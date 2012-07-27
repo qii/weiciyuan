@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.utils;
+package org.qii.weiciyuan.support.utils;
 
 import android.app.Application;
 
