@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?> 
 <!--
 /*
  * Copyright 2011 Sina.
@@ -17,21 +17,8 @@
  * limitations under the License.
  */
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#eaeaea"
-    >
-    
-	<Button
-		android:id="@+id/btnLogin"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="login"/>
-	<TextView
-		android:id="@+id/tvToken"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="null"/>
-</LinearLayout>
+<resources> 
+    <color name="transparent">#00000000</color>
+    <color name="text_num_gray">#333</color>
+    <color name="dialog_title_blue">#9CCCF7</color>
+</resources> 

@@ -14,7 +14,7 @@ public class LoginActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.account);
 
         SharedPreferences settings = getPreferences(MODE_PRIVATE);
         String account = settings.getString("username", "");

@@ -17,21 +17,26 @@
  * limitations under the License.
  */
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#eaeaea"
-    >
-    
-	<Button
-		android:id="@+id/btnLogin"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="login"/>
-	<TextView
-		android:id="@+id/tvToken"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="null"/>
-</LinearLayout>
+    android:layout_height="fill_parent">
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    >
+	    
+		<Button
+			android:id="@+id/btnShare"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="btnShare"/>
+		<TextView
+			android:id="@+id/tvResult"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="null"/>
+	</LinearLayout>
+	
+</ScrollView>

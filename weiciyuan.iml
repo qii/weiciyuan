@@ -31,6 +31,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Android 4.0 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="Com_weibo_android" />
   </component>
 </module>
 
