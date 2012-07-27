@@ -26,11 +26,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import com.weibo.net.Utility;
-import com.weibo.net.Weibo;
-import com.weibo.net.WeiboException;
-import com.weibo.net.WeiboParameters;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.weibo.Utility;
+import org.qii.weiciyuan.weibo.Weibo;
+import org.qii.weiciyuan.weibo.WeiboException;
+import org.qii.weiciyuan.weibo.WeiboParameters;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -123,11 +123,7 @@ public class TestActivity extends Activity {
 
     }
 
-    private void share2weibo(String content, String picPath) throws WeiboException {
-        Weibo weibo = Weibo.getInstance();
-        weibo.share2weibo(this, weibo.getAccessToken().getToken(), weibo.getAccessToken()
-                .getSecret(), content, picPath);
-    }
+
 
     private String getPublicTimeline(Weibo weibo) throws MalformedURLException, IOException,
             WeiboException {

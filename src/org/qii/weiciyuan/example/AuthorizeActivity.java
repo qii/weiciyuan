@@ -26,7 +26,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.weibo.android.R;
-import com.weibo.net.*;
+import org.qii.weiciyuan.weibo.*;
 
 /**
  * Sample code for testing weibo APIs.
@@ -44,7 +44,7 @@ public class AuthorizeActivity extends Activity {
     private static final String URL_ACTIVITY_CALLBACK = "weiboandroidsdk://TimeLineActivity";
     private static final String FROM = "xweibo";
 
-     private static final String CONSUMER_KEY = "1065511513";// 替换为开发者的appkey，例如"1646212960";
+    private static final String CONSUMER_KEY = "1065511513";// 替换为开发者的appkey，例如"1646212960";
     private static final String CONSUMER_SECRET = "df428e88aae8bd31f20481d149c856ed";// 替换为开发者的appkey，例如"94098772160b6f8ffc1315374d8861f9";
 
     private String username = "";
