@@ -7,17 +7,17 @@ import android.app.Application;
  * Date: 12-7-27
  * Time: 上午11:26
  */
-public class MyApplication extends Application {
+public final class GlobalContext extends Application {
 
-    private static MyApplication myApplication=null;
+    private static GlobalContext globalContext =null;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        myApplication = this;
+        globalContext = this;
     }
 
-    public static MyApplication getInstance() {
-        return myApplication;
+    public static GlobalContext getInstance() {
+        return globalContext;
     }
 }
