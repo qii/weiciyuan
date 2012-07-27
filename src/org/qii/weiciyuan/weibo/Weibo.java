@@ -101,7 +101,7 @@ public class Weibo {
      * @param httpMethod http verb: e.g. "GET", "POST", "DELETE"
      * @throws java.io.IOException
      * @throws java.net.MalformedURLException
-      */
+     */
     public String request(Context context, String url, WeiboParameters params, String httpMethod,
                           Token token) throws WeiboException {
         String rlt = Utility.openUrl(context, url, httpMethod, params, this.mAccessToken);
@@ -161,18 +161,11 @@ public class Weibo {
      * @param listener
      */
     public void authorize(Activity activity, final WeiboDialogListener listener) {
-        authorize(activity, new String[]{}, DEFAULT_AUTH_ACTIVITY_CODE, listener);
-    }
-
-
-    private void authorize(Activity activity, String[] permissions, int activityCode,
-                           final WeiboDialogListener listener) {
         Utility.setAuthorization(new Oauth2AccessTokenHeader());
 
         mAuthDialogListener = listener;
 
-        startDialogAuth(activity, permissions);
-
+        startDialogAuth(activity, new String[]{});
 
     }
 
@@ -189,8 +182,8 @@ public class Weibo {
         }
         String url = URL_OAUTH2_ACCESS_AUTHORIZE + "?" + Utility.encodeUrl(parameters);
         if (context.checkCallingOrSelfPermission(Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
-            Utility.showAlert(context, "Error",
-                    "Application requires permission to access the Internet");
+//            Utility.showAlert(context, "Error",
+//                    "Application requires permission to access the Internet");
         } else {
             new WeiboDialog(this, context, url, listener).show();
         }

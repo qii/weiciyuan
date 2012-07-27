@@ -16,7 +16,6 @@
  */
 package org.qii.weiciyuan.weibo;
 
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -26,11 +25,8 @@ import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -44,7 +40,6 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -61,8 +56,6 @@ import java.net.*;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -131,32 +124,7 @@ public class Utility {
         mRequestHeader.add(key, value);
     }
 
-    public static void setRequestHeader(WeiboParameters params) {
-        mRequestHeader.addAll(params);
-    }
 
-    public static void clearRequestHeader() {
-        mRequestHeader.clear();
-
-    }
-
-    public static String encodePostBody(Bundle parameters, String boundary) {
-        if (parameters == null)
-            return "";
-        StringBuilder sb = new StringBuilder();
-
-        for (String key : parameters.keySet()) {
-            if (parameters.getByteArray(key) != null) {
-                continue;
-            }
-
-            sb.append("Content-Disposition: form-data; name=\"" + key + "\"\r\n\r\n"
-                    + parameters.getString(key));
-            sb.append("\r\n" + "--" + boundary + "\r\n");
-        }
-
-        return sb.toString();
-    }
 
     public static String encodeUrl(WeiboParameters parameters) {
         if (parameters == null) {
@@ -208,44 +176,8 @@ public class Utility {
         }
     }
 
-    /**
-     * Construct a url encoded entity by parameters .
-     * 
-     * @param bundle
-     *            :parameters key pairs
-     * @return UrlEncodedFormEntity: encoed entity
-     */
-    public static UrlEncodedFormEntity getPostParamters(Bundle bundle) throws WeiboException {
-        if (bundle == null || bundle.isEmpty()) {
-            return null;
-        }
-        try {
-            List<NameValuePair> form = new ArrayList<NameValuePair>();
-            for (String key : bundle.keySet()) {
-                form.add(new BasicNameValuePair(key, bundle.getString(key)));
-            }
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(form, "UTF-8");
-            return entity;
-        } catch (UnsupportedEncodingException e) {
-            throw new WeiboException(e);
-        }
-    }
 
-    /**
-     * Implement a weibo http request and return results .
-     * 
-     * @param context
-     *            : context of activity
-     * @param url
-     *            : request url of open api
-     * @param method
-     *            : HTTP METHOD.GET, POST, DELETE
-     * @param params
-     *            : Http params , query or postparameters
-     * @param Token
-     *            : oauth token or accesstoken
-     * @return UrlEncodedFormEntity: encoed entity
-     */
+
 
     public static String openUrl(Context context, String url, String method,
             WeiboParameters params, Token token) throws WeiboException {
@@ -415,7 +347,7 @@ public class Utility {
 
     /**
      * Get a HttpClient object which is setting correctly .
-     * 
+     *
      * @param context
      *            : context of activity
      * @return HttpClient: HttpClient object
@@ -447,7 +379,7 @@ public class Utility {
 
     /**
      * Upload image into output stream .
-     * 
+     *
      * @param out
      *            : output stream for uploading weibo
      * @param imgpath
@@ -513,10 +445,10 @@ public class Utility {
 
     /**
      * Read http requests result from response .
-     * 
+     *
      * @param response
      *            : http response by executing httpclient
-     * 
+     *
      * @return String : http response content
      */
     private static String read(HttpResponse response) throws WeiboException {
@@ -548,55 +480,8 @@ public class Utility {
         }
     }
 
-    /**
-     * Read http requests result from inputstream .
-     * 
-     * @param inputstream
-     *            : http inputstream from HttpConnection
-     * 
-     * @return String : http response content
-     */
-    private static String read(InputStream in) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        BufferedReader r = new BufferedReader(new InputStreamReader(in), 1000);
-        for (String line = r.readLine(); line != null; line = r.readLine()) {
-            sb.append(line);
-        }
-        in.close();
-        return sb.toString();
-    }
 
-    /**
-     * Clear current context cookies .
-     * 
-     * @param context
-     *            : current activity context.
-     * 
-     * @return void
-     */
-    public static void clearCookies(Context context) {
-        @SuppressWarnings("unused")
-        CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(context);
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.removeAllCookie();
-    }
 
-    /**
-     * Display a simple alert dialog with the given text and title.
-     * 
-     * @param context
-     *            Android context in which the dialog should be displayed
-     * @param title
-     *            Alert dialog title
-     * @param text
-     *            Alert dialog message
-     */
-    public static void showAlert(Context context, String title, String text) {
-        Builder alertBuilder = new Builder(context);
-        alertBuilder.setTitle(title);
-        alertBuilder.setMessage(text);
-        alertBuilder.create().show();
-    }
 
     public static String encodeParameters(WeiboParameters httpParams) {
         if (null == httpParams || Utility.isBundleEmpty(httpParams)) {
@@ -620,38 +505,6 @@ public class Utility {
 
     }
 
-    /**
-     * Base64 encode mehtod for weibo request.Refer to weibo development
-     * document.
-     * 
-     */
-    public static char[] base64Encode(byte[] data) {
-        final char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
-                .toCharArray();
-        char[] out = new char[((data.length + 2) / 3) * 4];
-        for (int i = 0, index = 0; i < data.length; i += 3, index += 4) {
-            boolean quad = false;
-            boolean trip = false;
-            int val = (0xFF & (int) data[i]);
-            val <<= 8;
-            if ((i + 1) < data.length) {
-                val |= (0xFF & (int) data[i + 1]);
-                trip = true;
-            }
-            val <<= 8;
-            if ((i + 2) < data.length) {
-                val |= (0xFF & (int) data[i + 2]);
-                quad = true;
-            }
-            out[index + 3] = alphabet[(quad ? (val & 0x3F) : 64)];
-            val >>= 6;
-            out[index + 2] = alphabet[(trip ? (val & 0x3F) : 64)];
-            val >>= 6;
-            out[index + 1] = alphabet[val & 0x3F];
-            val >>= 6;
-            out[index + 0] = alphabet[val & 0x3F];
-        }
-        return out;
-    }
+
 
 }

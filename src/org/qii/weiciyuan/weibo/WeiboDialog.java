@@ -22,16 +22,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.weibo.android.R;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.*;
-
 public class WeiboDialog extends Dialog {
 
     static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(
             LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-    static final int MARGIN = 4;
-    static final int PADDING = 2;
+
 
     private final Weibo mWeibo;
     private String mUrl;
@@ -63,7 +58,6 @@ public class WeiboDialog extends Dialog {
 
         setUpWebView();
 
-        // setUpCloseBtn();
 
         addContentView(mContent, new LayoutParams(LayoutParams.FILL_PARENT,
                 LayoutParams.FILL_PARENT));
@@ -71,11 +65,7 @@ public class WeiboDialog extends Dialog {
 
     private void setUpWebView() {
         webViewContainer = new RelativeLayout(getContext());
-        // webViewContainer.setOrientation(LinearLayout.VERTICAL);
 
-        // webViewContainer.addView(title, new
-        // LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
-        // getContext().getResources().getDimensionPixelSize(R.dimen.dialog_title_height)));
 
         mWebView = new WebView(getContext());
         mWebView.setVerticalScrollBarEnabled(false);
@@ -98,31 +88,7 @@ public class WeiboDialog extends Dialog {
         mContent.addView(webViewContainer, lp);
     }
 
-    private void setUpCloseBtn() {
-        mBtnClose = new ImageView(getContext());
-        mBtnClose.setClickable(true);
-        mBtnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onCancel();
-                WeiboDialog.this.dismiss();
-            }
-        });
 
-        mBtnClose.setImageResource(R.drawable.close_selector);
-        mBtnClose.setVisibility(View.INVISIBLE);
-
-        RelativeLayout.LayoutParams closeBtnRL = new RelativeLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        closeBtnRL.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        closeBtnRL.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        closeBtnRL.topMargin = getContext().getResources().getDimensionPixelSize(
-                R.dimen.dialog_btn_close_right_margin);
-        closeBtnRL.rightMargin = getContext().getResources().getDimensionPixelSize(
-                R.dimen.dialog_btn_close_top_margin);
-
-        webViewContainer.addView(mBtnClose, closeBtnRL);
-    }
 
     private class WeiboWebViewClient extends WebViewClient {
 
@@ -196,43 +162,6 @@ public class WeiboDialog extends Dialog {
         }
     }
 
-    private static String getHtml(String urlString) {
 
-        try {
 
-            StringBuffer html = new StringBuffer();
-
-            SocketAddress sa = new InetSocketAddress("10.75.0.103", 8093);
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, sa);
-
-            URL url = new URL(urlString);
-
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection(proxy);
-
-            InputStreamReader isr = new InputStreamReader(conn.getInputStream());
-
-            BufferedReader br = new BufferedReader(isr);
-
-            String temp;
-
-            while ((temp = br.readLine()) != null) {
-
-                html.append(temp);
-
-            }
-
-            br.close();
-
-            isr.close();
-            return html.toString();
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            return null;
-
-        }
-
-    }
 }

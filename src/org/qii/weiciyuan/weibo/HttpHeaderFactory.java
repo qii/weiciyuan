@@ -16,8 +16,6 @@
  */
 package org.qii.weiciyuan.weibo;
 
-import android.os.Bundle;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -147,29 +145,6 @@ public abstract class HttpHeaderFactory {
         return buf.toString();
     }
 
-    public static String encodeParameters(Bundle postParams, String split, boolean quot) {
-        final String splitter = split;
-        StringBuffer buf = new StringBuffer();
-        for (String key : postParams.keySet()) {
-            if (buf.length() != 0) {
-                if (quot) {
-                    buf.append("\"");
-                }
-                buf.append(splitter);
-            }
-            buf.append(encode(key)).append("=");
-            if (quot) {
-                buf.append("\"");
-            }
-            buf.append(encode(postParams.getString(key)));
-        }
-        if (buf.length() != 0) {
-            if (quot) {
-                buf.append("\"");
-            }
-        }
-        return buf.toString();
-    }
 
     //
     public static String constructRequestURL(String url) {
