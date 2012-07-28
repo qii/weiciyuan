@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
-import org.qii.weiciyuan.example.TestActivity;
 import org.qii.weiciyuan.ui.HomeActivity;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
@@ -21,85 +20,103 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
 
     private ListView listView;
 
-    private AccountAdapter accountAdapter;
+    private AccountAdapter listAdapter;
 
-    private List<String> accountList = new ArrayList<String>();
+    private List<String> listData = new ArrayList<String>();
 
     private ActionMode mActionMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
+        jumpToHomeLine();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
+        listAdapter = new AccountAdapter();
+        listView = (ListView) findViewById(R.id.listView);
+        listView.setOnItemClickListener(this);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setAdapter(listAdapter);
 
-        SharedPreferences settings = getPreferences(MODE_PRIVATE);
-        String account = settings.getString("username", "");
-        if (!TextUtils.isEmpty(account)) {
-            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-            finish();
+
+        listView.setMultiChoiceModeListener(multiChoiceModeLinstener);
+
+    }
+
+    private AbsListView.MultiChoiceModeListener multiChoiceModeLinstener = new AbsListView.MultiChoiceModeListener() {
+
+        boolean checkAll = false;
+
+        @Override
+        public void onItemCheckedStateChanged(ActionMode mode, int position,
+                                              long id, boolean checked) {
+
+
         }
 
-        listView = (ListView) findViewById(R.id.listView);
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+             switch (item.getItemId()) {
+                case R.id.menu_select_all:
+                    if (!checkAll) {
+                        listAdapter.selectAll();
+                        checkAll = true;
+                        item.setIcon(R.drawable.account_select_none);
+                    } else {
+                        listAdapter.unSelectButRemainCheckBoxAll();
+                        checkAll = false;
+                        item.setIcon(R.drawable.account_select_all);
+                    }
+                    return true;
+                default:
+                    Toast.makeText(LoginActivity.this, "删除", Toast.LENGTH_SHORT).show();
+                    mode.finish();
+                    return false;
+            }
+        }
 
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.login_menu, menu);
+            return true;
+        }
 
-        listView.setOnItemClickListener(this);
-        accountAdapter = new AccountAdapter();
-        listView.setAdapter(accountAdapter);
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            listAdapter.unSelectAll();
+        }
 
-        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            listAdapter.addCheckbox();
+            return false;
+        }
+    };
 
-            boolean checkAll = false;
+    private void jumpToHomeLine() {
+        SharedPreferences settings = getPreferences(MODE_PRIVATE);
+        String username = settings.getString("username", "");
+        String token = settings.getString("token", "");
 
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position,
-                                                  long id, boolean checked) {
+        boolean haveToken = !TextUtils.isEmpty(token);
 
+        boolean haveUsername = !TextUtils.isEmpty(username);
 
+        if (haveToken) {
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            intent.putExtra("token", token);
+
+            if (haveUsername) {
+                intent.putExtra("username", username);
             }
 
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                // Respond to clicks on the actions in the CAB
-                switch (item.getItemId()) {
-                    case R.id.menu_select_all:
-                        if (!checkAll) {
-                            accountAdapter.selectAll();
-                            checkAll = true;
-                            item.setIcon(R.drawable.account_select_none);
-                        } else {
-                            accountAdapter.unSelectButRemainCheckBoxAll();
-                            checkAll = false;
-                            item.setIcon(R.drawable.account_select_all);
-                        }
-                        return true;
-                    default:
-                        Toast.makeText(LoginActivity.this, "删除", Toast.LENGTH_SHORT).show();
-                        mode.finish();
-                        return false;
-                }
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.login_menu, menu);
-                return true;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                accountAdapter.unSelectAll();
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                accountAdapter.addCheckbox();
-                return false;
-            }
-        });
-
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override
@@ -123,9 +140,9 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
             String access_token = values.getString("access_token");
             String expires_in = values.getString("expires_in");
 
-            accountList.add(access_token);
+            listData.add(access_token);
 
-            accountAdapter.notifyDataSetChanged();
+            listAdapter.notifyDataSetChanged();
 
         }
     }
@@ -133,7 +150,7 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-        String token = accountList.get(i);
+        String token = listData.get(i);
 
         SharedPreferences settings = getPreferences(MODE_PRIVATE);
 
@@ -141,7 +158,9 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
 
         editor.putString("token", token);
 
-        Intent intent = new Intent(this, TestActivity.class);
+        editor.commit();
+
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("token", token);
 
         startActivity(intent);
@@ -158,17 +177,17 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
 
         @Override
         public int getCount() {
-            return accountList.size();  //To change body of implemented methods use File | Settings | File Templates.
+            return listData.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+            return listData.get(i);
         }
 
         @Override
         public long getItemId(int i) {
-            return 0;  //To change body of implemented methods use File | Settings | File Templates.
+            return 0;
         }
 
         @Override
@@ -192,7 +211,7 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
             }
             TextView textView = (TextView) mView.findViewById(R.id.textView);
 
-            textView.setText(accountList.get(i));
+            textView.setText(listData.get(i));
 
             return mView;
         }
