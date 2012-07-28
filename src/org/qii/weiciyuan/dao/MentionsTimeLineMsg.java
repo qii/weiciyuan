@@ -9,10 +9,7 @@ import org.qii.weiciyuan.weibo.Utility;
 import org.qii.weiciyuan.weibo.WeiboException;
 import org.qii.weiciyuan.weibo.WeiboParameters;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -55,6 +52,17 @@ public class MentionsTimeLineMsg implements TimeLineMsg {
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("id", object.optString("id"));
                 map.put("text", object.optString("text"));
+                Iterator iterator = object.keys();
+                String key;
+                while (iterator.hasNext()) {
+                    key=(String)iterator.next();
+                    Object value=object.opt(key);
+                    if(value instanceof String){
+                        map.put(key,value.toString());
+                    }else if(value instanceof JSONObject){
+                        map.put("screen_name",((JSONObject) value).optString("screen_name"));
+                    }
+                }
                 list.add(map);
             }
 

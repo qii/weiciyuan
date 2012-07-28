@@ -1,46 +1,48 @@
 package org.qii.weiciyuan.ui;
 
-import android.app.Activity;
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.dao.MentionsTimeLineMsg;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * User: Jiang Qi
  * Date: 12-7-27
  * Time: 下午1:02
  */
-public class MentionsTimeLineActivity extends Activity {
+public class MentionsTimeLineActivity extends FragmentActivity {
 
-    private ListView listView;
 
-    private List<Map<String, String>> list=new ArrayList<Map<String, String>>();
+    private ViewPager mViewPager;
 
-    private TimeLineAdapter timeLineAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.timeline);
-        listView = (ListView) findViewById(R.id.listView);
-        timeLineAdapter=new TimeLineAdapter();
-        listView.setAdapter(timeLineAdapter);
+        setContentView(R.layout.timeline_viewpage);
 
+        final ActionBar actionBar = getActionBar();
+
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        actionBar.setTitle("叛逆的心之所在");
+
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager.setAdapter(new TimeLinePagerAdapter(getSupportFragmentManager()));
+        mViewPager.setOnPageChangeListener(simpleOnPageChangeListener);
+
+        for (int i = 0; i < 4; i++) {
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setText("Tab " + (i + 1))
+                            .setTabListener(tabListener));
+        }
 
         Intent intent = getIntent();
 
@@ -55,60 +57,29 @@ public class MentionsTimeLineActivity extends Activity {
         GlobalContext.getInstance().setExpires(expires);
 
 
-        new AsyncTask<Void, List<Map<String, String>>, List<Map<String, String>>>() {
-
-
-            @Override
-            protected List<Map<String, String>> doInBackground(Void... params) {
-
-                return new MentionsTimeLineMsg().getMsgList();
-
-            }
-
-            @Override
-            protected void onPostExecute(List<Map<String, String>> o) {
-                ((TextView) findViewById(R.id.tvResult)).setText(o.get(0).get("text"));
-                list=o;
-                timeLineAdapter.notifyDataSetChanged();
-
-                super.onPostExecute(o);
-            }
-        }.execute();
     }
 
-    private class TimeLineAdapter extends BaseAdapter {
-
+    ViewPager.SimpleOnPageChangeListener simpleOnPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
         @Override
-        public int getCount() {
-            return list.size();  //To change body of implemented methods use File | Settings | File Templates.
+        public void onPageSelected(int position) {
+
+            getActionBar().setSelectedNavigationItem(position);
+        }
+    };
+
+    ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+        public void onTabSelected(ActionBar.Tab tab,
+                                  FragmentTransaction ft) {
+
+            mViewPager.setCurrentItem(tab.getPosition());
         }
 
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);  //To change body of implemented methods use File | Settings | File Templates.
+        public void onTabUnselected(ActionBar.Tab tab,
+                                    FragmentTransaction ft) {
         }
 
-        @Override
-        public long getItemId(int position) {
-            return 0;
+        public void onTabReselected(ActionBar.Tab tab,
+                                    FragmentTransaction ft) {
         }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            LayoutInflater inflater = getLayoutInflater();
-
-            View view = inflater.inflate(R.layout.mentionstimeline_item, parent, false);
-
-            TextView screenName = (TextView)view.findViewById(R.id.username);
-            TextView txt=(TextView)view.findViewById(R.id.content);
-
-            screenName.setText(list.get(position).get("id"));
-
-            txt.setText(list.get(position).get("text"));
-
-            return view;
-
-        }
-    }
+    };
 }
