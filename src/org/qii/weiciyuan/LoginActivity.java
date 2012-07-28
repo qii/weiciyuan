@@ -11,7 +11,9 @@ import org.qii.weiciyuan.ui.HomeActivity;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LoginActivity extends Activity implements AdapterView.OnItemClickListener {
     /**
@@ -22,7 +24,7 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
 
     private AccountAdapter listAdapter;
 
-    private List<String> listData = new ArrayList<String>();
+    private List<Map<String, String>> listData = new ArrayList<Map<String, String>>();
 
     private ActionMode mActionMode;
 
@@ -59,7 +61,7 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-             switch (item.getItemId()) {
+            switch (item.getItemId()) {
                 case R.id.menu_select_all:
                     if (!checkAll) {
                         listAdapter.selectAll();
@@ -101,14 +103,16 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
         SharedPreferences settings = getPreferences(MODE_PRIVATE);
         String username = settings.getString("username", "");
         String token = settings.getString("token", "");
+        String expires = settings.getString("expires", "");
 
-        boolean haveToken = !TextUtils.isEmpty(token);
+        boolean haveToken = !TextUtils.isEmpty(token) && !TextUtils.isEmpty(expires);
 
         boolean haveUsername = !TextUtils.isEmpty(username);
 
         if (haveToken) {
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             intent.putExtra("token", token);
+            intent.putExtra("expires", expires);
 
             if (haveUsername) {
                 intent.putExtra("username", username);
@@ -140,7 +144,12 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
             String access_token = values.getString("access_token");
             String expires_in = values.getString("expires_in");
 
-            listData.add(access_token);
+            Map<String, String> map = new HashMap<String, String>();
+
+            map.put("token", access_token);
+            map.put("expires", expires_in);
+
+            listData.add(map);
 
             listAdapter.notifyDataSetChanged();
 
@@ -150,18 +159,21 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-        String token = listData.get(i);
+        String token = listData.get(i).get("token");
+        String expires = listData.get(i).get("expires");
 
         SharedPreferences settings = getPreferences(MODE_PRIVATE);
 
         SharedPreferences.Editor editor = settings.edit();
 
         editor.putString("token", token);
+        editor.putString("expires", expires);
 
         editor.commit();
 
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("token", token);
+        intent.putExtra("expires", expires);
 
         startActivity(intent);
 
@@ -211,7 +223,7 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
             }
             TextView textView = (TextView) mView.findViewById(R.id.textView);
 
-            textView.setText(listData.get(i));
+            textView.setText(listData.get(i).get("token"));
 
             return mView;
         }

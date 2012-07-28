@@ -15,8 +15,8 @@ import java.util.Properties;
  */
 
 public final class URLManager {
-    private static final String URL_SINA_WEIBO = "https://api.weibo.com/2/";
-    private static final String URL_FORMAT = "http://%s%s";
+    private static final String URL_SINA_WEIBO = "https://api.weibo.com/2";
+    private static final String URL_FORMAT = "%s%s";
     private static Properties properties = new Properties();
 
     private final static String getUrl(String name) {
@@ -39,10 +39,11 @@ public final class URLManager {
         if (TextUtils.isEmpty(urlContent))
             return null;
 
-        if (!urlContent.startsWith("/")) {
-            urlContent = "/" + urlContent;
+        String url=getUrl(urlContent);
+        if (!url.startsWith("/")) {
+            url = "/" + url;
         }
 
-        return String.format(URL_FORMAT, URL_SINA_WEIBO, urlContent);
+        return String.format(URL_FORMAT, URL_SINA_WEIBO,url);
     }
 }

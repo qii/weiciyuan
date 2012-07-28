@@ -22,7 +22,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.weibo.Utility;
@@ -46,20 +45,8 @@ public class TestActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.timeline);
-        // Uri uri = this.getIntent().getData();
-        // String oauth_verifier = uri.getQueryParameter("oauth_verifier");
-        // mWeibo.addOauthverifier(oauth_verifier);
-        // try {
-        // mWeibo.generateAccessToken(this, null);
-        // }catch (WeiboException e1) {
-        // e1.printStackTrace();
-        // }
+
         mResult = (TextView) this.findViewById(R.id.tvResult);
-        Button getShare = (Button) this.findViewById(R.id.btnShare);
-
-
-
-
 
 
         new AsyncTask<Void, String, String>() {

@@ -13,6 +13,16 @@ public final class GlobalContext extends Application {
 
     private static String token = "";
 
+    private static String expires = "";
+
+    public String getExpires() {
+        return expires;
+    }
+
+    public void setExpires(String expires) {
+        GlobalContext.expires = expires;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

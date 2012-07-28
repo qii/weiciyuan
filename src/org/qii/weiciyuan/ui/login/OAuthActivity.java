@@ -26,7 +26,7 @@ import org.qii.weiciyuan.weibo.WeiboParameters;
 public class OAuthActivity extends Activity {
 
     public static String URL_OAUTH2_ACCESS_AUTHORIZE = "https://api.weibo.com/oauth2/authorize";
-    private static final String APP_KEY = "1065511513";
+    public static final String APP_KEY = "1065511513";
     private static final String CONSUMER_SECRET = "df428e88aae8bd31f20481d149c856ed";
     private static final String DIRECT_URL = "https://api.weibo.com/oauth2/default.html";
 
