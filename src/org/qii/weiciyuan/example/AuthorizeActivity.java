@@ -25,7 +25,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.weibo.android.R;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.weibo.*;
 
 /**
@@ -35,20 +35,14 @@ import org.qii.weiciyuan.weibo.*;
  */
 
 public class AuthorizeActivity extends Activity {
-    /**
-     * Called when the activity is first created.
-     */
+
     private Button mLogin;
     private TextView mToken;
 
-    private static final String URL_ACTIVITY_CALLBACK = "weiboandroidsdk://TimeLineActivity";
-    private static final String FROM = "xweibo";
 
     private static final String CONSUMER_KEY = "1065511513";// 替换为开发者的appkey，例如"1646212960";
     private static final String CONSUMER_SECRET = "df428e88aae8bd31f20481d149c856ed";// 替换为开发者的appkey，例如"94098772160b6f8ffc1315374d8861f9";
 
-    private String username = "";
-    private String password = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -20,7 +20,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.weibo.android.R;
+import org.qii.weiciyuan.R;
 
 public class WeiboDialog extends Dialog {
 
