@@ -1,15 +1,10 @@
 package org.qii.weiciyuan.ui;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.webkit.*;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.weibo.Utility;
@@ -29,16 +24,35 @@ public class OAuthActivity extends Activity {
     private static final String CONSUMER_SECRET = "df428e88aae8bd31f20481d149c856ed";
     private static final String DIRECT_URL = "https://api.weibo.com/oauth2/default.html";
 
+    private WebView webView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.oauth);
-        WebView webView = (WebView) findViewById(R.id.webView);
+        webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new WeiboWebViewClient());
+
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                Toast.makeText(OAuthActivity.this, "测试", Toast.LENGTH_SHORT).show();
+                return super.onJsAlert(view, url, message, result);    //To change body of overridden methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
+                Toast.makeText(OAuthActivity.this, "测试", Toast.LENGTH_SHORT).show();
+
+                return super.onJsConfirm(view, url, message, result);    //To change body of overridden methods use File | Settings | File Templates.
+            }
+        });
+
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-        webView.loadUrl(getWeiboOAuthUrl());
 
+
+        webView.loadUrl(getWeiboOAuthUrl());
 
     }
 
@@ -55,7 +69,6 @@ public class OAuthActivity extends Activity {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Toast.makeText(OAuthActivity.this, "ni", Toast.LENGTH_SHORT).show();
             view.loadUrl(url);
             return true;
         }
@@ -88,31 +101,23 @@ public class OAuthActivity extends Activity {
         intent.putExtras(values);
 
         if (error == null && error_code == null) {
+            Toast.makeText(OAuthActivity.this, "授权成功", Toast.LENGTH_SHORT).show();
             setResult(0, intent);
+
+        } else {
+            Toast.makeText(OAuthActivity.this, "你取消了授权", Toast.LENGTH_SHORT).show();
+        }
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (webView.canGoBack()) {
+            webView.goBack();
+        } else {
             finish();
         }
     }
 
-    static class MyProgressDialogFragment extends DialogFragment {
 
-        public static MyProgressDialogFragment newInstance() {
-            MyProgressDialogFragment frag = new MyProgressDialogFragment();
-            frag.setRetainInstance(true);
-            Bundle args = new Bundle();
-            frag.setArguments(args);
-            return frag;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-            ProgressDialog dialog = new ProgressDialog(getActivity());
-
-            dialog.setMessage("授权中");
-            dialog.setIndeterminate(false);
-            dialog.setCancelable(true);
-
-            return dialog;
-        }
-    }
 }

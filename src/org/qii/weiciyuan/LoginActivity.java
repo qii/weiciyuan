@@ -22,7 +22,7 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
 
     private BaseAdapter accountAdapter;
 
-    private List<String> accountList=new ArrayList<String>();
+    private List<String> accountList = new ArrayList<String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
         listView = (ListView) findViewById(R.id.listView);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
-        accountAdapter=new AccountAdapter();
+        accountAdapter = new AccountAdapter();
         listView.setAdapter(accountAdapter);
 
     }
@@ -62,17 +62,18 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null) {
+            Bundle values = data.getExtras();
 
-        Bundle values = data.getExtras();
+            String access_token = values.getString("access_token");
+            String expires_in = values.getString("expires_in");
 
-        String access_token = values.getString("access_token");
-        String expires_in = values.getString("expires_in");
+            accountList.add(access_token);
 
-        accountList.add(access_token);
+            accountAdapter.notifyDataSetChanged();
 
-        accountAdapter.notifyDataSetChanged();
-
-        Toast.makeText(this, access_token, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, access_token, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
