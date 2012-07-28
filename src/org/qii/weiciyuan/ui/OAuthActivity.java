@@ -1,10 +1,9 @@
 package org.qii.weiciyuan.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.http.SslError;
 import android.os.Bundle;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -48,53 +47,46 @@ public class OAuthActivity extends Activity {
         parameters.add("redirect_uri", DIRECT_URL);
         parameters.add("display", "mobile");
 
-        return URL_OAUTH2_ACCESS_AUTHORIZE + "?" + Utility.encodeUrl(parameters);
+        String url= URL_OAUTH2_ACCESS_AUTHORIZE + "?" + Utility.encodeUrl(parameters);
+        return url;
     }
 
     private class WeiboWebViewClient extends WebViewClient {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
-//            if (url.startsWith(mWeibo.getRedirectUrl())) {
-//                handleRedirectUrl(view, url);
-//                WeiboDialog.this.dismiss();
-//                return true;
-//            }
+            view.loadUrl(url);
             return true;
         }
 
-        @Override
-        public void onReceivedError(WebView view, int errorCode, String description,
-                                    String failingUrl) {
-            super.onReceivedError(view, errorCode, description, failingUrl);
-
-        }
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
-            // google issue. shouldOverrideUrlLoading not executed
-//            if (url.startsWith(mWeibo.getRedirectUrl())) {
-//                handleRedirectUrl(view, url);
-//                view.stopLoading();
-//                WeiboDialog.this.dismiss();
-//                return;
-//            }
+            if (url.startsWith(DIRECT_URL)) {
+                handleRedirectUrl(view, url);
+                view.stopLoading();
+                return;
+            }
             super.onPageStarted(view, url, favicon);
 
         }
 
-        @Override
-        public void onPageFinished(WebView view, String url) {
 
-            super.onPageFinished(view, url);
+    }
 
+    private void handleRedirectUrl(WebView view, String url) {
+        Bundle values = Utility.parseUrl(url);
+
+        String error = values.getString("error");
+        String error_code = values.getString("error_code");
+
+        Intent intent = new Intent();
+        intent.putExtras(values);
+
+        if (error == null && error_code == null) {
+            setResult(0, intent);
+            finish();
         }
-
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            handler.proceed();
-        }
-
     }
 }

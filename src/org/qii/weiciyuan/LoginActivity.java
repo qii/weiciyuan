@@ -9,6 +9,7 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 import org.qii.weiciyuan.ui.HomeActivity;
 import org.qii.weiciyuan.ui.OAuthActivity;
 
@@ -52,6 +53,17 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
         intent.putExtra("url", "http://www.cnbeta.com");
 
         startActivityForResult(intent, 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Bundle values = data.getExtras();
+
+        String access_token = values.getString("access_token");
+        String expires_in = values.getString("expires_in");
+
+        Toast.makeText(this,access_token,Toast.LENGTH_SHORT).show();
     }
 
     @Override
