@@ -9,8 +9,8 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import org.qii.weiciyuan.example.AuthorizeActivity;
 import org.qii.weiciyuan.ui.HomeActivity;
+import org.qii.weiciyuan.ui.OAuthActivity;
 
 public class LoginActivity extends Activity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     /**
@@ -47,7 +47,11 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
     }
 
     public void addAccount(MenuItem menu) {
-        startActivity(new Intent(this, AuthorizeActivity.class));
+
+        Intent intent = new Intent(this, OAuthActivity.class);
+        intent.putExtra("url", "http://www.cnbeta.com");
+
+        startActivityForResult(intent, 0);
     }
 
     @Override

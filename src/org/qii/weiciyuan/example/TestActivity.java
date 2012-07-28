@@ -22,8 +22,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
@@ -58,42 +56,10 @@ public class TestActivity extends Activity {
         // }
         mResult = (TextView) this.findViewById(R.id.tvResult);
         Button getShare = (Button) this.findViewById(R.id.btnShare);
-        getShare.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
 
-//                File file = Environment.getExternalStorageDirectory();
-//                String sdPath = file.getAbsolutePath();
-//                // 请保证SD卡根目录下有这张图片文件
-//                String picPath = sdPath + "/" + "abc.jpg";
-//                File picFile = new File(picPath);
-//                if (!picFile.exists()) {
-//                    Toast.makeText(TestActivity.this, "图片" + picPath + "不存在！", Toast.LENGTH_SHORT)
-//                            .show();
-//                    picPath = null;
-//                }
-//                try {
-//                    share2weibo("abc", picPath);
-//                    Intent i = new Intent(TestActivity.this, ShareActivity.class);
-//                    TestActivity.this.startActivity(i);
-//
-//                } catch (WeiboException e) {
-//                    // TODO Auto-generated catch block
-//                    e.printStackTrace();
-//                } finally {
-//
-//                }
 
-                try {
-                    update(mWeibo,"wo",null,"ni",null,null);
-                } catch (WeiboException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
 
-            }
-
-        });
 
 
         new AsyncTask<Void, String, String>() {
