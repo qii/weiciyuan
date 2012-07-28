@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.dao.HomeLineMsg;
+import org.qii.weiciyuan.dao.MentionsTimeLineMsg;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 /**
@@ -48,7 +48,7 @@ public class HomeActivity extends Activity {
             @Override
             protected String doInBackground(Void... params) {
 
-                return HomeLineMsg.getMsgstr();
+                return new MentionsTimeLineMsg().getMsgs();
 
             }
 

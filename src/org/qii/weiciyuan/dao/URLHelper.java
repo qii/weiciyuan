@@ -16,4 +16,11 @@ public class URLHelper {
         return URLManager.getRealUrl("hometimeline");
     }
 
+    public static String getMentionsTimeLine(){
+
+
+        return URLManager.getRealUrl("mentions");
+
+    }
+
 }
