@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_add_account"
+          android:icon="@drawable/oauth_refresh"
+          android:title="刷新"
+          android:showAsAction="ifRoom|withText"
+          android:onClick="refresh"/>
+</menu>

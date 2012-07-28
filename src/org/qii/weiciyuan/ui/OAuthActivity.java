@@ -1,9 +1,13 @@
 package org.qii.weiciyuan.ui;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.webkit.*;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
@@ -30,6 +34,8 @@ public class OAuthActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.oauth);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new WeiboWebViewClient());
 
@@ -54,6 +60,29 @@ public class OAuthActivity extends Activity {
 
         webView.loadUrl(getWeiboOAuthUrl());
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.oauth_refresh, menu);
+        return true;
+    }
+
+    public void refresh(MenuItem menu) {
+
+        webView.reload();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private String getWeiboOAuthUrl() {
