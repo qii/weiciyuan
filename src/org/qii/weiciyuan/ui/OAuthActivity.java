@@ -1,12 +1,16 @@
 package org.qii.weiciyuan.ui;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.weibo.Utility;
 import org.qii.weiciyuan.weibo.WeiboParameters;
@@ -51,6 +55,7 @@ public class OAuthActivity extends Activity {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            Toast.makeText(OAuthActivity.this, "ni", Toast.LENGTH_SHORT).show();
             view.loadUrl(url);
             return true;
         }
@@ -60,6 +65,8 @@ public class OAuthActivity extends Activity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
             if (url.startsWith(DIRECT_URL)) {
+
+
                 handleRedirectUrl(view, url);
                 view.stopLoading();
                 return;
@@ -83,6 +90,29 @@ public class OAuthActivity extends Activity {
         if (error == null && error_code == null) {
             setResult(0, intent);
             finish();
+        }
+    }
+
+    static class MyProgressDialogFragment extends DialogFragment {
+
+        public static MyProgressDialogFragment newInstance() {
+            MyProgressDialogFragment frag = new MyProgressDialogFragment();
+            frag.setRetainInstance(true);
+            Bundle args = new Bundle();
+            frag.setArguments(args);
+            return frag;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            ProgressDialog dialog = new ProgressDialog(getActivity());
+
+            dialog.setMessage("授权中");
+            dialog.setIndeterminate(false);
+            dialog.setCancelable(true);
+
+            return dialog;
         }
     }
 }
