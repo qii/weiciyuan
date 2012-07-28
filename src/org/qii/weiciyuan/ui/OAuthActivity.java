@@ -30,6 +30,7 @@ public class OAuthActivity extends Activity {
 
     private WebView webView;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +58,7 @@ public class OAuthActivity extends Activity {
 
     public void refresh(MenuItem menu) {
 
-        webView.reload();
+        webView.loadUrl(getWeiboOAuthUrl());
     }
 
     @Override
