@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">微次元</string>
+
+
+    <!--login-->
+    <string name="you_cancel_login">你取消了授权</string>
+    <string name="login_success">授权成功</string>
 </resources>

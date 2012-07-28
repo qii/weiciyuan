@@ -39,20 +39,6 @@ public class OAuthActivity extends Activity {
         webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new WeiboWebViewClient());
 
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                Toast.makeText(OAuthActivity.this, "测试", Toast.LENGTH_SHORT).show();
-                return super.onJsAlert(view, url, message, result);    //To change body of overridden methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
-                Toast.makeText(OAuthActivity.this, "测试", Toast.LENGTH_SHORT).show();
-
-                return super.onJsConfirm(view, url, message, result);    //To change body of overridden methods use File | Settings | File Templates.
-            }
-        });
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -130,11 +116,11 @@ public class OAuthActivity extends Activity {
         intent.putExtras(values);
 
         if (error == null && error_code == null) {
-            Toast.makeText(OAuthActivity.this, "授权成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(OAuthActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
             setResult(0, intent);
 
         } else {
-            Toast.makeText(OAuthActivity.this, "你取消了授权", Toast.LENGTH_SHORT).show();
+            Toast.makeText(OAuthActivity.this, getString(R.string.you_cancel_login), Toast.LENGTH_SHORT).show();
         }
         finish();
     }
@@ -144,6 +130,7 @@ public class OAuthActivity extends Activity {
         if (webView.canGoBack()) {
             webView.goBack();
         } else {
+            Toast.makeText(OAuthActivity.this, getString(R.string.you_cancel_login), Toast.LENGTH_SHORT).show();
             finish();
         }
     }
