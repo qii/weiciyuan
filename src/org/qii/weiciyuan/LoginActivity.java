@@ -6,12 +6,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.*;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.*;
 import org.qii.weiciyuan.ui.HomeActivity;
 import org.qii.weiciyuan.ui.OAuthActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginActivity extends Activity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     /**
@@ -19,6 +19,10 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
      */
 
     private ListView listView;
+
+    private BaseAdapter accountAdapter;
+
+    private List<String> accountList=new ArrayList<String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +40,8 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
         listView = (ListView) findViewById(R.id.listView);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
-        listView.setAdapter(new AccountAdapter());
+        accountAdapter=new AccountAdapter();
+        listView.setAdapter(accountAdapter);
 
     }
 
@@ -63,7 +68,11 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
         String access_token = values.getString("access_token");
         String expires_in = values.getString("expires_in");
 
-        Toast.makeText(this,access_token,Toast.LENGTH_SHORT).show();
+        accountList.add(access_token);
+
+        accountAdapter.notifyDataSetChanged();
+
+        Toast.makeText(this, access_token, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -80,7 +89,7 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
 
         @Override
         public int getCount() {
-            return 20;  //To change body of implemented methods use File | Settings | File Templates.
+            return accountList.size();  //To change body of implemented methods use File | Settings | File Templates.
         }
 
         @Override
@@ -100,6 +109,9 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
 
             View mView = layoutInflater.inflate(R.layout.account_item, viewGroup, false);
 
+            TextView textView = (TextView) mView.findViewById(R.id.textView);
+
+            textView.setText(accountList.get(i));
 
             return mView;
         }

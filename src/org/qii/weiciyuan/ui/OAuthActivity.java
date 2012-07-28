@@ -21,17 +21,15 @@ import org.qii.weiciyuan.weibo.WeiboParameters;
 public class OAuthActivity extends Activity {
 
     public static String URL_OAUTH2_ACCESS_AUTHORIZE = "https://api.weibo.com/oauth2/authorize";
-    private static final String APP_KEY = "1065511513";// 替换为开发者的appkey，例如"1646212960";
-    private static final String CONSUMER_SECRET = "df428e88aae8bd31f20481d149c856ed";// 替换为开发者的appkey，例如"94098772160b6f8ffc1315374d8861f9";
+    private static final String APP_KEY = "1065511513";
+    private static final String CONSUMER_SECRET = "df428e88aae8bd31f20481d149c856ed";
     private static final String DIRECT_URL = "https://api.weibo.com/oauth2/default.html";
-
-    private WebView webView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.oauth);
-        webView = (WebView) findViewById(R.id.webView);
+        WebView webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new WeiboWebViewClient());
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -46,9 +44,7 @@ public class OAuthActivity extends Activity {
         parameters.add("response_type", "token");
         parameters.add("redirect_uri", DIRECT_URL);
         parameters.add("display", "mobile");
-
-        String url= URL_OAUTH2_ACCESS_AUTHORIZE + "?" + Utility.encodeUrl(parameters);
-        return url;
+        return URL_OAUTH2_ACCESS_AUTHORIZE + "?" + Utility.encodeUrl(parameters);
     }
 
     private class WeiboWebViewClient extends WebViewClient {
