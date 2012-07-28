@@ -47,7 +47,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.HomeActivity" />
+        <activity android:name=".ui.MentionsTimeLineActivity" />
         <activity android:name=".example.TestActivity"/>
         <activity android:name=".example.AuthorizeActivity"/>
         <activity android:name=".ui.login.OAuthActivity" android:label="授权"/>
