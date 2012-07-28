@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.ui;
+package org.qii.weiciyuan.ui.login;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.webkit.*;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.weibo.Utility;
