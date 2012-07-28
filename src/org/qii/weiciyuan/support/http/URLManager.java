@@ -15,7 +15,7 @@ import java.util.Properties;
  */
 
 public final class URLManager {
-    private static final String URL_SINA_WEIBO = "https://api.weibo.com";
+    private static final String URL_SINA_WEIBO = "https://api.weibo.com/2/";
     private static final String URL_FORMAT = "http://%s%s";
     private static Properties properties = new Properties();
 

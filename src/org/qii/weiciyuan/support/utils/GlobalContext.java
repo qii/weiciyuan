@@ -9,7 +9,9 @@ import android.app.Application;
  */
 public final class GlobalContext extends Application {
 
-    private static GlobalContext globalContext =null;
+    private static GlobalContext globalContext = null;
+
+    private static String token = "";
 
     @Override
     public void onCreate() {
@@ -19,5 +21,13 @@ public final class GlobalContext extends Application {
 
     public static GlobalContext getInstance() {
         return globalContext;
+    }
+
+    public void setToken(String value) {
+        token = value;
+    }
+
+    public String getToken() {
+        return token;
     }
 }
