@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.*;
 import android.widget.ListView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.TimeLineFriendsMsg;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
@@ -51,7 +52,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.maintimelineactivity_menu, menu);
+        inflater.inflate(R.menu.friendstimelinefragment_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -91,6 +92,8 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
         protected void onPostExecute(List<Map<String, String>> o) {
 
             list.addAll(0, o);
+
+            Toast.makeText(getActivity(),""+list.size(),Toast.LENGTH_SHORT).show();
 
             dialogFragment.dismissAllowingStateLoss();
 

@@ -116,8 +116,7 @@ class TimeLinePagerAdapter extends
         super(fm);
         list.add(new TimeLineFriendsFragment());
         list.add(new TimeLineMentionsFragment());
-        list.add(new TimeLineMentionsFragment());
-        list.add(new TimeLineMentionsFragment());
+
 
     }
 

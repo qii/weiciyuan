@@ -2,9 +2,7 @@ package org.qii.weiciyuan.ui.timeline;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.TimeLineMentionsMsg;
@@ -21,6 +19,12 @@ import java.util.Map;
  */
 public class TimeLineMentionsFragment extends TimeLineAbstractFragment {
 
+
+    @Override
+     public void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);    //To change body of overridden methods use File | Settings | File Templates.
+         setHasOptionsMenu(true);
+     }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -57,6 +61,22 @@ public class TimeLineMentionsFragment extends TimeLineAbstractFragment {
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.mentionstimelinefragment_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.menu_refresh_timeline:
+
+                break;
+        }
+        return true;
+    }
 
 }
 
