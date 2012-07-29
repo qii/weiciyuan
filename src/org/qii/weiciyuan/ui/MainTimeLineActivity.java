@@ -108,10 +108,10 @@ class TimeLinePagerAdapter extends
 
     public TimeLinePagerAdapter(FragmentManager fm) {
         super(fm);
-        list.add(new MentionsFragment());
-        list.add(new MentionsFragment());
-        list.add(new MentionsFragment());
-        list.add(new MentionsFragment());
+        list.add(new TimeLineFriendsFragment());
+        list.add(new TimeLineMentionsFragment());
+        list.add(new TimeLineMentionsFragment());
+        list.add(new TimeLineMentionsFragment());
 
     }
 

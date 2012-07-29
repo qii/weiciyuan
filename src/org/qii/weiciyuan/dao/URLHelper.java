@@ -12,8 +12,8 @@ import org.qii.weiciyuan.support.http.URLManager;
 public class URLHelper {
 
 
-    public static String getHomeLine() {
-        return URLManager.getRealUrl("hometimeline");
+    public static String getFriendsTimeLine() {
+        return URLManager.getRealUrl("friendstimeline");
     }
 
     public static String getMentionsTimeLine(){

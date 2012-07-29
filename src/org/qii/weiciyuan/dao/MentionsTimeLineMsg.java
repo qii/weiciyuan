@@ -5,8 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.weibo.Token;
 
 import java.util.*;
 
@@ -17,16 +15,12 @@ import java.util.*;
  * Time: 下午10:04
  * To change this template use File | Settings | File Templates.
  */
-public class MentionsTimeLineMsg implements TimeLineMsg {
-    @Override
-    public String getMsgs() {
+public class MentionsTimeLineMsg {
+
+    private String getMsgs() {
         String msg = "";
-        Token token = new Token();
-        token.setToken(GlobalContext.getInstance().getToken());
-        token.setExpiresIn(GlobalContext.getInstance().getExpires());
 
         String url = URLHelper.getMentionsTimeLine();
-
 
         Map<String, String> map = new HashMap<String, String>();
 

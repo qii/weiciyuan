@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.dao.MentionsTimeLineMsg;
+import org.qii.weiciyuan.dao.FriendsTimeLineMsg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +20,10 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-7-29
- * Time: 上午12:52
+ * Time: 下午12:03
  * To change this template use File | Settings | File Templates.
  */
-public class MentionsFragment extends Fragment {
+public class TimeLineFriendsFragment extends Fragment {
 
     private ListView listView;
 
@@ -50,7 +50,7 @@ public class MentionsFragment extends Fragment {
             @Override
             protected List<Map<String, String>> doInBackground(Void... params) {
 
-                return new MentionsTimeLineMsg().getMsgList();
+                return new FriendsTimeLineMsg().getMsgList();
 
             }
 
