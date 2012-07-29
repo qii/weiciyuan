@@ -28,7 +28,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);    //To change body of overridden methods use File | Settings | File Templates.
+        super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
@@ -74,7 +74,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
     class TimeLineTask extends AsyncTask<Void, List<Map<String, String>>, List<Map<String, String>>> {
 
-         DialogFragment dialogFragment=ProgressFragment.newInstance();
+        DialogFragment dialogFragment = ProgressFragment.newInstance();
 
         @Override
         protected void onPreExecute() {
@@ -93,7 +93,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
             list.addAll(0, o);
 
-            Toast.makeText(getActivity(),""+list.size(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "" + list.size(), Toast.LENGTH_SHORT).show();
 
             dialogFragment.dismissAllowingStateLoss();
 
@@ -103,7 +103,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
         }
     }
 
-     static class ProgressFragment extends DialogFragment {
+    static class ProgressFragment extends DialogFragment {
 
         public static ProgressFragment newInstance() {
             ProgressFragment frag = new ProgressFragment();
@@ -117,7 +117,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
             ProgressDialog dialog = new ProgressDialog(getActivity());
-             dialog.setMessage("刷新中");
+            dialog.setMessage("刷新中");
             dialog.setIndeterminate(false);
             dialog.setCancelable(true);
 
