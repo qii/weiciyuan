@@ -58,6 +58,7 @@ public abstract class TimeLineAbstractFragment extends Fragment {
             }
 
 
+
             holder.screenName.setText(list.get(position).get("screen_name"));
 
             holder.txt.setText(list.get(position).get("text"));

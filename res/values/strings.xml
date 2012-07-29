@@ -6,4 +6,9 @@
     <!--login-->
     <string name="you_cancel_login">你取消了授权</string>
     <string name="login_success">授权成功</string>
+
+    <!--status new!-->
+    <string name="select">选择</string>
+    <string name="take_camera">拍照</string>
+    <string name="select_pic">图库</string>
 </resources>

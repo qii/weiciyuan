@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.dao.MentionsTimeLineMsg;
+import org.qii.weiciyuan.dao.TimeLineMentionsMsg;
 
 import java.util.List;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class TimeLineMentionsFragment extends TimeLineAbstractFragment {
             @Override
             protected List<Map<String, String>> doInBackground(Void... params) {
 
-                return new MentionsTimeLineMsg().getMsgList();
+                return new TimeLineMentionsMsg().getMsgList();
 
             }
 

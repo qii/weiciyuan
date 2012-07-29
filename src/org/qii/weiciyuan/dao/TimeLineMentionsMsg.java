@@ -15,7 +15,7 @@ import java.util.*;
  * Time: 下午10:04
  * To change this template use File | Settings | File Templates.
  */
-public class MentionsTimeLineMsg {
+public class TimeLineMentionsMsg {
 
     private String getMsgs() {
         String msg = "";

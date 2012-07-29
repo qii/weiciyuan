@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.support.http;
 
 
+import android.util.Log;
 import ch.boye.httpclientandroidlib.HttpEntity;
 import ch.boye.httpclientandroidlib.HttpResponse;
 import ch.boye.httpclientandroidlib.HttpVersion;
@@ -21,6 +22,7 @@ import ch.boye.httpclientandroidlib.protocol.HttpContext;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.qii.weiciyuan.support.debug.Debug;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.IOException;
@@ -135,6 +137,11 @@ public class HttpUtility {
 
 
         }
+
+        if (Debug.debug) {
+            Log.e("HttpUtility",result);
+        }
+
         return result;
     }
 
