@@ -21,7 +21,7 @@ import java.util.List;
  * Date: 12-7-27
  * Time: 下午1:02
  */
-public class MentionsTimeLineActivity extends FragmentActivity {
+public class MainTimeLineActivity extends FragmentActivity {
 
 
     private ViewPager mViewPager;
@@ -43,12 +43,23 @@ public class MentionsTimeLineActivity extends FragmentActivity {
         mViewPager.setAdapter(new TimeLinePagerAdapter(getSupportFragmentManager()));
         mViewPager.setOnPageChangeListener(simpleOnPageChangeListener);
 
-        for (int i = 0; i < 4; i++) {
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setText("Tab " + (i + 1))
-                            .setTabListener(tabListener));
-        }
+
+        actionBar.addTab(actionBar.newTab()
+                .setText("首页")
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText("回复")
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText("评论")
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText("私信")
+                .setTabListener(tabListener));
+
 
         Intent intent = getIntent();
 
@@ -100,6 +111,8 @@ class TimeLinePagerAdapter extends
         list.add(new MentionsFragment());
         list.add(new MentionsFragment());
         list.add(new MentionsFragment());
+        list.add(new MentionsFragment());
+
     }
 
     @Override

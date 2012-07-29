@@ -44,24 +44,24 @@ public class MentionsFragment extends Fragment {
         listView.setAdapter(timeLineAdapter);
 
 
-                new AsyncTask<Void, List<Map<String, String>>, List<Map<String, String>>>() {
+        new AsyncTask<Void, List<Map<String, String>>, List<Map<String, String>>>() {
 
 
-                    @Override
-                    protected List<Map<String, String>> doInBackground(Void... params) {
+            @Override
+            protected List<Map<String, String>> doInBackground(Void... params) {
 
-                        return new MentionsTimeLineMsg().getMsgList();
+                return new MentionsTimeLineMsg().getMsgList();
 
-                    }
+            }
 
-                    @Override
-                    protected void onPostExecute(List<Map<String, String>> o) {
-                        list = o;
-                        timeLineAdapter.notifyDataSetChanged();
+            @Override
+            protected void onPostExecute(List<Map<String, String>> o) {
+                list = o;
+                timeLineAdapter.notifyDataSetChanged();
 
-                        super.onPostExecute(o);
-                    }
-                }.execute();
+                super.onPostExecute(o);
+            }
+        }.execute();
 
         return view;
     }
@@ -70,12 +70,12 @@ public class MentionsFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return list.size();  //To change body of implemented methods use File | Settings | File Templates.
+            return list.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return list.get(position);  //To change body of implemented methods use File | Settings | File Templates.
+            return list.get(position);
         }
 
         @Override

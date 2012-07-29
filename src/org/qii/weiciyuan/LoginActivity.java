@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
-import org.qii.weiciyuan.ui.MentionsTimeLineActivity;
+import org.qii.weiciyuan.ui.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
 import java.util.ArrayList;
@@ -110,7 +110,7 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
         boolean haveUsername = !TextUtils.isEmpty(username);
 
         if (haveToken) {
-            Intent intent = new Intent(LoginActivity.this, MentionsTimeLineActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MainTimeLineActivity.class);
             intent.putExtra("token", token);
             intent.putExtra("expires", expires);
 
@@ -171,7 +171,7 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
 
         editor.commit();
 
-        Intent intent = new Intent(this, MentionsTimeLineActivity.class);
+        Intent intent = new Intent(this, MainTimeLineActivity.class);
         intent.putExtra("token", token);
         intent.putExtra("expires", expires);
 
