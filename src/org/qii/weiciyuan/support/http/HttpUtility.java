@@ -1,7 +1,10 @@
 package org.qii.weiciyuan.support.http;
 
 
-import ch.boye.httpclientandroidlib.*;
+import ch.boye.httpclientandroidlib.HttpEntity;
+import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.HttpVersion;
+import ch.boye.httpclientandroidlib.StatusLine;
 import ch.boye.httpclientandroidlib.client.CookieStore;
 import ch.boye.httpclientandroidlib.client.HttpClient;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
@@ -18,11 +21,10 @@ import ch.boye.httpclientandroidlib.protocol.HttpContext;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -77,9 +79,10 @@ public class HttpUtility {
 
     public String doGet(String url, Map<String, String> param) throws URISyntaxException, IOException {
 
-        List<NameValuePair> qparams = new ArrayList<NameValuePair>();
 
         URIBuilder uriBuilder = new URIBuilder(url);
+
+        uriBuilder.addParameter("access_token", GlobalContext.getInstance().getToken());
 
 
         Set<String> keys = param.keySet();
@@ -88,6 +91,7 @@ public class HttpUtility {
 
             uriBuilder.addParameter(key, param.get(key));
         }
+
 
         httpGet.setURI(uriBuilder.build());
 
@@ -109,17 +113,14 @@ public class HttpUtility {
         StatusLine status = httpResponse.getStatusLine();
         int statusCode = status.getStatusCode();
 
-        String result = "";
 
         if (statusCode != 200) {
-            dealWithError(httpResponse);
+            return dealWithError(httpResponse);
         }
 
 
-        result = readResult(httpResponse);
+        return readResult(httpResponse);
 
-
-        return result;
 
     }
 
@@ -130,7 +131,8 @@ public class HttpUtility {
         try {
             result = EntityUtils.toString(entity);
 
-        } catch (IOException e) {
+        } catch (IOException ignored) {
+
 
         }
         return result;

@@ -7,7 +7,6 @@ import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.weibo.Token;
-import org.qii.weiciyuan.weibo.WeiboParameters;
 
 import java.util.*;
 
@@ -27,21 +26,12 @@ public class MentionsTimeLineMsg implements TimeLineMsg {
         token.setExpiresIn(GlobalContext.getInstance().getExpires());
 
         String url = URLHelper.getMentionsTimeLine();
-        WeiboParameters bundle = new WeiboParameters();
-        bundle.add("access_token", GlobalContext.getInstance().getToken());
-//        try {
-//            msg = Utility.openUrl(GlobalContext.getInstance(), url, "GET", bundle, token);
-
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("access_token", GlobalContext.getInstance().getToken());
-            msg = HttpUtility.getInstance().execute(HttpMethod.Get, url, map);
 
 
+        Map<String, String> map = new HashMap<String, String>();
 
+        msg = HttpUtility.getInstance().execute(HttpMethod.Get, url, map);
 
-//        } catch (WeiboException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
         return msg;
     }
 
