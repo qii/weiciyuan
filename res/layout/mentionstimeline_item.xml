@@ -2,7 +2,8 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+        android:padding="5dp">
 
     <ImageView
             android:layout_width="45dp"
@@ -38,6 +39,7 @@
             android:layout_toRightOf="@id/pic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="来源"
             android:layout_alignParentBottom="true"
             android:layout_alignLeft="@id/content"
