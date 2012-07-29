@@ -129,6 +129,7 @@ public class StatusNewActivity extends Activity {
 
 //                imv = (ImageView) findViewById(R.id.ReturnedImageView);
 //                imv.setImageBitmap(bmp);
+
         }
     }
 
