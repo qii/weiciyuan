@@ -4,11 +4,17 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: Jiang Qi
@@ -82,4 +88,29 @@ public class MentionsTimeLineActivity extends FragmentActivity {
                                     FragmentTransaction ft) {
         }
     };
+}
+
+class TimeLinePagerAdapter extends
+        FragmentStatePagerAdapter {
+
+    List<Fragment> list = new ArrayList<Fragment>();
+
+    public TimeLinePagerAdapter(FragmentManager fm) {
+        super(fm);
+        list.add(new MentionsFragment());
+        list.add(new MentionsFragment());
+        list.add(new MentionsFragment());
+    }
+
+    @Override
+    public Fragment getItem(int i) {
+
+        return list.get(i);
+    }
+
+    @Override
+    public int getCount() {
+        return list.size();
+    }
+
 }
