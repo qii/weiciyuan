@@ -2,18 +2,17 @@ package org.qii.weiciyuan.support.http;
 
 
 import android.util.Log;
-import ch.boye.httpclientandroidlib.HttpEntity;
-import ch.boye.httpclientandroidlib.HttpResponse;
-import ch.boye.httpclientandroidlib.HttpVersion;
-import ch.boye.httpclientandroidlib.StatusLine;
+import ch.boye.httpclientandroidlib.*;
 import ch.boye.httpclientandroidlib.client.CookieStore;
 import ch.boye.httpclientandroidlib.client.HttpClient;
+import ch.boye.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
 import ch.boye.httpclientandroidlib.client.methods.HttpPost;
 import ch.boye.httpclientandroidlib.client.protocol.ClientContext;
 import ch.boye.httpclientandroidlib.client.utils.URIBuilder;
 import ch.boye.httpclientandroidlib.impl.client.BasicCookieStore;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
+import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
 import ch.boye.httpclientandroidlib.params.CoreProtocolPNames;
 import ch.boye.httpclientandroidlib.params.HttpParams;
@@ -26,7 +25,10 @@ import org.qii.weiciyuan.support.debug.Debug;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -75,8 +77,34 @@ public class HttpUtility {
 
     public String doPost(String url, Map<String, String> param) {
 
+        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 
-        return "";
+        formparams.add(new BasicNameValuePair("access_token", GlobalContext.getInstance().getToken()));
+
+        Set<String> keys = param.keySet();
+        for (String key : keys) {
+            formparams.add(new BasicNameValuePair(key, param.get(key)));
+
+        }
+
+
+        UrlEncodedFormEntity entity = null;
+        try {
+            entity = new UrlEncodedFormEntity(formparams, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+
+        }
+        HttpPost httppost = new HttpPost(url);
+        httppost.setEntity(entity);
+
+        HttpResponse response = null;
+        try {
+            response = httpclient.execute(httppost);
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return dealWithResponse(response);
     }
 
     public String doGet(String url, Map<String, String> param) throws URISyntaxException, IOException {
@@ -139,7 +167,7 @@ public class HttpUtility {
         }
 
         if (Debug.debug) {
-            Log.e("HttpUtility",result);
+            Log.e("HttpUtility", result);
         }
 
         return result;
