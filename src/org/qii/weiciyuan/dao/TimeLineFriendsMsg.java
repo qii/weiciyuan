@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.dao;
 
+import android.util.Log;
 import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,6 +70,8 @@ public class TimeLineFriendsMsg {
 
     public TimeLineMsgList getGSONMsgList() {
         Gson gson = new Gson();
+        Log.e("gson","------------------------------");
+        Log.e("gson",getMsgs());
 
         TimeLineMsgList value = gson.fromJson(getMsgs(), TimeLineMsgList.class);
 

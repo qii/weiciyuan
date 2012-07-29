@@ -1,5 +1,8 @@
 package org.qii.weiciyuan.domain;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created with IntelliJ IDEA.
  * User: qii
@@ -9,7 +12,11 @@ package org.qii.weiciyuan.domain;
  */
 public class WeiboMsg {
     public String getCreated_at() {
-        return created_at;
+
+        SimpleDateFormat format = new SimpleDateFormat("kk:mm");
+        return format.format(new Date(created_at));
+
+//        return created_at;
     }
 
     public void setCreated_at(String created_at) {
@@ -127,6 +134,7 @@ public class WeiboMsg {
     public void setUser(WeiboUser user) {
         this.user = user;
     }
+
 
     private String created_at;
     private String id;
