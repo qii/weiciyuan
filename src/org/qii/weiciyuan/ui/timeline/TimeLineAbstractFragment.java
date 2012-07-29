@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.ui;
+package org.qii.weiciyuan.ui.timeline;
 
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;

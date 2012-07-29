@@ -12,6 +12,8 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.timeline.TimeLineFriendsFragment;
+import org.qii.weiciyuan.ui.timeline.TimeLineMentionsFragment;
 
 import java.util.ArrayList;
 import java.util.List;

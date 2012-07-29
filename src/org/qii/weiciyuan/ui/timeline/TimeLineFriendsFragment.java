@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.ui;
+package org.qii.weiciyuan.ui.timeline;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.dao.MentionsTimeLineMsg;
+import org.qii.weiciyuan.dao.FriendsTimeLineMsg;
 
 import java.util.List;
 import java.util.Map;
@@ -16,11 +16,10 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-7-29
- * Time: 上午12:52
+ * Time: 下午12:03
  * To change this template use File | Settings | File Templates.
  */
-public class TimeLineMentionsFragment extends TimeLineAbstractFragment {
-
+public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -41,7 +40,7 @@ public class TimeLineMentionsFragment extends TimeLineAbstractFragment {
             @Override
             protected List<Map<String, String>> doInBackground(Void... params) {
 
-                return new MentionsTimeLineMsg().getMsgList();
+                return new FriendsTimeLineMsg().getMsgList();
 
             }
 
@@ -56,7 +55,6 @@ public class TimeLineMentionsFragment extends TimeLineAbstractFragment {
 
         return view;
     }
-
 
 }
 
