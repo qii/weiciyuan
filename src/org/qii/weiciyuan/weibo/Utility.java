@@ -20,16 +20,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnRouteParams;
@@ -37,7 +34,6 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -205,36 +201,36 @@ public class Utility {
             HttpClient client = getNewHttpClient(context);
             HttpUriRequest request = null;
             ByteArrayOutputStream bos = null;
-            if (method.equals("GET")) {
+//            if (method.equals("GET")) {
                 url = url + "?" + encodeUrl(params);
                 HttpGet get = new HttpGet(url);
                 request = get;
-            } else if (method.equals("POST")) {
-                HttpPost post = new HttpPost(url);
-                byte[] data = null;
-                bos = new ByteArrayOutputStream(1024 * 50);
-                if (!TextUtils.isEmpty(file)) {
-                    Utility.paramToUpload(bos, params);
-                    post.setHeader("Content-Type", MULTIPART_FORM_DATA + "; boundary=" + BOUNDARY);
-                    Bitmap bf = BitmapFactory.decodeFile(file);
-
-                    Utility.imageContentToUpload(bos, bf);
-
-                } else {
-                    post.setHeader("Content-Type", "application/x-www-form-urlencoded");
-                    String postParam = encodeParameters(params);
-                    data = postParam.getBytes("UTF-8");
-                    bos.write(data);
-                }
-                data = bos.toByteArray();
-                bos.close();
-                // UrlEncodedFormEntity entity = getPostParamters(params);
-                ByteArrayEntity formEntity = new ByteArrayEntity(data);
-                post.setEntity(formEntity);
-                request = post;
-            } else if (method.equals("DELETE")) {
-                request = new HttpDelete(url);
-            }
+//            } else if (method.equals("POST")) {
+//                HttpPost post = new HttpPost(url);
+//                byte[] data = null;
+//                bos = new ByteArrayOutputStream(1024 * 50);
+//                if (!TextUtils.isEmpty(file)) {
+//                    Utility.paramToUpload(bos, params);
+//                    post.setHeader("Content-Type", MULTIPART_FORM_DATA + "; boundary=" + BOUNDARY);
+//                    Bitmap bf = BitmapFactory.decodeFile(file);
+//
+//                    Utility.imageContentToUpload(bos, bf);
+//
+//                } else {
+//                    post.setHeader("Content-Type", "application/x-www-form-urlencoded");
+//                    String postParam = encodeParameters(params);
+//                    data = postParam.getBytes("UTF-8");
+//                    bos.write(data);
+//                }
+//                data = bos.toByteArray();
+//                bos.close();
+//                // UrlEncodedFormEntity entity = getPostParamters(params);
+//                ByteArrayEntity formEntity = new ByteArrayEntity(data);
+//                post.setEntity(formEntity);
+//                request = post;
+//            } else if (method.equals("DELETE")) {
+//                request = new HttpDelete(url);
+//            }
             setHeader(method, request, params, url, token);
             HttpResponse response = client.execute(request);
             StatusLine status = response.getStatusLine();

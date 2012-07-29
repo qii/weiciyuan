@@ -1,24 +1,30 @@
 package org.qii.weiciyuan.support.http;
 
 
-import ch.boye.httpclientandroidlib.HttpVersion;
-import ch.boye.httpclientandroidlib.NameValuePair;
+import ch.boye.httpclientandroidlib.*;
+import ch.boye.httpclientandroidlib.client.CookieStore;
 import ch.boye.httpclientandroidlib.client.HttpClient;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
 import ch.boye.httpclientandroidlib.client.methods.HttpPost;
-import ch.boye.httpclientandroidlib.client.utils.URIUtils;
-import ch.boye.httpclientandroidlib.client.utils.URLEncodedUtils;
+import ch.boye.httpclientandroidlib.client.protocol.ClientContext;
+import ch.boye.httpclientandroidlib.client.utils.URIBuilder;
+import ch.boye.httpclientandroidlib.impl.client.BasicCookieStore;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
-import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
 import ch.boye.httpclientandroidlib.params.CoreProtocolPNames;
 import ch.boye.httpclientandroidlib.params.HttpParams;
+import ch.boye.httpclientandroidlib.protocol.BasicHttpContext;
+import ch.boye.httpclientandroidlib.protocol.HttpContext;
+import ch.boye.httpclientandroidlib.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.net.URI;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -56,7 +62,7 @@ public class HttpUtility {
             case Get:
                 try {
                     return doGet(url, param);
-                } catch (URISyntaxException e) {
+                } catch (Exception e) {
 
                 }
         }
@@ -64,21 +70,103 @@ public class HttpUtility {
     }
 
     public String doPost(String url, Map<String, String> param) {
+
+
         return "";
     }
 
-    public String doGet(String url, Map<String, String> param) throws URISyntaxException {
+    public String doGet(String url, Map<String, String> param) throws URISyntaxException, IOException {
 
         List<NameValuePair> qparams = new ArrayList<NameValuePair>();
-        qparams.add(new BasicNameValuePair("q", "httpclient"));
-        qparams.add(new BasicNameValuePair("btnG", "Google Search"));
-        qparams.add(new BasicNameValuePair("aq", "f"));
-        qparams.add(new BasicNameValuePair("oq", null));
-        URI uri = URIUtils.createURI("http", "www.google.com", -1, "/search",
-                URLEncodedUtils.format(qparams, "UTF-8"), null);
-        httpGet.setURI(uri);
 
-        return "";
+        URIBuilder uriBuilder = new URIBuilder(url);
+
+
+        Set<String> keys = param.keySet();
+
+        for (String key : keys) {
+
+            uriBuilder.addParameter(key, param.get(key));
+        }
+
+        httpGet.setURI(uriBuilder.build());
+
+        CookieStore cookieStore = new BasicCookieStore();
+
+        HttpContext localContext = new BasicHttpContext();
+        localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+
+
+        HttpResponse response = httpclient.execute(httpGet, localContext);
+
+        return dealWithResponse(response);
+
+    }
+
+    private String dealWithResponse(HttpResponse httpResponse) {
+
+
+        StatusLine status = httpResponse.getStatusLine();
+        int statusCode = status.getStatusCode();
+
+        String result = "";
+
+        if (statusCode != 200) {
+            dealWithError(httpResponse);
+        }
+
+
+        result = readResult(httpResponse);
+
+
+        return result;
+
+    }
+
+    private String readResult(HttpResponse response) {
+        HttpEntity entity = response.getEntity();
+        String result = "";
+
+        try {
+            result = EntityUtils.toString(entity);
+
+        } catch (IOException e) {
+
+        }
+        return result;
+    }
+
+    private String dealWithError(HttpResponse httpResponse) {
+
+        StatusLine status = httpResponse.getStatusLine();
+        int statusCode = status.getStatusCode();
+
+        String result = "";
+
+        if (statusCode != 200) {
+
+            result = readResult(httpResponse);
+            String err = null;
+            int errCode = 0;
+            try {
+                JSONObject json = new JSONObject(result);
+                err = json.getString("error");
+                errCode = json.getInt("error_code");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return result;
+    }
+
+
+    private void dealCookie() {
+//        List<Cookie> cookies = cookieStore.getCookies();
+//              for (int i = 0; i < cookies.size(); i++) {
+//                  System.out.println("Local cookie: " + cookies.get(i));
+//              }
     }
 }
 
