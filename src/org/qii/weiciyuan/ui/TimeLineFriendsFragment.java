@@ -2,17 +2,13 @@ package org.qii.weiciyuan.ui;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.FriendsTimeLineMsg;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,13 +19,7 @@ import java.util.Map;
  * Time: 下午12:03
  * To change this template use File | Settings | File Templates.
  */
-public class TimeLineFriendsFragment extends Fragment {
-
-    private ListView listView;
-
-    private List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-
-    private TimeLineAdapter timeLineAdapter;
+public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -66,40 +56,5 @@ public class TimeLineFriendsFragment extends Fragment {
         return view;
     }
 
-    private class TimeLineAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-
-            View view = inflater.inflate(R.layout.mentionstimeline_item, parent, false);
-
-            TextView screenName = (TextView) view.findViewById(R.id.username);
-            TextView txt = (TextView) view.findViewById(R.id.content);
-
-            screenName.setText(list.get(position).get("screen_name"));
-
-            txt.setText(list.get(position).get("text"));
-
-            return view;
-
-        }
-    }
 }
 
