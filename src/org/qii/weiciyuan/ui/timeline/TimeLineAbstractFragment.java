@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
@@ -55,6 +56,7 @@ public abstract class TimeLineAbstractFragment extends Fragment {
                 convertView = inflater.inflate(R.layout.mentionstimeline_item, parent, false);
                 holder.screenName = (TextView) convertView.findViewById(R.id.username);
                 holder.txt = (TextView) convertView.findViewById(R.id.content);
+                holder.pic = (ImageView) convertView.findViewById(R.id.pic);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -66,6 +68,8 @@ public abstract class TimeLineAbstractFragment extends Fragment {
 
             holder.txt.setText(map.get("text"));
 
+            holder.pic.setImageDrawable(getResources().getDrawable(R.drawable.app));
+
             return convertView;
 
         }
@@ -74,6 +78,6 @@ public abstract class TimeLineAbstractFragment extends Fragment {
     static class ViewHolder {
         TextView screenName;
         TextView txt;
-
+        ImageView pic;
     }
 }
