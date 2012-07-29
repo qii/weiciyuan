@@ -2,6 +2,7 @@ package org.qii.weiciyuan.dao;
 
 import android.util.Log;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,10 +71,15 @@ public class TimeLineFriendsMsg {
 
     public TimeLineMsgList getGSONMsgList() {
         Gson gson = new Gson();
-        Log.e("gson","------------------------------");
-        Log.e("gson",getMsgs());
 
-        TimeLineMsgList value = gson.fromJson(getMsgs(), TimeLineMsgList.class);
+
+        TimeLineMsgList value = null;
+        try {
+            value = gson.fromJson(getMsgs(), TimeLineMsgList.class);
+        } catch (JsonSyntaxException e) {
+            Log.e("gson", "------------------------------");
+            Log.e("gson", getMsgs());
+        }
 
         return value;
     }
