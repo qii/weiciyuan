@@ -1,12 +1,15 @@
 package org.qii.weiciyuan.ui.timeline;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.*;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
@@ -30,6 +33,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -43,11 +47,17 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
         listView = (ListView) view.findViewById(R.id.listView);
         timeLineAdapter = new TimeLineAdapter();
         listView.setAdapter(timeLineAdapter);
-
+        listView.setOnItemLongClickListener(onItemLongClickListener);
 
         new TimeLineTask().execute();
 
         return view;
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        return super.onContextItemSelected(item);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     @Override
@@ -70,6 +80,70 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
                 break;
         }
         return true;
+    }
+
+    AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            view.setSelected(true);
+            MyAlertDialogFragment.newInstance().setView(view).show(getFragmentManager(), "");
+
+            return true;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+    };
+
+    static class MyAlertDialogFragment extends DialogFragment {
+
+        View view;
+
+        public static MyAlertDialogFragment newInstance() {
+            MyAlertDialogFragment frag = new MyAlertDialogFragment();
+            frag.setRetainInstance(true);
+            Bundle args = new Bundle();
+            frag.setArguments(args);
+            return frag;
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            view.setSelected(false);
+        }
+
+        public MyAlertDialogFragment setView(View view) {
+            this.view = view;
+            return this;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            String[] items = {getString(R.string.take_camera), getString(R.string.select_pic)};
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                    .setTitle(getString(R.string.select))
+                    .setItems(items, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            switch (which) {
+                                case 0:
+
+                                    break;
+                                case 1:
+
+                                    break;
+                            }
+
+
+
+                        }
+                    });
+
+
+            return builder.create();
+        }
     }
 
     class TimeLineTask extends AsyncTask<Void, List<Map<String, String>>, List<Map<String, String>>> {
