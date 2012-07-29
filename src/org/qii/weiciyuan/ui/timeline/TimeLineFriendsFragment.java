@@ -14,10 +14,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.TimeLineFriendsMsg;
+import org.qii.weiciyuan.domain.TimeLineMsgList;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -137,7 +135,6 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
                             }
 
 
-
                         }
                     });
 
@@ -146,7 +143,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
         }
     }
 
-    class TimeLineTask extends AsyncTask<Void, List<Map<String, String>>, List<Map<String, String>>> {
+    class TimeLineTask extends AsyncTask<Void, TimeLineMsgList, TimeLineMsgList> {
 
         DialogFragment dialogFragment = ProgressFragment.newInstance();
 
@@ -156,18 +153,17 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
         }
 
         @Override
-        protected List<Map<String, String>> doInBackground(Void... params) {
-
-            return new TimeLineFriendsMsg().getMsgList();
+        protected TimeLineMsgList doInBackground(Void... params) {
+            return new TimeLineFriendsMsg().getGSONMsgList();
 
         }
 
         @Override
-        protected void onPostExecute(List<Map<String, String>> o) {
+        protected void onPostExecute(TimeLineMsgList o) {
 
-            list.addAll(0, o);
+            list = o;
 
-            Toast.makeText(getActivity(), "" + list.size(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "" + list.getStatuses().size(), Toast.LENGTH_SHORT).show();
 
             dialogFragment.dismissAllowingStateLoss();
 

@@ -1,14 +1,9 @@
 package org.qii.weiciyuan.ui.timeline;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.dao.TimeLineMentionsMsg;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,24 +34,24 @@ public class TimeLineMentionsFragment extends TimeLineAbstractFragment {
         listView.setAdapter(timeLineAdapter);
 
 
-        new AsyncTask<Void, List<Map<String, String>>, List<Map<String, String>>>() {
-
-
-            @Override
-            protected List<Map<String, String>> doInBackground(Void... params) {
-
-                return new TimeLineMentionsMsg().getMsgList();
-
-            }
-
-            @Override
-            protected void onPostExecute(List<Map<String, String>> o) {
-                list = o;
-                timeLineAdapter.notifyDataSetChanged();
-
-                super.onPostExecute(o);
-            }
-        }.execute();
+//        new AsyncTask<Void, List<Map<String, String>>, List<Map<String, String>>>() {
+//
+//
+//            @Override
+//            protected List<Map<String, String>> doInBackground(Void... params) {
+//
+//                return new TimeLineMentionsMsg().getMsgList();
+//
+//            }
+//
+//            @Override
+//            protected void onPostExecute(List<Map<String, String>> o) {
+//                list = o;
+//                timeLineAdapter.notifyDataSetChanged();
+//
+//                super.onPostExecute(o);
+//            }
+//        }.execute();
 
         return view;
     }

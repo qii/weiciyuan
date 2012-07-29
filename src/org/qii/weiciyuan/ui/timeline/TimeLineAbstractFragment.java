@@ -9,10 +9,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.qii.weiciyuan.domain.TimeLineMsgList;
+import org.qii.weiciyuan.domain.WeiboMsg;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,7 +21,7 @@ import java.util.Map;
  */
 public abstract class TimeLineAbstractFragment extends Fragment {
     protected ListView listView;
-    protected List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+    protected TimeLineMsgList list = new TimeLineMsgList();
     protected TimeLineAdapter timeLineAdapter;
 
     protected class TimeLineAdapter extends BaseAdapter {
@@ -32,12 +30,18 @@ public abstract class TimeLineAbstractFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return list.size();
+
+            if (list.getStatuses() != null) {
+
+                return list.getStatuses().size();
+            } else {
+                return 0;
+            }
         }
 
         @Override
         public Object getItem(int position) {
-            return list.get(position);
+            return list.getStatuses().get(position);
         }
 
         @Override
@@ -60,13 +64,13 @@ public abstract class TimeLineAbstractFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            Map<String, String> map = list.get(position);
+            WeiboMsg msg = list.getStatuses().get(position);
 
-            holder.screenName.setText(map.get("screen_name"));
+            holder.screenName.setText(msg.getUser().getScreen_name());
 
-            holder.txt.setText(map.get("text"));
+            holder.txt.setText(msg.getText());
 
-            holder.time.setText("" + position);
+            holder.time.setText(msg.getCreated_at());
 
             holder.pic.setImageDrawable(getResources().getDrawable(R.drawable.app));
 
