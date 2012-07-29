@@ -27,10 +27,8 @@ public abstract class TimeLineAbstractFragment extends Fragment {
     protected TimeLineAdapter timeLineAdapter;
 
     protected class TimeLineAdapter extends BaseAdapter {
-        ViewHolder holder = new ViewHolder();
-        LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        Map<String, String> map;
+        LayoutInflater inflater = getActivity().getLayoutInflater();
 
         @Override
         public int getCount() {
@@ -49,24 +47,26 @@ public abstract class TimeLineAbstractFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
-
+            ViewHolder holder = new ViewHolder();
             if (convertView == null) {
 
                 convertView = inflater.inflate(R.layout.mentionstimeline_item, parent, false);
                 holder.screenName = (TextView) convertView.findViewById(R.id.username);
                 holder.txt = (TextView) convertView.findViewById(R.id.content);
+                holder.time = (TextView) convertView.findViewById(R.id.time);
                 holder.pic = (ImageView) convertView.findViewById(R.id.pic);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            map = list.get(position);
+            Map<String, String> map = list.get(position);
 
             holder.screenName.setText(map.get("screen_name"));
 
             holder.txt.setText(map.get("text"));
+
+            holder.time.setText("" + position);
 
             holder.pic.setImageDrawable(getResources().getDrawable(R.drawable.app));
 
@@ -78,6 +78,7 @@ public abstract class TimeLineAbstractFragment extends Fragment {
     static class ViewHolder {
         TextView screenName;
         TextView txt;
+        TextView time;
         ImageView pic;
     }
 }

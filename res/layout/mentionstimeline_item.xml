@@ -10,7 +10,8 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/app"
-            android:id="@+id/pic" android:layout_gravity="left|center_vertical"/>
+            android:id="@+id/pic" android:layout_gravity="left|center_vertical"
+            android:layout_marginRight="5dp"/>
 
     <TextView
             android:layout_width="wrap_content"
