@@ -28,6 +28,10 @@ public abstract class TimeLineAbstractFragment extends Fragment {
     public void setToken(String token){
         this.token=token;
     }
+
+    public   void refresh(){
+
+    };
     
     protected class TimeLineAdapter extends BaseAdapter {
 

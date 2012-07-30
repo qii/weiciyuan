@@ -32,7 +32,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
-        new TimeLineTask().execute();
+
     }
 
     @Override
@@ -47,12 +47,20 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
         timeLineAdapter = new TimeLineAdapter();
         listView.setAdapter(timeLineAdapter);
         listView.setOnItemLongClickListener(onItemLongClickListener);
-
-
+        new TimeLineTask().execute();
 
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();    //To change body of overridden methods use File | Settings | File Templates.
+    }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
@@ -80,6 +88,11 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void refresh() {
+
     }
 
     AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {

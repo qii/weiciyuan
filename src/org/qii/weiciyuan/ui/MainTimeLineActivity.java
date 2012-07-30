@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.TimeLineMsgList;
 import org.qii.weiciyuan.ui.timeline.*;
 
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ public class MainTimeLineActivity extends FragmentActivity {
     private String token;
 
     private String screen_name;
+
+    private TimeLineMsgList homeList = new TimeLineMsgList();
 
 
     @Override
@@ -54,9 +57,9 @@ public class MainTimeLineActivity extends FragmentActivity {
 
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mViewPager.setAdapter(new TimeLinePagerAdapter(getSupportFragmentManager()));
+        TimeLinePagerAdapter timeLinePagerAdapter = new TimeLinePagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(timeLinePagerAdapter);
         mViewPager.setOnPageChangeListener(simpleOnPageChangeListener);
-
 
         actionBar.addTab(actionBar.newTab()
                 .setText("首页")
@@ -78,7 +81,7 @@ public class MainTimeLineActivity extends FragmentActivity {
                 .setText("资料")
                 .setTabListener(tabListener));
 
-
+        ((TimeLineAbstractFragment) timeLinePagerAdapter.getItem(0)).refresh();
     }
 
     @Override
