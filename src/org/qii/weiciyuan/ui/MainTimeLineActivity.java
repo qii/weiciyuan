@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Menu;
-import android.view.MenuInflater;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
 import org.qii.weiciyuan.ui.timeline.*;
@@ -93,12 +92,7 @@ public class MainTimeLineActivity extends FragmentActivity {
         ((TimeLineAbstractFragment) timeLinePagerAdapter.getItem(0)).refresh();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.maintimelineactivity_menu, menu);
-        return true;
-    }
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
