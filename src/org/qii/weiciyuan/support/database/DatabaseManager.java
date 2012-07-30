@@ -3,7 +3,7 @@ package org.qii.weiciyuan.support.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import org.qii.weiciyuan.dao.WeiboAccount;
+import org.qii.weiciyuan.bean.WeiboAccount;
 import org.qii.weiciyuan.support.database.table.AccountTable;
 
 import java.util.ArrayList;

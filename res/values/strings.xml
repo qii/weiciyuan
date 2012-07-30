@@ -3,7 +3,7 @@
     <string name="app_name">微次元</string>
 
 
-    <!--login-->
+    <!--accountactivity_layout-->
     <string name="you_cancel_login">你取消了授权</string>
     <string name="login_success">授权成功</string>
 

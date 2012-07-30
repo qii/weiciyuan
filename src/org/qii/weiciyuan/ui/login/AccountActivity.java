@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.dao.WeiboAccount;
+import org.qii.weiciyuan.bean.WeiboAccount;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.ui.MainTimeLineActivity;
 
@@ -37,7 +37,7 @@ public class AccountActivity extends Activity implements AdapterView.OnItemClick
         //jumpToHomeLine();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        setContentView(R.layout.accountactivity_layout);
 
         listAdapter = new AccountAdapter();
         listView = (ListView) findViewById(R.id.listView);
@@ -87,7 +87,7 @@ public class AccountActivity extends Activity implements AdapterView.OnItemClick
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.login_menu, menu);
+            inflater.inflate(R.menu.accountactivity_menu_contextual, menu);
             return true;
         }
 
@@ -130,7 +130,7 @@ public class AccountActivity extends Activity implements AdapterView.OnItemClick
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.login, menu);
+        inflater.inflate(R.menu.accountactivity_menu_main, menu);
         return true;
     }
 
@@ -197,7 +197,7 @@ public class AccountActivity extends Activity implements AdapterView.OnItemClick
 
             LayoutInflater layoutInflater = getLayoutInflater();
 
-            View mView = layoutInflater.inflate(R.layout.account_item, viewGroup, false);
+            View mView = layoutInflater.inflate(R.layout.accountactivity_listview_item_layout, viewGroup, false);
             if (needCheckbox) {
                 LinearLayout linearLayout = (LinearLayout) mView;
 

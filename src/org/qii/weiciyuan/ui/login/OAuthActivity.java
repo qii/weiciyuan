@@ -15,7 +15,7 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.OAuthDao;
-import org.qii.weiciyuan.dao.WeiboAccount;
+import org.qii.weiciyuan.bean.WeiboAccount;
 import org.qii.weiciyuan.bean.WeiboUser;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.weibo.Utility;
@@ -41,7 +41,7 @@ public class OAuthActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.oauth);
+        setContentView(R.layout.oauthactivity_layout);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         webView = (WebView) findViewById(R.id.webView);
@@ -59,7 +59,7 @@ public class OAuthActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.oauth_refresh, menu);
+        inflater.inflate(R.menu.oauthactivity_menu, menu);
         return true;
     }
 

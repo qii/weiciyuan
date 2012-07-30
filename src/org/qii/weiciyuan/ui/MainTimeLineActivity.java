@@ -37,7 +37,7 @@ public class MainTimeLineActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.timeline_viewpage);
+        setContentView(R.layout.maintimelineactivity_viewpager_layout);
 
         final ActionBar actionBar = getActionBar();
 

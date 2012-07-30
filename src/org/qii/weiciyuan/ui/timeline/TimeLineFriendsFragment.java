@@ -41,7 +41,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
         Bundle args = getArguments();
 
-        View view = inflater.inflate(R.layout.timeline, container, false);
+        View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
         listView = (ListView) view.findViewById(R.id.listView);
         timeLineAdapter = new TimeLineAdapter();
         listView.setAdapter(timeLineAdapter);
@@ -165,11 +165,11 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
                 Toast.makeText(getActivity(), "" + list.getStatuses().size(), Toast.LENGTH_SHORT).show();
 
-                dialogFragment.dismissAllowingStateLoss();
 
                 timeLineAdapter.notifyDataSetChanged();
 
             }
+            dialogFragment.dismissAllowingStateLoss();
             super.onPostExecute(o);
         }
     }

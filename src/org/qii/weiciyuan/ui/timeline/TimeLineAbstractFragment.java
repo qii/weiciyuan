@@ -59,7 +59,7 @@ public abstract class TimeLineAbstractFragment extends Fragment {
             ViewHolder holder = new ViewHolder();
             if (convertView == null) {
 
-                convertView = inflater.inflate(R.layout.mentionstimeline_item, parent, false);
+                convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
                 holder.screenName = (TextView) convertView.findViewById(R.id.username);
                 holder.txt = (TextView) convertView.findViewById(R.id.content);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
