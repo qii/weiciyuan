@@ -59,17 +59,6 @@ public class DatabaseManager {
     }
 
 
-    public long updateAccount(WeiboAccount account) {
-
-        ContentValues cv = new ContentValues();
-        cv.put(AccountTable.ID, account.getUid());
-        cv.put(AccountTable.OAUTH_TOKEN, account.getAccess_token());
-        long result = wsd.insert(AccountTable.TABLE_NAME,
-                AccountTable.ID, cv);
-
-        return result;
-    }
-
     public List<WeiboAccount> getAccountList() {
         List<WeiboAccount> weiboAccountList = new ArrayList<WeiboAccount>();
         String sql = "select * from " + AccountTable.TABLE_NAME;
@@ -86,6 +75,12 @@ public class DatabaseManager {
         }
 
         return weiboAccountList;
+    }
+
+    public void removeAccount(String uid) {
+        String[] args = {uid};
+        String column = AccountTable.ID;
+        wsd.delete(AccountTable.TABLE_NAME, column + "=?", args);
     }
 
 }

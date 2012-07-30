@@ -39,7 +39,17 @@ public class MainTimeLineActivity extends FragmentActivity {
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        actionBar.setTitle("叛逆的心之所在");
+
+        Intent intent = getIntent();
+
+        String token = intent.getStringExtra("token");
+        String username = intent.getStringExtra("screen_name");
+
+        if (!TextUtils.isEmpty(username))
+            actionBar.setTitle(username);
+
+        GlobalContext.getInstance().setToken(token);
+
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(new TimeLinePagerAdapter(getSupportFragmentManager()));
@@ -61,19 +71,6 @@ public class MainTimeLineActivity extends FragmentActivity {
         actionBar.addTab(actionBar.newTab()
                 .setText("私信")
                 .setTabListener(tabListener));
-
-
-        Intent intent = getIntent();
-
-        String token = intent.getStringExtra("token");
-        String expires = intent.getStringExtra("expires");
-        String username = intent.getStringExtra("username");
-
-        if (TextUtils.isEmpty(username))
-            setTitle(username);
-
-        GlobalContext.getInstance().setToken(token);
-        GlobalContext.getInstance().setExpires(expires);
 
 
     }

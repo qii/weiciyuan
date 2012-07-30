@@ -163,6 +163,7 @@ public class AccountActivity extends Activity implements AdapterView.OnItemClick
 
         Intent intent = new Intent(this, MainTimeLineActivity.class);
         intent.putExtra("token", token);
+        intent.putExtra("screen_name",weiboAccountList.get(i).getUsernick());
 
         startActivity(intent);
 
