@@ -19,7 +19,6 @@ package org.qii.weiciyuan.weibo;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.Random;
 
 /**
  * Encapsulation a abstract weibo http headers base class.
@@ -35,24 +34,24 @@ public abstract class HttpHeaderFactory {
     public HttpHeaderFactory() {
     }
 
-    public String getWeiboAuthHeader(String method, String url, WeiboParameters params,
-            String app_key, String app_secret, Token token) throws WeiboException {
-        // step 1: generate timestamp and nonce
-        final long timestamp = System.currentTimeMillis() / 1000;
-        final long nonce = timestamp + (new Random()).nextInt();
-        // step 2: authParams有两个用处：1.加密串一部分 2.生成最后Authorization头域
-        WeiboParameters authParams = this.generateAuthParameters(nonce, timestamp, token);
-        // 生成用于计算signature的，参数串
-        WeiboParameters signatureParams = this.generateSignatureParameters(authParams, params, url);
-        // step 3: 生成用于签名的base String
-        String oauthBaseString = this.generateAuthSignature(method, signatureParams, url, token);
-        // step 4: 生成oauth_signature
-        String signature = generateSignature(oauthBaseString, token);
-        authParams.add("oauth_signature", signature);
-        // step 5: for additional parameters
-        this.addAdditionalParams(authParams, params);
-        return "OAuth " + encodeParameters(authParams, ",", true);
-    }
+//    public String getWeiboAuthHeader(String method, String url, WeiboParameters params,
+//            String app_key, String app_secret, Token token) throws WeiboException {
+//        // step 1: generate timestamp and nonce
+//        final long timestamp = System.currentTimeMillis() / 1000;
+//        final long nonce = timestamp + (new Random()).nextInt();
+//        // step 2: authParams有两个用处：1.加密串一部分 2.生成最后Authorization头域
+//        WeiboParameters authParams = this.generateAuthParameters(nonce, timestamp, token);
+//        // 生成用于计算signature的，参数串
+//        WeiboParameters signatureParams = this.generateSignatureParameters(authParams, params, url);
+//        // step 3: 生成用于签名的base String
+//        String oauthBaseString = this.generateAuthSignature(method, signatureParams, url, token);
+//        // step 4: 生成oauth_signature
+//        String signature = generateSignature(oauthBaseString, token);
+//        authParams.add("oauth_signature", signature);
+//        // step 5: for additional parameters
+//        this.addAdditionalParams(authParams, params);
+//        return "OAuth " + encodeParameters(authParams, ",", true);
+//    }
 
     private String generateAuthSignature(final String method, WeiboParameters signatureParams,
             final String url, Token token) {
@@ -63,31 +62,31 @@ public abstract class HttpHeaderFactory {
         return oauthBaseString;
     }
 
-    private WeiboParameters generateSignatureParameters(WeiboParameters authParams,
-            WeiboParameters params, String url) throws WeiboException {
-        WeiboParameters signatureParams = new WeiboParameters();
-        signatureParams.addAll(authParams);
-        signatureParams.add("source", Weibo.getAppKey());
-        signatureParams.addAll(params);
-        this.parseUrlParameters(url, signatureParams);
-        WeiboParameters lsp = generateSignatureList(signatureParams);
-        return lsp;
-    }
+//    private WeiboParameters generateSignatureParameters(WeiboParameters authParams,
+//            WeiboParameters params, String url) throws WeiboException {
+//        WeiboParameters signatureParams = new WeiboParameters();
+//        signatureParams.addAll(authParams);
+//        signatureParams.add("source", Weibo.getAppKey());
+//        signatureParams.addAll(params);
+//        this.parseUrlParameters(url, signatureParams);
+//        WeiboParameters lsp = generateSignatureList(signatureParams);
+//        return lsp;
+//    }
 
-    private WeiboParameters generateAuthParameters(long nonce, long timestamp, Token token) {
-        WeiboParameters authParams = new WeiboParameters();
-        authParams.add("oauth_consumer_key", Weibo.getAppKey());
-        authParams.add("oauth_nonce", String.valueOf(nonce));
-        authParams.add("oauth_signature_method", HttpHeaderFactory.CONST_SIGNATURE_METHOD);
-        authParams.add("oauth_timestamp", String.valueOf(timestamp));
-        authParams.add("oauth_version", HttpHeaderFactory.CONST_OAUTH_VERSION);
-        if (token != null) {
-            authParams.add("oauth_token", token.getToken());
-        } else {
-            authParams.add("source", Weibo.getAppKey());
-        }
-        return authParams;
-    }
+//    private WeiboParameters generateAuthParameters(long nonce, long timestamp, Token token) {
+//        WeiboParameters authParams = new WeiboParameters();
+//        authParams.add("oauth_consumer_key", Weibo.getAppKey());
+//        authParams.add("oauth_nonce", String.valueOf(nonce));
+//        authParams.add("oauth_signature_method", HttpHeaderFactory.CONST_SIGNATURE_METHOD);
+//        authParams.add("oauth_timestamp", String.valueOf(timestamp));
+//        authParams.add("oauth_version", HttpHeaderFactory.CONST_OAUTH_VERSION);
+//        if (token != null) {
+//            authParams.add("oauth_token", token.getToken());
+//        } else {
+//            authParams.add("source", Weibo.getAppKey());
+//        }
+//        return authParams;
+//    }
 
     // 生成用于哈希的base string串，注意要按顺序，按需文档需求参数生成，否则40107错误
     public abstract WeiboParameters generateSignatureList(WeiboParameters bundle);

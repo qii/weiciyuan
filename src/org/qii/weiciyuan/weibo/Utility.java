@@ -23,11 +23,8 @@ import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.text.TextUtils;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnRouteParams;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -41,8 +38,6 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -87,25 +82,7 @@ public class Utility {
         mAuth = auth;
     }
 
-    // 设置http头,如果authParam不为空，则表示当前有token认证信息需要加入到头中
-    public static void setHeader(String httpMethod, HttpUriRequest request,
-            WeiboParameters authParam, String url, Token token) throws WeiboException {
-        if (!isBundleEmpty(mRequestHeader)) {
-            for (int loc = 0; loc < mRequestHeader.size(); loc++) {
-                String key = mRequestHeader.getKey(loc);
-                request.setHeader(key, mRequestHeader.getValue(key));
-            }
-        }
-        if (!isBundleEmpty(authParam) && mAuth != null) {
-            String authHeader = mAuth.getWeiboAuthHeader(httpMethod, url, authParam,
-                    Weibo.getAppKey(), Weibo.getAppSecret(), token);
-            if (authHeader != null) {
-                request.setHeader("Authorization", authHeader);
-            }
-        }
-        request.setHeader("User-Agent", System.getProperties().getProperty("http.agent")
-                + " WeiboAndroidSDK");
-    }
+
 
     public static boolean isBundleEmpty(WeiboParameters bundle) {
         if (bundle == null || bundle.size() == 0) {
@@ -175,87 +152,8 @@ public class Utility {
 
 
 
-    public static String openUrl(Context context, String url, String method,
-            WeiboParameters params, Token token) throws WeiboException {
-        String rlt = "";
-        String file = "";
-        for (int loc = 0; loc < params.size(); loc++) {
-            String key = params.getKey(loc);
-            if (key.equals("pic")) {
-                file = params.getValue(key);
-                params.remove(key);
-            }
-        }
-        if (TextUtils.isEmpty(file)) {
-            rlt = openUrl(context, url, method, params, null, token);
-        } else {
-            rlt = openUrl(context, url, method, params, file, token);
-        }
-        return rlt;
-    }
 
-    public static String openUrl(Context context, String url, String method,
-            WeiboParameters params, String file, Token token) throws WeiboException {
-        String result = "";
-        try {
-            HttpClient client = getNewHttpClient(context);
-            HttpUriRequest request = null;
-            ByteArrayOutputStream bos = null;
-//            if (method.equals("GET")) {
-                url = url + "?" + encodeUrl(params);
-                HttpGet get = new HttpGet(url);
-                request = get;
-//            } else if (method.equals("POST")) {
-//                HttpPost post = new HttpPost(url);
-//                byte[] data = null;
-//                bos = new ByteArrayOutputStream(1024 * 50);
-//                if (!TextUtils.isEmpty(file)) {
-//                    Utility.paramToUpload(bos, params);
-//                    post.setHeader("Content-Type", MULTIPART_FORM_DATA + "; boundary=" + BOUNDARY);
-//                    Bitmap bf = BitmapFactory.decodeFile(file);
-//
-//                    Utility.imageContentToUpload(bos, bf);
-//
-//                } else {
-//                    post.setHeader("Content-Type", "application/x-www-form-urlencoded");
-//                    String postParam = encodeParameters(params);
-//                    data = postParam.getBytes("UTF-8");
-//                    bos.write(data);
-//                }
-//                data = bos.toByteArray();
-//                bos.close();
-//                // UrlEncodedFormEntity entity = getPostParamters(params);
-//                ByteArrayEntity formEntity = new ByteArrayEntity(data);
-//                post.setEntity(formEntity);
-//                request = post;
-//            } else if (method.equals("DELETE")) {
-//                request = new HttpDelete(url);
-//            }
-            setHeader(method, request, params, url, token);
-            HttpResponse response = client.execute(request);
-            StatusLine status = response.getStatusLine();
-            int statusCode = status.getStatusCode();
 
-            if (statusCode != 200) {
-                result = read(response);
-                String err = null;
-                int errCode = 0;
-				try {
-					JSONObject json = new JSONObject(result);
-					err = json.getString("error");
-					errCode = json.getInt("error_code");
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				throw new WeiboException(String.format(err), errCode);
-            }
-            // parse content stream from response
-            result = read(response);
-            return result;
-        } catch (IOException e) {
-            throw new WeiboException(e);
-        }
-    }
 
     public static HttpClient getNewHttpClient(Context context) {
         try {

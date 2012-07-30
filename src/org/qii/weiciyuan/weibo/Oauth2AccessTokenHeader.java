@@ -27,15 +27,15 @@ package org.qii.weiciyuan.weibo;
  */
 public class Oauth2AccessTokenHeader extends HttpHeaderFactory {
 
-    @Override
-    public String getWeiboAuthHeader(String method, String url, WeiboParameters params,
-            String app_key, String app_secret, Token token) throws WeiboException {
-        if(token == null){
-            return null;
-        }
-        return "OAuth2 " + token.getToken();
-        
-    }
+//    @Override
+//    public String getWeiboAuthHeader(String method, String url, WeiboParameters params,
+//            String app_key, String app_secret, Token token) throws WeiboException {
+//        if(token == null){
+//            return null;
+//        }
+//        return "OAuth2 " + token.getToken();
+//
+//    }
 	@Override
 	public WeiboParameters generateSignatureList(WeiboParameters bundle) {
 	    return null;
