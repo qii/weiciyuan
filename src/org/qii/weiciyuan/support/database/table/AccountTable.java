@@ -14,6 +14,10 @@ public class AccountTable {
 
     public static final String USERNICK = "usernick";
 
+    public static final String USERURL = "userurl";
+
+    public static final String PORTRAIT = "portrait";
+
     public static final String OAUTH_TOKEN = "oauth_token";
 
     public static final String OAUTH_TOKEN_SECRET = "oauth_token_secret";
