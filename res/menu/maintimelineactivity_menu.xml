@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_account_management"
+          android:icon="@drawable/maintimelineactivity_search"
+          android:title="搜索"
+          android:showAsAction="ifRoom|withText"
+            />
+    <item android:id="@+id/menu_account_management"
+          android:icon="@drawable/maintimelineactivity_account_management"
+          android:title="账号管理"
+          android:showAsAction="ifRoom|withText"
+            />
+    <item android:id="@+id/menu_settings"
+          android:icon="@drawable/maintimelineactivity_settings"
+          android:title="设置"
+          android:showAsAction="ifRoom|withText"
+            />
+
+
+</menu>

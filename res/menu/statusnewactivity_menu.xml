@@ -10,7 +10,7 @@
 
     <item android:id="@+id/menu_add_pic"
           android:icon="@drawable/statusnewactivity_camera"
-          android:title="刷新"
+          android:title="照片"
           android:showAsAction="ifRoom|withText"
             />
 

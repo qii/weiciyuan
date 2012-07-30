@@ -60,8 +60,9 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.friendstimelinefragment_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.friendstimelinefragment_menu, menu);
+
     }
 
     @Override
