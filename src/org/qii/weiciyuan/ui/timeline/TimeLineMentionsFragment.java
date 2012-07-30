@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.*;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.TimeLineMsgList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +15,10 @@ import org.qii.weiciyuan.R;
  */
 public class TimeLineMentionsFragment extends TimeLineAbstractFragment {
 
+    @Override
+    protected TimeLineMsgList getList() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     @Override
      public void onCreate(Bundle savedInstanceState) {

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.TimeLineMsgList;
 import org.qii.weiciyuan.bean.WeiboMsg;
 import org.qii.weiciyuan.ui.MainTimeLineActivity;
 
@@ -32,6 +33,7 @@ public abstract class TimeLineAbstractFragment<T> extends Fragment {
 
     }
 
+    protected abstract TimeLineMsgList getList();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,9 +49,9 @@ public abstract class TimeLineAbstractFragment<T> extends Fragment {
         @Override
         public int getCount() {
 
-            if (activity.getHomeList().getStatuses() != null) {
+            if (getList() != null && getList().getStatuses() != null) {
 
-                return activity.getHomeList().getStatuses().size();
+                return getList().getStatuses().size();
             } else {
                 return 0;
             }
@@ -57,7 +59,7 @@ public abstract class TimeLineAbstractFragment<T> extends Fragment {
 
         @Override
         public Object getItem(int position) {
-            return activity.getHomeList().getStatuses().get(position);
+            return getList().getStatuses().get(position);
         }
 
         @Override
@@ -80,7 +82,7 @@ public abstract class TimeLineAbstractFragment<T> extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            WeiboMsg msg = activity.getHomeList().getStatuses().get(position);
+            WeiboMsg msg = getList().getStatuses().get(position);
 
             holder.screenName.setText(msg.getUser().getScreen_name());
 

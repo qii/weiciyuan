@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.*;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -27,6 +28,11 @@ import org.qii.weiciyuan.ui.send.StatusNewActivity;
  */
 public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
+
+    @Override
+    protected TimeLineMsgList getList() {
+        return activity.getHomeList();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +54,19 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
         timeLineAdapter = new TimeLineAdapter();
         listView.setAdapter(timeLineAdapter);
         listView.setOnItemLongClickListener(onItemLongClickListener);
-        new TimeLineTask().execute();
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                activity.setHomelist_position(firstVisibleItem);
+
+            }
+        });
+       // new TimeLineTask().execute();
 
         return view;
     }
@@ -187,6 +205,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
 
                 timeLineAdapter.notifyDataSetChanged();
+                listView.smoothScrollToPosition(activity.getHomelist_position());
 
             }
             dialogFragment.dismissAllowingStateLoss();

@@ -78,7 +78,7 @@ public class TimeLineFriendsMsg {
             value = gson.fromJson(json, TimeLineMsgList.class);
         } catch (JsonSyntaxException e) {
             Log.e("gson", "------------------------------");
-            Log.e("gson", json);
+            Log.e("gson", e.getMessage().toString());
         }
 
         return value;

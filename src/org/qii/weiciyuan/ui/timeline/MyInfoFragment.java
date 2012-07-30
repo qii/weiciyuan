@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.ui.timeline;
 
+import org.qii.weiciyuan.bean.TimeLineMsgList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: qii
@@ -9,4 +11,8 @@ package org.qii.weiciyuan.ui.timeline;
  */
 public class MyInfoFragment extends TimeLineAbstractFragment {
 
+    @Override
+    protected TimeLineMsgList getList() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

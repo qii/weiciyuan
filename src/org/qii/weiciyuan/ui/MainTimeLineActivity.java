@@ -39,6 +39,16 @@ public class MainTimeLineActivity extends FragmentActivity {
     private TimeLineMsgList commentList = new TimeLineMsgList();
     private TimeLineMsgList mailList = new TimeLineMsgList();
 
+    public int getHomelist_position() {
+        return homelist_position;
+    }
+
+    public void setHomelist_position(int homelist_position) {
+        this.homelist_position = homelist_position;
+    }
+
+    private int homelist_position = 0;
+
     public TimeLineMsgList getMentionList() {
         return mentionList;
     }
@@ -175,8 +185,6 @@ public class MainTimeLineActivity extends FragmentActivity {
             TimeLineAbstractFragment mails = new TimeLineMailsFragment();
             TimeLineAbstractFragment info = new MyInfoFragment();
 
-//            home.setToken(token);
-//            mentions.setToken(token);
 
             list.add(home);
             list.add(mentions);
