@@ -1,6 +1,9 @@
 package org.qii.weiciyuan.support.database;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import org.qii.weiciyuan.dao.WeiboAccount;
+import org.qii.weiciyuan.support.database.table.AccountTable;
 
 /**
  * User: Jiang Qi
@@ -9,7 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class DatabaseManager {
 
-    private static DatabaseManager databaseManager = null;
+    private static DatabaseManager singleton = null;
 
 
     private SQLiteDatabase wsd = null;
@@ -23,17 +26,30 @@ public class DatabaseManager {
 
     public synchronized static DatabaseManager getInstance() {
 
-        if (databaseManager == null) {
+        if (singleton == null) {
             DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
             SQLiteDatabase wsd = databaseHelper.getWritableDatabase();
             SQLiteDatabase rsd = databaseHelper.getReadableDatabase();
 
-            databaseManager = new DatabaseManager();
-            databaseManager.wsd = wsd;
-            databaseManager.rsd = rsd;
+            singleton = new DatabaseManager();
+            singleton.wsd = wsd;
+            singleton.rsd = rsd;
         }
 
-        return databaseManager;
+        return singleton;
+    }
+
+    public long addAccount(WeiboAccount account) {
+
+        ContentValues cv = new ContentValues();
+        cv.put(AccountTable.ID, account.getUid());
+        cv.put(AccountTable.OAUTH_TOKEN, account.getAccess_token());
+
+        long result = wsd.insert(AccountTable.TABLE_NAME,
+                AccountTable.ID, cv);
+
+        return result;
+
     }
 
 }

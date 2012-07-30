@@ -22,9 +22,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "weibo.db";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String CREATE_ACCOUNT_TABLE_SQL = "create table" + AccountTable.TABLE_NAME
+    private static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
-            + AccountTable.ID + "integer primary key autoincrement,"
+            + AccountTable.ID + " integer primary key autoincrement,"
             + AccountTable.OAUTH_TOKEN + " text,"
             + AccountTable.OAUTH_TOKEN_SECRET + " text,"
             + AccountTable.PORTRAIT + " text,"
@@ -33,17 +33,17 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + AccountTable.USERURL + " text"
             + ");";
 
-    private static final String CREATE_GROUP_TABLE_SQL = "create table" + GroupTable.TABLE_NAME
+    private static final String CREATE_GROUP_TABLE_SQL = "create table " + GroupTable.TABLE_NAME
             + "("
             + GroupTable.COUNT + " text,"
             + GroupTable.GID + " text,"
             + GroupTable.TITLE + " text,"
-            + GroupTable.USER_ID + " text,"
+            + GroupTable.USER_ID + " text"
             + ");";
 
-    private static final String CREATE_HOME_TABLE_SQL = "create table" + HomeTable.TABLE_NAME
+    private static final String CREATE_HOME_TABLE_SQL = "create table " + HomeTable.TABLE_NAME
             + "("
-            + HomeTable.MBLOGID + "integer primary key autoincrement,"
+            + HomeTable.MBLOGID + " integer primary key autoincrement,"
             + HomeTable.FEEDID + " text,"
             + HomeTable.MBLOGIDNUM + " text,"
             + HomeTable.GID + " text,"
@@ -59,7 +59,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + HomeTable.RTREASON + " text,"
             + HomeTable.TIME + " text,"
             + HomeTable.PIC + " text,"
-            + HomeTable.SRC + " text,"
+            + HomeTable.SRC + " text"
             + ");";
 
     DatabaseHelper(Context context) {

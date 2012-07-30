@@ -8,7 +8,7 @@ package org.qii.weiciyuan.support.database.table;
 public class AccountTable {
     public static final String TABLE_NAME = "account_table";
 
-    public static final String ID = "_id";
+    public static final String ID = "uid";
 
     public static final String USERNAME = "username";
 

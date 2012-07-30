@@ -7,7 +7,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
-import org.qii.weiciyuan.support.database.DatabaseHelper;
+import org.qii.weiciyuan.dao.WeiboAccount;
+import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.ui.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
@@ -153,6 +154,11 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
             listData.add(map);
 
             listAdapter.notifyDataSetChanged();
+
+            WeiboAccount weiboAccount = new WeiboAccount();
+            weiboAccount.setAccess_token(access_token);
+
+            long result = DatabaseManager.getInstance().addAccount(weiboAccount);
 
         }
     }
