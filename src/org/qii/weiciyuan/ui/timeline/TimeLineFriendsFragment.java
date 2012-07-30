@@ -96,6 +96,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
     }
 
+
     AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -171,7 +172,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
         @Override
         protected TimeLineMsgList doInBackground(Void... params) {
 
-            MainTimeLineActivity activity=(MainTimeLineActivity)getActivity();
+            MainTimeLineActivity activity = (MainTimeLineActivity) getActivity();
 
             return new TimeLineFriendsMsg().getGSONMsgList(activity.getToken());
 
@@ -180,9 +181,9 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
         @Override
         protected void onPostExecute(TimeLineMsgList o) {
             if (o != null) {
-                list = o;
+                activity.setHomeList(o);
 
-                Toast.makeText(getActivity(), "" + list.getStatuses().size(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "" + activity.getHomeList().getStatuses().size(), Toast.LENGTH_SHORT).show();
 
 
                 timeLineAdapter.notifyDataSetChanged();

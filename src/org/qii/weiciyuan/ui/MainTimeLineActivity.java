@@ -35,12 +35,45 @@ public class MainTimeLineActivity extends FragmentActivity {
     private String screen_name;
 
     private TimeLineMsgList homeList = new TimeLineMsgList();
+    private TimeLineMsgList mentionList = new TimeLineMsgList();
+    private TimeLineMsgList commentList = new TimeLineMsgList();
+    private TimeLineMsgList mailList = new TimeLineMsgList();
 
+    public TimeLineMsgList getMentionList() {
+        return mentionList;
+    }
+
+    public void setMentionList(TimeLineMsgList mentionList) {
+        this.mentionList = mentionList;
+    }
+
+    public TimeLineMsgList getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(TimeLineMsgList commentList) {
+        this.commentList = commentList;
+    }
+
+    public TimeLineMsgList getMailList() {
+        return mailList;
+    }
+
+    public void setMailList(TimeLineMsgList mailList) {
+        this.mailList = mailList;
+    }
 
     public String getToken() {
         return token;
     }
 
+    public TimeLineMsgList getHomeList() {
+        return homeList;
+    }
+
+    public void setHomeList(TimeLineMsgList homeList) {
+        this.homeList = homeList;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

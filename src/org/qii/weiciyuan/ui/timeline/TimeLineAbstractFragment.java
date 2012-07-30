@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.timeline;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.TimeLineMsgList;
 import org.qii.weiciyuan.bean.WeiboMsg;
+import org.qii.weiciyuan.ui.MainTimeLineActivity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,32 +20,36 @@ import org.qii.weiciyuan.bean.WeiboMsg;
  * Time: 下午12:14
  * To change this template use File | Settings | File Templates.
  */
-public abstract class TimeLineAbstractFragment extends Fragment {
+public abstract class TimeLineAbstractFragment<T> extends Fragment {
     protected ListView listView;
-    protected TimeLineMsgList list = new TimeLineMsgList();
+    //    protected TimeLineMsgList list = new TimeLineMsgList();
     protected TimeLineAdapter timeLineAdapter;
-    protected String token;
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+    protected MainTimeLineActivity activity;
+
 
     public void refresh() {
 
     }
 
-    ;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activity = (MainTimeLineActivity) getActivity();
+    }
 
     protected class TimeLineAdapter extends BaseAdapter {
+
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         @Override
         public int getCount() {
 
-            if (list.getStatuses() != null) {
+            if (activity.getHomeList().getStatuses() != null) {
 
-                return list.getStatuses().size();
+                return activity.getHomeList().getStatuses().size();
             } else {
                 return 0;
             }
@@ -52,7 +57,7 @@ public abstract class TimeLineAbstractFragment extends Fragment {
 
         @Override
         public Object getItem(int position) {
-            return list.getStatuses().get(position);
+            return activity.getHomeList().getStatuses().get(position);
         }
 
         @Override
@@ -75,7 +80,7 @@ public abstract class TimeLineAbstractFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            WeiboMsg msg = list.getStatuses().get(position);
+            WeiboMsg msg = activity.getHomeList().getStatuses().get(position);
 
             holder.screenName.setText(msg.getUser().getScreen_name());
 
