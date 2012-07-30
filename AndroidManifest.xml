@@ -38,7 +38,7 @@
                  android:name="org.qii.weiciyuan.support.utils.GlobalContext"
                  android:theme="@style/AppTheme">
         <activity
-                android:name=".LoginActivity"
+                android:name=".ui.login.AccountActivity"
                 android:screenOrientation="portrait"
                 android:uiOptions="splitActionBarWhenNarrow">
             <intent-filter>
