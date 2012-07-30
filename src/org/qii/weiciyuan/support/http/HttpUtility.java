@@ -144,7 +144,7 @@ public class HttpUtility {
         int statusCode = status.getStatusCode();
 
 
-        if (statusCode != 200) {
+        if (statusCode != HttpStatus.SC_OK) {
             return dealWithError(httpResponse);
         }
 
@@ -180,7 +180,7 @@ public class HttpUtility {
 
         String result = "";
 
-        if (statusCode != 200) {
+        if (statusCode != HttpStatus.SC_OK) {
 
             result = readResult(httpResponse);
             String err = null;
