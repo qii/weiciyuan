@@ -103,8 +103,6 @@ public class MainTimeLineActivity extends FragmentActivity {
     };
 
 
-
-
 }
 
 class TimeLinePagerAdapter extends

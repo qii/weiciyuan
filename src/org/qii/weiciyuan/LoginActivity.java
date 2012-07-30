@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
+import org.qii.weiciyuan.support.database.DatabaseHelper;
 import org.qii.weiciyuan.ui.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 

@@ -3,16 +3,22 @@ package org.qii.weiciyuan.support.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import org.qii.weiciyuan.support.database.table.AccountTable;
 import org.qii.weiciyuan.support.database.table.GroupTable;
 import org.qii.weiciyuan.support.database.table.HomeTable;
+import org.qii.weiciyuan.support.debug.Debug;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 /**
  * User: Jiang Qi
  * Date: 12-7-30
  * Time: 上午9:40
  */
-public class DatabaseHelper extends SQLiteOpenHelper {
+class DatabaseHelper extends SQLiteOpenHelper {
+
+    private static DatabaseHelper singleton = null;
+
     private static final String DATABASE_NAME = "weibo.db";
     private static final int DATABASE_VERSION = 1;
 
@@ -72,6 +78,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (Debug.debug) {
+            Log.w("LOG_TAG", "Upgrading database from version "
+                    + oldVersion + " to " + newVersion + ",which will destroy all old data");
+        }
+        db.execSQL("DROP TABLE IF EXISTS " + AccountTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
+        onCreate(db);
+    }
+
+    public synchronized static DatabaseHelper getInstance() {
+        if (singleton == null) {
+            singleton = new DatabaseHelper(GlobalContext.getInstance());
+        }
+        return singleton;
     }
 }
