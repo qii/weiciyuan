@@ -15,6 +15,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.TimeLineFriendsMsg;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
+import org.qii.weiciyuan.ui.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
 /**
@@ -169,7 +170,10 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
         @Override
         protected TimeLineMsgList doInBackground(Void... params) {
-            return new TimeLineFriendsMsg().getGSONMsgList(token);
+
+            MainTimeLineActivity activity=(MainTimeLineActivity)getActivity();
+
+            return new TimeLineFriendsMsg().getGSONMsgList(activity.getToken());
 
         }
 

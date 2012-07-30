@@ -24,15 +24,17 @@ public abstract class TimeLineAbstractFragment extends Fragment {
     protected TimeLineMsgList list = new TimeLineMsgList();
     protected TimeLineAdapter timeLineAdapter;
     protected String token;
-    
-    public void setToken(String token){
-        this.token=token;
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public   void refresh(){
+    public void refresh() {
 
-    };
-    
+    }
+
+    ;
+
     protected class TimeLineAdapter extends BaseAdapter {
 
         LayoutInflater inflater = getActivity().getLayoutInflater();

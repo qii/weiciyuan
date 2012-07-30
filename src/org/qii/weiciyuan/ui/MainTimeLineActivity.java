@@ -29,11 +29,17 @@ public class MainTimeLineActivity extends FragmentActivity {
 
     private ViewPager mViewPager;
 
+
     private String token;
 
     private String screen_name;
 
     private TimeLineMsgList homeList = new TimeLineMsgList();
+
+
+    public String getToken() {
+        return token;
+    }
 
 
     @Override
@@ -136,8 +142,8 @@ public class MainTimeLineActivity extends FragmentActivity {
             TimeLineAbstractFragment mails = new TimeLineMailsFragment();
             TimeLineAbstractFragment info = new MyInfoFragment();
 
-            home.setToken(token);
-            mentions.setToken(token);
+//            home.setToken(token);
+//            mentions.setToken(token);
 
             list.add(home);
             list.add(mentions);
