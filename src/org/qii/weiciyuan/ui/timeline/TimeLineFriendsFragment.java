@@ -31,7 +31,8 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
+        setRetainInstance(true);
+        new TimeLineTask().execute();
     }
 
     @Override
@@ -47,7 +48,7 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
         listView.setAdapter(timeLineAdapter);
         listView.setOnItemLongClickListener(onItemLongClickListener);
 
-        new TimeLineTask().execute();
+
 
         return view;
     }

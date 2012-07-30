@@ -13,9 +13,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.ui.timeline.TimeLineAbstractFragment;
-import org.qii.weiciyuan.ui.timeline.TimeLineFriendsFragment;
-import org.qii.weiciyuan.ui.timeline.TimeLineMentionsFragment;
+import org.qii.weiciyuan.ui.timeline.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +88,13 @@ public class MainTimeLineActivity extends FragmentActivity {
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+
+        return super.onPrepareOptionsMenu(menu);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
     ViewPager.SimpleOnPageChangeListener simpleOnPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
@@ -124,12 +129,18 @@ public class MainTimeLineActivity extends FragmentActivity {
 
             TimeLineAbstractFragment home = new TimeLineFriendsFragment();
             TimeLineAbstractFragment mentions = new TimeLineMentionsFragment();
+            TimeLineAbstractFragment comments = new TimeLineCommentsFragment();
+            TimeLineAbstractFragment mails = new TimeLineMailsFragment();
+            TimeLineAbstractFragment info = new MyInfoFragment();
 
             home.setToken(token);
             mentions.setToken(token);
 
             list.add(home);
             list.add(mentions);
+            list.add(comments);
+            list.add(mails);
+            list.add(info);
 
 
         }
