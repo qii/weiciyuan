@@ -48,6 +48,8 @@ public class DatabaseManager {
         ContentValues cv = new ContentValues();
         cv.put(AccountTable.ID, account.getUid());
         cv.put(AccountTable.OAUTH_TOKEN, account.getAccess_token());
+        cv.put(AccountTable.USERNAME, account.getUsername());
+        cv.put(AccountTable.USERNICK, account.getUsernick());
 
         long result = wsd.insert(AccountTable.TABLE_NAME,
                 AccountTable.ID, cv);
@@ -55,6 +57,7 @@ public class DatabaseManager {
         return result;
 
     }
+
 
     public long updateAccount(WeiboAccount account) {
 
@@ -75,6 +78,10 @@ public class DatabaseManager {
             WeiboAccount account = new WeiboAccount();
             int colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN);
             account.setAccess_token(c.getString(colid));
+
+            colid = c.getColumnIndex(AccountTable.USERNICK);
+            account.setUsernick(c.getString(colid));
+
             weiboAccountList.add(account);
         }
 

@@ -1,9 +1,9 @@
 package org.qii.weiciyuan.ui.login;
 
-import android.app.ActionBar;
-import android.app.Activity;
+import android.app.*;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +13,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.dao.OAuthDao;
+import org.qii.weiciyuan.dao.WeiboAccount;
+import org.qii.weiciyuan.domain.WeiboUser;
+import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.weibo.Utility;
 import org.qii.weiciyuan.weibo.WeiboParameters;
 
@@ -119,13 +123,15 @@ public class OAuthActivity extends Activity {
         intent.putExtras(values);
 
         if (error == null && error_code == null) {
+            String access_token = values.getString("access_token");
             Toast.makeText(OAuthActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
             setResult(0, intent);
-
+            new OAuthTask().execute(access_token);
         } else {
             Toast.makeText(OAuthActivity.this, getString(R.string.you_cancel_login), Toast.LENGTH_SHORT).show();
+            finish();
         }
-        finish();
+
     }
 
     @Override
@@ -138,5 +144,64 @@ public class OAuthActivity extends Activity {
         }
     }
 
+    class OAuthTask extends AsyncTask<String, WeiboUser, Void> {
 
+
+        ProgressFragment progressFragment = ProgressFragment.newInstance();
+
+        @Override
+        protected void onPreExecute() {
+            progressFragment.show(getFragmentManager(), "");
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            String token = params[0];
+
+            WeiboUser weiboUser = OAuthDao.getOAuthUserInfo(token);
+
+            WeiboAccount weiboAccount = new WeiboAccount();
+            weiboAccount.setAccess_token(token);
+            weiboAccount.setUsername(weiboUser.getName());
+            weiboAccount.setUid(weiboUser.getId());
+            weiboAccount.setUsernick(weiboUser.getScreen_name());
+
+            long result = DatabaseManager.getInstance().addAccount(weiboAccount);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void weiboUser) {
+
+            progressFragment.dismissAllowingStateLoss();
+            finish();
+
+        }
+    }
+
+    static class ProgressFragment extends DialogFragment {
+
+        public static ProgressFragment newInstance() {
+            ProgressFragment frag = new ProgressFragment();
+            frag.setRetainInstance(true); //注意这句
+            Bundle args = new Bundle();
+            frag.setArguments(args);
+            return frag;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            ProgressDialog dialog = new ProgressDialog(getActivity());
+            dialog.setMessage("授权中");
+            dialog.setIndeterminate(false);
+            dialog.setCancelable(true);
+
+
+            return dialog;
+        }
+
+    }
 }

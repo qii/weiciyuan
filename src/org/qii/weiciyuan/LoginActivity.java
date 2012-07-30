@@ -143,17 +143,6 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
-            Bundle values = data.getExtras();
-
-            String access_token = values.getString("access_token");
-            String expires_in = values.getString("expires_in");
-
-
-            WeiboAccount weiboAccount = new WeiboAccount();
-            weiboAccount.setAccess_token(access_token);
-
-            long result = DatabaseManager.getInstance().addAccount(weiboAccount);
-
             new AccountDBTask().execute();
 
         }
@@ -221,7 +210,7 @@ public class LoginActivity extends Activity implements AdapterView.OnItemClickLi
             }
             TextView textView = (TextView) mView.findViewById(R.id.textView);
 
-            textView.setText(weiboAccountList.get(i).getAccess_token());
+            textView.setText(weiboAccountList.get(i).getUsernick());
 
             return mView;
         }
