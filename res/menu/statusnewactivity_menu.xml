@@ -3,19 +3,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/menu_add_gps"
-          android:icon="@drawable/status_gps"
+          android:icon="@drawable/statusnewactivity_gps"
           android:title="GPS"
           android:showAsAction="ifRoom|withText"
             />
 
     <item android:id="@+id/menu_add_pic"
-          android:icon="@drawable/status_camera"
+          android:icon="@drawable/statusnewactivity_camera"
           android:title="刷新"
           android:showAsAction="ifRoom|withText"
             />
 
     <item android:id="@+id/menu_send"
-          android:icon="@drawable/status_send"
+          android:icon="@drawable/statusnewactivity_send"
           android:title="发送"
           android:showAsAction="ifRoom|withText"
             />

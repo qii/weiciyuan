@@ -70,11 +70,11 @@ public class AccountActivity extends Activity implements AdapterView.OnItemClick
                     if (!checkAll) {
                         listAdapter.selectAll();
                         checkAll = true;
-                        item.setIcon(R.drawable.account_select_none);
+                        item.setIcon(R.drawable.accountactivity_select_none);
                     } else {
                         listAdapter.unSelectButRemainCheckBoxAll();
                         checkAll = false;
-                        item.setIcon(R.drawable.account_select_all);
+                        item.setIcon(R.drawable.accountactivity_select_all);
                     }
                     return true;
                 default:

@@ -3,13 +3,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/menu_new_weibo"
-            android:icon="@drawable/status_write"
+            android:icon="@drawable/friendstimelinefragment_write"
             android:title="写微博"
             android:showAsAction="ifRoom|withText"
             />
 
     <item android:id="@+id/menu_refresh_timeline"
-            android:icon="@drawable/oauth_refresh"
+            android:icon="@drawable/refresh"
             android:title="刷新"
             android:showAsAction="ifRoom|withText"
             />
