@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.TimeLineFriendsMsg;
-import org.qii.weiciyuan.domain.TimeLineMsgList;
+import org.qii.weiciyuan.bean.TimeLineMsgList;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
 /**

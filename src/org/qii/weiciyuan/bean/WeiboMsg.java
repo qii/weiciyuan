@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.domain;
+package org.qii.weiciyuan.bean;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

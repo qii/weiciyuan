@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.domain.TimeLineMsgList;
-import org.qii.weiciyuan.domain.WeiboMsg;
+import org.qii.weiciyuan.bean.TimeLineMsgList;
+import org.qii.weiciyuan.bean.WeiboMsg;
 
 /**
  * Created with IntelliJ IDEA.

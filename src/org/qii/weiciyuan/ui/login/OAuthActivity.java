@@ -16,7 +16,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.OAuthDao;
 import org.qii.weiciyuan.dao.WeiboAccount;
-import org.qii.weiciyuan.domain.WeiboUser;
+import org.qii.weiciyuan.bean.WeiboUser;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.weibo.Utility;
 import org.qii.weiciyuan.weibo.WeiboParameters;

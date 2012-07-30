@@ -3,7 +3,7 @@ package org.qii.weiciyuan.dao;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import org.qii.weiciyuan.domain.TimeLineMsgList;
+import org.qii.weiciyuan.bean.TimeLineMsgList;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 

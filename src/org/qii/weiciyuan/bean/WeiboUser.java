@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.domain;
+package org.qii.weiciyuan.bean;
 
 /**
  * Created with IntelliJ IDEA.
