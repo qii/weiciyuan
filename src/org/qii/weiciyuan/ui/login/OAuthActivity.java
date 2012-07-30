@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.login;
 
 import android.app.*;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -124,7 +125,6 @@ public class OAuthActivity extends Activity {
 
         if (error == null && error_code == null) {
             String access_token = values.getString("access_token");
-            Toast.makeText(OAuthActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
             setResult(0, intent);
             new OAuthTask().execute(access_token);
         } else {
@@ -151,7 +151,9 @@ public class OAuthActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
+            progressFragment.setAsyncTask(this);
             progressFragment.show(getFragmentManager(), "");
+
         }
 
         @Override
@@ -176,6 +178,7 @@ public class OAuthActivity extends Activity {
         protected void onPostExecute(Void weiboUser) {
 
             progressFragment.dismissAllowingStateLoss();
+            Toast.makeText(OAuthActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
             finish();
 
         }
@@ -183,9 +186,11 @@ public class OAuthActivity extends Activity {
 
     static class ProgressFragment extends DialogFragment {
 
+        AsyncTask asyncTask = null;
+
         public static ProgressFragment newInstance() {
             ProgressFragment frag = new ProgressFragment();
-            frag.setRetainInstance(true); //注意这句
+            frag.setRetainInstance(true);
             Bundle args = new Bundle();
             frag.setArguments(args);
             return frag;
@@ -203,5 +208,18 @@ public class OAuthActivity extends Activity {
             return dialog;
         }
 
+        @Override
+        public void onCancel(DialogInterface dialog) {
+
+            if (asyncTask != null) {
+                asyncTask.cancel(true);
+            }
+
+            super.onCancel(dialog);
+        }
+
+        void setAsyncTask(AsyncTask task) {
+            asyncTask = task;
+        }
     }
 }
