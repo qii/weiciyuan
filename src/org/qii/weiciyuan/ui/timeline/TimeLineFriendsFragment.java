@@ -154,21 +154,22 @@ public class TimeLineFriendsFragment extends TimeLineAbstractFragment {
 
         @Override
         protected TimeLineMsgList doInBackground(Void... params) {
-            return new TimeLineFriendsMsg().getGSONMsgList();
+            return new TimeLineFriendsMsg().getGSONMsgList(token);
 
         }
 
         @Override
         protected void onPostExecute(TimeLineMsgList o) {
+            if (o != null) {
+                list = o;
 
-            list = o;
+                Toast.makeText(getActivity(), "" + list.getStatuses().size(), Toast.LENGTH_SHORT).show();
 
-            Toast.makeText(getActivity(), "" + list.getStatuses().size(), Toast.LENGTH_SHORT).show();
+                dialogFragment.dismissAllowingStateLoss();
 
-            dialogFragment.dismissAllowingStateLoss();
+                timeLineAdapter.notifyDataSetChanged();
 
-            timeLineAdapter.notifyDataSetChanged();
-
+            }
             super.onPostExecute(o);
         }
     }

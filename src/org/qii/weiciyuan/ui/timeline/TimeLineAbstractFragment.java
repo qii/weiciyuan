@@ -23,7 +23,12 @@ public abstract class TimeLineAbstractFragment extends Fragment {
     protected ListView listView;
     protected TimeLineMsgList list = new TimeLineMsgList();
     protected TimeLineAdapter timeLineAdapter;
-
+    protected String token;
+    
+    public void setToken(String token){
+        this.token=token;
+    }
+    
     protected class TimeLineAdapter extends BaseAdapter {
 
         LayoutInflater inflater = getActivity().getLayoutInflater();

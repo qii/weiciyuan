@@ -11,17 +11,7 @@ public final class GlobalContext extends Application {
 
     private static GlobalContext globalContext = null;
 
-    private static String token = "";
 
-    private static String expires = "";
-
-    public String getExpires() {
-        return expires;
-    }
-
-    public void setExpires(String expires) {
-        GlobalContext.expires = expires;
-    }
 
     @Override
     public void onCreate() {
@@ -33,11 +23,5 @@ public final class GlobalContext extends Application {
         return globalContext;
     }
 
-    public void setToken(String value) {
-        token = value;
-    }
 
-    public String getToken() {
-        return token;
-    }
 }

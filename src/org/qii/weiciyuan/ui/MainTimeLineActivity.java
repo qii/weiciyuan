@@ -11,7 +11,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.timeline.TimeLineAbstractFragment;
 import org.qii.weiciyuan.ui.timeline.TimeLineFriendsFragment;
 import org.qii.weiciyuan.ui.timeline.TimeLineMentionsFragment;
 
@@ -28,6 +28,10 @@ public class MainTimeLineActivity extends FragmentActivity {
 
     private ViewPager mViewPager;
 
+    private String token;
+
+    private String screen_name;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,13 +46,11 @@ public class MainTimeLineActivity extends FragmentActivity {
 
         Intent intent = getIntent();
 
-        String token = intent.getStringExtra("token");
-        String username = intent.getStringExtra("screen_name");
+        token = intent.getStringExtra("token");
+        screen_name = intent.getStringExtra("screen_name");
 
-        if (!TextUtils.isEmpty(username))
-            actionBar.setTitle(username);
-
-        GlobalContext.getInstance().setToken(token);
+        if (!TextUtils.isEmpty(screen_name))
+            actionBar.setTitle(screen_name);
 
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -99,31 +101,37 @@ public class MainTimeLineActivity extends FragmentActivity {
         }
     };
 
+    class TimeLinePagerAdapter extends
+            FragmentStatePagerAdapter {
 
-}
+        List<Fragment> list = new ArrayList<Fragment>();
 
-class TimeLinePagerAdapter extends
-        FragmentStatePagerAdapter {
+        public TimeLinePagerAdapter(FragmentManager fm) {
+            super(fm);
 
-    List<Fragment> list = new ArrayList<Fragment>();
+            TimeLineAbstractFragment home = new TimeLineFriendsFragment();
+            TimeLineAbstractFragment mentions = new TimeLineMentionsFragment();
 
-    public TimeLinePagerAdapter(FragmentManager fm) {
-        super(fm);
-        list.add(new TimeLineFriendsFragment());
-        list.add(new TimeLineMentionsFragment());
+            home.setToken(token);
+            mentions.setToken(token);
+
+            list.add(home);
+            list.add(mentions);
 
 
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+
+            return list.get(i);
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
     }
 
-    @Override
-    public Fragment getItem(int i) {
-
-        return list.get(i);
-    }
-
-    @Override
-    public int getCount() {
-        return list.size();
-    }
 
 }

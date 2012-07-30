@@ -22,7 +22,6 @@ import ch.boye.httpclientandroidlib.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.qii.weiciyuan.support.debug.Debug;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -50,6 +49,7 @@ public class HttpUtility {
 
         HttpParams params = new BasicHttpParams();
         params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+
         httpclient = new DefaultHttpClient(params);
 
 
@@ -76,10 +76,6 @@ public class HttpUtility {
     public String doPost(String url, Map<String, String> param) {
 
         List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-
-        if (!param.containsKey("access_token")) {
-            formparams.add(new BasicNameValuePair("access_token", GlobalContext.getInstance().getToken()));
-        }
 
         Set<String> keys = param.keySet();
         for (String key : keys) {
@@ -114,10 +110,6 @@ public class HttpUtility {
         try {
             uriBuilder = new URIBuilder(url);
 
-            if (!param.containsKey("access_token")) {
-                uriBuilder.addParameter("access_token", GlobalContext.getInstance().getToken());
-            }
-
             Set<String> keys = param.keySet();
 
             for (String key : keys) {
@@ -125,8 +117,10 @@ public class HttpUtility {
                 uriBuilder.addParameter(key, param.get(key));
             }
 
-
             httpGet.setURI(uriBuilder.build());
+            if (Debug.debug)
+                Log.e("HttpUtility", uriBuilder.build().toString());
+
         } catch (URISyntaxException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -145,7 +139,11 @@ public class HttpUtility {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        return dealWithResponse(response);
+        if (response != null) {
+            return dealWithResponse(response);
+        } else {
+            return "";
+        }
 
     }
 
