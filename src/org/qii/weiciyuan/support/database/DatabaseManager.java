@@ -1,9 +1,13 @@
 package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import org.qii.weiciyuan.dao.WeiboAccount;
 import org.qii.weiciyuan.support.database.table.AccountTable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: Jiang Qi
@@ -50,6 +54,31 @@ public class DatabaseManager {
 
         return result;
 
+    }
+
+    public long updateAccount(WeiboAccount account) {
+
+        ContentValues cv = new ContentValues();
+        cv.put(AccountTable.ID, account.getUid());
+        cv.put(AccountTable.OAUTH_TOKEN, account.getAccess_token());
+        long result = wsd.insert(AccountTable.TABLE_NAME,
+                AccountTable.ID, cv);
+
+        return result;
+    }
+
+    public List<WeiboAccount> getAccountList() {
+        List<WeiboAccount> weiboAccountList = new ArrayList<WeiboAccount>();
+        String sql = "select * from " + AccountTable.TABLE_NAME;
+        Cursor c = rsd.rawQuery(sql, null);
+        while (c.moveToNext()) {
+            WeiboAccount account = new WeiboAccount();
+            int colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN);
+            account.setAccess_token(c.getString(colid));
+            weiboAccountList.add(account);
+        }
+
+        return weiboAccountList;
     }
 
 }
