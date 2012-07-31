@@ -16,7 +16,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
 import org.qii.weiciyuan.bean.WeiboMsg;
-import org.qii.weiciyuan.dao.TimeLineFriendsMsg;
+import org.qii.weiciyuan.dao.FriendsTimeLineMsgDao;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 import org.qii.weiciyuan.ui.timeline.*;
 
@@ -187,12 +187,12 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         protected TimeLineMsgList doInBackground(Void... params) {
 
             WeiboMsg msg = homeList.getStatuses().get(0);
-            TimeLineFriendsMsg.Parameter parameter = new TimeLineFriendsMsg.Parameter();
+            FriendsTimeLineMsgDao.Parameter parameter = new FriendsTimeLineMsgDao.Parameter();
             parameter.access_token=getToken();
             if (msg != null) {
                 parameter.since_id = msg.getId();
             }
-            return new TimeLineFriendsMsg().getGSONMsgList(parameter);
+            return new FriendsTimeLineMsgDao().getGSONMsgList(parameter);
 
         }
 
