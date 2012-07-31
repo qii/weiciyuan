@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.dao;
 
+import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,5 +65,13 @@ public class CommentsTimeLineMsgDao {
         return list;
     }
 
+    private String access_token;
+
+
+    public CommentsTimeLineMsgDao(String access_token) {
+        if (TextUtils.isEmpty(access_token))
+            throw new IllegalArgumentException();
+        this.access_token = access_token;
+    }
 
 }

@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.dao;
 
+import android.text.TextUtils;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -20,29 +21,35 @@ import java.util.Map;
  */
 public class OAuthDao {
 
-    public static WeiboUser getOAuthUserInfo(String token) {
+    private String access_token;
 
-        String uidJson = getOAuthUserUID(token);
-        String uid="";
+    public OAuthDao(String access_token) {
+        if (TextUtils.isEmpty(access_token))
+            throw new IllegalArgumentException();
+        this.access_token = access_token;
+    }
+
+    public WeiboUser getOAuthUserInfo() {
+
+        String uidJson = getOAuthUserUIDJsonData();
+        String uid = "";
 
         try {
-            JSONObject jsonObject=new JSONObject(uidJson);
-            uid=jsonObject.optString("uid");
+            JSONObject jsonObject = new JSONObject(uidJson);
+            uid = jsonObject.optString("uid");
         } catch (JSONException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
         }
 
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("uid", uid);
-        map.put("access_token", token);
+        map.put("access_token", access_token);
 
         String url = URLManager.getRealUrl("usershow");
         String result = HttpUtility.getInstance().execute(HttpMethod.Get, url, map);
 
         Gson gson = new Gson();
-
-
         WeiboUser user = new WeiboUser();
         try {
             user = gson.fromJson(result, WeiboUser.class);
@@ -52,15 +59,13 @@ public class OAuthDao {
         }
 
         return user;
-
-
     }
 
-    private static String getOAuthUserUID(String token) {
+    private String getOAuthUserUIDJsonData() {
 
         String url = URLManager.getRealUrl("uid");
         Map<String, String> map = new HashMap<String, String>();
-        map.put("access_token", token);
+        map.put("access_token", access_token);
         return HttpUtility.getInstance().execute(HttpMethod.Get, url, map);
     }
 

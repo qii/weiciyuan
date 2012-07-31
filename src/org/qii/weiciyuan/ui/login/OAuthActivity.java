@@ -161,7 +161,7 @@ public class OAuthActivity extends Activity {
 
             String token = params[0];
 
-            WeiboUser weiboUser = OAuthDao.getOAuthUserInfo(token);
+            WeiboUser weiboUser = new OAuthDao(token).getOAuthUserInfo();
 
             WeiboAccount weiboAccount = new WeiboAccount();
             weiboAccount.setAccess_token(token);
