@@ -9,9 +9,9 @@ import android.content.Intent;
  * Date: 12-7-31
  * Time: 上午9:05
  */
-public class NewMsgNotificationBroadcastReceiver extends BroadcastReceiver{
+public class NewMsgNotificationBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 }

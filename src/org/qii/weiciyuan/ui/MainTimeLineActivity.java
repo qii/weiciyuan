@@ -5,7 +5,6 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -23,7 +22,7 @@ import java.util.List;
  * Date: 12-7-27
  * Time: 下午1:02
  */
-public class MainTimeLineActivity extends FragmentActivity {
+public class MainTimeLineActivity extends AbstractMainActivity {
 
 
     private ViewPager mViewPager;

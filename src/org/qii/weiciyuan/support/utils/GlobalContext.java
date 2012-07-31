@@ -11,6 +11,7 @@ public final class GlobalContext extends Application {
 
     private static GlobalContext globalContext = null;
 
+    private boolean isAppForeground = false;
 
 
     @Override
@@ -21,6 +22,18 @@ public final class GlobalContext extends Application {
 
     public static GlobalContext getInstance() {
         return globalContext;
+    }
+
+    public void setAppForegroundFlag() {
+        isAppForeground = true;
+    }
+
+    public void removeAppForegroundFlag() {
+        isAppForeground = false;
+    }
+
+    public boolean isAppForeground() {
+        return isAppForeground;
     }
 
 

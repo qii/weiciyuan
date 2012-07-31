@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.StatusNewMsg;
+import org.qii.weiciyuan.ui.AbstractMainActivity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,7 +24,7 @@ import org.qii.weiciyuan.dao.StatusNewMsg;
  * Time: 下午2:02
  * To change this template use File | Settings | File Templates.
  */
-public class StatusNewActivity extends Activity {
+public class StatusNewActivity extends AbstractMainActivity implements DialogInterface.OnClickListener {
 
     private static final int CAMERA_RESULT = 0;
 
@@ -58,8 +59,7 @@ public class StatusNewActivity extends Activity {
 
                 break;
             case R.id.menu_add_pic:
-                MyAlertDialogFragment myAlertDialogFragment = MyAlertDialogFragment.newInstance();
-                myAlertDialogFragment.show(getFragmentManager(), "");
+                new MyAlertDialogFragment().show(getFragmentManager(), "");
                 break;
 
             case R.id.menu_send:
@@ -77,45 +77,31 @@ public class StatusNewActivity extends Activity {
         return true;
     }
 
-    static class MyAlertDialogFragment extends DialogFragment {
-
-        public static MyAlertDialogFragment newInstance() {
-            MyAlertDialogFragment frag = new MyAlertDialogFragment();
-            frag.setRetainInstance(true);
-            Bundle args = new Bundle();
-            frag.setArguments(args);
-            return frag;
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        switch (which) {
+            case 0:
+                Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(i, CAMERA_RESULT);
+                break;
+            case 1:
+                Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(choosePictureIntent, PIC_RESULT);
+                break;
         }
+    }
+
+    class MyAlertDialogFragment extends DialogFragment {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
             String[] items = {getString(R.string.take_camera), getString(R.string.select_pic)};
 
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+            AlertDialog.Builder builder = new AlertDialog.Builder(StatusNewActivity.this)
                     .setTitle(getString(R.string.select))
-                    .setItems(items, new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            switch (which) {
-                                case 0:
-                                    Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                                    startActivityForResult(i, CAMERA_RESULT);
-                                    break;
-                                case 1:
-                                    Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,
-                                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                    startActivityForResult(choosePictureIntent, PIC_RESULT);
-                                    break;
-                            }
-
-                        }
-                    });
-
-
+                    .setItems(items, StatusNewActivity.this);
             return builder.create();
         }
     }
@@ -141,7 +127,7 @@ public class StatusNewActivity extends Activity {
             this.content = content;
         }
 
-        ProgressFragment progressFragment = ProgressFragment.newInstance();
+        ProgressFragment progressFragment = new ProgressFragment();
 
         @Override
         protected void onPreExecute() {
@@ -180,25 +166,14 @@ public class StatusNewActivity extends Activity {
         }
     }
 
-    static class ProgressFragment extends DialogFragment {
-
-        public static ProgressFragment newInstance() {
-            ProgressFragment frag = new ProgressFragment();
-            frag.setRetainInstance(true); //注意这句
-            Bundle args = new Bundle();
-            frag.setArguments(args);
-            return frag;
-        }
+    class ProgressFragment extends DialogFragment {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-
             ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage("发送中");
             dialog.setIndeterminate(false);
             dialog.setCancelable(true);
-
-
             return dialog;
         }
     }
