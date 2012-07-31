@@ -89,7 +89,7 @@ public class MainTimeLineActivity extends FragmentActivity {
                 .setText("资料")
                 .setTabListener(tabListener));
 
-        ((TimeLineAbstractFragment) timeLinePagerAdapter.getItem(0)).refresh();
+        ((AbstractTimeLineFragment) timeLinePagerAdapter.getItem(0)).refresh();
     }
 
 
@@ -133,11 +133,11 @@ public class MainTimeLineActivity extends FragmentActivity {
         public TimeLinePagerAdapter(FragmentManager fm) {
             super(fm);
 
-            TimeLineAbstractFragment home = new TimeLineFriendsFragment();
-            TimeLineAbstractFragment mentions = new TimeLineMentionsFragment();
-            TimeLineAbstractFragment comments = new TimeLineCommentsFragment();
-            TimeLineAbstractFragment mails = new TimeLineMailsFragment();
-            TimeLineAbstractFragment info = new MyInfoFragment();
+            AbstractTimeLineFragment home = new FriendsTimeLineFragment();
+            AbstractTimeLineFragment mentions = new MentionsTimeLineFragment();
+            AbstractTimeLineFragment comments = new CommentsTimeLineFragment();
+            AbstractTimeLineFragment mails = new MailsTimeLineFragment();
+            AbstractTimeLineFragment info = new MyInfoTimeLineFragment();
 
 
             list.add(home);
