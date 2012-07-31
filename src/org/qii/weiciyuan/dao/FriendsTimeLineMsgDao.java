@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.dao;
 
+import android.text.TextUtils;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -20,77 +21,27 @@ import java.util.Map;
  */
 public class FriendsTimeLineMsgDao {
 
-
-    private String getMsgs(String token) {
-        String msg = "";
-
+    private String getMsgListJson() {
         String url = URLHelper.getFriendsTimeLine();
 
         Map<String, String> map = new HashMap<String, String>();
-        map.put("access_token", token);
+        map.put("access_token", access_token);
+        map.put("since_id", since_id);
+        map.put("max_id", max_id);
+        map.put("count", count);
+        map.put("page", page);
+        map.put("base_app", base_app);
+        map.put("feature", feature);
+        map.put("trim_user", trim_user);
 
-        msg = HttpUtility.getInstance().execute(HttpMethod.Get, url, map);
+        String jsonData = HttpUtility.getInstance().execute(HttpMethod.Get, url, map);
 
-        return msg;
+        return jsonData;
     }
 
-    private String getMsgs(Parameter param) {
-        String msg = "";
+    public TimeLineMsgList getGSONMsgList() {
 
-        String url = URLHelper.getFriendsTimeLine();
-
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("access_token", param.access_token);
-        map.put("since_id", param.since_id);
-        map.put("max_id", param.max_id);
-        map.put("count", param.count);
-        map.put("page", param.page);
-        map.put("base_app", param.base_app);
-        map.put("feature", param.feature);
-        map.put("trim_user", param.trim_user);
-
-        msg = HttpUtility.getInstance().execute(HttpMethod.Get, url, map);
-
-        return msg;
-    }
-
-
-//    public List<Map<String, String>> getMsgList() {
-//        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-//        String msg = getMsgs();
-//
-//        try {
-//            JSONObject jsonObject = new JSONObject(msg);
-//            JSONArray statuses = jsonObject.getJSONArray("statuses");
-//            int length = statuses.length();
-//            for (int i = 0; i < length; i++) {
-//                JSONObject object = statuses.getJSONObject(i);
-//                Map<String, String> map = new HashMap<String, String>();
-//                map.put("id", object.optString("id"));
-//                map.put("text", object.optString("text"));
-//                Iterator iterator = object.keys();
-//                String key;
-//                while (iterator.hasNext()) {
-//                    key = (String) iterator.next();
-//                    Object value = object.opt(key);
-//                    if (value instanceof String) {
-//                        map.put(key, value.toString());
-//                    } else if (value instanceof JSONObject) {
-//                        map.put("screen_name", ((JSONObject) value).optString("screen_name"));
-//                    }
-//                }
-//                list.add(map);
-//            }
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
-//
-//        return list;
-//    }
-
-    public TimeLineMsgList getGSONMsgList(Parameter param) {
-        String json = getMsgs(param);
+        String json = getMsgListJson();
         Gson gson = new Gson();
 
         TimeLineMsgList value = null;
@@ -105,14 +56,56 @@ public class FriendsTimeLineMsgDao {
         return value;
     }
 
-    public static class Parameter {
-        public String access_token;
-        public String since_id;
-        public String max_id;
-        public String count;
-        public String page;
-        public String base_app;
-        public String feature;
-        public String trim_user;
+
+    private String access_token;
+    private String since_id;
+    private String max_id;
+    private String count;
+    private String page;
+    private String base_app;
+    private String feature;
+    private String trim_user;
+
+    public FriendsTimeLineMsgDao(String access_token) {
+        if (TextUtils.isEmpty(access_token))
+            throw new IllegalArgumentException();
+        this.access_token = access_token;
     }
+
+    public FriendsTimeLineMsgDao setSince_id(String since_id) {
+        this.since_id = since_id;
+        return this;
+    }
+
+    public FriendsTimeLineMsgDao setMax_id(String max_id) {
+        this.max_id = max_id;
+        return this;
+    }
+
+    public FriendsTimeLineMsgDao setCount(String count) {
+        this.count = count;
+        return this;
+    }
+
+    public FriendsTimeLineMsgDao setPage(String page) {
+        this.page = page;
+        return this;
+    }
+
+    public FriendsTimeLineMsgDao setBase_app(String base_app) {
+        this.base_app = base_app;
+        return this;
+    }
+
+    public FriendsTimeLineMsgDao setFeature(String feature) {
+        this.feature = feature;
+        return this;
+    }
+
+    public FriendsTimeLineMsgDao setTrim_user(String trim_user) {
+        this.trim_user = trim_user;
+        return this;
+    }
+
+
 }

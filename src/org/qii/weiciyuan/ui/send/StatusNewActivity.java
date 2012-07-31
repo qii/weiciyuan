@@ -14,7 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.dao.StatusNewMsg;
+import org.qii.weiciyuan.dao.StatusNewMsgDao;
 import org.qii.weiciyuan.ui.AbstractMainActivity;
 
 /**
@@ -25,6 +25,8 @@ import org.qii.weiciyuan.ui.AbstractMainActivity;
  * To change this template use File | Settings | File Templates.
  */
 public class StatusNewActivity extends AbstractMainActivity implements DialogInterface.OnClickListener {
+
+    private String token = "";
 
     private static final int CAMERA_RESULT = 0;
 
@@ -37,6 +39,9 @@ public class StatusNewActivity extends AbstractMainActivity implements DialogInt
         setContentView(R.layout.statusnewactivity_layout);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        token = intent.getStringExtra("token");
 
     }
 
@@ -152,7 +157,7 @@ public class StatusNewActivity extends AbstractMainActivity implements DialogInt
 
         @Override
         protected String doInBackground(Void... params) {
-            new StatusNewMsg().sendNewMsg(content);
+            new StatusNewMsgDao(token).sendNewMsg(content);
             return null;
         }
 

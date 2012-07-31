@@ -138,7 +138,9 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
         @Override
         public void newWeibo() {
-            startActivity(new Intent(MainTimeLineActivity.this, StatusNewActivity.class));
+            Intent intent=new Intent(MainTimeLineActivity.this, StatusNewActivity.class);
+            intent.putExtra("token",token);
+            startActivity(intent);
         }
     };
 
@@ -187,12 +189,15 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         protected TimeLineMsgList doInBackground(Void... params) {
 
             WeiboMsg msg = homeList.getStatuses().get(0);
-            FriendsTimeLineMsgDao.Parameter parameter = new FriendsTimeLineMsgDao.Parameter();
-            parameter.access_token=getToken();
+            String since_id = "";
+
             if (msg != null) {
-                parameter.since_id = msg.getId();
+                since_id = msg.getId();
             }
-            return new FriendsTimeLineMsgDao().getGSONMsgList(parameter);
+
+            return new FriendsTimeLineMsgDao(token)
+                    .setSince_id(since_id)
+                    .getGSONMsgList();
 
         }
 
