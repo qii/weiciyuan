@@ -87,11 +87,11 @@ public class WeiboMsg {
         this.in_reply_to_screen_name = in_reply_to_screen_name;
     }
 
-    public String getGeo() {
+    public Geo getGeo() {
         return geo;
     }
 
-    public void setGeo(String geo) {
+    public void setGeo(Geo geo) {
         this.geo = geo;
     }
 
@@ -119,13 +119,13 @@ public class WeiboMsg {
         this.comments_count = comments_count;
     }
 
-    public String getAnnotations() {
-        return annotations;
-    }
-
-    public void setAnnotations(String annotations) {
-        this.annotations = annotations;
-    }
+//    public String getAnnotations() {
+//        return annotations;
+//    }
+//
+//    public void setAnnotations(String annotations) {
+//        this.annotations = annotations;
+//    }
 
     public WeiboUser getUser() {
         return user;
@@ -135,6 +135,13 @@ public class WeiboMsg {
         this.user = user;
     }
 
+    public WeiboMsg getRetweeted_status() {
+        return retweeted_status;
+    }
+
+    public void setRetweeted_status(WeiboMsg retweeted_status) {
+        this.retweeted_status = retweeted_status;
+    }
 
     private String created_at;
     private String id;
@@ -145,11 +152,12 @@ public class WeiboMsg {
     private String in_reply_to_status_id;
     private String in_reply_to_user_id;
     private String in_reply_to_screen_name;
-    private String geo;
     private String mid;
     private String reposts_count;
     private String comments_count;
-    private String annotations;
+//    private Object annotations;
     private WeiboUser user;
+    private WeiboMsg retweeted_status;
+    private Geo geo;
 
 }

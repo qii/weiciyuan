@@ -45,7 +45,7 @@ public class TimeLineMsgList {
 
     private List<WeiboMsg> statuses = new ArrayList<WeiboMsg>();
     private String previous_cursor = "";
-    private String next_cursor = "";
+    private String next_cursor = "0";
     private String total_number = "";
 
 }

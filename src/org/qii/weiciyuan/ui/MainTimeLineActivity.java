@@ -191,7 +191,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
             FriendsTimeLineMsgDao dao = new FriendsTimeLineMsgDao(token);
             if (homeList.getStatuses().size() > 0) {
-                dao.setSince_id(homeList.getStatuses().get(0).getId());
+            dao.setSince_id(homeList.getStatuses().get(0).getId());
             }
             return dao.getGSONMsgList();
 
@@ -200,9 +200,11 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         @Override
         protected void onPostExecute(TimeLineMsgList newValue) {
             if (newValue != null) {
-                setHomeList(newValue);
+                Toast.makeText(MainTimeLineActivity.this, "" + newValue.getStatuses().size(), Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(MainTimeLineActivity.this, "" + getHomeList().getStatuses().size(), Toast.LENGTH_SHORT).show();
+
+                newValue.getStatuses().addAll(getHomeList().getStatuses());
+                setHomeList(newValue);
 
                 home.refreshAndScrollTo(homelist_position);
             }
