@@ -131,7 +131,10 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
             WeiboMsg recontent = msg.getRetweeted_status();
             if (recontent != null) {
+                holder.recontent.setVisibility(View.VISIBLE);
                 holder.recontent.setText(recontent.getUser().getScreen_name() + "：" + recontent.getText());
+            }else{
+                holder.recontent.setVisibility(View.GONE);
             }
 
             return convertView;
