@@ -24,7 +24,6 @@ import ch.boye.httpclientandroidlib.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.debug.Debug;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
@@ -190,9 +189,8 @@ public class HttpUtility {
 
         }
 
-        if (Debug.debug) {
-            AppLogger.d(result);
-        }
+        AppLogger.d(result);
+
 
         return result;
     }

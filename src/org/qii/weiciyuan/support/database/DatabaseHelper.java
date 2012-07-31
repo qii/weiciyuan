@@ -3,11 +3,10 @@ package org.qii.weiciyuan.support.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import org.qii.weiciyuan.support.database.table.AccountTable;
 import org.qii.weiciyuan.support.database.table.GroupTable;
 import org.qii.weiciyuan.support.database.table.HomeTable;
-import org.qii.weiciyuan.support.debug.Debug;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 /**
@@ -78,10 +77,10 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (Debug.debug) {
-            Log.w("LOG_TAG", "Upgrading database from version "
-                    + oldVersion + " to " + newVersion + ",which will destroy all old data");
-        }
+
+        AppLogger.d("Upgrading database from version "
+                + oldVersion + " to " + newVersion + ",which will destroy all old data");
+
         db.execSQL("DROP TABLE IF EXISTS " + AccountTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
