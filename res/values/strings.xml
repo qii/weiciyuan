@@ -2,6 +2,9 @@
 <resources>
     <string name="app_name">微次元</string>
 
+    <!--system -->
+    <string name="timeout">请求超时</string>
+
     <!--maintimelineactivity_layout -->
     <string name="home">首页</string>
     <string name="mentions">回复</string>

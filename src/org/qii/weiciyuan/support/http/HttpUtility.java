@@ -24,6 +24,7 @@ import ch.boye.httpclientandroidlib.protocol.HttpContext;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.debug.Debug;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
 
@@ -144,7 +145,7 @@ public class HttpUtility {
         } catch (ConnectTimeoutException e) {
 
             Log.e("HttpUtility", "connection request timeout");
-            ActivityUtils.showTips("超时");
+            ActivityUtils.showTips(R.string.timeout);
 
         } catch (ClientProtocolException e) {
 

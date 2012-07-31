@@ -13,8 +13,12 @@ public class ActivityUtils {
         GlobalContext.getInstance().getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(GlobalContext.getInstance(),str,Toast.LENGTH_SHORT).show();
+                Toast.makeText(GlobalContext.getInstance(), str, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public static void showTips(final int resId) {
+        showTips(GlobalContext.getInstance().getString(resId));
     }
 }
