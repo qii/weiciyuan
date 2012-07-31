@@ -33,6 +33,26 @@ public class TimeLineFriendsMsg {
         return msg;
     }
 
+    private String getMsgs(Parameter param) {
+        String msg = "";
+
+        String url = URLHelper.getFriendsTimeLine();
+
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("access_token", param.access_token);
+        map.put("since_id", param.since_id);
+        map.put("max_id", param.max_id);
+        map.put("count", param.count);
+        map.put("page", param.page);
+        map.put("base_app", param.base_app);
+        map.put("feature", param.feature);
+        map.put("trim_user", param.trim_user);
+
+        msg = HttpUtility.getInstance().execute(HttpMethod.Get, url, map);
+
+        return msg;
+    }
+
 
 //    public List<Map<String, String>> getMsgList() {
 //        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
@@ -68,10 +88,9 @@ public class TimeLineFriendsMsg {
 //        return list;
 //    }
 
-    public TimeLineMsgList getGSONMsgList(String token) {
-        String json = getMsgs(token);
+    public TimeLineMsgList getGSONMsgList(Parameter param) {
+        String json = getMsgs(param);
         Gson gson = new Gson();
-
 
         TimeLineMsgList value = null;
         try {
@@ -82,5 +101,16 @@ public class TimeLineFriendsMsg {
         }
 
         return value;
+    }
+
+    public static class Parameter {
+        public String access_token;
+        public String since_id;
+        public String max_id;
+        public String count;
+        public String page;
+        public String base_app;
+        public String feature;
+        public String trim_user;
     }
 }

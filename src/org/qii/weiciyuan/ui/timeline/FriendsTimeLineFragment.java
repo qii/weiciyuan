@@ -55,10 +55,21 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         new MyAlertDialogFragment().setView(view).setPosition(position).show(getFragmentManager(), "");
     }
 
+    @Override
+    protected void rememberListViewPosition(int position) {
+        activity.setHomelist_position(position);
+    }
 
 
     public void refresh() {
         timeLineAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void refreshAndScrollTo(int positon) {
+        refresh();
+        listView.smoothScrollToPosition(positon);
+
     }
 
     @Override

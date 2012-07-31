@@ -26,12 +26,15 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     public abstract void refresh();
 
+    public abstract void refreshAndScrollTo(int positon);
+
     protected abstract TimeLineMsgList getList();
 
     protected abstract void scrollToBottom();
 
     protected abstract void listViewItemLongClick(AdapterView parent, View view, int position, long id);
 
+    protected abstract void rememberListViewPosition(int position);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
                             scrollToBottom();
                         }
+                        rememberListViewPosition(view.getFirstVisiblePosition());
                         break;
                     case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
                         break;

@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,9 +43,9 @@ public class TimeLineMsgList {
         this.total_number = total_number;
     }
 
-    private List<WeiboMsg> statuses;
-    private String previous_cursor;
-    private String next_cursor;
-    private String total_number;
+    private List<WeiboMsg> statuses = new ArrayList<WeiboMsg>();
+    private String previous_cursor = "";
+    private String next_cursor = "";
+    private String total_number = "";
 
 }
