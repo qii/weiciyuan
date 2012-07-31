@@ -2,7 +2,12 @@
 <resources>
     <string name="app_name">微次元</string>
 
-
+    <!--maintimelineactivity_layout -->
+    <string name="home">首页</string>
+    <string name="mentions">回复</string>
+    <string name="comments">评论</string>
+    <string name="mail">私信</string>
+    <string name="info">资料</string>
     <!--accountactivity_layout-->
     <string name="you_cancel_login">你取消了授权</string>
     <string name="login_success">授权成功</string>

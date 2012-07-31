@@ -8,8 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
-import android.view.Menu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
 import org.qii.weiciyuan.ui.timeline.*;
@@ -24,13 +22,11 @@ import java.util.List;
  */
 public class MainTimeLineActivity extends AbstractMainActivity {
 
+    private ViewPager mViewPager = null;
+    private TimeLinePagerAdapter timeLinePagerAdapter = null;
 
-    private ViewPager mViewPager;
-
-
-    private String token;
-
-    private String screen_name;
+    private String token = "";
+    private String screen_name = "";
 
     private TimeLineMsgList homeList = new TimeLineMsgList();
     private TimeLineMsgList mentionList = new TimeLineMsgList();
@@ -42,68 +38,57 @@ public class MainTimeLineActivity extends AbstractMainActivity {
     private int commentList_position = 0;
     private int mailList_position = 0;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.maintimelineactivity_viewpager_layout);
 
-        final ActionBar actionBar = getActionBar();
-
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-
         Intent intent = getIntent();
-
         token = intent.getStringExtra("token");
         screen_name = intent.getStringExtra("screen_name");
 
-        if (!TextUtils.isEmpty(screen_name))
-            actionBar.setTitle(screen_name);
-
-
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        TimeLinePagerAdapter timeLinePagerAdapter = new TimeLinePagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(timeLinePagerAdapter);
-        mViewPager.setOnPageChangeListener(simpleOnPageChangeListener);
-
-        actionBar.addTab(actionBar.newTab()
-                .setText("首页")
-                .setTabListener(tabListener));
-
-        actionBar.addTab(actionBar.newTab()
-                .setText("回复")
-                .setTabListener(tabListener));
-
-        actionBar.addTab(actionBar.newTab()
-                .setText("评论")
-                .setTabListener(tabListener));
-
-        actionBar.addTab(actionBar.newTab()
-                .setText("私信")
-                .setTabListener(tabListener));
-
-        actionBar.addTab(actionBar.newTab()
-                .setText("资料")
-                .setTabListener(tabListener));
+        buildActionBarAndViewPagerTitles();
+        buildViewPager();
 
         ((AbstractTimeLineFragment) timeLinePagerAdapter.getItem(0)).refresh();
     }
 
-
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-
-        return super.onPrepareOptionsMenu(menu);    //To change body of overridden methods use File | Settings | File Templates.
+    private void buildViewPager() {
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        timeLinePagerAdapter = new TimeLinePagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(timeLinePagerAdapter);
+        mViewPager.setOnPageChangeListener(onPageChangeListener);
     }
 
-    ViewPager.SimpleOnPageChangeListener simpleOnPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+    private void buildActionBarAndViewPagerTitles() {
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setTitle(screen_name);
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.home))
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.mentions))
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.comments))
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.mail))
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.info))
+                .setTabListener(tabListener));
+    }
+
+
+    ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
-
             getActionBar().setSelectedNavigationItem(position);
         }
     };
@@ -138,19 +123,15 @@ public class MainTimeLineActivity extends AbstractMainActivity {
             AbstractTimeLineFragment mails = new MailsTimeLineFragment();
             AbstractTimeLineFragment info = new MyInfoTimeLineFragment();
 
-
             list.add(home);
             list.add(mentions);
             list.add(comments);
             list.add(mails);
             list.add(info);
-
-
         }
 
         @Override
         public Fragment getItem(int i) {
-
             return list.get(i);
         }
 
@@ -191,7 +172,6 @@ public class MainTimeLineActivity extends AbstractMainActivity {
     public void setHomelist_position(int homelist_position) {
         this.homelist_position = homelist_position;
     }
-
 
     public TimeLineMsgList getMentionList() {
         return mentionList;
