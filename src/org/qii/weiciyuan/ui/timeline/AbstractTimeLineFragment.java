@@ -5,10 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
 import org.qii.weiciyuan.bean.WeiboMsg;
@@ -27,16 +24,60 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     protected MainTimeLineActivity activity;
 
-    public void refresh() {
-
-    }
+    public abstract void refresh();
 
     protected abstract TimeLineMsgList getList();
+
+    protected abstract void scrollToBottom();
+
+    protected abstract void listViewItemLongClick(AdapterView parent, View view, int position, long id);
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (MainTimeLineActivity) getActivity();
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
+        listView = (ListView) view.findViewById(R.id.listView);
+        timeLineAdapter = new TimeLineAdapter();
+        listView.setAdapter(timeLineAdapter);
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+                            scrollToBottom();
+                        }
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                listViewItemLongClick(parent, view, position, id);
+                return true;
+            }
+        });
+        return view;
     }
 
     protected class TimeLineAdapter extends BaseAdapter {

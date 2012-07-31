@@ -5,10 +5,12 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.*;
-import android.widget.AbsListView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
 
@@ -42,34 +44,18 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        setRetainInstance(true);
-
+    protected void scrollToBottom() {
+        Toast.makeText(getActivity(), "底部", Toast.LENGTH_SHORT).show();
+        commander.getNewFriendsTimeLineMsg();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
-        listView = (ListView) view.findViewById(R.id.listView);
-        timeLineAdapter = new TimeLineAdapter();
-        listView.setAdapter(timeLineAdapter);
-        listView.setOnItemLongClickListener(onItemLongClickListener);
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                activity.setHomelist_position(firstVisibleItem);
-            }
-        });
-        return view;
+    public void listViewItemLongClick(AdapterView parent, View view, int position, long id) {
+        view.setSelected(true);
+        new MyAlertDialogFragment().setView(view).setPosition(position).show(getFragmentManager(), "");
     }
+
+
 
     public void refresh() {
         timeLineAdapter.notifyDataSetChanged();
@@ -94,15 +80,6 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            view.setSelected(true);
-            new MyAlertDialogFragment().setView(view).setPosition(position).show(getFragmentManager(), "");
-
-            return true;
-        }
-    };
 
     class MyAlertDialogFragment extends DialogFragment {
         View view;

@@ -27,6 +27,12 @@ public class AbstractMainActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        GlobalContext.getInstance().setActivity(this);
+    }
+
+    @Override
     public void startActivity(Intent intent) {
         GlobalContext.getInstance().setAppForegroundFlag();
         super.startActivity(intent);

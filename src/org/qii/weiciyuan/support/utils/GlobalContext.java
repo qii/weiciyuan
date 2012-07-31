@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.support.utils;
 
+import android.app.Activity;
 import android.app.Application;
 
 /**
@@ -12,6 +13,8 @@ public final class GlobalContext extends Application {
     private static GlobalContext globalContext = null;
 
     private boolean isAppForeground = false;
+
+    private Activity activity = null;
 
 
     @Override
@@ -34,6 +37,14 @@ public final class GlobalContext extends Application {
 
     public boolean isAppForeground() {
         return isAppForeground;
+    }
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 
 

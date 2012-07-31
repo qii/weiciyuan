@@ -39,7 +39,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
     private AbstractTimeLineFragment mentions = null;
     private AbstractTimeLineFragment comments = null;
     private AbstractTimeLineFragment mails = null;
-    private AbstractTimeLineFragment info = null;
+    private Fragment info = null;
 
     private TimeLineMsgList homeList = new TimeLineMsgList();
     private TimeLineMsgList mentionList = new TimeLineMsgList();

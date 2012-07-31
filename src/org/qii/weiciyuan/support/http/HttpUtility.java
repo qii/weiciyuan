@@ -3,6 +3,7 @@ package org.qii.weiciyuan.support.http;
 
 import android.util.Log;
 import ch.boye.httpclientandroidlib.*;
+import ch.boye.httpclientandroidlib.client.ClientProtocolException;
 import ch.boye.httpclientandroidlib.client.CookieStore;
 import ch.boye.httpclientandroidlib.client.HttpClient;
 import ch.boye.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
@@ -10,11 +11,13 @@ import ch.boye.httpclientandroidlib.client.methods.HttpGet;
 import ch.boye.httpclientandroidlib.client.methods.HttpPost;
 import ch.boye.httpclientandroidlib.client.protocol.ClientContext;
 import ch.boye.httpclientandroidlib.client.utils.URIBuilder;
+import ch.boye.httpclientandroidlib.conn.ConnectTimeoutException;
 import ch.boye.httpclientandroidlib.impl.client.BasicCookieStore;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
 import ch.boye.httpclientandroidlib.params.CoreProtocolPNames;
+import ch.boye.httpclientandroidlib.params.HttpConnectionParams;
 import ch.boye.httpclientandroidlib.params.HttpParams;
 import ch.boye.httpclientandroidlib.protocol.BasicHttpContext;
 import ch.boye.httpclientandroidlib.protocol.HttpContext;
@@ -22,6 +25,7 @@ import ch.boye.httpclientandroidlib.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.qii.weiciyuan.support.debug.Debug;
+import org.qii.weiciyuan.support.utils.ActivityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -51,6 +55,8 @@ public class HttpUtility {
         params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
         httpclient = new DefaultHttpClient(params);
+        HttpConnectionParams.setConnectionTimeout(httpclient.getParams(), 2000);
+        HttpConnectionParams.setSoTimeout(httpclient.getParams(), 2000);
 
 
     }
@@ -135,8 +141,15 @@ public class HttpUtility {
         HttpResponse response = null;
         try {
             response = httpclient.execute(httpGet, localContext);
+        } catch (ConnectTimeoutException e) {
+
+            Log.e("HttpUtility", "connection request timeout");
+            ActivityUtils.showTips("超时");
+
+        } catch (ClientProtocolException e) {
+
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
         }
 
         if (response != null) {
