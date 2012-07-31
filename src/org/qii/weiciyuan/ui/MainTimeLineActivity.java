@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.MenuItem;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
@@ -123,22 +122,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
     };
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.friendstimelinefragment_new_weibo:
-                startActivity(new Intent(this, StatusNewActivity.class));
-                break;
-            case R.id.friendstimelinefragment_refresh:
-                new TimeLineTask().execute();
-                break;
-            case R.id.mentionstimelinefragment_refresh:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    FriendsTimeLineFragment.FrinedsTimeLineMsgCommand frinedsTimeLineMsgCommand = new FriendsTimeLineFragment.FrinedsTimeLineMsgCommand() {
+    FriendsTimeLineFragment.Commander frinedsTimeLineMsgCommand = new FriendsTimeLineFragment.Commander() {
         @Override
         public void getNewFriendsTimeLineMsg() {
 
@@ -150,6 +134,11 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         public void replayTo(int position) {
 
         }
+
+        @Override
+        public void newWeibo() {
+            startActivity(new Intent(MainTimeLineActivity.this, StatusNewActivity.class));
+        }
     };
 
     class TimeLinePagerAdapter extends
@@ -160,7 +149,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         public TimeLinePagerAdapter(FragmentManager fm) {
             super(fm);
 
-            home = new FriendsTimeLineFragment().setCommand(frinedsTimeLineMsgCommand);
+            home = new FriendsTimeLineFragment().setCommander(frinedsTimeLineMsgCommand);
             mentions = new MentionsTimeLineFragment();
             comments = new CommentsTimeLineFragment();
             mails = new MailsTimeLineFragment();

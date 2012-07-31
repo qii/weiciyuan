@@ -21,16 +21,18 @@ import org.qii.weiciyuan.bean.TimeLineMsgList;
  */
 public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
-    private FrinedsTimeLineMsgCommand command;
+    private Commander commander;
 
-    public static interface FrinedsTimeLineMsgCommand {
+    public static interface Commander {
         public void getNewFriendsTimeLineMsg();
 
         public void replayTo(int position);
+
+        public void newWeibo();
     }
 
-    public FriendsTimeLineFragment setCommand(FrinedsTimeLineMsgCommand command) {
-        this.command = command;
+    public FriendsTimeLineFragment setCommander(Commander commander) {
+        this.commander = commander;
         return this;
     }
 
@@ -73,11 +75,23 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         timeLineAdapter.notifyDataSetChanged();
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.friendstimelinefragment_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.friendstimelinefragment_new_weibo:
+                commander.newWeibo();
+                break;
+            case R.id.friendstimelinefragment_refresh:
+                commander.getNewFriendsTimeLineMsg();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
@@ -91,9 +105,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     };
 
     class MyAlertDialogFragment extends DialogFragment {
-
         View view;
-
         int position;
 
         @Override
@@ -120,7 +132,6 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
                     .setTitle(getString(R.string.select))
                     .setItems(items, onClickListener);
 
-
             return builder.create();
         }
 
@@ -131,14 +142,12 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
                 switch (which) {
                     case 0:
-                        command.getNewFriendsTimeLineMsg();
+                        commander.getNewFriendsTimeLineMsg();
                         break;
                     case 1:
-                        command.replayTo(position);
+                        commander.replayTo(position);
                         break;
                 }
-
-
             }
         };
     }
