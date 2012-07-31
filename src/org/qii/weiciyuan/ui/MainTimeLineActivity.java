@@ -190,7 +190,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         protected TimeLineMsgList doInBackground(Void... params) {
 
             FriendsTimeLineMsgDao dao = new FriendsTimeLineMsgDao(token);
-            if (homeList.getStatuses().size() != 0) {
+            if (homeList.getStatuses().size() > 0) {
                 dao.setSince_id(homeList.getStatuses().get(0).getId());
             }
             return dao.getGSONMsgList();
