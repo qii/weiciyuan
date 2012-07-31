@@ -71,7 +71,7 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.menu_refresh_timeline:
+            case R.id.friendstimelinefragment_refresh:
 
                 break;
         }

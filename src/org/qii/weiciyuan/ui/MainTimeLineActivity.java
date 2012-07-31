@@ -8,8 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
+import org.qii.weiciyuan.ui.send.StatusNewActivity;
 import org.qii.weiciyuan.ui.timeline.*;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import java.util.List;
  * Date: 12-7-27
  * Time: 下午1:02
  */
-public class MainTimeLineActivity extends AbstractMainActivity {
+public class MainTimeLineActivity extends AbstractMainActivity implements FriendsTimeLineFragment.OnGetNewFrinedsTimeLineMsg {
 
     private ViewPager mViewPager = null;
     private TimeLinePagerAdapter timeLinePagerAdapter = null;
@@ -47,8 +49,8 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         token = intent.getStringExtra("token");
         screen_name = intent.getStringExtra("screen_name");
 
-        buildActionBarAndViewPagerTitles();
         buildViewPager();
+        buildActionBarAndViewPagerTitles();
 
         ((AbstractTimeLineFragment) timeLinePagerAdapter.getItem(0)).refresh();
     }
@@ -108,6 +110,26 @@ public class MainTimeLineActivity extends AbstractMainActivity {
                                     FragmentTransaction ft) {
         }
     };
+
+    @Override
+    public void getNewFriendsTimeLineMsg() {
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.friendstimelinefragment_new_weibo:
+                startActivity(new Intent(this, StatusNewActivity.class));
+                break;
+            case R.id.friendstimelinefragment_refresh:
+                //                new TimeLineTask().execute();
+                break;
+            case R.id.mentionstimelinefragment_refresh:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     class TimeLinePagerAdapter extends
             FragmentStatePagerAdapter {

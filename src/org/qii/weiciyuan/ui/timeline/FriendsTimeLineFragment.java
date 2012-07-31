@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -14,10 +13,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.dao.TimeLineFriendsMsg;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
+import org.qii.weiciyuan.dao.TimeLineFriendsMsg;
 import org.qii.weiciyuan.ui.MainTimeLineActivity;
-import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,6 +26,9 @@ import org.qii.weiciyuan.ui.send.StatusNewActivity;
  */
 public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
+    public static interface OnGetNewFrinedsTimeLineMsg {
+        public void getNewFriendsTimeLineMsg();
+    }
 
     @Override
     protected TimeLineMsgList getList() {
@@ -66,7 +67,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
             }
         });
-       // new TimeLineTask().execute();
+        // new TimeLineTask().execute();
 
         return view;
     }
@@ -90,30 +91,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.friendstimelinefragment_menu, menu);
-
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_new_weibo:
-
-                startActivity(new Intent(getActivity(), StatusNewActivity.class));
-
-                break;
-            case R.id.menu_refresh_timeline:
-
-                new TimeLineTask().execute();
-                break;
-        }
-        return true;
-    }
-
-    @Override
-    public void refresh() {
-
-    }
-
 
     AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
@@ -121,7 +99,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
             view.setSelected(true);
             MyAlertDialogFragment.newInstance().setView(view).show(getFragmentManager(), "");
 
-            return true;  //To change body of implemented methods use File | Settings | File Templates.
+            return true;
         }
     };
 
