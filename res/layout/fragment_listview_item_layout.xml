@@ -4,7 +4,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-        android:background="@drawable/listview_item_background_selector">
+                android:background="@drawable/listview_item_background_selector">
 
     <ImageView
             android:layout_width="45dp"
@@ -32,15 +32,30 @@
             android:layout_alignBottom="@id/username"
             android:id="@+id/time"/>
 
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="内容"
-            android:textColor="@drawable/listview_item_text_selector"
+    <LinearLayout android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/username"
+                  android:layout_toRightOf="@id/pic"
+                  android:layout_centerInParent="true"
+            android:orientation="vertical">
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="内容"
+                android:textColor="@drawable/listview_item_text_selector"
+                android:id="@+id/content"
+                />
 
-            android:layout_below="@id/username"
-            android:layout_toRightOf="@id/pic"
-            android:id="@+id/content" android:layout_centerInParent="true"/>
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="2dp"
+                android:text="转发内容"
+                android:textColor="@drawable/listview_item_text_selector"
+                android:id="@+id/recontent"/>
+
+    </LinearLayout>
 
     <TextView
             android:layout_toRightOf="@id/pic"

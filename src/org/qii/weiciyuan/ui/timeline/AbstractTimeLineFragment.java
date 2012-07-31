@@ -115,6 +115,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
                 convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
                 holder.screenName = (TextView) convertView.findViewById(R.id.username);
                 holder.txt = (TextView) convertView.findViewById(R.id.content);
+                holder.recontent = (TextView) convertView.findViewById(R.id.recontent);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
                 holder.pic = (ImageView) convertView.findViewById(R.id.pic);
                 convertView.setTag(holder);
@@ -128,6 +129,11 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
             holder.time.setText(msg.getCreated_at());
             holder.pic.setImageDrawable(getResources().getDrawable(R.drawable.app));
 
+            WeiboMsg recontent = msg.getRetweeted_status();
+            if (recontent != null) {
+                holder.recontent.setText(recontent.getUser().getScreen_name() + "：" + recontent.getText());
+            }
+
             return convertView;
         }
     }
@@ -135,6 +141,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
     static class ViewHolder {
         TextView screenName;
         TextView txt;
+        TextView recontent;
         TextView time;
         ImageView pic;
     }
