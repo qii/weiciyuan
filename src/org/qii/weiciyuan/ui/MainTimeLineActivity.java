@@ -15,10 +15,11 @@ import android.support.v4.view.ViewPager;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
-import org.qii.weiciyuan.bean.WeiboMsg;
 import org.qii.weiciyuan.dao.FriendsTimeLineMsgDao;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
-import org.qii.weiciyuan.ui.timeline.*;
+import org.qii.weiciyuan.ui.timeline.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.timeline.FriendsTimeLineFragment;
+import org.qii.weiciyuan.ui.timeline.MyInfoTimeLineFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,9 +190,8 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         protected TimeLineMsgList doInBackground(Void... params) {
 
             FriendsTimeLineMsgDao dao = new FriendsTimeLineMsgDao(token);
-            WeiboMsg msg = homeList.getStatuses().get(0);
-            if (msg != null) {
-                dao.setSince_id(msg.getId());
+            if (homeList.getStatuses().size() != 0) {
+                dao.setSince_id(homeList.getStatuses().get(0).getId());
             }
             return dao.getGSONMsgList();
 
