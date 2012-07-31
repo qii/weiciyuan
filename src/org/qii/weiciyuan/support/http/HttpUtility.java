@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.support.http;
 
 
-import android.util.Log;
 import ch.boye.httpclientandroidlib.*;
 import ch.boye.httpclientandroidlib.client.ClientProtocolException;
 import ch.boye.httpclientandroidlib.client.CookieStore;
@@ -27,6 +26,7 @@ import org.json.JSONObject;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.debug.Debug;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
+import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -125,8 +125,8 @@ public class HttpUtility {
             }
 
             httpGet.setURI(uriBuilder.build());
-            if (Debug.debug)
-                Log.e("HttpUtility", uriBuilder.build().toString());
+
+            AppLogger.d(uriBuilder.build().toString());
 
         } catch (URISyntaxException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -144,7 +144,7 @@ public class HttpUtility {
             response = httpclient.execute(httpGet, localContext);
         } catch (ConnectTimeoutException e) {
 
-            Log.e("HttpUtility", "connection request timeout");
+            AppLogger.e("connection request timeout");
             ActivityUtils.showTips(R.string.timeout);
 
         } catch (ClientProtocolException e) {
@@ -191,7 +191,7 @@ public class HttpUtility {
         }
 
         if (Debug.debug) {
-            Log.e("HttpUtility", result);
+            AppLogger.d(result);
         }
 
         return result;

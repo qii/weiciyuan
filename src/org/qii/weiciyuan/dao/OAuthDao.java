@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.dao;
 
 import android.text.TextUtils;
-import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.json.JSONException;
@@ -10,6 +9,7 @@ import org.qii.weiciyuan.bean.WeiboUser;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.http.URLManager;
+import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,8 +54,7 @@ public class OAuthDao {
         try {
             user = gson.fromJson(result, WeiboUser.class);
         } catch (JsonSyntaxException e) {
-            Log.e("gson", "------------------------------");
-            Log.e("gson", result);
+            AppLogger.e(result);
         }
 
         return user;

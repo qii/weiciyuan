@@ -33,7 +33,6 @@ public class AccountActivity extends Activity implements AdapterView.OnItemClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-
         //jumpToHomeLine();
 
         super.onCreate(savedInstanceState);
@@ -163,7 +162,7 @@ public class AccountActivity extends Activity implements AdapterView.OnItemClick
 
         Intent intent = new Intent(this, MainTimeLineActivity.class);
         intent.putExtra("token", token);
-        intent.putExtra("screen_name",weiboAccountList.get(i).getUsernick());
+        intent.putExtra("screen_name", weiboAccountList.get(i).getUsernick());
 
         startActivity(intent);
 
