@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.support.http;
 
 
+import android.text.TextUtils;
 import ch.boye.httpclientandroidlib.*;
 import ch.boye.httpclientandroidlib.client.ClientProtocolException;
 import ch.boye.httpclientandroidlib.client.CookieStore;
@@ -85,7 +86,9 @@ public class HttpUtility {
 
         Set<String> keys = param.keySet();
         for (String key : keys) {
-            formparams.add(new BasicNameValuePair(key, param.get(key)));
+            String value = param.get(key);
+            if (!TextUtils.isEmpty(value))
+                formparams.add(new BasicNameValuePair(key, value));
 
         }
 
@@ -119,8 +122,9 @@ public class HttpUtility {
             Set<String> keys = param.keySet();
 
             for (String key : keys) {
-
-                uriBuilder.addParameter(key, param.get(key));
+                String value = param.get(key);
+                if (!TextUtils.isEmpty(value))
+                    uriBuilder.addParameter(key, param.get(key));
             }
 
             httpGet.setURI(uriBuilder.build());
