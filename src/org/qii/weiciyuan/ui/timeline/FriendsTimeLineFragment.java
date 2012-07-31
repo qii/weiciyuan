@@ -2,20 +2,15 @@ package org.qii.weiciyuan.ui.timeline;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.*;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
-import org.qii.weiciyuan.dao.TimeLineFriendsMsg;
-import org.qii.weiciyuan.ui.MainTimeLineActivity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,8 +21,17 @@ import org.qii.weiciyuan.ui.MainTimeLineActivity;
  */
 public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
-    public static interface OnGetNewFrinedsTimeLineMsg {
+    private FrinedsTimeLineMsgCommand command;
+
+    public static interface FrinedsTimeLineMsgCommand {
         public void getNewFriendsTimeLineMsg();
+
+        public void replayTo(int position);
+    }
+
+    public FriendsTimeLineFragment setCommand(FrinedsTimeLineMsgCommand command) {
+        this.command = command;
+        return this;
     }
 
     @Override
@@ -46,10 +50,6 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-
-        Bundle args = getArguments();
-
         View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
         listView = (ListView) view.findViewById(R.id.listView);
         timeLineAdapter = new TimeLineAdapter();
@@ -58,34 +58,21 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                //To change body of implemented methods use File | Settings | File Templates.
+
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 activity.setHomelist_position(firstVisibleItem);
-
             }
         });
-        // new TimeLineTask().execute();
-
         return view;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();    //To change body of overridden methods use File | Settings | File Templates.
+    public void refresh() {
+        timeLineAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();    //To change body of overridden methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        return super.onContextItemSelected(item);    //To change body of overridden methods use File | Settings | File Templates.
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -97,23 +84,17 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
             view.setSelected(true);
-            MyAlertDialogFragment.newInstance().setView(view).show(getFragmentManager(), "");
+            new MyAlertDialogFragment().setView(view).setPosition(position).show(getFragmentManager(), "");
 
             return true;
         }
     };
 
-    static class MyAlertDialogFragment extends DialogFragment {
+    class MyAlertDialogFragment extends DialogFragment {
 
         View view;
 
-        public static MyAlertDialogFragment newInstance() {
-            MyAlertDialogFragment frag = new MyAlertDialogFragment();
-            frag.setRetainInstance(true);
-            Bundle args = new Bundle();
-            frag.setArguments(args);
-            return frag;
-        }
+        int position;
 
         @Override
         public void onCancel(DialogInterface dialog) {
@@ -125,93 +106,43 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
             return this;
         }
 
+        public MyAlertDialogFragment setPosition(int position) {
+            this.position = position;
+            return this;
+        }
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-            String[] items = {getString(R.string.take_camera), getString(R.string.select_pic)};
-
+            String[] items = {"刷新", "回复"};
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                     .setTitle(getString(R.string.select))
-                    .setItems(items, new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            switch (which) {
-                                case 0:
-
-                                    break;
-                                case 1:
-
-                                    break;
-                            }
-
-
-                        }
-                    });
+                    .setItems(items, onClickListener);
 
 
             return builder.create();
         }
-    }
 
-    class TimeLineTask extends AsyncTask<Void, TimeLineMsgList, TimeLineMsgList> {
+        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
 
-        DialogFragment dialogFragment = ProgressFragment.newInstance();
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
-        @Override
-        protected void onPreExecute() {
-            dialogFragment.show(getFragmentManager(), "");
-        }
+                switch (which) {
+                    case 0:
+                        command.getNewFriendsTimeLineMsg();
+                        break;
+                    case 1:
+                        command.replayTo(position);
+                        break;
+                }
 
-        @Override
-        protected TimeLineMsgList doInBackground(Void... params) {
-
-            MainTimeLineActivity activity = (MainTimeLineActivity) getActivity();
-
-            return new TimeLineFriendsMsg().getGSONMsgList(activity.getToken());
-
-        }
-
-        @Override
-        protected void onPostExecute(TimeLineMsgList o) {
-            if (o != null) {
-                activity.setHomeList(o);
-
-                Toast.makeText(getActivity(), "" + activity.getHomeList().getStatuses().size(), Toast.LENGTH_SHORT).show();
-
-
-                timeLineAdapter.notifyDataSetChanged();
-                listView.smoothScrollToPosition(activity.getHomelist_position());
 
             }
-            dialogFragment.dismissAllowingStateLoss();
-            super.onPostExecute(o);
-        }
+        };
     }
 
-    static class ProgressFragment extends DialogFragment {
-
-        public static ProgressFragment newInstance() {
-            ProgressFragment frag = new ProgressFragment();
-            frag.setRetainInstance(true); //注意这句
-            Bundle args = new Bundle();
-            frag.setArguments(args);
-            return frag;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-            ProgressDialog dialog = new ProgressDialog(getActivity());
-            dialog.setMessage("刷新中");
-            dialog.setIndeterminate(false);
-            dialog.setCancelable(true);
-
-            return dialog;
-        }
-    }
 
 }
 

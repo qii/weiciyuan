@@ -1,16 +1,22 @@
 package org.qii.weiciyuan.ui;
 
 import android.app.ActionBar;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
+import org.qii.weiciyuan.dao.TimeLineFriendsMsg;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 import org.qii.weiciyuan.ui.timeline.*;
 
@@ -22,13 +28,19 @@ import java.util.List;
  * Date: 12-7-27
  * Time: 下午1:02
  */
-public class MainTimeLineActivity extends AbstractMainActivity implements FriendsTimeLineFragment.OnGetNewFrinedsTimeLineMsg {
+public class MainTimeLineActivity extends AbstractMainActivity {
 
     private ViewPager mViewPager = null;
     private TimeLinePagerAdapter timeLinePagerAdapter = null;
 
     private String token = "";
     private String screen_name = "";
+
+    private AbstractTimeLineFragment home = null;
+    private AbstractTimeLineFragment mentions = null;
+    private AbstractTimeLineFragment comments = null;
+    private AbstractTimeLineFragment mails = null;
+    private AbstractTimeLineFragment info = null;
 
     private TimeLineMsgList homeList = new TimeLineMsgList();
     private TimeLineMsgList mentionList = new TimeLineMsgList();
@@ -52,7 +64,6 @@ public class MainTimeLineActivity extends AbstractMainActivity implements Friend
         buildViewPager();
         buildActionBarAndViewPagerTitles();
 
-        ((AbstractTimeLineFragment) timeLinePagerAdapter.getItem(0)).refresh();
     }
 
     private void buildViewPager() {
@@ -111,10 +122,6 @@ public class MainTimeLineActivity extends AbstractMainActivity implements Friend
         }
     };
 
-    @Override
-    public void getNewFriendsTimeLineMsg() {
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -123,13 +130,27 @@ public class MainTimeLineActivity extends AbstractMainActivity implements Friend
                 startActivity(new Intent(this, StatusNewActivity.class));
                 break;
             case R.id.friendstimelinefragment_refresh:
-                //                new TimeLineTask().execute();
+                new TimeLineTask().execute();
                 break;
             case R.id.mentionstimelinefragment_refresh:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    FriendsTimeLineFragment.FrinedsTimeLineMsgCommand frinedsTimeLineMsgCommand = new FriendsTimeLineFragment.FrinedsTimeLineMsgCommand() {
+        @Override
+        public void getNewFriendsTimeLineMsg() {
+
+            new TimeLineTask().execute();
+
+        }
+
+        @Override
+        public void replayTo(int position) {
+
+        }
+    };
 
     class TimeLinePagerAdapter extends
             FragmentStatePagerAdapter {
@@ -139,11 +160,11 @@ public class MainTimeLineActivity extends AbstractMainActivity implements Friend
         public TimeLinePagerAdapter(FragmentManager fm) {
             super(fm);
 
-            AbstractTimeLineFragment home = new FriendsTimeLineFragment();
-            AbstractTimeLineFragment mentions = new MentionsTimeLineFragment();
-            AbstractTimeLineFragment comments = new CommentsTimeLineFragment();
-            AbstractTimeLineFragment mails = new MailsTimeLineFragment();
-            AbstractTimeLineFragment info = new MyInfoTimeLineFragment();
+            home = new FriendsTimeLineFragment().setCommand(frinedsTimeLineMsgCommand);
+            mentions = new MentionsTimeLineFragment();
+            comments = new CommentsTimeLineFragment();
+            mails = new MailsTimeLineFragment();
+            info = new MyInfoTimeLineFragment();
 
             list.add(home);
             list.add(mentions);
@@ -162,6 +183,61 @@ public class MainTimeLineActivity extends AbstractMainActivity implements Friend
             return list.size();
         }
     }
+
+    class TimeLineTask extends AsyncTask<Void, TimeLineMsgList, TimeLineMsgList> {
+
+        DialogFragment dialogFragment = ProgressFragment.newInstance();
+
+        @Override
+        protected void onPreExecute() {
+            dialogFragment.show(getSupportFragmentManager(), "");
+        }
+
+        @Override
+        protected TimeLineMsgList doInBackground(Void... params) {
+
+            return new TimeLineFriendsMsg().getGSONMsgList(getToken());
+
+        }
+
+        @Override
+        protected void onPostExecute(TimeLineMsgList o) {
+            if (o != null) {
+                setHomeList(o);
+
+                Toast.makeText(MainTimeLineActivity.this, "" + getHomeList().getStatuses().size(), Toast.LENGTH_SHORT).show();
+
+                home.refresh();
+                //   listView.smoothScrollToPosition(activity.getHomelist_position());
+
+            }
+            dialogFragment.dismissAllowingStateLoss();
+            super.onPostExecute(o);
+        }
+    }
+
+    static class ProgressFragment extends DialogFragment {
+
+        public static ProgressFragment newInstance() {
+            ProgressFragment frag = new ProgressFragment();
+            frag.setRetainInstance(true); //注意这句
+            Bundle args = new Bundle();
+            frag.setArguments(args);
+            return frag;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            ProgressDialog dialog = new ProgressDialog(getActivity());
+            dialog.setMessage("刷新中");
+            dialog.setIndeterminate(false);
+            dialog.setCancelable(true);
+
+            return dialog;
+        }
+    }
+
 
     public int getMentionList_position() {
         return mentionList_position;

@@ -23,11 +23,9 @@ import org.qii.weiciyuan.ui.MainTimeLineActivity;
  */
 public abstract class AbstractTimeLineFragment<T> extends Fragment {
     protected ListView listView;
-    //    protected TimeLineMsgList list = new TimeLineMsgList();
     protected TimeLineAdapter timeLineAdapter;
 
     protected MainTimeLineActivity activity;
-
 
     public void refresh() {
 
@@ -43,14 +41,12 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     protected class TimeLineAdapter extends BaseAdapter {
 
-
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         @Override
         public int getCount() {
 
             if (getList() != null && getList().getStatuses() != null) {
-
                 return getList().getStatuses().size();
             } else {
                 return 0;
@@ -71,7 +67,6 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder = new ViewHolder();
             if (convertView == null) {
-
                 convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
                 holder.screenName = (TextView) convertView.findViewById(R.id.username);
                 holder.txt = (TextView) convertView.findViewById(R.id.content);
@@ -83,17 +78,12 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
             }
 
             WeiboMsg msg = getList().getStatuses().get(position);
-
             holder.screenName.setText(msg.getUser().getScreen_name());
-
             holder.txt.setText(msg.getText());
-
             holder.time.setText(msg.getCreated_at());
-
             holder.pic.setImageDrawable(getResources().getDrawable(R.drawable.app));
 
             return convertView;
-
         }
     }
 
