@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
 
@@ -43,6 +42,10 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
         public void onItemClick(int position) {
         }
+
+        public void listViewFooterViewClick(View view) {
+
+        }
     }
 
     public FriendsTimeLineFragment setCommander(Commander commander) {
@@ -57,7 +60,6 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
     @Override
     protected void scrollToBottom() {
-        Toast.makeText(getActivity(), "bottom", Toast.LENGTH_SHORT).show();
         commander.getOlderFriendsTimeLineMsgList();
     }
 
@@ -75,6 +77,11 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     @Override
     protected void rememberListViewPosition(int position) {
         activity.setHomelist_position(position);
+    }
+
+    @Override
+    protected void listViewFooterViewClick(View view) {
+        commander.listViewFooterViewClick(view);
     }
 
 

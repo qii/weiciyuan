@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
@@ -132,6 +133,14 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
     FriendsTimeLineFragment.Commander frinedsTimeLineMsgCommand = new FriendsTimeLineFragment.Commander() {
 
+        @Override
+        public void listViewFooterViewClick(View view) {
+            if (!isBusying) {
+                ((TextView) view.findViewById(R.id.textView)).setText("loading");
+                new FriendsTimeLineGetOlderMsgListTask().execute();
+
+            }
+        }
 
         @Override
         public void getNewFriendsTimeLineMsgList() {
@@ -142,10 +151,10 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
         @Override
         public void getOlderFriendsTimeLineMsgList() {
-            if (!isBusying) {
-                new FriendsTimeLineGetOlderMsgListTask().execute();
-
-            }
+//            if (!isBusying) {
+//                new FriendsTimeLineGetOlderMsgListTask().execute();
+//
+//            }
 
         }
 
@@ -232,9 +241,11 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         @Override
         protected void onPostExecute(TimeLineMsgList newValue) {
             if (newValue != null) {
-                Toast.makeText(MainTimeLineActivity.this, "" + newValue.getStatuses().size(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainTimeLineActivity.this, "total " + newValue.getStatuses().size() + " new messages", Toast.LENGTH_SHORT).show();
 
-                homelist_position += newValue.getStatuses().size();
+                //if homelist_position equal 0,listview don't scroll because this is the first time to refresh
+                if (homelist_position > 0)
+                    homelist_position += newValue.getStatuses().size();
                 newValue.getStatuses().addAll(getHomeList().getStatuses());
                 setHomeList(newValue);
 
@@ -246,13 +257,17 @@ public class MainTimeLineActivity extends AbstractMainActivity {
     }
 
     class FriendsTimeLineGetOlderMsgListTask extends AsyncTask<Void, TimeLineMsgList, TimeLineMsgList> {
-
+        View footerView;
         DialogFragment dialogFragment = new ProgressFragment();
 
         @Override
         protected void onPreExecute() {
             frinedsTimeLineMsgCommand.isBusying = true;
             // dialogFragment.show(getSupportFragmentManager(), "");
+            footerView = MainTimeLineActivity.this.getLayoutInflater().inflate(R.layout.fragment_listview_footer_layout, null);
+            home.getListView().addFooterView(footerView);
+            home.refresh();
+
         }
 
         @Override
@@ -279,6 +294,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
             }
             //  dialogFragment.dismissAllowingStateLoss();
             frinedsTimeLineMsgCommand.isBusying = false;
+            home.getListView().removeFooterView(footerView);
             super.onPostExecute(newValue);
         }
     }

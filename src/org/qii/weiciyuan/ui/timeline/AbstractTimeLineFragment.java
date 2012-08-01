@@ -39,6 +39,8 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     protected abstract void rememberListViewPosition(int position);
 
+    protected abstract void listViewFooterViewClick(View view);
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +49,20 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
         setRetainInstance(true);
     }
 
+    public ListView getListView() {
+        return listView;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
         listView = (ListView) view.findViewById(R.id.listView);
+
+        View footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
+        listView.addFooterView(footerView);
+
+
         timeLineAdapter = new TimeLineAdapter();
         listView.setAdapter(timeLineAdapter);
 
@@ -87,7 +98,13 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listViewItemClick(parent, view, position, id);
+
+                if (position < getList().getStatuses().size()) {
+                    listViewItemClick(parent, view, position, id);
+                } else {
+
+                    listViewFooterViewClick(view);
+                }
             }
         });
         return view;
