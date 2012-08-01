@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.timeline;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,8 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
     protected abstract void scrollToBottom();
 
     protected abstract void listViewItemLongClick(AdapterView parent, View view, int position, long id);
+
+    protected abstract void listViewItemClick(AdapterView parent, View view, int position, long id);
 
     protected abstract void rememberListViewPosition(int position);
 
@@ -81,6 +84,12 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
                 return true;
             }
         });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                listViewItemClick(parent, view, position, id);
+            }
+        });
         return view;
     }
 
@@ -126,14 +135,18 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
             WeiboMsg msg = getList().getStatuses().get(position);
             holder.screenName.setText(msg.getUser().getScreen_name());
             holder.txt.setText(msg.getText());
-            holder.time.setText(msg.getCreated_at());
+            if (!TextUtils.isEmpty(msg.getListviewItemShowTime())) {
+                holder.time.setText(msg.getListviewItemShowTime());
+            } else {
+                holder.time.setText(msg.getCreated_at());
+            }
             holder.pic.setImageDrawable(getResources().getDrawable(R.drawable.app));
 
             WeiboMsg recontent = msg.getRetweeted_status();
             if (recontent != null) {
                 holder.recontent.setVisibility(View.VISIBLE);
                 holder.recontent.setText(recontent.getUser().getScreen_name() + "：" + recontent.getText());
-            }else{
+            } else {
                 holder.recontent.setVisibility(View.GONE);
             }
 

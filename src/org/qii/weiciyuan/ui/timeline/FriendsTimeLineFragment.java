@@ -28,9 +28,11 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     public static interface Commander {
         public void getNewFriendsTimeLineMsg();
 
-        public void replayTo(int position);
+        public void replayTo(int position,View view);
 
         public void newWeibo();
+
+        public void onItemClick(int position);
     }
 
     public FriendsTimeLineFragment setCommander(Commander commander) {
@@ -53,6 +55,11 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     public void listViewItemLongClick(AdapterView parent, View view, int position, long id) {
         view.setSelected(true);
         new MyAlertDialogFragment().setView(view).setPosition(position).show(getFragmentManager(), "");
+    }
+
+    @Override
+    protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
+        commander.onItemClick(position);
     }
 
     @Override
@@ -133,7 +140,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
                         commander.getNewFriendsTimeLineMsg();
                         break;
                     case 1:
-                        commander.replayTo(position);
+                        commander.replayTo(position,view);
                         break;
                 }
             }

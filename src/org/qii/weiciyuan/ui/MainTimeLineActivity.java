@@ -12,10 +12,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgList;
 import org.qii.weiciyuan.dao.FriendsTimeLineMsgDao;
+import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 import org.qii.weiciyuan.ui.timeline.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.timeline.FriendsTimeLineFragment;
@@ -62,8 +65,11 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         token = intent.getStringExtra("token");
         screen_name = intent.getStringExtra("screen_name");
 
+        homeList = DatabaseManager.getInstance().getHomeLineMsgList();
+
         buildViewPager();
         buildActionBarAndViewPagerTitles();
+
 
     }
 
@@ -86,13 +92,13 @@ public class MainTimeLineActivity extends AbstractMainActivity {
                 .setText(getString(R.string.mentions))
                 .setTabListener(tabListener));
 
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.comments))
-                .setTabListener(tabListener));
-
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.mail))
-                .setTabListener(tabListener));
+//        actionBar.addTab(actionBar.newTab()
+//                .setText(getString(R.string.comments))
+//                .setTabListener(tabListener));
+//
+//        actionBar.addTab(actionBar.newTab()
+//                .setText(getString(R.string.mail))
+//                .setTabListener(tabListener));
 
         actionBar.addTab(actionBar.newTab()
                 .setText(getString(R.string.info))
@@ -133,7 +139,12 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         }
 
         @Override
-        public void replayTo(int position) {
+        public void replayTo(int position,View view) {
+
+            Intent intent = new Intent(MainTimeLineActivity.this, BrowserWeiboMsgActivity.class);
+            intent.putExtra("content", homeList.getStatuses().get(position).getText());
+            startActivity(intent);
+            view.setSelected(false);
 
         }
 
@@ -141,6 +152,13 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         public void newWeibo() {
             Intent intent = new Intent(MainTimeLineActivity.this, StatusNewActivity.class);
             intent.putExtra("token", token);
+            startActivity(intent);
+        }
+
+        @Override
+        public void onItemClick(int position) {
+            Intent intent = new Intent(MainTimeLineActivity.this, BrowserWeiboMsgActivity.class);
+            intent.putExtra("content", homeList.getStatuses().get(position).getText());
             startActivity(intent);
         }
     };
@@ -191,9 +209,12 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
             FriendsTimeLineMsgDao dao = new FriendsTimeLineMsgDao(token);
             if (homeList.getStatuses().size() > 0) {
-            dao.setSince_id(homeList.getStatuses().get(0).getId());
+                dao.setSince_id(homeList.getStatuses().get(0).getId());
             }
-            return dao.getGSONMsgList();
+            TimeLineMsgList result = dao.getGSONMsgList();
+            if (result != null)
+                DatabaseManager.getInstance().addHomeLineMsg(result);
+            return result;
 
         }
 
