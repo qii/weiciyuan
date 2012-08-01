@@ -11,6 +11,9 @@
         <item name="android:editTextStyle">@style/EditText</item>
         <item name="android:checkboxStyle">@style/CheckBox</item>
         <item name="android:radioButtonStyle">@style/RadioButton</item>
+        <!--<item name="android:actionBarStyle">@style/MyActionBar</item>-->
+        <!--<item name="android:actionBarTabStyle">@style/MyActionBar.TabView</item>-->
+
     </style>
     <!-- detail style -->
     <style name="Button" parent="@android:style/Widget.Holo.Button">
@@ -37,5 +40,23 @@
     <style name="RadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">
 
     </style>
+
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">#33b5e5</item>
+
+    </style>
+
+    <style name="MyActionBar.TabView" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
+        <item name="android:background">#33b5e5</item>
+        <item name="android:paddingLeft">16dip</item>
+        <item name="android:paddingRight">16dip</item>
+    </style>
+
+    <!--<style name="Widget.Holo.Light.Tab" parent="Widget.Holo.Light.ActionBar.TabView">-->
+        <!--<item name="android:background">@android:drawable/tab_indicator_holo</item>-->
+        <!--<item name="android:layout_width">0dip</item>-->
+        <!--<item name="android:layout_weight">1</item>-->
+        <!--<item name="android:minWidth">80dip</item>-->
+    <!--</style>-->
 
 </resources>

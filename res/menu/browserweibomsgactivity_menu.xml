@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/menu_select_all"
+          android:icon="@drawable/accountactivity_select_all"
+          android:title="reply"
+          android:checkable="true"
+          android:showAsAction="ifRoom|withText"
+            />
+    <item android:id="@+id/menu_remove_account"
+          android:icon="@drawable/accountactivity_remove"
+          android:title="comment"
+          android:showAsAction="ifRoom|withText"
+            />
+    <item android:id="@+id/menu_select_all"
+          android:icon="@drawable/refresh"
+          android:title="refresh"
+          android:checkable="true"
+          android:showAsAction="ifRoom|withText"
+            />
+
+
+</menu>

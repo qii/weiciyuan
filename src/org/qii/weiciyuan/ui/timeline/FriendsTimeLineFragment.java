@@ -25,14 +25,24 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
     private Commander commander;
 
-    public static interface Commander {
-        public void getNewFriendsTimeLineMsg();
+    public static abstract class Commander {
 
-        public void replayTo(int position,View view);
+        public volatile boolean isBusying = false;
 
-        public void newWeibo();
+        public void getNewFriendsTimeLineMsgList() {
+        }
 
-        public void onItemClick(int position);
+        public void getOlderFriendsTimeLineMsgList() {
+        }
+
+        public void replayTo(int position, View view) {
+        }
+
+        public void newWeibo() {
+        }
+
+        public void onItemClick(int position) {
+        }
     }
 
     public FriendsTimeLineFragment setCommander(Commander commander) {
@@ -47,8 +57,8 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
     @Override
     protected void scrollToBottom() {
-        Toast.makeText(getActivity(), "底部", Toast.LENGTH_SHORT).show();
-        commander.getNewFriendsTimeLineMsg();
+        Toast.makeText(getActivity(), "bottom", Toast.LENGTH_SHORT).show();
+        commander.getOlderFriendsTimeLineMsgList();
     }
 
     @Override
@@ -92,7 +102,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
                 commander.newWeibo();
                 break;
             case R.id.friendstimelinefragment_refresh:
-                commander.getNewFriendsTimeLineMsg();
+                commander.getNewFriendsTimeLineMsgList();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -137,10 +147,10 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
                 switch (which) {
                     case 0:
-                        commander.getNewFriendsTimeLineMsg();
+                        commander.getNewFriendsTimeLineMsgList();
                         break;
                     case 1:
-                        commander.replayTo(position,view);
+                        commander.replayTo(position, view);
                         break;
                 }
             }

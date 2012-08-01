@@ -131,15 +131,26 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
 
     FriendsTimeLineFragment.Commander frinedsTimeLineMsgCommand = new FriendsTimeLineFragment.Commander() {
-        @Override
-        public void getNewFriendsTimeLineMsg() {
 
-            new FriendsTimeLineTask().execute();
+
+        @Override
+        public void getNewFriendsTimeLineMsgList() {
+
+            new FriendsTimeLineGetNewMsgListTask().execute();
 
         }
 
         @Override
-        public void replayTo(int position,View view) {
+        public void getOlderFriendsTimeLineMsgList() {
+            if (!isBusying) {
+                new FriendsTimeLineGetOlderMsgListTask().execute();
+
+            }
+
+        }
+
+        @Override
+        public void replayTo(int position, View view) {
 
             Intent intent = new Intent(MainTimeLineActivity.this, BrowserWeiboMsgActivity.class);
             intent.putExtra("content", homeList.getStatuses().get(position).getText());
@@ -195,7 +206,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         }
     }
 
-    class FriendsTimeLineTask extends AsyncTask<Void, TimeLineMsgList, TimeLineMsgList> {
+    class FriendsTimeLineGetNewMsgListTask extends AsyncTask<Void, TimeLineMsgList, TimeLineMsgList> {
 
         DialogFragment dialogFragment = new ProgressFragment();
 
@@ -223,7 +234,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
             if (newValue != null) {
                 Toast.makeText(MainTimeLineActivity.this, "" + newValue.getStatuses().size(), Toast.LENGTH_SHORT).show();
 
-
+                homelist_position += newValue.getStatuses().size();
                 newValue.getStatuses().addAll(getHomeList().getStatuses());
                 setHomeList(newValue);
 
@@ -233,6 +244,45 @@ public class MainTimeLineActivity extends AbstractMainActivity {
             super.onPostExecute(newValue);
         }
     }
+
+    class FriendsTimeLineGetOlderMsgListTask extends AsyncTask<Void, TimeLineMsgList, TimeLineMsgList> {
+
+        DialogFragment dialogFragment = new ProgressFragment();
+
+        @Override
+        protected void onPreExecute() {
+            frinedsTimeLineMsgCommand.isBusying = true;
+            // dialogFragment.show(getSupportFragmentManager(), "");
+        }
+
+        @Override
+        protected TimeLineMsgList doInBackground(Void... params) {
+
+            FriendsTimeLineMsgDao dao = new FriendsTimeLineMsgDao(token);
+            if (homeList.getStatuses().size() > 0) {
+                dao.setMax_id(homeList.getStatuses().get(homeList.getStatuses().size() - 1).getId());
+            }
+            TimeLineMsgList result = dao.getGSONMsgList();
+            if (result != null)
+                DatabaseManager.getInstance().addHomeLineMsg(result);
+            return result;
+
+        }
+
+        @Override
+        protected void onPostExecute(TimeLineMsgList newValue) {
+            if (newValue != null) {
+                Toast.makeText(MainTimeLineActivity.this, "" + newValue.getStatuses().size(), Toast.LENGTH_SHORT).show();
+
+                homeList.getStatuses().addAll(newValue.getStatuses());
+                home.refreshAndScrollTo(homelist_position);
+            }
+            //  dialogFragment.dismissAllowingStateLoss();
+            frinedsTimeLineMsgCommand.isBusying = false;
+            super.onPostExecute(newValue);
+        }
+    }
+
 
     static class ProgressFragment extends DialogFragment {
 
