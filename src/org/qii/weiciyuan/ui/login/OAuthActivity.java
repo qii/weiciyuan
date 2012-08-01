@@ -102,7 +102,6 @@ public class OAuthActivity extends Activity {
 
             if (url.startsWith(DIRECT_URL)) {
 
-
                 handleRedirectUrl(view, url);
                 view.stopLoading();
                 return;
@@ -124,9 +123,11 @@ public class OAuthActivity extends Activity {
         intent.putExtras(values);
 
         if (error == null && error_code == null) {
+
             String access_token = values.getString("access_token");
             setResult(0, intent);
             new OAuthTask().execute(access_token);
+
         } else {
             Toast.makeText(OAuthActivity.this, getString(R.string.you_cancel_login), Toast.LENGTH_SHORT).show();
             finish();
@@ -152,6 +153,7 @@ public class OAuthActivity extends Activity {
         @Override
         protected void onPreExecute() {
             progressFragment.setAsyncTask(this);
+
             progressFragment.show(getFragmentManager(), "");
 
         }
@@ -176,12 +178,20 @@ public class OAuthActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void weiboUser) {
-
-            progressFragment.dismissAllowingStateLoss();
+            if (progressFragment.isVisible()) {
+                progressFragment.dismissAllowingStateLoss();
+            }
             Toast.makeText(OAuthActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
             finish();
 
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(isFinishing())
+            webView.stopLoading();
     }
 
     static class ProgressFragment extends DialogFragment {

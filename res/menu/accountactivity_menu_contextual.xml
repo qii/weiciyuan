@@ -6,7 +6,7 @@
           android:checkable="true"
           android:showAsAction="ifRoom|withText"
             />
-    <item android:id="@+id/menu_add_account"
+    <item android:id="@+id/menu_remove_account"
           android:icon="@drawable/accountactivity_remove"
           android:title="删除"
           android:showAsAction="ifRoom|withText"

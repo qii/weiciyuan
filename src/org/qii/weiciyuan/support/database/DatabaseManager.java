@@ -8,6 +8,7 @@ import org.qii.weiciyuan.support.database.table.AccountTable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: Jiang Qi
@@ -71,16 +72,22 @@ public class DatabaseManager {
             colid = c.getColumnIndex(AccountTable.USERNICK);
             account.setUsernick(c.getString(colid));
 
+            colid = c.getColumnIndex(AccountTable.ID);
+            account.setUid(c.getString(colid));
+
             weiboAccountList.add(account);
         }
 
         return weiboAccountList;
     }
 
-    public void removeAccount(String uid) {
-        String[] args = {uid};
+    public List<WeiboAccount> removeAndGetNewAccountList(Set<String> checkedItemPosition) {
+        String[] args = checkedItemPosition.toArray(new String[0]);
+
         String column = AccountTable.ID;
-        wsd.delete(AccountTable.TABLE_NAME, column + "=?", args);
+        long result = wsd.delete(AccountTable.TABLE_NAME, column + "=?", args);
+
+        return getAccountList();
     }
 
 }
