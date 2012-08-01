@@ -14,6 +14,7 @@
     <!--accountactivity_layout-->
     <string name="you_cancel_login">你取消了授权</string>
     <string name="login_success">授权成功</string>
+    <string name="update_account_success">已有该帐号，授权信息更新成功</string>
 
     <!--status new!-->
     <string name="select">选择</string>

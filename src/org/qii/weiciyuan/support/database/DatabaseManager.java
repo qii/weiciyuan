@@ -9,6 +9,7 @@ import org.qii.weiciyuan.bean.WeiboMsg;
 import org.qii.weiciyuan.bean.WeiboUser;
 import org.qii.weiciyuan.support.database.table.AccountTable;
 import org.qii.weiciyuan.support.database.table.HomeTable;
+import org.qii.weiciyuan.ui.login.OAuthActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,18 +49,28 @@ public class DatabaseManager {
         return singleton;
     }
 
-    public long addAccount(WeiboAccount account) {
+    public OAuthActivity.DBResult addAccount(WeiboAccount account) {
 
         ContentValues cv = new ContentValues();
-        cv.put(AccountTable.ID, account.getUid());
+        cv.put(AccountTable.UID, account.getUid());
         cv.put(AccountTable.OAUTH_TOKEN, account.getAccess_token());
         cv.put(AccountTable.USERNAME, account.getUsername());
         cv.put(AccountTable.USERNICK, account.getUsernick());
 
-        long result = wsd.insert(AccountTable.TABLE_NAME,
-                AccountTable.ID, cv);
+        String sql = "select * from " + AccountTable.TABLE_NAME
+                + " where " + AccountTable.UID + " = " + account.getUid();
 
-        return result;
+        Cursor c = rsd.rawQuery(sql, null);
+        if (c != null && c.getCount() > 0) {
+            String[] args = {account.getUid()};
+            wsd.update(AccountTable.TABLE_NAME, cv, AccountTable.UID + "=?", args);
+            return OAuthActivity.DBResult.update_successfully;
+        } else {
+
+            wsd.insert(AccountTable.TABLE_NAME,
+                    AccountTable.UID, cv);
+            return OAuthActivity.DBResult.add_successfuly;
+        }
 
     }
 
@@ -76,7 +87,7 @@ public class DatabaseManager {
             colid = c.getColumnIndex(AccountTable.USERNICK);
             account.setUsernick(c.getString(colid));
 
-            colid = c.getColumnIndex(AccountTable.ID);
+            colid = c.getColumnIndex(AccountTable.UID);
             account.setUid(c.getString(colid));
 
             weiboAccountList.add(account);
@@ -88,7 +99,7 @@ public class DatabaseManager {
     public List<WeiboAccount> removeAndGetNewAccountList(Set<String> checkedItemPosition) {
         String[] args = checkedItemPosition.toArray(new String[0]);
 
-        String column = AccountTable.ID;
+        String column = AccountTable.UID;
         long result = wsd.delete(AccountTable.TABLE_NAME, column + "=?", args);
 
         return getAccountList();

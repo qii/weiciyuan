@@ -23,7 +23,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
-            + AccountTable.ID + " integer primary key autoincrement,"
+            + AccountTable.UID + " integer primary key autoincrement,"
             + AccountTable.OAUTH_TOKEN + " text,"
             + AccountTable.OAUTH_TOKEN_SECRET + " text,"
             + AccountTable.PORTRAIT + " text,"
