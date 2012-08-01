@@ -16,7 +16,7 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="用户名"
+            android:text="username"
             android:textColor="@drawable/listview_item_text_selector"
             android:layout_toRightOf="@id/pic"
             android:id="@+id/username"/>
@@ -25,47 +25,36 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="几分钟"
+            android:text="12:00"
             android:textColor="@drawable/listview_item_text_selector"
 
             android:layout_alignParentRight="true"
             android:layout_alignBottom="@id/username"
             android:id="@+id/time"/>
 
-    <LinearLayout android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_below="@id/username"
-                  android:layout_toRightOf="@id/pic"
-                  android:layout_centerInParent="true"
-            android:orientation="vertical">
-        <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="内容"
-                android:textColor="@drawable/listview_item_text_selector"
-                android:id="@+id/content"
-                />
-
-        <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="2dp"
-                android:text="转发内容"
-                android:textColor="@drawable/listview_item_text_selector"
-                android:id="@+id/recontent"/>
-
-    </LinearLayout>
 
     <TextView
-            android:layout_toRightOf="@id/pic"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="来源"
-            android:layout_alignParentBottom="true"
-            android:layout_alignLeft="@id/content"
+            android:text="contentcontentcontentcontentcontentcontentcontentcontent"
+            android:textColor="@drawable/listview_item_text_selector"
+            android:id="@+id/content"
+            android:layout_below="@id/username"
+            android:layout_toRightOf="@id/pic"
+
+            />
+
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="2dp"
+            android:text="the recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent text"
+            android:textColor="@drawable/listview_item_text_selector"
             android:layout_below="@id/content"
-            android:id="@+id/source"/>
+            android:layout_toRightOf="@id/pic"
+            android:visibility="gone"
+            android:id="@+id/recontent"/>
+
 
 </RelativeLayout>
