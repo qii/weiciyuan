@@ -221,7 +221,6 @@ public class AccountActivity extends Activity implements AdapterView.OnItemClick
                             checkedItemPostion.remove(uid);
                         }
 
-                        Toast.makeText(AccountActivity.this, "" + uid, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -298,7 +297,7 @@ public class AccountActivity extends Activity implements AdapterView.OnItemClick
         protected void onPostExecute(List<WeiboAccount> weiboAccounts) {
             weiboAccountList = weiboAccounts;
             listAdapter.notifyDataSetChanged();
-            Toast.makeText(AccountActivity.this,"remove successfully",Toast.LENGTH_SHORT).show();
+            Toast.makeText(AccountActivity.this, "remove successfully", Toast.LENGTH_SHORT).show();
 
         }
     }
