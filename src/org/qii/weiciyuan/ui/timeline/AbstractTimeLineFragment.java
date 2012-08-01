@@ -22,6 +22,7 @@ import org.qii.weiciyuan.ui.MainTimeLineActivity;
 public abstract class AbstractTimeLineFragment<T> extends Fragment {
     protected ListView listView;
     protected TimeLineAdapter timeLineAdapter;
+    private volatile boolean isFlying=false;
 
     protected MainTimeLineActivity activity;
 
@@ -75,10 +76,13 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
                             scrollToBottom();
                         }
                         rememberListViewPosition(view.getFirstVisiblePosition());
+                        isFlying=false;
                         break;
                     case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                        isFlying=true;
                         break;
                     case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                        isFlying=false;
                         break;
                 }
             }
@@ -87,7 +91,10 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
             }
+
+
         });
+
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -151,12 +158,16 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
             WeiboMsg msg = getList().getStatuses().get(position);
             holder.screenName.setText(msg.getUser().getScreen_name());
+            if(!isFlying){
             holder.txt.setText(msg.getText());
+
+            }
             if (!TextUtils.isEmpty(msg.getListviewItemShowTime())) {
                 holder.time.setText(msg.getListviewItemShowTime());
             } else {
                 holder.time.setText(msg.getCreated_at());
             }
+
             holder.pic.setImageDrawable(getResources().getDrawable(R.drawable.app));
 
             WeiboMsg recontent = msg.getRetweeted_status();
