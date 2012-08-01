@@ -171,17 +171,17 @@ public class OAuthActivity extends Activity {
             weiboAccount.setUid(weiboUser.getId());
             weiboAccount.setUsernick(weiboUser.getScreen_name());
 
-            return DatabaseManager.getInstance().addAccount(weiboAccount);
+            return DatabaseManager.getInstance().addOrUpdateAccount(weiboAccount);
 
 
         }
 
         @Override
-        protected void onPostExecute(DBResult weiboUser) {
+        protected void onPostExecute(DBResult dbResult) {
             if (progressFragment.isVisible()) {
                 progressFragment.dismissAllowingStateLoss();
             }
-            switch (weiboUser) {
+            switch (dbResult) {
                 case add_successfuly:
                     Toast.makeText(OAuthActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
                     break;
