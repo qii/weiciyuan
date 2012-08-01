@@ -162,7 +162,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         public void replayTo(int position, View view) {
 
             Intent intent = new Intent(MainTimeLineActivity.this, BrowserWeiboMsgActivity.class);
-            intent.putExtra("content", homeList.getStatuses().get(position).getText());
+            intent.putExtra("msg", homeList.getStatuses().get(position));
             startActivity(intent);
             view.setSelected(false);
 
@@ -178,7 +178,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         @Override
         public void onItemClick(int position) {
             Intent intent = new Intent(MainTimeLineActivity.this, BrowserWeiboMsgActivity.class);
-            intent.putExtra("content", homeList.getStatuses().get(position).getText());
+            intent.putExtra("msg", homeList.getStatuses().get(position));
             startActivity(intent);
         }
     };

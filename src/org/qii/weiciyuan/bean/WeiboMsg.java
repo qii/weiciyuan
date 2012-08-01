@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.bean;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -10,7 +11,10 @@ import java.util.Date;
  * Time: 下午7:47
  * To change this template use File | Settings | File Templates.
  */
-public class WeiboMsg {
+public class WeiboMsg implements Serializable{
+
+
+
     public String getCreated_at() {
 
         SimpleDateFormat format = new SimpleDateFormat("kk:mm");

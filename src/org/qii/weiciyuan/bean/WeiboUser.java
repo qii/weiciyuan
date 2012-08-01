@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import java.io.Serializable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: qii
@@ -7,7 +9,7 @@ package org.qii.weiciyuan.bean;
  * Time: 下午7:42
  * To change this template use File | Settings | File Templates.
  */
-public class WeiboUser {
+public class WeiboUser implements Serializable {
 
     public String getId() {
         return id;
