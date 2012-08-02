@@ -5,9 +5,80 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
 
-    <TextView
-            android:layout_width="wrap_content"
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="New Text"
-            android:id="@+id/textView" android:layout_gravity="center"/>
+            android:padding="5dp"
+            android:background="@drawable/listview_item_background_selector">
+
+        <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@drawable/app"
+                android:id="@+id/pic" android:layout_gravity="left|center_vertical"
+                android:layout_marginRight="5dp"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="username"
+                android:textColor="@drawable/listview_item_text_selector"
+                android:layout_toRightOf="@id/pic"
+                android:id="@+id/username"/>
+
+        <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12:00"
+                android:textColor="@drawable/listview_item_text_selector"
+
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@id/username"
+                android:id="@+id/time"/>
+
+
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="contentcontentcontentcontentcontentcontentcontentcontent"
+                android:textColor="@drawable/listview_item_text_selector"
+                android:id="@+id/content"
+                android:layout_below="@id/username"
+                android:layout_toRightOf="@id/pic"
+
+                />
+
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="2dp"
+                android:text="the recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent text"
+                android:textColor="@drawable/listview_item_text_selector"
+                android:layout_below="@id/content"
+                android:layout_toRightOf="@id/pic"
+                android:visibility="gone"
+
+                android:id="@+id/recontent"/>
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:id="@+id/linearLayout">
+        <Button android:layout_height="wrap_content"
+                  android:layout_width="0dp"
+                  android:text="comment number:"
+                  android:layout_weight="1" android:id="@+id/comment_number"/>
+
+        <Button android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:text="retweet number:"
+                android:layout_weight="1" android:id="@+id/retweet_number"/>
+    </LinearLayout>
+
 </LinearLayout>
