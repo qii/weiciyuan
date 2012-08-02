@@ -28,4 +28,8 @@ public class URLHelper {
 
        }
 
+    public static String getCommentListByMsgId(){
+        return URLManager.getRealUrl("commentstimelinebymsgid");
+    }
+
 }
