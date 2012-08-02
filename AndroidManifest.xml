@@ -33,6 +33,11 @@
         <activity android:name=".ui.login.OAuthActivity" android:label="授权"/>
         <activity android:name=".ui.browser.BrowserWeiboMsgActivity" android:label="detail"
                   android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".ui.browser.BrowserCommentListActivity"/>
+        <activity android:name=".ui.browser.BrowserRepostListActivity"/>
+
+
+
         <service android:name=".ui.backgroundservices.MentionsAndCommentsTimeLineService"/>
         <receiver android:name=".ui.timeline.NewMsgNotificationBroadcastReceiver"/>
 

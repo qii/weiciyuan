@@ -57,6 +57,21 @@ public class BrowserWeiboMsgActivity extends AbstractMainActivity {
 
         comment_number = (Button) findViewById(R.id.comment_number);
         retweet_number = (Button) findViewById(R.id.retweet_number);
+
+        comment_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 startActivity(new Intent(BrowserWeiboMsgActivity.this,BrowserCommentListActivity.class));
+            }
+        });
+
+        retweet_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BrowserWeiboMsgActivity.this,BrowserRepostListActivity.class));
+
+            }
+        });
     }
 
     private void buildViewData() {
