@@ -143,8 +143,9 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            ViewHolder holder = new ViewHolder();
+            ViewHolder holder = null;
             if (convertView == null) {
+                holder=new ViewHolder();
                 convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
                 holder.screenName = (TextView) convertView.findViewById(R.id.username);
                 holder.txt = (TextView) convertView.findViewById(R.id.content);

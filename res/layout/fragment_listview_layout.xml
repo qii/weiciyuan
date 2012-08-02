@@ -16,6 +16,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:scrollingCache="true"
-            android:smoothScrollbar="true" />
+            android:smoothScrollbar="true"
+            />
 
 </LinearLayout>

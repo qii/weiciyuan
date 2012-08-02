@@ -54,6 +54,7 @@
             android:layout_below="@id/content"
             android:layout_toRightOf="@id/pic"
             android:visibility="gone"
+
             android:id="@+id/recontent"/>
 
 
