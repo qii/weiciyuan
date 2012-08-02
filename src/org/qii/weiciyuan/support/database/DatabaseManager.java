@@ -3,10 +3,10 @@ package org.qii.weiciyuan.support.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import org.qii.weiciyuan.bean.TimeLineMsgList;
-import org.qii.weiciyuan.bean.WeiboAccount;
-import org.qii.weiciyuan.bean.WeiboMsg;
-import org.qii.weiciyuan.bean.WeiboUser;
+import org.qii.weiciyuan.bean.TimeLineMsgListBean;
+import org.qii.weiciyuan.bean.WeiboAccountBean;
+import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.bean.WeiboUserBean;
 import org.qii.weiciyuan.support.database.table.AccountTable;
 import org.qii.weiciyuan.support.database.table.HomeTable;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
@@ -49,7 +49,7 @@ public class DatabaseManager {
         return singleton;
     }
 
-    public OAuthActivity.DBResult addOrUpdateAccount(WeiboAccount account) {
+    public OAuthActivity.DBResult addOrUpdateAccount(WeiboAccountBean account) {
 
         ContentValues cv = new ContentValues();
         cv.put(AccountTable.UID, account.getUid());
@@ -74,12 +74,12 @@ public class DatabaseManager {
     }
 
 
-    public List<WeiboAccount> getAccountList() {
-        List<WeiboAccount> weiboAccountList = new ArrayList<WeiboAccount>();
+    public List<WeiboAccountBean> getAccountList() {
+        List<WeiboAccountBean> weiboAccountList = new ArrayList<WeiboAccountBean>();
         String sql = "select * from " + AccountTable.TABLE_NAME;
         Cursor c = rsd.rawQuery(sql, null);
         while (c.moveToNext()) {
-            WeiboAccount account = new WeiboAccount();
+            WeiboAccountBean account = new WeiboAccountBean();
             int colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN);
             account.setAccess_token(c.getString(colid));
 
@@ -95,7 +95,7 @@ public class DatabaseManager {
         return weiboAccountList;
     }
 
-    public List<WeiboAccount> removeAndGetNewAccountList(Set<String> checkedItemPosition) {
+    public List<WeiboAccountBean> removeAndGetNewAccountList(Set<String> checkedItemPosition) {
         String[] args = checkedItemPosition.toArray(new String[0]);
 
         String column = AccountTable.UID;
@@ -104,13 +104,13 @@ public class DatabaseManager {
         return getAccountList();
     }
 
-    public void addHomeLineMsg(TimeLineMsgList list) {
+    public void addHomeLineMsg(TimeLineMsgListBean list) {
 
-        List<WeiboMsg> msgList = list.getStatuses();
+        List<WeiboMsgBean> msgList = list.getStatuses();
         int size = msgList.size();
         for (int i = 0; i < size; i++) {
-            WeiboMsg msg = msgList.get(i);
-            WeiboUser user = msg.getUser();
+            WeiboMsgBean msg = msgList.get(i);
+            WeiboUserBean user = msg.getUser();
             ContentValues cv = new ContentValues();
             cv.put(HomeTable.MBLOGID, msg.getId());
             cv.put(HomeTable.NICK, user.getScreen_name());
@@ -124,15 +124,15 @@ public class DatabaseManager {
 
     }
 
-    public TimeLineMsgList getHomeLineMsgList() {
+    public TimeLineMsgListBean getHomeLineMsgList() {
 
-        TimeLineMsgList result = new TimeLineMsgList();
+        TimeLineMsgListBean result = new TimeLineMsgListBean();
 
-        List<WeiboMsg> msgList = new ArrayList<WeiboMsg>();
+        List<WeiboMsgBean> msgList = new ArrayList<WeiboMsgBean>();
         String sql = "select * from " + HomeTable.TABLE_NAME;
         Cursor c = rsd.rawQuery(sql, null);
         while (c.moveToNext()) {
-            WeiboMsg msg = new WeiboMsg();
+            WeiboMsgBean msg = new WeiboMsgBean();
             int colid = c.getColumnIndex(HomeTable.MBLOGID);
             msg.setId(c.getString(colid));
 
@@ -141,7 +141,7 @@ public class DatabaseManager {
 
             msg.setListviewItemShowTime(c.getString(c.getColumnIndex(HomeTable.TIME)));
 
-            WeiboUser user = new WeiboUser();
+            WeiboUserBean user = new WeiboUserBean();
 
             user.setScreen_name(c.getString(c.getColumnIndex(HomeTable.NICK)));
 

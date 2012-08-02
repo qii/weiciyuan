@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.TimeLineMsgList;
+import org.qii.weiciyuan.bean.TimeLineMsgListBean;
 
 /**
  * Created with IntelliJ IDEA.
@@ -54,7 +54,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     }
 
     @Override
-    protected TimeLineMsgList getList() {
+    protected TimeLineMsgListBean getList() {
         return activity.getHomeList();
     }
 

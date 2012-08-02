@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.TimeLineMsgList;
-import org.qii.weiciyuan.bean.WeiboMsg;
+import org.qii.weiciyuan.bean.TimeLineMsgListBean;
+import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.ui.MainTimeLineActivity;
 
 /**
@@ -29,7 +29,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     public abstract void refreshAndScrollTo(int positon);
 
-    protected abstract TimeLineMsgList getList();
+    protected abstract TimeLineMsgListBean getList();
 
     protected abstract void scrollToBottom();
 
@@ -165,7 +165,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
         private void bindViewData(ViewHolder holder, int position) {
 
-            WeiboMsg msg = getList().getStatuses().get(position);
+            WeiboMsgBean msg = getList().getStatuses().get(position);
             holder.screenName.setText(msg.getUser().getScreen_name());
 
             holder.txt.setText(msg.getText());
@@ -178,7 +178,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
               holder.pic.setImageDrawable(getResources().getDrawable(R.drawable.app));
 
-            WeiboMsg recontent = msg.getRetweeted_status();
+            WeiboMsgBean recontent = msg.getRetweeted_status();
             if (recontent != null) {
                 holder.recontent.setVisibility(View.VISIBLE);
                 holder.recontent.setText(recontent.getUser().getScreen_name() + "：" + recontent.getText());

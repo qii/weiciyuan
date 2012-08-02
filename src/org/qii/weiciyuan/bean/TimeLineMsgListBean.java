@@ -1,25 +1,22 @@
 package org.qii.weiciyuan.bean;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: Jiang Qi
- * Date: 12-8-2
- * Time: 下午3:28
+ * Created with IntelliJ IDEA.
+ * User: qii
+ * Date: 12-7-29
+ * Time: 下午8:22
+ * To change this template use File | Settings | File Templates.
  */
-public class CommentListBean implements Serializable {
-    private List<CommentBean> comments;
-    private String previous_cursor;
-    private String next_cursor;
-    private String total_number;
-
-    public List<CommentBean> getComments() {
-        return comments;
+public class TimeLineMsgListBean {
+    public List<WeiboMsgBean> getStatuses() {
+        return statuses;
     }
 
-    public void setComments(List<CommentBean> comments) {
-        this.comments = comments;
+    public void setStatuses(List<WeiboMsgBean> statuses) {
+        this.statuses = statuses;
     }
 
     public String getPrevious_cursor() {
@@ -45,4 +42,10 @@ public class CommentListBean implements Serializable {
     public void setTotal_number(String total_number) {
         this.total_number = total_number;
     }
+
+    private List<WeiboMsgBean> statuses = new ArrayList<WeiboMsgBean>();
+    private String previous_cursor = "";
+    private String next_cursor = "0";
+    private String total_number = "";
+
 }

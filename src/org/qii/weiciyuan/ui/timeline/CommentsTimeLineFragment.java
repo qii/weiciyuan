@@ -2,7 +2,7 @@
 //
 //import android.view.View;
 //import android.widget.AdapterView;
-//import org.qii.weiciyuan.bean.TimeLineMsgList;
+//import org.qii.weiciyuan.bean.TimeLineMsgListBean;
 //
 ///**
 // * Created with IntelliJ IDEA.
@@ -26,7 +26,7 @@
 //    }
 //
 //    @Override
-//    protected TimeLineMsgList getList() {
+//    protected TimeLineMsgListBean getList() {
 //        return null;  //To change body of implemented methods use File | Settings | File Templates.
 //    }
 //

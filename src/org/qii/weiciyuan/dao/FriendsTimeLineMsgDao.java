@@ -3,7 +3,7 @@ package org.qii.weiciyuan.dao;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import org.qii.weiciyuan.bean.TimeLineMsgList;
+import org.qii.weiciyuan.bean.TimeLineMsgListBean;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
@@ -39,14 +39,14 @@ public class FriendsTimeLineMsgDao {
         return jsonData;
     }
 
-    public TimeLineMsgList getGSONMsgList() {
+    public TimeLineMsgListBean getGSONMsgList() {
 
         String json = getMsgListJson();
         Gson gson = new Gson();
 
-        TimeLineMsgList value = null;
+        TimeLineMsgListBean value = null;
         try {
-            value = gson.fromJson(json, TimeLineMsgList.class);
+            value = gson.fromJson(json, TimeLineMsgListBean.class);
         } catch (JsonSyntaxException e) {
             ActivityUtils.showTips("发生错误，请重刷");
             AppLogger.e(e.getMessage().toString());

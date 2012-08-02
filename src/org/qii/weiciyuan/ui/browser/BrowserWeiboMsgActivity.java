@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.WeiboMsg;
+import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.ui.AbstractMainActivity;
 
 /**
@@ -20,8 +20,8 @@ import org.qii.weiciyuan.ui.AbstractMainActivity;
  */
 public class BrowserWeiboMsgActivity extends AbstractMainActivity {
 
-    private WeiboMsg msg;
-    private WeiboMsg retweetMsg;
+    private WeiboMsgBean msg;
+    private WeiboMsgBean retweetMsg;
 
     private TextView username;
     private TextView content;
@@ -40,7 +40,7 @@ public class BrowserWeiboMsgActivity extends AbstractMainActivity {
         actionBar.setTitle("detail");
 
         Intent intent = getIntent();
-        msg = (WeiboMsg) intent.getSerializableExtra("msg");
+        msg = (WeiboMsgBean) intent.getSerializableExtra("msg");
         retweetMsg = msg.getRetweeted_status();
 
         buildView();

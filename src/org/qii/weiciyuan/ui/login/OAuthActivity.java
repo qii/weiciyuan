@@ -14,9 +14,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.WeiboAccountBean;
+import org.qii.weiciyuan.bean.WeiboUserBean;
 import org.qii.weiciyuan.dao.OAuthDao;
-import org.qii.weiciyuan.bean.WeiboAccount;
-import org.qii.weiciyuan.bean.WeiboUser;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.weibo.Utility;
 import org.qii.weiciyuan.weibo.WeiboParameters;
@@ -145,7 +145,7 @@ public class OAuthActivity extends Activity {
         }
     }
 
-    class OAuthTask extends AsyncTask<String, WeiboUser, DBResult> {
+    class OAuthTask extends AsyncTask<String, WeiboUserBean, DBResult> {
 
 
         ProgressFragment progressFragment = ProgressFragment.newInstance();
@@ -163,9 +163,9 @@ public class OAuthActivity extends Activity {
 
             String token = params[0];
 
-            WeiboUser weiboUser = new OAuthDao(token).getOAuthUserInfo();
+            WeiboUserBean weiboUser = new OAuthDao(token).getOAuthUserInfo();
 
-            WeiboAccount weiboAccount = new WeiboAccount();
+            WeiboAccountBean weiboAccount = new WeiboAccountBean();
             weiboAccount.setAccess_token(token);
             weiboAccount.setUsername(weiboUser.getName());
             weiboAccount.setUid(weiboUser.getId());
