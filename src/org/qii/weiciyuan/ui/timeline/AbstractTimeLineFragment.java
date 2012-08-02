@@ -58,7 +58,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
         listView = (ListView) view.findViewById(R.id.listView);
-
+         listView.setScrollingCacheEnabled(false);
         View footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         listView.addFooterView(footerView);
 
@@ -143,9 +143,9 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            ViewHolder holder = null;
+            ViewHolder holder;
             if (convertView == null) {
-                holder=new ViewHolder();
+                holder = new ViewHolder();
                 convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
                 holder.screenName = (TextView) convertView.findViewById(R.id.username);
                 holder.txt = (TextView) convertView.findViewById(R.id.content);
@@ -176,7 +176,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
                 holder.time.setText(msg.getCreated_at());
             }
 
-            holder.pic.setImageDrawable(getResources().getDrawable(R.drawable.app));
+              holder.pic.setImageDrawable(getResources().getDrawable(R.drawable.app));
 
             WeiboMsg recontent = msg.getRetweeted_status();
             if (recontent != null) {
