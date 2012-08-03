@@ -174,5 +174,33 @@ public class WeiboMsgBean implements Serializable {
     private WeiboMsgBean retweeted_status;
     private GeoBean geo;
 
+    private String thumbnail_pic;
+    private String bmiddle_pic;
+    private String original_pic;
+
+    public String getThumbnail_pic() {
+        return thumbnail_pic;
+    }
+
+    public void setThumbnail_pic(String thumbnail_pic) {
+        this.thumbnail_pic = thumbnail_pic;
+    }
+
+    public String getBmiddle_pic() {
+        return bmiddle_pic;
+    }
+
+    public void setBmiddle_pic(String bmiddle_pic) {
+        this.bmiddle_pic = bmiddle_pic;
+    }
+
+    public String getOriginal_pic() {
+        return original_pic;
+    }
+
+    public void setOriginal_pic(String original_pic) {
+        this.original_pic = original_pic;
+    }
+
     private String listviewItemShowTime;
 }

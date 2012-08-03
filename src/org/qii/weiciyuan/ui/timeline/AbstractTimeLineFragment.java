@@ -149,11 +149,13 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
-                holder.screenName = (TextView) convertView.findViewById(R.id.username);
-                holder.txt = (TextView) convertView.findViewById(R.id.content);
-                holder.recontent = (TextView) convertView.findViewById(R.id.recontent);
+                holder.username = (TextView) convertView.findViewById(R.id.username);
+                holder.content = (TextView) convertView.findViewById(R.id.content);
+                holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
-                holder.pic = (ImageView) convertView.findViewById(R.id.pic);
+                holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
+                holder.content_pic = (ImageView) convertView.findViewById(R.id.content_pic);
+                holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -168,9 +170,11 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
         private void bindViewData(ViewHolder holder, int position) {
 
             WeiboMsgBean msg = getList().getStatuses().get(position);
-            holder.screenName.setText(msg.getUser().getScreen_name());
+            WeiboMsgBean repost_msg = msg.getRetweeted_status();
 
-            holder.txt.setText(msg.getText());
+
+            holder.username.setText(msg.getUser().getScreen_name());
+            holder.content.setText(msg.getText());
 
             if (!TextUtils.isEmpty(msg.getListviewItemShowTime())) {
                 holder.time.setText(msg.getListviewItemShowTime());
@@ -181,25 +185,44 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
             String image_url = msg.getUser().getProfile_image_url();
             if (!TextUtils.isEmpty(image_url)) {
-                downloadAvatar(holder.pic, msg.getUser().getProfile_image_url());
+                downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url());
             }
 
-            WeiboMsgBean recontent = msg.getRetweeted_status();
-            if (recontent != null) {
-                holder.recontent.setVisibility(View.VISIBLE);
-                holder.recontent.setText(recontent.getUser().getScreen_name() + "：" + recontent.getText());
-            } else {
-                holder.recontent.setVisibility(View.GONE);
+            holder.repost_content.setVisibility(View.GONE);
+            holder.repost_content_pic.setVisibility(View.GONE);
+            holder.content_pic.setVisibility(View.GONE);
+
+            if (repost_msg != null) {
+                buildRepostContent(repost_msg, holder);
+            } else if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
+                buildContentPic(msg, holder);
             }
 
+
+        }
+
+        private void buildRepostContent(WeiboMsgBean repost_msg, ViewHolder holder) {
+            holder.repost_content.setVisibility(View.VISIBLE);
+
+            holder.repost_content.setText(repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
+            if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
+                holder.repost_content_pic.setVisibility(View.VISIBLE);
+            }
+        }
+
+        private void buildContentPic(WeiboMsgBean msg, ViewHolder holder) {
+            String main_thumbnail_pic_url = msg.getThumbnail_pic();
+            holder.content_pic.setVisibility(View.VISIBLE);
         }
     }
 
     static class ViewHolder {
-        TextView screenName;
-        TextView txt;
-        TextView recontent;
+        TextView username;
+        TextView content;
+        TextView repost_content;
         TextView time;
-        ImageView pic;
+        ImageView avatar;
+        ImageView content_pic;
+        ImageView repost_content_pic;
     }
 }

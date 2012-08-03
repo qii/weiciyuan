@@ -7,55 +7,82 @@
                 android:background="@drawable/listview_item_background_selector">
 
     <ImageView
+            android:id="@+id/avatar"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/app"
-            android:id="@+id/pic" android:layout_gravity="left|center_vertical"
+            android:layout_gravity="left|center_vertical"
             android:layout_marginRight="5dp"/>
 
     <TextView
+            android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="username"
             android:textColor="@drawable/listview_item_text_selector"
-            android:layout_toRightOf="@id/pic"
-            android:id="@+id/username"/>
+            android:layout_toRightOf="@id/avatar"
+            />
 
     <TextView
-
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="12:00"
             android:textColor="@drawable/listview_item_text_selector"
-
             android:layout_alignParentRight="true"
             android:layout_alignBottom="@id/username"
-            android:id="@+id/time"/>
+            />
 
 
     <TextView
+            android:id="@+id/content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="contentcontentcontentcontentcontentcontentcontentcontent"
+            android:text="content"
             android:textColor="@drawable/listview_item_text_selector"
-            android:id="@+id/content"
             android:layout_below="@id/username"
-            android:layout_toRightOf="@id/pic"
+            android:layout_toRightOf="@id/avatar"
 
             />
 
-    <TextView
+    <FrameLayout
+
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="13dp"
-            android:layout_marginTop="2dp"
-            android:text="the recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent textthe recontent text"
-            android:textColor="@drawable/listview_item_text_selector"
             android:layout_below="@id/content"
-            android:layout_toRightOf="@id/pic"
-            android:visibility="gone"
+            android:layout_toRightOf="@id/avatar"
+            >
+        <ImageView
+                android:id="@+id/content_pic"
+                android:layout_width="fill_parent"
+                android:layout_height="80dp"
+                android:visibility="gone"
+                />
+        <LinearLayout
 
-            android:id="@+id/recontent"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="2dp"
+                android:orientation="vertical"
 
+                >
+            <TextView
+                    android:id="@+id/repost_content"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="content"
+                    android:textColor="@drawable/listview_item_text_selector"
+                    android:visibility="gone"
+                    />
+            <ImageView
 
+                    android:id="@+id/repost_content_pic"
+                    android:layout_width="fill_parent"
+                    android:layout_height="80dp"
+                    android:visibility="gone"
+                    />
+        </LinearLayout>
+
+    </FrameLayout>
 </RelativeLayout>
