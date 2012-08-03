@@ -26,11 +26,7 @@ public class FileManager {
         boolean unMounted = Environment.getExternalStorageState().equals(
                 Environment.MEDIA_UNMOUNTED);
 
-        if (!canRead || onlyRead || unMounted) {
-            return false;
-        }
-
-        return true;
+        return !(!canRead || onlyRead || unMounted);
     }
 
     private static String getFileAbsolutePathFromRelativePath(String relativePath) {
@@ -72,15 +68,14 @@ public class FileManager {
     }
 
 
-    public static File creatNewFileInSdcard(String absoluatePath) {
+    public static File createNewFileInSDCard(String absolutePath) {
         if (!isExternalStorageMounted()) {
             AppLogger.e("sdcard unavailiable");
             return null;
         }
 
-        String absoluteFilePath = absoluatePath;
-        String absoluteFileDirPath = absoluteFilePath.substring(0, absoluteFilePath.length() - 1);
-        File file = new File(absoluteFilePath + ".jpg");
+        String absoluteFileDirPath = absolutePath.substring(0, absolutePath.length() - 1);
+        File file = new File(absolutePath + ".jpg");
         if (file.exists()) {
             return file;
         } else {
@@ -89,8 +84,9 @@ public class FileManager {
             if (dirFile.mkdirs()) {
 
                 try {
-                    file.createNewFile();
-                    return file;
+                    if (file.createNewFile()) {
+                        return file;
+                    }
                 } catch (IOException e) {
                     return null;
                 }
