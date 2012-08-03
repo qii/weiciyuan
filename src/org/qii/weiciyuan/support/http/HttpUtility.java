@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
@@ -37,17 +38,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA.
- * User: qii
- * Date: 12-7-29
- * Time: 上午10:10
- * To change this template use File | Settings | File Templates.
- */
 public class HttpUtility {
 
     private static HttpUtility httpUtility = new HttpUtility();
-    private HttpClient httpclient = null;
+    private HttpClient httpClient = null;
     private HttpGet httpGet = new HttpGet();
     private HttpPost httpPost = new HttpPost();
 
@@ -56,9 +50,9 @@ public class HttpUtility {
         HttpParams params = new BasicHttpParams();
         params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
-        httpclient = new DefaultHttpClient(params);
-        HttpConnectionParams.setConnectionTimeout(httpclient.getParams(), 2000);
-        HttpConnectionParams.setSoTimeout(httpclient.getParams(), 2000);
+        httpClient = new DefaultHttpClient(params);
+        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 4000);
+        HttpConnectionParams.setSoTimeout(httpClient.getParams(), 4000);
 
 
     }
@@ -75,29 +69,28 @@ public class HttpUtility {
                 return doPost(url, param);
             case Get:
                 return doGet(url, param);
-            case Get_File:
-                return doGetFile(url, param);
+            case Get_AVATAR_File:
+                return doGetAvatarFile(url, param);
         }
         return "";
     }
 
     public String doPost(String url, Map<String, String> param) {
 
-        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
         Set<String> keys = param.keySet();
         for (String key : keys) {
             String value = param.get(key);
             if (!TextUtils.isEmpty(value))
-                formparams.add(new BasicNameValuePair(key, value));
+                nameValuePairs.add(new BasicNameValuePair(key, value));
 
         }
 
-
         UrlEncodedFormEntity entity = null;
         try {
-            entity = new UrlEncodedFormEntity(formparams, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+            entity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
+        } catch (UnsupportedEncodingException ignored) {
 
         }
         HttpPost httppost = new HttpPost(url);
@@ -105,27 +98,19 @@ public class HttpUtility {
 
         HttpResponse response = null;
         try {
-            response = httpclient.execute(httppost);
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            response = httpClient.execute(httppost);
+        } catch (IOException ignored) {
         }
 
         return dealWithResponse(response);
     }
 
-    public String doGetFile(String url, Map<String, String> param) {
+    public String doGetAvatarFile(String url, Map<String, String> param) {
         HttpResponse response = getDoGetHttpResponse(url, param);
 
         if (response != null) {
-            String result= FileDownloaderHttpHelper.saveFile(url, response);
-            if( response.getEntity() != null ) {
-                try {
-                    response.getEntity().consumeContent();
-                } catch (IOException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
-            }//if
-            return result;
+            return FileDownloaderHttpHelper.saveFile(url, response, FileLocationMethod.avatar);
+
         } else {
             return "";
         }
@@ -145,7 +130,7 @@ public class HttpUtility {
     }
 
     private HttpResponse getDoGetHttpResponse(String url, Map<String, String> param) {
-        URIBuilder uriBuilder = null;
+        URIBuilder uriBuilder;
         try {
             uriBuilder = new URIBuilder(url);
 
@@ -162,7 +147,7 @@ public class HttpUtility {
             AppLogger.d(uriBuilder.build().toString());
 
         } catch (URISyntaxException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            AppLogger.d(e.getMessage());
         }
 
 
@@ -174,16 +159,17 @@ public class HttpUtility {
 
         HttpResponse response = null;
         try {
-            response = httpclient.execute(httpGet, localContext);
+            response = httpClient.execute(httpGet, localContext);
         } catch (ConnectTimeoutException e) {
 
-            AppLogger.e("connection request timeout");
+            AppLogger.e(e.getMessage());
             ActivityUtils.showTips(R.string.timeout);
 
         } catch (ClientProtocolException e) {
+            AppLogger.e(e.getMessage());
 
         } catch (IOException e) {
-
+            AppLogger.e(e.getMessage());
         }
         return response;
     }
@@ -213,9 +199,9 @@ public class HttpUtility {
         try {
             result = EntityUtils.toString(entity);
 
-        } catch (IOException ignored) {
+        } catch (IOException e) {
 
-
+            AppLogger.e(e.getMessage());
         }
 
         AppLogger.d(result);
@@ -250,11 +236,5 @@ public class HttpUtility {
     }
 
 
-    private void dealCookie() {
-//        List<Cookie> cookies = cookieStore.getCookies();
-//              for (int i = 0; i < cookies.size(); i++) {
-//                  System.out.println("Local cookie: " + cookies.get(i));
-//              }
-    }
 }
 

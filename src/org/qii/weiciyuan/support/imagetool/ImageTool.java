@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.imagetool;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
@@ -25,7 +26,7 @@ public class ImageTool {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url);
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture);
 
         absoluteFilePath = absoluteFilePath + ".jpg";
 
@@ -47,6 +48,27 @@ public class ImageTool {
         }
     }
 
+    private static Bitmap decodeBitmapFromSDCard(String url) {
+
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url,FileLocationMethod.avatar);
+
+        absoluteFilePath = absoluteFilePath + ".jpg";
+
+        File file = new File(absoluteFilePath);
+
+        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        if (bitmap != null) {
+
+            return bitmap;
+        } else {
+
+            return null;
+        }
+    }
+
     public static Bitmap getBitmapFromSDCardOrNetWork(String url,
                                                       int reqWidth, int reqHeight) {
         Bitmap bitmap = decodeBitmapFromSDCard(url, reqWidth, reqHeight);
@@ -58,11 +80,28 @@ public class ImageTool {
         }
     }
 
+    public static Bitmap getAvatarBitmapFromSDCardOrNetWork(String url) {
+
+        Bitmap bitmap = decodeBitmapFromSDCard(url);
+
+        if (bitmap != null) {
+            return bitmap;
+        } else {
+            return getBitmapFromNetWork(url);
+        }
+    }
+
     private static Bitmap getBitmapFromNetWork(String url,
                                                int reqWidth, int reqHeight) {
         Map<String, String> parms = new HashMap<String, String>();
-        String relativeFilePaht = HttpUtility.getInstance().execute(HttpMethod.Get_File, url, parms);
+        String relativeFilePaht = HttpUtility.getInstance().execute(HttpMethod.Get_AVATAR_File, url, parms);
         return decodeBitmapFromSDCard(url, reqWidth, reqHeight);
+    }
+
+    private static Bitmap getBitmapFromNetWork(String url) {
+        Map<String, String> parms = new HashMap<String, String>();
+        String relativeFilePaht = HttpUtility.getInstance().execute(HttpMethod.Get_AVATAR_File, url, parms);
+        return decodeBitmapFromSDCard(url);
     }
 
     private static int calculateInSampleSize(

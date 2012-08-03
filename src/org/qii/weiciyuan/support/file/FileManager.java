@@ -12,38 +12,53 @@ import java.io.IOException;
  * Time: 上午10:06
  */
 public class FileManager {
-    private static String SDCARD_PATH = Environment.getExternalStorageDirectory().getPath();
-    private static String APP_NAME = "weiciyuan";
-    private static String AVATAR_CACHE = "avatar";
+    private static final String SDCARD_PATH = Environment.getExternalStorageDirectory().getPath();
+    private static final String APP_NAME = "weiciyuan";
+    private static final String AVATAR_CACHE = "avatar";
+    private static final String PICTURE_CACHE = "picture";
 
 
     private static boolean isExternalStorageMounted() {
-        if (!Environment.getExternalStorageDirectory().canRead()
-                || Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED_READ_ONLY)
-                || Environment.getExternalStorageState().equals(
-                Environment.MEDIA_UNMOUNTED)) {
+
+        boolean canRead = Environment.getExternalStorageDirectory().canRead();
+        boolean onlyRead = Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED_READ_ONLY);
+        boolean unMounted = Environment.getExternalStorageState().equals(
+                Environment.MEDIA_UNMOUNTED);
+
+        if (!canRead || onlyRead || unMounted) {
             return false;
         }
 
         return true;
     }
 
-    public static String getFileAbsolutePathFromRelativePath(String relativePath) {
+    private static String getFileAbsolutePathFromRelativePath(String relativePath) {
         String result = SDCARD_PATH + File.separator + APP_NAME + relativePath;
         AppLogger.d(result);
         return result;
     }
 
-    public static String getFileAbsolutePathFromUrl(String url) {
-        String relativePath = getFileRelativePathFromUrl(url);
-        String result = getFileAbsolutePathFromRelativePath(relativePath);
-        AppLogger.d(result);
+    public static String getFileAbsolutePathFromUrl(String url, FileLocationMethod method) {
+        String oldRelativePath = getFileRelativePathFromUrl(url);
+        String newRelativePath = "";
+        switch (method) {
+            case avatar:
+                newRelativePath = File.separator + AVATAR_CACHE + oldRelativePath;
+                break;
+            case picture:
+                newRelativePath = File.separator + PICTURE_CACHE + oldRelativePath;
+                break;
+        }
 
-        return result;
+        String absolutePath = getFileAbsolutePathFromRelativePath(newRelativePath);
+
+        AppLogger.d(absolutePath);
+
+        return absolutePath;
     }
 
-    public static String getFileRelativePathFromUrl(String url) {
+    private static String getFileRelativePathFromUrl(String url) {
 
         int index = url.indexOf("//");
 
@@ -57,13 +72,13 @@ public class FileManager {
     }
 
 
-    public static File creatNewFileInSdcard(String relativePath) {
+    public static File creatNewFileInSdcard(String absoluatePath) {
         if (!isExternalStorageMounted()) {
             AppLogger.e("sdcard unavailiable");
             return null;
         }
 
-        String absoluteFilePath = getFileAbsolutePathFromRelativePath(relativePath);
+        String absoluteFilePath = absoluatePath;
         String absoluteFileDirPath = absoluteFilePath.substring(0, absoluteFilePath.length() - 1);
         File file = new File(absoluteFilePath + ".jpg");
         if (file.exists()) {

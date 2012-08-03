@@ -4,6 +4,8 @@ import ch.boye.httpclientandroidlib.HttpEntity;
 import ch.boye.httpclientandroidlib.HttpResponse;
 import ch.boye.httpclientandroidlib.HttpStatus;
 import ch.boye.httpclientandroidlib.StatusLine;
+import ch.boye.httpclientandroidlib.util.EntityUtils;
+import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.io.*;
 
@@ -15,7 +17,7 @@ import java.io.*;
 public class FileDownloaderHttpHelper {
 
 
-    public static String saveFile(String url, HttpResponse response) {
+    public static String saveFile(String url, HttpResponse response,FileLocationMethod method) {
 
         StatusLine status = response.getStatusLine();
         int statusCode = status.getStatusCode();
@@ -26,7 +28,7 @@ public class FileDownloaderHttpHelper {
         }
 
 
-        return saveFileAndGetFileRelativePath(response, url);
+        return saveFileAndGetFileRelativePath(response, url, method);
 
     }
 
@@ -35,10 +37,10 @@ public class FileDownloaderHttpHelper {
         return "";
     }
 
-    private static String saveFileAndGetFileRelativePath(HttpResponse response, String url) {
+    private static String saveFileAndGetFileRelativePath(HttpResponse response, String url, FileLocationMethod method) {
         HttpEntity httpEntity = response.getEntity();
-        String imageRelativePath = FileManager.getFileRelativePathFromUrl(url);
-        File file = FileManager.creatNewFileInSdcard(imageRelativePath);
+        String imageAbsolutePath = FileManager.getFileAbsolutePathFromUrl(url, method);
+        File file = FileManager.creatNewFileInSdcard(imageAbsolutePath);
         FileOutputStream out = null;
         InputStream in = null;
         String result = "";
@@ -54,7 +56,7 @@ public class FileDownloaderHttpHelper {
                     bytesum += byteread;
                     out.write(buffer, 0, byteread);
                 }
-                result = imageRelativePath;
+                result = imageAbsolutePath;
             } catch (FileNotFoundException ignored) {
             } catch (IOException e) {
 
@@ -79,10 +81,14 @@ public class FileDownloaderHttpHelper {
 
         }
 
+        try {
+            EntityUtils.consume(response.getEntity());
+        } catch (IOException e) {
+            AppLogger.e(e.getMessage());
+        }
+
         return result;
     }
-
-
 
 
 }
