@@ -8,5 +8,5 @@ package org.qii.weiciyuan.support.http;
  * To change this template use File | Settings | File Templates.
  */
 public enum HttpMethod {
-    Post, Get
+    Post, Get, Get_File
 }

@@ -25,6 +25,7 @@ import ch.boye.httpclientandroidlib.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
@@ -73,9 +74,9 @@ public class HttpUtility {
             case Post:
                 return doPost(url, param);
             case Get:
-
                 return doGet(url, param);
-
+            case Get_File:
+                return doGetFile(url, param);
         }
         return "";
     }
@@ -112,9 +113,30 @@ public class HttpUtility {
         return dealWithResponse(response);
     }
 
+    public String doGetFile(String url, Map<String, String> param) {
+        HttpResponse response = getDoGetHttpResponse(url, param);
+
+        if (response != null) {
+            return FileDownloaderHttpHelper.saveFile(url,response);
+        } else {
+            return "";
+        }
+    }
+
     public String doGet(String url, Map<String, String> param) {
 
 
+        HttpResponse response = getDoGetHttpResponse(url, param);
+
+        if (response != null) {
+            return dealWithResponse(response);
+        } else {
+            return "";
+        }
+
+    }
+
+    private HttpResponse getDoGetHttpResponse(String url, Map<String, String> param) {
         URIBuilder uriBuilder = null;
         try {
             uriBuilder = new URIBuilder(url);
@@ -155,13 +177,7 @@ public class HttpUtility {
         } catch (IOException e) {
 
         }
-
-        if (response != null) {
-            return dealWithResponse(response);
-        } else {
-            return "";
-        }
-
+        return response;
     }
 
     private String dealWithResponse(HttpResponse httpResponse) {
@@ -180,6 +196,7 @@ public class HttpUtility {
 
 
     }
+
 
     private String readResult(HttpResponse response) {
         HttpEntity entity = response.getEntity();
