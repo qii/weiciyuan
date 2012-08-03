@@ -209,6 +209,11 @@ public class MainTimeLineActivity extends AbstractMainActivity {
                 avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
                 avatarBitmapWorkerTaskHashMap.remove(key);
             }
+            Set<String> pKeys = pictureBitmapWorkerTaskMap.keySet();
+            for (String pkey : pKeys) {
+                pictureBitmapWorkerTaskMap.get(pkey).cancel(true);
+                pictureBitmapWorkerTaskMap.remove(pkey);
+            }
         }
 
         @Override
