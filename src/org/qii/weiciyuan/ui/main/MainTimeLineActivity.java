@@ -1,10 +1,9 @@
 package org.qii.weiciyuan.ui.main;
 
-import android.app.ActionBar;
-import android.app.Dialog;
-import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
+import android.app.*;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -12,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.LruCache;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -59,6 +59,8 @@ public class MainTimeLineActivity extends AbstractMainActivity {
     private int commentList_position = 0;
     private int mailList_position = 0;
 
+    private LruCache<String, Bitmap> avatarCache;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,9 +72,20 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
         homeList = DatabaseManager.getInstance().getHomeLineMsgList();
 
+        buildCache();
         buildViewPager();
         buildActionBarAndViewPagerTitles();
 
+
+    }
+
+    private void buildCache() {
+        final int memClass = ((ActivityManager) getSystemService(
+                Context.ACTIVITY_SERVICE)).getMemoryClass();
+
+        final int cacheSize = 1024 * 1024 * memClass / 8;
+
+        avatarCache = new LruCache<String, Bitmap>(cacheSize);
 
     }
 
@@ -132,13 +145,24 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         }
     };
 
+    private Bitmap getBitmapFromMemCache(String key) {
+        return avatarCache.get(key);
+    }
 
     FriendsTimeLineFragment.Commander frinedsTimeLineMsgCommand = new FriendsTimeLineFragment.Commander() {
 
         @Override
-        public void downloadPic(ImageView view, String url) {
-            BitmapWorkerTask task = new BitmapWorkerTask(view);
-            task.execute(url);
+        public void downloadAvatar(ImageView view, String urlKey) {
+
+            Bitmap bitmap = getBitmapFromMemCache(urlKey);
+            if (bitmap != null) {
+                view.setImageBitmap(bitmap);
+            } else {
+                view.setImageDrawable(getResources().getDrawable(R.drawable.app));
+                BitmapWorkerTask task = new BitmapWorkerTask(avatarCache);
+                task.execute(urlKey);
+            }
+
         }
 
         @Override
@@ -340,5 +364,6 @@ public class MainTimeLineActivity extends AbstractMainActivity {
     public void setHomeList(TimeLineMsgListBean homeList) {
         this.homeList = homeList;
     }
+
 
 }

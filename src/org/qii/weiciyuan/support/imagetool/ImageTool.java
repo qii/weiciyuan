@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.support.picturetool;
+package org.qii.weiciyuan.support.imagetool;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,14 +25,13 @@ public class ImageTool {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromRelativePath(
-                FileManager.getFileRelativePathFromUrl(url));
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url);
 
         absoluteFilePath = absoluteFilePath + ".jpg";
 
-        File file=new File(absoluteFilePath);
+        File file = new File(absoluteFilePath);
 
-        boolean is=file.exists();
+        boolean is = file.exists();
 
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         if (bitmap != null) {

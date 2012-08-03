@@ -41,7 +41,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     protected abstract void listViewFooterViewClick(View view);
 
-    protected abstract void downloadPic(ImageView view, String url);
+    protected abstract void downloadAvatar(ImageView view, String url);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -178,12 +178,11 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
                 holder.time.setText(msg.getCreated_at());
             }
 
-            holder.pic.setImageDrawable(getResources().getDrawable(R.drawable.app));
 
             String image_url = msg.getUser().getProfile_image_url();
-            if (!TextUtils.isEmpty(image_url))
-                downloadPic(holder.pic, msg.getUser().getProfile_image_url());
-
+            if (!TextUtils.isEmpty(image_url)) {
+                downloadAvatar(holder.pic, msg.getUser().getProfile_image_url());
+            }
 
             WeiboMsgBean recontent = msg.getRetweeted_status();
             if (recontent != null) {

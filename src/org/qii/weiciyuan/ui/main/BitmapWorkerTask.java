@@ -2,10 +2,8 @@ package org.qii.weiciyuan.ui.main;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.widget.ImageView;
-import org.qii.weiciyuan.support.picturetool.ImageTool;
-
-import java.lang.ref.WeakReference;
+import android.util.LruCache;
+import org.qii.weiciyuan.support.imagetool.ImageTool;
 
 /**
  * User: Jiang Qi
@@ -15,42 +13,31 @@ import java.lang.ref.WeakReference;
 public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 
 
-    private final WeakReference<ImageView> imageViewReference;
+    private LruCache<String, Bitmap> lruCache;
     private String data = "";
     private int reqHeight = 0;
     private int reqWidth = 0;
 
-    public BitmapWorkerTask(ImageView imageView) {
+    public BitmapWorkerTask(LruCache<String, Bitmap> cache) {
 
-        imageViewReference = new WeakReference(imageView);
-        reqHeight = imageView.getHeight();
-        reqWidth = imageView.getWidth();
+        lruCache = cache;
+
     }
-
-//    @Override
-//    protected void onPreExecute() {
-//        if (imageViewReference != null  ) {
-//            final ImageView imageView = imageViewReference.get();
-//            if (imageView != null) {
-//                imageView.setImageDrawable(GlobalContext.getInstance().getResources().getDrawable(R.drawable.app));
-//            }
-//        }
-//        super.onPreExecute();
-//    }
 
     @Override
     protected Bitmap doInBackground(String... url) {
         data = url[0];
+
         return ImageTool.getBitmapFromSDCardOrNetWork(data, reqWidth, reqHeight);
     }
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-        if (imageViewReference != null && bitmap != null) {
-            final ImageView imageView = imageViewReference.get();
-            if (imageView != null) {
-                imageView.setImageBitmap(bitmap);
-            }
+
+        if (bitmap != null) {
+
+            lruCache.put(data, bitmap);
+
         }
     }
 

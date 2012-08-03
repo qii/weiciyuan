@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,15 +13,15 @@ import java.util.Date;
  * Time: 下午7:47
  * To change this template use File | Settings | File Templates.
  */
-public class WeiboMsgBean implements Serializable{
-
+public class WeiboMsgBean implements Serializable {
 
 
     public String getCreated_at() {
-
-        SimpleDateFormat format = new SimpleDateFormat("kk:mm");
-        return format.format(new Date(created_at));
-
+        if (!TextUtils.isEmpty(created_at)) {
+            SimpleDateFormat format = new SimpleDateFormat("kk:mm");
+            return format.format(new Date(created_at));
+        }
+        return "";
 //        return created_at;
     }
 
@@ -167,7 +169,7 @@ public class WeiboMsgBean implements Serializable{
     private String mid;
     private String reposts_count;
     private String comments_count;
-//    private Object annotations;
+    //    private Object annotations;
     private WeiboUserBean user;
     private WeiboMsgBean retweeted_status;
     private GeoBean geo;

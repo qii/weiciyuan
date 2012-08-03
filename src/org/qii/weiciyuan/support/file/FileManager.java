@@ -14,6 +14,8 @@ import java.io.IOException;
 public class FileManager {
     private static String SDCARD_PATH = Environment.getExternalStorageDirectory().getPath();
     private static String APP_NAME = "weiciyuan";
+    private static String AVATAR_CACHE = "avatar";
+
 
     private static boolean isExternalStorageMounted() {
         if (!Environment.getExternalStorageDirectory().canRead()
@@ -42,7 +44,6 @@ public class FileManager {
     }
 
     public static String getFileRelativePathFromUrl(String url) {
-        //  String url = "http://tp2.sinaimg.cn/2500453793/50/5617547700/0";
 
         int index = url.indexOf("//");
 
@@ -63,8 +64,8 @@ public class FileManager {
         }
 
         String absoluteFilePath = getFileAbsolutePathFromRelativePath(relativePath);
-        String absoluteFileDirPath = absoluteFilePath.substring(0, absoluteFilePath.length()-1);
-        File file = new File(absoluteFilePath+".jpg");
+        String absoluteFileDirPath = absoluteFilePath.substring(0, absoluteFilePath.length() - 1);
+        File file = new File(absoluteFilePath + ".jpg");
         if (file.exists()) {
             return file;
         } else {
@@ -81,52 +82,7 @@ public class FileManager {
             }
 
         }
-       return null;
-//        File file = new File(absolutePath);
-//        if (file.exists()){
-//            return file;
-//        }
-//        file = null;
-//
-//        String sdPath = null;
-//        String[] paths = absolutePath.split("/");
-//        String newPath = null;
-//        int j = 0;
-//
-//
-//            sdPath = Environment.getExternalStorageDirectory().getPath();
-//            // paths = path.replace(sdPath, "").split("/");
-//            newPath = sdPath;
-//            j = sdPath.split("/").length;
-//
-//
-//        for (int i = j; i < paths.length - 1; i++) {
-//            newPath += "/" + paths[i];
-//        }
-//
-//        File newFileDir = new File(newPath);
-//
-//        if (!newFileDir.exists()) {
-//            boolean dirsCreated = newFileDir.mkdirs();
-//
-//            if (!dirsCreated)
-//                return null;
-//        }
-//
-//        File newFile = new File(absolutePath);
-//        if (!newFile.exists()) {
-//
-//            boolean isCreated = false;
-//            try {
-//                isCreated = newFile.createNewFile();
-//            } catch (IOException e) {
-//                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//            }
-//            if (!isCreated)
-//                return null;
-//
-//        }
-//
-//        return newFile;
+        return null;
+
     }
 }
