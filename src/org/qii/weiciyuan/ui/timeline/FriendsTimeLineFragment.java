@@ -51,6 +51,10 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         public void downloadAvatar(ImageView view, String url) {
 
         }
+
+        public void downContentPic(ImageView view, String url) {
+
+        }
     }
 
     public FriendsTimeLineFragment setCommander(Commander commander) {
@@ -92,6 +96,11 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     @Override
     protected void downloadAvatar(ImageView view, String url) {
         commander.downloadAvatar(view, url);
+    }
+
+    @Override
+    protected void downContentPic(ImageView view, String url) {
+        commander.downContentPic(view, url);
     }
 
 

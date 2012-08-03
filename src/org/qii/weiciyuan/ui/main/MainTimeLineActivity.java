@@ -19,7 +19,6 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgListBean;
 import org.qii.weiciyuan.dao.FriendsTimeLineMsgDao;
-import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.ui.AbstractMainActivity;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
@@ -72,7 +71,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         token = intent.getStringExtra("token");
         screen_name = intent.getStringExtra("screen_name");
 
-        homeList = DatabaseManager.getInstance().getHomeLineMsgList();
+        //homeList = DatabaseManager.getInstance().getHomeLineMsgList();
 
         buildCache();
         buildViewPager();
@@ -153,7 +152,8 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
     FriendsTimeLineFragment.Commander frinedsTimeLineMsgCommand = new FriendsTimeLineFragment.Commander() {
 
-        Map<String, AvatarBitmapWorkerTask> map = new HashMap<String, AvatarBitmapWorkerTask>();
+        Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = new HashMap<String, AvatarBitmapWorkerTask>();
+        Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = new HashMap<String, PictureBitmapWorkerTask>();
 
         @Override
         public void downloadAvatar(ImageView view, String urlKey) {
@@ -161,16 +161,26 @@ public class MainTimeLineActivity extends AbstractMainActivity {
             Bitmap bitmap = getBitmapFromMemCache(urlKey);
             if (bitmap != null) {
                 view.setImageBitmap(bitmap);
-                map.remove(urlKey);
+                avatarBitmapWorkerTaskHashMap.remove(urlKey);
             } else {
                 view.setImageDrawable(getResources().getDrawable(R.drawable.app));
-                if (map.get(urlKey) == null) {
+                if (avatarBitmapWorkerTaskHashMap.get(urlKey) == null) {
                     AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(avatarCache);
                     avatarTask.execute(urlKey);
-                    map.put(urlKey, avatarTask);
+                    avatarBitmapWorkerTaskHashMap.put(urlKey, avatarTask);
                 }
             }
 
+        }
+
+        @Override
+        public void downContentPic(ImageView view, String urlKey) {
+            view.setImageDrawable(getResources().getDrawable(R.drawable.app));
+            if (pictureBitmapWorkerTaskMap.get(urlKey) == null) {
+                PictureBitmapWorkerTask avatarTask = new PictureBitmapWorkerTask();
+                avatarTask.execute(urlKey);
+                pictureBitmapWorkerTaskMap.put(urlKey, avatarTask);
+            }
         }
 
         @Override

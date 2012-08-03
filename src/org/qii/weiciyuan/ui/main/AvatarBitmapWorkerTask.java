@@ -3,6 +3,7 @@ package org.qii.weiciyuan.ui.main;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.LruCache;
+import android.widget.ListView;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 
 /**
@@ -12,7 +13,8 @@ import org.qii.weiciyuan.support.imagetool.ImageTool;
  */
 public class AvatarBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 
-
+    private String position;
+    private ListView listView;
     private LruCache<String, Bitmap> lruCache;
     private String data = "";
 

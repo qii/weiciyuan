@@ -43,6 +43,8 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     protected abstract void downloadAvatar(ImageView view, String url);
 
+    protected abstract void downContentPic(ImageView view, String url);
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -207,12 +209,14 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
             holder.repost_content.setText(repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
             if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
                 holder.repost_content_pic.setVisibility(View.VISIBLE);
+                downContentPic(holder.repost_content_pic,repost_msg.getThumbnail_pic());
             }
         }
 
         private void buildContentPic(WeiboMsgBean msg, ViewHolder holder) {
             String main_thumbnail_pic_url = msg.getThumbnail_pic();
             holder.content_pic.setVisibility(View.VISIBLE);
+            downContentPic(holder.content_pic,main_thumbnail_pic_url);
         }
     }
 
