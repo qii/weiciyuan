@@ -88,6 +88,7 @@ public class FileManager {
                         return file;
                     }
                 } catch (IOException e) {
+                    AppLogger.d(e.getMessage());
                     return null;
                 }
             }
