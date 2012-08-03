@@ -31,7 +31,7 @@ public class StatusNewMsgDao {
         map.put("access_token", access_token);
         map.put("status", str);
 
-        HttpUtility.getInstance().execute(HttpMethod.Post, url, map);
+        HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
 
     }
 }

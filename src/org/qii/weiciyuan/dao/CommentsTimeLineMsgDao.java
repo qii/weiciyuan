@@ -50,7 +50,7 @@ public class CommentsTimeLineMsgDao {
         map.put("filter_by_author", filter_by_author);
 
 
-        String jsonData = HttpUtility.getInstance().execute(HttpMethod.Get, url, map);
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
 
         Gson gson = new Gson();

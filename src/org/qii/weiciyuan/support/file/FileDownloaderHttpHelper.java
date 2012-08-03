@@ -17,7 +17,7 @@ import java.io.*;
 public class FileDownloaderHttpHelper {
 
 
-    public static String saveFile(String url, HttpResponse response,FileLocationMethod method) {
+    public static String saveFile(HttpResponse response, String path) {
 
         StatusLine status = response.getStatusLine();
         int statusCode = status.getStatusCode();
@@ -28,7 +28,7 @@ public class FileDownloaderHttpHelper {
         }
 
 
-        return saveFileAndGetFileRelativePath(response, url, method);
+        return saveFileAndGetFileAbsolutePath(response, path);
 
     }
 
@@ -37,10 +37,9 @@ public class FileDownloaderHttpHelper {
         return "";
     }
 
-    private static String saveFileAndGetFileRelativePath(HttpResponse response, String url, FileLocationMethod method) {
+    private static String saveFileAndGetFileAbsolutePath(HttpResponse response, String path) {
         HttpEntity httpEntity = response.getEntity();
-        String imageAbsolutePath = FileManager.getFileAbsolutePathFromUrl(url, method);
-        File file = FileManager.createNewFileInSDCard(imageAbsolutePath);
+        File file = FileManager.createNewFileInSDCard(path);
         FileOutputStream out = null;
         InputStream in = null;
         String result = "";
@@ -56,7 +55,7 @@ public class FileDownloaderHttpHelper {
                     bytesum += byteread;
                     out.write(buffer, 0, byteread);
                 }
-                result = imageAbsolutePath;
+                result = path;
             } catch (FileNotFoundException ignored) {
             } catch (IOException e) {
 

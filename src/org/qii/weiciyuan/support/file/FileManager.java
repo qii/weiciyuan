@@ -15,7 +15,9 @@ public class FileManager {
     private static final String SDCARD_PATH = Environment.getExternalStorageDirectory().getPath();
     private static final String APP_NAME = "weiciyuan";
     private static final String AVATAR_CACHE = "avatar";
-    private static final String PICTURE_CACHE = "picture";
+    private static final String PICTURE_THUMBNAIL_CACHE = "picture_thumbnail";
+    private static final String PICTURE_BMIDDLE = "picture_bmiddle";
+    private static final String PICTURE_LARGE = "picture_large";
 
 
     private static boolean isExternalStorageMounted() {
@@ -31,7 +33,7 @@ public class FileManager {
 
     private static String getFileAbsolutePathFromRelativePath(String relativePath) {
         String result = SDCARD_PATH + File.separator + APP_NAME + relativePath;
-        AppLogger.d(result);
+       ;
         return result;
     }
 
@@ -42,9 +44,10 @@ public class FileManager {
             case avatar:
                 newRelativePath = File.separator + AVATAR_CACHE + oldRelativePath;
                 break;
-            case picture:
-                newRelativePath = File.separator + PICTURE_CACHE + oldRelativePath;
+            case picture_thumbnail:
+                newRelativePath = File.separator + PICTURE_THUMBNAIL_CACHE + oldRelativePath;
                 break;
+
         }
 
         String absolutePath = getFileAbsolutePathFromRelativePath(newRelativePath);
@@ -62,7 +65,7 @@ public class FileManager {
 
         String result = s.substring(s.indexOf("/"));
 
-        AppLogger.d(result);
+
 
         return result;
     }
@@ -75,7 +78,7 @@ public class FileManager {
         }
 
         String absoluteFileDirPath = absolutePath.substring(0, absolutePath.length() - 1);
-        File file = new File(absolutePath + ".jpg");
+        File file = new File(absolutePath);
         if (file.exists()) {
             return file;
         } else {

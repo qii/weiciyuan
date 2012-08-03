@@ -26,17 +26,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
-import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class HttpUtility {
 
@@ -63,19 +59,22 @@ public class HttpUtility {
     }
 
 
-    public String execute(HttpMethod httpMethod, String url, Map<String, String> param) {
+    public String executeNormalTask(HttpMethod httpMethod, String url, Map<String, String> param) {
         switch (httpMethod) {
             case Post:
                 return doPost(url, param);
             case Get:
                 return doGet(url, param);
-            case Get_AVATAR_File:
-                return doGetAvatarFile(url, param);
+
         }
         return "";
     }
 
-    public String doPost(String url, Map<String, String> param) {
+    public String executeDownloadTask(String url, String path) {
+        return doGetSaveFile(url, path);
+    }
+
+    private String doPost(String url, Map<String, String> param) {
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
@@ -105,18 +104,20 @@ public class HttpUtility {
         return dealWithResponse(response);
     }
 
-    public String doGetAvatarFile(String url, Map<String, String> param) {
-        HttpResponse response = getDoGetHttpResponse(url, param);
 
+    private String doGetSaveFile(String url, String path) {
+
+        HttpResponse response = getDoGetHttpResponse(url, new HashMap<String, String>());
         if (response != null) {
-            return FileDownloaderHttpHelper.saveFile(url, response, FileLocationMethod.avatar);
+
+            return FileDownloaderHttpHelper.saveFile(response, path);
 
         } else {
             return "";
         }
     }
 
-    public String doGet(String url, Map<String, String> param) {
+    private String doGet(String url, Map<String, String> param) {
 
 
         HttpResponse response = getDoGetHttpResponse(url, param);

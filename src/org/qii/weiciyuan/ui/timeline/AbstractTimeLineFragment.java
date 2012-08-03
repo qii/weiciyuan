@@ -206,6 +206,9 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
         private void buildRepostContent(WeiboMsgBean repost_msg, ViewHolder holder,int position) {
             holder.repost_content.setVisibility(View.VISIBLE);
 
+//            AppLogger.e(repost_msg.getUser().getScreen_name());
+//            AppLogger.e(repost_msg.getText());
+
             holder.repost_content.setText(repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
             if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
                 holder.repost_content_pic.setVisibility(View.VISIBLE);

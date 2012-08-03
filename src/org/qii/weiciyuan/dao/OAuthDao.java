@@ -47,7 +47,7 @@ public class OAuthDao {
         map.put("access_token", access_token);
 
         String url = URLManager.getRealUrl("usershow");
-        String result = HttpUtility.getInstance().execute(HttpMethod.Get, url, map);
+        String result = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
         Gson gson = new Gson();
         WeiboUserBean user = new WeiboUserBean();
@@ -65,7 +65,7 @@ public class OAuthDao {
         String url = URLManager.getRealUrl("uid");
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
-        return HttpUtility.getInstance().execute(HttpMethod.Get, url, map);
+        return HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
     }
 
 }

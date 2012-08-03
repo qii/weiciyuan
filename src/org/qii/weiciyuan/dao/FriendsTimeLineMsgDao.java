@@ -35,7 +35,7 @@ public class FriendsTimeLineMsgDao {
         map.put("feature", feature);
         map.put("trim_user", trim_user);
 
-        String jsonData = HttpUtility.getInstance().execute(HttpMethod.Get, url, map);
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
         return jsonData;
     }

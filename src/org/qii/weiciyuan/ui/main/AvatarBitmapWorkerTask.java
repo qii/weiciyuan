@@ -43,7 +43,7 @@ public class AvatarBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... url) {
         data = url[0];
 
-        return ImageTool.getAvatarBitmapFromSDCardOrNetWork(data);
+        return ImageTool.getAvatarBitmap(data);
     }
 
     @Override

@@ -6,5 +6,5 @@ package org.qii.weiciyuan.support.file;
  * Time: 下午3:10
  */
 public enum FileLocationMethod {
-    avatar,picture
+    avatar, picture_thumbnail
 }
