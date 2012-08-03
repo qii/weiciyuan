@@ -28,7 +28,9 @@ import org.qii.weiciyuan.ui.timeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.timeline.MyInfoTimeLineFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: Jiang Qi
@@ -151,16 +153,22 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
     FriendsTimeLineFragment.Commander frinedsTimeLineMsgCommand = new FriendsTimeLineFragment.Commander() {
 
+        Map<String, AvatarBitmapWorkerTask> map = new HashMap<String, AvatarBitmapWorkerTask>();
+
         @Override
         public void downloadAvatar(ImageView view, String urlKey) {
 
             Bitmap bitmap = getBitmapFromMemCache(urlKey);
             if (bitmap != null) {
                 view.setImageBitmap(bitmap);
+                map.remove(urlKey);
             } else {
                 view.setImageDrawable(getResources().getDrawable(R.drawable.app));
-                BitmapWorkerTask task = new BitmapWorkerTask(avatarCache);
-                task.execute(urlKey);
+                if (map.get(urlKey) == null) {
+                    AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(avatarCache);
+                    avatarTask.execute(urlKey);
+                    map.put(urlKey, avatarTask);
+                }
             }
 
         }

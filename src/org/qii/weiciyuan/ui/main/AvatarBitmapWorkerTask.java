@@ -10,15 +10,14 @@ import org.qii.weiciyuan.support.imagetool.ImageTool;
  * Date: 12-8-3
  * Time: 下午12:25
  */
-public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+public class AvatarBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 
 
     private LruCache<String, Bitmap> lruCache;
     private String data = "";
-    private int reqHeight = 0;
-    private int reqWidth = 0;
 
-    public BitmapWorkerTask(LruCache<String, Bitmap> cache) {
+
+    public AvatarBitmapWorkerTask(LruCache<String, Bitmap> cache) {
 
         lruCache = cache;
 
@@ -28,7 +27,17 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... url) {
         data = url[0];
 
-        return ImageTool.getBitmapFromSDCardOrNetWork(data, reqWidth, reqHeight);
+        return ImageTool.getAvatarBitmapFromSDCardOrNetWork(data);
+    }
+
+    @Override
+    protected void onCancelled(Bitmap bitmap) {
+        if (bitmap != null) {
+
+            lruCache.put(data, bitmap);
+
+        }
+        super.onCancelled(bitmap);
     }
 
     @Override

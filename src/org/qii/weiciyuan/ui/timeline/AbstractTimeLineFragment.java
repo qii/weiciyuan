@@ -27,7 +27,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     public abstract void refresh();
 
-    public abstract void refreshAndScrollTo(int positon);
+    public abstract void refreshAndScrollTo(int position);
 
     protected abstract TimeLineMsgListBean getList();
 

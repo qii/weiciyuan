@@ -100,9 +100,9 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     }
 
     @Override
-    public void refreshAndScrollTo(int positon) {
+    public void refreshAndScrollTo(int position) {
         refresh();
-        listView.smoothScrollToPosition(positon);
+        listView.smoothScrollToPosition(position);
 
     }
 

@@ -30,11 +30,7 @@ public class ImageTool {
 
         absoluteFilePath = absoluteFilePath + ".jpg";
 
-        File file = new File(absoluteFilePath);
-
-        boolean is = file.exists();
-
-        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
         if (bitmap != null) {
 
             options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
@@ -51,9 +47,7 @@ public class ImageTool {
     private static Bitmap decodeBitmapFromSDCard(String url) {
 
 
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url,FileLocationMethod.avatar);
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar);
 
         absoluteFilePath = absoluteFilePath + ".jpg";
 
@@ -69,8 +63,8 @@ public class ImageTool {
         }
     }
 
-    public static Bitmap getBitmapFromSDCardOrNetWork(String url,
-                                                      int reqWidth, int reqHeight) {
+    public static Bitmap getPictureBitmapFromSDCardOrNetWork(String url,
+                                                             int reqWidth, int reqHeight) {
         Bitmap bitmap = decodeBitmapFromSDCard(url, reqWidth, reqHeight);
 
         if (bitmap != null) {
@@ -93,14 +87,14 @@ public class ImageTool {
 
     private static Bitmap getBitmapFromNetWork(String url,
                                                int reqWidth, int reqHeight) {
-        Map<String, String> parms = new HashMap<String, String>();
-        String relativeFilePaht = HttpUtility.getInstance().execute(HttpMethod.Get_AVATAR_File, url, parms);
+        Map<String, String> param = new HashMap<String, String>();
+        HttpUtility.getInstance().execute(HttpMethod.Get_AVATAR_File, url, param);
         return decodeBitmapFromSDCard(url, reqWidth, reqHeight);
     }
 
     private static Bitmap getBitmapFromNetWork(String url) {
-        Map<String, String> parms = new HashMap<String, String>();
-        String relativeFilePaht = HttpUtility.getInstance().execute(HttpMethod.Get_AVATAR_File, url, parms);
+        Map<String, String> param = new HashMap<String, String>();
+        HttpUtility.getInstance().execute(HttpMethod.Get_AVATAR_File, url, param);
         return decodeBitmapFromSDCard(url);
     }
 
