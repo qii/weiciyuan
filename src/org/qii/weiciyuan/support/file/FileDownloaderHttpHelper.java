@@ -42,6 +42,7 @@ public class FileDownloaderHttpHelper {
         FileOutputStream out = null;
         InputStream in = null;
         String result = "";
+
         if (file != null) {
             try {
                 int bytesum = 0;
@@ -77,6 +78,7 @@ public class FileDownloaderHttpHelper {
             }
 
         }
+
         return result;
     }
 

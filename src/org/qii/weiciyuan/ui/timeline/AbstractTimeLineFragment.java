@@ -10,7 +10,7 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgListBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
-import org.qii.weiciyuan.ui.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,6 +41,8 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     protected abstract void listViewFooterViewClick(View view);
 
+    protected abstract void downloadPic(ImageView view, String url);
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +60,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
         listView = (ListView) view.findViewById(R.id.listView);
-         listView.setScrollingCacheEnabled(false);
+        listView.setScrollingCacheEnabled(false);
         View footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         listView.addFooterView(footerView);
 
@@ -176,7 +178,12 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
                 holder.time.setText(msg.getCreated_at());
             }
 
-              holder.pic.setImageDrawable(getResources().getDrawable(R.drawable.app));
+            holder.pic.setImageDrawable(getResources().getDrawable(R.drawable.app));
+
+            String image_url = msg.getUser().getProfile_image_url();
+            if (!TextUtils.isEmpty(image_url))
+                downloadPic(holder.pic, msg.getUser().getProfile_image_url());
+
 
             WeiboMsgBean recontent = msg.getRetweeted_status();
             if (recontent != null) {

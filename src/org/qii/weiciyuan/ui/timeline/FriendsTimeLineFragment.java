@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgListBean;
 
@@ -44,6 +45,10 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         }
 
         public void listViewFooterViewClick(View view) {
+
+        }
+
+        public void downloadPic(ImageView view, String url) {
 
         }
     }
@@ -82,6 +87,11 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     @Override
     protected void listViewFooterViewClick(View view) {
         commander.listViewFooterViewClick(view);
+    }
+
+    @Override
+    protected void downloadPic(ImageView view, String url) {
+        commander.downloadPic(view, url);
     }
 
 

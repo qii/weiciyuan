@@ -117,7 +117,15 @@ public class HttpUtility {
         HttpResponse response = getDoGetHttpResponse(url, param);
 
         if (response != null) {
-            return FileDownloaderHttpHelper.saveFile(url,response);
+            String result= FileDownloaderHttpHelper.saveFile(url, response);
+            if( response.getEntity() != null ) {
+                try {
+                    response.getEntity().consumeContent();
+                } catch (IOException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+            }//if
+            return result;
         } else {
             return "";
         }

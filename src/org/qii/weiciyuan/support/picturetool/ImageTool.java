@@ -6,6 +6,7 @@ import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,9 +25,16 @@ public class ImageTool {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromRelativePath(url);
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromRelativePath(
+                FileManager.getFileRelativePathFromUrl(url));
 
-        Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath, options);
+        absoluteFilePath = absoluteFilePath + ".jpg";
+
+        File file=new File(absoluteFilePath);
+
+        boolean is=file.exists();
+
+        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         if (bitmap != null) {
 
             options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);

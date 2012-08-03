@@ -62,21 +62,71 @@ public class FileManager {
             return null;
         }
 
-        String absolutePath = getFileAbsolutePathFromRelativePath(relativePath);
-
-        File file = new File(absolutePath);
+        String absoluteFilePath = getFileAbsolutePathFromRelativePath(relativePath);
+        String absoluteFileDirPath = absoluteFilePath.substring(0, absoluteFilePath.length()-1);
+        File file = new File(absoluteFilePath+".jpg");
         if (file.exists()) {
             return file;
         } else {
 
-            try {
-                file.createNewFile();
-                return file;
-            } catch (IOException e) {
-                return null;
+            File dirFile = new File(absoluteFileDirPath);
+            if (dirFile.mkdirs()) {
+
+                try {
+                    file.createNewFile();
+                    return file;
+                } catch (IOException e) {
+                    return null;
+                }
             }
 
-
         }
+       return null;
+//        File file = new File(absolutePath);
+//        if (file.exists()){
+//            return file;
+//        }
+//        file = null;
+//
+//        String sdPath = null;
+//        String[] paths = absolutePath.split("/");
+//        String newPath = null;
+//        int j = 0;
+//
+//
+//            sdPath = Environment.getExternalStorageDirectory().getPath();
+//            // paths = path.replace(sdPath, "").split("/");
+//            newPath = sdPath;
+//            j = sdPath.split("/").length;
+//
+//
+//        for (int i = j; i < paths.length - 1; i++) {
+//            newPath += "/" + paths[i];
+//        }
+//
+//        File newFileDir = new File(newPath);
+//
+//        if (!newFileDir.exists()) {
+//            boolean dirsCreated = newFileDir.mkdirs();
+//
+//            if (!dirsCreated)
+//                return null;
+//        }
+//
+//        File newFile = new File(absolutePath);
+//        if (!newFile.exists()) {
+//
+//            boolean isCreated = false;
+//            try {
+//                isCreated = newFile.createNewFile();
+//            } catch (IOException e) {
+//                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//            }
+//            if (!isCreated)
+//                return null;
+//
+//        }
+//
+//        return newFile;
     }
 }

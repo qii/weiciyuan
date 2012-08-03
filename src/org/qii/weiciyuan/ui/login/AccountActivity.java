@@ -11,7 +11,7 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboAccountBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
-import org.qii.weiciyuan.ui.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.util.ArrayList;
 import java.util.HashSet;
