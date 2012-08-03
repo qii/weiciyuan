@@ -7,6 +7,7 @@ import org.qii.weiciyuan.bean.TimeLineMsgListBean;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
@@ -69,6 +70,7 @@ public class FriendsTimeLineMsgDao {
         if (TextUtils.isEmpty(access_token))
             throw new IllegalArgumentException();
         this.access_token = access_token;
+        this.count= String.valueOf(AppConfig.DEFAULT_MSG_NUMBERS);
     }
 
     public FriendsTimeLineMsgDao setSince_id(String since_id) {

@@ -6,5 +6,5 @@ package org.qii.weiciyuan.support.utils;
  * Time: 上午10:28
  */
 public class AppConfig {
-    public static final String DEFAULT_MSG_NUMBERS="20";
+    public static final int DEFAULT_MSG_NUMBERS=50;
 }

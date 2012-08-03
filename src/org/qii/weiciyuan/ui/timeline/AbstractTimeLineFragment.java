@@ -41,9 +41,9 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     protected abstract void listViewFooterViewClick(View view);
 
-    protected abstract void downloadAvatar(ImageView view, String url);
+    protected abstract void downloadAvatar(ImageView view, String url,int position,ListView listView);
 
-    protected abstract void downContentPic(ImageView view, String url);
+    protected abstract void downContentPic(ImageView view, String url,int position,ListView listView);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -187,7 +187,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
             String image_url = msg.getUser().getProfile_image_url();
             if (!TextUtils.isEmpty(image_url)) {
-                downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url());
+                downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(),position,listView);
             }
 
             holder.repost_content.setVisibility(View.GONE);
@@ -195,28 +195,28 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
             holder.content_pic.setVisibility(View.GONE);
 
             if (repost_msg != null) {
-                buildRepostContent(repost_msg, holder);
+                buildRepostContent(repost_msg, holder,position);
             } else if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
-                buildContentPic(msg, holder);
+                buildContentPic(msg, holder,position);
             }
 
 
         }
 
-        private void buildRepostContent(WeiboMsgBean repost_msg, ViewHolder holder) {
+        private void buildRepostContent(WeiboMsgBean repost_msg, ViewHolder holder,int position) {
             holder.repost_content.setVisibility(View.VISIBLE);
 
             holder.repost_content.setText(repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
             if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
                 holder.repost_content_pic.setVisibility(View.VISIBLE);
-                downContentPic(holder.repost_content_pic,repost_msg.getThumbnail_pic());
+                downContentPic(holder.repost_content_pic,repost_msg.getThumbnail_pic(),position,listView);
             }
         }
 
-        private void buildContentPic(WeiboMsgBean msg, ViewHolder holder) {
+        private void buildContentPic(WeiboMsgBean msg, ViewHolder holder,int position) {
             String main_thumbnail_pic_url = msg.getThumbnail_pic();
             holder.content_pic.setVisibility(View.VISIBLE);
-            downContentPic(holder.content_pic,main_thumbnail_pic_url);
+            downContentPic(holder.content_pic,main_thumbnail_pic_url,position,listView);
         }
     }
 
