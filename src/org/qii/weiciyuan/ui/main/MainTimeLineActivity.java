@@ -264,6 +264,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
             super(fm);
 
             home = new FriendsTimeLineFragment().setCommander(frinedsTimeLineMsgCommand);
+            home.setBean(homeList);
 //            mentions = new MentionsTimeLineFragment();
 //            comments = new CommentsTimeLineFragment();
 //            mails = new MailsTimeLineFragment();

@@ -1,10 +1,9 @@
 package org.qii.weiciyuan.ui.timeline;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 
@@ -16,6 +15,25 @@ import org.qii.weiciyuan.ui.login.AccountActivity;
  * To change this template use File | Settings | File Templates.
  */
 public class MyInfoTimeLineFragment extends Fragment {
+
+    public MyInfoTimeLineFragment(){
+        super();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_info_layout, container, false);
+
+        return view;
+    }
 
 
 

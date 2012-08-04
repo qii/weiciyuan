@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.TimeLineMsgListBean;
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,11 +48,11 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
         }
 
-        public void downloadAvatar(ImageView view, String url,int position,ListView listView) {
+        public void downloadAvatar(ImageView view, String url, int position, ListView listView) {
 
         }
 
-        public void downContentPic(ImageView view, String url,int position,ListView listView) {
+        public void downContentPic(ImageView view, String url, int position, ListView listView) {
 
         }
     }
@@ -61,11 +60,6 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     public FriendsTimeLineFragment setCommander(Commander commander) {
         this.commander = commander;
         return this;
-    }
-
-    @Override
-    protected TimeLineMsgListBean getList() {
-        return activity.getHomeList();
     }
 
     @Override
@@ -95,13 +89,13 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     }
 
     @Override
-    protected void downloadAvatar(ImageView view, String url,int position,ListView listView) {
-        commander.downloadAvatar(view, url,position,listView);
+    protected void downloadAvatar(ImageView view, String url, int position, ListView listView) {
+        commander.downloadAvatar(view, url, position, listView);
     }
 
     @Override
-    protected void downContentPic(ImageView view, String url,int position,ListView listView) {
-        commander.downContentPic(view, url,position,listView);
+    protected void downContentPic(ImageView view, String url, int position, ListView listView) {
+        commander.downContentPic(view, url, position, listView);
     }
 
 
