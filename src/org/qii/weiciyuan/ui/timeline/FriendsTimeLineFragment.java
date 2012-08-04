@@ -107,6 +107,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
     public void refresh() {
         timeLineAdapter.notifyDataSetChanged();
+        listView.setSelectionAfterHeaderView();
     }
 
     @Override

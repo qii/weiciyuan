@@ -209,6 +209,11 @@ public class MainTimeLineActivity extends AbstractMainActivity {
                 avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
                 avatarBitmapWorkerTaskHashMap.remove(key);
             }
+//            Iterator<String> iterator=keys.iterator();
+//            while(iterator.hasNext()){
+//                iterator.next();
+//                iterator.remove();
+//            }
             Set<String> pKeys = pictureBitmapWorkerTaskMap.keySet();
             for (String pkey : pKeys) {
                 pictureBitmapWorkerTaskMap.get(pkey).cancel(true);
@@ -288,6 +293,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
         @Override
         protected void onPreExecute() {
+
             dialogFragment.show(getSupportFragmentManager(), "");
         }
 
@@ -308,20 +314,23 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         @Override
         protected void onPostExecute(TimeLineMsgListBean newValue) {
             if (newValue != null) {
-                Toast.makeText(MainTimeLineActivity.this, "total " + newValue.getStatuses().size() + " new messages", Toast.LENGTH_SHORT).show();
+                if (newValue.getStatuses().size() == 0) {
+                    Toast.makeText(MainTimeLineActivity.this, "no new message", Toast.LENGTH_SHORT).show();
 
-                if (newValue.getStatuses().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                    //if homelist_position equal 0,listview don't scroll because this is the first time to refresh
-                    if (homelist_position > 0)
-                        homelist_position += newValue.getStatuses().size();
-                    newValue.getStatuses().addAll(getHomeList().getStatuses());
                 } else {
-                    homelist_position = 0;
+                    Toast.makeText(MainTimeLineActivity.this, "total " + newValue.getStatuses().size() + " new messages", Toast.LENGTH_SHORT).show();
+                    if (newValue.getStatuses().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                        //if homelist_position equal 0,listview don't scroll because this is the first time to refresh
+                        if (homelist_position > 0)
+                            homelist_position += newValue.getStatuses().size();
+                        newValue.getStatuses().addAll(getHomeList().getStatuses());
+                    } else {
+                        homelist_position = 0;
+                    }
+                    setHomeList(newValue);
+                    home.refresh();
+//               home.refreshAndScrollTo(0);
                 }
-                setHomeList(newValue);
-
-                home.refreshAndScrollTo(homelist_position);
-
             }
             dialogFragment.dismissAllowingStateLoss();
             super.onPostExecute(newValue);
