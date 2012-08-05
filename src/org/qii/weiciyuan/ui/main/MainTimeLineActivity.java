@@ -349,7 +349,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         protected void onPreExecute() {
             frinedsTimeLineMsgCommand.isBusying = true;
 
-            ((TextView) footerView.findViewById(R.id.account_name)).setText("loading");
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("loading");
 
         }
 
@@ -377,7 +377,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
             frinedsTimeLineMsgCommand.isBusying = false;
             home.refresh();
-            ((TextView) footerView.findViewById(R.id.account_name)).setText("click to load older message");
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("click to load older message");
 
             super.onPostExecute(newValue);
         }

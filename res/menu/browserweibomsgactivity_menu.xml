@@ -13,12 +13,6 @@
           android:title="comment"
           android:showAsAction="ifRoom|withText"
             />
-    <item android:id="@+id/menu_refresh"
-          android:icon="@drawable/refresh"
-          android:title="refresh"
-          android:checkable="true"
-          android:showAsAction="ifRoom|withText"
-            />
 
 
 </menu>

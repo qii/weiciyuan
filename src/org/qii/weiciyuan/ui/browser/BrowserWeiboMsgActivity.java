@@ -4,10 +4,11 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
@@ -28,8 +29,13 @@ public class BrowserWeiboMsgActivity extends AbstractMainActivity {
     private TextView recontent;
     private TextView time;
 
-    private Button comment_number;
-    private Button retweet_number;
+    private ImageView avatar;
+    private ImageView content_pic;
+    private ImageView repost_pic;
+
+
+    private String comment_sum = "";
+    private String retweet_sum = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,23 +61,10 @@ public class BrowserWeiboMsgActivity extends AbstractMainActivity {
         recontent = (TextView) findViewById(R.id.repost_content);
         time = (TextView) findViewById(R.id.time);
 
-        comment_number = (Button) findViewById(R.id.comment_number);
-        retweet_number = (Button) findViewById(R.id.retweet_number);
 
-        comment_number.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                 startActivity(new Intent(BrowserWeiboMsgActivity.this,BrowserCommentListActivity.class));
-            }
-        });
-
-        retweet_number.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(BrowserWeiboMsgActivity.this,BrowserRepostListActivity.class));
-
-            }
-        });
+        avatar = (ImageView) findViewById(R.id.avatar);
+        content_pic = (ImageView) findViewById(R.id.content_pic);
+        repost_pic = (ImageView) findViewById(R.id.repost_content_pic);
     }
 
     private void buildViewData() {
@@ -80,19 +73,39 @@ public class BrowserWeiboMsgActivity extends AbstractMainActivity {
         content.setText(msg.getText());
         time.setText(msg.getCreated_at());
 
-        comment_number.setText("comments:" + msg.getComments_count());
-        retweet_number.setText("retweets:" + msg.getReposts_count());
+        comment_sum = msg.getComments_count();
+        retweet_sum = msg.getReposts_count();
+
+
+        invalidateOptionsMenu();
+
+        SimpleBitmapWorkerTask avatarTask = new SimpleBitmapWorkerTask(avatar);
+        avatarTask.execute(msg.getUser().getProfile_image_url());
 
         if (retweetMsg != null) {
             recontent.setVisibility(View.VISIBLE);
-            recontent.setText(retweetMsg.getUser().getScreen_name() + "--" + retweetMsg.getText());
+            recontent.setText(retweetMsg.getUser().getScreen_name() + "：" + retweetMsg.getText());
+            if (!TextUtils.isEmpty(retweetMsg.getThumbnail_pic())) {
+                repost_pic.setVisibility(View.VISIBLE);
+                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic);
+                task.execute(retweetMsg.getBmiddle_pic());
+            }
+        } else if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
+            content_pic.setVisibility(View.VISIBLE);
+            SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(content_pic);
+            task.execute(msg.getBmiddle_pic());
         }
+
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.browserweibomsgactivity_menu, menu);
+
+        menu.getItem(0).setTitle(menu.getItem(0).getTitle() + "(" + retweet_sum + ")");
+        menu.getItem(1).setTitle(menu.getItem(1).getTitle() + "(" + comment_sum + ")");
+
         return super.onCreateOptionsMenu(menu);
     }
 
