@@ -1,0 +1,7 @@
+<resources>
+    <resources>
+        <string-array name="error_map">
+            <item>21315-Token 已经过期！</item>
+        </string-array>
+    </resources>
+</resources>
