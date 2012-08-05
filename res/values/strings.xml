@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">微次元</string>
 
+    <string name="detail">详细</string>
+
     <!--system -->
     <string name="timeout">请求超时</string>
 
@@ -9,6 +11,7 @@
     <string name="home">首页</string>
     <string name="mentions">回复</string>
     <string name="comments">评论</string>
+    <string name="repost">转发</string>
     <string name="mail">私信</string>
     <string name="info">资料</string>
 

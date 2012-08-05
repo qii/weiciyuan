@@ -43,7 +43,7 @@ public class BrowserWeiboMsgActivity extends AbstractMainActivity {
         setContentView(R.layout.browserweibomsgactivity_layout);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("detail");
+        actionBar.setTitle(getString(R.string.detail));
 
         Intent intent = getIntent();
         msg = (WeiboMsgBean) intent.getSerializableExtra("msg");

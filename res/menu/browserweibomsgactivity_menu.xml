@@ -4,13 +4,13 @@
 
     <item android:id="@+id/menu_retweet"
 
-          android:title="retweet"
-          android:checkable="true"
+          android:title="@string/repost"
+
           android:showAsAction="ifRoom|withText"
             />
     <item android:id="@+id/menu_comment"
 
-          android:title="comment"
+          android:title="@string/comments"
           android:showAsAction="ifRoom|withText"
             />
 
