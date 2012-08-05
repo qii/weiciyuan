@@ -203,6 +203,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         @Override
         public void getNewFriendsTimeLineMsgList() {
 
+
             new FriendsTimeLineGetNewMsgListTask().execute();
             Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
             for (String key : keys) {
@@ -265,6 +266,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
             home = new FriendsTimeLineFragment().setCommander(frinedsTimeLineMsgCommand);
             home.setBean(homeList);
+
 //            mentions = new MentionsTimeLineFragment();
 //            comments = new CommentsTimeLineFragment();
 //            mails = new MailsTimeLineFragment();
@@ -328,7 +330,9 @@ public class MainTimeLineActivity extends AbstractMainActivity {
                     } else {
                         homelist_position = 0;
                     }
-                    setHomeList(newValue);
+                    homeList=newValue;
+                    home.setBean(homeList);
+                    //setHomeList(newValue);
                     home.refresh();
 //               home.refreshAndScrollTo(0);
                 }
