@@ -52,13 +52,13 @@ public class FileManager {
 
         String absolutePath = getFileAbsolutePathFromRelativePath(newRelativePath);
 
-        AppLogger.d(absolutePath);
+        //AppLogger.d(absolutePath);
 
         return absolutePath;
     }
 
     private static String getFileRelativePathFromUrl(String url) {
-        AppLogger.d(url);
+        //AppLogger.d(url);
         int index = url.indexOf("//");
 
         String s = url.substring(index + 2);
