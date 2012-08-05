@@ -33,7 +33,7 @@ public class FileManager {
 
     private static String getFileAbsolutePathFromRelativePath(String relativePath) {
         String result = SDCARD_PATH + File.separator + APP_NAME + relativePath;
-       ;
+        ;
         return result;
     }
 
@@ -58,13 +58,12 @@ public class FileManager {
     }
 
     private static String getFileRelativePathFromUrl(String url) {
-
+        AppLogger.d(url);
         int index = url.indexOf("//");
 
         String s = url.substring(index + 2);
 
         String result = s.substring(s.indexOf("/"));
-
 
 
         return result;

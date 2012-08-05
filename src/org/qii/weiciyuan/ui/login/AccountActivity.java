@@ -11,6 +11,8 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboAccountBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.util.ArrayList;
@@ -230,9 +232,16 @@ public class AccountActivity extends Activity implements AdapterView.OnItemClick
                 linearLayout.addView(cb, 0);
 
             }
-            TextView textView = (TextView) mView.findViewById(R.id.textView);
+            TextView textView = (TextView) mView.findViewById(R.id.account_name);
 
             textView.setText(weiboAccountList.get(i).getUsernick());
+
+            ImageView imageView = (ImageView) mView.findViewById(R.id.imageView_avatar);
+
+            if (!TextUtils.isEmpty(weiboAccountList.get(i).getAvatar_url())) {
+                AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), null, imageView, listView, i);
+                avatarTask.execute(weiboAccountList.get(i).getAvatar_url());
+            }
 
             return mView;
         }

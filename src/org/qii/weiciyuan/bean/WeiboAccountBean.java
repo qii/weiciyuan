@@ -30,12 +30,12 @@ public class WeiboAccountBean {
         this.usernick = usernick;
     }
 
-    public String getUserurl() {
-        return userurl;
+    public String getAvatar_url() {
+        return avatar_url;
     }
 
-    public void setUserurl(String userurl) {
-        this.userurl = userurl;
+    public void setAvatar_url(String avatar_url) {
+        this.avatar_url = avatar_url;
     }
 
     public String getPortrait() {
@@ -60,7 +60,7 @@ public class WeiboAccountBean {
 
     private String usernick;
 
-    private String userurl;
+    private String avatar_url;
 
     private String portrait;
 

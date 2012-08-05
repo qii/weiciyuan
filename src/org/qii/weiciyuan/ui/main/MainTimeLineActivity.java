@@ -1,7 +1,9 @@
 package org.qii.weiciyuan.ui.main;
 
-import android.app.*;
-import android.content.Context;
+import android.app.ActionBar;
+import android.app.Dialog;
+import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -11,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.LruCache;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -21,6 +22,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgListBean;
 import org.qii.weiciyuan.dao.FriendsTimeLineMsgDao;
 import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.AbstractMainActivity;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
@@ -59,7 +61,6 @@ public class MainTimeLineActivity extends AbstractMainActivity {
     private int commentList_position = 0;
     private int mailList_position = 0;
 
-    private LruCache<String, Bitmap> avatarCache;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,22 +73,13 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
         //homeList = DatabaseManager.getInstance().getHomeLineMsgList();
 
-        buildCache();
+
         buildViewPager();
         buildActionBarAndViewPagerTitles();
 
 
     }
 
-    private void buildCache() {
-        final int memClass = ((ActivityManager) getSystemService(
-                Context.ACTIVITY_SERVICE)).getMemoryClass();
-
-        final int cacheSize = 1024 * 1024 * memClass / 8;
-
-        avatarCache = new LruCache<String, Bitmap>(cacheSize);
-
-    }
 
     private void buildViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -108,13 +100,13 @@ public class MainTimeLineActivity extends AbstractMainActivity {
                 .setText(getString(R.string.mentions))
                 .setTabListener(tabListener));
 
-//        actionBar.addTab(actionBar.newTab()
-//                .setText(getString(R.string.comments))
-//                .setTabListener(tabListener));
-//
-//        actionBar.addTab(actionBar.newTab()
-//                .setText(getString(R.string.mail))
-//                .setTabListener(tabListener));
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.comments))
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.mail))
+                .setTabListener(tabListener));
 
         actionBar.addTab(actionBar.newTab()
                 .setText(getString(R.string.info))
@@ -146,7 +138,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
     };
 
     private Bitmap getBitmapFromMemCache(String key) {
-        return avatarCache.get(key);
+        return GlobalContext.getInstance().getAvatarCache().get(key);
     }
 
     FriendsTimeLineFragment.Commander frinedsTimeLineMsgCommand = new FriendsTimeLineFragment.Commander() {
@@ -164,7 +156,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
             } else {
                 view.setImageDrawable(getResources().getDrawable(R.drawable.app));
                 if (avatarBitmapWorkerTaskHashMap.get(urlKey) == null) {
-                    AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(avatarCache, avatarBitmapWorkerTaskHashMap, view, listView, position);
+                    AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, listView, position);
                     avatarTask.execute(urlKey);
                     avatarBitmapWorkerTaskHashMap.put(urlKey, avatarTask);
                 }
@@ -182,7 +174,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
             } else {
                 view.setImageDrawable(getResources().getDrawable(R.drawable.app));
                 if (pictureBitmapWorkerTaskMap.get(urlKey) == null) {
-                    PictureBitmapWorkerTask avatarTask = new PictureBitmapWorkerTask(avatarCache, pictureBitmapWorkerTaskMap, view, listView, position);
+                    PictureBitmapWorkerTask avatarTask = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, listView, position);
                     avatarTask.execute(urlKey);
                     pictureBitmapWorkerTaskMap.put(urlKey, avatarTask);
                 }
@@ -353,7 +345,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         protected void onPreExecute() {
             frinedsTimeLineMsgCommand.isBusying = true;
 
-            ((TextView) footerView.findViewById(R.id.textView)).setText("loading");
+            ((TextView) footerView.findViewById(R.id.account_name)).setText("loading");
 
         }
 
@@ -381,7 +373,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
             frinedsTimeLineMsgCommand.isBusying = false;
             home.refresh();
-            ((TextView) footerView.findViewById(R.id.textView)).setText("click to load older message");
+            ((TextView) footerView.findViewById(R.id.account_name)).setText("click to load older message");
 
             super.onPostExecute(newValue);
         }

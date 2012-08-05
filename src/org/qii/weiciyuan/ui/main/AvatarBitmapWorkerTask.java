@@ -53,7 +53,7 @@ public class AvatarBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             lruCache.put(data, bitmap);
 
         }
-        if (taskMap.get(data) != null) {
+        if (taskMap != null && taskMap.get(data) != null) {
             taskMap.remove(data);
         }
         super.onCancelled(bitmap);
@@ -72,7 +72,7 @@ public class AvatarBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 
         }
 
-        if (taskMap.get(data) != null) {
+        if (taskMap != null && taskMap.get(data) != null) {
             taskMap.remove(data);
         }
     }

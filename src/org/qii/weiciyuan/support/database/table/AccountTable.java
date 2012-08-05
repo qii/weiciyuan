@@ -14,7 +14,7 @@ public class AccountTable {
 
     public static final String USERNICK = "usernick";
 
-    public static final String USERURL = "userurl";
+    public static final String AVATAR_URL = "avatar_url";
 
     public static final String PORTRAIT = "portrait";
 

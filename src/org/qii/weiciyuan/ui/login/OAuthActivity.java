@@ -170,6 +170,7 @@ public class OAuthActivity extends Activity {
             weiboAccount.setUsername(weiboUser.getName());
             weiboAccount.setUid(weiboUser.getId());
             weiboAccount.setUsernick(weiboUser.getScreen_name());
+            weiboAccount.setAvatar_url(weiboUser.getProfile_image_url());
 
             return DatabaseManager.getInstance().addOrUpdateAccount(weiboAccount);
 

@@ -56,6 +56,7 @@ public class DatabaseManager {
         cv.put(AccountTable.OAUTH_TOKEN, account.getAccess_token());
         cv.put(AccountTable.USERNAME, account.getUsername());
         cv.put(AccountTable.USERNICK, account.getUsernick());
+        cv.put(AccountTable.AVATAR_URL,account.getAvatar_url());
 
         Cursor c = rsd.query(AccountTable.TABLE_NAME, null, AccountTable.UID + "=?",
                 new String[]{account.getUid()}, null, null, null);
@@ -88,6 +89,9 @@ public class DatabaseManager {
 
             colid = c.getColumnIndex(AccountTable.UID);
             account.setUid(c.getString(colid));
+
+            colid = c.getColumnIndex(AccountTable.AVATAR_URL);
+                        account.setAvatar_url(c.getString(colid));
 
             weiboAccountList.add(account);
         }

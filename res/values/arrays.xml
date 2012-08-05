@@ -1,0 +1,9 @@
+<resources>
+    <string-array name="action_list">
+        <item>Home</item>
+        <item>Mention</item>
+        <item>Comment</item>
+        <item>Mail</item>
+        <item>Info</item>
+    </string-array>
+</resources>

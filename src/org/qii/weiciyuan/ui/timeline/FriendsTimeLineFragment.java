@@ -115,6 +115,16 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.friendstimelinefragment_menu, menu);
+        menu.addSubMenu("home");
+        menu.addSubMenu("my weibo");
+        menu.add("it");
+        menu.addSubMenu("acg");
+        menu.add("hangzhou");
+        menu.addSubMenu("acg");
+        menu.add("it");
+        menu.addSubMenu("acg");
+        menu.add("it");
+        menu.addSubMenu("acg");
     }
 
     @Override

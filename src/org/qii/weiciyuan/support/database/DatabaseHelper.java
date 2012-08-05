@@ -19,7 +19,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -29,7 +29,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + AccountTable.PORTRAIT + " text,"
             + AccountTable.USERNAME + " text,"
             + AccountTable.USERNICK + " text,"
-            + AccountTable.USERURL + " text"
+            + AccountTable.AVATAR_URL + " text"
             + ");";
 
     private static final String CREATE_GROUP_TABLE_SQL = "create table " + GroupTable.TABLE_NAME

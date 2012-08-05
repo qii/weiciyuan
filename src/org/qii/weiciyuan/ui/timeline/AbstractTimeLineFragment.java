@@ -25,7 +25,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     protected MainTimeLineActivity activity;
 
-    private TimeLineMsgListBean bean;
+    protected TimeLineMsgListBean bean;
 
     public abstract void refresh();
 
