@@ -25,6 +25,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
     private Commander commander;
 
+
     public static abstract class Commander {
 
         public volatile boolean isBusying = false;
@@ -115,16 +116,8 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.friendstimelinefragment_menu, menu);
-        menu.addSubMenu("home");
-        menu.addSubMenu("my weibo");
-        menu.add("it");
-        menu.addSubMenu("acg");
-        menu.add("hangzhou");
-        menu.addSubMenu("acg");
-        menu.add("it");
-        menu.addSubMenu("acg");
-        menu.add("it");
-        menu.addSubMenu("acg");
+        menu.add("weibo dont have messages group api");
+
     }
 
     @Override

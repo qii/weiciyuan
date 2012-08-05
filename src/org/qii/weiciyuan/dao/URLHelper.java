@@ -32,4 +32,7 @@ public class URLHelper {
         return URLManager.getRealUrl("commentstimelinebymsgid");
     }
 
+    public static String getTags(){
+        return  URLManager.getRealUrl("tags");
+    }
 }

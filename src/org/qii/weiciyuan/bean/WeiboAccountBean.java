@@ -1,11 +1,13 @@
 package org.qii.weiciyuan.bean;
 
+import java.io.Serializable;
+
 /**
  * User: Jiang Qi
  * Date: 12-7-30
  * Time: 上午10:51
  */
-public class WeiboAccountBean {
+public class WeiboAccountBean implements Serializable {
     public String getUid() {
         return uid;
     }

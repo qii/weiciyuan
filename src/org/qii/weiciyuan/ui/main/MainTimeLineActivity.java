@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgListBean;
+import org.qii.weiciyuan.bean.WeiboAccountBean;
 import org.qii.weiciyuan.dao.FriendsTimeLineMsgDao;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -43,7 +44,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
     private TimeLinePagerAdapter timeLinePagerAdapter = null;
 
     private String token = "";
-    private String screen_name = "";
+    private WeiboAccountBean weiboAccountBean = null;
 
     private AbstractTimeLineFragment home = null;
     private AbstractTimeLineFragment mentions = null;
@@ -68,8 +69,9 @@ public class MainTimeLineActivity extends AbstractMainActivity {
         setContentView(R.layout.maintimelineactivity_viewpager_layout);
 
         Intent intent = getIntent();
-        token = intent.getStringExtra("token");
-        screen_name = intent.getStringExtra("screen_name");
+        weiboAccountBean = (WeiboAccountBean) intent.getSerializableExtra("account");
+        token = weiboAccountBean.getAccess_token();
+
 
         //homeList = DatabaseManager.getInstance().getHomeLineMsgList();
 

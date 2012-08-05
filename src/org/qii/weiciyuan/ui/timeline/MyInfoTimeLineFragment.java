@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.*;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.WeiboUserBean;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 
 /**
@@ -16,7 +17,13 @@ import org.qii.weiciyuan.ui.login.AccountActivity;
  */
 public class MyInfoTimeLineFragment extends Fragment {
 
-    public MyInfoTimeLineFragment(){
+    private WeiboUserBean bean;
+
+    public void setBean(WeiboUserBean bean) {
+        this.bean = bean;
+    }
+
+    public MyInfoTimeLineFragment() {
         super();
     }
 
@@ -36,12 +43,16 @@ public class MyInfoTimeLineFragment extends Fragment {
     }
 
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.myinfofragment_menu, menu);
 
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     @Override

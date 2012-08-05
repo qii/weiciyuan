@@ -169,9 +169,8 @@ public class AccountActivity extends Activity implements AdapterView.OnItemClick
         editor.commit();
 
         Intent intent = new Intent(this, MainTimeLineActivity.class);
-        intent.putExtra("token", token);
-        intent.putExtra("screen_name", weiboAccountList.get(i).getUsernick());
-
+        intent.putExtra("account", weiboAccountList.get(i));
+        intent.putExtra("uid", weiboAccountList.get(i).getUid());
         startActivity(intent);
 
 
