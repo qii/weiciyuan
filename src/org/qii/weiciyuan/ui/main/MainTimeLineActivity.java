@@ -15,10 +15,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboAccountBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.AbstractMainActivity;
-import org.qii.weiciyuan.ui.timeline.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.timeline.FriendsTimeLineFragment;
-import org.qii.weiciyuan.ui.timeline.MentionsTimeLineFragment;
-import org.qii.weiciyuan.ui.timeline.MyInfoTimeLineFragment;
+import org.qii.weiciyuan.ui.timeline.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -186,15 +183,19 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
             AbstractTimeLineFragment home = new FriendsTimeLineFragment().setCommander(frinedsTimeLineMsgCommand);
 
-            AbstractTimeLineFragment   mentions = new MentionsTimeLineFragment().setCommander(frinedsTimeLineMsgCommand);
+            AbstractTimeLineFragment mentions = new MentionsTimeLineFragment().setCommander(frinedsTimeLineMsgCommand);
+
+            Fragment comments = new CommentsTimeLineFragment().setCommander(frinedsTimeLineMsgCommand);
+
+
 //            comments = new CommentsTimeLineFragment();
 //            mails = new MailsTimeLineFragment();
-            MyInfoTimeLineFragment  info = new MyInfoTimeLineFragment();
+            MyInfoTimeLineFragment info = new MyInfoTimeLineFragment();
             info.setAccountBean(weiboAccountBean);
 
             list.add(home);
             list.add(mentions);
-            list.add(new MentionsTimeLineFragment());
+            list.add(comments);
             list.add(new MentionsTimeLineFragment());
             list.add(info);
         }

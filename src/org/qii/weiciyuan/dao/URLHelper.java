@@ -22,14 +22,9 @@ public class URLHelper {
 
     }
 
-    public static String getMyCommentsTimeLine() {
 
-           return URLManager.getRealUrl("commentstimeline");
-
-       }
-
-    public static String getCommentListByMsgId(){
-        return URLManager.getRealUrl("commentstimelinebymsgid");
+    public static String getCommentList(){
+        return URLManager.getRealUrl("commentstimeline");
     }
 
     public static String getTags(){
