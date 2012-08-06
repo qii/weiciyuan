@@ -24,7 +24,6 @@ import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
-import org.qii.weiciyuan.ui.main.ProgressFragment;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
 import java.util.Map;
@@ -142,8 +141,11 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
                 startActivity(intent);
                 break;
             case R.id.friendstimelinefragment_refresh:
+                if (!isBusying) {
 
-                refresh();
+                    refresh();
+
+                }
 
                 break;
         }
@@ -202,12 +204,22 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
     class FriendsTimeLineGetNewMsgListTask extends AsyncTask<Void, TimeLineMsgListBean, TimeLineMsgListBean> {
 
-        DialogFragment dialogFragment = new ProgressFragment();
 
         @Override
         protected void onPreExecute() {
+            isBusying = true;
+            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
+            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
+            Animation rotateAnimation = new RotateAnimation(0f, 360f,
+                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            rotateAnimation.setDuration(1000);
+            rotateAnimation.setRepeatCount(-1);
+            rotateAnimation.setRepeatMode(Animation.RESTART);
+            rotateAnimation.setInterpolator(new LinearInterpolator());
+            headerView.findViewById(R.id.header_progress).startAnimation(rotateAnimation);
+            listView.setSelection(0);
 
-            dialogFragment.show(getActivity().getSupportFragmentManager(), "");
+//            dialogFragment.show(getActivity().getSupportFragmentManager(), "");
         }
 
         @Override
@@ -248,10 +260,15 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
                     bean = newValue;
                     timeLineAdapter.notifyDataSetChanged();
                     listView.setSelectionAfterHeaderView();
+                    headerView.findViewById(R.id.header_progress).clearAnimation();
+
 
                 }
             }
-            dialogFragment.dismissAllowingStateLoss();
+            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
+            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
+            isBusying =false;
+//            dialogFragment.dismissAllowingStateLoss();
             super.onPostExecute(newValue);
         }
     }
@@ -273,7 +290,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
             view.setVisibility(View.VISIBLE);
 
             Animation rotateAnimation = new RotateAnimation(0f, 360f,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,0.5f);
+                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             rotateAnimation.setDuration(1000);
             rotateAnimation.setRepeatCount(-1);
             rotateAnimation.setRepeatMode(Animation.RESTART);

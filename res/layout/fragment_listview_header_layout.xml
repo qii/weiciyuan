@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center">
+    <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="@drawable/refresh"
+            android:id="@+id/header_progress"
+            android:visibility="gone"
+            />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:text="refreshing"
+            android:visibility="gone"
+            android:id="@+id/header_text" android:gravity="center"/>
+</LinearLayout>

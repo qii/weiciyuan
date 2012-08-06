@@ -29,6 +29,8 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     protected int position = 0;
 
+    View headerView;
+
     public abstract void refresh();
 
 
@@ -64,6 +66,9 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
         View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
         listView = (ListView) view.findViewById(R.id.listView);
         listView.setScrollingCacheEnabled(false);
+         headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
+        listView.addHeaderView(headerView);
+        listView.setHeaderDividersEnabled(false);
         View footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         listView.addFooterView(footerView);
 
@@ -110,8 +115,9 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (position < getList().getStatuses().size()) {
-                    listViewItemClick(parent, view, position, id);
+                if (position-1 < getList().getStatuses().size()) {
+
+                    listViewItemClick(parent, view, position-1, id);
                 } else {
 
                     listViewFooterViewClick(view);

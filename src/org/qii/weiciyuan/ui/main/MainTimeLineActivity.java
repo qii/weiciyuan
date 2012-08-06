@@ -18,9 +18,9 @@ import org.qii.weiciyuan.ui.AbstractMainActivity;
 import org.qii.weiciyuan.ui.timeline.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * User: Jiang Qi
@@ -36,8 +36,8 @@ public class MainTimeLineActivity extends AbstractMainActivity {
     private WeiboAccountBean weiboAccountBean = null;
 
 
-    Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = new HashMap<String, AvatarBitmapWorkerTask>();
-    Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = new HashMap<String, PictureBitmapWorkerTask>();
+    Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = new ConcurrentHashMap<String, AvatarBitmapWorkerTask>();
+    Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = new ConcurrentHashMap<String, PictureBitmapWorkerTask>();
 
     public Map<String, AvatarBitmapWorkerTask> getAvatarBitmapWorkerTaskHashMap() {
         return avatarBitmapWorkerTaskHashMap;
