@@ -38,11 +38,8 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
     private Commander commander;
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public FriendsTimeLineFragment() {
         bean = DatabaseManager.getInstance().getHomeLineMsgList();
-        timeLineAdapter.notifyDataSetChanged();
     }
 
     public static abstract class Commander {
