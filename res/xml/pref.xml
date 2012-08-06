@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+            title="ggg"
+            key="pref_key_storage_settings">
+        <CheckBoxPreference
+                key="pref_key_auto_delete"
+                summary="sss"
+                title="ddd"
+                defaultValue="false"/>
+        <Preference
+                key="pref_key_sms_delete_limit"
+                dependency="pref_key_auto_delete"
+                summary="fsdfsdf"
+                title="fsdfsdfd"/>
+        <Preference
+                key="pref_key_mms_delete_limit"
+                dependency="pref_key_auto_delete"
+                summary="567567t"
+                title="7567ref_title_mms_delete"
+                />
+    </PreferenceCategory>
 
 </PreferenceScreen>

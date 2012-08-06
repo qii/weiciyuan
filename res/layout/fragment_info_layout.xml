@@ -1,64 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:padding="5dp">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="5dp">
 
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:layout_gravity="right|center_vertical">
-        <ImageView
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:background="@drawable/app"
-                android:id="@+id/imageView"/>
-        <TextView
-                android:layout_marginLeft="5dp"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="New Text"
-                android:gravity="center_vertical"
-                android:id="@+id/textView_username" android:layout_weight="1"/>
-    </LinearLayout>
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-        <TextView
-                android:layout_width="match_parent"
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" android:layout_gravity="right|center_vertical">
+            <ImageView
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:background="@drawable/app"
+                    android:id="@+id/avatar"/>
+            <TextView
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:text="New Text"
+                    android:gravity="center_vertical"
+                    android:id="@+id/username"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="这是简介这是简介这是简介这是简介这是简介这是简介这是简介"
+                    android:id="@+id/textView_info"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="这是简介这是简介这是简介这是简介这是简介这是简介这是简介"
-                android:id="@+id/textView_info"/>
+                android:gravity="center">
+            <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="weibo msg number"
+                    android:gravity="center"
+                    android:id="@+id/weibo_number" android:singleLine="false"/>
+            <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="following"
+                    android:gravity="center"
+                    android:id="@+id/following_number"/>
+            <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="60dp"
+                    android:text="fans"
+                    android:gravity="center"
+                    android:id="@+id/fans_number"/>
+            <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="60dp"
+                    android:text="subject"
+                    android:gravity="center"
+                    android:id="@+id/subject_number"/>
+            <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="60dp"
+                    android:text="fav"
+                    android:gravity="center"
+                    android:id="@+id/fav_number"/>
+            <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="60dp"
+                    android:text="block"
+                    android:gravity="center"
+                    android:id="@+id/block_number"/>
+        </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center">
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="weibo msg number"
-                android:gravity="center"
-                android:id="@+id/accountname" android:singleLine="false"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="following"
-                android:gravity="center"
-                android:id="@+id/textView1"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="fans"
-                android:gravity="center"
-                android:id="@+id/textView2"/>
-    </LinearLayout>
-</LinearLayout>
+</ScrollView>

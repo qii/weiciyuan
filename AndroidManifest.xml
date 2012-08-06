@@ -35,7 +35,7 @@
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.browser.BrowserCommentListActivity"/>
         <activity android:name=".ui.browser.BrowserRepostListActivity"/>
-
+        <activity android:name=".ui.preference.SettingActivity"/>
 
 
         <service android:name=".ui.backgroundservices.MentionsAndCommentsTimeLineService"/>

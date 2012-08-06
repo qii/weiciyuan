@@ -190,6 +190,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 //            comments = new CommentsTimeLineFragment();
 //            mails = new MailsTimeLineFragment();
             MyInfoTimeLineFragment  info = new MyInfoTimeLineFragment();
+            info.setAccountBean(weiboAccountBean);
 
             list.add(home);
             list.add(mentions);
