@@ -214,8 +214,13 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
                 dao.setSince_id(getList().getStatuses().get(0).getId());
             }
             TimeLineMsgListBean result = dao.getGSONMsgList();
-            if (result != null)
-                DatabaseManager.getInstance().addHomeLineMsg(result);
+            if (result != null) {
+                if (result.getStatuses().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                    DatabaseManager.getInstance().addHomeLineMsg(result);
+                } else {
+                    DatabaseManager.getInstance().replaceHomeLineMsg(result);
+                }
+            }
             return result;
 
         }

@@ -130,12 +130,21 @@ public class DatabaseManager {
 
     }
 
+    public void replaceHomeLineMsg(TimeLineMsgListBean list) {
+
+
+        wsd.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
+        wsd.execSQL(DatabaseHelper.CREATE_HOME_TABLE_SQL);
+
+        addHomeLineMsg(list);
+    }
+
     public TimeLineMsgListBean getHomeLineMsgList() {
 
         TimeLineMsgListBean result = new TimeLineMsgListBean();
 
         List<WeiboMsgBean> msgList = new ArrayList<WeiboMsgBean>();
-        String sql = "select * from " + HomeTable.TABLE_NAME;
+        String sql = "select * from " + HomeTable.TABLE_NAME + " order by " + HomeTable.MBLOGID + " desc";
         Cursor c = rsd.rawQuery(sql, null);
         while (c.moveToNext()) {
             WeiboMsgBean msg = new WeiboMsgBean();
