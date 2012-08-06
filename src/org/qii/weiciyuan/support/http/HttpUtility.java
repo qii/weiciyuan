@@ -9,6 +9,7 @@ import ch.boye.httpclientandroidlib.client.HttpClient;
 import ch.boye.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
 import ch.boye.httpclientandroidlib.client.methods.HttpPost;
+import ch.boye.httpclientandroidlib.client.methods.HttpRequestBase;
 import ch.boye.httpclientandroidlib.client.protocol.ClientContext;
 import ch.boye.httpclientandroidlib.client.utils.URIBuilder;
 import ch.boye.httpclientandroidlib.conn.ConnectTimeoutException;
@@ -31,6 +32,7 @@ import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
@@ -92,16 +94,21 @@ public class HttpUtility {
         } catch (UnsupportedEncodingException ignored) {
 
         }
-        HttpPost httppost = new HttpPost(url);
-        httppost.setEntity(entity);
-
-        HttpResponse response = null;
         try {
-            response = httpClient.execute(httppost);
-        } catch (IOException ignored) {
+            httpPost.setURI(new URI(url));
+        } catch (URISyntaxException e) {
+            AppLogger.e(e.getMessage());
         }
+        httpPost.setEntity(entity);
 
-        return dealWithResponse(response);
+        HttpResponse response = getHttpResponse(httpGet, null);
+
+        if (response != null) {
+
+            return dealWithResponse(response);
+        } else {
+            return "";
+        }
     }
 
 
@@ -158,9 +165,19 @@ public class HttpUtility {
         localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
 
+        HttpResponse response = getHttpResponse(httpGet, localContext);
+
+        return response;
+    }
+
+    private HttpResponse getHttpResponse(HttpRequestBase httpRequest, HttpContext localContext) {
         HttpResponse response = null;
         try {
-            response = httpClient.execute(httpGet, localContext);
+            if (localContext != null) {
+                response = httpClient.execute(httpRequest, localContext);
+            } else {
+                response = httpClient.execute(httpRequest);
+            }
         } catch (ConnectTimeoutException e) {
 
             AppLogger.e(e.getMessage());
