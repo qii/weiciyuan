@@ -19,9 +19,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 6;
 
-     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
+    static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
             + AccountTable.UID + " integer primary key autoincrement,"
             + AccountTable.OAUTH_TOKEN + " text,"
@@ -32,7 +32,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + AccountTable.AVATAR_URL + " text"
             + ");";
 
-     static final String CREATE_GROUP_TABLE_SQL = "create table " + GroupTable.TABLE_NAME
+    static final String CREATE_GROUP_TABLE_SQL = "create table " + GroupTable.TABLE_NAME
             + "("
             + GroupTable.COUNT + " text,"
             + GroupTable.GID + " text,"
@@ -40,7 +40,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + GroupTable.USER_ID + " text"
             + ");";
 
-     static final String CREATE_HOME_TABLE_SQL = "create table " + HomeTable.TABLE_NAME
+    static final String CREATE_HOME_TABLE_SQL = "create table " + HomeTable.TABLE_NAME
             + "("
             + HomeTable.MBLOGID + " integer primary key autoincrement,"
             + HomeTable.FEEDID + " text,"
@@ -57,6 +57,10 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + HomeTable.RTROTNICK + " text,"
             + HomeTable.RTROOTVIP + " text,"
             + HomeTable.RTREASON + " text,"
+            + HomeTable.RTAVATAR + " text,"
+            + HomeTable.RTPIC + " text,"
+            + HomeTable.RTCONTENT + " text,"
+            + HomeTable.RTID + " text,"
             + HomeTable.TIME + " text,"
             + HomeTable.PIC + " text,"
             + HomeTable.SRC + " text"

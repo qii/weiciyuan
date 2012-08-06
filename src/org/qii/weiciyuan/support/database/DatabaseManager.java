@@ -3,6 +3,7 @@ package org.qii.weiciyuan.support.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import org.qii.weiciyuan.bean.TimeLineMsgListBean;
 import org.qii.weiciyuan.bean.WeiboAccountBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
@@ -123,6 +124,20 @@ public class DatabaseManager {
             cv.put(HomeTable.TIME, msg.getCreated_at());
             cv.put(HomeTable.PIC, msg.getThumbnail_pic());
             cv.put(HomeTable.AVATAR, msg.getUser().getProfile_image_url());
+
+            WeiboMsgBean rt = msg.getRetweeted_status();
+            if (rt != null) {
+                WeiboUserBean rtUser = rt.getUser();
+                cv.put(HomeTable.RTAVATAR, rtUser.getProfile_image_url());
+                cv.put(HomeTable.RTCONTENT, rt.getText());
+                cv.put(HomeTable.RTID, rt.getId());
+                cv.put(HomeTable.RTROTNICK,rtUser.getScreen_name());
+                cv.put(HomeTable.RTROOTUID, rtUser.getId());
+                if (!TextUtils.isEmpty(rt.getThumbnail_pic())) {
+                    cv.put(HomeTable.RTPIC, rt.getThumbnail_pic());
+                }
+            }
+
             long result = wsd.insert(HomeTable.TABLE_NAME,
                     HomeTable.MBLOGID, cv);
         }
@@ -165,6 +180,21 @@ public class DatabaseManager {
             user.setProfile_image_url(c.getString(c.getColumnIndex(HomeTable.AVATAR)));
 
             msg.setUser(user);
+
+            colid = c.getColumnIndex(HomeTable.RTCONTENT);
+            String rtContent = c.getString(colid);
+            if (!TextUtils.isEmpty((rtContent))) {
+                WeiboMsgBean bean = new WeiboMsgBean();
+                WeiboUserBean userBean = new WeiboUserBean();
+                bean.setId(c.getString(c.getColumnIndex(HomeTable.RTID)));
+                bean.setText(c.getString(c.getColumnIndex(HomeTable.RTCONTENT)));
+                bean.setThumbnail_pic(c.getString(c.getColumnIndex(HomeTable.RTPIC)));
+                userBean.setScreen_name(c.getString(c.getColumnIndex(HomeTable.RTROTNICK)));
+                userBean.setId(c.getString(c.getColumnIndex(HomeTable.RTROOTUID)));
+
+                bean.setUser(userBean);
+                msg.setRetweeted_status(bean);
+            }
 
             msgList.add(msg);
         }
