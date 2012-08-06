@@ -56,7 +56,7 @@ public class DatabaseManager {
         cv.put(AccountTable.OAUTH_TOKEN, account.getAccess_token());
         cv.put(AccountTable.USERNAME, account.getUsername());
         cv.put(AccountTable.USERNICK, account.getUsernick());
-        cv.put(AccountTable.AVATAR_URL,account.getAvatar_url());
+        cv.put(AccountTable.AVATAR_URL, account.getAvatar_url());
 
         Cursor c = rsd.query(AccountTable.TABLE_NAME, null, AccountTable.UID + "=?",
                 new String[]{account.getUid()}, null, null, null);
@@ -91,7 +91,7 @@ public class DatabaseManager {
             account.setUid(c.getString(colid));
 
             colid = c.getColumnIndex(AccountTable.AVATAR_URL);
-                        account.setAvatar_url(c.getString(colid));
+            account.setAvatar_url(c.getString(colid));
 
             weiboAccountList.add(account);
         }
@@ -121,6 +121,8 @@ public class DatabaseManager {
             cv.put(HomeTable.UID, user.getId());
             cv.put(HomeTable.CONTENT, msg.getText());
             cv.put(HomeTable.TIME, msg.getCreated_at());
+            cv.put(HomeTable.PIC, msg.getThumbnail_pic());
+            cv.put(HomeTable.AVATAR, msg.getUser().getProfile_image_url());
             long result = wsd.insert(HomeTable.TABLE_NAME,
                     HomeTable.MBLOGID, cv);
         }
@@ -145,9 +147,13 @@ public class DatabaseManager {
 
             msg.setListviewItemShowTime(c.getString(c.getColumnIndex(HomeTable.TIME)));
 
+            msg.setThumbnail_pic(c.getString(c.getColumnIndex(HomeTable.PIC)));
+
+
             WeiboUserBean user = new WeiboUserBean();
 
             user.setScreen_name(c.getString(c.getColumnIndex(HomeTable.NICK)));
+            user.setProfile_image_url(c.getString(c.getColumnIndex(HomeTable.AVATAR)));
 
             msg.setUser(user);
 

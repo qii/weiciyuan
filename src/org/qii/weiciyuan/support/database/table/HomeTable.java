@@ -9,7 +9,7 @@ public class HomeTable {
 
     public static final String TABLE_NAME = "home_table";
     public static final String MBLOGID = "mblogid";
-
+    public static final String AVATAR="avatar";
     public static final String FEEDID = "feedid";
     public static final String MBLOGIDNUM = "mblogidnum";
     public static final String GID = "gid";

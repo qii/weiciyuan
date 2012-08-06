@@ -7,14 +7,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgListBean;
 import org.qii.weiciyuan.dao.FriendsTimeLineMsgDao;
+import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
@@ -40,6 +38,12 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
     private Commander commander;
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        bean = DatabaseManager.getInstance().getHomeLineMsgList();
+        timeLineAdapter.notifyDataSetChanged();
+    }
 
     public static abstract class Commander {
 
@@ -210,8 +214,8 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
                 dao.setSince_id(getList().getStatuses().get(0).getId());
             }
             TimeLineMsgListBean result = dao.getGSONMsgList();
-            //            if (result != null)
-            //DatabaseManager.getInstance().addHomeLineMsg(result);
+            if (result != null)
+                DatabaseManager.getInstance().addHomeLineMsg(result);
             return result;
 
         }
