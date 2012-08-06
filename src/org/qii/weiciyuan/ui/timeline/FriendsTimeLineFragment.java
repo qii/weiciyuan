@@ -7,7 +7,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TimeLineMsgListBean;
@@ -263,6 +269,16 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
             isBusying = true;
 
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText("loading");
+            View view = footerView.findViewById(R.id.refresh);
+            view.setVisibility(View.VISIBLE);
+
+            Animation rotateAnimation = new RotateAnimation(0f, 360f,
+                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,0.5f);
+            rotateAnimation.setDuration(1000);
+            rotateAnimation.setRepeatCount(-1);
+            rotateAnimation.setRepeatMode(Animation.RESTART);
+            rotateAnimation.setInterpolator(new LinearInterpolator());
+            view.startAnimation(rotateAnimation);
 
         }
 
@@ -290,6 +306,8 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
             isBusying = false;
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText("click to load older message");
+            footerView.findViewById(R.id.refresh).clearAnimation();
+            footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
             super.onPostExecute(newValue);
         }
