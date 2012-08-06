@@ -84,7 +84,12 @@ public class BrowserWeiboMsgActivity extends AbstractMainActivity {
 
         if (retweetMsg != null) {
             recontent.setVisibility(View.VISIBLE);
-            recontent.setText(retweetMsg.getUser().getScreen_name() + "：" + retweetMsg.getText());
+            if (retweetMsg.getUser() != null) {
+                recontent.setText(retweetMsg.getUser().getScreen_name() + "：" + retweetMsg.getText());
+            } else {
+                recontent.setText(retweetMsg.getText());
+
+            }
             if (!TextUtils.isEmpty(retweetMsg.getBmiddle_pic())) {
                 repost_pic.setVisibility(View.VISIBLE);
                 SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic);

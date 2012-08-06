@@ -177,6 +177,11 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
 
             holder.username.setText(msg.getUser().getScreen_name());
+            String image_url = msg.getUser().getProfile_image_url();
+            if (!TextUtils.isEmpty(image_url)) {
+                downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
+            }
+
             holder.content.setText(msg.getText());
 
             if (!TextUtils.isEmpty(msg.getListviewItemShowTime())) {
@@ -185,11 +190,6 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
                 holder.time.setText(msg.getCreated_at());
             }
 
-
-            String image_url = msg.getUser().getProfile_image_url();
-            if (!TextUtils.isEmpty(image_url)) {
-                downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
-            }
 
             holder.repost_content.setVisibility(View.GONE);
             holder.repost_content_pic.setVisibility(View.GONE);
@@ -206,8 +206,13 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
         private void buildRepostContent(WeiboMsgBean repost_msg, ViewHolder holder, int position) {
             holder.repost_content.setVisibility(View.VISIBLE);
+            if (repost_msg.getUser() != null) {
 
-            holder.repost_content.setText(repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
+                holder.repost_content.setText(repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
+            } else {
+                holder.repost_content.setText(repost_msg.getText());
+
+            }
             if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
                 holder.repost_content_pic.setVisibility(View.VISIBLE);
                 downContentPic(holder.repost_content_pic, repost_msg.getThumbnail_pic(), position, listView);

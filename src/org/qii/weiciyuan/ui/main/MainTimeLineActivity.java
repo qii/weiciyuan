@@ -186,7 +186,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
 
             AbstractTimeLineFragment home = new FriendsTimeLineFragment().setCommander(frinedsTimeLineMsgCommand);
 
-            AbstractTimeLineFragment   mentions = new MentionsTimeLineFragment();
+            AbstractTimeLineFragment   mentions = new MentionsTimeLineFragment().setCommander(frinedsTimeLineMsgCommand);
 //            comments = new CommentsTimeLineFragment();
 //            mails = new MailsTimeLineFragment();
             MyInfoTimeLineFragment  info = new MyInfoTimeLineFragment();
