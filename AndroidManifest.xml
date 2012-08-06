@@ -39,7 +39,12 @@
 
 
         <service android:name=".ui.backgroundservices.MentionsAndCommentsTimeLineService"/>
-        <receiver android:name=".ui.timeline.NewMsgNotificationBroadcastReceiver"/>
+        <receiver android:name=".ui.receiver.MentionsAndCommentsReceiver"/>
+        <receiver android:name=".ui.receiver.ConnectionChangeReceiver" android:label="NetworkConnection">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
