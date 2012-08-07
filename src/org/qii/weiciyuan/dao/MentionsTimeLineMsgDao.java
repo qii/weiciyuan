@@ -2,7 +2,7 @@ package org.qii.weiciyuan.dao;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import org.qii.weiciyuan.bean.TimeLineMsgListBean;
+import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
@@ -41,14 +41,14 @@ public class MentionsTimeLineMsgDao {
         return jsonData;
     }
 
-    public TimeLineMsgListBean getGSONMsgList() {
+    public MessageListBean getGSONMsgList() {
 
         String json = getMsgListJson();
         Gson gson = new Gson();
 
-        TimeLineMsgListBean value = null;
+        MessageListBean value = null;
         try {
-            value = gson.fromJson(json, TimeLineMsgListBean.class);
+            value = gson.fromJson(json, MessageListBean.class);
         } catch (JsonSyntaxException e) {
             ActivityUtils.showTips("发生错误，请重刷");
             AppLogger.e(e.getMessage().toString());

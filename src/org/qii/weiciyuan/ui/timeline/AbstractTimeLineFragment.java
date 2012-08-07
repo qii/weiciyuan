@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.TimeLineMsgListBean;
+import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -25,7 +25,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     protected MainTimeLineActivity activity;
 
-    protected TimeLineMsgListBean bean = new TimeLineMsgListBean();
+    protected MessageListBean bean = new MessageListBean();
 
     protected int position = 0;
 
@@ -35,7 +35,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
     public abstract void refresh();
 
 
-    public TimeLineMsgListBean getList() {
+    public MessageListBean getList() {
         return bean;
     }
 

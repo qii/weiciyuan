@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import org.qii.weiciyuan.bean.TimeLineMsgListBean;
+import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.WeiboAccountBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.bean.WeiboUserBean;
@@ -109,7 +109,7 @@ public class DatabaseManager {
         return getAccountList();
     }
 
-    public void addHomeLineMsg(TimeLineMsgListBean list) {
+    public void addHomeLineMsg(MessageListBean list) {
 
         List<WeiboMsgBean> msgList = list.getStatuses();
         int size = msgList.size();
@@ -145,7 +145,7 @@ public class DatabaseManager {
 
     }
 
-    public void replaceHomeLineMsg(TimeLineMsgListBean list) {
+    public void replaceHomeLineMsg(MessageListBean list) {
 
 
         wsd.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
@@ -154,9 +154,9 @@ public class DatabaseManager {
         addHomeLineMsg(list);
     }
 
-    public TimeLineMsgListBean getHomeLineMsgList() {
+    public MessageListBean getHomeLineMsgList() {
 
-        TimeLineMsgListBean result = new TimeLineMsgListBean();
+        MessageListBean result = new MessageListBean();
 
         List<WeiboMsgBean> msgList = new ArrayList<WeiboMsgBean>();
         String sql = "select * from " + HomeTable.TABLE_NAME + " order by " + HomeTable.MBLOGID + " desc";
