@@ -1,9 +1,8 @@
 <resources>
-    <string-array name="action_list">
-        <item>Home</item>
-        <item>Mention</item>
-        <item>Comment</item>
-        <item>Mail</item>
-        <item>Info</item>
+    <string-array name="frequency">
+        <item>Five Minutes</item>
+        <item>Half Hour</item>
+        <item>One Hour</item>
+        <item>Five Hour</item>
     </string-array>
 </resources>

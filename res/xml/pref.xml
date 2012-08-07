@@ -1,24 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen>
-
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        >
     <PreferenceCategory
-            title="ggg"
-            key="pref_key_storage_settings">
+            android:title="Normal"
+            android:key="pref_key_storage_settings">
         <CheckBoxPreference
-                key="pref_key_auto_delete"
-                summary="sss"
-                title="ddd"
-                defaultValue="false"/>
+                android:key="pref_key_auto_delete"
+                android:summary="sss"
+                android:title="ddd"
+                android:defaultValue="false"/>
+        <ListPreference
+                android:dependency="pref_key_auto_delete"
+                android:key="pref_syncConnectionType"
+                android:title="Frequency"
+                android:dialogTitle="Frequency"
+                android:entries="@array/frequency"
+                android:entryValues="@array/frequency"
+                android:defaultValue="Comment"/>
+
         <Preference
-                key="pref_key_sms_delete_limit"
-                dependency="pref_key_auto_delete"
-                summary="fsdfsdf"
-                title="fsdfsdfd"/>
+                android:key="clear_cache"
+                android:title="Clear SD Cache"
+                android:summary="clear avatar and picture"
+                />
         <Preference
-                key="pref_key_mms_delete_limit"
-                dependency="pref_key_auto_delete"
-                summary="567567t"
-                title="7567ref_title_mms_delete"
+                android:key="1.0 alpha"
+                android:title="version"
                 />
     </PreferenceCategory>
 
