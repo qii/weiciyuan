@@ -137,7 +137,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
                 view.setImageBitmap(bitmap);
                 avatarBitmapWorkerTaskHashMap.remove(urlKey);
             } else {
-                view.setImageDrawable(getResources().getDrawable(R.drawable.app));
+                view.setImageDrawable(getResources().getDrawable(R.drawable.account));
                 if (avatarBitmapWorkerTaskHashMap.get(urlKey) == null) {
                     AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, listView, position);
                     avatarTask.execute(urlKey);
@@ -155,7 +155,7 @@ public class MainTimeLineActivity extends AbstractMainActivity {
                 view.setImageBitmap(bitmap);
                 pictureBitmapWorkerTaskMap.remove(urlKey);
             } else {
-                view.setImageDrawable(getResources().getDrawable(R.drawable.app));
+                view.setImageDrawable(getResources().getDrawable(R.drawable.picture));
                 if (pictureBitmapWorkerTaskMap.get(urlKey) == null) {
                     PictureBitmapWorkerTask avatarTask = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, listView, position);
                     avatarTask.execute(urlKey);
