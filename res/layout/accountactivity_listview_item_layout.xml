@@ -3,16 +3,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="fill_parent"
-              android:layout_height="48dp"
+              android:layout_height="wrap_content"
               android:gravity="center"
               android:padding="5dp"
         >
 
     <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/imageView_avatar" android:layout_gravity="center"
-            android:background="@drawable/app"
+            android:background="@drawable/account"
             android:layout_marginRight="5dp"/>
     <TextView
             android:gravity="center_vertical"
