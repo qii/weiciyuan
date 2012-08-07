@@ -30,6 +30,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
     protected int position = 0;
 
     View headerView;
+    View footerView;
 
     public abstract void refresh();
 
@@ -66,11 +67,15 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
         View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
         listView = (ListView) view.findViewById(R.id.listView);
         listView.setScrollingCacheEnabled(false);
-         headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
+        headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
         listView.addHeaderView(headerView);
         listView.setHeaderDividersEnabled(false);
-        View footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
+        footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         listView.addFooterView(footerView);
+
+        if(bean.getStatuses().size()==0){
+            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+        }
 
 
         timeLineAdapter = new TimeLineAdapter();
@@ -115,9 +120,9 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (position-1 < getList().getStatuses().size()) {
+                if (position - 1 < getList().getStatuses().size()) {
 
-                    listViewItemClick(parent, view, position-1, id);
+                    listViewItemClick(parent, view, position - 1, id);
                 } else {
 
                     listViewFooterViewClick(view);
