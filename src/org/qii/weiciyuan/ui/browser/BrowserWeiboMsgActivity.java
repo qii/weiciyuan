@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.dao.StatusesShowMsgDao;
 import org.qii.weiciyuan.ui.AbstractMainActivity;
 
 /**
@@ -23,6 +24,7 @@ public class BrowserWeiboMsgActivity extends AbstractMainActivity {
 
     private WeiboMsgBean msg;
     private WeiboMsgBean retweetMsg;
+    private String token;
 
     private TextView username;
     private TextView content;
@@ -46,12 +48,14 @@ public class BrowserWeiboMsgActivity extends AbstractMainActivity {
         actionBar.setTitle(getString(R.string.detail));
 
         Intent intent = getIntent();
+        token = intent.getStringExtra("token");
         msg = (WeiboMsgBean) intent.getSerializableExtra("msg");
         retweetMsg = msg.getRetweeted_status();
 
         buildView();
         buildViewData();
 
+        new UpdateMsgTask().execute();
 
     }
 
@@ -139,17 +143,22 @@ public class BrowserWeiboMsgActivity extends AbstractMainActivity {
     }
 
 
-    class UpdateMsgTask extends AsyncTask<Void, Void, Void> {
+    class UpdateMsgTask extends AsyncTask<Void, Void, WeiboMsgBean> {
 
         @Override
-        protected Void doInBackground(Void... params) {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        protected WeiboMsgBean doInBackground(Void... params) {
+            return new StatusesShowMsgDao(token, msg.getId()).getMsg();
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            buildViewData();
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(WeiboMsgBean newValue) {
+            if (newValue != null) {
+                msg = newValue;
+                retweetMsg = msg.getRetweeted_status();
+                buildViewData();
+            }
+
+            super.onPostExecute(newValue);
         }
     }
 }

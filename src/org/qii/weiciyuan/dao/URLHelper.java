@@ -23,11 +23,15 @@ public class URLHelper {
     }
 
 
-    public static String getCommentList(){
+    public static String getCommentList() {
         return URLManager.getRealUrl("commentstimeline");
     }
 
-    public static String getTags(){
-        return  URLManager.getRealUrl("tags");
+    public static String getTags() {
+        return URLManager.getRealUrl("tags");
+    }
+
+    public static String getStatuses_Show() {
+        return URLManager.getRealUrl("statuses_show");
     }
 }

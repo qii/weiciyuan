@@ -80,6 +80,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("msg", bean.getStatuses().get(position));
+        intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
         startActivity(intent);
     }
 
