@@ -67,8 +67,13 @@ public final class GlobalContext extends Application {
 
         final int cacheSize = 1024 * 1024 * memClass / 8;
 
-        avatarCache = new LruCache<String, Bitmap>(cacheSize);
-
+        avatarCache = new LruCache<String, Bitmap>(cacheSize){
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in bytes rather than number of items.
+                return bitmap.getByteCount();
+            }
+        };
     }
 
 
