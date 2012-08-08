@@ -42,7 +42,7 @@
             android:textColor="@drawable/listview_item_text_selector"
             android:layout_below="@id/username"
             android:layout_toRightOf="@id/avatar"
-
+            android:layerType="software"
             />
 
     <FrameLayout
@@ -74,6 +74,7 @@
                     android:text="content"
                     android:textColor="@drawable/listview_item_text_selector"
                     android:visibility="gone"
+                    android:layerType="software"
                     />
             <ImageView
 
