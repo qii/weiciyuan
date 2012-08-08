@@ -31,8 +31,11 @@ public class SimpleBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... url) {
         data = url[0];
+        if (!isCancelled()) {
+            return ImageTool.getAvatarBitmap(data);
+        }
 
-        return ImageTool.getAvatarBitmap(data);
+        return null;
     }
 
     @Override

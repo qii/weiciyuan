@@ -18,20 +18,19 @@ public class PictureBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 
 
     private int position;
-     private ListView listView;
-     private LruCache<String, Bitmap> lruCache;
-     private String data = "";
-     private ImageView view;
+    private ListView listView;
+    private LruCache<String, Bitmap> lruCache;
+    private String data = "";
+    private ImageView view;
 
-     private Map<String, PictureBitmapWorkerTask> taskMap;
-
+    private Map<String, PictureBitmapWorkerTask> taskMap;
 
 
     public PictureBitmapWorkerTask(LruCache<String, Bitmap> lruCache,
-                                  Map<String, PictureBitmapWorkerTask> taskMap,
-                                  ImageView view,
-                                  ListView listView,
-                                  int position) {
+                                   Map<String, PictureBitmapWorkerTask> taskMap,
+                                   ImageView view,
+                                   ListView listView,
+                                   int position) {
 
         this.lruCache = lruCache;
         this.taskMap = taskMap;
@@ -44,8 +43,10 @@ public class PictureBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... url) {
         data = url[0];
-
-        return ImageTool.getPictureThumbnailBitmap(data);
+        if (!isCancelled()) {
+            return ImageTool.getPictureThumbnailBitmap(data);
+        }
+        return null;
     }
 
     @Override
