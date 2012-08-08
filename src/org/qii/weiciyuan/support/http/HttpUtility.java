@@ -77,7 +77,7 @@ public class HttpUtility {
     }
 
     private String doPost(String url, Map<String, String> param) {
-
+        AppLogger.d(url);
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
         Set<String> keys = param.keySet();
@@ -101,7 +101,7 @@ public class HttpUtility {
         }
         httpPost.setEntity(entity);
 
-        HttpResponse response = getHttpResponse(httpGet, null);
+        HttpResponse response = getHttpResponse(httpPost, null);
 
         if (response != null) {
 
