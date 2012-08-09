@@ -16,7 +16,6 @@ public final class GlobalContext extends Application {
 
     private static GlobalContext globalContext = null;
 
-    private boolean isAppForeground = false;
 
     private Activity activity = null;
 
@@ -41,17 +40,7 @@ public final class GlobalContext extends Application {
         return globalContext;
     }
 
-    public void setAppForegroundFlag() {
-        isAppForeground = true;
-    }
 
-    public void removeAppForegroundFlag() {
-        isAppForeground = false;
-    }
-
-    public boolean isAppForeground() {
-        return isAppForeground;
-    }
 
     public Activity getActivity() {
         return activity;

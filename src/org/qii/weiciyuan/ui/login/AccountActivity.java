@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.login;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -12,6 +11,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboAccountBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.AbstractMainActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AccountActivity extends Activity implements AdapterView.OnItemClickListener {
+public class AccountActivity extends AbstractMainActivity implements AdapterView.OnItemClickListener {
     /**
      * Called when the activity is first created.
      */

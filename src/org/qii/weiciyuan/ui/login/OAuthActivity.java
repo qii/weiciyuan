@@ -1,6 +1,9 @@
 package org.qii.weiciyuan.ui.login;
 
-import android.app.*;
+import android.app.ActionBar;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,6 +21,7 @@ import org.qii.weiciyuan.bean.WeiboAccountBean;
 import org.qii.weiciyuan.bean.WeiboUserBean;
 import org.qii.weiciyuan.dao.OAuthDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.ui.AbstractMainActivity;
 import org.qii.weiciyuan.weibo.Utility;
 import org.qii.weiciyuan.weibo.WeiboParameters;
 
@@ -28,7 +32,7 @@ import org.qii.weiciyuan.weibo.WeiboParameters;
  * Time: 下午1:44
  * To change this template use File | Settings | File Templates.
  */
-public class OAuthActivity extends Activity {
+public class OAuthActivity extends AbstractMainActivity {
 
     public static String URL_OAUTH2_ACCESS_AUTHORIZE = "https://api.weibo.com/oauth2/authorize";
     public static final String APP_KEY = "1065511513";
