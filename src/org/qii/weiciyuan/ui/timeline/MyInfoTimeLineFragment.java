@@ -20,6 +20,13 @@ import org.qii.weiciyuan.ui.preference.SettingActivity;
  */
 public class MyInfoTimeLineFragment extends Fragment {
 
+    ImageView avatar;
+    TextView username;
+    TextView jshao;
+    Button weibo_number;
+    Button following_number;
+    Button fans_number;
+
     public static interface IUserInfo {
         public UserBean getUser();
     }
@@ -48,6 +55,9 @@ public class MyInfoTimeLineFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        bean = ((IUserInfo) getActivity()).getUser();
+        username.setText(bean.getScreen_name());
+
 
     }
 
@@ -55,15 +65,13 @@ public class MyInfoTimeLineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info_layout, container, false);
-        bean = ((IUserInfo) getActivity()).getUser();
-        ImageView avatar = (ImageView) view.findViewById(R.id.avatar);
-        TextView username = (TextView) view.findViewById(R.id.username);
-        TextView jshao = (TextView) view.findViewById(R.id.textView_info);
-        Button weibo_number = (Button) view.findViewById(R.id.weibo_number);
-        Button following_number = (Button) view.findViewById(R.id.following_number);
-        Button fans_number = (Button) view.findViewById(R.id.fans_number);
+        avatar = (ImageView) view.findViewById(R.id.avatar);
+        username = (TextView) view.findViewById(R.id.username);
+        jshao = (TextView) view.findViewById(R.id.textView_info);
+        weibo_number = (Button) view.findViewById(R.id.weibo_number);
+        following_number = (Button) view.findViewById(R.id.following_number);
+        fans_number = (Button) view.findViewById(R.id.fans_number);
 
-        username.setText(bean.getScreen_name());
 
         return view;
     }

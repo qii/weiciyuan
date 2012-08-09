@@ -177,6 +177,8 @@ public class MainTimeLineActivity extends AbstractAppActivity implements MyInfoT
         return bean;
     }
 
+    public MainTimeLineActivity(){};
+
 
     class TimeLinePagerAdapter extends
             FragmentStatePagerAdapter {
