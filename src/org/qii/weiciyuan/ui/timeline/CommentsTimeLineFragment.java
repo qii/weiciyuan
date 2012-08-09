@@ -25,12 +25,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
-* Created with IntelliJ IDEA.
-* User: qii
-* Date: 12-7-29
-* Time: 下午1:15
-* To change this template use File | Settings | File Templates.
-*/
+ * Created with IntelliJ IDEA.
+ * User: qii
+ * Date: 12-7-29
+ * Time: 下午1:15
+ * To change this template use File | Settings | File Templates.
+ */
 public class CommentsTimeLineFragment extends Fragment {
     protected ListView listView;
     protected TimeLineAdapter timeLineAdapter;
@@ -42,11 +42,16 @@ public class CommentsTimeLineFragment extends Fragment {
     protected int position = 0;
 
 
-
     public CommentListBean getList() {
         return bean;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        commander = ((MainTimeLineActivity) getActivity()).getCommander();
+        ((MainTimeLineActivity) getActivity()).setCommentsListView(listView);
+    }
 
 
     @Override
@@ -185,7 +190,6 @@ public class CommentsTimeLineFragment extends Fragment {
             holder.content.setText(msg.getText());
 
 
-
             holder.repost_content.setVisibility(View.GONE);
             holder.repost_content_pic.setVisibility(View.GONE);
             holder.content_pic.setVisibility(View.GONE);
@@ -239,21 +243,21 @@ public class CommentsTimeLineFragment extends Fragment {
         return this;
     }
 
-     protected void scrollToBottom() {
+    protected void scrollToBottom() {
 
     }
 
-     public void listViewItemLongClick(AdapterView parent, View view, int position, long id) {
+    public void listViewItemLongClick(AdapterView parent, View view, int position, long id) {
         view.setSelected(true);
         new MyAlertDialogFragment().setView(view).setPosition(position).show(getFragmentManager(), "");
     }
 
-     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
+    protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
 
     }
 
 
-     protected void listViewFooterViewClick(View view) {
+    protected void listViewFooterViewClick(View view) {
         if (!isBusying) {
 
             new FriendsTimeLineGetOlderMsgListTask(view).execute();
@@ -261,11 +265,11 @@ public class CommentsTimeLineFragment extends Fragment {
         }
     }
 
-     protected void downloadAvatar(ImageView view, String url, int position, ListView listView) {
+    protected void downloadAvatar(ImageView view, String url, int position, ListView listView) {
         commander.downloadAvatar(view, url, position, listView);
     }
 
-     protected void downContentPic(ImageView view, String url, int position, ListView listView) {
+    protected void downContentPic(ImageView view, String url, int position, ListView listView) {
         commander.downContentPic(view, url, position, listView);
     }
 
