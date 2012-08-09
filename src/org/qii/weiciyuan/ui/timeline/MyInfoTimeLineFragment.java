@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.timeline;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,31 +9,24 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.WeiboAccountBean;
-import org.qii.weiciyuan.bean.WeiboUserBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 /**
- * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-7-30
  * Time: 下午10:13
- * To change this template use File | Settings | File Templates.
  */
 public class MyInfoTimeLineFragment extends Fragment {
 
-    private WeiboAccountBean accountBean;
-
-    private WeiboUserBean bean;
-
-    public void setAccountBean(WeiboAccountBean accountBean) {
-        this.accountBean = accountBean;
+    public static interface IUserInfo {
+        public UserBean getUser();
     }
 
-    public void setBean(WeiboUserBean bean) {
-        this.bean = bean;
-    }
+
+    private UserBean bean;
+
 
     public MyInfoTimeLineFragment() {
         super();
@@ -46,10 +40,22 @@ public class MyInfoTimeLineFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info_layout, container, false);
-
+        bean = ((IUserInfo) getActivity()).getUser();
         ImageView avatar = (ImageView) view.findViewById(R.id.avatar);
         TextView username = (TextView) view.findViewById(R.id.username);
         TextView jshao = (TextView) view.findViewById(R.id.textView_info);
@@ -57,7 +63,7 @@ public class MyInfoTimeLineFragment extends Fragment {
         Button following_number = (Button) view.findViewById(R.id.following_number);
         Button fans_number = (Button) view.findViewById(R.id.fans_number);
 
-        username.setText(accountBean.getUsernick());
+        username.setText(bean.getScreen_name());
 
         return view;
     }
@@ -72,7 +78,7 @@ public class MyInfoTimeLineFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);    //To change body of overridden methods use File | Settings | File Templates.
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -84,7 +90,7 @@ public class MyInfoTimeLineFragment extends Fragment {
                 startActivity(intent);
                 break;
             case R.id.menu_settings:
-                  startActivity(new Intent(getActivity(), SettingActivity.class));
+                startActivity(new Intent(getActivity(), SettingActivity.class));
                 break;
 
         }

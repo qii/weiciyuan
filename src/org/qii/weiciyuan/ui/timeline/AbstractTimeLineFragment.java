@@ -10,7 +10,6 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,7 +22,6 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
     protected ListView listView;
     protected TimeLineAdapter timeLineAdapter;
 
-    protected MainTimeLineActivity activity;
 
     protected MessageListBean bean = new MessageListBean();
 
@@ -45,7 +43,6 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
 
     protected abstract void listViewItemClick(AdapterView parent, View view, int position, long id);
 
-
     protected abstract void listViewFooterViewClick(View view);
 
     protected abstract void downloadAvatar(ImageView view, String url, int position, ListView listView);
@@ -55,7 +52,6 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (MainTimeLineActivity) getActivity();
         setHasOptionsMenu(true);
         setRetainInstance(true);
     }
@@ -73,7 +69,7 @@ public abstract class AbstractTimeLineFragment<T> extends Fragment {
         footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         listView.addFooterView(footerView);
 
-        if(bean.getStatuses().size()==0){
+        if (bean.getStatuses().size() == 0) {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
         }
 

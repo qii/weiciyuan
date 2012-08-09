@@ -8,10 +8,10 @@ import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.WeiboAccountBean;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.AbstractMainActivity;
+import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AccountActivity extends AbstractMainActivity implements AdapterView.OnItemClickListener {
+public class AccountActivity extends AbstractAppActivity implements AdapterView.OnItemClickListener {
     /**
      * Called when the activity is first created.
      */
@@ -30,7 +30,7 @@ public class AccountActivity extends AbstractMainActivity implements AdapterView
     private AccountAdapter listAdapter;
 
 
-    private List<WeiboAccountBean> weiboAccountList = new ArrayList<WeiboAccountBean>();
+    private List<AccountBean> accountList = new ArrayList<AccountBean>();
 
     private ActionMode mActionMode;
 
@@ -158,7 +158,7 @@ public class AccountActivity extends AbstractMainActivity implements AdapterView
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-        String token = weiboAccountList.get(i).getAccess_token();
+        String token = accountList.get(i).getAccess_token();
 
         SharedPreferences settings = getPreferences(MODE_PRIVATE);
 
@@ -169,8 +169,8 @@ public class AccountActivity extends AbstractMainActivity implements AdapterView
         editor.commit();
 
         Intent intent = new Intent(this, MainTimeLineActivity.class);
-        intent.putExtra("account", weiboAccountList.get(i));
-        intent.putExtra("uid", weiboAccountList.get(i).getUid());
+        intent.putExtra("account", accountList.get(i));
+        intent.putExtra("uid", accountList.get(i).getUid());
         startActivity(intent);
 
 
@@ -187,12 +187,12 @@ public class AccountActivity extends AbstractMainActivity implements AdapterView
 
         @Override
         public int getCount() {
-            return weiboAccountList.size();
+            return accountList.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return weiboAccountList.get(i);
+            return accountList.get(i);
         }
 
         @Override
@@ -214,7 +214,7 @@ public class AccountActivity extends AbstractMainActivity implements AdapterView
                 cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        WeiboAccountBean account = weiboAccountList.get(i);
+                        AccountBean account = accountList.get(i);
                         String uid = account.getUid();
                         if (isChecked) {
                             checkedItemPostion.add(uid);
@@ -233,13 +233,13 @@ public class AccountActivity extends AbstractMainActivity implements AdapterView
             }
             TextView textView = (TextView) mView.findViewById(R.id.account_name);
 
-            textView.setText(weiboAccountList.get(i).getUsernick());
+            textView.setText(accountList.get(i).getUsernick());
 
             ImageView imageView = (ImageView) mView.findViewById(R.id.imageView_avatar);
 
-            if (!TextUtils.isEmpty(weiboAccountList.get(i).getAvatar_url())) {
+            if (!TextUtils.isEmpty(accountList.get(i).getAvatar_url())) {
                 AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), null, imageView, listView, i);
-                avatarTask.execute(weiboAccountList.get(i).getAvatar_url());
+                avatarTask.execute(accountList.get(i).getAvatar_url());
             }
 
             return mView;
@@ -279,31 +279,31 @@ public class AccountActivity extends AbstractMainActivity implements AdapterView
 
     }
 
-    class GetAccountListDBTask extends AsyncTask<Void, List<WeiboAccountBean>, List<WeiboAccountBean>> {
+    class GetAccountListDBTask extends AsyncTask<Void, List<AccountBean>, List<AccountBean>> {
 
         @Override
-        protected List<WeiboAccountBean> doInBackground(Void... params) {
+        protected List<AccountBean> doInBackground(Void... params) {
             return DatabaseManager.getInstance().getAccountList();
         }
 
         @Override
-        protected void onPostExecute(List<WeiboAccountBean> weiboAccounts) {
-            weiboAccountList = weiboAccounts;
+        protected void onPostExecute(List<AccountBean> accounts) {
+            accountList = accounts;
             listAdapter.notifyDataSetChanged();
 
         }
     }
 
-    class RemoveAccountDBTask extends AsyncTask<Void, List<WeiboAccountBean>, List<WeiboAccountBean>> {
+    class RemoveAccountDBTask extends AsyncTask<Void, List<AccountBean>, List<AccountBean>> {
 
         @Override
-        protected List<WeiboAccountBean> doInBackground(Void... params) {
+        protected List<AccountBean> doInBackground(Void... params) {
             return DatabaseManager.getInstance().removeAndGetNewAccountList(listAdapter.getCheckedItemPosition());
         }
 
         @Override
-        protected void onPostExecute(List<WeiboAccountBean> weiboAccounts) {
-            weiboAccountList = weiboAccounts;
+        protected void onPostExecute(List<AccountBean> accounts) {
+            accountList = accounts;
             listAdapter.notifyDataSetChanged();
             Toast.makeText(AccountActivity.this, "remove successfully", Toast.LENGTH_SHORT).show();
 

@@ -13,14 +13,14 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.StatusesShowMsgDao;
-import org.qii.weiciyuan.ui.AbstractMainActivity;
+import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 
 /**
  * User: Jiang Qi
  * Date: 12-8-1
  * Time: 上午10:48
  */
-public class BrowserWeiboMsgActivity extends AbstractMainActivity {
+public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
     private WeiboMsgBean msg;
     private WeiboMsgBean retweetMsg;

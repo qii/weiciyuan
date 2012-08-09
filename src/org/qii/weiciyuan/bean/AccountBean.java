@@ -7,7 +7,7 @@ import java.io.Serializable;
  * Date: 12-7-30
  * Time: 上午10:51
  */
-public class WeiboAccountBean implements Serializable {
+public class AccountBean implements Serializable {
     public String getUid() {
         return uid;
     }

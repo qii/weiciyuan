@@ -37,14 +37,14 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
 
     public volatile boolean isBusying = false;
 
-    private FriendsTimeLineFragment.Commander commander;
+    private Commander commander;
 
     public MentionsTimeLineFragment() {
 //        bean = DatabaseManager.getInstance().getHomeLineMsgList();
     }
 
 
-    public MentionsTimeLineFragment setCommander(FriendsTimeLineFragment.Commander commander) {
+    public MentionsTimeLineFragment setCommander(Commander commander) {
         this.commander = commander;
         return this;
 

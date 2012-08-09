@@ -13,7 +13,7 @@ public class CommentBean implements Serializable {
     private String text;
     private String source;
     private String mid;
-    private WeiboUserBean user;
+    private UserBean user;
     private WeiboMsgBean status;
 
     public String getCreated_at() {
@@ -56,11 +56,11 @@ public class CommentBean implements Serializable {
         this.mid = mid;
     }
 
-    public WeiboUserBean getUser() {
+    public UserBean getUser() {
         return user;
     }
 
-    public void setUser(WeiboUserBean user) {
+    public void setUser(UserBean user) {
         this.user = user;
     }
 

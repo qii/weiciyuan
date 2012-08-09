@@ -5,9 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.bean.WeiboAccountBean;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
-import org.qii.weiciyuan.bean.WeiboUserBean;
 import org.qii.weiciyuan.support.database.table.AccountTable;
 import org.qii.weiciyuan.support.database.table.HomeTable;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
@@ -50,7 +50,7 @@ public class DatabaseManager {
         return singleton;
     }
 
-    public OAuthActivity.DBResult addOrUpdateAccount(WeiboAccountBean account) {
+    public OAuthActivity.DBResult addOrUpdateAccount(AccountBean account) {
 
         ContentValues cv = new ContentValues();
         cv.put(AccountTable.UID, account.getUid());
@@ -76,12 +76,12 @@ public class DatabaseManager {
     }
 
 
-    public List<WeiboAccountBean> getAccountList() {
-        List<WeiboAccountBean> weiboAccountList = new ArrayList<WeiboAccountBean>();
+    public List<AccountBean> getAccountList() {
+        List<AccountBean> accountList = new ArrayList<AccountBean>();
         String sql = "select * from " + AccountTable.TABLE_NAME;
         Cursor c = rsd.rawQuery(sql, null);
         while (c.moveToNext()) {
-            WeiboAccountBean account = new WeiboAccountBean();
+            AccountBean account = new AccountBean();
             int colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN);
             account.setAccess_token(c.getString(colid));
 
@@ -94,13 +94,13 @@ public class DatabaseManager {
             colid = c.getColumnIndex(AccountTable.AVATAR_URL);
             account.setAvatar_url(c.getString(colid));
 
-            weiboAccountList.add(account);
+            accountList.add(account);
         }
 
-        return weiboAccountList;
+        return accountList;
     }
 
-    public List<WeiboAccountBean> removeAndGetNewAccountList(Set<String> checkedItemPosition) {
+    public List<AccountBean> removeAndGetNewAccountList(Set<String> checkedItemPosition) {
         String[] args = checkedItemPosition.toArray(new String[0]);
 
         String column = AccountTable.UID;
@@ -115,7 +115,7 @@ public class DatabaseManager {
         int size = msgList.size();
         for (int i = 0; i < size; i++) {
             WeiboMsgBean msg = msgList.get(i);
-            WeiboUserBean user = msg.getUser();
+            UserBean user = msg.getUser();
             ContentValues cv = new ContentValues();
             cv.put(HomeTable.MBLOGID, msg.getId());
             cv.put(HomeTable.NICK, user.getScreen_name());
@@ -127,7 +127,7 @@ public class DatabaseManager {
 
             WeiboMsgBean rt = msg.getRetweeted_status();
             if (rt != null) {
-                WeiboUserBean rtUser = rt.getUser();
+                UserBean rtUser = rt.getUser();
                 cv.put(HomeTable.RTAVATAR, rtUser.getProfile_image_url());
                 cv.put(HomeTable.RTCONTENT, rt.getText());
                 cv.put(HomeTable.RTID, rt.getId());
@@ -174,7 +174,7 @@ public class DatabaseManager {
             msg.setThumbnail_pic(c.getString(c.getColumnIndex(HomeTable.PIC)));
 
 
-            WeiboUserBean user = new WeiboUserBean();
+            UserBean user = new UserBean();
 
             user.setScreen_name(c.getString(c.getColumnIndex(HomeTable.NICK)));
             user.setProfile_image_url(c.getString(c.getColumnIndex(HomeTable.AVATAR)));
@@ -185,7 +185,7 @@ public class DatabaseManager {
             String rtContent = c.getString(colid);
             if (!TextUtils.isEmpty((rtContent))) {
                 WeiboMsgBean bean = new WeiboMsgBean();
-                WeiboUserBean userBean = new WeiboUserBean();
+                UserBean userBean = new UserBean();
                 bean.setId(c.getString(c.getColumnIndex(HomeTable.RTID)));
                 bean.setText(c.getString(c.getColumnIndex(HomeTable.RTCONTENT)));
                 bean.setThumbnail_pic(c.getString(c.getColumnIndex(HomeTable.RTPIC)));

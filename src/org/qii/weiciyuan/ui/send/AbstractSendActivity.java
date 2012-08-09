@@ -12,14 +12,14 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.ui.AbstractMainActivity;
+import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 
 /**
  * User: Jiang Qi
  * Date: 12-8-2
  * Time: 下午3:53
  */
-public abstract class AbstractSendActivity extends AbstractMainActivity implements DialogInterface.OnClickListener{
+public abstract class AbstractSendActivity extends AbstractAppActivity implements DialogInterface.OnClickListener{
     private static final int CAMERA_RESULT = 0;
     private static final int PIC_RESULT = 1;
     protected String token = "";

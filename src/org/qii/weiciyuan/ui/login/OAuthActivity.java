@@ -17,11 +17,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.WeiboAccountBean;
-import org.qii.weiciyuan.bean.WeiboUserBean;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.OAuthDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
-import org.qii.weiciyuan.ui.AbstractMainActivity;
+import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.weibo.Utility;
 import org.qii.weiciyuan.weibo.WeiboParameters;
 
@@ -32,7 +32,7 @@ import org.qii.weiciyuan.weibo.WeiboParameters;
  * Time: 下午1:44
  * To change this template use File | Settings | File Templates.
  */
-public class OAuthActivity extends AbstractMainActivity {
+public class OAuthActivity extends AbstractAppActivity {
 
     public static String URL_OAUTH2_ACCESS_AUTHORIZE = "https://api.weibo.com/oauth2/authorize";
     public static final String APP_KEY = "1065511513";
@@ -149,7 +149,7 @@ public class OAuthActivity extends AbstractMainActivity {
         }
     }
 
-    class OAuthTask extends AsyncTask<String, WeiboUserBean, DBResult> {
+    class OAuthTask extends AsyncTask<String, UserBean, DBResult> {
 
 
         ProgressFragment progressFragment = ProgressFragment.newInstance();
@@ -167,16 +167,16 @@ public class OAuthActivity extends AbstractMainActivity {
 
             String token = params[0];
 
-            WeiboUserBean weiboUser = new OAuthDao(token).getOAuthUserInfo();
+            UserBean user = new OAuthDao(token).getOAuthUserInfo();
 
-            WeiboAccountBean weiboAccount = new WeiboAccountBean();
-            weiboAccount.setAccess_token(token);
-            weiboAccount.setUsername(weiboUser.getName());
-            weiboAccount.setUid(weiboUser.getId());
-            weiboAccount.setUsernick(weiboUser.getScreen_name());
-            weiboAccount.setAvatar_url(weiboUser.getProfile_image_url());
+            AccountBean account = new AccountBean();
+            account.setAccess_token(token);
+            account.setUsername(user.getName());
+            account.setUid(user.getId());
+            account.setUsernick(user.getScreen_name());
+            account.setAvatar_url(user.getProfile_image_url());
 
-            return DatabaseManager.getInstance().addOrUpdateAccount(weiboAccount);
+            return DatabaseManager.getInstance().addOrUpdateAccount(account);
 
 
         }

@@ -133,11 +133,11 @@ public class WeiboMsgBean implements Serializable {
 //        this.annotations = annotations;
 //    }
 
-    public WeiboUserBean getUser() {
+    public UserBean getUser() {
         return user;
     }
 
-    public void setUser(WeiboUserBean user) {
+    public void setUser(UserBean user) {
         this.user = user;
     }
 
@@ -170,7 +170,7 @@ public class WeiboMsgBean implements Serializable {
     private String reposts_count;
     private String comments_count;
     //    private Object annotations;
-    private WeiboUserBean user;
+    private UserBean user;
     private WeiboMsgBean retweeted_status;
     private GeoBean geo;
 
