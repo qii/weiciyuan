@@ -43,16 +43,27 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     private Commander commander;
 
     public FriendsTimeLineFragment() {
-        bean = DatabaseManager.getInstance().getHomeLineMsgList();
 
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("bean", bean);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         ((MainTimeLineActivity) getActivity()).setHomeListView(listView);
+        if (savedInstanceState != null) {
+            bean = (MessageListBean) savedInstanceState.getSerializable("bean");
+        } else {
+            bean = DatabaseManager.getInstance().getHomeLineMsgList();
+        }
+        timeLineAdapter.notifyDataSetChanged();
     }
 
     @Override

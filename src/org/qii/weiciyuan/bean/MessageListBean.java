@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * Time: 下午8:22
  * To change this template use File | Settings | File Templates.
  */
-public class MessageListBean {
+public class MessageListBean implements Serializable{
     public List<WeiboMsgBean> getStatuses() {
         return statuses;
     }
