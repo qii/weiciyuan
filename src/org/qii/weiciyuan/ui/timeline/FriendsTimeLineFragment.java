@@ -63,7 +63,8 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander=((MainTimeLineActivity)getActivity()).getFrinedsTimeLineMsgCommand();
+        commander = ((MainTimeLineActivity) getActivity()).getFrinedsTimeLineMsgCommand();
+        ((MainTimeLineActivity) getActivity()).setHomeListView(listView);
     }
 
     @Override
