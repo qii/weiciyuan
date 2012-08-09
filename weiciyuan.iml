@@ -21,10 +21,8 @@
         <option name="PACK_TEST_CODE" value="false" />
         <option name="RUN_PROGUARD" value="false" />
         <option name="PROGUARD_CFG_PATH" value="/proguard-project.txt" />
-        <resOverlayFolders>
-          <path>/res-overlay</path>
-        </resOverlayFolders>
-        <includeSystemProguardFile>true</includeSystemProguardFile>
+        <resOverlayFolders />
+        <includeSystemProguardFile>false</includeSystemProguardFile>
         <additionalNativeLibs />
       </configuration>
     </facet>
@@ -32,12 +30,46 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Android 4.0.3 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android 4.0 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="libs" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/android-support-v4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/eclair" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/froyo" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/gingerbread" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/honeycomb" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/honeycomb_mr2" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/ics" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/java" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/gson-2.2.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/httpclientandroidlib-1.1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

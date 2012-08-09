@@ -15,6 +15,7 @@ import ch.boye.httpclientandroidlib.client.utils.URIBuilder;
 import ch.boye.httpclientandroidlib.conn.ConnectTimeoutException;
 import ch.boye.httpclientandroidlib.impl.client.BasicCookieStore;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
+import ch.boye.httpclientandroidlib.impl.conn.PoolingClientConnectionManager;
 import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
 import ch.boye.httpclientandroidlib.params.CoreProtocolPNames;
@@ -34,7 +35,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class HttpUtility {
 
@@ -48,7 +52,8 @@ public class HttpUtility {
         HttpParams params = new BasicHttpParams();
         params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
-        httpClient = new DefaultHttpClient(params);
+        //default 2 connections
+        httpClient = new DefaultHttpClient(new PoolingClientConnectionManager());
         HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 4000);
         HttpConnectionParams.setSoTimeout(httpClient.getParams(), 4000);
 
