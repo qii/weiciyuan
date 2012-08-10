@@ -4,11 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.support.database.table.AccountTable;
+import org.qii.weiciyuan.support.database.table.CommentsTable;
 import org.qii.weiciyuan.support.database.table.HomeTable;
 import org.qii.weiciyuan.support.database.table.RepostsTable;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
@@ -147,13 +145,13 @@ public class DatabaseManager {
 
     }
 
-    public void replaceHomeLineMsg(MessageListBean list,String accountId) {
+    public void replaceHomeLineMsg(MessageListBean list, String accountId) {
 
 
         wsd.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
         wsd.execSQL(DatabaseHelper.CREATE_HOME_TABLE_SQL);
 
-        addHomeLineMsg(list,accountId);
+        addHomeLineMsg(list, accountId);
     }
 
     public MessageListBean getHomeLineMsgList(String accountId) {
@@ -233,7 +231,6 @@ public class DatabaseManager {
 
             user.setScreen_name(c.getString(c.getColumnIndex(RepostsTable.NICK)));
             user.setProfile_image_url(c.getString(c.getColumnIndex(RepostsTable.AVATAR)));
-
             msg.setUser(user);
 
             colid = c.getColumnIndex(RepostsTable.RTCONTENT);
@@ -246,8 +243,10 @@ public class DatabaseManager {
                 bean.setThumbnail_pic(c.getString(c.getColumnIndex(RepostsTable.RTPIC)));
                 userBean.setScreen_name(c.getString(c.getColumnIndex(RepostsTable.RTROTNICK)));
                 userBean.setId(c.getString(c.getColumnIndex(RepostsTable.RTROOTUID)));
+                if (userBean.getScreen_name() != null) {
+                    bean.setUser(userBean);
+                }
 
-                bean.setUser(userBean);
                 msg.setRetweeted_status(bean);
             }
 
@@ -280,13 +279,17 @@ public class DatabaseManager {
             WeiboMsgBean rt = msg.getRetweeted_status();
             if (rt != null) {
                 UserBean rtUser = rt.getUser();
-                cv.put(RepostsTable.RTAVATAR, rtUser.getProfile_image_url());
-                cv.put(RepostsTable.RTCONTENT, rt.getText());
-                cv.put(RepostsTable.RTID, rt.getId());
-                cv.put(RepostsTable.RTROTNICK, rtUser.getScreen_name());
-                cv.put(RepostsTable.RTROOTUID, rtUser.getId());
-                if (!TextUtils.isEmpty(rt.getThumbnail_pic())) {
-                    cv.put(HomeTable.RTPIC, rt.getThumbnail_pic());
+                if (rtUser != null) {
+                    cv.put(RepostsTable.RTAVATAR, rtUser.getProfile_image_url());
+                    cv.put(RepostsTable.RTCONTENT, rt.getText());
+                    cv.put(RepostsTable.RTID, rt.getId());
+                    cv.put(RepostsTable.RTROTNICK, rtUser.getScreen_name());
+                    cv.put(RepostsTable.RTROOTUID, rtUser.getId());
+                    if (!TextUtils.isEmpty(rt.getThumbnail_pic())) {
+                        cv.put(HomeTable.RTPIC, rt.getThumbnail_pic());
+                    }
+                } else {
+                    cv.put(RepostsTable.RTCONTENT, rt.getText());
                 }
             }
 
@@ -297,13 +300,49 @@ public class DatabaseManager {
 
     }
 
-    public void replaceRepostLineMsg(MessageListBean list,String accountId) {
+    public void replaceRepostLineMsg(MessageListBean list, String accountId) {
 
         //need modification
         wsd.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
         wsd.execSQL(DatabaseHelper.CREATE_REPOSTS_TABLE_SQL);
 
-        addRepostLineMsg(list,accountId);
+        addRepostLineMsg(list, accountId);
+    }
+
+    public void addCommentLineMsg(CommentListBean list, String accountId) {
+
+        List<CommentBean> msgList = list.getComments();
+        int size = msgList.size();
+        for (int i = 0; i < size; i++) {
+            CommentBean msg = msgList.get(i);
+            UserBean user = msg.getUser();
+            ContentValues cv = new ContentValues();
+            cv.put(CommentsTable.MBLOGID, msg.getId());
+            cv.put(CommentsTable.ACCOUNTID, accountId);
+            cv.put(CommentsTable.NICK, user.getScreen_name());
+            cv.put(CommentsTable.UID, user.getId());
+            cv.put(CommentsTable.CONTENT, msg.getText());
+            cv.put(CommentsTable.TIME, msg.getCreated_at());
+            cv.put(CommentsTable.AVATAR, msg.getUser().getProfile_image_url());
+
+            WeiboMsgBean rt = msg.getStatus();
+            if (rt != null) {
+                UserBean rtUser = rt.getUser();
+                cv.put(CommentsTable.RTAVATAR, rtUser.getProfile_image_url());
+                cv.put(CommentsTable.RTCONTENT, rt.getText());
+                cv.put(CommentsTable.RTID, rt.getId());
+                cv.put(CommentsTable.RTROTNICK, rtUser.getScreen_name());
+                cv.put(CommentsTable.RTROOTUID, rtUser.getId());
+                if (!TextUtils.isEmpty(rt.getThumbnail_pic())) {
+                    cv.put(HomeTable.RTPIC, rt.getThumbnail_pic());
+                }
+            }
+
+            long result = wsd.insert(CommentsTable.TABLE_NAME,
+                    CommentsTable.ID, cv);
+        }
+
+
     }
 
 }
