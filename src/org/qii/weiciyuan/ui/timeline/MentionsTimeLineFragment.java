@@ -45,10 +45,7 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
     }
 
 
-    @Override
-    protected void scrollToBottom() {
 
-    }
 
     @Override
     public void listViewItemLongClick(AdapterView parent, View view, int position, long id) {
