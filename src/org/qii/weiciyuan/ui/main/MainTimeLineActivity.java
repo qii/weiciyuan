@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;
@@ -187,7 +187,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements MyInfoT
 
 
     class TimeLinePagerAdapter extends
-            FragmentStatePagerAdapter {
+            FragmentPagerAdapter {
 
         List<Fragment> list = new ArrayList<Fragment>();
 

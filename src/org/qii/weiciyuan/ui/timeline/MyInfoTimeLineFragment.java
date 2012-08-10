@@ -61,17 +61,20 @@ public class MyInfoTimeLineFragment extends Fragment {
 
     }
 
+    View view;
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_info_layout, container, false);
-        avatar = (ImageView) view.findViewById(R.id.avatar);
-        username = (TextView) view.findViewById(R.id.username);
-        jshao = (TextView) view.findViewById(R.id.textView_info);
-        weibo_number = (Button) view.findViewById(R.id.weibo_number);
-        following_number = (Button) view.findViewById(R.id.following_number);
-        fans_number = (Button) view.findViewById(R.id.fans_number);
-
+        if (view == null) {
+            view = inflater.inflate(R.layout.fragment_info_layout, container, false);
+            avatar = (ImageView) view.findViewById(R.id.avatar);
+            username = (TextView) view.findViewById(R.id.username);
+            jshao = (TextView) view.findViewById(R.id.textView_info);
+            weibo_number = (Button) view.findViewById(R.id.weibo_number);
+            following_number = (Button) view.findViewById(R.id.following_number);
+            fans_number = (Button) view.findViewById(R.id.fans_number);
+        }
 
         return view;
     }
