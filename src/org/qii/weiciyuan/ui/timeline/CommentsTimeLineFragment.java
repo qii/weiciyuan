@@ -1,14 +1,13 @@
 package org.qii.weiciyuan.ui.timeline;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.*;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
@@ -19,28 +18,24 @@ import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
-import org.qii.weiciyuan.ui.main.ProgressFragment;
 
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-7-29
  * Time: 下午1:15
- * To change this template use File | Settings | File Templates.
  */
 public class CommentsTimeLineFragment extends Fragment {
+
+    protected View headerView;
+    protected View footerView;
+    public volatile boolean isBusying = false;
+    protected Commander commander;
     protected ListView listView;
     protected TimeLineAdapter timeLineAdapter;
-
-    protected MainTimeLineActivity activity;
-
     protected CommentListBean bean = new CommentListBean();
-
-    protected int position = 0;
-
 
     public CommentListBean getList() {
         return bean;
@@ -57,7 +52,6 @@ public class CommentsTimeLineFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (MainTimeLineActivity) getActivity();
         setHasOptionsMenu(true);
         setRetainInstance(true);
     }
@@ -69,54 +63,26 @@ public class CommentsTimeLineFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
         listView = (ListView) view.findViewById(R.id.listView);
         listView.setScrollingCacheEnabled(false);
-        View footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
+        headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
+        listView.addHeaderView(headerView);
+        listView.setHeaderDividersEnabled(false);
+        footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         listView.addFooterView(footerView);
+
+        if (bean.getComments().size() == 0) {
+            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+        }
 
 
         timeLineAdapter = new TimeLineAdapter();
         listView.setAdapter(timeLineAdapter);
-
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                switch (scrollState) {
-                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                            scrollToBottom();
-                        }
-                        position = view.getFirstVisiblePosition();
-
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-
-                        break;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-
-
-        });
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                listViewItemLongClick(parent, view, position, id);
-                return true;
-            }
-        });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (position < getList().getComments().size()) {
-                    listViewItemClick(parent, view, position, id);
+                if (position - 1 < getList().getComments().size()) {
+
+                    listViewItemClick(parent, view, position - 1, id);
                 } else {
 
                     listViewFooterViewClick(view);
@@ -229,23 +195,6 @@ public class CommentsTimeLineFragment extends Fragment {
         ImageView repost_content_pic;
     }
 
-    public volatile boolean isBusying = false;
-
-    private Commander commander;
-
-    public CommentsTimeLineFragment() {
-//        bean = DatabaseManager.getInstance().getHomeLineMsgList();
-    }
-
-
-    protected void scrollToBottom() {
-
-    }
-
-    public void listViewItemLongClick(AdapterView parent, View view, int position, long id) {
-        view.setSelected(true);
-        new MyAlertDialogFragment().setView(view).setPosition(position).show(getFragmentManager(), "");
-    }
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
 
@@ -254,9 +203,7 @@ public class CommentsTimeLineFragment extends Fragment {
 
     protected void listViewFooterViewClick(View view) {
         if (!isBusying) {
-
-            new FriendsTimeLineGetOlderMsgListTask(view).execute();
-
+            new FriendsTimeLineGetOlderMsgListTask().execute();
         }
     }
 
@@ -294,7 +241,6 @@ public class CommentsTimeLineFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.mentionstimelinefragment_menu, menu);
-        menu.add("weibo dont have messages group api");
 
     }
 
@@ -312,64 +258,24 @@ public class CommentsTimeLineFragment extends Fragment {
     }
 
 
-    class MyAlertDialogFragment extends DialogFragment {
-        View view;
-        int position;
-
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            view.setSelected(false);
-        }
-
-        public MyAlertDialogFragment setView(View view) {
-            this.view = view;
-            return this;
-        }
-
-        public MyAlertDialogFragment setPosition(int position) {
-            this.position = position;
-            return this;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-            String[] items = {"刷新", "回复"};
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                    .setTitle(getString(R.string.select))
-                    .setItems(items, onClickListener);
-
-            return builder.create();
-        }
-
-        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                switch (which) {
-                    case 0:
-
-                        break;
-                    case 1:
-
-                        break;
-                }
-            }
-        };
-    }
-
-
     class FriendsTimeLineGetNewMsgListTask extends AsyncTask<Void, CommentListBean, CommentListBean> {
-
-        DialogFragment dialogFragment = new ProgressFragment();
 
         @Override
         protected void onPreExecute() {
-
-            dialogFragment.show(getActivity().getSupportFragmentManager(), "");
+            isBusying = true;
+            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
+            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
+            Animation rotateAnimation = new RotateAnimation(0f, 360f,
+                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            rotateAnimation.setDuration(1000);
+            rotateAnimation.setRepeatCount(-1);
+            rotateAnimation.setRepeatMode(Animation.RESTART);
+            rotateAnimation.setInterpolator(new LinearInterpolator());
+            headerView.findViewById(R.id.header_progress).startAnimation(rotateAnimation);
+            listView.setSelection(0);
         }
+
 
         @Override
         protected CommentListBean doInBackground(Void... params) {
@@ -398,38 +304,47 @@ public class CommentsTimeLineFragment extends Fragment {
                 } else {
                     Toast.makeText(getActivity(), "total " + newValue.getComments().size() + " new messages", Toast.LENGTH_SHORT).show();
                     if (newValue.getComments().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                        //if position equal 0,listview don't scroll because this is the first time to refresh
-                        if (position > 0)
-                            position += newValue.getComments().size();
                         newValue.getComments().addAll(getList().getComments());
-                    } else {
-                        position = 0;
                     }
 
                     bean = newValue;
                     timeLineAdapter.notifyDataSetChanged();
                     listView.setSelectionAfterHeaderView();
+                    headerView.findViewById(R.id.header_progress).clearAnimation();
+
 
                 }
             }
-            dialogFragment.dismissAllowingStateLoss();
+            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
+            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
+            isBusying = false;
+            if (bean.getComments().size() == 0) {
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+            } else {
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+            }
             super.onPostExecute(newValue);
+
         }
     }
 
 
     class FriendsTimeLineGetOlderMsgListTask extends AsyncTask<Void, CommentListBean, CommentListBean> {
-        View footerView;
-
-        public FriendsTimeLineGetOlderMsgListTask(View view) {
-            footerView = view;
-        }
-
         @Override
         protected void onPreExecute() {
             isBusying = true;
 
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText("loading");
+            View view = footerView.findViewById(R.id.refresh);
+            view.setVisibility(View.VISIBLE);
+
+            Animation rotateAnimation = new RotateAnimation(0f, 360f,
+                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            rotateAnimation.setDuration(1000);
+            rotateAnimation.setRepeatCount(-1);
+            rotateAnimation.setRepeatMode(Animation.RESTART);
+            rotateAnimation.setInterpolator(new LinearInterpolator());
+            view.startAnimation(rotateAnimation);
 
         }
 
@@ -457,6 +372,8 @@ public class CommentsTimeLineFragment extends Fragment {
 
             isBusying = false;
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText("click to load older message");
+            footerView.findViewById(R.id.refresh).clearAnimation();
+            footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
             super.onPostExecute(newValue);
         }

@@ -13,10 +13,10 @@
           android:title="刷新"
           android:showAsAction="ifRoom|withText"
             />
-    <item android:id="@+id/menu_account_management"
+    <item android:id="@+id/menu_search"
           android:icon="@drawable/friendstimelinefragment_search"
           android:title="搜索"
-          android:showAsAction="ifRoom|withText"
+
             />
 
 </menu>

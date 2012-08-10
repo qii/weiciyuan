@@ -42,11 +42,6 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
 
 
     @Override
-    public void listViewItemLongClick(AdapterView parent, View view, int position, long id) {
-
-    }
-
-    @Override
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("msg", bean.getStatuses().get(position));
