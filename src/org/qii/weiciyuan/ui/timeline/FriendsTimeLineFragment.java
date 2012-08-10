@@ -21,6 +21,7 @@ import org.qii.weiciyuan.dao.FriendsTimeLineMsgDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -61,9 +62,11 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         if (savedInstanceState != null) {
             bean = (MessageListBean) savedInstanceState.getSerializable("bean");
         } else {
-            bean = DatabaseManager.getInstance().getHomeLineMsgList();
+            bean = DatabaseManager.getInstance().getHomeLineMsgList(((MyInfoTimeLineFragment.IUserInfo) getActivity()).getUser().getId());
         }
         timeLineAdapter.notifyDataSetChanged();
+
+
     }
 
     @Override
@@ -235,9 +238,9 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
             MessageListBean result = dao.getGSONMsgList();
             if (result != null) {
                 if (result.getStatuses().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                    DatabaseManager.getInstance().addHomeLineMsg(result);
+                    DatabaseManager.getInstance().addHomeLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
                 } else {
-                    DatabaseManager.getInstance().replaceHomeLineMsg(result);
+                    DatabaseManager.getInstance().replaceHomeLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
                 }
             }
             return result;

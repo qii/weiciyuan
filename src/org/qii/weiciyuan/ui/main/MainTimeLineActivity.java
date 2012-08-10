@@ -13,6 +13,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.timeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.timeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.timeline.MentionsTimeLineFragment;
@@ -26,7 +27,8 @@ import java.util.List;
  * Date: 12-7-27
  * Time: 下午1:02
  */
-public class MainTimeLineActivity extends AbstractAppActivity implements MyInfoTimeLineFragment.IUserInfo {
+public class MainTimeLineActivity extends AbstractAppActivity implements MyInfoTimeLineFragment.IUserInfo,
+        IAccountInfo {
 
     private ViewPager mViewPager = null;
     private String token = "";
@@ -177,7 +179,11 @@ public class MainTimeLineActivity extends AbstractAppActivity implements MyInfoT
         return bean;
     }
 
-    public MainTimeLineActivity(){};
+
+    @Override
+    public AccountBean getAccount() {
+        return accountBean;
+    }
 
 
     class TimeLinePagerAdapter extends

@@ -8,7 +8,13 @@ package org.qii.weiciyuan.support.database.table;
 public class HomeTable {
 
     public static final String TABLE_NAME = "home_table";
+    //support multi user,so primary key can't be message id
+    public static final String ID = "_id";
+    //support mulit user
+    public static final String ACCOUNTID="accountid";
+    //message id
     public static final String MBLOGID = "mblogid";
+    //message author avatar url
     public static final String AVATAR = "avatar";
     public static final String FEEDID = "feedid";
     public static final String MBLOGIDNUM = "mblogidnum";
@@ -23,7 +29,7 @@ public class HomeTable {
     public static final String RTAVATAR = "rtavatar";
     public static final String RTCONTENT = "rtcontent";
     public static final String RTPIC = "rtpic";
-    public static final String RTID="rtid";
+    public static final String RTID = "rtid";
     public static final String RTROTNICK = "rtrootnick";
     public static final String RTROOTVIP = "rtrootvip";
     public static final String RTREASON = "rtreason";
