@@ -10,6 +10,7 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.support.database.table.AccountTable;
 import org.qii.weiciyuan.support.database.table.HomeTable;
+import org.qii.weiciyuan.support.database.table.RepostsTable;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
 import java.util.ArrayList;
@@ -140,7 +141,7 @@ public class DatabaseManager {
             }
 
             long result = wsd.insert(HomeTable.TABLE_NAME,
-                    HomeTable.MBLOGID, cv);
+                    HomeTable.ID, cv);
         }
 
 
@@ -205,6 +206,104 @@ public class DatabaseManager {
 
         return result;
 
+    }
+
+    public MessageListBean getRepostLineMsgList(String accountId) {
+
+        MessageListBean result = new MessageListBean();
+
+        List<WeiboMsgBean> msgList = new ArrayList<WeiboMsgBean>();
+        String sql = "select * from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID + "  = "
+                + accountId + " order by " + RepostsTable.MBLOGID + " desc";
+        Cursor c = rsd.rawQuery(sql, null);
+        while (c.moveToNext()) {
+            WeiboMsgBean msg = new WeiboMsgBean();
+            int colid = c.getColumnIndex(RepostsTable.MBLOGID);
+            msg.setId(c.getString(colid));
+
+            colid = c.getColumnIndex(RepostsTable.CONTENT);
+            msg.setText(c.getString(colid));
+
+            msg.setListviewItemShowTime(c.getString(c.getColumnIndex(RepostsTable.TIME)));
+
+            msg.setThumbnail_pic(c.getString(c.getColumnIndex(RepostsTable.PIC)));
+
+
+            UserBean user = new UserBean();
+
+            user.setScreen_name(c.getString(c.getColumnIndex(RepostsTable.NICK)));
+            user.setProfile_image_url(c.getString(c.getColumnIndex(RepostsTable.AVATAR)));
+
+            msg.setUser(user);
+
+            colid = c.getColumnIndex(RepostsTable.RTCONTENT);
+            String rtContent = c.getString(colid);
+            if (!TextUtils.isEmpty((rtContent))) {
+                WeiboMsgBean bean = new WeiboMsgBean();
+                UserBean userBean = new UserBean();
+                bean.setId(c.getString(c.getColumnIndex(RepostsTable.RTID)));
+                bean.setText(c.getString(c.getColumnIndex(RepostsTable.RTCONTENT)));
+                bean.setThumbnail_pic(c.getString(c.getColumnIndex(RepostsTable.RTPIC)));
+                userBean.setScreen_name(c.getString(c.getColumnIndex(RepostsTable.RTROTNICK)));
+                userBean.setId(c.getString(c.getColumnIndex(RepostsTable.RTROOTUID)));
+
+                bean.setUser(userBean);
+                msg.setRetweeted_status(bean);
+            }
+
+            msgList.add(msg);
+        }
+
+        result.setStatuses(msgList);
+
+        return result;
+
+    }
+
+    public void addRepostLineMsg(MessageListBean list, String accountId) {
+
+        List<WeiboMsgBean> msgList = list.getStatuses();
+        int size = msgList.size();
+        for (int i = 0; i < size; i++) {
+            WeiboMsgBean msg = msgList.get(i);
+            UserBean user = msg.getUser();
+            ContentValues cv = new ContentValues();
+            cv.put(RepostsTable.MBLOGID, msg.getId());
+            cv.put(RepostsTable.ACCOUNTID, accountId);
+            cv.put(RepostsTable.NICK, user.getScreen_name());
+            cv.put(RepostsTable.UID, user.getId());
+            cv.put(RepostsTable.CONTENT, msg.getText());
+            cv.put(RepostsTable.TIME, msg.getCreated_at());
+            cv.put(RepostsTable.PIC, msg.getThumbnail_pic());
+            cv.put(RepostsTable.AVATAR, msg.getUser().getProfile_image_url());
+
+            WeiboMsgBean rt = msg.getRetweeted_status();
+            if (rt != null) {
+                UserBean rtUser = rt.getUser();
+                cv.put(RepostsTable.RTAVATAR, rtUser.getProfile_image_url());
+                cv.put(RepostsTable.RTCONTENT, rt.getText());
+                cv.put(RepostsTable.RTID, rt.getId());
+                cv.put(RepostsTable.RTROTNICK, rtUser.getScreen_name());
+                cv.put(RepostsTable.RTROOTUID, rtUser.getId());
+                if (!TextUtils.isEmpty(rt.getThumbnail_pic())) {
+                    cv.put(HomeTable.RTPIC, rt.getThumbnail_pic());
+                }
+            }
+
+            long result = wsd.insert(RepostsTable.TABLE_NAME,
+                    RepostsTable.ID, cv);
+        }
+
+
+    }
+
+    public void replaceRepostLineMsg(MessageListBean list,String accountId) {
+
+
+        wsd.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
+        wsd.execSQL(DatabaseHelper.CREATE_REPOSTS_TABLE_SQL);
+
+        addRepostLineMsg(list,accountId);
     }
 
 }

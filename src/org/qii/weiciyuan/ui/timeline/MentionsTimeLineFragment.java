@@ -15,7 +15,9 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.MentionsTimeLineMsgDao;
+import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -40,7 +42,6 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
     private Commander commander;
 
     public MentionsTimeLineFragment() {
-//        bean = DatabaseManager.getInstance().getHomeLineMsgList();
     }
 
 
@@ -56,6 +57,8 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
         super.onActivityCreated(savedInstanceState);
         commander = ((MainTimeLineActivity) getActivity()).getCommander();
         ((MainTimeLineActivity) getActivity()).setMentionsListView(listView);
+        bean = DatabaseManager.getInstance().getRepostLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid());
+        timeLineAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -208,9 +211,9 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
             MessageListBean result = dao.getGSONMsgList();
             if (result != null) {
                 if (result.getStatuses().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-//                    DatabaseManager.getInstance().addHomeLineMsg(result);
+                    DatabaseManager.getInstance().addRepostLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
                 } else {
-//                    DatabaseManager.getInstance().replaceHomeLineMsg(result);
+                    DatabaseManager.getInstance().replaceRepostLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
                 }
             }
             return result;

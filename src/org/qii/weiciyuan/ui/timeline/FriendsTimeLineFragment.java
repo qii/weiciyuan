@@ -62,7 +62,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         if (savedInstanceState != null) {
             bean = (MessageListBean) savedInstanceState.getSerializable("bean");
         } else {
-            bean = DatabaseManager.getInstance().getHomeLineMsgList(((MyInfoTimeLineFragment.IUserInfo) getActivity()).getUser().getId());
+            bean = DatabaseManager.getInstance().getHomeLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid());
         }
         timeLineAdapter.notifyDataSetChanged();
 
