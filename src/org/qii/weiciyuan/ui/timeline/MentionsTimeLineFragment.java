@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.timeline;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,13 +34,26 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((MainTimeLineActivity) getActivity()).setMentionsListView(listView);
-        bean = DatabaseManager.getInstance().getRepostLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid());
-        timeLineAdapter.notifyDataSetChanged();
-        if (bean.getStatuses().size() != 0) {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-        }
+        new SimpleTask().execute();
     }
 
+    private class SimpleTask extends AsyncTask<Object, Object, Object> {
+
+        @Override
+        protected Object doInBackground(Object... params) {
+            bean = DatabaseManager.getInstance().getRepostLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            timeLineAdapter.notifyDataSetChanged();
+            if (bean.getStatuses().size() != 0) {
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+            }
+            super.onPostExecute(o);
+        }
+    }
 
     @Override
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
