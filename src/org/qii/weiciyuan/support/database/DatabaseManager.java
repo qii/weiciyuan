@@ -3,7 +3,6 @@ package org.qii.weiciyuan.support.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.*;
@@ -112,39 +111,18 @@ public class DatabaseManager {
     }
 
     public void addHomeLineMsg(MessageListBean list, String accountId) {
-
+        Gson gson = new Gson();
         List<WeiboMsgBean> msgList = list.getStatuses();
-        int size = msgList.size();
-        for (int i = 0; i < size; i++) {
-            WeiboMsgBean msg = msgList.get(i);
-            UserBean user = msg.getUser();
+
+        for (WeiboMsgBean msg : msgList) {
             ContentValues cv = new ContentValues();
             cv.put(HomeTable.MBLOGID, msg.getId());
             cv.put(HomeTable.ACCOUNTID, accountId);
-            cv.put(HomeTable.NICK, user.getScreen_name());
-            cv.put(HomeTable.UID, user.getId());
-            cv.put(HomeTable.CONTENT, msg.getText());
-            cv.put(HomeTable.TIME, msg.getCreated_at());
-            cv.put(HomeTable.PIC, msg.getThumbnail_pic());
-            cv.put(HomeTable.AVATAR, msg.getUser().getProfile_image_url());
-
-            WeiboMsgBean rt = msg.getRetweeted_status();
-            if (rt != null) {
-                UserBean rtUser = rt.getUser();
-                cv.put(HomeTable.RTAVATAR, rtUser.getProfile_image_url());
-                cv.put(HomeTable.RTCONTENT, rt.getText());
-                cv.put(HomeTable.RTID, rt.getId());
-                cv.put(HomeTable.RTROTNICK, rtUser.getScreen_name());
-                cv.put(HomeTable.RTROOTUID, rtUser.getId());
-                if (!TextUtils.isEmpty(rt.getThumbnail_pic())) {
-                    cv.put(HomeTable.RTPIC, rt.getThumbnail_pic());
-                }
-            }
-
-            long result = wsd.insert(HomeTable.TABLE_NAME,
+            String json = gson.toJson(msg);
+            cv.put(HomeTable.JSONDATA, json);
+            wsd.insert(HomeTable.TABLE_NAME,
                     HomeTable.ID, cv);
         }
-
 
     }
 
@@ -158,7 +136,7 @@ public class DatabaseManager {
     }
 
     public MessageListBean getHomeLineMsgList(String accountId) {
-
+        Gson gson = new Gson();
         MessageListBean result = new MessageListBean();
 
         List<WeiboMsgBean> msgList = new ArrayList<WeiboMsgBean>();
@@ -166,41 +144,14 @@ public class DatabaseManager {
                 + accountId + " order by " + HomeTable.MBLOGID + " desc";
         Cursor c = rsd.rawQuery(sql, null);
         while (c.moveToNext()) {
-            WeiboMsgBean msg = new WeiboMsgBean();
-            int colid = c.getColumnIndex(HomeTable.MBLOGID);
-            msg.setId(c.getString(colid));
-
-            colid = c.getColumnIndex(HomeTable.CONTENT);
-            msg.setText(c.getString(colid));
-
-            msg.setListviewItemShowTime(c.getString(c.getColumnIndex(HomeTable.TIME)));
-
-            msg.setThumbnail_pic(c.getString(c.getColumnIndex(HomeTable.PIC)));
-
-
-            UserBean user = new UserBean();
-
-            user.setScreen_name(c.getString(c.getColumnIndex(HomeTable.NICK)));
-            user.setProfile_image_url(c.getString(c.getColumnIndex(HomeTable.AVATAR)));
-
-            msg.setUser(user);
-
-            colid = c.getColumnIndex(HomeTable.RTCONTENT);
-            String rtContent = c.getString(colid);
-            if (!TextUtils.isEmpty((rtContent))) {
-                WeiboMsgBean bean = new WeiboMsgBean();
-                UserBean userBean = new UserBean();
-                bean.setId(c.getString(c.getColumnIndex(HomeTable.RTID)));
-                bean.setText(c.getString(c.getColumnIndex(HomeTable.RTCONTENT)));
-                bean.setThumbnail_pic(c.getString(c.getColumnIndex(HomeTable.RTPIC)));
-                userBean.setScreen_name(c.getString(c.getColumnIndex(HomeTable.RTROTNICK)));
-                userBean.setId(c.getString(c.getColumnIndex(HomeTable.RTROOTUID)));
-
-                bean.setUser(userBean);
-                msg.setRetweeted_status(bean);
+            String json = c.getString(c.getColumnIndex(HomeTable.JSONDATA));
+            try {
+                WeiboMsgBean value = gson.fromJson(json, WeiboMsgBean.class);
+                msgList.add(value);
+            } catch (JsonSyntaxException e) {
+                AppLogger.e(e.getMessage());
             }
 
-            msgList.add(msg);
         }
 
         result.setStatuses(msgList);
@@ -210,7 +161,7 @@ public class DatabaseManager {
     }
 
     public MessageListBean getRepostLineMsgList(String accountId) {
-
+        Gson gson = new Gson();
         MessageListBean result = new MessageListBean();
 
         List<WeiboMsgBean> msgList = new ArrayList<WeiboMsgBean>();
@@ -218,42 +169,14 @@ public class DatabaseManager {
                 + accountId + " order by " + RepostsTable.MBLOGID + " desc";
         Cursor c = rsd.rawQuery(sql, null);
         while (c.moveToNext()) {
-            WeiboMsgBean msg = new WeiboMsgBean();
-            int colid = c.getColumnIndex(RepostsTable.MBLOGID);
-            msg.setId(c.getString(colid));
-
-            colid = c.getColumnIndex(RepostsTable.CONTENT);
-            msg.setText(c.getString(colid));
-
-            msg.setListviewItemShowTime(c.getString(c.getColumnIndex(RepostsTable.TIME)));
-
-            msg.setThumbnail_pic(c.getString(c.getColumnIndex(RepostsTable.PIC)));
-
-
-            UserBean user = new UserBean();
-
-            user.setScreen_name(c.getString(c.getColumnIndex(RepostsTable.NICK)));
-            user.setProfile_image_url(c.getString(c.getColumnIndex(RepostsTable.AVATAR)));
-            msg.setUser(user);
-
-            colid = c.getColumnIndex(RepostsTable.RTCONTENT);
-            String rtContent = c.getString(colid);
-            if (!TextUtils.isEmpty((rtContent))) {
-                WeiboMsgBean bean = new WeiboMsgBean();
-                UserBean userBean = new UserBean();
-                bean.setId(c.getString(c.getColumnIndex(RepostsTable.RTID)));
-                bean.setText(c.getString(c.getColumnIndex(RepostsTable.RTCONTENT)));
-                bean.setThumbnail_pic(c.getString(c.getColumnIndex(RepostsTable.RTPIC)));
-                userBean.setScreen_name(c.getString(c.getColumnIndex(RepostsTable.RTROTNICK)));
-                userBean.setId(c.getString(c.getColumnIndex(RepostsTable.RTROOTUID)));
-                if (userBean.getScreen_name() != null) {
-                    bean.setUser(userBean);
-                }
-
-                msg.setRetweeted_status(bean);
+            String json = c.getString(c.getColumnIndex(RepostsTable.JSONDATA));
+            try {
+                WeiboMsgBean value = gson.fromJson(json, WeiboMsgBean.class);
+                msgList.add(value);
+            } catch (JsonSyntaxException e) {
+                AppLogger.e(e.getMessage());
             }
 
-            msgList.add(msg);
         }
 
         result.setStatuses(msgList);
@@ -263,40 +186,17 @@ public class DatabaseManager {
     }
 
     public void addRepostLineMsg(MessageListBean list, String accountId) {
-
+        Gson gson = new Gson();
         List<WeiboMsgBean> msgList = list.getStatuses();
         int size = msgList.size();
         for (int i = 0; i < size; i++) {
             WeiboMsgBean msg = msgList.get(i);
-            UserBean user = msg.getUser();
             ContentValues cv = new ContentValues();
             cv.put(RepostsTable.MBLOGID, msg.getId());
             cv.put(RepostsTable.ACCOUNTID, accountId);
-            cv.put(RepostsTable.NICK, user.getScreen_name());
-            cv.put(RepostsTable.UID, user.getId());
-            cv.put(RepostsTable.CONTENT, msg.getText());
-            cv.put(RepostsTable.TIME, msg.getCreated_at());
-            cv.put(RepostsTable.PIC, msg.getThumbnail_pic());
-            cv.put(RepostsTable.AVATAR, msg.getUser().getProfile_image_url());
-
-            WeiboMsgBean rt = msg.getRetweeted_status();
-            if (rt != null) {
-                UserBean rtUser = rt.getUser();
-                if (rtUser != null) {
-                    cv.put(RepostsTable.RTAVATAR, rtUser.getProfile_image_url());
-                    cv.put(RepostsTable.RTCONTENT, rt.getText());
-                    cv.put(RepostsTable.RTID, rt.getId());
-                    cv.put(RepostsTable.RTROTNICK, rtUser.getScreen_name());
-                    cv.put(RepostsTable.RTROOTUID, rtUser.getId());
-                    if (!TextUtils.isEmpty(rt.getThumbnail_pic())) {
-                        cv.put(HomeTable.RTPIC, rt.getThumbnail_pic());
-                    }
-                } else {
-                    cv.put(RepostsTable.RTCONTENT, rt.getText());
-                }
-            }
-
-            long result = wsd.insert(RepostsTable.TABLE_NAME,
+            String json = gson.toJson(msg);
+            cv.put(RepostsTable.JSONDATA, json);
+            wsd.insert(RepostsTable.TABLE_NAME,
                     RepostsTable.ID, cv);
         }
 
@@ -315,18 +215,15 @@ public class DatabaseManager {
     public void addCommentLineMsg(CommentListBean list, String accountId) {
         Gson gson = new Gson();
         List<CommentBean> msgList = list.getComments();
-        int size = msgList.size();
-        for (int i = 0; i < size; i++) {
-            CommentBean msg = msgList.get(i);
+        for (CommentBean msg : msgList) {
             ContentValues cv = new ContentValues();
             cv.put(CommentsTable.MBLOGID, msg.getId());
             cv.put(CommentsTable.ACCOUNTID, accountId);
             String json = gson.toJson(msg);
             cv.put(CommentsTable.JSONDATA, json);
-            long result = wsd.insert(CommentsTable.TABLE_NAME,
+            wsd.insert(CommentsTable.TABLE_NAME,
                     CommentsTable.ID, cv);
         }
-
 
     }
 
@@ -345,7 +242,7 @@ public class DatabaseManager {
                 CommentBean value = gson.fromJson(json, CommentBean.class);
                 msgList.add(value);
             } catch (JsonSyntaxException e) {
-                AppLogger.e(e.getMessage().toString());
+                AppLogger.e(e.getMessage());
             }
         }
 

@@ -17,7 +17,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -43,27 +43,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + HomeTable.ID + " integer primary key autoincrement,"
             + HomeTable.ACCOUNTID + " text,"
             + HomeTable.MBLOGID + " text,"
-            + HomeTable.FEEDID + " text,"
-            + HomeTable.AVATAR + " text,"
-            + HomeTable.MBLOGIDNUM + " text,"
-            + HomeTable.GID + " text,"
-            + HomeTable.GSID + " text,"
-            + HomeTable.UID + " text,"
-            + HomeTable.NICK + " text,"
-            + HomeTable.PORTRAIT + " text,"
-            + HomeTable.VIP + " text,"
-            + HomeTable.CONTENT + " text,"
-            + HomeTable.RTROOTUID + " text,"
-            + HomeTable.RTROTNICK + " text,"
-            + HomeTable.RTROOTVIP + " text,"
-            + HomeTable.RTREASON + " text,"
-            + HomeTable.RTAVATAR + " text,"
-            + HomeTable.RTPIC + " text,"
-            + HomeTable.RTCONTENT + " text,"
-            + HomeTable.RTID + " text,"
-            + HomeTable.TIME + " text,"
-            + HomeTable.PIC + " text,"
-            + HomeTable.SRC + " text"
+            + HomeTable.JSONDATA + " text"
             + ");";
 
     static final String CREATE_COMMENTS_TABLE_SQL = "create table " + CommentsTable.TABLE_NAME
@@ -80,27 +60,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + RepostsTable.ID + " integer primary key autoincrement,"
             + RepostsTable.ACCOUNTID + " text,"
             + RepostsTable.MBLOGID + " text,"
-            + RepostsTable.FEEDID + " text,"
-            + RepostsTable.AVATAR + " text,"
-            + RepostsTable.MBLOGIDNUM + " text,"
-            + RepostsTable.GID + " text,"
-            + RepostsTable.GSID + " text,"
-            + RepostsTable.UID + " text,"
-            + RepostsTable.NICK + " text,"
-            + RepostsTable.PORTRAIT + " text,"
-            + RepostsTable.VIP + " text,"
-            + RepostsTable.CONTENT + " text,"
-            + RepostsTable.RTROOTUID + " text,"
-            + RepostsTable.RTROTNICK + " text,"
-            + RepostsTable.RTROOTVIP + " text,"
-            + RepostsTable.RTREASON + " text,"
-            + RepostsTable.RTAVATAR + " text,"
-            + RepostsTable.RTPIC + " text,"
-            + RepostsTable.RTCONTENT + " text,"
-            + RepostsTable.RTID + " text,"
-            + RepostsTable.TIME + " text,"
-            + RepostsTable.PIC + " text,"
-            + RepostsTable.SRC + " text"
+            + RepostsTable.JSONDATA + " text"
             + ");";
 
     DatabaseHelper(Context context) {
