@@ -299,7 +299,7 @@ public class DatabaseManager {
 
     public void replaceRepostLineMsg(MessageListBean list,String accountId) {
 
-
+        //need modification
         wsd.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
         wsd.execSQL(DatabaseHelper.CREATE_REPOSTS_TABLE_SQL);
 
