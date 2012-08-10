@@ -29,12 +29,27 @@ import java.util.Set;
  */
 public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("bean", bean);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((MainTimeLineActivity) getActivity()).setMentionsListView(listView);
-        new SimpleTask().execute();
+        ((MainTimeLineActivity) getActivity()).setHomeListView(listView);
+        if (savedInstanceState != null) {
+            bean = (MessageListBean) savedInstanceState.getSerializable("bean");
+            timeLineAdapter.notifyDataSetChanged();
+
+            if (bean.getStatuses().size() != 0) {
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+            }
+        } else {
+            new SimpleTask().execute();
+        }
+
     }
 
     private class SimpleTask extends AsyncTask<Object, Object, Object> {

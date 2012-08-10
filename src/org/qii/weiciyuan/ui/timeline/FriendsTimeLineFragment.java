@@ -43,14 +43,15 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         ((MainTimeLineActivity) getActivity()).setHomeListView(listView);
         if (savedInstanceState != null) {
             bean = (MessageListBean) savedInstanceState.getSerializable("bean");
+            timeLineAdapter.notifyDataSetChanged();
+
+            if (bean.getStatuses().size() != 0) {
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+            }
         } else {
             new SimpleTask().execute();
         }
-        timeLineAdapter.notifyDataSetChanged();
 
-        if (bean.getStatuses().size() != 0) {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-        }
     }
 
     private class SimpleTask extends AsyncTask<Object, Object, Object> {
