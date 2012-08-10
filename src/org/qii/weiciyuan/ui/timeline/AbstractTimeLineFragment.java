@@ -12,11 +12,9 @@ import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
 
 /**
- * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-7-29
  * Time: 下午12:14
- * To change this template use File | Settings | File Templates.
  */
 public abstract class AbstractTimeLineFragment<T> extends Fragment {
     protected ListView listView;

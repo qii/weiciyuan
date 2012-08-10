@@ -43,10 +43,6 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
     private Commander commander;
 
-    public FriendsTimeLineFragment() {
-
-    }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -214,9 +210,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         @Override
         protected void onPreExecute() {
             isBusying = true;
-
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-
             headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
             headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
             Animation rotateAnimation = new RotateAnimation(0f, 360f,

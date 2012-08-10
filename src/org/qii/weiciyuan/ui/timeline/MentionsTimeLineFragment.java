@@ -28,11 +28,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-7-29
  * Time: 上午12:52
- * To change this template use File | Settings | File Templates.
  */
 public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
 
@@ -40,17 +38,6 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
     public volatile boolean isBusying = false;
 
     private Commander commander;
-
-    public MentionsTimeLineFragment() {
-    }
-
-
-    public MentionsTimeLineFragment setCommander(Commander commander) {
-        this.commander = commander;
-        return this;
-
-
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
