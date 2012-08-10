@@ -17,7 +17,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -71,27 +71,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + CommentsTable.ID + " integer primary key autoincrement,"
             + CommentsTable.ACCOUNTID + " text,"
             + CommentsTable.MBLOGID + " text,"
-            + CommentsTable.FEEDID + " text,"
-            + CommentsTable.AVATAR + " text,"
-            + CommentsTable.MBLOGIDNUM + " text,"
-            + CommentsTable.GID + " text,"
-            + CommentsTable.GSID + " text,"
-            + CommentsTable.UID + " text,"
-            + CommentsTable.NICK + " text,"
-            + CommentsTable.PORTRAIT + " text,"
-            + CommentsTable.VIP + " text,"
-            + CommentsTable.CONTENT + " text,"
-            + CommentsTable.RTROOTUID + " text,"
-            + CommentsTable.RTROTNICK + " text,"
-            + CommentsTable.RTROOTVIP + " text,"
-            + CommentsTable.RTREASON + " text,"
-            + CommentsTable.RTAVATAR + " text,"
-            + CommentsTable.RTPIC + " text,"
-            + CommentsTable.RTCONTENT + " text,"
-            + CommentsTable.RTID + " text,"
-            + CommentsTable.TIME + " text,"
-            + CommentsTable.PIC + " text,"
-            + CommentsTable.SRC + " text"
+            + CommentsTable.JSONDATA + " text"
             + ");";
 
 

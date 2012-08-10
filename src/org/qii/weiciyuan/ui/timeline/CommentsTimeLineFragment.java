@@ -14,7 +14,9 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.CommentsTimeLineMsgDao;
+import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
@@ -42,10 +44,26 @@ public class CommentsTimeLineFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("bean", bean);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((MainTimeLineActivity) getActivity()).getCommander();
         ((MainTimeLineActivity) getActivity()).setCommentsListView(listView);
+        if (savedInstanceState != null) {
+            bean = (CommentListBean) savedInstanceState.getSerializable("bean");
+        } else {
+            bean = DatabaseManager.getInstance().getCommentLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid());
+        }
+        timeLineAdapter.notifyDataSetChanged();
+
+        if (bean.getComments().size() != 0) {
+            footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -286,9 +304,9 @@ public class CommentsTimeLineFragment extends Fragment {
             CommentListBean result = dao.getGSONMsgList();
             if (result != null) {
                 if (result.getComments().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-//                    DatabaseManager.getInstance().addHomeLineMsg(result);
+                    DatabaseManager.getInstance().addCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
                 } else {
-//                    DatabaseManager.getInstance().replaceHomeLineMsg(result);
+                    DatabaseManager.getInstance().replaceCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
                 }
             }
             return result;
