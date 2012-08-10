@@ -157,13 +157,13 @@ public class MainTimeLineActivity extends AbstractAppActivity implements MyInfoT
                                     FragmentTransaction ft) {
             switch (tab.getPosition()) {
                 case 0:
-                    if (home) homeListView.smoothScrollToPosition(0);
+                    if (home) homeListView.setSelection(0);
                     break;
                 case 1:
-                    if (mentions) mentionsListView.smoothScrollToPosition(0);
+                    if (mentions) mentionsListView.setSelection(0);
                     break;
                 case 2:
-                    if (comments) commentsListView.smoothScrollToPosition(0);
+                    if (comments) commentsListView.setSelection(0);
                     break;
                 case 3:
                     break;
