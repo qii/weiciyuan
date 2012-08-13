@@ -36,6 +36,7 @@
         <activity android:name=".ui.browser.BrowserCommentListActivity"/>
         <activity android:name=".ui.browser.BrowserRepostListActivity"/>
         <activity android:name=".ui.send.RepostNewActivity"/>
+        <activity android:name=".ui.send.CommentNewActivity"/>
         <activity android:name=".ui.preference.SettingActivity"/>
 
 

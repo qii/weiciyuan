@@ -32,8 +32,8 @@ public class URLHelper {
     }
 
     public static String getRepostListById() {
-           return URLManager.getRealUrl("repoststimelinebymsgid");
-       }
+        return URLManager.getRealUrl("repoststimelinebymsgid");
+    }
 
     public static String getTags() {
         return URLManager.getRealUrl("tags");
@@ -44,6 +44,10 @@ public class URLHelper {
     }
 
     public static String new_Repost() {
-           return URLManager.getRealUrl("repost");
-       }
+        return URLManager.getRealUrl("repost");
+    }
+
+    public static String new_Comment() {
+        return URLManager.getRealUrl("comment");
+    }
 }
