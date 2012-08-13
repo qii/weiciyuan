@@ -14,6 +14,7 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
+import org.qii.weiciyuan.ui.backgroundservices.FetchNewMsgService;
 import org.qii.weiciyuan.ui.timeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.timeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.timeline.MentionsTimeLineFragment;
@@ -68,7 +69,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements MyInfoT
         buildViewPager();
         buildActionBarAndViewPagerTitles();
 
-
+        startService(new Intent(this, FetchNewMsgService.class));
     }
 
 

@@ -137,6 +137,15 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.menu_repost:
+
+                return true;
+            case R.id.menu_comment:
+                Intent intent = new Intent(this, BrowserCommentListActivity.class);
+                intent.putExtra("token", token);
+                intent.putExtra("id", msg.getId());
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

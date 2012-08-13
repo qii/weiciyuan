@@ -38,7 +38,7 @@
         <activity android:name=".ui.preference.SettingActivity"/>
 
 
-        <service android:name=".ui.backgroundservices.MentionsAndCommentsTimeLineService"/>
+        <service android:name=".ui.backgroundservices.FetchNewMsgService"/>
         <receiver android:name=".ui.receiver.MentionsAndCommentsReceiver"/>
         <receiver android:name=".ui.receiver.ConnectionChangeReceiver" android:label="NetworkConnection">
             <intent-filter>
