@@ -36,6 +36,8 @@ public class CommentsTimeLineFragment extends Fragment {
     public volatile boolean isBusying = false;
     protected Commander commander;
     protected ListView listView;
+    protected TextView empty;
+    protected ProgressBar progressBar;
     protected TimeLineAdapter timeLineAdapter;
     protected CommentListBean bean = new CommentListBean();
 
@@ -50,6 +52,20 @@ public class CommentsTimeLineFragment extends Fragment {
     }
 
 
+    protected void refreshLayout(CommentListBean bean) {
+        if (bean.getComments().size() > 0) {
+            footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+            empty.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            listView.setVisibility(View.VISIBLE);
+        } else {
+            footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
+            empty.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            listView.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -58,10 +74,8 @@ public class CommentsTimeLineFragment extends Fragment {
         if (savedInstanceState != null && bean.getComments().size() == 0) {
             bean = (CommentListBean) savedInstanceState.getSerializable("bean");
             timeLineAdapter.notifyDataSetChanged();
-            if (bean.getComments().size() != 0) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            }
-        } else if (bean.getComments().size() == 0) {
+            refreshLayout(bean);
+        } else {
             new SimpleTask().execute();
 
         }
@@ -79,9 +93,7 @@ public class CommentsTimeLineFragment extends Fragment {
         @Override
         protected void onPostExecute(Object o) {
             timeLineAdapter.notifyDataSetChanged();
-            if (bean.getComments().size() != 0) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            }
+            refreshLayout(bean);
             super.onPostExecute(o);
         }
     }
@@ -98,6 +110,8 @@ public class CommentsTimeLineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
+        empty = (TextView) view.findViewById(R.id.empty);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         listView = (ListView) view.findViewById(R.id.listView);
         listView.setScrollingCacheEnabled(false);
         headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);

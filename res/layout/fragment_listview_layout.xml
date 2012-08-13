@@ -6,17 +6,33 @@
               android:layout_height="fill_parent"
         >
 
+    <FrameLayout android:layout_width="fill_parent"
+                 android:layout_height="0dp"
+                 android:layout_weight="1"
+            >
+        <ListView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:fastScrollEnabled="true"
+                android:cacheColorHint="@android:color/transparent"
+                android:id="@+id/listView"
+                android:layout_gravity="center"
+                android:scrollingCache="true"
+                android:smoothScrollbar="true"
+                android:visibility="invisible"
+                />
 
-    <ListView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:fastScrollEnabled="true"
-            android:cacheColorHint="@android:color/transparent"
-            android:id="@+id/listView"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:scrollingCache="true"
-            android:smoothScrollbar="true"
-            />
+        <TextView android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:visibility="gone"
+                  android:id="@+id/empty"
+                  android:text="empty"/>
+        <ProgressBar android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_gravity="center"
+                     android:id="@+id/progressbar"
+                     android:visibility="visible"/>
+
+    </FrameLayout>
 
 </LinearLayout>

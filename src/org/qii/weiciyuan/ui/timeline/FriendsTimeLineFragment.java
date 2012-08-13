@@ -45,9 +45,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
             bean = (MessageListBean) savedInstanceState.getSerializable("bean");
             timeLineAdapter.notifyDataSetChanged();
 
-            if (bean.getStatuses().size() != 0) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            }
+            refreshLayout(bean);
         } else {
             new SimpleTask().execute();
         }
@@ -65,9 +63,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         @Override
         protected void onPostExecute(Object o) {
             timeLineAdapter.notifyDataSetChanged();
-            if (bean.getStatuses().size() != 0) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            }
+            refreshLayout(bean);
             super.onPostExecute(o);
         }
     }

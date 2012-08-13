@@ -24,6 +24,10 @@ import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
  */
 public abstract class AbstractTimeLineFragment extends Fragment {
     protected ListView listView;
+    protected TextView empty;
+    protected ProgressBar progressBar;
+
+
     protected TimeLineAdapter timeLineAdapter;
     protected MessageListBean bean = new MessageListBean();
     protected View headerView;
@@ -66,6 +70,8 @@ public abstract class AbstractTimeLineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
+        empty = (TextView) view.findViewById(R.id.empty);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         listView = (ListView) view.findViewById(R.id.listView);
         listView.setScrollingCacheEnabled(false);
         headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
@@ -75,6 +81,7 @@ public abstract class AbstractTimeLineFragment extends Fragment {
         listView.addFooterView(footerView);
 
         if (bean.getStatuses().size() == 0) {
+
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
         }
 
@@ -95,6 +102,20 @@ public abstract class AbstractTimeLineFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    protected void refreshLayout(MessageListBean bean) {
+        if (bean.getStatuses().size() > 0) {
+            footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+            empty.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            listView.setVisibility(View.VISIBLE);
+        } else {
+            footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
+            empty.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            listView.setVisibility(View.INVISIBLE);
+        }
     }
 
     protected class TimeLineAdapter extends BaseAdapter {
