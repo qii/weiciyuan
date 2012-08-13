@@ -69,13 +69,15 @@ public class MainTimeLineActivity extends AbstractAppActivity implements MyInfoT
         buildViewPager();
         buildActionBarAndViewPagerTitles();
 
-        startService(new Intent(this, FetchNewMsgService.class));
+
     }
 
 
     private void buildViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mViewPager.setAdapter(new TimeLinePagerAdapter(getSupportFragmentManager()));
+        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
+        mViewPager.setOffscreenPageLimit(5);
+        mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
     }
 
