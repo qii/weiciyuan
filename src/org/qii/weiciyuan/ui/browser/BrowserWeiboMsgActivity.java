@@ -19,6 +19,8 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.StatusesShowMsgDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.send.CommentNewActivity;
+import org.qii.weiciyuan.ui.send.RepostNewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -200,13 +202,14 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
                 finish();
                 return true;
             case R.id.menu_repost:
-                intent = new Intent(this, BrowserRepostListActivity.class);
+                intent = new Intent(this, RepostNewActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("id", msg.getId());
+                intent.putExtra("repost_content", msg.getText());
                 startActivity(intent);
                 return true;
             case R.id.menu_comment:
-                intent = new Intent(this, BrowserCommentListActivity.class);
+                intent = new Intent(this, CommentNewActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("id", msg.getId());
                 startActivity(intent);

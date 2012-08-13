@@ -42,4 +42,8 @@ public class URLHelper {
     public static String getStatuses_Show() {
         return URLManager.getRealUrl("statuses_show");
     }
+
+    public static String new_Repost() {
+           return URLManager.getRealUrl("repost");
+       }
 }

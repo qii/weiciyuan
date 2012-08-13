@@ -35,10 +35,12 @@
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.browser.BrowserCommentListActivity"/>
         <activity android:name=".ui.browser.BrowserRepostListActivity"/>
+        <activity android:name=".ui.send.RepostNewActivity"/>
         <activity android:name=".ui.preference.SettingActivity"/>
 
 
         <service android:name=".ui.backgroundservices.FetchNewMsgService"/>
+
         <receiver android:name=".ui.receiver.MentionsAndCommentsReceiver"/>
         <receiver android:name=".ui.receiver.ConnectionChangeReceiver" android:label="NetworkConnection"
                 >
