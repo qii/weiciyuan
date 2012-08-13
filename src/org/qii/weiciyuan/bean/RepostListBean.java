@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * Date: 12-8-7
  * Time: 下午3:58
  */
-public class RepostListBean {
+public class RepostListBean implements Serializable{
 
     private List<WeiboMsgBean> reposts = new ArrayList<WeiboMsgBean>();
     private String previous_cursor = "";

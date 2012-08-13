@@ -12,7 +12,6 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.CommentsTimeLineMsgByIdDao;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -198,7 +197,6 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         private void bindViewData(ViewHolder holder, int position) {
 
             CommentBean msg = getList().getComments().get(position);
-            WeiboMsgBean repost_msg = msg.getStatus();
 
 
             holder.username.setText(msg.getUser().getScreen_name());
@@ -206,6 +204,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             if (!TextUtils.isEmpty(image_url)) {
                 downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
             }
+            holder.time.setText(msg.getCreated_at());
 
             holder.content.setText(msg.getText());
 

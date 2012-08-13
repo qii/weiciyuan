@@ -1,6 +1,10 @@
 package org.qii.weiciyuan.bean;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * User: Jiang Qi
@@ -17,7 +21,11 @@ public class CommentBean implements Serializable {
     private WeiboMsgBean status;
 
     public String getCreated_at() {
-        return created_at;
+        if (!TextUtils.isEmpty(created_at)) {
+            SimpleDateFormat format = new SimpleDateFormat("kk:mm");
+            return format.format(new Date(created_at));
+        }
+        return "";
     }
 
     public void setCreated_at(String created_at) {
