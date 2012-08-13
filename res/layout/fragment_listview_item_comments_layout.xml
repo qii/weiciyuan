@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:background="@drawable/listview_item_background_selector">
+
+    <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/account"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginRight="5dp"/>
+
+    <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="username"
+            android:textColor="@drawable/listview_item_text_selector"
+            android:layout_toRightOf="@id/avatar"
+            />
+
+    <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12:00"
+            android:textColor="@drawable/listview_item_text_selector"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/username"
+            />
+
+
+    <TextView
+            android:id="@+id/content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="content"
+            android:textColor="@drawable/listview_item_text_selector"
+            android:layout_below="@id/username"
+            android:layout_toRightOf="@id/avatar"
+            android:layerType="software"
+            />
+
+</RelativeLayout>

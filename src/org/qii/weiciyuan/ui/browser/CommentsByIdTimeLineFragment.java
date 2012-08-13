@@ -13,9 +13,11 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.dao.CommentsTimeLineMsgByIdDao;
 import org.qii.weiciyuan.dao.CommentsTimeLineMsgDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -37,11 +39,21 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     public volatile boolean isBusying = false;
     protected Commander commander;
     protected ListView listView;
+    protected TextView empty;
+    protected ProgressBar progressBar;
     protected TimeLineAdapter timeLineAdapter;
     protected CommentListBean bean = new CommentListBean();
 
     public CommentListBean getList() {
         return bean;
+    }
+
+    private String token;
+    private String id;
+
+    public CommentsByIdTimeLineFragment(String token, String id) {
+        this.token = token;
+        this.id = id;
     }
 
     @Override
@@ -51,18 +63,29 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     }
 
 
+    protected void refreshLayout(CommentListBean bean) {
+        if (bean.getComments().size() > 0) {
+            footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+            empty.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            listView.setVisibility(View.VISIBLE);
+        } else {
+            footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
+            empty.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            listView.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((MainTimeLineActivity) getActivity()).getCommander();
-
+        commander = ((AbstractAppActivity) getActivity()).getCommander();
         if (savedInstanceState != null && bean.getComments().size() == 0) {
             bean = (CommentListBean) savedInstanceState.getSerializable("bean");
             timeLineAdapter.notifyDataSetChanged();
-            if (bean.getComments().size() != 0) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            }
-        } else if (bean.getComments().size() == 0) {
+            refreshLayout(bean);
+        } else {
             new SimpleTask().execute();
 
         }
@@ -73,16 +96,14 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
         @Override
         protected Object doInBackground(Object... params) {
-//            bean = new CommentsTimeLineMsgByIdDao(token, id).getGSONMsgList();
+            bean = new CommentsTimeLineMsgByIdDao(token,id).getGSONMsgList();
             return null;
         }
 
         @Override
         protected void onPostExecute(Object o) {
             timeLineAdapter.notifyDataSetChanged();
-            if (bean.getComments().size() != 0) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            }
+            refreshLayout(bean);
             super.onPostExecute(o);
         }
     }
@@ -99,6 +120,8 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
+        empty = (TextView) view.findViewById(R.id.empty);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         listView = (ListView) view.findViewById(R.id.listView);
         listView.setScrollingCacheEnabled(false);
         headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
@@ -160,14 +183,11 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
+                convertView = inflater.inflate(R.layout.fragment_listview_item_comments_layout, parent, false);
                 holder.username = (TextView) convertView.findViewById(R.id.username);
                 holder.content = (TextView) convertView.findViewById(R.id.content);
-                holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
                 holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
-                holder.content_pic = (ImageView) convertView.findViewById(R.id.content_pic);
-                holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -193,44 +213,16 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
             holder.content.setText(msg.getText());
 
-
-            holder.repost_content.setVisibility(View.GONE);
-            holder.repost_content_pic.setVisibility(View.GONE);
-            holder.content_pic.setVisibility(View.GONE);
-
-            if (repost_msg != null) {
-                buildRepostContent(repost_msg, holder, position);
-            }
-
-
         }
-
-        private void buildRepostContent(WeiboMsgBean repost_msg, ViewHolder holder, int position) {
-            holder.repost_content.setVisibility(View.VISIBLE);
-            if (repost_msg.getUser() != null) {
-
-                holder.repost_content.setText(repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
-            } else {
-                holder.repost_content.setText(repost_msg.getText());
-
-            }
-            if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
-                holder.repost_content_pic.setVisibility(View.VISIBLE);
-                downContentPic(holder.repost_content_pic, repost_msg.getThumbnail_pic(), position, listView);
-            }
-        }
-
 
     }
 
     static class ViewHolder {
         TextView username;
         TextView content;
-        TextView repost_content;
         TextView time;
         ImageView avatar;
-        ImageView content_pic;
-        ImageView repost_content_pic;
+
     }
 
 
@@ -247,10 +239,6 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
     protected void downloadAvatar(ImageView view, String url, int position, ListView listView) {
         commander.downloadAvatar(view, url, position, listView);
-    }
-
-    protected void downContentPic(ImageView view, String url, int position, ListView listView) {
-        commander.downContentPic(view, url, position, listView);
     }
 
 
@@ -300,6 +288,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
+            showListView();
             isBusying = true;
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
@@ -370,6 +359,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     class FriendsTimeLineGetOlderMsgListTask extends AsyncTask<Void, CommentListBean, CommentListBean> {
         @Override
         protected void onPreExecute() {
+            showListView();
             isBusying = true;
 
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText("loading");
@@ -415,5 +405,11 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             timeLineAdapter.notifyDataSetChanged();
             super.onPostExecute(newValue);
         }
+    }
+
+    private void showListView() {
+        empty.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }

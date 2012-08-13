@@ -4,9 +4,7 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
-    <fragment android:name="org.qii.weiciyuan.ui.browser.CommentsByIdTimeLineFragment"
-
-            android:layout_height="fill_parent"
+    <FrameLayout android:layout_height="fill_parent"
               android:layout_width="fill_parent"
               android:id="@+id/listViewFragment"/>
 
