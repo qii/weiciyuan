@@ -16,6 +16,7 @@ import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.CommentsTimeLineMsgDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -69,7 +70,7 @@ public class CommentsTimeLineFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((MainTimeLineActivity) getActivity()).getCommander();
+        commander = ((AbstractAppActivity) getActivity()).getCommander();
         ((MainTimeLineActivity) getActivity()).setCommentsListView(listView);
         if (savedInstanceState != null && bean.getComments().size() == 0) {
             bean = (CommentListBean) savedInstanceState.getSerializable("bean");
@@ -313,6 +314,7 @@ public class CommentsTimeLineFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
+            showListView();
             isBusying = true;
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
@@ -383,6 +385,7 @@ public class CommentsTimeLineFragment extends Fragment {
     class FriendsTimeLineGetOlderMsgListTask extends AsyncTask<Void, CommentListBean, CommentListBean> {
         @Override
         protected void onPreExecute() {
+            showListView();
             isBusying = true;
 
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText("loading");
@@ -428,5 +431,11 @@ public class CommentsTimeLineFragment extends Fragment {
             timeLineAdapter.notifyDataSetChanged();
             super.onPostExecute(newValue);
         }
+    }
+
+    private void showListView() {
+        empty.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }
