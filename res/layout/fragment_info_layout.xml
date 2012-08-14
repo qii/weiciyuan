@@ -64,21 +64,9 @@
             <Button
                     android:layout_width="fill_parent"
                     android:layout_height="60dp"
-                    android:text="subject"
-                    android:gravity="center"
-                    android:id="@+id/subject_number"/>
-            <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="60dp"
                     android:text="fav"
                     android:gravity="center"
                     android:id="@+id/fav_number"/>
-            <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="60dp"
-                    android:text="block"
-                    android:gravity="center"
-                    android:id="@+id/block_number"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

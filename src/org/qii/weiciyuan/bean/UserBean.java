@@ -237,4 +237,23 @@ public class UserBean implements Serializable {
     private String online_status;
     private String bi_followers_count;
 
+    public String getFollowers_count() {
+        return followers_count;
+    }
+
+    public void setFollowers_count(String followers_count) {
+        this.followers_count = followers_count;
+    }
+
+    public String getFriends_count() {
+        return friends_count;
+    }
+
+    public void setFriends_count(String friends_count) {
+        this.friends_count = friends_count;
+    }
+
+    private String followers_count;
+    private String friends_count;
+
 }
