@@ -45,6 +45,14 @@ public class BrowserRepostAndCommentListActivity extends AbstractAppActivity {
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
+
+        mViewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                Integer index = getIntent().getIntExtra("tabindex", 0);
+                mViewPager.setCurrentItem(index);
+            }
+        });
     }
 
     private void buildActionBarAndViewPagerTitles() {
@@ -63,8 +71,8 @@ public class BrowserRepostAndCommentListActivity extends AbstractAppActivity {
         actionBar.addTab(actionBar.newTab()
                 .setText(getString(R.string.comments))
                 .setTabListener(tabListener));
-
-
+        Integer index = getIntent().getIntExtra("tabindex", 0);
+        getActionBar().setSelectedNavigationItem(index);
     }
 
 

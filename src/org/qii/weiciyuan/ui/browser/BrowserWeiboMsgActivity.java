@@ -15,7 +15,6 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.StatusesShowMsgDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.send.RepostNewActivity;
 
 /**
  * User: Jiang Qi
@@ -148,16 +147,17 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
                 finish();
                 return true;
             case R.id.menu_repost:
-                intent = new Intent(this, RepostNewActivity.class);
+                intent = new Intent(this, BrowserRepostAndCommentListActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("id", msg.getId());
-                intent.putExtra("repost_content", msg.getText());
+                intent.putExtra("tabindex",0);
                 startActivity(intent);
                 return true;
             case R.id.menu_comment:
                 intent = new Intent(this, BrowserRepostAndCommentListActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("id", msg.getId());
+                intent.putExtra("tabindex",1);
                 startActivity(intent);
                 return true;
             default:
