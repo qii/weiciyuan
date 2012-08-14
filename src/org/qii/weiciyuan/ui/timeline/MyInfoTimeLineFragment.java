@@ -2,15 +2,21 @@ package org.qii.weiciyuan.ui.timeline;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.*;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.dao.OAuthDao;
+import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 import org.qii.weiciyuan.ui.login.AccountActivity;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 /**
@@ -20,20 +26,21 @@ import org.qii.weiciyuan.ui.preference.SettingActivity;
  */
 public class MyInfoTimeLineFragment extends Fragment {
 
-    ImageView avatar;
-    TextView username;
-    TextView jshao;
-    Button weibo_number;
-    Button following_number;
-    Button fans_number;
+    private UserBean bean;
+
+    private ImageView avatar;
+    private TextView username;
+    private TextView info;
+    private Button weibo_number;
+    private Button following_number;
+    private Button fans_number;
+
+    protected Commander commander;
+
 
     public static interface IUserInfo {
         public UserBean getUser();
     }
-
-
-    private UserBean bean;
-
 
     public MyInfoTimeLineFragment() {
         super();
@@ -49,19 +56,27 @@ public class MyInfoTimeLineFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         bean = ((IUserInfo) getActivity()).getUser();
-        username.setText(bean.getScreen_name());
-
-
+        commander = ((AbstractAppActivity) getActivity()).getCommander();
+        setValue();
+        new SimpleTask().execute();
     }
 
-    View view;
+    private void setValue() {
+        username.setText(bean.getScreen_name());
+        info.setText(bean.getDescription());
+
+        String avatarUrl = bean.getAvatar_large();
+        if (!TextUtils.isEmpty(avatarUrl)) {
+            new SimpleBitmapWorkerTask(avatar).execute(avatarUrl);
+        }
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -70,7 +85,7 @@ public class MyInfoTimeLineFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_info_layout, container, false);
         avatar = (ImageView) view.findViewById(R.id.avatar);
         username = (TextView) view.findViewById(R.id.username);
-        jshao = (TextView) view.findViewById(R.id.textView_info);
+        info = (TextView) view.findViewById(R.id.textView_info);
         weibo_number = (Button) view.findViewById(R.id.weibo_number);
         following_number = (Button) view.findViewById(R.id.following_number);
         fans_number = (Button) view.findViewById(R.id.fans_number);
@@ -105,5 +120,24 @@ public class MyInfoTimeLineFragment extends Fragment {
 
         }
         return true;
+    }
+
+    private class SimpleTask extends AsyncTask<Object, UserBean, UserBean> {
+
+        @Override
+        protected UserBean doInBackground(Object... params) {
+            UserBean user = new OAuthDao(((MainTimeLineActivity) getActivity()).getToken()).getOAuthUserInfo();
+            if (user != null) {
+                bean = user;
+            }
+            return user;
+        }
+
+        @Override
+        protected void onPostExecute(UserBean o) {
+
+            setValue();
+            super.onPostExecute(o);
+        }
     }
 }
