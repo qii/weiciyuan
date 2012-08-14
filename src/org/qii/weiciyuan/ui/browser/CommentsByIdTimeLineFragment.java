@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -416,9 +417,12 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     }
 
     private void invlidateTabText() {
-        ActionBar.Tab tab = this.getActivity().getActionBar().getTabAt(1);
-        String name = tab.getText().toString();
-        String num = "(" + bean.getComments().size() + ")";
-        tab.setText(name + num);
+        Activity activity = getActivity();
+        if (activity != null) {
+            ActionBar.Tab tab = activity.getActionBar().getTabAt(1);
+            String name = tab.getText().toString();
+            String num = "(" + bean.getComments().size() + ")";
+            tab.setText(name + num);
+        }
     }
 }

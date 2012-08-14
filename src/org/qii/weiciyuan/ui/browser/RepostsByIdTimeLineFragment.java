@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -356,11 +357,15 @@ public class RepostsByIdTimeLineFragment extends Fragment {
     }
 
     private void invlidateTabText() {
-        ActionBar.Tab tab = this.getActivity().getActionBar().getTabAt(0);
-        String name = tab.getText().toString();
-        String num = "(" + bean.getReposts().size() + ")";
-        tab.setText(name + num);
+        Activity activity = getActivity();
+        if (activity != null) {
+            ActionBar.Tab tab = activity.getActionBar().getTabAt(0);
+            String name = tab.getText().toString();
+            String num = "(" + bean.getReposts().size() + ")";
+            tab.setText(name + num);
+        }
     }
+
 
 
     class FriendsTimeLineGetOlderMsgListTask extends AsyncTask<Void, RepostListBean, RepostListBean> {
