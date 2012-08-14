@@ -286,6 +286,7 @@ public class HttpUtility {
                 errCode = json.getInt("error_code");
                 WeiboException exception = new WeiboException();
                 exception.setError_code(errCode);
+                exception.setError(err);
                 throw exception;
 
             } catch (JSONException e) {
