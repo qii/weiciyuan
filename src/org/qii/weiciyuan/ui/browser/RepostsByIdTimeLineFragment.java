@@ -15,7 +15,7 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.RepostListBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
-import org.qii.weiciyuan.dao.RepostsTimeLineMsgByIdDao;
+import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
@@ -95,7 +95,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
         @Override
         protected Object doInBackground(Object... params) {
-            RepostListBean newValue = new RepostsTimeLineMsgByIdDao(token, id).getGSONMsgList();
+            RepostListBean newValue = new RepostsTimeLineByIdDao(token, id).getGSONMsgList();
             if (newValue != null) {
                 bean = newValue;
             }
@@ -311,7 +311,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         @Override
         protected RepostListBean doInBackground(Void... params) {
 
-            RepostsTimeLineMsgByIdDao dao = new RepostsTimeLineMsgByIdDao(token, id);
+            RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, id);
 
             if (getList().getReposts().size() > 0) {
                 dao.setSince_id(getList().getReposts().get(0).getId());
@@ -396,7 +396,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         @Override
         protected RepostListBean doInBackground(Void... params) {
 
-            RepostsTimeLineMsgByIdDao dao = new RepostsTimeLineMsgByIdDao(token, id);
+            RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, id);
             if (getList().getReposts().size() > 0) {
                 dao.setMax_id(getList().getReposts().get(getList().getReposts().size() - 1).getId());
             }

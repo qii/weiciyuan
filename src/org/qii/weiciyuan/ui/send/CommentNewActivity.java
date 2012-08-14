@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
-import org.qii.weiciyuan.dao.CommentNewMsgDao;
+import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 
 /**

@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.dao.MentionsTimeLineMsgDao;
+import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
@@ -131,7 +131,7 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
 
     @Override
     protected MessageListBean getDoInBackgroundNewData() {
-        MentionsTimeLineMsgDao dao = new MentionsTimeLineMsgDao(((MainTimeLineActivity) getActivity()).getToken());
+        MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
         if (getList().getStatuses().size() > 0) {
             dao.setSince_id(getList().getStatuses().get(0).getId());
         }
@@ -149,7 +149,7 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
 
     @Override
     protected MessageListBean getDoInBackgroundOldData() {
-        MentionsTimeLineMsgDao dao = new MentionsTimeLineMsgDao(((MainTimeLineActivity) getActivity()).getToken());
+        MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
         if (getList().getStatuses().size() > 0) {
             dao.setMax_id(getList().getStatuses().get(getList().getStatuses().size() - 1).getId());
         }

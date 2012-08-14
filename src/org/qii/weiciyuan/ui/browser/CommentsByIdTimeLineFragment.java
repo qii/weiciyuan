@@ -15,7 +15,7 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
-import org.qii.weiciyuan.dao.CommentsTimeLineMsgByIdDao;
+import org.qii.weiciyuan.dao.timeline.CommentsTimeLineByIdDao;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
@@ -95,7 +95,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
         @Override
         protected Object doInBackground(Object... params) {
-            CommentListBean newValue = new CommentsTimeLineMsgByIdDao(token, id).getGSONMsgList();
+            CommentListBean newValue = new CommentsTimeLineByIdDao(token, id).getGSONMsgList();
             if (newValue != null) {
                 bean = newValue;
             }
@@ -313,7 +313,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         @Override
         protected CommentListBean doInBackground(Void... params) {
 
-            CommentsTimeLineMsgByIdDao dao = new CommentsTimeLineMsgByIdDao(token, id);
+            CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
 
             if (getList().getComments().size() > 0) {
                 dao.setSince_id(getList().getComments().get(0).getId());
@@ -381,7 +381,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         @Override
         protected CommentListBean doInBackground(Void... params) {
 
-            CommentsTimeLineMsgByIdDao dao = new CommentsTimeLineMsgByIdDao(token, id);
+            CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
             if (getList().getComments().size() > 0) {
                 dao.setMax_id(getList().getComments().get(getList().getComments().size() - 1).getId());
             }

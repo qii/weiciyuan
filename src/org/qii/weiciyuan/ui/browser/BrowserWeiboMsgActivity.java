@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
-import org.qii.weiciyuan.dao.StatusesShowMsgDao;
+import org.qii.weiciyuan.dao.show.ShowStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.userinfo.MainUserInfoActivity;
@@ -196,7 +196,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         @Override
         protected WeiboMsgBean doInBackground(Void... params) {
             try {
-                return new StatusesShowMsgDao(token, msg.getId()).getMsg();
+                return new ShowStatusDao(token, msg.getId()).getMsg();
             } catch (WeiboException e) {
                 this.e = e;
                 cancel(true);

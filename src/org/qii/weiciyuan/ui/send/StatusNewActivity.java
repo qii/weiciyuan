@@ -17,7 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.dao.StatusNewMsgDao;
+import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 
 /**

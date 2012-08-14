@@ -1,8 +1,9 @@
-package org.qii.weiciyuan.dao;
+package org.qii.weiciyuan.dao.send;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
@@ -13,31 +14,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * User: Jiang Qi
- * Date: 12-8-14
- * Time: 下午2:47
+ * User: qii
+ * Date: 12-8-13
  */
-public class UserDao {
-
-    public UserBean getUserInfo() {
-        String url = URLHelper.getUser();
+public class CommentNewMsgDao {
+    public CommentBean sendNewMsg() {
+        String url = URLHelper.new_Comment();
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
-        map.put("uid", uid);
-        map.put("screen_name", screen_name);
+        map.put("id", id);
+        map.put("comment", comment);
+        map.put("comment_ori", comment_ori);
 
         String jsonData = null;
         try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
         } catch (WeiboException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         Gson gson = new Gson();
 
-        UserBean value = null;
+        CommentBean value = null;
         try {
-            value = gson.fromJson(jsonData, UserBean.class);
+            value = gson.fromJson(jsonData, CommentBean.class);
         } catch (JsonSyntaxException e) {
             ActivityUtils.showTips("发生错误，请重刷");
             AppLogger.e(e.getMessage().toString());
@@ -48,21 +48,19 @@ public class UserDao {
 
     }
 
+    public CommentNewMsgDao(String token, String id, String comment) {
+        this.access_token = token;
+        this.id = id;
+        this.comment = comment;
+    }
+
+
+    public void setComment_ori(String comment_ori) {
+        this.comment_ori = comment_ori;
+    }
+
     private String access_token;
-    private String uid;
-    private String screen_name;
-
-    public UserDao(String access_token) {
-        this.access_token = access_token;
-    }
-
-    public UserDao setScreen_name(String screen_name) {
-        this.screen_name = screen_name;
-        return this;
-    }
-
-    public UserDao setUid(String uid) {
-        this.uid = uid;
-        return this;
-    }
+    private String id;
+    private String comment;
+    private String comment_ori;
 }

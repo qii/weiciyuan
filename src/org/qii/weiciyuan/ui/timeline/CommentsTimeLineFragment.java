@@ -13,7 +13,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
-import org.qii.weiciyuan.dao.CommentsTimeLineMsgDao;
+import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -332,7 +332,7 @@ public class CommentsTimeLineFragment extends Fragment {
 
         @Override
         protected CommentListBean doInBackground(Void... params) {
-            CommentsTimeLineMsgDao dao = new CommentsTimeLineMsgDao(((MainTimeLineActivity) getActivity()).getToken());
+            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
             if (getList().getComments().size() > 0) {
                 dao.setSince_id(getList().getComments().get(0).getId());
             }
@@ -405,7 +405,7 @@ public class CommentsTimeLineFragment extends Fragment {
         @Override
         protected CommentListBean doInBackground(Void... params) {
 
-            CommentsTimeLineMsgDao dao = new CommentsTimeLineMsgDao(((MainTimeLineActivity) getActivity()).getToken());
+            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
             if (getList().getComments().size() > 0) {
                 dao.setMax_id(getList().getComments().get(getList().getComments().size() - 1).getId());
             }

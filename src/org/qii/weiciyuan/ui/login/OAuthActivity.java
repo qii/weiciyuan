@@ -19,7 +19,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.dao.OAuthDao;
+import org.qii.weiciyuan.dao.login.OAuthDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.weibo.Utility;

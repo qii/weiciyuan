@@ -12,8 +12,8 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.dao.CommentsTimeLineMsgDao;
-import org.qii.weiciyuan.dao.MentionsTimeLineMsgDao;
+import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
+import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -54,18 +54,18 @@ public class FetchNewMsgService extends Service {
             CommentListBean commentLineBean = DatabaseManager.getInstance().getCommentLineMsgList(accountId);
             MessageListBean messageListBean = DatabaseManager.getInstance().getRepostLineMsgList(accountId);
 
-            CommentsTimeLineMsgDao dao = new CommentsTimeLineMsgDao(token);
+            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
             if (commentLineBean.getComments().size() > 0) {
                 dao.setSince_id(commentLineBean.getComments().get(0).getId());
             }
             CommentListBean result = dao.getGSONMsgList();
 
 
-            MentionsTimeLineMsgDao mentionsTimeLineMsgDao = new MentionsTimeLineMsgDao(token);
+            MainMentionsTimeLineDao mainMentionsTimeLineDao = new MainMentionsTimeLineDao(token);
             if (messageListBean.getStatuses().size() > 0) {
                 dao.setSince_id(messageListBean.getStatuses().get(0).getId());
             }
-            MessageListBean messageListBeanResult = mentionsTimeLineMsgDao.getGSONMsgList();
+            MessageListBean messageListBeanResult = mainMentionsTimeLineDao.getGSONMsgList();
 
             return result.getComments().size() + messageListBeanResult.getStatuses().size();
         }

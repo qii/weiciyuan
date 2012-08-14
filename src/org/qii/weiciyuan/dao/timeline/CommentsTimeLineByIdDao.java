@@ -1,8 +1,9 @@
-package org.qii.weiciyuan.dao;
+package org.qii.weiciyuan.dao.timeline;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
@@ -15,9 +16,8 @@ import java.util.Map;
 /**
  * User: Jiang Qi
  * Date: 12-8-13
- * Time: 下午3:50
  */
-public class CommentsTimeLineMsgByIdDao {
+public class CommentsTimeLineByIdDao {
 
 
     public CommentListBean getGSONMsgList() {
@@ -38,7 +38,7 @@ public class CommentsTimeLineMsgByIdDao {
         try {
             jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
         } catch (WeiboException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
 
@@ -49,14 +49,14 @@ public class CommentsTimeLineMsgByIdDao {
             value = gson.fromJson(jsonData, CommentListBean.class);
         } catch (JsonSyntaxException e) {
             ActivityUtils.showTips("发生错误，请重刷");
-            AppLogger.e(e.getMessage().toString());
+            AppLogger.e(e.getMessage());
         }
 
         return value;
     }
 
 
-    public CommentsTimeLineMsgByIdDao(String token, String id) {
+    public CommentsTimeLineByIdDao(String token, String id) {
         this.access_token = token;
         this.id = id;
     }

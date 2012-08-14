@@ -1,8 +1,9 @@
-package org.qii.weiciyuan.dao;
+package org.qii.weiciyuan.dao.show;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
@@ -14,14 +15,13 @@ import java.util.Map;
 /**
  * User: Jiang Qi
  * Date: 12-8-7
- * Time: 下午3:38
  */
-public class StatusesShowMsgDao {
+public class ShowStatusDao {
 
     private String access_token;
     private String id;
 
-    public StatusesShowMsgDao(String access_token, String id) {
+    public ShowStatusDao(String access_token, String id) {
         this.access_token = access_token;
         this.id = id;
     }

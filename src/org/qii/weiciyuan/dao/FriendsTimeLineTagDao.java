@@ -12,11 +12,8 @@ import org.qii.weiciyuan.support.utils.AppLogger;
 import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-8-5
- * Time: 下午6:10
- * To change this template use File | Settings | File Templates.
  */
 public class FriendsTimeLineTagDao {
 
@@ -33,7 +30,7 @@ public class FriendsTimeLineTagDao {
         try {
             jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
         } catch (WeiboException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         return jsonData;
@@ -57,7 +54,7 @@ public class FriendsTimeLineTagDao {
                         String value = jsonObject.optString(key);
                         bean.setWeight(value);
                     } else {
-                        String value=jsonObject.optString(key);
+                        String value = jsonObject.optString(key);
                         bean.setId(Integer.valueOf(key));
                         bean.setName(value);
                     }
