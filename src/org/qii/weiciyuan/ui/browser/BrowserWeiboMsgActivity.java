@@ -4,26 +4,18 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.StatusesShowMsgDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.send.CommentNewActivity;
 import org.qii.weiciyuan.ui.send.RepostNewActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * User: Jiang Qi
@@ -69,7 +61,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
         buildView();
         buildViewData();
-        buildViewPager();
         new UpdateMsgTask().execute();
 
     }
@@ -85,52 +76,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         content_pic = (ImageView) findViewById(R.id.content_pic);
         repost_pic = (ImageView) findViewById(R.id.repost_content_pic);
 
-        Button switchBtn = (Button) findViewById(R.id.switchbtn);
 
-        switchBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (a) {
-                    mViewPager.setCurrentItem(0);
-                    a = false;
-                } else {
-                    mViewPager.setCurrentItem(1);
-                    a = true;
-                }
-            }
-        });
-    }
-
-    private void buildViewPager() {
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
-        mViewPager.setOffscreenPageLimit(5);
-        mViewPager.setAdapter(adapter);
-    }
-
-    class TimeLinePagerAdapter extends
-            FragmentPagerAdapter {
-
-        List<Fragment> list = new ArrayList<Fragment>();
-
-
-        public TimeLinePagerAdapter(FragmentManager fm) {
-            super(fm);
-
-            list.add(new RepostsByIdTimeLineFragment(token, msg.getId()));
-            list.add(new CommentsByIdTimeLineFragment(token, msg.getId()));
-
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-            return list.get(i);
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
     }
 
 
@@ -209,7 +155,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
                 startActivity(intent);
                 return true;
             case R.id.menu_comment:
-                intent = new Intent(this, CommentNewActivity.class);
+                intent = new Intent(this, BrowserRepostAndCommentListActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("id", msg.getId());
                 startActivity(intent);
@@ -233,6 +179,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
                 msg = newValue;
                 retweetMsg = msg.getRetweeted_status();
                 buildViewData();
+                invalidateOptionsMenu();
             }
 
             super.onPostExecute(newValue);

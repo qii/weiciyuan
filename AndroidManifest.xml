@@ -38,6 +38,7 @@
         <activity android:name=".ui.send.RepostNewActivity"/>
         <activity android:name=".ui.send.CommentNewActivity"/>
         <activity android:name=".ui.preference.SettingActivity"/>
+        <activity android:name=".ui.browser.BrowserRepostAndCommentListActivity" android:uiOptions="splitActionBarWhenNarrow"/>
 
 
         <service android:name=".ui.backgroundservices.FetchNewMsgService"/>
