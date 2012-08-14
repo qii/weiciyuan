@@ -14,9 +14,10 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.UserDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 import org.qii.weiciyuan.ui.login.AccountActivity;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 /**
@@ -39,9 +40,6 @@ public class MyInfoTimeLineFragment extends Fragment {
     protected Commander commander;
 
 
-    public static interface IUserInfo {
-        public UserBean getUser();
-    }
 
     public MyInfoTimeLineFragment() {
         super();
@@ -132,7 +130,7 @@ public class MyInfoTimeLineFragment extends Fragment {
 
         @Override
         protected UserBean doInBackground(Object... params) {
-            UserBean user = new UserDao(((MainTimeLineActivity) getActivity()).getToken())
+            UserBean user = new UserDao(((IToken) getActivity()).getToken())
                     .setUid(bean.getId()).getUserInfo();
             if (user != null) {
                 bean = user;
