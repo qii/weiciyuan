@@ -21,7 +21,8 @@
                 android:name=".ui.login.AccountActivity"
                 android:screenOrientation="portrait"
                 android:uiOptions="splitActionBarWhenNarrow"
-                android:launchMode="standard">
+                android:launchMode="standard"
+                android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
