@@ -19,7 +19,7 @@ import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.show.ShowStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.userinfo.MainUserInfoActivity;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
  * User: Jiang Qi
@@ -84,7 +84,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BrowserWeiboMsgActivity.this, MainUserInfoActivity.class);
+                Intent intent = new Intent(BrowserWeiboMsgActivity.this, UserInfoActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("user", msg.getUser());
                 startActivity(intent);

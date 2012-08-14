@@ -16,10 +16,10 @@ import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
-import org.qii.weiciyuan.ui.timeline.CommentsTimeLineFragment;
-import org.qii.weiciyuan.ui.timeline.FriendsTimeLineFragment;
-import org.qii.weiciyuan.ui.timeline.MentionsTimeLineFragment;
-import org.qii.weiciyuan.ui.timeline.MyInfoTimeLineFragment;
+import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
+import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
+import org.qii.weiciyuan.ui.maintimeline.MentionsTimeLineFragment;
+import org.qii.weiciyuan.ui.maintimeline.MyInfoTimeLineFragment;
 
 import java.util.ArrayList;
 import java.util.List;

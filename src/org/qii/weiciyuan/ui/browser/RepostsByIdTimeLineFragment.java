@@ -19,8 +19,8 @@ import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
+import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.send.RepostNewActivity;
-import org.qii.weiciyuan.ui.timeline.Commander;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +36,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
     protected View headerView;
     protected View footerView;
     public volatile boolean isBusying = false;
-    protected Commander commander;
+    protected ICommander commander;
     protected ListView listView;
     protected TextView empty;
     protected ProgressBar progressBar;

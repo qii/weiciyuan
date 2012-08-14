@@ -10,7 +10,6 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
-import org.qii.weiciyuan.ui.timeline.Commander;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +25,7 @@ public class AbstractAppActivity extends FragmentActivity {
     Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = new ConcurrentHashMap<String, AvatarBitmapWorkerTask>();
     Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = new ConcurrentHashMap<String, PictureBitmapWorkerTask>();
 
-    protected Commander commander = new Commander() {
+    protected ICommander commander = new ICommander() {
 
 
         @Override
@@ -88,7 +87,7 @@ public class AbstractAppActivity extends FragmentActivity {
         return avatarBitmapWorkerTaskHashMap;
     }
 
-    public Commander getCommander() {
+    public ICommander getCommander() {
         return commander;
     }
 

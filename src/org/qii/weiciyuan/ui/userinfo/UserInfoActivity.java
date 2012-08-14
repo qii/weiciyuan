@@ -11,7 +11,7 @@ import org.qii.weiciyuan.ui.Abstract.IUserInfo;
  * Date: 12-8-14
  * Time: 下午2:59
  */
-public class MainUserInfoActivity extends AbstractAppActivity implements IUserInfo,
+public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
         IToken {
 
     private String token;

@@ -12,6 +12,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 /**
  * User: Jiang Qi

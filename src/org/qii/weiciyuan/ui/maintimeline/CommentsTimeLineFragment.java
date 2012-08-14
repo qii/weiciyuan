@@ -1,8 +1,5 @@
-package org.qii.weiciyuan.ui.browser;
+package org.qii.weiciyuan.ui.maintimeline;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,14 +12,17 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
-import org.qii.weiciyuan.dao.timeline.CommentsTimeLineByIdDao;
+import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
+import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
+import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
-import org.qii.weiciyuan.ui.send.CommentNewActivity;
+import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,7 +31,7 @@ import java.util.Set;
  * Date: 12-7-29
  * Time: 下午1:15
  */
-public class CommentsByIdTimeLineFragment extends Fragment {
+public class CommentsTimeLineFragment extends Fragment {
 
     protected View headerView;
     protected View footerView;
@@ -45,14 +45,6 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
     public CommentListBean getList() {
         return bean;
-    }
-
-    private String token;
-    private String id;
-
-    public CommentsByIdTimeLineFragment(String token, String id) {
-        this.token = token;
-        this.id = id;
     }
 
     @Override
@@ -80,6 +72,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
+        ((MainTimeLineActivity) getActivity()).setCommentsListView(listView);
         if (savedInstanceState != null && bean.getComments().size() == 0) {
             bean = (CommentListBean) savedInstanceState.getSerializable("bean");
             timeLineAdapter.notifyDataSetChanged();
@@ -95,10 +88,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
         @Override
         protected Object doInBackground(Object... params) {
-            CommentListBean newValue = new CommentsTimeLineByIdDao(token, id).getGSONMsgList();
-            if (newValue != null) {
-                bean = newValue;
-            }
+            bean = DatabaseManager.getInstance().getCommentLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid());
             return null;
         }
 
@@ -106,7 +96,6 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         protected void onPostExecute(Object o) {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
-            invlidateTabText();
             super.onPostExecute(o);
         }
     }
@@ -186,11 +175,14 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = inflater.inflate(R.layout.fragment_listview_item_comments_layout, parent, false);
+                convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
                 holder.username = (TextView) convertView.findViewById(R.id.username);
                 holder.content = (TextView) convertView.findViewById(R.id.content);
+                holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
                 holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
+                holder.content_pic = (ImageView) convertView.findViewById(R.id.content_pic);
+                holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -205,6 +197,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         private void bindViewData(ViewHolder holder, int position) {
 
             CommentBean msg = getList().getComments().get(position);
+            WeiboMsgBean repost_msg = msg.getStatus();
 
 
             holder.username.setText(msg.getUser().getScreen_name());
@@ -212,20 +205,47 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             if (!TextUtils.isEmpty(image_url)) {
                 downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
             }
-            holder.time.setText(msg.getCreated_at());
 
             holder.content.setText(msg.getText());
 
+
+            holder.repost_content.setVisibility(View.GONE);
+            holder.repost_content_pic.setVisibility(View.GONE);
+            holder.content_pic.setVisibility(View.GONE);
+
+            if (repost_msg != null) {
+                buildRepostContent(repost_msg, holder, position);
+            }
+
+
         }
+
+        private void buildRepostContent(WeiboMsgBean repost_msg, ViewHolder holder, int position) {
+            holder.repost_content.setVisibility(View.VISIBLE);
+            if (repost_msg.getUser() != null) {
+
+                holder.repost_content.setText(repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
+            } else {
+                holder.repost_content.setText(repost_msg.getText());
+
+            }
+            if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
+                holder.repost_content_pic.setVisibility(View.VISIBLE);
+                downContentPic(holder.repost_content_pic, repost_msg.getThumbnail_pic(), position, listView);
+            }
+        }
+
 
     }
 
     static class ViewHolder {
         TextView username;
         TextView content;
+        TextView repost_content;
         TextView time;
         ImageView avatar;
-
+        ImageView content_pic;
+        ImageView repost_content_pic;
     }
 
 
@@ -244,9 +264,14 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         commander.downloadAvatar(view, url, position, listView);
     }
 
+    protected void downContentPic(ImageView view, String url, int position, ListView listView) {
+        commander.downContentPic(view, url, position, listView);
+    }
+
 
     public void refresh() {
-        Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
+        Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((MainTimeLineActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
+        Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = ((MainTimeLineActivity) getActivity()).getPictureBitmapWorkerTaskMap();
 
 
         new FriendsTimeLineGetNewMsgListTask().execute();
@@ -256,6 +281,11 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             avatarBitmapWorkerTaskHashMap.remove(key);
         }
 
+        Set<String> pKeys = pictureBitmapWorkerTaskMap.keySet();
+        for (String pkey : pKeys) {
+            pictureBitmapWorkerTaskMap.get(pkey).cancel(true);
+            pictureBitmapWorkerTaskMap.remove(pkey);
+        }
 
     }
 
@@ -263,7 +293,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.commentsbyidtimelinefragment_menu, menu);
+        inflater.inflate(R.menu.mentionstimelinefragment_menu, menu);
 
     }
 
@@ -271,16 +301,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.commentsbyidtimelinefragment_comment:
-
-                Intent intent = new Intent(getActivity(), CommentNewActivity.class);
-                intent.putExtra("token", token);
-                intent.putExtra("id", id);
-                startActivity(intent);
-
-                break;
-
-            case R.id.commentsbyidtimelinefragment_refresh:
+            case R.id.mentionstimelinefragment_refresh:
 
                 refresh();
 
@@ -312,14 +333,18 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
         @Override
         protected CommentListBean doInBackground(Void... params) {
-
-            CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
-
+            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
             if (getList().getComments().size() > 0) {
                 dao.setSince_id(getList().getComments().get(0).getId());
             }
             CommentListBean result = dao.getGSONMsgList();
-
+            if (result != null) {
+                if (result.getComments().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                    DatabaseManager.getInstance().addCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
+                } else {
+                    DatabaseManager.getInstance().replaceCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
+                }
+            }
             return result;
 
         }
@@ -341,6 +366,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
                     listView.setSelectionAfterHeaderView();
                     headerView.findViewById(R.id.header_progress).clearAnimation();
 
+
                 }
             }
             headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
@@ -351,7 +377,6 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             } else {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             }
-            invlidateTabText();
             super.onPostExecute(newValue);
 
         }
@@ -381,7 +406,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         @Override
         protected CommentListBean doInBackground(Void... params) {
 
-            CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
+            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
             if (getList().getComments().size() > 0) {
                 dao.setMax_id(getList().getComments().get(getList().getComments().size() - 1).getId());
             }
@@ -393,10 +418,10 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
         @Override
         protected void onPostExecute(CommentListBean newValue) {
-            if (newValue != null && newValue.getComments().size() > 1) {
+            if (newValue != null) {
                 Toast.makeText(getActivity(), "total " + newValue.getComments().size() + " old messages", Toast.LENGTH_SHORT).show();
-                List<CommentBean> list = newValue.getComments();
-                getList().getComments().addAll(list.subList(1, list.size() - 1));
+
+                getList().getComments().addAll(newValue.getComments().subList(1, newValue.getComments().size() - 1));
 
             }
 
@@ -405,7 +430,6 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
-            invlidateTabText();
             super.onPostExecute(newValue);
         }
     }
@@ -414,21 +438,5 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         empty.setVisibility(View.INVISIBLE);
         listView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
-    }
-
-    private void invlidateTabText() {
-        Activity activity = getActivity();
-        if (activity != null) {
-            ActionBar.Tab tab = activity.getActionBar().getTabAt(1);
-            String name = tab.getText().toString();
-            String num = "(" + bean.getComments().size() + ")";
-            if (!name.endsWith(")")) {
-                tab.setText(name + num);
-            } else {
-                int index = name.indexOf("(");
-                String newName = name.substring(0, index);
-                tab.setText(newName + num);
-            }
-        }
     }
 }

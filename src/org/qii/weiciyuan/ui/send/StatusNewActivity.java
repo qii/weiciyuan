@@ -19,6 +19,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 /**
  * Created with IntelliJ IDEA.

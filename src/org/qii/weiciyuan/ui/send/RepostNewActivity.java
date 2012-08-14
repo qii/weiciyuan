@@ -12,6 +12,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 /**
  * User: Jiang Qi
