@@ -64,7 +64,13 @@ public class MyInfoTimeLineFragment extends Fragment {
         bean = ((IUserInfo) getActivity()).getUser();
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         setValue();
-        new SimpleTask().execute();
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+       // new SimpleTask().execute();
     }
 
     private void setValue() {
