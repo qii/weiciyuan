@@ -129,7 +129,6 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         protected void onPreExecute() {
             progressFragment.onCancel(new DialogInterface() {
 
-
                 @Override
                 public void cancel() {
                     StatusNewTask.this.cancel(true);

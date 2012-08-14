@@ -3,7 +3,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/repostsbyidtimelinefragment_repost"
-          android:icon="@drawable/friendstimelinefragment_write"
+          android:icon="@drawable/repost"
           android:title="@string/repost"
           android:showAsAction="ifRoom|withText"
             />

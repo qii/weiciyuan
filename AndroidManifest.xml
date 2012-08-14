@@ -27,18 +27,27 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.MainTimeLineActivity" android:uiOptions="splitActionBarWhenNarrow"/>
-        <activity android:name=".ui.send.StatusNewActivity" android:uiOptions="splitActionBarWhenNarrow"
+        <activity android:name=".ui.main.MainTimeLineActivity"
+                  android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".ui.send.StatusNewActivity"
+                  android:uiOptions="splitActionBarWhenNarrow"
                   android:windowSoftInputMode="stateVisible|adjustResize"/>
-        <activity android:name=".ui.login.OAuthActivity" android:label="授权"/>
-        <activity android:name=".ui.browser.BrowserWeiboMsgActivity" android:label="detail"
+        <activity android:name=".ui.login.OAuthActivity"
+                  android:label="授权"/>
+        <activity android:name=".ui.browser.BrowserWeiboMsgActivity"
+                  android:label="detail"
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.browser.BrowserCommentListActivity"/>
         <activity android:name=".ui.browser.BrowserRepostListActivity"/>
-        <activity android:name=".ui.send.RepostNewActivity"/>
-        <activity android:name=".ui.send.CommentNewActivity"/>
+        <activity android:name=".ui.send.RepostNewActivity"
+                  android:uiOptions="splitActionBarWhenNarrow"
+                  android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <activity android:name=".ui.send.CommentNewActivity"
+                  android:uiOptions="splitActionBarWhenNarrow"
+                  android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity android:name=".ui.preference.SettingActivity"/>
-        <activity android:name=".ui.browser.BrowserRepostAndCommentListActivity" android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".ui.browser.BrowserRepostAndCommentListActivity"
+                  android:uiOptions="splitActionBarWhenNarrow"/>
 
 
         <service android:name=".ui.backgroundservices.FetchNewMsgService"/>
