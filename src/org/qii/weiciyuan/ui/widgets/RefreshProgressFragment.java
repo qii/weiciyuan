@@ -9,12 +9,11 @@ import android.os.Bundle;
 /**
  * User: Jiang Qi
  * Date: 12-7-30
- * Time: 下午2:52
  */
-public class ProgressDialogFragment extends DialogFragment {
+public class RefreshProgressFragment extends DialogFragment {
 
-    public static ProgressDialogFragment newInstance() {
-        ProgressDialogFragment frag = new ProgressDialogFragment();
+    public static RefreshProgressFragment newInstance() {
+        RefreshProgressFragment frag = new RefreshProgressFragment();
         frag.setRetainInstance(true); //注意这句
         Bundle args = new Bundle();
         frag.setArguments(args);
