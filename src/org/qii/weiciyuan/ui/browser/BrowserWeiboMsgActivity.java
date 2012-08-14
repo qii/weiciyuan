@@ -4,8 +4,10 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.StrikethroughSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,13 +44,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
     private String comment_sum = "";
     private String retweet_sum = "";
 
-    private ViewPager mViewPager = null;
-
-
-    boolean a = true;
-
-    private UpdateMsgTask task;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +59,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
         buildView();
         buildViewData();
-        task = new UpdateMsgTask();
+        UpdateMsgTask task = new UpdateMsgTask();
         task.execute();
 
     }
@@ -209,6 +204,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         @Override
         protected void onCancelled(WeiboMsgBean weiboMsgBean) {
             dealWithException(e);
+            setTextViewDeleted();
             super.onCancelled(weiboMsgBean);
         }
 
@@ -223,5 +219,12 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
             super.onPostExecute(newValue);
         }
+    }
+
+    private void setTextViewDeleted() {
+        SpannableString ss = new SpannableString(content.getText().toString());
+        ss.setSpan(new StrikethroughSpan(), 0, ss.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        content.setText(ss);
     }
 }
