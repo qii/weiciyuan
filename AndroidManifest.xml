@@ -52,10 +52,10 @@
         <activity android:name=".ui.userinfo.UserInfoActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
 
-        <service android:name=".ui.backgroundservices.FetchNewMsgService"/>
+        <service android:name=".othercomponent.FetchNewMsgService"/>
 
-        <receiver android:name=".ui.receiver.MentionsAndCommentsReceiver"/>
-        <receiver android:name=".ui.receiver.ConnectionChangeReceiver" android:label="NetworkConnection"
+        <receiver android:name=".othercomponent.MentionsAndCommentsReceiver"/>
+        <receiver android:name=".othercomponent.ConnectionChangeReceiver" android:label="NetworkConnection"
                 >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>

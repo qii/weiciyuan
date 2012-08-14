@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.ui.backgroundservices;
+package org.qii.weiciyuan.othercomponent;
 
 import android.app.Notification;
 import android.app.NotificationManager;

@@ -17,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * User: Jiang Qi
  * Date: 12-7-31
- * Time: 上午9:30
  */
 public class AbstractAppActivity extends FragmentActivity {
 

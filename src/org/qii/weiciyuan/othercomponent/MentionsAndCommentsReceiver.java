@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.ui.receiver;
+package org.qii.weiciyuan.othercomponent;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
