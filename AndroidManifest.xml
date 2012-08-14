@@ -31,7 +31,7 @@
         </activity>
         <activity android:name=".ui.main.MainTimeLineActivity"
                   android:uiOptions="splitActionBarWhenNarrow"
-                android:launchMode="standard"/>
+                  android:launchMode="standard"/>
         <activity android:name=".ui.send.StatusNewActivity"
                   android:uiOptions="splitActionBarWhenNarrow"
                   android:windowSoftInputMode="stateVisible|adjustResize"/>
@@ -51,7 +51,8 @@
         <activity android:name=".ui.preference.SettingActivity"/>
         <activity android:name=".ui.browser.BrowserRepostAndCommentListActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
-
+        <activity android:name=".ui.userinfo.MainUserInfoActivity"
+                  android:uiOptions="splitActionBarWhenNarrow"/>
 
         <service android:name=".ui.backgroundservices.FetchNewMsgService"/>
 
