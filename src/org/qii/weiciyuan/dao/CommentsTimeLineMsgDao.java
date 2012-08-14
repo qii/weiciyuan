@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
@@ -70,7 +71,12 @@ public class CommentsTimeLineMsgDao {
         map.put("filter_by_source", filter_by_source);
 
 
-        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+        String jsonData = null;
+        try {
+            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+        } catch (WeiboException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
 
         Gson gson = new Gson();

@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
@@ -35,7 +36,12 @@ public class FriendsTimeLineMsgDao {
         map.put("feature", feature);
         map.put("trim_user", trim_user);
 
-        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+        String jsonData = null;
+        try {
+            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+        } catch (WeiboException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
         return jsonData;
     }

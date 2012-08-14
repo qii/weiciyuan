@@ -3,6 +3,7 @@ package org.qii.weiciyuan.dao;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -25,7 +26,7 @@ public class StatusesShowMsgDao {
         this.id = id;
     }
 
-    public WeiboMsgBean getMsg() {
+    public WeiboMsgBean getMsg() throws WeiboException {
 
         String url = URLHelper.getStatuses_Show();
 

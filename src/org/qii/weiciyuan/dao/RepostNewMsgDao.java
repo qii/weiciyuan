@@ -3,6 +3,7 @@ package org.qii.weiciyuan.dao;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
@@ -26,7 +27,12 @@ public class RepostNewMsgDao {
         map.put("status", status);
         map.put("is_comment", is_comment);
 
-        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
+        String jsonData = null;
+        try {
+            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
+        } catch (WeiboException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
         Gson gson = new Gson();
 

@@ -6,6 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.http.URLManager;
@@ -47,7 +48,12 @@ public class OAuthDao {
         map.put("access_token", access_token);
 
         String url = URLManager.getRealUrl("usershow");
-        String result = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+        String result = null;
+        try {
+            result = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+        } catch (WeiboException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
         Gson gson = new Gson();
         UserBean user = new UserBean();
@@ -65,7 +71,13 @@ public class OAuthDao {
         String url = URLManager.getRealUrl("uid");
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
-        return HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+        try {
+            return HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+        } catch (WeiboException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return null;
     }
 
 }

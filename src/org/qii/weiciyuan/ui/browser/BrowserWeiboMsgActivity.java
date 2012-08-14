@@ -15,6 +15,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.StatusesShowMsgDao;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 
 /**
@@ -46,6 +47,8 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
     boolean a = true;
 
+    private UpdateMsgTask task;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +64,14 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
         buildView();
         buildViewData();
-        new UpdateMsgTask().execute();
+        task = new UpdateMsgTask();
+        task.execute();
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     private void buildView() {
@@ -97,8 +106,11 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
 
     private void buildViewData() {
-
-        username.setText(msg.getUser().getScreen_name());
+        if (msg.getUser() != null) {
+            username.setText(msg.getUser().getScreen_name());
+            SimpleBitmapWorkerTask avatarTask = new SimpleBitmapWorkerTask(avatar);
+            avatarTask.execute(msg.getUser().getProfile_image_url());
+        }
         content.setText(msg.getText());
         time.setText(msg.getCreated_at());
 
@@ -107,9 +119,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
 
         invalidateOptionsMenu();
-
-        SimpleBitmapWorkerTask avatarTask = new SimpleBitmapWorkerTask(avatar);
-        avatarTask.execute(msg.getUser().getProfile_image_url());
 
         if (retweetMsg != null) {
             recontent.setVisibility(View.VISIBLE);
@@ -184,15 +193,28 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
 
     class UpdateMsgTask extends AsyncTask<Void, Void, WeiboMsgBean> {
+        WeiboException e;
 
         @Override
         protected WeiboMsgBean doInBackground(Void... params) {
-            return new StatusesShowMsgDao(token, msg.getId()).getMsg();
+            try {
+                return new StatusesShowMsgDao(token, msg.getId()).getMsg();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onCancelled(WeiboMsgBean weiboMsgBean) {
+            dealWithException(e);
+            super.onCancelled(weiboMsgBean);
         }
 
         @Override
         protected void onPostExecute(WeiboMsgBean newValue) {
-            if (newValue != null) {
+            if (newValue != null && e == null) {
                 msg = newValue;
                 retweetMsg = msg.getRetweeted_status();
                 buildViewData();
