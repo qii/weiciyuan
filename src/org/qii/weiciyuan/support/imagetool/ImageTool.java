@@ -65,11 +65,13 @@ public class ImageTool {
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
-        if (bitmap != null) {
-            return bitmap;
-        } else {
-            return getBitmapFromNetWork(url, absoluteFilePath);
+        if (bitmap == null) {
+            bitmap = getBitmapFromNetWork(url, absoluteFilePath);
         }
+        if (bitmap != null) {
+            bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+        }
+        return bitmap;
     }
 
 
