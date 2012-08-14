@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.dao.OAuthDao;
+import org.qii.weiciyuan.dao.UserDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 import org.qii.weiciyuan.ui.login.AccountActivity;
@@ -132,7 +132,8 @@ public class MyInfoTimeLineFragment extends Fragment {
 
         @Override
         protected UserBean doInBackground(Object... params) {
-            UserBean user = new OAuthDao(((MainTimeLineActivity) getActivity()).getToken()).getOAuthUserInfo();
+            UserBean user = new UserDao(((MainTimeLineActivity) getActivity()).getToken())
+                    .setUid(bean.getId()).getUserInfo();
             if (user != null) {
                 bean = user;
             } else {

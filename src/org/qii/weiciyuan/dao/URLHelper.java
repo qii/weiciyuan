@@ -50,4 +50,8 @@ public class URLHelper {
     public static String new_Comment() {
         return URLManager.getRealUrl("comment");
     }
+
+    public static String getUser(){
+        return URLManager.getRealUrl("usershow");
+    }
 }
