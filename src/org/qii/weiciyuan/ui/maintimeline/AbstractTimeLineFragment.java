@@ -20,6 +20,7 @@ import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
+import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 
 /**
  * User: qii
@@ -213,7 +214,7 @@ public abstract class AbstractTimeLineFragment extends Fragment {
             });
         }
 
-        private void buildRepostContent(WeiboMsgBean repost_msg, ViewHolder holder, int position) {
+        private void buildRepostContent(final WeiboMsgBean repost_msg, ViewHolder holder, int position) {
             holder.repost_content.setVisibility(View.VISIBLE);
             if (repost_msg.getUser() != null) {
                 holder.repost_content.setText(repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
@@ -227,20 +228,22 @@ public abstract class AbstractTimeLineFragment extends Fragment {
                 holder.repost_content_pic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
+                        PictureDialogFragment progressFragment = new PictureDialogFragment(repost_msg);
+                        progressFragment.show(getActivity().getFragmentManager(), "");
                     }
                 });
             }
         }
 
-        private void buildContentPic(WeiboMsgBean msg, ViewHolder holder, int position) {
-            String main_thumbnail_pic_url = msg.getThumbnail_pic();
+        private void buildContentPic(final WeiboMsgBean msg, ViewHolder holder, int position) {
+            final String main_thumbnail_pic_url = msg.getThumbnail_pic();
             holder.content_pic.setVisibility(View.VISIBLE);
             downContentPic(holder.content_pic, main_thumbnail_pic_url, position, listView);
             holder.content_pic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
+                    PictureDialogFragment progressFragment = new PictureDialogFragment(msg);
+                    progressFragment.show(getActivity().getFragmentManager(), "");
                 }
             });
         }
