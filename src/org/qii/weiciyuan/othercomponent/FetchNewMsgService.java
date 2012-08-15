@@ -85,6 +85,12 @@ public class FetchNewMsgService extends Service {
             super.onPostExecute(sum);
         }
 
+        @Override
+        protected void onCancelled(Map<String, Integer> stringIntegerMap) {
+            stopSelf();
+            super.onCancelled(stringIntegerMap);
+        }
+
         private void showNotification(Map<String, Integer> sum) {
 
             Intent intent = new Intent(MentionsAndCommentsReceiver.ACTION);
