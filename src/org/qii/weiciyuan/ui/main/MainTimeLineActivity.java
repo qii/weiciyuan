@@ -70,10 +70,42 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         buildViewPager();
         buildActionBarAndViewPagerTitles();
-
+        buildTabTitle(getIntent());
 
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        buildTabTitle(intent);
+    }
+
+    private void buildTabTitle(Intent intent) {
+        int commentsum = intent.getIntExtra("commentsum", 0);
+        int repostsum = intent.getIntExtra("repostsum", 0);
+
+        if (repostsum > 0) {
+            invlidateTabText(1, repostsum);
+        }
+        if (commentsum > 0) {
+            invlidateTabText(2, commentsum);
+        }
+    }
+
+    private void invlidateTabText(int index, int number) {
+
+        ActionBar.Tab tab = getActionBar().getTabAt(index);
+        String name = tab.getText().toString();
+        String num = "(" + number + ")";
+        if (!name.endsWith(")")) {
+            tab.setText(name + num);
+        } else {
+            int i = name.indexOf("(");
+            String newName = name.substring(0, i);
+            tab.setText(newName + num);
+        }
+
+    }
 
     private void buildViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);

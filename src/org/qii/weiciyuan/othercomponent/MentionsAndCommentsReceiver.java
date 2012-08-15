@@ -43,6 +43,8 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
 
         Intent i = new Intent(context, MainTimeLineActivity.class);
         i.putExtra("account", accountBean);
+        i.putExtra("commentsum", commentsum);
+        i.putExtra("repostsum", repostsum);
         PendingIntent activity = PendingIntent.getActivity(context, 0, i, 0);
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
