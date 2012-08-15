@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -149,6 +151,9 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
     @Override
     protected void afterGetNewMsg() {
         getActivity().getActionBar().getTabAt(1).setText(getString(R.string.mentions));
+        NotificationManager notificationManager = (NotificationManager) getActivity()
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 
     @Override

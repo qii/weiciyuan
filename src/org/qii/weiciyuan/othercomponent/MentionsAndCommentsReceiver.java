@@ -33,12 +33,14 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         String title = "";
         String content = "";
 
-        if (comment.getComments().size() != 0) {
+        if (comment.getComments().size() > 0) {
             title = comment.getComments().get(0).getUser().getScreen_name();
             content = comment.getComments().get(0).getText();
-        } else {
+        } else if (repost.getStatuses().size() > 0) {
             title = repost.getStatuses().get(0).getUser().getScreen_name();
             content = repost.getStatuses().get(0).getText();
+        } else {
+            return;
         }
 
         Intent i = new Intent(context, MainTimeLineActivity.class);

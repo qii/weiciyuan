@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -378,6 +380,9 @@ public class CommentsTimeLineFragment extends Fragment {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             }
             getActivity().getActionBar().getTabAt(2).setText(getString(R.string.comments));
+            NotificationManager notificationManager = (NotificationManager) getActivity()
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancelAll();
             super.onPostExecute(newValue);
 
         }
