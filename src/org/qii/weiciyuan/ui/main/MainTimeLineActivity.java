@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -19,7 +20,6 @@ import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsTimeLineFragment;
-import org.qii.weiciyuan.ui.maintimeline.MyInfoTimeLineFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,6 +109,17 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add("account");
+        menu.add("search");
+        menu.add("favourite");
+        menu.add("mute");
+        menu.add("myinfo");
+        menu.add("setting");
+        return super.onCreateOptionsMenu(menu);
+    }
+
     private void buildViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
@@ -139,9 +150,9 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 .setTabListener(tabListener));
 
 
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.info))
-                .setTabListener(tabListener));
+//        actionBar.addTab(actionBar.newTab()
+//                .setText(getString(R.string.info))
+//                .setTabListener(tabListener));
     }
 
 
@@ -214,7 +225,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     @Override
     public UserBean getUser() {
-        return  accountBean.getInfo();
+        return accountBean.getInfo();
 
     }
 
@@ -237,7 +248,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             list.add(new FriendsTimeLineFragment());
             list.add(new MentionsTimeLineFragment());
             list.add(new CommentsTimeLineFragment());
-            list.add(new MyInfoTimeLineFragment());
+            // list.add(new MyInfoTimeLineFragment());
         }
 
         @Override
