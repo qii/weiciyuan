@@ -1,3 +1,4 @@
 <resources>
     <string name="code20101">target weibo does not exist!</string>
+    <string name="code21327">expired_token!</string>
 </resources>

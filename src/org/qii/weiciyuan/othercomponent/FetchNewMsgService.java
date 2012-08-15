@@ -1,23 +1,19 @@
 package org.qii.weiciyuan.othercomponent;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: Jiang Qi
@@ -25,6 +21,9 @@ import java.util.List;
  * Time: 上午9:04
  */
 public class FetchNewMsgService extends Service {
+    CommentListBean commentResult;
+    MessageListBean repostResult;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -39,58 +38,62 @@ public class FetchNewMsgService extends Service {
     }
 
 
-    class SimpleTask extends AsyncTask<Void, Void, Integer> {
+    class SimpleTask extends AsyncTask<Void, Void, Map<String, Integer>> {
 
         AccountBean accountBean;
 
         @Override
-        protected Integer doInBackground(Void... params) {
-
+        protected Map<String, Integer> doInBackground(Void... params) {
+            Map<String, Integer> map = new HashMap<String, Integer>();
             List<AccountBean> accountBeans = DatabaseManager.getInstance().getAccountList();
-            accountBean=accountBeans.get(0);
+            accountBean = accountBeans.get(0);
             String accountId = accountBean.getUid();
             String token = accountBean.getAccess_token();
 
             CommentListBean commentLineBean = DatabaseManager.getInstance().getCommentLineMsgList(accountId);
             MessageListBean messageListBean = DatabaseManager.getInstance().getRepostLineMsgList(accountId);
 
-            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
+            MainCommentsTimeLineDao commentDao = new MainCommentsTimeLineDao(token);
             if (commentLineBean.getComments().size() > 0) {
-                dao.setSince_id(commentLineBean.getComments().get(0).getId());
+                commentDao.setSince_id(commentLineBean.getComments().get(0).getId());
             }
-            CommentListBean result = dao.getGSONMsgList();
+            commentResult = commentDao.getGSONMsgList();
+            if (commentResult != null) {
+                map.put("comment", commentResult.getComments().size());
+            } else {
+                cancel(true);
+            }
 
-
-            MainMentionsTimeLineDao mainMentionsTimeLineDao = new MainMentionsTimeLineDao(token);
+            MainMentionsTimeLineDao mentionDao = new MainMentionsTimeLineDao(token);
             if (messageListBean.getStatuses().size() > 0) {
-                dao.setSince_id(messageListBean.getStatuses().get(0).getId());
+                mentionDao.setSince_id(messageListBean.getStatuses().get(0).getId());
             }
-            MessageListBean messageListBeanResult = mainMentionsTimeLineDao.getGSONMsgList();
-
-            return result.getComments().size() + messageListBeanResult.getStatuses().size();
+            repostResult = mentionDao.getGSONMsgList();
+            if (repostResult != null) {
+                map.put("repost", repostResult.getStatuses().size());
+            } else {
+                cancel(true);
+            }
+            return map;
         }
 
         @Override
-        protected void onPostExecute(Integer sum) {
-            if (sum > 0) {
-                showNotification(sum);
-            }
+        protected void onPostExecute(Map<String, Integer> sum) {
+
+            showNotification(sum);
+
             super.onPostExecute(sum);
         }
 
-        private void showNotification(Integer aVoid) {
-            Intent intent = new Intent(FetchNewMsgService.this, MainTimeLineActivity.class);
-            intent.putExtra("account",accountBean);
-            PendingIntent activity = PendingIntent.getActivity(FetchNewMsgService.this, 0, intent, 0);
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            Notification notification = new Notification.Builder(FetchNewMsgService.this)
-                    .setContentText("new message" + aVoid)
-                    .setSmallIcon(R.drawable.ic_launcher)
-                    .setContentIntent(activity)
-                    .getNotification();
+        private void showNotification(Map<String, Integer> sum) {
 
-            notificationManager.notify(0, notification);
-
+            Intent intent = new Intent(MentionsAndCommentsReceiver.ACTION);
+            intent.putExtra("account", accountBean);
+            intent.putExtra("commentsum", sum.get("comment"));
+            intent.putExtra("repostsum", sum.get("repost"));
+            intent.putExtra("comment", commentResult);
+            intent.putExtra("repost", repostResult);
+            sendOrderedBroadcast(intent, null);
 
         }
     }

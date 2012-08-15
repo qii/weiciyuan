@@ -9,7 +9,6 @@ import android.net.NetworkInfo;
 /**
  * User: Jiang Qi
  * Date: 12-8-6
- * Time: 下午4:38
  */
 public class ConnectionChangeReceiver extends BroadcastReceiver {
     @Override

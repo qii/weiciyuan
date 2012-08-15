@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.support.utils;
 
+import android.app.Activity;
 import android.widget.Toast;
 
 /**
@@ -10,12 +11,15 @@ import android.widget.Toast;
 public class ActivityUtils {
 
     public static void showTips(final String str) {
-        GlobalContext.getInstance().getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(GlobalContext.getInstance(), str, Toast.LENGTH_SHORT).show();
-            }
-        });
+        Activity activity = GlobalContext.getInstance().getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(GlobalContext.getInstance(), str, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     public static void showTips(final int resId) {
