@@ -46,6 +46,10 @@ public class FetchNewMsgService extends Service {
         protected Map<String, Integer> doInBackground(Void... params) {
             Map<String, Integer> map = new HashMap<String, Integer>();
             List<AccountBean> accountBeans = DatabaseManager.getInstance().getAccountList();
+            if (accountBeans.size() == 0) {
+                cancel(true);
+                return null;
+            }
             accountBean = accountBeans.get(0);
             String accountId = accountBean.getUid();
             String token = accountBean.getAccess_token();

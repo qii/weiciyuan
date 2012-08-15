@@ -175,6 +175,7 @@ public class OAuthActivity extends AbstractAppActivity {
             account.setUid(user.getId());
             account.setUsernick(user.getScreen_name());
             account.setAvatar_url(user.getProfile_image_url());
+            account.setInfo(user);
 
             return DatabaseManager.getInstance().addOrUpdateAccount(account);
 

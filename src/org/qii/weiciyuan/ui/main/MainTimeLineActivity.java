@@ -214,10 +214,8 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     @Override
     public UserBean getUser() {
-        UserBean bean = new UserBean();
-        bean.setScreen_name(accountBean.getUsernick());
-        bean.setId(accountBean.getUid());
-        return bean;
+        return  accountBean.getInfo();
+
     }
 
 

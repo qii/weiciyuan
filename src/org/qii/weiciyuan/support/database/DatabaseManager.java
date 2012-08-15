@@ -60,6 +60,9 @@ public class DatabaseManager {
         cv.put(AccountTable.USERNICK, account.getUsernick());
         cv.put(AccountTable.AVATAR_URL, account.getAvatar_url());
 
+        String json = new Gson().toJson(account.getInfo());
+        cv.put(AccountTable.INFOJSON, json);
+
         Cursor c = rsd.query(AccountTable.TABLE_NAME, null, AccountTable.UID + "=?",
                 new String[]{account.getUid()}, null, null, null);
 
@@ -94,6 +97,15 @@ public class DatabaseManager {
 
             colid = c.getColumnIndex(AccountTable.AVATAR_URL);
             account.setAvatar_url(c.getString(colid));
+
+            Gson gson = new Gson();
+            String json = c.getString(c.getColumnIndex(AccountTable.INFOJSON));
+            try {
+                UserBean value = gson.fromJson(json, UserBean.class);
+                account.setInfo(value);
+            } catch (JsonSyntaxException e) {
+                AppLogger.e(e.getMessage());
+            }
 
             accountList.add(account);
         }

@@ -21,4 +21,6 @@ public class AccountTable {
 
     public static final String OAUTH_TOKEN_SECRET = "oauth_token_secret";
 
+    public static final String INFOJSON = "json";
+
 }

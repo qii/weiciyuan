@@ -24,8 +24,7 @@ import org.qii.weiciyuan.ui.preference.SettingActivity;
 /**
  * User: qii
  * Date: 12-7-30
- * Time: 下午10:13
- */
+  */
 public class MyInfoTimeLineFragment extends Fragment {
 
     private UserBean bean;

@@ -5,7 +5,6 @@ import java.io.Serializable;
 /**
  * User: Jiang Qi
  * Date: 12-7-30
- * Time: 上午10:51
  */
 public class AccountBean implements Serializable {
     public String getUid() {
@@ -56,6 +55,14 @@ public class AccountBean implements Serializable {
         this.access_token = access_token;
     }
 
+    public UserBean getInfo() {
+        return info;
+    }
+
+    public void setInfo(UserBean info) {
+        this.info = info;
+    }
+
     private String uid;
 
     private String username;
@@ -68,4 +75,7 @@ public class AccountBean implements Serializable {
 
     private String access_token;
 
- }
+    private UserBean info;
+
+
+}
