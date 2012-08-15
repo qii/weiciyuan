@@ -21,8 +21,8 @@
                 android:name=".ui.login.AccountActivity"
                 android:screenOrientation="portrait"
                 android:uiOptions="splitActionBarWhenNarrow"
-                android:launchMode="standard"
-                android:noHistory="true">
+
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -31,7 +31,7 @@
         </activity>
         <activity android:name=".ui.main.MainTimeLineActivity"
                   android:uiOptions="splitActionBarWhenNarrow"
-                  android:launchMode="standard"/>
+                  android:launchMode="singleTask"/>
         <activity android:name=".ui.send.StatusNewActivity"
                   android:uiOptions="splitActionBarWhenNarrow"
                   android:windowSoftInputMode="stateVisible|adjustResize"/>

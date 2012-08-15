@@ -12,7 +12,6 @@ import android.widget.ListView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.othercomponent.FetchNewMsgService;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -72,7 +71,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         buildViewPager();
         buildActionBarAndViewPagerTitles();
 
-       startService(new Intent(this, FetchNewMsgService.class));
+
     }
 
 

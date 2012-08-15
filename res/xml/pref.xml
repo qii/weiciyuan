@@ -4,29 +4,38 @@
         >
     <PreferenceCategory
             android:title="Normal"
-            android:key="pref_key_storage_settings">
+            >
         <CheckBoxPreference
-                android:key="pref_key_auto_delete"
-                android:summary="sss"
-                android:title="ddd"
+                android:key="show_picture"
+                android:title="show picture"
+                android:defaultValue="true"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:title="New Message"
+            >
+        <CheckBoxPreference
+                android:key="enable_fetch_msg"
+                android:title="enable fetch msg"
                 android:defaultValue="false"/>
         <ListPreference
-                android:dependency="pref_key_auto_delete"
-                android:key="pref_syncConnectionType"
+                android:dependency="enable_fetch_msg"
+                android:key="frequency"
                 android:title="Frequency"
                 android:dialogTitle="Frequency"
                 android:entries="@array/frequency"
-                android:entryValues="@array/frequency"
+                android:entryValues="@array/frequency_value"
                 android:defaultValue="Comment"/>
-
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:title="Other">
         <Preference
                 android:key="clear_cache"
                 android:title="Clear SD Cache"
                 android:summary="clear avatar and picture"
                 />
         <Preference
-                android:key="1.0 alpha"
-                android:title="version"
+                android:title="@string/version"
+                android:summary="1.0 alpha"
                 />
     </PreferenceCategory>
 

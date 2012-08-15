@@ -25,4 +25,8 @@
     <string name="select">选择</string>
     <string name="take_camera">拍照</string>
     <string name="select_pic">图库</string>
+
+    <!---Setting  -->
+    <string name="setting">Setting</string>
+    <string name="version">Version</string>
 </resources>

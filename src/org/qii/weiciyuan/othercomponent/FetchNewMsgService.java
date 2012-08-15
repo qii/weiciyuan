@@ -81,7 +81,7 @@ public class FetchNewMsgService extends Service {
         protected void onPostExecute(Map<String, Integer> sum) {
 
             showNotification(sum);
-
+            stopSelf();
             super.onPostExecute(sum);
         }
 

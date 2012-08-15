@@ -3,6 +3,10 @@
         <item>Five Minutes</item>
         <item>Half Hour</item>
         <item>One Hour</item>
-        <item>Five Hour</item>
+    </string-array>
+    <string-array name="frequency_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
     </string-array>
 </resources>
