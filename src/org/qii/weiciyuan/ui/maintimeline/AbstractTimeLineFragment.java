@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,8 @@ import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
  * User: qii
@@ -170,7 +173,7 @@ public abstract class AbstractTimeLineFragment extends Fragment {
 
         private void bindViewData(ViewHolder holder, int position) {
 
-            WeiboMsgBean msg = getList().getStatuses().get(position);
+            final WeiboMsgBean msg = getList().getStatuses().get(position);
             WeiboMsgBean repost_msg = msg.getRetweeted_status();
 
 
@@ -199,7 +202,16 @@ public abstract class AbstractTimeLineFragment extends Fragment {
                 buildContentPic(msg, holder, position);
             }
 
-
+            holder.avatar.setClickable(true);
+            holder.avatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                    intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
+                    intent.putExtra("user", msg.getUser());
+                    startActivity(intent);
+                }
+            });
         }
 
         private void buildRepostContent(WeiboMsgBean repost_msg, ViewHolder holder, int position) {
@@ -297,9 +309,11 @@ public abstract class AbstractTimeLineFragment extends Fragment {
 
     protected abstract MessageListBean getDoInBackgroundOldData();
 
-    protected void afterGetNewMsg(){
+    protected void afterGetNewMsg() {
 
-    };
+    }
+
+    ;
 
     class TimeLineGetOlderMsgListTask extends AsyncTask<Object, MessageListBean, MessageListBean> {
 
