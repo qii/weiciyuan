@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,15 +15,13 @@ import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
-import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
-import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
-import org.qii.weiciyuan.ui.preference.SettingActivity;
+import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 
 /**
  * User: qii
  * Date: 12-7-30
-  */
+ */
 public class MyInfoTimeLineFragment extends Fragment {
 
     private UserBean bean;
@@ -38,7 +35,6 @@ public class MyInfoTimeLineFragment extends Fragment {
     private Button fav_number;
 
     protected ICommander commander;
-
 
 
     public MyInfoTimeLineFragment() {
@@ -69,7 +65,7 @@ public class MyInfoTimeLineFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-       // new SimpleTask().execute();
+        // new SimpleTask().execute();
     }
 
     private void setValue() {
@@ -119,14 +115,7 @@ public class MyInfoTimeLineFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_account_management:
-                Intent intent = new Intent(getActivity(), AccountActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                break;
-            case R.id.menu_settings:
-                startActivity(new Intent(getActivity(), SettingActivity.class));
-                break;
+
 
         }
         return true;

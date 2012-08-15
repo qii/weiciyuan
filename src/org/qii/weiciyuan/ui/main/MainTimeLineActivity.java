@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -17,9 +18,11 @@ import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
+import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsTimeLineFragment;
+import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,13 +114,26 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add("account");
-        menu.add("search");
-        menu.add("favourite");
-        menu.add("mute");
-        menu.add("myinfo");
-        menu.add("setting");
+
+        getMenuInflater().inflate(R.menu.maintimelineactivity_menu, menu);
+
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_account:
+                Intent intent = new Intent(this, AccountActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+            case R.id.menu_setting:
+                startActivity(new Intent(this, SettingActivity.class));
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void buildViewPager() {

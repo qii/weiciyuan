@@ -26,7 +26,19 @@
     <string name="take_camera">拍照</string>
     <string name="select_pic">图库</string>
 
+    <!-- serach -->
+    <string name="search">搜索</string>
+
+    <!--fav-->
+    <string name="favourite">收藏</string>
+
+    <!-- account -->
+    <string name="account">帐号</string>
+
+    <!-- mute -->
+    <string name="mute">过滤</string>
+
     <!---Setting  -->
-    <string name="setting">Setting</string>
-    <string name="version">Version</string>
+    <string name="setting">设置</string>
+    <string name="version">版本</string>
 </resources>
