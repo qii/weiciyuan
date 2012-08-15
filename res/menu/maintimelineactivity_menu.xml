@@ -6,12 +6,6 @@
     <item android:id="@+id/menu_search"
           android:title="@string/search"
             />
-    <item android:id="@+id/menu_fav"
-          android:title="@string/favourite"
-            />
-    <item android:id="@+id/menu_mute"
-          android:title="@string/mute"
-            />
     <item android:id="@+id/menu_myinfo"
           android:title="@string/info"
             />

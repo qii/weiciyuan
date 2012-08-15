@@ -2,14 +2,14 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/menu_account_management"
-          android:icon="@drawable/maintimelineactivity_account_management"
-          android:title="账号管理"
+    <item android:id="@+id/menu_edit"
+          android:icon="@drawable/edit"
+          android:title="编辑"
           android:showAsAction="ifRoom|withText"
             />
-    <item android:id="@+id/menu_settings"
-          android:icon="@drawable/maintimelineactivity_settings"
-          android:title="设置"
+    <item android:id="@+id/menu_refresh"
+          android:icon="@drawable/refresh"
+          android:title="刷新"
           android:showAsAction="ifRoom|withText"
             />
 

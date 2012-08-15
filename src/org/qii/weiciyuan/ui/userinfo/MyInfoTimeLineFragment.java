@@ -1,14 +1,15 @@
-package org.qii.weiciyuan.ui.maintimeline;
+package org.qii.weiciyuan.ui.userinfo;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
@@ -115,7 +116,12 @@ public class MyInfoTimeLineFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
+            case R.id.menu_refresh:
+                new SimpleTask().execute();
+                break;
+            case R.id.menu_edit:
+                Toast.makeText(getActivity(), "接口没开放", Toast.LENGTH_SHORT).show();
+                break;
 
         }
         return true;

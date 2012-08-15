@@ -23,6 +23,7 @@ import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsTimeLineFragment;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
+import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,10 +123,17 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_account:
-                Intent intent = new Intent(this, AccountActivity.class);
+                intent = new Intent(this, AccountActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+            case R.id.menu_myinfo:
+                intent = new Intent(this, MyInfoActivity.class);
+                intent.putExtra("token",token);
+                intent.putExtra("user",getUser());
                 startActivity(intent);
                 break;
             case R.id.menu_setting:
