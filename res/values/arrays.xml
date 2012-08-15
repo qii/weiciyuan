@@ -1,8 +1,8 @@
 <resources>
     <string-array name="frequency">
-        <item>Five Minutes</item>
+        <item>Three Minutes</item>
+        <item>Fifteen Minutes</item>
         <item>Half Hour</item>
-        <item>One Hour</item>
     </string-array>
     <string-array name="frequency_value">
         <item>1</item>

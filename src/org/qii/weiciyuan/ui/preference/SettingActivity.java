@@ -79,16 +79,14 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
         }
 
         if (key.equals("frequency")) {
-            Toast.makeText(getActivity(), "frequency", Toast.LENGTH_SHORT).show();
-
             String value = sharedPreferences.getString(key, "1");
 
-            if (value.endsWith("1"))
+            if (value.equals("1"))
+                startAlarm(3 * 60 * 1000);
+            if (value.equals("2"))
                 startAlarm(AlarmManager.INTERVAL_FIFTEEN_MINUTES);
-            if (value.endsWith("2"))
+            if (value.equals("3"))
                 startAlarm(AlarmManager.INTERVAL_HALF_HOUR);
-            if (value.endsWith("3"))
-                startAlarm(AlarmManager.INTERVAL_HOUR);
 
         }
     }
@@ -98,7 +96,9 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
                 Context.ALARM_SERVICE);
         Intent intent = new Intent(getActivity(), FetchNewMsgService.class);
         PendingIntent sender = PendingIntent.getService(getActivity(), 195, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, System.currentTimeMillis(), time, sender);
+        alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, time, time, sender);
+        Toast.makeText(getActivity(), "start fetch new message", Toast.LENGTH_SHORT).show();
+
     }
 
     private void cancelAlarm() {
