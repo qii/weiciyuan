@@ -146,6 +146,10 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
         return result;
     }
 
+    @Override
+    protected void afterGetNewMsg() {
+        getActivity().getActionBar().getTabAt(1).setText(getString(R.string.mentions));
+    }
 
     @Override
     protected MessageListBean getDoInBackgroundOldData() {

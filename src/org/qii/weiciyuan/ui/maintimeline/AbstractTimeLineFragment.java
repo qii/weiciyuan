@@ -290,11 +290,16 @@ public abstract class AbstractTimeLineFragment extends Fragment {
             } else {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             }
+            afterGetNewMsg();
             super.onPostExecute(newValue);
         }
     }
 
     protected abstract MessageListBean getDoInBackgroundOldData();
+
+    protected void afterGetNewMsg(){
+
+    };
 
     class TimeLineGetOlderMsgListTask extends AsyncTask<Object, MessageListBean, MessageListBean> {
 
@@ -339,6 +344,7 @@ public abstract class AbstractTimeLineFragment extends Fragment {
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
+
             super.onPostExecute(newValue);
         }
     }

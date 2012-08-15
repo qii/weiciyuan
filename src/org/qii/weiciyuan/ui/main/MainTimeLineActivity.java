@@ -86,9 +86,11 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         if (repostsum > 0) {
             invlidateTabText(1, repostsum);
+            getActionBar().setSelectedNavigationItem(1);
         }
         if (commentsum > 0) {
             invlidateTabText(2, commentsum);
+            getActionBar().setSelectedNavigationItem(2);
         }
     }
 

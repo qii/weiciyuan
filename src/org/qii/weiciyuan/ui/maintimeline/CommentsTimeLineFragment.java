@@ -377,6 +377,7 @@ public class CommentsTimeLineFragment extends Fragment {
             } else {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             }
+            getActivity().getActionBar().getTabAt(2).setText(getString(R.string.comments));
             super.onPostExecute(newValue);
 
         }
