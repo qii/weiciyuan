@@ -3,8 +3,7 @@ package org.qii.weiciyuan.support.database.table;
 /**
  * User: Jiang Qi
  * Date: 12-7-30
- * Time: 上午9:52
- */
+  */
 public class HomeTable {
 
     public static final String TABLE_NAME = "home_table";

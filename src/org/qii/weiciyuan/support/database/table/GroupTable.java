@@ -3,8 +3,7 @@ package org.qii.weiciyuan.support.database.table;
 /**
  * User: Jiang Qi
  * Date: 12-7-30
- * Time: 上午9:51
- */
+  */
 public class GroupTable {
     
     public static final String TABLE_NAME="group_table";

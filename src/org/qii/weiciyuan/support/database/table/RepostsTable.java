@@ -3,8 +3,7 @@ package org.qii.weiciyuan.support.database.table;
 /**
  * User: Jiang Qi
  * Date: 12-8-10
- * Time: 上午10:37
- */
+  */
 public class RepostsTable {
 
     public static final String TABLE_NAME = "reposts_table";
