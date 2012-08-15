@@ -10,10 +10,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
+import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -30,12 +32,14 @@ import java.util.Set;
  */
 public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
+    UserBean userBean;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -49,8 +53,10 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         } else {
             new SimpleTask().execute();
         }
-
+        userBean = ((IUserInfo) getActivity()).getUser();
+        getActivity().invalidateOptionsMenu();
     }
+
 
     private class SimpleTask extends AsyncTask<Object, Object, Object> {
 
@@ -114,6 +120,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.friendstimelinefragment_menu, menu);
+        menu.findItem(R.id.friendstimelinefragment_name).setTitle(userBean.getScreen_name());
     }
 
     @Override

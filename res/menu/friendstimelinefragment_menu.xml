@@ -8,6 +8,11 @@
           android:showAsAction="ifRoom|withText"
             />
 
+    <item android:id="@+id/friendstimelinefragment_name"
+          android:title="name"
+          android:showAsAction="ifRoom|withText"
+            />
+
     <item android:id="@+id/friendstimelinefragment_refresh"
           android:icon="@drawable/refresh"
           android:title="刷新"
