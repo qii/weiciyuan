@@ -202,7 +202,6 @@ public abstract class AbstractTimeLineFragment extends Fragment {
                 buildContentPic(msg, holder, position);
             }
 
-            holder.avatar.setClickable(true);
             holder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -225,6 +224,12 @@ public abstract class AbstractTimeLineFragment extends Fragment {
             if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
                 holder.repost_content_pic.setVisibility(View.VISIBLE);
                 downContentPic(holder.repost_content_pic, repost_msg.getThumbnail_pic(), position, listView);
+                holder.repost_content_pic.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
 
@@ -232,6 +237,12 @@ public abstract class AbstractTimeLineFragment extends Fragment {
             String main_thumbnail_pic_url = msg.getThumbnail_pic();
             holder.content_pic.setVisibility(View.VISIBLE);
             downContentPic(holder.content_pic, main_thumbnail_pic_url, position, listView);
+            holder.content_pic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 

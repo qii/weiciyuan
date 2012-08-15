@@ -12,7 +12,8 @@
             android:layout_height="40dp"
             android:background="@drawable/account"
             android:layout_gravity="left|center_vertical"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginRight="5dp"
+            android:clickable="true"/>
 
     <TextView
             android:id="@+id/username"
@@ -57,6 +58,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="80dp"
                 android:visibility="gone"
+                android:clickable="true"
                 />
         <LinearLayout
 
@@ -82,6 +84,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="80dp"
                     android:visibility="gone"
+                    android:clickable="true"
                     />
         </LinearLayout>
 
