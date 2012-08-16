@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * User: Jiang Qi
  * Date: 12-7-30
- * Time: 下午1:55
  */
 public class OAuthDao {
 
@@ -39,7 +38,7 @@ public class OAuthDao {
             JSONObject jsonObject = new JSONObject(uidJson);
             uid = jsonObject.optString("uid");
         } catch (JSONException e) {
-
+            AppLogger.e(e.getMessage());
         }
 
 
@@ -48,9 +47,8 @@ public class OAuthDao {
         map.put("access_token", access_token);
 
         String url = URLManager.getRealUrl("usershow");
-        String result = null;
 
-        result = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+        String result = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
 
         Gson gson = new Gson();
@@ -64,18 +62,14 @@ public class OAuthDao {
         return user;
     }
 
-    private String getOAuthUserUIDJsonData() {
+    private String getOAuthUserUIDJsonData() throws WeiboException {
 
         String url = URLManager.getRealUrl("uid");
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
-        try {
-            return HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
 
-        return null;
+        return HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+
     }
 
 }
