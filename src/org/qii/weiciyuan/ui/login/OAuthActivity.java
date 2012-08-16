@@ -26,11 +26,8 @@ import org.qii.weiciyuan.weibo.Utility;
 import org.qii.weiciyuan.weibo.WeiboParameters;
 
 /**
- * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-7-28
- * Time: 下午1:44
- * To change this template use File | Settings | File Templates.
  */
 public class OAuthActivity extends AbstractAppActivity {
 

@@ -25,7 +25,6 @@ import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 /**
  * User: qii
  * Date: 12-7-29
- * Time: 下午12:14
  */
 public abstract class AbstractTimeLineFragment extends Fragment {
     protected ListView listView;
@@ -327,7 +326,6 @@ public abstract class AbstractTimeLineFragment extends Fragment {
 
     }
 
-    ;
 
     class TimeLineGetOlderMsgListTask extends AsyncTask<Object, MessageListBean, MessageListBean> {
 
