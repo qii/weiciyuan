@@ -34,7 +34,6 @@ public class UserInfoFragment extends android.app.Fragment {
     private Button weibo_number;
     private Button following_number;
     private Button fans_number;
-    private Button fav_number;
 
     protected ICommander commander;
 
@@ -82,7 +81,6 @@ public class UserInfoFragment extends android.app.Fragment {
         setTextViewNum(weibo_number, bean.getStatuses_count());
         setTextViewNum(fans_number, bean.getFollowers_count());
         setTextViewNum(following_number, bean.getFriends_count());
-        setTextViewNum(fav_number, bean.getFavourites_count());
 
     }
 
@@ -97,7 +95,7 @@ public class UserInfoFragment extends android.app.Fragment {
         weibo_number = (Button) view.findViewById(R.id.weibo_number);
         following_number = (Button) view.findViewById(R.id.following_number);
         fans_number = (Button) view.findViewById(R.id.fans_number);
-        fav_number = (Button) view.findViewById(R.id.fav_number);
+        view.findViewById(R.id.fav_number).setVisibility(View.GONE);
 
         weibo_number.setOnClickListener(new View.OnClickListener() {
             @Override
