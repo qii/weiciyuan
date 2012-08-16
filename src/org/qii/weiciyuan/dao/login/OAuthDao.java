@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.dao.login;
 
-import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.json.JSONException;
@@ -24,8 +23,7 @@ public class OAuthDao {
     private String access_token;
 
     public OAuthDao(String access_token) {
-        if (TextUtils.isEmpty(access_token))
-            throw new IllegalArgumentException();
+
         this.access_token = access_token;
     }
 

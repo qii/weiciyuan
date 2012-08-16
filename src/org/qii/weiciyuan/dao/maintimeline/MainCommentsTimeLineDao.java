@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.dao.maintimeline;
 
-import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.CommentListBean;
@@ -50,8 +49,7 @@ public class MainCommentsTimeLineDao {
     private String filter_by_source;
 
     public MainCommentsTimeLineDao(String access_token) {
-        if (TextUtils.isEmpty(access_token))
-            throw new IllegalArgumentException();
+
         this.access_token = access_token;
     }
 

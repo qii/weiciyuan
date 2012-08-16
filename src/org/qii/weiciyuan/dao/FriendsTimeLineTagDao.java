@@ -77,6 +77,7 @@ public class FriendsTimeLineTagDao {
     private String page;
 
     public FriendsTimeLineTagDao(String access_token, String uid) {
+
         this.access_token = access_token;
         this.uid = uid;
     }

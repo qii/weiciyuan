@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.dao.send;
 
-import android.text.TextUtils;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
@@ -18,8 +17,7 @@ public class StatusNewMsgDao {
     private String access_token;
 
     public StatusNewMsgDao(String access_token) {
-        if (TextUtils.isEmpty(access_token))
-            throw new IllegalArgumentException();
+
         this.access_token = access_token;
     }
 

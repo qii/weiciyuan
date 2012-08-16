@@ -49,6 +49,7 @@ public class CommentNewMsgDao {
     }
 
     public CommentNewMsgDao(String token, String id, String comment) {
+
         this.access_token = token;
         this.id = id;
         this.comment = comment;

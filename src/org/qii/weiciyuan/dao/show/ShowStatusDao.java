@@ -22,6 +22,7 @@ public class ShowStatusDao {
     private String id;
 
     public ShowStatusDao(String access_token, String id) {
+
         this.access_token = access_token;
         this.id = id;
     }

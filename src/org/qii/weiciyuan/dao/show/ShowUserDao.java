@@ -53,6 +53,7 @@ public class ShowUserDao {
     private String screen_name;
 
     public ShowUserDao(String access_token) {
+
         this.access_token = access_token;
     }
 
