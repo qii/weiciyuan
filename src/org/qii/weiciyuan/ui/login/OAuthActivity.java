@@ -168,18 +168,32 @@ public class OAuthActivity extends AbstractAppActivity {
             String token = params[0];
 
             UserBean user = new OAuthDao(token).getOAuthUserInfo();
+            if (user != null) {
+                AccountBean account = new AccountBean();
+                account.setAccess_token(token);
+                account.setUsername(user.getName());
+                account.setUid(user.getId());
+                account.setUsernick(user.getScreen_name());
+                account.setAvatar_url(user.getProfile_image_url());
+                account.setInfo(user);
 
-            AccountBean account = new AccountBean();
-            account.setAccess_token(token);
-            account.setUsername(user.getName());
-            account.setUid(user.getId());
-            account.setUsernick(user.getScreen_name());
-            account.setAvatar_url(user.getProfile_image_url());
-            account.setInfo(user);
-
-            return DatabaseManager.getInstance().addOrUpdateAccount(account);
+                return DatabaseManager.getInstance().addOrUpdateAccount(account);
+            } else {
+                cancel(true);
+                return null;
+            }
 
 
+        }
+
+        @Override
+        protected void onCancelled(DBResult dbResult) {
+            super.onCancelled(dbResult);
+            if (progressFragment.isVisible()) {
+                progressFragment.dismissAllowingStateLoss();
+            }
+            Toast.makeText(OAuthActivity.this, "retry it", Toast.LENGTH_SHORT).show();
+            webView.loadUrl(getWeiboOAuthUrl());
         }
 
         @Override
