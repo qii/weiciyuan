@@ -8,11 +8,8 @@ import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 /**
- * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-8-5
- * Time: 下午7:50
- * To change this template use File | Settings | File Templates.
  */
 public class SimpleBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 
