@@ -50,11 +50,16 @@ public class URLHelper {
     public static String getUser() {
         return URLManager.getRealUrl("usershow");
     }
+
     public static String getStatusesTimeLineById() {
         return URLManager.getRealUrl("statusestimelinebyid");
     }
 
     public static String getFriendListById() {
         return URLManager.getRealUrl("friendsbyid");
+    }
+
+    public static String getFanListById() {
+        return URLManager.getRealUrl("followersbyid");
     }
 }

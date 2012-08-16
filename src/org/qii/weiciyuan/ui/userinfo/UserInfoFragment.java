@@ -118,6 +118,15 @@ public class UserInfoFragment extends android.app.Fragment {
                 startActivity(intent);
             }
         });
+        fans_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FanListActivity.class);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("user", bean);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
