@@ -5,12 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: qii
+  * User: qii
  * Date: 12-7-29
- * Time: 下午8:22
- * To change this template use File | Settings | File Templates.
- */
+   */
 public class MessageListBean implements Serializable{
     public List<WeiboMsgBean> getStatuses() {
         return statuses;

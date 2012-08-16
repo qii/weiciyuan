@@ -50,4 +50,7 @@ public class URLHelper {
     public static String getUser() {
         return URLManager.getRealUrl("usershow");
     }
+    public static String getStatusesTimeLineById() {
+        return URLManager.getRealUrl("statusestimelinebyid");
+    }
 }

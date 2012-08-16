@@ -54,6 +54,7 @@
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.userinfo.MyInfoActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".ui.userinfo.UserInfoStatusesActivity"/>
 
         <service android:name=".othercomponent.FetchNewMsgService"/>
 
