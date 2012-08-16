@@ -30,7 +30,7 @@ public class OAuthDao {
         this.access_token = access_token;
     }
 
-    public UserBean getOAuthUserInfo() {
+    public UserBean getOAuthUserInfo() throws WeiboException {
 
         String uidJson = getOAuthUserUIDJsonData();
         String uid = "";
@@ -49,11 +49,9 @@ public class OAuthDao {
 
         String url = URLManager.getRealUrl("usershow");
         String result = null;
-        try {
-            result = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+
+        result = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+
 
         Gson gson = new Gson();
         UserBean user = new UserBean();

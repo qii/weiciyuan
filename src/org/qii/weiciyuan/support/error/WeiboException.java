@@ -6,7 +6,6 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 /**
  * User: Jiang Qi
  * Date: 12-8-14
- * Time: 上午11:21
  */
 public class WeiboException extends Exception {
     private String error;

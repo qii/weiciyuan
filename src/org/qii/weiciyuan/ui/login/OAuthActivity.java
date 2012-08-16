@@ -21,6 +21,8 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.login.OAuthDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.weibo.Utility;
 import org.qii.weiciyuan.weibo.WeiboParameters;
@@ -148,6 +150,7 @@ public class OAuthActivity extends AbstractAppActivity {
 
     class OAuthTask extends AsyncTask<String, UserBean, DBResult> {
 
+        WeiboException e;
 
         ProgressFragment progressFragment = ProgressFragment.newInstance();
 
@@ -164,8 +167,8 @@ public class OAuthActivity extends AbstractAppActivity {
 
             String token = params[0];
 
-            UserBean user = new OAuthDao(token).getOAuthUserInfo();
-            if (user != null) {
+            try {
+                UserBean user = new OAuthDao(token).getOAuthUserInfo();
                 AccountBean account = new AccountBean();
                 account.setAccess_token(token);
                 account.setUsername(user.getName());
@@ -173,9 +176,10 @@ public class OAuthActivity extends AbstractAppActivity {
                 account.setUsernick(user.getScreen_name());
                 account.setAvatar_url(user.getProfile_image_url());
                 account.setInfo(user);
-
                 return DatabaseManager.getInstance().addOrUpdateAccount(account);
-            } else {
+            } catch (WeiboException e) {
+                AppLogger.e(e.getError());
+                this.e = e;
                 cancel(true);
                 return null;
             }
@@ -189,7 +193,7 @@ public class OAuthActivity extends AbstractAppActivity {
             if (progressFragment.isVisible()) {
                 progressFragment.dismissAllowingStateLoss();
             }
-            Toast.makeText(OAuthActivity.this, "retry it", Toast.LENGTH_SHORT).show();
+            Toast.makeText(OAuthActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
             webView.loadUrl(getWeiboOAuthUrl());
         }
 
