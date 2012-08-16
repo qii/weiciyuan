@@ -108,6 +108,16 @@ public class UserInfoFragment extends android.app.Fragment {
                 startActivity(intent);
             }
         });
+
+        following_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FriendListActivity.class);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("user", bean);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 

@@ -53,4 +53,8 @@ public class URLHelper {
     public static String getStatusesTimeLineById() {
         return URLManager.getRealUrl("statusestimelinebyid");
     }
+
+    public static String getFriendListById() {
+        return URLManager.getRealUrl("friendsbyid");
+    }
 }
