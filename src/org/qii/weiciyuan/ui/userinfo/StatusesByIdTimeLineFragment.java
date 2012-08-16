@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.userinfo;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
+import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 
 import java.util.List;
@@ -105,7 +107,7 @@ public class StatusesByIdTimeLineFragment extends Fragment {
         protected void onPostExecute(Object o) {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
-             super.onPostExecute(o);
+            super.onPostExecute(o);
         }
     }
 
@@ -227,7 +229,10 @@ public class StatusesByIdTimeLineFragment extends Fragment {
 
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-
+        Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
+        intent.putExtra("token", token);
+        intent.putExtra("msg", bean.getStatuses().get(position));
+        startActivity(intent);
     }
 
 
@@ -346,8 +351,6 @@ public class StatusesByIdTimeLineFragment extends Fragment {
     }
 
 
-
-
     class FriendsTimeLineGetOlderMsgListTask extends AsyncTask<Void, RepostListBean, RepostListBean> {
         @Override
         protected void onPreExecute() {
@@ -395,7 +398,7 @@ public class StatusesByIdTimeLineFragment extends Fragment {
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
-             super.onPostExecute(newValue);
+            super.onPostExecute(newValue);
         }
     }
 
