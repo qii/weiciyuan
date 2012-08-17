@@ -2,14 +2,10 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/menu_edit"
-          android:icon="@drawable/edit"
-          android:title="编辑"
-          android:showAsAction="ifRoom|withText"
-            />
+
     <item android:id="@+id/menu_refresh"
           android:icon="@drawable/refresh"
-          android:title="刷新"
+          android:title="@string/refresh"
           android:showAsAction="ifRoom|withText"
             />
 

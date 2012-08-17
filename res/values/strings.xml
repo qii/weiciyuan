@@ -9,6 +9,7 @@
     <string name="timeout">请求超时</string>
 
     <!-- timeline -->
+    <string name="refresh">刷新</string>
     <string name="no_new_message">没有新消息</string>
     <string name="total">共计</string>
     <string name="new_messages">条新消息</string>
@@ -46,6 +47,7 @@
 
     <!--info -->
     <string name="personal_info">个人资料</string>
+    <string name="my_info">我的资料</string>
 
     <!-- serach -->
     <string name="search">搜索</string>

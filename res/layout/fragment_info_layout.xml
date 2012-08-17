@@ -64,7 +64,7 @@
             <Button
                     android:layout_width="fill_parent"
                     android:layout_height="60dp"
-                    android:text="fav"
+                    android:text="@string/favourite"
                     android:gravity="center"
                     android:id="@+id/fav_number"/>
         </LinearLayout>

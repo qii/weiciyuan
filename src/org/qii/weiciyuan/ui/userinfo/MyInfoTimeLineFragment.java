@@ -9,7 +9,6 @@ import android.view.*;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
@@ -119,9 +118,7 @@ public class MyInfoTimeLineFragment extends Fragment {
             case R.id.menu_refresh:
                 new SimpleTask().execute();
                 break;
-            case R.id.menu_edit:
-                Toast.makeText(getActivity(), "接口没开放", Toast.LENGTH_SHORT).show();
-                break;
+
 
         }
         return true;
