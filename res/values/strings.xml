@@ -3,6 +3,7 @@
     <string name="app_name">微次元</string>
 
     <string name="detail">详细</string>
+    <string name="weibo">微博</string>
 
     <!--system -->
     <string name="timeout">请求超时</string>
@@ -14,6 +15,10 @@
     <string name="old_messages"> 条旧消息</string>
     <string name="loading">载入中……</string>
     <string name="click_to_load_older_message">点击载入旧消息</string>
+    <string name="message_list">消息列表</string>
+    <string name="message_number">微博消息</string>
+    <string name="following_number">好友</string>
+    <string name="fan_number">粉丝</string>
 
     <!--maintimelineactivity_layout -->
     <string name="home">首页</string>
@@ -33,6 +38,9 @@
     <string name="select">选择</string>
     <string name="take_camera">拍照</string>
     <string name="select_pic">图库</string>
+
+    <!--info -->
+    <string name="personal_info">个人资料</string>
 
     <!-- serach -->
     <string name="search">搜索</string>

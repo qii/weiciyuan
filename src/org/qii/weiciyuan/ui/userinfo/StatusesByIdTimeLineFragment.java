@@ -265,7 +265,7 @@ public class StatusesByIdTimeLineFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.repostsbyidtimelinefragment_menu, menu);
+        inflater.inflate(R.menu.statusesbyidtimelinefragment_menu, menu);
 
     }
 
@@ -273,7 +273,7 @@ public class StatusesByIdTimeLineFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.repostsbyidtimelinefragment_repost_refresh:
+            case R.id.statusesbyidtimelinefragment_status_refresh:
 
                 refresh();
 

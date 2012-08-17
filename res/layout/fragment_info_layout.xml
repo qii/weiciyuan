@@ -46,19 +46,19 @@
             <Button
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:text="weibo msg number"
+                    android:text="@string/message_number"
                     android:gravity="center"
                     android:id="@+id/weibo_number" android:singleLine="false"/>
             <Button
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:text="following"
+                    android:text="@string/following_number"
                     android:gravity="center"
                     android:id="@+id/following_number"/>
             <Button
                     android:layout_width="fill_parent"
                     android:layout_height="60dp"
-                    android:text="fans"
+                    android:text="@string/fan_number"
                     android:gravity="center"
                     android:id="@+id/fans_number"/>
             <Button

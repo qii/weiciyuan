@@ -19,12 +19,12 @@ import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.show.ShowStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
  * User: Jiang Qi
  * Date: 12-8-1
- * Time: 上午10:48
  */
 public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
@@ -51,7 +51,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         setContentView(R.layout.browserweibomsgactivity_layout);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(getString(R.string.detail));
+        actionBar.setTitle(getString(R.string.weibo));
 
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
@@ -168,7 +168,9 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                intent = new Intent(this, MainTimeLineActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 return true;
             case R.id.menu_repost:
                 intent = new Intent(this, BrowserRepostAndCommentListActivity.class);
