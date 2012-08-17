@@ -28,7 +28,6 @@ import java.util.Set;
 /**
  * User: qii
  * Date: 12-7-29
- * Time: 下午12:03
  */
 public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
