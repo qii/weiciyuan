@@ -3,35 +3,35 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         >
     <PreferenceCategory
-            android:title="Normal"
+            android:title="@string/normal"
             >
         <CheckBoxPreference
                 android:key="show_picture"
-                android:title="show picture"
+                android:title="@string/show_pic"
                 android:defaultValue="true"/>
     </PreferenceCategory>
     <PreferenceCategory
-            android:title="New Message"
+            android:title="@string/new_message"
             >
         <CheckBoxPreference
                 android:key="enable_fetch_msg"
-                android:title="enable fetch msg"
+                android:title="@string/enable_fetch_new_msg"
                 android:defaultValue="false"/>
         <ListPreference
                 android:dependency="enable_fetch_msg"
                 android:key="frequency"
-                android:title="Frequency"
-                android:dialogTitle="Frequency"
+                android:title="@string/frequency"
+                android:dialogTitle="@string/frequency"
                 android:entries="@array/frequency"
                 android:entryValues="@array/frequency_value"
-                android:defaultValue="Comment"/>
+                android:defaultValue="1"/>
     </PreferenceCategory>
     <PreferenceCategory
-            android:title="Other">
+            android:title="@string/other">
         <Preference
                 android:key="clear_cache"
-                android:title="Clear SD Cache"
-                android:summary="clear avatar and picture"
+                android:title="@string/clear_sd_cache"
+                android:summary="@string/clear_avatar_and_pic"
                 />
         <Preference
                 android:title="@string/version"

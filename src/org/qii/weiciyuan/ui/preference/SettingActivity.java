@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.othercomponent.FetchNewMsgService;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
  * User: Jiang Qi
@@ -33,13 +34,15 @@ public class SettingActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                intent = new Intent(this, MainTimeLineActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return false;
     }
 
 }
