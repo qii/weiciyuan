@@ -73,6 +73,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         setContentView(R.layout.statusnewactivity_layout);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(R.string.write_weibo);
 
         Intent intent = getIntent();
         token = intent.getStringExtra("token");

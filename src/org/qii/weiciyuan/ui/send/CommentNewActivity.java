@@ -29,6 +29,7 @@ public class CommentNewActivity extends AbstractAppActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statusnewactivity_layout);
+        getActionBar().setTitle(R.string.comments);
 
         token = getIntent().getStringExtra("token");
         id = getIntent().getStringExtra("id");
