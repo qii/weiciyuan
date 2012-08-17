@@ -11,14 +11,16 @@
     <!-- timeline -->
     <string name="no_new_message">没有新消息</string>
     <string name="total">共计</string>
-    <string name="new_messages"> 条新消息</string>
-    <string name="old_messages"> 条旧消息</string>
+    <string name="new_messages">条新消息</string>
+    <string name="old_messages">条旧消息</string>
     <string name="loading">载入中……</string>
     <string name="click_to_load_older_message">点击载入旧消息</string>
     <string name="message_list">消息列表</string>
     <string name="message_number">微博消息</string>
     <string name="following_number">好友</string>
     <string name="fan_number">粉丝</string>
+    <string name="following_list">好友列表</string>
+    <string name="fan_list">粉丝列表</string>
 
     <!--maintimelineactivity_layout -->
     <string name="home">首页</string>

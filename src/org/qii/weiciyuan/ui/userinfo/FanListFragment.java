@@ -26,7 +26,6 @@ import java.util.Set;
 /**
  * User: Jiang Qi
  * Date: 12-8-16
- * Time: 下午4:21
  */
 public class FanListFragment extends Fragment {
 
@@ -201,16 +200,16 @@ public class FanListFragment extends Fragment {
 
         private void bindViewData(ViewHolder holder, int position) {
 
-            UserBean msg = getList().getUsers().get(position);
+            UserBean user = getList().getUsers().get(position);
 
 
-            holder.username.setText(msg.getScreen_name());
-            String image_url = msg.getProfile_image_url();
+            holder.username.setText(user.getScreen_name());
+            String image_url = user.getProfile_image_url();
             if (!TextUtils.isEmpty(image_url)) {
-                downloadAvatar(holder.avatar, msg.getProfile_image_url(), position, listView);
+                downloadAvatar(holder.avatar, user.getProfile_image_url(), position, listView);
             }
             holder.time.setVisibility(View.GONE);
-            holder.content.setText(msg.getDescription());
+            holder.content.setText(user.getDescription());
 
         }
 

@@ -17,7 +17,6 @@ import org.qii.weiciyuan.dao.user.FriendListDao;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
-import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 
 import java.util.List;
@@ -27,7 +26,6 @@ import java.util.Set;
 /**
  * User: Jiang Qi
  * Date: 12-8-16
- * Time: 下午3:00
  */
 public class FriendsListFragment extends Fragment {
 

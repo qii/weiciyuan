@@ -10,8 +10,7 @@ import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 /**
  * User: Jiang Qi
  * Date: 12-8-16
- * Time: 下午3:15
- */
+  */
 public class FriendListActivity extends AbstractAppActivity implements IUserInfo,
         IToken {
     private String token;
@@ -32,11 +31,11 @@ public class FriendListActivity extends AbstractAppActivity implements IUserInfo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(getString(R.string.info));
+        getActionBar().setTitle(getString(R.string.following_list));
         token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new FriendsListFragment(token,bean.getId()))
+                .replace(android.R.id.content, new FriendsListFragment(token, bean.getId()))
                 .commit();
 
     }
