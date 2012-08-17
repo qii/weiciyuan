@@ -291,10 +291,10 @@ public abstract class AbstractTimeLineFragment extends Fragment {
         protected void onPostExecute(MessageListBean newValue) {
             if (newValue != null) {
                 if (newValue.getStatuses().size() == 0) {
-                    Toast.makeText(getActivity(), "no new message", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Toast.makeText(getActivity(), "total " + newValue.getStatuses().size() + " new messages", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.total) + newValue.getStatuses().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
                     if (newValue.getStatuses().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
                         newValue.getStatuses().addAll(getList().getStatuses());
                     }
@@ -335,7 +335,7 @@ public abstract class AbstractTimeLineFragment extends Fragment {
 
             isBusying = true;
 
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("loading");
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
             View view = footerView.findViewById(R.id.refresh);
             view.setVisibility(View.VISIBLE);
 
@@ -359,14 +359,14 @@ public abstract class AbstractTimeLineFragment extends Fragment {
         @Override
         protected void onPostExecute(MessageListBean newValue) {
             if (newValue != null) {
-                Toast.makeText(getActivity(), "total " + newValue.getStatuses().size() + " old messages", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getStatuses().size() + getString(R.string.old_messages), Toast.LENGTH_SHORT).show();
 
                 getList().getStatuses().addAll(newValue.getStatuses().subList(1, newValue.getStatuses().size() - 1));
 
             }
 
             isBusying = false;
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("click to load older message");
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.click_to_load_older_message));
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();

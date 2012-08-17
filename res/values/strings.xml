@@ -7,6 +7,14 @@
     <!--system -->
     <string name="timeout">请求超时</string>
 
+    <!-- timeline -->
+    <string name="no_new_message">没有新消息</string>
+    <string name="total">共计</string>
+    <string name="new_messages"> 条新消息</string>
+    <string name="old_messages"> 条旧消息</string>
+    <string name="loading">载入中……</string>
+    <string name="click_to_load_older_message">点击载入旧消息</string>
+
     <!--maintimelineactivity_layout -->
     <string name="home">首页</string>
     <string name="mentions">回复</string>
