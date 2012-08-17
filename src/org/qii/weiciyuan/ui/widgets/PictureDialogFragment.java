@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.ImageView;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 
@@ -29,7 +30,7 @@ public class PictureDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         view = new ImageView(getActivity());
         builder.setView(view);
-        builder.setNeutralButton("关闭", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -37,7 +38,6 @@ public class PictureDialogFragment extends DialogFragment {
                 dismissAllowingStateLoss();
             }
         });
-
 
 
         return builder.create();

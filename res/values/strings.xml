@@ -5,6 +5,9 @@
     <string name="detail">详细</string>
     <string name="weibo">微博</string>
 
+    <!--button -->
+    <string name="close">关闭</string>
+
     <!--system -->
     <string name="timeout">请求超时</string>
 
