@@ -63,7 +63,7 @@
                     android:layout_height="80dp"
                     android:visibility="gone"
                     android:clickable="true"
-                    android:scaleType="centerCrop"
+
                     />
         </LinearLayout>
         <LinearLayout
@@ -94,7 +94,7 @@
                         android:layout_height="80dp"
                         android:visibility="gone"
                         android:clickable="true"
-                        android:scaleType="centerCrop"/>
+                        />
             </LinearLayout>
         </LinearLayout>
 
