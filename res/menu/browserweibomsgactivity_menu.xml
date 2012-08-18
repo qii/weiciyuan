@@ -14,5 +14,9 @@
           android:showAsAction="ifRoom|withText"
             />
 
+    <item android:id="@+id/menu_share"
+          android:title="@string/share"
+            />
+
 
 </menu>

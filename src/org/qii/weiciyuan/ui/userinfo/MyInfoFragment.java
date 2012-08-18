@@ -97,6 +97,33 @@ public class MyInfoFragment extends Fragment {
         following_number = (Button) view.findViewById(R.id.following_number);
         fans_number = (Button) view.findViewById(R.id.fans_number);
         fav_number = (Button) view.findViewById(R.id.fav_number);
+        weibo_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UserInfoStatusesActivity.class);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("user", bean);
+                startActivity(intent);
+            }
+        });
+        following_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FriendListActivity.class);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("user", bean);
+                startActivity(intent);
+            }
+        });
+        fans_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FanListActivity.class);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("user", bean);
+                startActivity(intent);
+            }
+        });
         fav_number.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

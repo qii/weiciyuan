@@ -61,12 +61,7 @@
                     android:text="@string/fan_number"
                     android:gravity="center"
                     android:id="@+id/fans_number"/>
-            <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="60dp"
-                    android:text="@string/favourite"
-                    android:gravity="center"
-                    android:id="@+id/fav_number"/>
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

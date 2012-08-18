@@ -186,6 +186,12 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
                 intent.putExtra("tabindex", 1);
                 startActivity(intent);
                 return true;
+            case R.id.menu_share:
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, msg.getText());
+                startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_to)));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
