@@ -62,6 +62,8 @@
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.browser.BrowserBigPicActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".ui.userinfo.MyFavActivity"
+                  android:uiOptions="splitActionBarWhenNarrow"/>
 
         <service android:name=".othercomponent.FetchNewMsgService"/>
 

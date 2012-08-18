@@ -62,4 +62,8 @@ public class URLHelper {
     public static String getFanListById() {
         return URLManager.getRealUrl("followersbyid");
     }
+
+    public static String getFavList() {
+        return URLManager.getRealUrl("myfav");
+    }
 }

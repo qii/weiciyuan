@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.userinfo;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -96,6 +97,14 @@ public class MyInfoTimeLineFragment extends Fragment {
         following_number = (Button) view.findViewById(R.id.following_number);
         fans_number = (Button) view.findViewById(R.id.fans_number);
         fav_number = (Button) view.findViewById(R.id.fav_number);
+        fav_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MyFavActivity.class);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
