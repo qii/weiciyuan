@@ -23,7 +23,7 @@ import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
  * User: qii
  * Date: 12-7-30
  */
-public class MyInfoTimeLineFragment extends Fragment {
+public class MyInfoFragment extends Fragment {
 
     private UserBean bean;
 
@@ -38,7 +38,7 @@ public class MyInfoTimeLineFragment extends Fragment {
     protected ICommander commander;
 
 
-    public MyInfoTimeLineFragment() {
+    public MyInfoFragment() {
         super();
     }
 

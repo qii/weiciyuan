@@ -267,7 +267,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             list.add(new FriendsTimeLineFragment());
             list.add(new MentionsTimeLineFragment());
             list.add(new CommentsTimeLineFragment());
-            // list.add(new MyInfoTimeLineFragment());
+            // list.add(new MyInfoFragment());
         }
 
         @Override
