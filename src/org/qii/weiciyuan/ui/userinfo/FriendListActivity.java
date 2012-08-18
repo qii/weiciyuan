@@ -35,7 +35,7 @@ public class FriendListActivity extends AbstractAppActivity implements IUserInfo
         token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new FriendsListFragment(token, bean.getId()))
+                .replace(android.R.id.content, new FriendsListFragment(bean.getId()))
                 .commit();
 
     }

@@ -35,7 +35,7 @@ public class FanListActivity extends AbstractAppActivity implements IUserInfo,
         token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new FanListFragment(token, bean.getId()))
+                .replace(android.R.id.content, new FanListFragment(bean.getId()))
                 .commit();
 
     }
