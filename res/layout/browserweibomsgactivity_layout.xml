@@ -48,7 +48,7 @@
                 android:textColor="@drawable/listview_item_text_selector"
                 android:layout_below="@id/first"
 
-                />
+                android:autoLink="phone|email|web"/>
 
         <FrameLayout
 
@@ -81,7 +81,7 @@
                         android:text="content"
                         android:textColor="@drawable/listview_item_text_selector"
                         android:visibility="gone"
-                        />
+                        android:autoLink="phone|email|web"/>
                 <ImageView
 
                         android:id="@+id/repost_content_pic"
