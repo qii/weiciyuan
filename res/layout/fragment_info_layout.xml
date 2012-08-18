@@ -31,6 +31,7 @@
                         android:gravity="left"
                         android:id="@+id/username"/>
                 <TextView
+
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
                         android:layout_width="match_parent"
