@@ -23,7 +23,6 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:text="New Text"
                     android:gravity="center_vertical"
                     android:id="@+id/username"/>
         </LinearLayout>
@@ -37,7 +36,7 @@
                     android:paddingLeft="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/location" />
+                    android:id="@+id/location"/>
             <TextView
                     android:padding="5dp"
                     android:layout_width="match_parent"
@@ -47,7 +46,6 @@
                     android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="这是简介这是简介这是简介这是简介这是简介这是简介这是简介"
                     android:id="@+id/textView_info"/>
         </LinearLayout>
         <LinearLayout

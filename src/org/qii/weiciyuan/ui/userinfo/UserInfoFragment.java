@@ -21,8 +21,7 @@ import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 /**
  * User: Jiang Qi
  * Date: 12-8-14
- * Time: 下午3:19
- */
+  */
 public class UserInfoFragment extends android.app.Fragment {
 
     private UserBean bean;
