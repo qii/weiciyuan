@@ -7,37 +7,47 @@
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:padding="5dp">
+            android:padding="8dp">
 
         <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" android:layout_gravity="right|center_vertical">
+                android:layout_height="wrap_content" android:layout_gravity="right|center_vertical"
+                android:orientation="horizontal">
             <ImageView
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:background="@drawable/app"
                     android:id="@+id/avatar"/>
-            <TextView
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:id="@+id/username"/>
+            <LinearLayout android:layout_height="match_parent"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:orientation="vertical"
+                          android:gravity="center_vertical">
+                <TextView
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:id="@+id/username"/>
+                <TextView
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:id="@+id/location"/>
+            </LinearLayout>
+
         </LinearLayout>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 >
+
             <TextView
                     android:paddingTop="10dp"
-                    android:paddingLeft="5dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/location"/>
-            <TextView
                     android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
