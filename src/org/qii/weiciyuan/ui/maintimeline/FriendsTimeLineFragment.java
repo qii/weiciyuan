@@ -15,12 +15,14 @@ import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
+import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
+import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
 import java.util.Map;
 import java.util.Set;
@@ -134,6 +136,12 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
                 if (!isBusying) {
                     refresh();
                 }
+                break;
+            case R.id.friendstimelinefragment_name:
+                intent = new Intent(getActivity(), MyInfoActivity.class);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("user", ((IUserInfo) getActivity()).getUser());
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);

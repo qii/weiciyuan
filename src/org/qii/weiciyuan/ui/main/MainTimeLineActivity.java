@@ -130,12 +130,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;
-            case R.id.menu_myinfo:
-                intent = new Intent(this, MyInfoActivity.class);
-                intent.putExtra("token",token);
-                intent.putExtra("user",getUser());
-                startActivity(intent);
-                break;
+
             case R.id.menu_setting:
                 startActivity(new Intent(this, SettingActivity.class));
                 break;

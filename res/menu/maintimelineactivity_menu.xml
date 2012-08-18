@@ -6,9 +6,7 @@
     <item android:id="@+id/menu_search"
           android:title="@string/search"
             />
-    <item android:id="@+id/menu_myinfo"
-          android:title="@string/info"
-            />
+
     <item android:id="@+id/menu_setting"
           android:title="@string/setting"
             />
