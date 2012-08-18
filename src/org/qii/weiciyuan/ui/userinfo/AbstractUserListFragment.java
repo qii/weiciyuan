@@ -40,6 +40,18 @@ public abstract class AbstractUserListFragment extends Fragment {
     protected UserListBean bean = new UserListBean();
     protected String uid;
 
+    private UserListGetNewDataTask newTask;
+    private UserListGetOlderDataTask oldTask;
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (newTask != null)
+            newTask.cancel(true);
+        if (oldTask != null)
+            oldTask.cancel(true);
+    }
+
     public AbstractUserListFragment(String uid) {
         this.uid = uid;
     }
@@ -116,7 +128,8 @@ public abstract class AbstractUserListFragment extends Fragment {
 
     protected void listViewFooterViewClick(View view) {
         if (!isBusying) {
-            new UserListGetOlderDataTask().execute();
+            oldTask = new UserListGetOlderDataTask();
+            oldTask.execute();
         }
     }
 
@@ -149,7 +162,8 @@ public abstract class AbstractUserListFragment extends Fragment {
         Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
 
 
-        new UserListGetNewDataTask().execute();
+        newTask = new UserListGetNewDataTask();
+        newTask.execute();
         Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
         for (String key : keys) {
             avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
@@ -160,24 +174,24 @@ public abstract class AbstractUserListFragment extends Fragment {
     }
 
     @Override
-       public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-           super.onCreateOptionsMenu(menu, inflater);
-           inflater.inflate(R.menu.userlistfragment_menu, menu);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.userlistfragment_menu, menu);
 
-       }
+    }
 
-       @Override
-       public boolean onOptionsItemSelected(MenuItem item) {
-           switch (item.getItemId()) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
 
-               case R.id.refresh:
+            case R.id.refresh:
 
-                   refresh();
+                refresh();
 
-                   break;
-           }
-           return super.onOptionsItemSelected(item);
-       }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     static class ViewHolder {
         TextView username;
