@@ -88,7 +88,7 @@ public class MyInfoTimeLineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_info_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_myinfo_layout, container, false);
         avatar = (ImageView) view.findViewById(R.id.avatar);
         username = (TextView) view.findViewById(R.id.username);
         info = (TextView) view.findViewById(R.id.textView_info);
