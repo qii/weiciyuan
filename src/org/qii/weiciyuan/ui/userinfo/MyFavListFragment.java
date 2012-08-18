@@ -15,7 +15,6 @@ import org.qii.weiciyuan.bean.FavBean;
 import org.qii.weiciyuan.bean.FavListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.fav.FavListDao;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -29,9 +28,8 @@ import java.util.Set;
 /**
  * User: qii
  * Date: 12-8-18
- * Time: 上午10:30
  */
-public class FavListFragment extends Fragment {
+public class MyFavListFragment extends Fragment {
     protected View headerView;
     protected View footerView;
     public volatile boolean isBusying = false;
@@ -41,6 +39,7 @@ public class FavListFragment extends Fragment {
     protected ProgressBar progressBar;
     protected TimeLineAdapter timeLineAdapter;
     protected FavListBean bean = new FavListBean();
+    private String page = "1";
 
     public FavListBean getList() {
         return bean;
@@ -208,7 +207,7 @@ public class FavListFragment extends Fragment {
             if (!TextUtils.isEmpty(image_url)) {
                 downloadAvatar(holder.avatar, user.getProfile_image_url(), position, listView);
             }
-            holder.time.setVisibility(View.GONE);
+            holder.time.setText(getList().getFavorites().get(position).getStatus().getCreated_at());
             holder.content.setText(getList().getFavorites().get(position).getStatus().getText());
 
         }
@@ -261,7 +260,7 @@ public class FavListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.repostsbyidtimelinefragment_menu, menu);
+        inflater.inflate(R.menu.myfavlistfragment_menu, menu);
 
     }
 
@@ -269,7 +268,7 @@ public class FavListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.repostsbyidtimelinefragment_repost_refresh:
+            case R.id.myfavlistfragment_refresh:
 
                 refresh();
 
@@ -302,7 +301,7 @@ public class FavListFragment extends Fragment {
         @Override
         protected FavListBean doInBackground(Void... params) {
 
-            FavListDao dao = new FavListDao(((IToken) getActivity()).getToken());
+            FavListDao dao = new FavListDao(((IToken) getActivity()).getToken()).setPage(page);
 
 
             FavListBean result = dao.getGSONMsgList();
@@ -314,21 +313,11 @@ public class FavListFragment extends Fragment {
         @Override
         protected void onPostExecute(FavListBean newValue) {
             if (newValue != null) {
-                if (newValue.getFavorites().size() == 0) {
-                    Toast.makeText(getActivity(), "no new message", Toast.LENGTH_SHORT).show();
+                bean = newValue;
+                timeLineAdapter.notifyDataSetChanged();
+                listView.setSelectionAfterHeaderView();
+                headerView.findViewById(R.id.header_progress).clearAnimation();
 
-                } else {
-                    Toast.makeText(getActivity(), "total " + newValue.getFavorites().size() + " new messages", Toast.LENGTH_SHORT).show();
-                    if (newValue.getFavorites().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                        newValue.getFavorites().addAll(getList().getFavorites());
-                    }
-
-                    bean = newValue;
-                    timeLineAdapter.notifyDataSetChanged();
-                    listView.setSelectionAfterHeaderView();
-                    headerView.findViewById(R.id.header_progress).clearAnimation();
-
-                }
             }
             headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
@@ -338,6 +327,8 @@ public class FavListFragment extends Fragment {
             } else {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             }
+
+            page = "1";
 
             super.onPostExecute(newValue);
 
@@ -367,8 +358,8 @@ public class FavListFragment extends Fragment {
 
         @Override
         protected FavListBean doInBackground(Void... params) {
-
-            FavListDao dao = new FavListDao(((IToken) getActivity()).getToken());
+            page += 1;
+            FavListDao dao = new FavListDao(((IToken) getActivity()).getToken()).setPage(page);
 
             FavListBean result = dao.getGSONMsgList();
 
@@ -379,14 +370,12 @@ public class FavListFragment extends Fragment {
         @Override
         protected void onPostExecute(FavListBean newValue) {
             if (newValue != null && newValue.getFavorites().size() > 1) {
-                Toast.makeText(getActivity(), "total " + newValue.getFavorites().size() + " old messages", Toast.LENGTH_SHORT).show();
                 List<FavBean> list = newValue.getFavorites();
                 getList().getFavorites().addAll(list.subList(1, list.size() - 1));
-
             }
 
             isBusying = false;
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("click to load older message");
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.click_to_load_older_message));
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
