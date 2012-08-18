@@ -30,9 +30,21 @@
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                >
             <TextView
-                    android:padding="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/location" />
+            <TextView
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/blog_url" android:autoLink="web"/>
+            <TextView
+                    android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="这是简介这是简介这是简介这是简介这是简介这是简介这是简介"

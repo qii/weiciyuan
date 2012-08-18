@@ -30,6 +30,8 @@ public class UserInfoFragment extends android.app.Fragment {
     private ImageView avatar;
     private TextView username;
     private TextView info;
+    private TextView blog_url;
+    private TextView location;
     private Button weibo_number;
     private Button following_number;
     private Button fans_number;
@@ -76,7 +78,13 @@ public class UserInfoFragment extends android.app.Fragment {
         if (!TextUtils.isEmpty(avatarUrl)) {
             new SimpleBitmapWorkerTask(avatar).execute(avatarUrl);
         }
+        if (!TextUtils.isEmpty(bean.getUrl())) {
 
+            blog_url.setText(bean.getUrl());
+        } else {
+            blog_url.setVisibility(View.GONE);
+        }
+        location.setText(bean.getLocation());
         setTextViewNum(weibo_number, bean.getStatuses_count());
         setTextViewNum(fans_number, bean.getFollowers_count());
         setTextViewNum(following_number, bean.getFriends_count());
@@ -91,6 +99,8 @@ public class UserInfoFragment extends android.app.Fragment {
         avatar = (ImageView) view.findViewById(R.id.avatar);
         username = (TextView) view.findViewById(R.id.username);
         info = (TextView) view.findViewById(R.id.textView_info);
+        blog_url = (TextView) view.findViewById(R.id.blog_url);
+        location = (TextView) view.findViewById(R.id.location);
         weibo_number = (Button) view.findViewById(R.id.weibo_number);
         following_number = (Button) view.findViewById(R.id.following_number);
         fans_number = (Button) view.findViewById(R.id.fans_number);
@@ -171,6 +181,7 @@ public class UserInfoFragment extends android.app.Fragment {
             setValue();
             super.onPostExecute(o);
         }
+
     }
 
     private void setTextViewNum(TextView tv, String num) {
