@@ -25,6 +25,7 @@
     <string name="old_messages">条旧消息</string>
     <string name="loading">载入中……</string>
     <string name="click_to_load_older_message">点击载入旧消息</string>
+    <string name="more">载入更多</string>
     <string name="message_list">消息列表</string>
     <string name="message_number">微博消息</string>
     <string name="following_number">关注</string>

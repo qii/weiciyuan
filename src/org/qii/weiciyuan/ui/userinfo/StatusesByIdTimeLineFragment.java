@@ -12,13 +12,13 @@ import android.view.animation.RotateAnimation;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.bean.RepostListBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.WeiboMsgBean;
-import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
+import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 
@@ -29,7 +29,6 @@ import java.util.Set;
 /**
  * User: Jiang Qi
  * Date: 12-8-16
- * Time: 下午12:31
  */
 public class StatusesByIdTimeLineFragment extends Fragment {
 
@@ -42,6 +41,7 @@ public class StatusesByIdTimeLineFragment extends Fragment {
     protected ProgressBar progressBar;
     protected TimeLineAdapter timeLineAdapter;
     protected MessageListBean bean = new MessageListBean();
+    private UserBean userBean = new UserBean();
 
     public MessageListBean getList() {
         return bean;
@@ -85,31 +85,14 @@ public class StatusesByIdTimeLineFragment extends Fragment {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
-            new SimpleTask().execute();
+            refresh();
 
         }
+
+        userBean = ((IUserInfo) getActivity()).getUser();
 
     }
 
-    private class SimpleTask extends AsyncTask<Object, Object, Object> {
-
-        @Override
-        protected Object doInBackground(Object... params) {
-            MessageListBean newValue = new StatusesTimeLineDao(token, uid).getGSONMsgList();
-            if (newValue != null) {
-                bean = newValue;
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(bean);
-            super.onPostExecute(o);
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -266,7 +249,8 @@ public class StatusesByIdTimeLineFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.statusesbyidtimelinefragment_menu, menu);
-
+        String number = bean.getStatuses().size() + "/" + userBean.getStatuses_count();
+        menu.findItem(R.id.statusesbyidtimelinefragment_status_number).setTitle(number);
     }
 
     @Override
@@ -320,21 +304,16 @@ public class StatusesByIdTimeLineFragment extends Fragment {
         @Override
         protected void onPostExecute(MessageListBean newValue) {
             if (newValue != null) {
-                if (newValue.getStatuses().size() == 0) {
-                    Toast.makeText(getActivity(), "no new message", Toast.LENGTH_SHORT).show();
 
-                } else {
-                    Toast.makeText(getActivity(), "total " + newValue.getStatuses().size() + " new messages", Toast.LENGTH_SHORT).show();
-                    if (newValue.getStatuses().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                        newValue.getStatuses().addAll(getList().getStatuses());
-                    }
-
-                    bean = newValue;
-                    timeLineAdapter.notifyDataSetChanged();
-                    listView.setSelectionAfterHeaderView();
-                    headerView.findViewById(R.id.header_progress).clearAnimation();
-
+                if (newValue.getStatuses().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                    newValue.getStatuses().addAll(getList().getStatuses());
                 }
+
+                bean = newValue;
+                timeLineAdapter.notifyDataSetChanged();
+                listView.setSelectionAfterHeaderView();
+                headerView.findViewById(R.id.header_progress).clearAnimation();
+
             }
             headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
@@ -345,19 +324,21 @@ public class StatusesByIdTimeLineFragment extends Fragment {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             }
 
+            getActivity().invalidateOptionsMenu();
+
             super.onPostExecute(newValue);
 
         }
     }
 
 
-    class FriendsTimeLineGetOlderMsgListTask extends AsyncTask<Void, RepostListBean, RepostListBean> {
+    class FriendsTimeLineGetOlderMsgListTask extends AsyncTask<Void, MessageListBean, MessageListBean> {
         @Override
         protected void onPreExecute() {
             showListView();
             isBusying = true;
 
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("loading");
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
             View view = footerView.findViewById(R.id.refresh);
             view.setVisibility(View.VISIBLE);
 
@@ -372,33 +353,33 @@ public class StatusesByIdTimeLineFragment extends Fragment {
         }
 
         @Override
-        protected RepostListBean doInBackground(Void... params) {
+        protected MessageListBean doInBackground(Void... params) {
 
-            RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, uid);
+            StatusesTimeLineDao dao = new StatusesTimeLineDao(token, uid);
             if (getList().getStatuses().size() > 0) {
                 dao.setMax_id(getList().getStatuses().get(getList().getStatuses().size() - 1).getId());
             }
-            RepostListBean result = dao.getGSONMsgList();
+            MessageListBean result = dao.getGSONMsgList();
 
             return result;
 
         }
 
         @Override
-        protected void onPostExecute(RepostListBean newValue) {
-            if (newValue != null && newValue.getReposts().size() > 1) {
-                Toast.makeText(getActivity(), "total " + newValue.getReposts().size() + " old messages", Toast.LENGTH_SHORT).show();
-                List<WeiboMsgBean> list = newValue.getReposts();
+        protected void onPostExecute(MessageListBean olderValue) {
+            if (olderValue != null && olderValue.getStatuses().size() > 1) {
+                List<WeiboMsgBean> list = olderValue.getStatuses();
                 getList().getStatuses().addAll(list.subList(1, list.size() - 1));
 
             }
 
             isBusying = false;
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("click to load older message");
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
-            super.onPostExecute(newValue);
+            getActivity().invalidateOptionsMenu();
+            super.onPostExecute(olderValue);
         }
     }
 
