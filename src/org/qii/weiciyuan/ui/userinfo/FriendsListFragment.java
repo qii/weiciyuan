@@ -2,7 +2,6 @@ package org.qii.weiciyuan.ui.userinfo;
 
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.user.FriendListDao;
@@ -20,7 +19,12 @@ public class FriendsListFragment extends AbstractUserListFragment {
     }
 
 
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        String number = bean.getUsers().size() + "/" + currentUser.getFriends_count();
+        menu.findItem(R.id.statusesbyidtimelinefragment_status_number).setTitle(number);
+    }
 
 
     @Override

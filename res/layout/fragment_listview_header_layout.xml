@@ -16,7 +16,7 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="45dp"
-            android:text="refreshing"
+            android:text="@string/refreshing"
             android:visibility="gone"
             android:id="@+id/header_text" android:gravity="center"/>
 </LinearLayout>

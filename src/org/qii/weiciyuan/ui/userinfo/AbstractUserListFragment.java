@@ -17,6 +17,7 @@ import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     protected TextView empty;
     protected ProgressBar progressBar;
     protected BaseAdapter timeLineAdapter;
+    protected UserBean currentUser;
     protected UserListBean bean = new UserListBean();
     protected String uid;
 
@@ -60,6 +62,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
+        currentUser = ((IUserInfo) getActivity()).getUser();
         if (savedInstanceState != null && bean.getUsers().size() == 0) {
             bean = (UserListBean) savedInstanceState.getSerializable("bean");
             timeLineAdapter.notifyDataSetChanged();
@@ -177,6 +180,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.userlistfragment_menu, menu);
+
 
     }
 
@@ -296,10 +300,9 @@ public abstract class AbstractUserListFragment extends Fragment {
         protected void onPostExecute(UserListBean newValue) {
             if (newValue != null) {
                 if (newValue.getUsers().size() == 0) {
-                    Toast.makeText(getActivity(), "no new message", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Toast.makeText(getActivity(), "total " + newValue.getUsers().size() + " new messages", Toast.LENGTH_SHORT).show();
+
                     if (newValue.getUsers().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
                         newValue.getUsers().addAll(getList().getUsers());
                     }
@@ -319,7 +322,7 @@ public abstract class AbstractUserListFragment extends Fragment {
             } else {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             }
-
+            getActivity().invalidateOptionsMenu();
             super.onPostExecute(newValue);
 
         }
@@ -339,7 +342,7 @@ public abstract class AbstractUserListFragment extends Fragment {
             showListView();
             isBusying = true;
 
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("loading");
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
             View view = footerView.findViewById(R.id.refresh);
             view.setVisibility(View.VISIBLE);
 
@@ -364,17 +367,17 @@ public abstract class AbstractUserListFragment extends Fragment {
         @Override
         protected void onPostExecute(UserListBean newValue) {
             if (newValue != null && newValue.getUsers().size() > 1) {
-                Toast.makeText(getActivity(), "total " + newValue.getUsers().size() + " old messages", Toast.LENGTH_SHORT).show();
                 List<UserBean> list = newValue.getUsers();
                 getList().getUsers().addAll(list.subList(1, list.size() - 1));
 
             }
 
             isBusying = false;
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("click to load older message");
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
+            getActivity().invalidateOptionsMenu();
             super.onPostExecute(newValue);
         }
     }
@@ -382,4 +385,6 @@ public abstract class AbstractUserListFragment extends Fragment {
     protected abstract UserListBean getDoInBackgroundNewData();
 
     protected abstract UserListBean getDoInBackgroundOldData();
+
+
 }

@@ -1,5 +1,8 @@
 package org.qii.weiciyuan.ui.userinfo;
 
+import android.view.Menu;
+import android.view.MenuInflater;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.user.FanListDao;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -14,6 +17,12 @@ public class FanListFragment extends AbstractUserListFragment {
         super(uid);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        String number = bean.getUsers().size() + "/" + currentUser.getFollowers_count();
+        menu.findItem(R.id.statusesbyidtimelinefragment_status_number).setTitle(number);
+    }
 
     @Override
     protected UserListBean getDoInBackgroundNewData() {
