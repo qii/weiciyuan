@@ -88,7 +88,7 @@ public class RepostNewActivity extends AbstractAppActivity {
 
             String content = et.getText().toString();
             if (TextUtils.isEmpty(content)) {
-                content = "repost";
+                content = getString(R.string.repost);
             }
 
             RepostNewMsgDao dao = new RepostNewMsgDao(token, id);
