@@ -18,6 +18,7 @@ import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.send.RepostNewActivity;
@@ -275,6 +276,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), RepostNewActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("id", id);
+                intent.putExtra("msg", ((IWeiboMsgInfo) getActivity()).getMsg());
                 startActivity(intent);
                 break;
 

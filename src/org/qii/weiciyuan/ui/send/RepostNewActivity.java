@@ -17,7 +17,6 @@ import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 /**
  * User: Jiang Qi
  * Date: 12-8-2
- * Time: 下午4:00
  */
 public class RepostNewActivity extends AbstractAppActivity {
 
@@ -26,6 +25,8 @@ public class RepostNewActivity extends AbstractAppActivity {
     private String token;
 
     private EditText et = null;
+
+    private WeiboMsgBean msg;
 
 
     @Override
@@ -36,6 +37,7 @@ public class RepostNewActivity extends AbstractAppActivity {
 
         token = getIntent().getStringExtra("token");
         id = getIntent().getStringExtra("id");
+        msg = (WeiboMsgBean) getIntent().getSerializableExtra("msg");
         getActionBar().setTitle(getString(R.string.repost));
 
         et = ((EditText) findViewById(R.id.status_new_content));
@@ -90,7 +92,7 @@ public class RepostNewActivity extends AbstractAppActivity {
             }
 
             RepostNewMsgDao dao = new RepostNewMsgDao(token, id);
-            dao.setStatus(content);
+            dao.setStatus(content + "//@"+msg.getUser().getScreen_name()+":"+msg.getText());
             return dao.sendNewMsg();
         }
 
@@ -99,9 +101,9 @@ public class RepostNewActivity extends AbstractAppActivity {
             progressFragment.dismissAllowingStateLoss();
             if (s != null) {
                 finish();
-                Toast.makeText(RepostNewActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RepostNewActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(RepostNewActivity.this, "failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RepostNewActivity.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
             }
             super.onPostExecute(s);
 

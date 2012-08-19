@@ -17,7 +17,6 @@ import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 /**
  * User: Jiang Qi
  * Date: 12-8-2
- * Time: 下午4:00
  */
 public class CommentNewActivity extends AbstractAppActivity {
 
@@ -54,7 +53,7 @@ public class CommentNewActivity extends AbstractAppActivity {
                 if (!TextUtils.isEmpty(content)) {
                     new SimpleTask().execute();
                 } else {
-                    Toast.makeText(this, "comment can't be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.comment_cant_be_empty), Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -96,9 +95,9 @@ public class CommentNewActivity extends AbstractAppActivity {
             progressFragment.dismissAllowingStateLoss();
             if (s != null) {
                 finish();
-                Toast.makeText(CommentNewActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CommentNewActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(CommentNewActivity.this, "failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CommentNewActivity.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
             }
             super.onPostExecute(s);
 

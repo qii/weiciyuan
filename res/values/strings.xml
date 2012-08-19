@@ -42,7 +42,9 @@
 
     <!--new activity -->
     <string name="write_weibo">发消息</string>
-
+    <string name="comment_cant_be_empty">评论不能为空</string>
+    <string name="send_successfully">发送成功</string>
+    <string name="send_failed">发送失败</string>
 
     <!--accountactivity_layout-->
     <string name="you_cancel_login">你取消了授权</string>

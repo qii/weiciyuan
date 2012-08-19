@@ -188,6 +188,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
                 intent = new Intent(this, BrowserRepostAndCommentListActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("id", msg.getId());
+                intent.putExtra("msg", msg);
                 intent.putExtra("tabindex", 0);
                 startActivity(intent);
                 return true;
@@ -195,6 +196,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
                 intent = new Intent(this, BrowserRepostAndCommentListActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("id", msg.getId());
+                intent.putExtra("msg", msg);
                 intent.putExtra("tabindex", 1);
                 startActivity(intent);
                 return true;
@@ -208,6 +210,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
 
     class UpdateMsgTask extends AsyncTask<Void, Void, WeiboMsgBean> {
