@@ -4,14 +4,21 @@
 
     <item android:id="@+id/commentsbyidtimelinefragment_comment"
           android:icon="@drawable/comment"
-          android:title="@string/repost"
+          android:title="@string/comments"
+          android:showAsAction="ifRoom|withText"
+            />
+
+    <item android:id="@+id/commentsbyidtimelinefragment_search"
+          android:icon="@drawable/search"
+          android:title="@string/search"
           android:showAsAction="ifRoom|withText"
             />
 
     <item android:id="@+id/commentsbyidtimelinefragment_refresh"
           android:icon="@drawable/refresh"
-          android:title="refresh"
+          android:title="@string/refresh"
           android:showAsAction="ifRoom|withText"
             />
+
 
 </menu>

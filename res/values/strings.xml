@@ -5,6 +5,9 @@
     <string name="detail">详细</string>
     <string name="weibo">微博</string>
 
+    <!-- listview-->
+    <string name="empty">空</string>
+
     <!--button -->
     <string name="close">关闭</string>
     <string name="big_pic">原图</string>

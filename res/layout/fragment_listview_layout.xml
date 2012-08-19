@@ -27,7 +27,7 @@
                   android:visibility="gone"
                   android:gravity="center"
                   android:id="@+id/empty"
-                  android:text="empty"/>
+                  android:text="@string/empty"/>
         <ProgressBar android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:layout_gravity="center"
