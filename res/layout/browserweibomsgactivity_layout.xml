@@ -47,7 +47,6 @@
                 android:text="content"
                 android:textColor="@drawable/listview_item_text_selector"
                 android:layout_below="@id/first"
-
                 android:autoLink="phone|email|web"/>
 
         <FrameLayout
@@ -66,7 +65,8 @@
                     android:clickable="true"
                     />
             <LinearLayout
-
+                    android:id="@+id/repost_layout"
+                    android:clickable="true"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
