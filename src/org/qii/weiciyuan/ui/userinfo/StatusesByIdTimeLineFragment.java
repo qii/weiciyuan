@@ -21,6 +21,8 @@ import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 
 import java.util.List;
 import java.util.Map;
@@ -139,76 +141,218 @@ public class StatusesByIdTimeLineFragment extends Fragment {
         return view;
     }
 
+//    protected class TimeLineAdapter extends BaseAdapter {
+//
+//        LayoutInflater inflater = getActivity().getLayoutInflater();
+//
+//        @Override
+//        public int getCount() {
+//
+//            if (getList() != null && getList().getStatuses() != null) {
+//                return getList().getStatuses().size();
+//            } else {
+//                return 0;
+//            }
+//        }
+//
+//        @Override
+//        public Object getItem(int position) {
+//            return getList().getStatuses().get(position);
+//        }
+//
+//        @Override
+//        public long getItemId(int position) {
+//            return 0;
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//
+//            ViewHolder holder;
+//            if (convertView == null) {
+//                holder = new ViewHolder();
+//                convertView = inflater.inflate(R.layout.fragment_listview_item_comments_layout, parent, false);
+//                holder.username = (TextView) convertView.findViewById(R.id.username);
+//                holder.content = (TextView) convertView.findViewById(R.id.content);
+//                holder.time = (TextView) convertView.findViewById(R.id.time);
+//                holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
+//                convertView.setTag(holder);
+//            } else {
+//                holder = (ViewHolder) convertView.getTag();
+//            }
+//
+//            bindViewData(holder, position);
+//
+//
+//            return convertView;
+//        }
+//
+//        private void bindViewData(ViewHolder holder, int position) {
+//
+//            WeiboMsgBean msg = getList().getStatuses().get(position);
+//
+//
+//            holder.username.setText(msg.getUser().getScreen_name());
+//            String image_url = msg.getUser().getProfile_image_url();
+//            if (!TextUtils.isEmpty(image_url)) {
+//                downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
+//            }
+//            holder.time.setText(msg.getCreated_at());
+//            holder.content.setText(msg.getText());
+//
+//        }
+//
+//    }
+//
+//    static class ViewHolder {
+//        TextView username;
+//        TextView content;
+//        TextView time;
+//        ImageView avatar;
+//
+//    }
+
     protected class TimeLineAdapter extends BaseAdapter {
 
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+          LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        @Override
-        public int getCount() {
+          @Override
+          public int getCount() {
 
-            if (getList() != null && getList().getStatuses() != null) {
-                return getList().getStatuses().size();
-            } else {
-                return 0;
-            }
-        }
+              if (getList() != null && getList().getStatuses() != null) {
+                  return getList().getStatuses().size();
+              } else {
+                  return 0;
+              }
+          }
 
-        @Override
-        public Object getItem(int position) {
-            return getList().getStatuses().get(position);
-        }
+          @Override
+          public Object getItem(int position) {
+              return getList().getStatuses().get(position);
+          }
 
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
+          @Override
+          public long getItemId(int position) {
+              return 0;
+          }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+          @Override
+          public View getView(int position, View convertView, ViewGroup parent) {
 
-            ViewHolder holder;
-            if (convertView == null) {
-                holder = new ViewHolder();
-                convertView = inflater.inflate(R.layout.fragment_listview_item_comments_layout, parent, false);
-                holder.username = (TextView) convertView.findViewById(R.id.username);
-                holder.content = (TextView) convertView.findViewById(R.id.content);
-                holder.time = (TextView) convertView.findViewById(R.id.time);
-                holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
+              ViewHolder holder;
+              if (convertView == null) {
+                  holder = new ViewHolder();
+                  convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
+                  holder.username = (TextView) convertView.findViewById(R.id.username);
+                  holder.content = (TextView) convertView.findViewById(R.id.content);
+                  holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
+                  holder.time = (TextView) convertView.findViewById(R.id.time);
+                  holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
+                  holder.content_pic = (ImageView) convertView.findViewById(R.id.content_pic);
+                  holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
+                  convertView.setTag(holder);
+              } else {
+                  holder = (ViewHolder) convertView.getTag();
+              }
 
-            bindViewData(holder, position);
-
-
-            return convertView;
-        }
-
-        private void bindViewData(ViewHolder holder, int position) {
-
-            WeiboMsgBean msg = getList().getStatuses().get(position);
+              bindViewData(holder, position);
 
 
-            holder.username.setText(msg.getUser().getScreen_name());
-            String image_url = msg.getUser().getProfile_image_url();
-            if (!TextUtils.isEmpty(image_url)) {
-                downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
-            }
-            holder.time.setText(msg.getCreated_at());
-            holder.content.setText(msg.getText());
+              return convertView;
+          }
 
-        }
+          private void bindViewData(ViewHolder holder, int position) {
 
-    }
+              final WeiboMsgBean msg = getList().getStatuses().get(position);
+              WeiboMsgBean repost_msg = msg.getRetweeted_status();
 
-    static class ViewHolder {
-        TextView username;
-        TextView content;
-        TextView time;
-        ImageView avatar;
 
-    }
+              holder.username.setText(msg.getUser().getScreen_name());
+              String image_url = msg.getUser().getProfile_image_url();
+              if (!TextUtils.isEmpty(image_url)) {
+                  downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
+              }
+
+              holder.content.setText(msg.getText());
+
+              if (!TextUtils.isEmpty(msg.getListviewItemShowTime())) {
+                  holder.time.setText(msg.getListviewItemShowTime());
+              } else {
+                  holder.time.setText(msg.getCreated_at());
+              }
+
+
+              holder.repost_content.setVisibility(View.GONE);
+              holder.repost_content_pic.setVisibility(View.GONE);
+              holder.content_pic.setVisibility(View.GONE);
+
+              if (repost_msg != null) {
+                  buildRepostContent(repost_msg, holder, position);
+              } else if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
+                  buildContentPic(msg, holder, position);
+              }
+
+              holder.avatar.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                      intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
+                      intent.putExtra("user", msg.getUser());
+                      startActivity(intent);
+                  }
+              });
+          }
+
+          private void buildRepostContent(final WeiboMsgBean repost_msg, ViewHolder holder, int position) {
+              holder.repost_content.setVisibility(View.VISIBLE);
+              if (repost_msg.getUser() != null) {
+                  holder.repost_content.setText(repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
+              } else {
+                  holder.repost_content.setText(repost_msg.getText());
+
+              }
+              if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
+                  holder.repost_content_pic.setVisibility(View.VISIBLE);
+                  downContentPic(holder.repost_content_pic, repost_msg.getThumbnail_pic(), position, listView);
+                  holder.repost_content_pic.setOnClickListener(new View.OnClickListener() {
+                      @Override
+                      public void onClick(View v) {
+                          PictureDialogFragment progressFragment = new PictureDialogFragment(repost_msg);
+                          progressFragment.show(getActivity().getFragmentManager(), "");
+                      }
+                  });
+              }
+          }
+
+          private void buildContentPic(final WeiboMsgBean msg, ViewHolder holder, int position) {
+              final String main_thumbnail_pic_url = msg.getThumbnail_pic();
+              holder.content_pic.setVisibility(View.VISIBLE);
+              downContentPic(holder.content_pic, main_thumbnail_pic_url, position, listView);
+              holder.content_pic.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                      PictureDialogFragment progressFragment = new PictureDialogFragment(msg);
+                      progressFragment.show(getActivity().getFragmentManager(), "");
+                  }
+              });
+          }
+      }
+
+      static class ViewHolder {
+          TextView username;
+          TextView content;
+          TextView repost_content;
+          TextView time;
+          ImageView avatar;
+          ImageView content_pic;
+          ImageView repost_content_pic;
+      }
+
+
+
+      protected void downContentPic(ImageView view, String url, int position, ListView listView) {
+          commander.downContentPic(view, url, position, listView);
+      }
 
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
