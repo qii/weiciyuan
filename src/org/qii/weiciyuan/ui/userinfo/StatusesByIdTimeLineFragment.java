@@ -1,27 +1,22 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.app.Fragment;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.*;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
-import android.widget.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
+import org.qii.weiciyuan.ui.maintimeline.AbstractTimeLineFragment;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,22 +24,12 @@ import java.util.Set;
  * User: Jiang Qi
  * Date: 12-8-16
  */
-public class StatusesByIdTimeLineFragment extends Fragment {
+public class StatusesByIdTimeLineFragment extends AbstractTimeLineFragment {
 
-    protected View headerView;
-    protected View footerView;
-    public volatile boolean isBusying = false;
-    protected ICommander commander;
-    protected ListView listView;
-    protected TextView empty;
-    protected ProgressBar progressBar;
-    protected BaseAdapter timeLineAdapter;
-    protected MessageListBean bean = new MessageListBean();
+
     private UserBean userBean = new UserBean();
 
-    public MessageListBean getList() {
-        return bean;
-    }
+
 
     private String token;
     private String uid;
@@ -60,20 +45,6 @@ public class StatusesByIdTimeLineFragment extends Fragment {
         outState.putSerializable("bean", bean);
     }
 
-
-    protected void refreshLayout(MessageListBean bean) {
-        if (bean.getStatuses().size() > 0) {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            empty.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-            listView.setVisibility(View.VISIBLE);
-        } else {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
-            empty.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-            listView.setVisibility(View.INVISIBLE);
-        }
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -101,44 +72,6 @@ public class StatusesByIdTimeLineFragment extends Fragment {
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
-        empty = (TextView) view.findViewById(R.id.empty);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
-        listView = (ListView) view.findViewById(R.id.listView);
-        listView.setScrollingCacheEnabled(false);
-        headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
-        listView.addHeaderView(headerView);
-        listView.setHeaderDividersEnabled(false);
-        footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
-        listView.addFooterView(footerView);
-
-        if (bean.getStatuses().size() == 0) {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-        }
-
-
-        timeLineAdapter = new StatusesListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList(), listView);
-        listView.setAdapter(timeLineAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                if (position - 1 < getList().getStatuses().size()) {
-
-                    listViewItemClick(parent, view, position - 1, id);
-                } else {
-
-                    listViewFooterViewClick(view);
-                }
-            }
-        });
-        return view;
-    }
-
-
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("token", token);
@@ -149,7 +82,7 @@ public class StatusesByIdTimeLineFragment extends Fragment {
 
     protected void listViewFooterViewClick(View view) {
         if (!isBusying) {
-            new FriendsTimeLineGetOlderMsgListTask().execute();
+            new TimeLineGetOlderMsgListTask().execute();
         }
     }
 
@@ -158,7 +91,7 @@ public class StatusesByIdTimeLineFragment extends Fragment {
         Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
 
 
-        new FriendsTimeLineGetNewMsgListTask().execute();
+        new TimeLineGetNewMsgListTask().execute();
         Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
         for (String key : keys) {
             avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
@@ -191,127 +124,38 @@ public class StatusesByIdTimeLineFragment extends Fragment {
     }
 
 
-    class FriendsTimeLineGetNewMsgListTask extends AsyncTask<Void, MessageListBean, MessageListBean> {
+    @Override
+    protected MessageListBean getDoInBackgroundNewData() {
+        StatusesTimeLineDao dao = new StatusesTimeLineDao(token, uid);
 
-        @Override
-        protected void onPreExecute() {
-            showListView();
-            isBusying = true;
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
-            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
-            Animation rotateAnimation = new RotateAnimation(0f, 360f,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotateAnimation.setDuration(1000);
-            rotateAnimation.setRepeatCount(-1);
-            rotateAnimation.setRepeatMode(Animation.RESTART);
-            rotateAnimation.setInterpolator(new LinearInterpolator());
-            headerView.findViewById(R.id.header_progress).startAnimation(rotateAnimation);
-            listView.setSelection(0);
+        if (getList().getStatuses().size() > 0) {
+            dao.setSince_id(getList().getStatuses().get(0).getId());
         }
+        MessageListBean result = dao.getGSONMsgList();
 
-
-        @Override
-        protected MessageListBean doInBackground(Void... params) {
-
-            StatusesTimeLineDao dao = new StatusesTimeLineDao(token, uid);
-
-            if (getList().getStatuses().size() > 0) {
-                dao.setSince_id(getList().getStatuses().get(0).getId());
-            }
-            MessageListBean result = dao.getGSONMsgList();
-
-            return result;
-
-        }
-
-        @Override
-        protected void onPostExecute(MessageListBean newValue) {
-            if (newValue != null) {
-
-                if (newValue.getStatuses().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                    newValue.getStatuses().addAll(getList().getStatuses());
-                }
-
-                bean.getStatuses().clear();
-                bean.getStatuses().addAll(newValue.getStatuses());
-                timeLineAdapter.notifyDataSetChanged();
-                listView.setSelectionAfterHeaderView();
-                headerView.findViewById(R.id.header_progress).clearAnimation();
-
-            }
-            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
-            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
-            isBusying = false;
-            if (bean.getStatuses().size() == 0) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            } else {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            }
-
-            getActivity().invalidateOptionsMenu();
-
-            super.onPostExecute(newValue);
-
-        }
+        return result;
     }
 
-
-    class FriendsTimeLineGetOlderMsgListTask extends AsyncTask<Void, MessageListBean, MessageListBean> {
-        @Override
-        protected void onPreExecute() {
-            showListView();
-            isBusying = true;
-
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
-            View view = footerView.findViewById(R.id.refresh);
-            view.setVisibility(View.VISIBLE);
-
-            Animation rotateAnimation = new RotateAnimation(0f, 360f,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotateAnimation.setDuration(1000);
-            rotateAnimation.setRepeatCount(-1);
-            rotateAnimation.setRepeatMode(Animation.RESTART);
-            rotateAnimation.setInterpolator(new LinearInterpolator());
-            view.startAnimation(rotateAnimation);
-
+    @Override
+    protected MessageListBean getDoInBackgroundOldData() {
+        StatusesTimeLineDao dao = new StatusesTimeLineDao(token, uid);
+        if (getList().getStatuses().size() > 0) {
+            dao.setMax_id(getList().getStatuses().get(getList().getStatuses().size() - 1).getId());
         }
+        MessageListBean result = dao.getGSONMsgList();
 
-        @Override
-        protected MessageListBean doInBackground(Void... params) {
-
-            StatusesTimeLineDao dao = new StatusesTimeLineDao(token, uid);
-            if (getList().getStatuses().size() > 0) {
-                dao.setMax_id(getList().getStatuses().get(getList().getStatuses().size() - 1).getId());
-            }
-            MessageListBean result = dao.getGSONMsgList();
-
-            return result;
-
-        }
-
-        @Override
-        protected void onPostExecute(MessageListBean olderValue) {
-            if (olderValue != null && olderValue.getStatuses().size() > 1) {
-                List<WeiboMsgBean> list = olderValue.getStatuses();
-                getList().getStatuses().addAll(list.subList(1, list.size() - 1));
-
-            }
-
-            isBusying = false;
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
-            footerView.findViewById(R.id.refresh).clearAnimation();
-            footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
-            timeLineAdapter.notifyDataSetChanged();
-            getActivity().invalidateOptionsMenu();
-            super.onPostExecute(olderValue);
-        }
+        return result;
     }
 
-    private void showListView() {
-        empty.setVisibility(View.INVISIBLE);
-        listView.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
+    @Override
+    protected void afterGetNewMsg() {
+        getActivity().invalidateOptionsMenu();
+    }
+
+    @Override
+    protected void afterGetOldMsg() {
+        getActivity().invalidateOptionsMenu();
     }
 }
+
 

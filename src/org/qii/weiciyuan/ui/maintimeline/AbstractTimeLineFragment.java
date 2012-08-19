@@ -48,13 +48,6 @@ public abstract class AbstractTimeLineFragment extends Fragment {
 
     protected abstract void listViewFooterViewClick(View view);
 
-    protected void downloadAvatar(ImageView view, String url, int position, ListView listView) {
-        commander.downloadAvatar(view, url, position, listView);
-    }
-
-    protected void downContentPic(ImageView view, String url, int position, ListView listView) {
-        commander.downContentPic(view, url, position, listView);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,7 +118,7 @@ public abstract class AbstractTimeLineFragment extends Fragment {
 
     protected abstract MessageListBean getDoInBackgroundNewData();
 
-    protected class TimeLineGetNewMsgListTask extends AsyncTask<Object, MessageListBean, MessageListBean> {
+    public class TimeLineGetNewMsgListTask extends AsyncTask<Object, MessageListBean, MessageListBean> {
 
 
         @Override
@@ -189,8 +182,12 @@ public abstract class AbstractTimeLineFragment extends Fragment {
 
     }
 
+    protected void afterGetOldMsg() {
 
-    class TimeLineGetOlderMsgListTask extends AsyncTask<Object, MessageListBean, MessageListBean> {
+    }
+
+
+    public class TimeLineGetOlderMsgListTask extends AsyncTask<Object, MessageListBean, MessageListBean> {
 
         @Override
         protected void onPreExecute() {
@@ -233,7 +230,7 @@ public abstract class AbstractTimeLineFragment extends Fragment {
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
-
+            afterGetOldMsg();
             super.onPostExecute(newValue);
         }
     }
