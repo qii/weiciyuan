@@ -68,6 +68,9 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             empty.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             listView.setVisibility(View.VISIBLE);
+            if (bean.getComments().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+            }
         } else {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
             empty.setVisibility(View.VISIBLE);
@@ -397,11 +400,14 @@ public class CommentsByIdTimeLineFragment extends Fragment {
                 Toast.makeText(getActivity(), "total " + newValue.getComments().size() + " old messages", Toast.LENGTH_SHORT).show();
                 List<CommentBean> list = newValue.getComments();
                 getList().getComments().addAll(list.subList(1, list.size() - 1));
+                ((TextView) footerView.findViewById(R.id.listview_footer)).setText("click to load older message");
+
+            } else {
+                ((TextView) footerView.findViewById(R.id.listview_footer)).setVisibility(View.GONE);
 
             }
 
             isBusying = false;
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("click to load older message");
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
