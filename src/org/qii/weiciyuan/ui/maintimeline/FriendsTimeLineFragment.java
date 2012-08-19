@@ -47,7 +47,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         super.onActivityCreated(savedInstanceState);
         ((MainTimeLineActivity) getActivity()).setHomeListView(listView);
         if (savedInstanceState != null) {
-            bean = (MessageListBean) savedInstanceState.getSerializable("bean");
+            clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
 
             refreshLayout(bean);
@@ -63,7 +63,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
         @Override
         protected Object doInBackground(Object... params) {
-            bean = DatabaseManager.getInstance().getHomeLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid());
+            clearAndReplaceValue(DatabaseManager.getInstance().getHomeLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid()));
             return null;
         }
 

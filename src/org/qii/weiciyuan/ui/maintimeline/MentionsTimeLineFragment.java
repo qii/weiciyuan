@@ -27,7 +27,6 @@ import java.util.Set;
 /**
  * User: qii
  * Date: 12-7-29
- * Time: 上午12:52
  */
 public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
 
@@ -42,9 +41,8 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
         super.onActivityCreated(savedInstanceState);
         ((MainTimeLineActivity) getActivity()).setMentionsListView(listView);
         if (savedInstanceState != null) {
-            bean = (MessageListBean) savedInstanceState.getSerializable("bean");
+            clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
-
             refreshLayout(bean);
 
         } else {
@@ -57,7 +55,7 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
 
         @Override
         protected Object doInBackground(Object... params) {
-            bean = DatabaseManager.getInstance().getRepostLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid());
+            clearAndReplaceValue(DatabaseManager.getInstance().getRepostLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid()));
             return null;
         }
 
@@ -113,8 +111,6 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.mentionstimelinefragment_menu, menu);
-        menu.add("weibo dont have messages group api");
-
     }
 
     @Override

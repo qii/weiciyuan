@@ -1,10 +1,8 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +12,10 @@ import android.view.animation.RotateAnimation;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
-import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
-import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
+import org.qii.weiciyuan.ui.userinfo.StatusesListAdapter;
 
 /**
  * User: qii
@@ -32,7 +27,7 @@ public abstract class AbstractTimeLineFragment extends Fragment {
     protected ProgressBar progressBar;
 
 
-    protected TimeLineAdapter timeLineAdapter;
+    protected BaseAdapter timeLineAdapter;
     protected MessageListBean bean = new MessageListBean();
     protected View headerView;
     protected View footerView;
@@ -44,6 +39,10 @@ public abstract class AbstractTimeLineFragment extends Fragment {
         return bean;
     }
 
+    protected void clearAndReplaceValue(MessageListBean value) {
+        bean.getStatuses().clear();
+        bean.getStatuses().addAll(value.getStatuses());
+    }
 
     protected abstract void listViewItemClick(AdapterView parent, View view, int position, long id);
 
@@ -90,7 +89,8 @@ public abstract class AbstractTimeLineFragment extends Fragment {
         }
 
 
-        timeLineAdapter = new TimeLineAdapter();
+        timeLineAdapter = new StatusesListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList(), listView);
+
         listView.setAdapter(timeLineAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -122,141 +122,6 @@ public abstract class AbstractTimeLineFragment extends Fragment {
         }
     }
 
-    protected class TimeLineAdapter extends BaseAdapter {
-
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        @Override
-        public int getCount() {
-
-            if (getList() != null && getList().getStatuses() != null) {
-                return getList().getStatuses().size();
-            } else {
-                return 0;
-            }
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return getList().getStatuses().get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder;
-            if (convertView == null) {
-                holder = new ViewHolder();
-                convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
-                holder.username = (TextView) convertView.findViewById(R.id.username);
-                holder.content = (TextView) convertView.findViewById(R.id.content);
-                holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
-                holder.time = (TextView) convertView.findViewById(R.id.time);
-                holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
-                holder.content_pic = (ImageView) convertView.findViewById(R.id.content_pic);
-                holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            bindViewData(holder, position);
-
-
-            return convertView;
-        }
-
-        private void bindViewData(ViewHolder holder, int position) {
-
-            final WeiboMsgBean msg = getList().getStatuses().get(position);
-            WeiboMsgBean repost_msg = msg.getRetweeted_status();
-
-
-            holder.username.setText(msg.getUser().getScreen_name());
-            String image_url = msg.getUser().getProfile_image_url();
-            if (!TextUtils.isEmpty(image_url)) {
-                downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
-            }
-
-            holder.content.setText(msg.getText());
-
-            if (!TextUtils.isEmpty(msg.getListviewItemShowTime())) {
-                holder.time.setText(msg.getListviewItemShowTime());
-            } else {
-                holder.time.setText(msg.getCreated_at());
-            }
-
-
-            holder.repost_content.setVisibility(View.GONE);
-            holder.repost_content_pic.setVisibility(View.GONE);
-            holder.content_pic.setVisibility(View.GONE);
-
-            if (repost_msg != null) {
-                buildRepostContent(repost_msg, holder, position);
-            } else if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
-                buildContentPic(msg, holder, position);
-            }
-
-            holder.avatar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                    intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
-                    intent.putExtra("user", msg.getUser());
-                    startActivity(intent);
-                }
-            });
-        }
-
-        private void buildRepostContent(final WeiboMsgBean repost_msg, ViewHolder holder, int position) {
-            holder.repost_content.setVisibility(View.VISIBLE);
-            if (repost_msg.getUser() != null) {
-                holder.repost_content.setText(repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
-            } else {
-                holder.repost_content.setText(repost_msg.getText());
-
-            }
-            if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
-                holder.repost_content_pic.setVisibility(View.VISIBLE);
-                downContentPic(holder.repost_content_pic, repost_msg.getThumbnail_pic(), position, listView);
-                holder.repost_content_pic.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        PictureDialogFragment progressFragment = new PictureDialogFragment(repost_msg);
-                        progressFragment.show(getActivity().getFragmentManager(), "");
-                    }
-                });
-            }
-        }
-
-        private void buildContentPic(final WeiboMsgBean msg, ViewHolder holder, int position) {
-            final String main_thumbnail_pic_url = msg.getThumbnail_pic();
-            holder.content_pic.setVisibility(View.VISIBLE);
-            downContentPic(holder.content_pic, main_thumbnail_pic_url, position, listView);
-            holder.content_pic.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PictureDialogFragment progressFragment = new PictureDialogFragment(msg);
-                    progressFragment.show(getActivity().getFragmentManager(), "");
-                }
-            });
-        }
-    }
-
-    static class ViewHolder {
-        TextView username;
-        TextView content;
-        TextView repost_content;
-        TextView time;
-        ImageView avatar;
-        ImageView content_pic;
-        ImageView repost_content_pic;
-    }
 
     protected abstract MessageListBean getDoInBackgroundNewData();
 
@@ -292,21 +157,19 @@ public abstract class AbstractTimeLineFragment extends Fragment {
             if (newValue != null) {
                 if (newValue.getStatuses().size() == 0) {
                     Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
-
-                } else {
+                } else if (newValue.getStatuses().size() > 0) {
                     Toast.makeText(getActivity(), getString(R.string.total) + newValue.getStatuses().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
                     if (newValue.getStatuses().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                        //for speed, add old data after new data
                         newValue.getStatuses().addAll(getList().getStatuses());
                     }
-
-                    bean = newValue;
+                    clearAndReplaceValue(newValue);
                     timeLineAdapter.notifyDataSetChanged();
                     listView.setSelectionAfterHeaderView();
-                    headerView.findViewById(R.id.header_progress).clearAnimation();
-
 
                 }
             }
+            headerView.findViewById(R.id.header_progress).clearAnimation();
             headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
             isBusying = false;
