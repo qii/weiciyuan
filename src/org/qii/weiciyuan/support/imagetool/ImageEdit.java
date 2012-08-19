@@ -5,8 +5,7 @@ import android.graphics.*;
 /**
  * User: Jiang Qi
  * Date: 12-8-14
- * Time: 上午10:37
- */
+  */
 public class ImageEdit {
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
@@ -17,7 +16,7 @@ public class ImageEdit {
         final Paint paint = new Paint();
         final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
         final RectF rectF = new RectF(rect);
-        final float roundPx = 12;
+        final float roundPx = 5;
 
         paint.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);
