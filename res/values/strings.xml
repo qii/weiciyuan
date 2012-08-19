@@ -31,6 +31,8 @@
     <string name="fan_number">粉丝</string>
     <string name="following_list">关注列表</string>
     <string name="fan_list">粉丝列表</string>
+    <string name="topic_number">话题</string>
+    <string name="topic_list">话题列表</string>
 
     <!--maintimelineactivity_layout -->
     <string name="home">首页</string>
