@@ -21,6 +21,18 @@ public final class GlobalContext extends Application {
 
     private LruCache<String, Bitmap> avatarCache;
 
+    //for userinfo and topic
+
+    public String getSpecialToken() {
+        return specialToken;
+    }
+
+    public void setSpecialToken(String specialToken) {
+        this.specialToken = specialToken;
+    }
+
+    private String specialToken="";
+
     public LruCache<String, Bitmap> getAvatarCache() {
         return avatarCache;
     }

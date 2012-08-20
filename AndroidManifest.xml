@@ -51,7 +51,13 @@
         <activity android:name=".ui.browser.BrowserRepostAndCommentListActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.userinfo.UserInfoActivity"
-                  android:uiOptions="splitActionBarWhenNarrow"/>
+                  android:uiOptions="splitActionBarWhenNarrow">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <data android:scheme="org.qii.weiciyuan"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.userinfo.MyInfoActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.userinfo.UserInfoStatusesActivity"

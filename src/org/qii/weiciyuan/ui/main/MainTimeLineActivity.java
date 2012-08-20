@@ -14,6 +14,7 @@ import android.widget.ListView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -23,7 +24,6 @@ import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsTimeLineFragment;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
-import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +71,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         Intent intent = getIntent();
         accountBean = (AccountBean) intent.getSerializableExtra("account");
         token = accountBean.getAccess_token();
-
+        GlobalContext.getInstance().setSpecialToken(token);
         buildViewPager();
         buildActionBarAndViewPagerTitles();
         buildTabTitle(getIntent());

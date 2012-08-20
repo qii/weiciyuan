@@ -21,7 +21,7 @@ import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 /**
  * User: Jiang Qi
  * Date: 12-8-14
-  */
+ */
 public class UserInfoFragment extends android.app.Fragment {
 
     private UserBean bean;
@@ -66,7 +66,7 @@ public class UserInfoFragment extends android.app.Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        // new SimpleTask().execute();
+        new SimpleTask().execute();
     }
 
     private void setValue() {
@@ -164,8 +164,19 @@ public class UserInfoFragment extends android.app.Fragment {
 
         @Override
         protected UserBean doInBackground(Object... params) {
-            UserBean user = new ShowUserDao(((IToken) getActivity()).getToken())
-                    .setUid(bean.getId()).getUserInfo();
+            ShowUserDao dao = new ShowUserDao(((IToken) getActivity()).getToken());
+            boolean haveId = !TextUtils.isEmpty(bean.getId());
+            boolean haveName = !TextUtils.isEmpty(bean.getScreen_name());
+            if (haveId) {
+                dao.setUid(bean.getId());
+            } else if (haveName) {
+                dao.setScreen_name(bean.getScreen_name());
+            } else {
+                cancel(true);
+                return null;
+            }
+
+            UserBean user = dao.getUserInfo();
             if (user != null) {
                 bean = user;
             } else {

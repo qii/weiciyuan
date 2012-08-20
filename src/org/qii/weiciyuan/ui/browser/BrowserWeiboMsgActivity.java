@@ -20,7 +20,11 @@ import org.qii.weiciyuan.dao.show.ShowStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.support.lib.MyLinkify;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * User: Jiang Qi
@@ -128,6 +132,8 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
             avatarTask.execute(msg.getUser().getProfile_image_url());
         }
         content.setText(msg.getText());
+        setTextViewLink(content);
+
         time.setText(msg.getCreated_at());
 
         comment_sum = msg.getComments_count();
@@ -139,7 +145,9 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         if (retweetMsg != null) {
             recontent.setVisibility(View.VISIBLE);
             if (retweetMsg.getUser() != null) {
-                recontent.setText(retweetMsg.getUser().getScreen_name() + "：" + retweetMsg.getText());
+                recontent.setText("@" + retweetMsg.getUser().getScreen_name() + "：" + retweetMsg.getText());
+                setTextViewLink(recontent);
+
             } else {
                 recontent.setText(retweetMsg.getText());
 
@@ -169,6 +177,19 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         }
 
 
+    }
+
+    private void setTextViewLink(TextView view) {
+        MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
+            public final String transformUrl(final Matcher match, String url) {
+                return match.group(1);
+            }
+        };
+
+        // Match @mentions and capture just the username portion of the text.
+        Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)");
+        String scheme = "org.qii.weiciyuan://";
+        MyLinkify.addLinks(view, pattern, scheme, null, mentionFilter);
     }
 
     @Override
