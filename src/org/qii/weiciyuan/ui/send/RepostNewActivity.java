@@ -92,13 +92,14 @@ public class RepostNewActivity extends AbstractAppActivity {
             }
 
             RepostNewMsgDao dao = new RepostNewMsgDao(token, id);
-            dao.setStatus(content + "//@"+msg.getUser().getScreen_name()+":"+msg.getText());
+            dao.setStatus(content + "//@" + msg.getUser().getScreen_name() + ":" + msg.getText());
             return dao.sendNewMsg();
         }
 
         @Override
         protected void onPostExecute(WeiboMsgBean s) {
-            progressFragment.dismissAllowingStateLoss();
+            if (progressFragment.isVisible())
+                progressFragment.dismissAllowingStateLoss();
             if (s != null) {
                 finish();
                 Toast.makeText(RepostNewActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
