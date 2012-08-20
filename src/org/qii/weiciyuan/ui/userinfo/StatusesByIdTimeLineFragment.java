@@ -82,7 +82,8 @@ public class StatusesByIdTimeLineFragment extends AbstractTimeLineFragment {
 
     protected void listViewFooterViewClick(View view) {
         if (!isBusying) {
-            new TimeLineGetOlderMsgListTask().execute();
+            oldTask = new TimeLineGetOlderMsgListTask();
+            oldTask.execute();
         }
     }
 
@@ -91,7 +92,8 @@ public class StatusesByIdTimeLineFragment extends AbstractTimeLineFragment {
         Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
 
 
-        new TimeLineGetNewMsgListTask().execute();
+        newTask = new TimeLineGetNewMsgListTask();
+        newTask.execute();
         Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
         for (String key : keys) {
             avatarBitmapWorkerTaskHashMap.get(key).cancel(true);

@@ -34,6 +34,19 @@ public abstract class AbstractTimeLineFragment extends Fragment {
     public volatile boolean isBusying = false;
     protected ICommander commander;
 
+    protected TimeLineGetNewMsgListTask newTask;
+    protected TimeLineGetOlderMsgListTask oldTask;
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (newTask != null)
+            newTask.cancel(true);
+
+        if (oldTask != null)
+            oldTask.cancel(true);
+
+    }
 
     public MessageListBean getList() {
         return bean;
@@ -162,6 +175,18 @@ public abstract class AbstractTimeLineFragment extends Fragment {
 
                 }
             }
+            cleanWork();
+            afterGetNewMsg();
+            super.onPostExecute(newValue);
+        }
+
+        @Override
+        protected void onCancelled(MessageListBean messageListBean) {
+            super.onCancelled(messageListBean);
+            cleanWork();
+        }
+
+        private void cleanWork() {
             headerView.findViewById(R.id.header_progress).clearAnimation();
             headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
@@ -171,8 +196,6 @@ public abstract class AbstractTimeLineFragment extends Fragment {
             } else {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             }
-            afterGetNewMsg();
-            super.onPostExecute(newValue);
         }
     }
 
@@ -225,13 +248,24 @@ public abstract class AbstractTimeLineFragment extends Fragment {
 
             }
 
+            cleanWork();
+            afterGetOldMsg();
+            super.onPostExecute(newValue);
+        }
+
+        @Override
+        protected void onCancelled(MessageListBean messageListBean) {
+            super.onCancelled(messageListBean);
+            cleanWork();
+
+        }
+
+        private void cleanWork() {
             isBusying = false;
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.click_to_load_older_message));
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
-            afterGetOldMsg();
-            super.onPostExecute(newValue);
         }
     }
 
