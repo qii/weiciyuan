@@ -210,8 +210,12 @@ public class UserInfoFragment extends android.app.Fragment {
     }
 
     private void setTextViewNum(TextView tv, String num) {
+        if (TextUtils.isEmpty(num)) {
+            return;
+        }
 
         String name = tv.getText().toString();
+
         String value = "(" + num + ")";
         if (!name.endsWith(")")) {
             tv.setText(name + value);
