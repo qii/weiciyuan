@@ -37,6 +37,8 @@ public class UserInfoFragment extends android.app.Fragment {
 
     protected ICommander commander;
 
+    private SimpleTask task;
+
 
     public UserInfoFragment() {
         super();
@@ -55,6 +57,13 @@ public class UserInfoFragment extends android.app.Fragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        if (task != null)
+            task.cancel(true);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         bean = ((IUserInfo) getActivity()).getUser();
@@ -66,7 +75,8 @@ public class UserInfoFragment extends android.app.Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        new SimpleTask().execute();
+        task = new SimpleTask();
+        task.execute();
     }
 
     private void setValue() {
@@ -152,7 +162,8 @@ public class UserInfoFragment extends android.app.Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                new SimpleTask().execute();
+                task = new SimpleTask();
+                task.execute();
                 break;
 
 
@@ -164,25 +175,29 @@ public class UserInfoFragment extends android.app.Fragment {
 
         @Override
         protected UserBean doInBackground(Object... params) {
-            ShowUserDao dao = new ShowUserDao(((IToken) getActivity()).getToken());
-            boolean haveId = !TextUtils.isEmpty(bean.getId());
-            boolean haveName = !TextUtils.isEmpty(bean.getScreen_name());
-            if (haveId) {
-                dao.setUid(bean.getId());
-            } else if (haveName) {
-                dao.setScreen_name(bean.getScreen_name());
+            if (!isCancelled()) {
+                ShowUserDao dao = new ShowUserDao(((IToken) getActivity()).getToken());
+                boolean haveId = !TextUtils.isEmpty(bean.getId());
+                boolean haveName = !TextUtils.isEmpty(bean.getScreen_name());
+                if (haveId) {
+                    dao.setUid(bean.getId());
+                } else if (haveName) {
+                    dao.setScreen_name(bean.getScreen_name());
+                } else {
+                    cancel(true);
+                    return null;
+                }
+
+                UserBean user = dao.getUserInfo();
+                if (user != null) {
+                    bean = user;
+                } else {
+                    cancel(true);
+                }
+                return user;
             } else {
-                cancel(true);
                 return null;
             }
-
-            UserBean user = dao.getUserInfo();
-            if (user != null) {
-                bean = user;
-            } else {
-                cancel(true);
-            }
-            return user;
         }
 
         @Override
