@@ -1,9 +1,9 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.*;
 import android.view.animation.Animation;
@@ -62,7 +62,6 @@ public abstract class AbstractUserListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
-        currentUser = ((IUserInfo) getActivity()).getUser();
         if (savedInstanceState != null && bean.getUsers().size() == 0) {
             bean = (UserListBean) savedInstanceState.getSerializable("bean");
             timeLineAdapter.notifyDataSetChanged();
@@ -78,6 +77,8 @@ public abstract class AbstractUserListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        currentUser = ((IUserInfo) getActivity()).getUser();
+
         setHasOptionsMenu(true);
         setRetainInstance(true);
     }

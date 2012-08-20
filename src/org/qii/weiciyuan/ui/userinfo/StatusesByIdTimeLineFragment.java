@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.userinfo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,7 +29,6 @@ public class StatusesByIdTimeLineFragment extends AbstractTimeLineFragment {
 
 
     private UserBean userBean = new UserBean();
-
 
 
     private String token;
@@ -59,13 +59,13 @@ public class StatusesByIdTimeLineFragment extends AbstractTimeLineFragment {
 
         }
 
-        userBean = ((IUserInfo) getActivity()).getUser();
 
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        userBean = ((IUserInfo) getActivity()).getUser();
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
@@ -106,8 +106,10 @@ public class StatusesByIdTimeLineFragment extends AbstractTimeLineFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.statusesbyidtimelinefragment_menu, menu);
-        String number = bean.getStatuses().size() + "/" + userBean.getStatuses_count();
-        menu.findItem(R.id.statusesbyidtimelinefragment_status_number).setTitle(number);
+        if (!TextUtils.isEmpty(userBean.getStatuses_count())) {
+            String number = bean.getStatuses().size() + "/" + userBean.getStatuses_count();
+            menu.findItem(R.id.statusesbyidtimelinefragment_status_number).setTitle(number);
+        }
     }
 
     @Override

@@ -147,7 +147,7 @@ public abstract class AbstractTimeLineFragment extends Fragment {
 
         @Override
         protected void onPostExecute(MessageListBean newValue) {
-            if (newValue != null) {
+            if (newValue != null && getActivity() != null) {
                 if (newValue.getStatuses().size() == 0) {
                     Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
                 } else if (newValue.getStatuses().size() > 0) {
