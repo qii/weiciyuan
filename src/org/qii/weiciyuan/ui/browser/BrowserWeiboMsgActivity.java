@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
@@ -95,14 +94,21 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         content_pic.setOnClickListener(picOnClickListener);
         repost_pic.setOnClickListener(picOnClickListener);
 
-        LinearLayout repost_layout = (LinearLayout) findViewById(R.id.repost_layout);
-        repost_layout.setOnClickListener(new View.OnClickListener() {
+//        LinearLayout repost_layout = (LinearLayout) findViewById(R.id.repost_layout);
+        recontent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BrowserWeiboMsgActivity.this, BrowserWeiboMsgActivity.class);
-                intent.putExtra("token", token);
-                intent.putExtra("msg", retweetMsg);
-                startActivity(intent);
+
+                if (recontent.getSelectionStart() == -1 && recontent.getSelectionEnd() == -1) {
+                    //This condition will satisfy only when it is not an autolinked text
+                    //onClick action
+
+                    Intent intent = new Intent(BrowserWeiboMsgActivity.this, BrowserWeiboMsgActivity.class);
+                    intent.putExtra("token", token);
+                    intent.putExtra("msg", retweetMsg);
+                    startActivity(intent);
+                }
+
             }
         });
     }
@@ -210,7 +216,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 
     class UpdateMsgTask extends AsyncTask<Void, Void, WeiboMsgBean> {
