@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.userinfo;
 
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import org.qii.weiciyuan.R;
@@ -20,8 +21,10 @@ public class FanListFragment extends AbstractUserListFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        String number = bean.getUsers().size() + "/" + currentUser.getFollowers_count();
-        menu.findItem(R.id.statusesbyidtimelinefragment_status_number).setTitle(number);
+        if (!TextUtils.isEmpty(currentUser.getFollowers_count())) {
+            String number = bean.getUsers().size() + "/" + currentUser.getFollowers_count();
+            menu.findItem(R.id.statusesbyidtimelinefragment_status_number).setTitle(number);
+        }
     }
 
     @Override
