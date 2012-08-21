@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.othercomponent;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -17,6 +18,8 @@ public class PhotoUploadService extends Service {
     private String picPath;
     private String content;
 
+    private Notification notification;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -28,6 +31,13 @@ public class PhotoUploadService extends Service {
         token = intent.getStringExtra("token");
         picPath = intent.getStringExtra("picPath");
         content = intent.getStringExtra("content");
+
+        Notification.Builder builder = new Notification.Builder(PhotoUploadService.this)
+                .setTicker(getString(R.string.send_photo))
+                .setContentTitle(getString(R.string.background_sending))
+                .setProgress(100, 100, true)
+                .setSmallIcon(R.drawable.app);
+        notification = builder.getNotification();
 
         new UploadTask().execute();
 
@@ -41,7 +51,7 @@ public class PhotoUploadService extends Service {
         protected void onPreExecute() {
             super.onPreExecute();
             Toast.makeText(PhotoUploadService.this, getString(R.string.background_sending), Toast.LENGTH_SHORT).show();
-
+            startForeground(1, notification);
         }
 
         @Override
@@ -63,6 +73,7 @@ public class PhotoUploadService extends Service {
         protected void onCancelled(Void aVoid) {
             super.onCancelled(aVoid);
             Toast.makeText(PhotoUploadService.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
+            stopForeground(true);
             stopSelf();
         }
     }

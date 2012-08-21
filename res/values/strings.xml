@@ -50,7 +50,7 @@
     <string name="send_successfully">发送成功</string>
     <string name="send_failed">发送失败</string>
     <string name="background_sending">后台发送中</string>
-
+    <string name="send_photo">发送照片</string>
     <!--accountactivity_layout-->
     <string name="you_cancel_login">你取消了授权</string>
     <string name="login_success">授权成功</string>
