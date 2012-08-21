@@ -13,6 +13,7 @@ import org.qii.weiciyuan.support.utils.AppLogger;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public class FileUploaderHttpHelper {
             String value = param.get(key);
             if (!TextUtils.isEmpty(value)) {
                 try {
-                    mpEntity.addPart(key, new StringBody(value));
+                    mpEntity.addPart(key, new StringBody(value, Charset.forName("utf-8")));
                 } catch (UnsupportedEncodingException e) {
                     AppLogger.e(e.getMessage());
                     return false;

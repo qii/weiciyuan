@@ -35,8 +35,9 @@ public class PhotoUploadService extends Service {
         Notification.Builder builder = new Notification.Builder(PhotoUploadService.this)
                 .setTicker(getString(R.string.send_photo))
                 .setContentTitle(getString(R.string.background_sending))
+                .setContentText(content)
                 .setProgress(100, 100, true)
-                .setSmallIcon(R.drawable.app);
+                .setSmallIcon(R.drawable.upload);
         notification = builder.getNotification();
 
         new UploadTask().execute();
