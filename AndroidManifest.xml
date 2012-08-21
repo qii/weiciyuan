@@ -72,7 +72,7 @@
                   android:uiOptions="splitActionBarWhenNarrow"/>
 
         <service android:name=".othercomponent.FetchNewMsgService"/>
-
+        <service android:name=".othercomponent.PhotoUploadService"/>
         <receiver android:name=".othercomponent.MentionsAndCommentsReceiver"
                 >
             <intent-filter>

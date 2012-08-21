@@ -7,48 +7,66 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
+import org.qii.weiciyuan.othercomponent.PhotoUploadService;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 /**
- * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-7-29
- * Time: 下午2:02
- * To change this template use File | Settings | File Templates.
  */
 public class StatusNewActivity extends AbstractAppActivity implements DialogInterface.OnClickListener {
 
 
+    private ImageView iv;
+    private EditText content;
     private static final int CAMERA_RESULT = 0;
     private static final int PIC_RESULT = 1;
     protected String token = "";
 
-    protected void executeTask(String content) {
-        new StatusNewTask(content).execute();
-    }
+    private String picPath = "";
+
+    private String imageFilePath = "";
+
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
+
         switch (which) {
             case 0:
+
+                imageFilePath = Environment.getExternalStorageDirectory().getAbsolutePath()
+                        + "/myfavoritepicture.jpg";
+                File imageFile = new File(imageFilePath);
+                Uri imageFileUri = Uri.fromFile(imageFile);
                 Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageFileUri);
                 startActivityForResult(i, CAMERA_RESULT);
                 break;
             case 1:
                 Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
                 startActivityForResult(choosePictureIntent, PIC_RESULT);
                 break;
         }
@@ -57,13 +75,33 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        if (resultCode == RESULT_OK) {
-            Bundle extras = intent.getExtras();
-            Bitmap bmp = (Bitmap) extras.get("data");
+        if (requestCode == CAMERA_RESULT) {
+//            Bundle extras = intent.getExtras();
+//            Bitmap bmp = (Bitmap) extras.get("data");
+            BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+            bmpFactoryOptions.inSampleSize = 8;
+            Bitmap bmp = BitmapFactory.decodeFile(imageFilePath, bmpFactoryOptions);
+            iv.setImageBitmap(bmp);
 
-//                imv = (ImageView) findViewById(R.id.ReturnedImageView);
-//                imv.setImageBitmap(bmp);
+            picPath = imageFilePath;
+        } else if (requestCode == PIC_RESULT && resultCode == RESULT_OK) {
+            Uri imageFileUri = intent.getData();
+            BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+            bmpFactoryOptions.inSampleSize = 8;
+            Bitmap bmp = null;
+            try {
+                bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageFileUri), null, bmpFactoryOptions);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+            iv.setImageBitmap(bmp);
 
+            String[] proj = {MediaStore.Images.Media.DATA};
+            Cursor cursor = managedQuery(imageFileUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+
+            picPath = cursor.getString(column_index);
         }
     }
 
@@ -77,6 +115,9 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
+
+        iv = (ImageView) findViewById(R.id.iv);
+        content = ((EditText) findViewById(R.id.status_new_content));
 
     }
 
@@ -104,19 +145,28 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
             case R.id.menu_send:
 
-                final String content = ((EditText) findViewById(R.id.status_new_content)).getText().toString();
-
-                if (!TextUtils.isEmpty(content)) {
-
-
-                    executeTask(content);
-
+                String value = content.getText().toString();
+                if (!TextUtils.isEmpty(value)) {
+                    executeTask(value);
                 }
                 break;
         }
         return true;
     }
 
+    protected void executeTask(String content) {
+
+        if (TextUtils.isEmpty(picPath)) {
+            new StatusNewTask(content).execute();
+        } else {
+            Intent intent = new Intent(StatusNewActivity.this, PhotoUploadService.class);
+            intent.putExtra("token", token);
+            intent.putExtra("picPath", picPath);
+            intent.putExtra("content", content);
+            startService(intent);
+            finish();
+        }
+    }
 
     class StatusNewTask extends AsyncTask<Void, String, String> {
         String content;
@@ -148,15 +198,23 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         @Override
         protected String doInBackground(Void... params) {
-            new StatusNewMsgDao(token).sendNewMsg(content);
+            boolean result = new StatusNewMsgDao(token).sendNewMsg(content);
+
             return null;
+        }
+
+        @Override
+        protected void onCancelled(String s) {
+            super.onCancelled(s);
+            progressFragment.dismissAllowingStateLoss();
+            Toast.makeText(StatusNewActivity.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
         }
 
         @Override
         protected void onPostExecute(String s) {
             progressFragment.dismissAllowingStateLoss();
             finish();
-            Toast.makeText(StatusNewActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(StatusNewActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
             super.onPostExecute(s);
 
         }

@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
+import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
@@ -55,8 +56,8 @@ public class HttpUtility {
 
         //default 2 connections
         httpClient = new DefaultHttpClient(new PoolingClientConnectionManager());
-        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 4000);
-        HttpConnectionParams.setSoTimeout(httpClient.getParams(), 4000);
+        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 8000);
+        HttpConnectionParams.setSoTimeout(httpClient.getParams(), 8000);
 
 
     }
@@ -80,6 +81,10 @@ public class HttpUtility {
 
     public String executeDownloadTask(String url, String path) {
         return doGetSaveFile(url, path);
+    }
+
+    public boolean executeUploadTask(String url, Map<String, String> param, String path) {
+        return FileUploaderHttpHelper.upload(httpClient, url, param, path);
     }
 
     private String doPost(String url, Map<String, String> param) throws WeiboException {
