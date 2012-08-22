@@ -27,7 +27,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="username"
-
                     android:layout_marginLeft="8dp"
                     android:layout_toRightOf="@id/avatar"
                     android:id="@+id/username"/>
@@ -50,8 +49,8 @@
                 android:text="content"
                 android:textSize="17sp"
                 android:lineSpacingMultiplier="1.2"
-                 android:layout_below="@id/first"
-               />
+                android:layout_below="@id/first"
+                />
 
         <FrameLayout
 
@@ -82,7 +81,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="content"
-                         android:visibility="gone"
+                        android:visibility="gone"
                         android:textSize="17sp"
                         android:lineSpacingMultiplier="1.2"
                         />
