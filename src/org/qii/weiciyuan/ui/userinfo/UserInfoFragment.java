@@ -31,6 +31,7 @@ public class UserInfoFragment extends android.app.Fragment {
     private TextView info;
     private TextView blog_url;
     private TextView location;
+    private TextView relationship;
     private Button weibo_number;
     private Button following_number;
     private Button fans_number;
@@ -97,7 +98,12 @@ public class UserInfoFragment extends android.app.Fragment {
         setTextViewNum(weibo_number, bean.getStatuses_count());
         setTextViewNum(fans_number, bean.getFollowers_count());
         setTextViewNum(following_number, bean.getFriends_count());
+        if (bean.isFollow_me()) {
+            relationship.setText(getString(R.string.he_is_following_you));
+        } else {
+            relationship.setText(getString(R.string.he_is_not_following_you));
 
+        }
     }
 
     @Override
@@ -110,6 +116,7 @@ public class UserInfoFragment extends android.app.Fragment {
         info = (TextView) view.findViewById(R.id.textView_info);
         blog_url = (TextView) view.findViewById(R.id.blog_url);
         location = (TextView) view.findViewById(R.id.location);
+        relationship = (TextView) view.findViewById(R.id.relationship);
         weibo_number = (Button) view.findViewById(R.id.weibo_number);
         following_number = (Button) view.findViewById(R.id.following_number);
         fans_number = (Button) view.findViewById(R.id.fans_number);

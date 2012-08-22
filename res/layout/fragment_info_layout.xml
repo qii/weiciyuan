@@ -38,6 +38,14 @@
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:id="@+id/location"/>
+                <TextView
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="@string/he_is_not_following_you"
+                        android:id="@+id/relationship"/>
             </LinearLayout>
 
         </LinearLayout>

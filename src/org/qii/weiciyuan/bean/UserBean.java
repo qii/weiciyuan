@@ -123,12 +123,20 @@ public class UserBean implements Serializable {
         this.created_at = created_at;
     }
 
-    public String getFollowing() {
+    public boolean isFollowing() {
         return following;
     }
 
-    public void setFollowing(String following) {
+    public void setFollowing(boolean following) {
         this.following = following;
+    }
+
+    public boolean isFollow_me() {
+        return follow_me;
+    }
+
+    public void setFollow_me(boolean follow_me) {
+        this.follow_me = follow_me;
     }
 
     public String getAllow_all_act_msg() {
@@ -187,14 +195,6 @@ public class UserBean implements Serializable {
         this.verified_reason = verified_reason;
     }
 
-    public String getFollow_me() {
-        return follow_me;
-    }
-
-    public void setFollow_me(String follow_me) {
-        this.follow_me = follow_me;
-    }
-
     public String getOnline_status() {
         return online_status;
     }
@@ -225,7 +225,7 @@ public class UserBean implements Serializable {
     private String  statuses_count;
     private String favourites_count;
     private String created_at;
-    private String following;
+    private boolean following;
     private String allow_all_act_msg;
     private String remark;
     private String geo_enabled;
@@ -233,7 +233,7 @@ public class UserBean implements Serializable {
     private String allow_all_comment;
     private String avatar_large;
     private String verified_reason;
-    private String follow_me;
+    private boolean follow_me;
     private String online_status;
     private String bi_followers_count;
 
