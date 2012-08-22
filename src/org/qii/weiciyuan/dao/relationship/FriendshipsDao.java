@@ -21,45 +21,22 @@ import java.util.Map;
 public class FriendshipsDao {
 
     public UserBean followIt() throws WeiboException {
-        if (TextUtils.isEmpty(uid) && TextUtils.isEmpty(screen_name)) {
-            AppLogger.e("uid or screen name can't be empty");
-            return null;
-        }
-
         String url = URLHelper.getFollowitUrl();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("access_token", access_token);
-        if (!TextUtils.isEmpty(uid)) {
-            map.put("uid", uid);
-        } else {
-            map.put("screen_name", screen_name);
-        }
-        String jsonData = null;
+        return executeTask(url);
 
-        jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
-
-
-        Gson gson = new Gson();
-
-        UserBean value = null;
-        try {
-            value = gson.fromJson(jsonData, UserBean.class);
-            if (value != null)
-                return value;
-        } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
-            AppLogger.e(e.getMessage());
-        }
-        return null;
     }
 
     public UserBean unFollowIt() throws WeiboException {
+        String url = URLHelper.getUnFollowitUrl();
+        return executeTask(url);
+    }
+
+    private UserBean executeTask(String url) throws WeiboException {
         if (TextUtils.isEmpty(uid) && TextUtils.isEmpty(screen_name)) {
             AppLogger.e("uid or screen name can't be empty");
             return null;
         }
 
-        String url = URLHelper.getUnFollowitUrl();
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         if (!TextUtils.isEmpty(uid)) {
@@ -67,16 +44,9 @@ public class FriendshipsDao {
         } else {
             map.put("screen_name", screen_name);
         }
-        String jsonData = null;
-
-        jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
-
-
-        Gson gson = new Gson();
-
-        UserBean value = null;
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
         try {
-            value = gson.fromJson(jsonData, UserBean.class);
+            UserBean value = new Gson().fromJson(jsonData, UserBean.class);
             if (value != null)
                 return value;
         } catch (JsonSyntaxException e) {
