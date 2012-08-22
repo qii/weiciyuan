@@ -254,9 +254,11 @@ public class UserInfoFragment extends android.app.Fragment {
             isBusying = false;
             if (e != null) {
                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                if (e.getError_code() == ErrorCode.ALREADY_FOLLOWED) {
-                    follow_it.setVisibility(View.GONE);
-                    unfollow_it.setVisibility(View.VISIBLE);
+                switch (e.getError_code()) {
+                    case ErrorCode.ALREADY_FOLLOWED:
+                        follow_it.setVisibility(View.GONE);
+                        unfollow_it.setVisibility(View.VISIBLE);
+                        break;
                 }
 
             }
