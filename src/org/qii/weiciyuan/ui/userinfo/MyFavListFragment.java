@@ -342,7 +342,7 @@ public class MyFavListFragment extends Fragment {
             showListView();
             isBusying = true;
 
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("loading");
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
             View view = footerView.findViewById(R.id.refresh);
             view.setVisibility(View.VISIBLE);
 
@@ -375,7 +375,7 @@ public class MyFavListFragment extends Fragment {
             }
 
             isBusying = false;
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.click_to_load_older_message));
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
