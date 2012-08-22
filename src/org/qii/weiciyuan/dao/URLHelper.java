@@ -74,4 +74,12 @@ public class URLHelper {
     public static String getUnFollowitUrl() {
         return URLManager.getRealUrl("unfollowit");
     }
+
+    public static String getFavitUrl() {
+        return URLManager.getRealUrl("favit");
+    }
+
+    public static String getUnFavitUrl() {
+        return URLManager.getRealUrl("unfavit");
+    }
 }
