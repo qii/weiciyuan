@@ -70,6 +70,12 @@ public abstract class AbstractTimeLineFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        timeLineAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();

@@ -8,6 +8,13 @@
     <!-- listview-->
     <string name="empty">空</string>
 
+    <!-- time -->
+    <string name="month">月前</string>
+    <string name="day">天前</string>
+    <string name="hour">小时前</string>
+    <string name="min">分钟前</string>
+    <string name="justnow">刚才</string>
+
     <!--button -->
     <string name="close">关闭</string>
     <string name="big_pic">原图</string>

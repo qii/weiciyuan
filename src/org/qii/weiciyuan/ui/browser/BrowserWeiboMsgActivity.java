@@ -74,6 +74,12 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         super.onPause();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
     private void buildView() {
         username = (TextView) findViewById(R.id.username);
         content = (TextView) findViewById(R.id.content);

@@ -1,25 +1,30 @@
 package org.qii.weiciyuan.bean;
 
 import android.text.TextUtils;
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
  * User: qii
  * Date: 12-7-29
  */
+
 public class MessageBean implements Serializable {
 
 
     public String getCreated_at() {
         if (!TextUtils.isEmpty(created_at)) {
-            SimpleDateFormat format = new SimpleDateFormat("kk:mm");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+
             return format.format(new Date(created_at));
+
         }
         return "";
-//        return created_at;
     }
 
     public void setCreated_at(String created_at) {
@@ -147,6 +152,43 @@ public class MessageBean implements Serializable {
     }
 
     public String getListviewItemShowTime() {
+
+        if (!TextUtils.isEmpty(created_at)) {
+            Calendar cal = Calendar.getInstance();
+            int nowMonth = cal.get(Calendar.MONTH) + 1;
+            int nowDay = cal.get(Calendar.DAY_OF_MONTH);
+            int nowHour = cal.get(Calendar.HOUR);
+            int nowMinute = cal.get(Calendar.MINUTE);
+            int nowSeconds = cal.get(Calendar.SECOND);
+
+
+            Calendar messageCal = Calendar.getInstance();
+            messageCal.setTime(new Date(created_at));
+            int month = messageCal.get(Calendar.MONTH) + 1;
+            int day = messageCal.get(Calendar.DAY_OF_MONTH);
+            int hour = messageCal.get(Calendar.HOUR);
+            int minute = messageCal.get(Calendar.MINUTE);
+            int seconds = messageCal.get(Calendar.SECOND);
+
+            if (nowMonth > month)
+                return "" + (nowMonth - month) + GlobalContext.getInstance().getString(R.string.month);
+
+            if (nowDay > day)
+                return "" + (nowDay - day) + GlobalContext.getInstance().getString(R.string.day);
+
+            if (nowHour > hour)
+                return "" + (nowHour - hour) + GlobalContext.getInstance().getString(R.string.hour);
+
+            if (nowMinute > minute)
+                return "" + (nowMinute - minute) + GlobalContext.getInstance().getString(R.string.min);
+
+            if (nowMinute == minute)
+                return GlobalContext.getInstance().getString(R.string.justnow);
+
+
+            return "";
+        }
+
         return listviewItemShowTime;
     }
 
