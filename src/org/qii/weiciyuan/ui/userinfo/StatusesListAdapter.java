@@ -90,7 +90,8 @@ public class StatusesListAdapter extends BaseAdapter {
         MessageBean repost_msg = msg.getRetweeted_status();
 
         if (msg.getUser() != null) {
-
+            holder.username.setVisibility(View.VISIBLE);
+            holder.avatar.setVisibility(View.VISIBLE);
             holder.username.setText(msg.getUser().getScreen_name());
             String image_url = msg.getUser().getProfile_image_url();
             if (!TextUtils.isEmpty(image_url)) {
