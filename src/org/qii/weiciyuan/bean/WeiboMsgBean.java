@@ -7,11 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-7-29
- * Time: 下午7:47
- * To change this template use File | Settings | File Templates.
  */
 public class WeiboMsgBean implements Serializable {
 
