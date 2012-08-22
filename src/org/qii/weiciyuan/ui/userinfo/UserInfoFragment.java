@@ -14,6 +14,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
+import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -253,7 +254,7 @@ public class UserInfoFragment extends android.app.Fragment {
             isBusying = false;
             if (e != null) {
                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                if (e.getError_code() == 20506) {
+                if (e.getError_code() == ErrorCode.ALREADY_FOLLOWED) {
                     follow_it.setVisibility(View.GONE);
                     unfollow_it.setVisibility(View.VISIBLE);
                 }
