@@ -53,7 +53,7 @@ public class FriendshipsDao {
         return null;
     }
 
-    public UserBean unFollowIt() {
+    public UserBean unFollowIt() throws WeiboException {
         if (TextUtils.isEmpty(uid) && TextUtils.isEmpty(screen_name)) {
             AppLogger.e("uid or screen name can't be empty");
             return null;
@@ -68,11 +68,9 @@ public class FriendshipsDao {
             map.put("screen_name", screen_name);
         }
         String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
-        } catch (WeiboException e) {
-            AppLogger.e(e.getMessage());
-        }
+
+        jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
+
 
         Gson gson = new Gson();
 

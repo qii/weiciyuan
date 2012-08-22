@@ -272,6 +272,7 @@ public class UserInfoFragment extends android.app.Fragment {
     }
 
     private class UnFollowTask extends AsyncTask<Void, UserBean, UserBean> {
+        WeiboException e;
 
         @Override
         protected UserBean doInBackground(Void... params) {
@@ -284,7 +285,20 @@ public class UserInfoFragment extends android.app.Fragment {
                 dao.setScreen_name(bean.getScreen_name());
             }
 
-            return dao.unFollowIt();
+            try {
+                return dao.unFollowIt();
+            } catch (WeiboException e) {
+                AppLogger.e(e.getError());
+                this.e = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onCancelled(UserBean userBean) {
+            super.onCancelled(userBean);
+            isBusying = false;
         }
 
         @Override
