@@ -2,7 +2,7 @@ package org.qii.weiciyuan.dao.show;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
@@ -27,7 +27,7 @@ public class ShowStatusDao {
         this.id = id;
     }
 
-    public WeiboMsgBean getMsg() throws WeiboException {
+    public MessageBean getMsg() throws WeiboException {
 
         String url = URLHelper.getStatuses_Show();
 
@@ -39,9 +39,9 @@ public class ShowStatusDao {
 
         Gson gson = new Gson();
 
-        WeiboMsgBean value = null;
+        MessageBean value = null;
         try {
-            value = gson.fromJson(json, WeiboMsgBean.class);
+            value = gson.fromJson(json, MessageBean.class);
         } catch (JsonSyntaxException e) {
 
             AppLogger.e(e.getMessage().toString());

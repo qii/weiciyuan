@@ -14,7 +14,7 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
@@ -199,7 +199,7 @@ public class CommentsTimeLineFragment extends Fragment {
         private void bindViewData(ViewHolder holder, int position) {
 
             CommentBean msg = getList().getComments().get(position);
-            WeiboMsgBean repost_msg = msg.getStatus();
+            MessageBean repost_msg = msg.getStatus();
 
 
             holder.username.setText(msg.getUser().getScreen_name());
@@ -222,7 +222,7 @@ public class CommentsTimeLineFragment extends Fragment {
 
         }
 
-        private void buildRepostContent(WeiboMsgBean repost_msg, ViewHolder holder, int position) {
+        private void buildRepostContent(MessageBean repost_msg, ViewHolder holder, int position) {
             holder.repost_content.setVisibility(View.VISIBLE);
             if (repost_msg.getUser() != null) {
 

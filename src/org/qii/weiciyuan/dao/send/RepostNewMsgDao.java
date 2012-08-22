@@ -2,7 +2,7 @@ package org.qii.weiciyuan.dao.send;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class RepostNewMsgDao {
 
-    public WeiboMsgBean sendNewMsg() {
+    public MessageBean sendNewMsg() {
         String url = URLHelper.new_Repost();
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
@@ -37,9 +37,9 @@ public class RepostNewMsgDao {
 
         Gson gson = new Gson();
 
-        WeiboMsgBean value = null;
+        MessageBean value = null;
         try {
-            value = gson.fromJson(jsonData, WeiboMsgBean.class);
+            value = gson.fromJson(jsonData, MessageBean.class);
         } catch (JsonSyntaxException e) {
             ActivityUtils.showTips("发生错误，请重刷");
             AppLogger.e(e.getMessage().toString());

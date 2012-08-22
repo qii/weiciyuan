@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.show.ShowStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -32,8 +32,8 @@ import java.util.regex.Pattern;
  */
 public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
-    private WeiboMsgBean msg;
-    private WeiboMsgBean retweetMsg;
+    private MessageBean msg;
+    private MessageBean retweetMsg;
     private String token;
 
     private TextView username;
@@ -59,7 +59,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
-        msg = (WeiboMsgBean) intent.getSerializableExtra("msg");
+        msg = (MessageBean) intent.getSerializableExtra("msg");
         retweetMsg = msg.getRetweeted_status();
 
         buildView();
@@ -245,11 +245,11 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
     }
 
 
-    class UpdateMsgTask extends AsyncTask<Void, Void, WeiboMsgBean> {
+    class UpdateMsgTask extends AsyncTask<Void, Void, MessageBean> {
         WeiboException e;
 
         @Override
-        protected WeiboMsgBean doInBackground(Void... params) {
+        protected MessageBean doInBackground(Void... params) {
             try {
                 return new ShowStatusDao(token, msg.getId()).getMsg();
             } catch (WeiboException e) {
@@ -260,14 +260,14 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         }
 
         @Override
-        protected void onCancelled(WeiboMsgBean weiboMsgBean) {
+        protected void onCancelled(MessageBean weiboMsgBean) {
             dealWithException(e);
             setTextViewDeleted();
             super.onCancelled(weiboMsgBean);
         }
 
         @Override
-        protected void onPostExecute(WeiboMsgBean newValue) {
+        protected void onPostExecute(MessageBean newValue) {
             if (newValue != null && e == null) {
                 msg = newValue;
                 retweetMsg = msg.getRetweeted_status();

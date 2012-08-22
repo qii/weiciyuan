@@ -13,8 +13,8 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.*;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.RepostListBean;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -206,7 +206,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
         private void bindViewData(ViewHolder holder, int position) {
 
-            WeiboMsgBean msg = getList().getReposts().get(position);
+            MessageBean msg = getList().getReposts().get(position);
 
 
             holder.username.setText(msg.getUser().getScreen_name());
@@ -412,7 +412,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         protected void onPostExecute(RepostListBean newValue) {
             if (newValue != null && newValue.getReposts().size() > 1) {
                 Toast.makeText(getActivity(), "total " + newValue.getReposts().size() + " old messages", Toast.LENGTH_SHORT).show();
-                List<WeiboMsgBean> list = newValue.getReposts();
+                List<MessageBean> list = newValue.getReposts();
                 getList().getReposts().addAll(list.subList(1, list.size() - 1));
 
             }

@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
@@ -24,13 +24,13 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
  * Time: 下午9:29
  */
 public class PictureDialogFragment extends DialogFragment {
-    private WeiboMsgBean msg;
+    private MessageBean msg;
     private ImageView imageView;
     private ProgressBar pb;
     private FrameLayout fl;
     private PicSimpleBitmapWorkerTask avatarTask;
 
-    public PictureDialogFragment(WeiboMsgBean msg) {
+    public PictureDialogFragment(MessageBean msg) {
         this.msg = msg;
     }
 

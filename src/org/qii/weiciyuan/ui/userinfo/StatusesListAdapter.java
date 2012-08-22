@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
@@ -86,8 +86,8 @@ public class StatusesListAdapter extends BaseAdapter {
 
     private void bindViewData(ViewHolder holder, int position) {
 
-        final WeiboMsgBean msg = bean.getStatuses().get(position);
-        WeiboMsgBean repost_msg = msg.getRetweeted_status();
+        final MessageBean msg = bean.getStatuses().get(position);
+        MessageBean repost_msg = msg.getRetweeted_status();
 
 
         holder.username.setText(msg.getUser().getScreen_name());
@@ -126,7 +126,7 @@ public class StatusesListAdapter extends BaseAdapter {
         });
     }
 
-    private void buildRepostContent(final WeiboMsgBean repost_msg, ViewHolder holder, int position) {
+    private void buildRepostContent(final MessageBean repost_msg, ViewHolder holder, int position) {
         holder.repost_content.setVisibility(View.VISIBLE);
         if (repost_msg.getUser() != null) {
             holder.repost_content.setText(repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
@@ -147,7 +147,7 @@ public class StatusesListAdapter extends BaseAdapter {
         }
     }
 
-    private void buildContentPic(final WeiboMsgBean msg, ViewHolder holder, int position) {
+    private void buildContentPic(final MessageBean msg, ViewHolder holder, int position) {
         final String main_thumbnail_pic_url = msg.getThumbnail_pic();
         holder.content_pic.setVisibility(View.VISIBLE);
         commander.downContentPic(holder.content_pic, main_thumbnail_pic_url, position, listView);

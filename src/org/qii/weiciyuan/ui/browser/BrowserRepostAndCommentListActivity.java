@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
 
@@ -24,7 +24,7 @@ public class BrowserRepostAndCommentListActivity extends AbstractAppActivity imp
     private String token = "";
     private String id = "";
 
-    private WeiboMsgBean msg;
+    private MessageBean msg;
 
     private ViewPager mViewPager = null;
 
@@ -36,7 +36,7 @@ public class BrowserRepostAndCommentListActivity extends AbstractAppActivity imp
 
         token = getIntent().getStringExtra("token");
         id = getIntent().getStringExtra("id");
-        msg = (WeiboMsgBean) getIntent().getSerializableExtra("msg");
+        msg = (MessageBean) getIntent().getSerializableExtra("msg");
 
         buildViewPager();
         buildActionBarAndViewPagerTitles();
@@ -132,7 +132,7 @@ public class BrowserRepostAndCommentListActivity extends AbstractAppActivity imp
         }
     }
 
-    public WeiboMsgBean getMsg() {
+    public MessageBean getMsg() {
         return msg;
     }
 

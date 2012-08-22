@@ -1,6 +1,6 @@
 package org.qii.weiciyuan.ui.Abstract;
 
-import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.bean.MessageBean;
 
 /**
  * User: qii
@@ -8,5 +8,5 @@ import org.qii.weiciyuan.bean.WeiboMsgBean;
  */
 public interface IWeiboMsgInfo {
 
-    public WeiboMsgBean getMsg();
+    public MessageBean getMsg();
 }

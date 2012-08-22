@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
@@ -26,7 +26,7 @@ public class RepostNewActivity extends AbstractAppActivity {
 
     private EditText et = null;
 
-    private WeiboMsgBean msg;
+    private MessageBean msg;
 
 
     @Override
@@ -37,7 +37,7 @@ public class RepostNewActivity extends AbstractAppActivity {
 
         token = getIntent().getStringExtra("token");
         id = getIntent().getStringExtra("id");
-        msg = (WeiboMsgBean) getIntent().getSerializableExtra("msg");
+        msg = (MessageBean) getIntent().getSerializableExtra("msg");
         getActionBar().setTitle(getString(R.string.repost));
 
         et = ((EditText) findViewById(R.id.status_new_content));
@@ -60,7 +60,7 @@ public class RepostNewActivity extends AbstractAppActivity {
     }
 
 
-    class SimpleTask extends AsyncTask<Void, Void, WeiboMsgBean> {
+    class SimpleTask extends AsyncTask<Void, Void, MessageBean> {
 
         SendProgressFragment progressFragment = new SendProgressFragment();
 
@@ -84,7 +84,7 @@ public class RepostNewActivity extends AbstractAppActivity {
         }
 
         @Override
-        protected WeiboMsgBean doInBackground(Void... params) {
+        protected MessageBean doInBackground(Void... params) {
 
             String content = et.getText().toString();
             if (TextUtils.isEmpty(content)) {
@@ -97,7 +97,7 @@ public class RepostNewActivity extends AbstractAppActivity {
         }
 
         @Override
-        protected void onPostExecute(WeiboMsgBean s) {
+        protected void onPostExecute(MessageBean s) {
             if (progressFragment.isVisible())
                 progressFragment.dismissAllowingStateLoss();
             if (s != null) {

@@ -10,7 +10,7 @@ import java.util.Date;
  * User: qii
  * Date: 12-7-29
  */
-public class WeiboMsgBean implements Serializable {
+public class MessageBean implements Serializable {
 
 
     public String getCreated_at() {
@@ -138,11 +138,11 @@ public class WeiboMsgBean implements Serializable {
         this.user = user;
     }
 
-    public WeiboMsgBean getRetweeted_status() {
+    public MessageBean getRetweeted_status() {
         return retweeted_status;
     }
 
-    public void setRetweeted_status(WeiboMsgBean retweeted_status) {
+    public void setRetweeted_status(MessageBean retweeted_status) {
         this.retweeted_status = retweeted_status;
     }
 
@@ -168,7 +168,7 @@ public class WeiboMsgBean implements Serializable {
     private String comments_count;
     //    private Object annotations;
     private UserBean user;
-    private WeiboMsgBean retweeted_status;
+    private MessageBean retweeted_status;
     private GeoBean geo;
 
     private String thumbnail_pic;

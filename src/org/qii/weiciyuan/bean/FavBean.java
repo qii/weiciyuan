@@ -8,14 +8,14 @@ import java.io.Serializable;
  * Time: 上午10:32
  */
 public class FavBean implements Serializable {
-    private WeiboMsgBean status ;
+    private MessageBean status ;
     private String favorited_time;
 
-    public WeiboMsgBean getStatus() {
+    public MessageBean getStatus() {
         return status;
     }
 
-    public void setStatus(WeiboMsgBean status) {
+    public void setStatus(MessageBean status) {
         this.status = status;
     }
 

@@ -9,11 +9,11 @@ import java.util.List;
  * Date: 12-7-29
    */
 public class MessageListBean implements Serializable{
-    public List<WeiboMsgBean> getStatuses() {
+    public List<MessageBean> getStatuses() {
         return statuses;
     }
 
-    public void setStatuses(List<WeiboMsgBean> statuses) {
+    public void setStatuses(List<MessageBean> statuses) {
         this.statuses = statuses;
     }
 
@@ -41,7 +41,7 @@ public class MessageListBean implements Serializable{
         this.total_number = total_number;
     }
 
-    private List<WeiboMsgBean> statuses = new ArrayList<WeiboMsgBean>();
+    private List<MessageBean> statuses = new ArrayList<MessageBean>();
     private String previous_cursor = "";
     private String next_cursor = "0";
     private String total_number = "";

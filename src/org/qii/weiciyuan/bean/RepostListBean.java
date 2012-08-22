@@ -11,16 +11,16 @@ import java.util.List;
  */
 public class RepostListBean implements Serializable{
 
-    private List<WeiboMsgBean> reposts = new ArrayList<WeiboMsgBean>();
+    private List<MessageBean> reposts = new ArrayList<MessageBean>();
     private String previous_cursor = "";
     private String next_cursor = "0";
     private String total_number = "";
 
-    public List<WeiboMsgBean> getReposts() {
+    public List<MessageBean> getReposts() {
         return reposts;
     }
 
-    public void setReposts(List<WeiboMsgBean> reposts) {
+    public void setReposts(List<MessageBean> reposts) {
         this.reposts = reposts;
     }
 

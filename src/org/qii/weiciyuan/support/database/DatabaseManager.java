@@ -124,9 +124,9 @@ public class DatabaseManager {
 
     public void addHomeLineMsg(MessageListBean list, String accountId) {
         Gson gson = new Gson();
-        List<WeiboMsgBean> msgList = list.getStatuses();
+        List<MessageBean> msgList = list.getStatuses();
 
-        for (WeiboMsgBean msg : msgList) {
+        for (MessageBean msg : msgList) {
             ContentValues cv = new ContentValues();
             cv.put(HomeTable.MBLOGID, msg.getId());
             cv.put(HomeTable.ACCOUNTID, accountId);
@@ -151,14 +151,14 @@ public class DatabaseManager {
         Gson gson = new Gson();
         MessageListBean result = new MessageListBean();
 
-        List<WeiboMsgBean> msgList = new ArrayList<WeiboMsgBean>();
+        List<MessageBean> msgList = new ArrayList<MessageBean>();
         String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
                 + accountId + " order by " + HomeTable.MBLOGID + " desc";
         Cursor c = rsd.rawQuery(sql, null);
         while (c.moveToNext()) {
             String json = c.getString(c.getColumnIndex(HomeTable.JSONDATA));
             try {
-                WeiboMsgBean value = gson.fromJson(json, WeiboMsgBean.class);
+                MessageBean value = gson.fromJson(json, MessageBean.class);
                 msgList.add(value);
             } catch (JsonSyntaxException e) {
                 AppLogger.e(e.getMessage());
@@ -176,14 +176,14 @@ public class DatabaseManager {
         Gson gson = new Gson();
         MessageListBean result = new MessageListBean();
 
-        List<WeiboMsgBean> msgList = new ArrayList<WeiboMsgBean>();
+        List<MessageBean> msgList = new ArrayList<MessageBean>();
         String sql = "select * from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID + "  = "
                 + accountId + " order by " + RepostsTable.MBLOGID + " desc";
         Cursor c = rsd.rawQuery(sql, null);
         while (c.moveToNext()) {
             String json = c.getString(c.getColumnIndex(RepostsTable.JSONDATA));
             try {
-                WeiboMsgBean value = gson.fromJson(json, WeiboMsgBean.class);
+                MessageBean value = gson.fromJson(json, MessageBean.class);
                 msgList.add(value);
             } catch (JsonSyntaxException e) {
                 AppLogger.e(e.getMessage());
@@ -199,10 +199,10 @@ public class DatabaseManager {
 
     public void addRepostLineMsg(MessageListBean list, String accountId) {
         Gson gson = new Gson();
-        List<WeiboMsgBean> msgList = list.getStatuses();
+        List<MessageBean> msgList = list.getStatuses();
         int size = msgList.size();
         for (int i = 0; i < size; i++) {
-            WeiboMsgBean msg = msgList.get(i);
+            MessageBean msg = msgList.get(i);
             ContentValues cv = new ContentValues();
             cv.put(RepostsTable.MBLOGID, msg.getId());
             cv.put(RepostsTable.ACCOUNTID, accountId);

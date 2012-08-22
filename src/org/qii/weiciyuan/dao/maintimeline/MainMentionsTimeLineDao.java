@@ -2,8 +2,8 @@ package org.qii.weiciyuan.dao.maintimeline;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.bean.WeiboMsgBean;
 import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
@@ -62,13 +62,13 @@ public class MainMentionsTimeLineDao {
          * sometime sina weibo may delete message,so data don't have any user information
          */
         if (value != null) {
-            List<WeiboMsgBean> msgList = value.getStatuses();
+            List<MessageBean> msgList = value.getStatuses();
 
-            Iterator<WeiboMsgBean> iterator = msgList.iterator();
+            Iterator<MessageBean> iterator = msgList.iterator();
 
             while (iterator.hasNext()) {
 
-                WeiboMsgBean msg = iterator.next();
+                MessageBean msg = iterator.next();
                 if (msg.getUser() == null) {
                     iterator.remove();
                 }

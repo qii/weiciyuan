@@ -18,7 +18,7 @@ public class CommentBean implements Serializable {
     private String source;
     private String mid;
     private UserBean user;
-    private WeiboMsgBean status;
+    private MessageBean status;
 
     public String getCreated_at() {
         if (!TextUtils.isEmpty(created_at)) {
@@ -72,11 +72,11 @@ public class CommentBean implements Serializable {
         this.user = user;
     }
 
-    public WeiboMsgBean getStatus() {
+    public MessageBean getStatus() {
         return status;
     }
 
-    public void setStatus(WeiboMsgBean status) {
+    public void setStatus(MessageBean status) {
         this.status = status;
     }
 }
