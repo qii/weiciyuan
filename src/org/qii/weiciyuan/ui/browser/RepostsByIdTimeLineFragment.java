@@ -69,6 +69,9 @@ public class RepostsByIdTimeLineFragment extends Fragment {
             empty.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             listView.setVisibility(View.VISIBLE);
+            if (bean.getReposts().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+            }
         } else {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
             empty.setVisibility(View.VISIBLE);
@@ -328,10 +331,10 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         protected void onPostExecute(RepostListBean newValue) {
             if (newValue != null) {
                 if (newValue.getReposts().size() == 0) {
-                    Toast.makeText(getActivity(), "no new message", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Toast.makeText(getActivity(), "total " + newValue.getReposts().size() + " new messages", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.total) + newValue.getReposts().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
                     if (newValue.getReposts().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
                         newValue.getReposts().addAll(getList().getReposts());
                     }
@@ -381,7 +384,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
             showListView();
             isBusying = true;
 
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("loading");
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
             View view = footerView.findViewById(R.id.refresh);
             view.setVisibility(View.VISIBLE);
 
@@ -411,14 +414,14 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         @Override
         protected void onPostExecute(RepostListBean newValue) {
             if (newValue != null && newValue.getReposts().size() > 1) {
-                Toast.makeText(getActivity(), "total " + newValue.getReposts().size() + " old messages", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getReposts().size() + getString(R.string.old_messages), Toast.LENGTH_SHORT).show();
                 List<MessageBean> list = newValue.getReposts();
                 getList().getReposts().addAll(list.subList(1, list.size() - 1));
 
             }
 
             isBusying = false;
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("click to load older message");
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();

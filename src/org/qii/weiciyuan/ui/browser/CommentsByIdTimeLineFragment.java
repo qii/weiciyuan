@@ -29,7 +29,6 @@ import java.util.Set;
 /**
  * User: qii
  * Date: 12-7-29
- * Time: 下午1:15
  */
 public class CommentsByIdTimeLineFragment extends Fragment {
 
@@ -331,10 +330,10 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         protected void onPostExecute(CommentListBean newValue) {
             if (newValue != null) {
                 if (newValue.getComments().size() == 0) {
-                    Toast.makeText(getActivity(), "no new message", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Toast.makeText(getActivity(), "total " + newValue.getComments().size() + " new messages", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.total) + newValue.getComments().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
                     if (newValue.getComments().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
                         newValue.getComments().addAll(getList().getComments());
                     }
@@ -367,7 +366,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             showListView();
             isBusying = true;
 
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("loading");
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
             View view = footerView.findViewById(R.id.refresh);
             view.setVisibility(View.VISIBLE);
 
@@ -397,10 +396,10 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         @Override
         protected void onPostExecute(CommentListBean newValue) {
             if (newValue != null && newValue.getComments().size() > 1) {
-                Toast.makeText(getActivity(), "total " + newValue.getComments().size() + " old messages", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getComments().size() + getString(R.string.old_messages), Toast.LENGTH_SHORT).show();
                 List<CommentBean> list = newValue.getComments();
                 getList().getComments().addAll(list.subList(1, list.size() - 1));
-                ((TextView) footerView.findViewById(R.id.listview_footer)).setText("click to load older message");
+                ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
 
             } else {
                 ((TextView) footerView.findViewById(R.id.listview_footer)).setVisibility(View.GONE);
