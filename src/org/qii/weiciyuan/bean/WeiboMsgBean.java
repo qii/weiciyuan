@@ -53,11 +53,11 @@ public class WeiboMsgBean implements Serializable {
         this.source = source;
     }
 
-    public String getFavorited() {
+    public boolean isFavorited() {
         return favorited;
     }
 
-    public void setFavorited(String favorited) {
+    public void setFavorited(boolean favorited) {
         this.favorited = favorited;
     }
 
@@ -161,7 +161,7 @@ public class WeiboMsgBean implements Serializable {
     private String id;
     private String text;
     private String source;
-    private String favorited;
+    private boolean favorited;
     private String truncated;
     private String in_reply_to_status_id;
     private String in_reply_to_user_id;

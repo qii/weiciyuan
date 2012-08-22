@@ -139,7 +139,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         comment_sum = msg.getComments_count();
         retweet_sum = msg.getReposts_count();
 
-
         invalidateOptionsMenu();
 
         if (retweetMsg != null) {
@@ -198,6 +197,13 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
         menu.getItem(0).setTitle(menu.getItem(0).getTitle() + "(" + retweet_sum + ")");
         menu.getItem(1).setTitle(menu.getItem(1).getTitle() + "(" + comment_sum + ")");
+
+        boolean fav = msg.isFavorited();
+        if (fav) {
+            menu.findItem(R.id.menu_fav).setIcon(R.drawable.fav_un);
+        } else {
+            menu.findItem(R.id.menu_fav).setIcon(R.drawable.fav_en);
+        }
 
         return super.onCreateOptionsMenu(menu);
     }
