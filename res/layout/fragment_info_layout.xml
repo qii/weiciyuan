@@ -91,6 +91,22 @@
                     android:gravity="center"
                     android:id="@+id/fans_number"/>
 
+            <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="60dp"
+                    android:text="@string/follow_he"
+                    android:gravity="center"
+                    android:id="@+id/follow"
+                    android:visibility="gone"/>
+
+            <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="60dp"
+                    android:text="@string/unfollow_he"
+                    android:gravity="center"
+                    android:id="@+id/unfollow"
+                    android:visibility="gone"/>
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

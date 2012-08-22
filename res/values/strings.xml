@@ -42,6 +42,8 @@
     <string name="fan_list">粉丝列表</string>
     <string name="topic_number">话题</string>
     <string name="topic_list">话题列表</string>
+    <string name="follow_he">关注他</string>
+    <string name="unfollow_he">取消关注</string>
 
     <!--maintimelineactivity_layout -->
     <string name="home">首页</string>

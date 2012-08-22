@@ -24,6 +24,11 @@ public class WeiboException extends Exception {
         return error;
     }
 
+    @Override
+    public String getMessage() {
+        return getError();
+    }
+
     public void setError(String error) {
         this.error = error;
     }
@@ -33,5 +38,8 @@ public class WeiboException extends Exception {
         this.error_code = error_code;
     }
 
+    public int getError_code() {
+        return error_code;
+    }
 
 }

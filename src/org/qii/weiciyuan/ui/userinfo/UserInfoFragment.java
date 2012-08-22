@@ -9,9 +9,13 @@ import android.view.*;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -36,9 +40,14 @@ public class UserInfoFragment extends android.app.Fragment {
     private Button following_number;
     private Button fans_number;
 
+    private Button follow_it;
+    private Button unfollow_it;
+
     protected ICommander commander;
 
     private SimpleTask task;
+
+    private volatile boolean isBusying = false;
 
 
     public UserInfoFragment() {
@@ -102,7 +111,14 @@ public class UserInfoFragment extends android.app.Fragment {
             relationship.setText(getString(R.string.he_is_following_you));
         } else {
             relationship.setText(getString(R.string.he_is_not_following_you));
+        }
 
+        if (bean.isFollowing()) {
+            follow_it.setVisibility(View.GONE);
+            unfollow_it.setVisibility(View.VISIBLE);
+        } else {
+            unfollow_it.setVisibility(View.GONE);
+            follow_it.setVisibility(View.VISIBLE);
         }
     }
 
@@ -120,6 +136,12 @@ public class UserInfoFragment extends android.app.Fragment {
         weibo_number = (Button) view.findViewById(R.id.weibo_number);
         following_number = (Button) view.findViewById(R.id.following_number);
         fans_number = (Button) view.findViewById(R.id.fans_number);
+
+        follow_it = (Button) view.findViewById(R.id.follow);
+        unfollow_it = (Button) view.findViewById(R.id.unfollow);
+
+        follow_it.setOnClickListener(onClickListener);
+        unfollow_it.setOnClickListener(onClickListener);
 
         weibo_number.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,6 +199,102 @@ public class UserInfoFragment extends android.app.Fragment {
         }
         return true;
     }
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+
+
+            switch (v.getId()) {
+                case R.id.follow:
+
+                    if (!isBusying) {
+                        new FollowTask().execute();
+                    }
+                    break;
+                case R.id.unfollow:
+
+                    if (!isBusying) {
+                        new UnFollowTask().execute();
+                    }
+                    break;
+            }
+        }
+    };
+
+
+    private class FollowTask extends AsyncTask<Void, UserBean, UserBean> {
+        WeiboException e;
+
+        @Override
+        protected UserBean doInBackground(Void... params) {
+            if (isBusying)
+                return null;
+            FriendshipsDao dao = new FriendshipsDao(((IToken) getActivity()).getToken());
+            if (!TextUtils.isEmpty(bean.getId())) {
+                dao.setUid(bean.getId());
+            } else {
+                dao.setScreen_name(bean.getScreen_name());
+            }
+            try {
+                return dao.followIt();
+            } catch (WeiboException e) {
+                AppLogger.e(e.getError());
+                this.e = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onCancelled(UserBean userBean) {
+            super.onCancelled(userBean);
+            isBusying = false;
+            if (e != null) {
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                if (e.getError_code() == 20506) {
+                    follow_it.setVisibility(View.GONE);
+                    unfollow_it.setVisibility(View.VISIBLE);
+                }
+
+            }
+        }
+
+        @Override
+        protected void onPostExecute(UserBean o) {
+            super.onPostExecute(o);
+            bean = o;
+            isBusying = false;
+            setValue();
+        }
+    }
+
+    private class UnFollowTask extends AsyncTask<Void, UserBean, UserBean> {
+
+        @Override
+        protected UserBean doInBackground(Void... params) {
+            if (isBusying)
+                return null;
+            FriendshipsDao dao = new FriendshipsDao(((IToken) getActivity()).getToken());
+            if (!TextUtils.isEmpty(bean.getId())) {
+                dao.setUid(bean.getId());
+            } else {
+                dao.setScreen_name(bean.getScreen_name());
+            }
+
+            return dao.unFollowIt();
+        }
+
+        @Override
+        protected void onPostExecute(UserBean o) {
+            super.onPostExecute(o);
+            bean = o;
+            isBusying = false;
+            setValue();
+        }
+    }
+
 
     private class SimpleTask extends AsyncTask<Object, UserBean, UserBean> {
 

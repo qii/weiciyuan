@@ -66,4 +66,12 @@ public class URLHelper {
     public static String getFavList() {
         return URLManager.getRealUrl("myfav");
     }
+
+    public static String getFollowitUrl() {
+        return URLManager.getRealUrl("followit");
+    }
+
+    public static String getUnFollowitUrl() {
+        return URLManager.getRealUrl("unfollowit");
+    }
 }
