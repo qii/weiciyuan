@@ -14,7 +14,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 
 /**
@@ -34,7 +34,7 @@ public class StatusesListAdapter extends BaseAdapter {
         inflater = activity.getLayoutInflater();
         this.bean = bean;
         this.commander = commander;
-        this.listView=listView;
+        this.listView = listView;
 
     }
 
@@ -89,11 +89,16 @@ public class StatusesListAdapter extends BaseAdapter {
         final MessageBean msg = bean.getStatuses().get(position);
         MessageBean repost_msg = msg.getRetweeted_status();
 
+        if (msg.getUser() != null) {
 
-        holder.username.setText(msg.getUser().getScreen_name());
-        String image_url = msg.getUser().getProfile_image_url();
-        if (!TextUtils.isEmpty(image_url)) {
-            commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
+            holder.username.setText(msg.getUser().getScreen_name());
+            String image_url = msg.getUser().getProfile_image_url();
+            if (!TextUtils.isEmpty(image_url)) {
+                commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
+            }
+        } else {
+            holder.username.setVisibility(View.INVISIBLE);
+            holder.avatar.setVisibility(View.INVISIBLE);
         }
 
         holder.content.setText(msg.getText());
@@ -119,7 +124,7 @@ public class StatusesListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, UserInfoActivity.class);
-                intent.putExtra("token", ((MainTimeLineActivity) activity).getToken());
+                intent.putExtra("token", ((IToken) activity).getToken());
                 intent.putExtra("user", msg.getUser());
                 activity.startActivity(intent);
             }
