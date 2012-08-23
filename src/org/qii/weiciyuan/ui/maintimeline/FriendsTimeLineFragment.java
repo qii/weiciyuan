@@ -41,6 +41,13 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         outState.putSerializable("bean", bean);
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        userBean = ((IUserInfo) getActivity()).getUser();
+        super.onCreate(savedInstanceState);
+
+
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -54,7 +61,6 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         } else {
             new SimpleTask().execute();
         }
-        userBean = ((IUserInfo) getActivity()).getUser();
         getActivity().invalidateOptionsMenu();
     }
 

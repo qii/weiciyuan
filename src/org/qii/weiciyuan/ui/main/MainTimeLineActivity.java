@@ -10,7 +10,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SpinnerAdapter;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
@@ -72,9 +74,14 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         accountBean = (AccountBean) intent.getSerializableExtra("account");
         token = accountBean.getAccess_token();
         GlobalContext.getInstance().setSpecialToken(token);
-        buildViewPager();
-        buildActionBarAndViewPagerTitles();
-        buildTabTitle(getIntent());
+
+        if (getResources().getBoolean(R.bool.is_phone)) {
+            buildViewPager();
+            buildActionBarAndViewPagerTitles();
+            buildTabTitle(getIntent());
+        } else {
+            buildPad();
+        }
 
     }
 
@@ -82,6 +89,34 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         buildTabTitle(intent);
+    }
+
+    private void buildPad() {
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.action_list,
+                android.R.layout.simple_spinner_dropdown_item);
+        final List<Fragment> list = new ArrayList<Fragment>();
+        list.add(new FriendsTimeLineFragment());
+        list.add(new MentionsTimeLineFragment());
+        list.add(new CommentsTimeLineFragment());
+        ActionBar.OnNavigationListener mOnNavigationListener = new ActionBar.OnNavigationListener() {
+            String[] strings = getResources().getStringArray(R.array.action_list);
+
+            @Override
+            public boolean onNavigationItemSelected(int position, long itemId) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, list.get(position))
+                        .commit();
+
+                return true;
+            }
+        };
+        actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
+
     }
 
     private void buildTabTitle(Intent intent) {
