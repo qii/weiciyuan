@@ -10,19 +10,18 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:clickable="true"
-            android:id="@+id/userinfo"
-            >
+             >
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:id="@+id/first">
+                      android:id="@+id/first"
+                      android:clickable="true">
             <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="@drawable/app"
                     android:id="@+id/avatar" android:layout_gravity="left|center_vertical"
                     android:layout_marginRight="5dp"
-                    android:clickable="true"/>
+                    />
 
             <TextView
                     android:layout_gravity="center_vertical"
