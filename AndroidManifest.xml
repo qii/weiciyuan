@@ -19,7 +19,6 @@
                  android:theme="@style/AppTheme">
         <activity
                 android:name=".ui.login.AccountActivity"
-                android:screenOrientation="portrait"
                 android:uiOptions="splitActionBarWhenNarrow"
 
                 >

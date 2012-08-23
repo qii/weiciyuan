@@ -1,6 +1,8 @@
 package org.qii.weiciyuan.ui.Abstract;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -71,8 +73,18 @@ public class AbstractAppActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         GlobalContext.getInstance().setActivity(this);
+        if (getResources().getBoolean(R.bool.is_phone)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getResources().getBoolean(R.bool.is_phone)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
 
     protected Bitmap getBitmapFromMemCache(String key) {
         return GlobalContext.getInstance().getAvatarCache().get(key);
