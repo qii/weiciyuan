@@ -1,5 +1,5 @@
 <resources>
-    <string-array name="action_list">
+    <string-array name="maintimelineactivity_list">
         <item>首页</item>
         <item>回复</item>
         <item>评论</item>

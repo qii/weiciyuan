@@ -97,14 +97,13 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.action_list,
+        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.maintimelineactivity_list,
                 android.R.layout.simple_spinner_dropdown_item);
         final List<Fragment> list = new ArrayList<Fragment>();
         list.add(new FriendsTimeLineFragment());
         list.add(new MentionsTimeLineFragment());
         list.add(new CommentsTimeLineFragment());
         ActionBar.OnNavigationListener mOnNavigationListener = new ActionBar.OnNavigationListener() {
-            String[] strings = getResources().getStringArray(R.array.action_list);
 
             @Override
             public boolean onNavigationItemSelected(int position, long itemId) {
