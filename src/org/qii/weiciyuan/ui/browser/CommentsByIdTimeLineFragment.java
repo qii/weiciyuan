@@ -214,7 +214,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             if (!TextUtils.isEmpty(image_url)) {
                 downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
             }
-            holder.time.setText(msg.getCreated_at());
+            holder.time.setText(msg.getListviewItemShowTime());
 
             holder.content.setText(msg.getText());
 
