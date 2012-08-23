@@ -76,13 +76,17 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         GlobalContext.getInstance().setSpecialToken(token);
 
         if (getResources().getBoolean(R.bool.is_phone)) {
-            buildViewPager();
-            buildActionBarAndViewPagerTitles();
-            buildTabTitle(getIntent());
+            buildPhoneInterface();
         } else {
-            buildPad();
+            buildPadInterface();
         }
 
+    }
+
+    private void buildPhoneInterface() {
+        buildViewPager();
+        buildActionBarAndViewPagerTitles();
+        buildTabTitle(getIntent());
     }
 
     @Override
@@ -91,7 +95,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         buildTabTitle(intent);
     }
 
-    private void buildPad() {
+    private void buildPadInterface() {
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
