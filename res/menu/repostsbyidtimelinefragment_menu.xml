@@ -10,7 +10,7 @@
 
     <item android:id="@+id/repostsbyidtimelinefragment_repost_refresh"
           android:icon="@drawable/refresh"
-          android:title="refresh"
+          android:title="@string/refresh"
           android:showAsAction="ifRoom|withText"
             />
 
