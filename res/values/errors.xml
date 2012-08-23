@@ -3,4 +3,6 @@
     <string name="code21327">expired_token!</string>
     <string name="code21321">applications over the unaudited use restrictions!</string>
     <string name="code20506">already followed</string>
+    <string name="code21332">invalid_access_token</string>
+
 </resources>
