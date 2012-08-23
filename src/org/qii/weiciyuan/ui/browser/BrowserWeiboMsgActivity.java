@@ -91,7 +91,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         content_pic = (ImageView) findViewById(R.id.content_pic);
         repost_pic = (ImageView) findViewById(R.id.repost_content_pic);
 
-        avatar.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.userinfo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(BrowserWeiboMsgActivity.this, UserInfoActivity.class);
