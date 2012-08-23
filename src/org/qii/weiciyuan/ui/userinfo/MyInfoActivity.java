@@ -37,7 +37,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
         getActionBar().setTitle(getString(R.string.my_info));
         token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new MyInfoFragment())
                 .commit();
 

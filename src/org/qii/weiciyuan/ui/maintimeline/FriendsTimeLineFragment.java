@@ -127,7 +127,11 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.friendstimelinefragment_menu, menu);
-        menu.findItem(R.id.friendstimelinefragment_name).setTitle(userBean.getScreen_name());
+        if (getResources().getBoolean(R.bool.is_phone)) {
+            menu.findItem(R.id.friendstimelinefragment_name).setTitle(userBean.getScreen_name());
+        } else {
+            menu.removeItem(R.id.friendstimelinefragment_name);
+        }
     }
 
     @Override

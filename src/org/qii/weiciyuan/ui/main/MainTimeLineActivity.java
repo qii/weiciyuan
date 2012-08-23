@@ -26,6 +26,7 @@ import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsTimeLineFragment;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
+import org.qii.weiciyuan.ui.userinfo.MyInfoFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +108,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         list.add(new FriendsTimeLineFragment());
         list.add(new MentionsTimeLineFragment());
         list.add(new CommentsTimeLineFragment());
+        list.add(new MyInfoFragment());
         ActionBar.OnNavigationListener mOnNavigationListener = new ActionBar.OnNavigationListener() {
 
             @Override
