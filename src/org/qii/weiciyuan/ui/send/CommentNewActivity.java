@@ -23,6 +23,8 @@ public class CommentNewActivity extends AbstractAppActivity {
     private String id;
     private String token;
     private EditText et;
+    private boolean enableRepost = false;
+    private String enableRepostString = "同时转发（ ）";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class CommentNewActivity extends AbstractAppActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.commentnewactivity_menu, menu);
+        menu.findItem(R.id.menu_enable_repost).setTitle(enableRepostString);
         return true;
     }
 
@@ -55,6 +58,16 @@ public class CommentNewActivity extends AbstractAppActivity {
                 } else {
                     Toast.makeText(this, getString(R.string.comment_cant_be_empty), Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.menu_enable_repost:
+                if (enableRepost) {
+                    enableRepost = false;
+                    enableRepostString = "同时转发（ ）";
+                } else if (!enableRepost) {
+                    enableRepostString = "同时转发（√）";
+                    enableRepost = true;
+                }
+                invalidateOptionsMenu();
                 break;
         }
         return true;
