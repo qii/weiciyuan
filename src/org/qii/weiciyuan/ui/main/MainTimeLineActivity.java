@@ -3,7 +3,9 @@ package org.qii.weiciyuan.ui.main;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -76,10 +78,23 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         token = accountBean.getAccess_token();
         GlobalContext.getInstance().setSpecialToken(token);
 
+        buildSetting();
+
         if (getResources().getBoolean(R.bool.is_phone)) {
             buildPhoneInterface();
         } else {
             buildPadInterface();
+        }
+
+    }
+
+    private void buildSetting() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean enablePic = sharedPref.getBoolean(SettingActivity.ENABLE_PIC, true);
+        if (enablePic) {
+            GlobalContext.getInstance().setEnablePic(true);
+        } else {
+            GlobalContext.getInstance().setEnablePic(false);
         }
 
     }

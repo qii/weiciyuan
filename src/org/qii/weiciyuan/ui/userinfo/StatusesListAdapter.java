@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
@@ -91,11 +92,13 @@ public class StatusesListAdapter extends BaseAdapter {
 
         if (msg.getUser() != null) {
             holder.username.setVisibility(View.VISIBLE);
-            holder.avatar.setVisibility(View.VISIBLE);
             holder.username.setText(msg.getUser().getScreen_name());
             String image_url = msg.getUser().getProfile_image_url();
-            if (!TextUtils.isEmpty(image_url)) {
+            if (!TextUtils.isEmpty(image_url) && GlobalContext.getInstance().isEnablePic()) {
+                holder.avatar.setVisibility(View.VISIBLE);
                 commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
+            } else {
+                holder.avatar.setVisibility(View.GONE);
             }
         } else {
             holder.username.setVisibility(View.INVISIBLE);
@@ -117,7 +120,7 @@ public class StatusesListAdapter extends BaseAdapter {
 
         if (repost_msg != null) {
             buildRepostContent(repost_msg, holder, position);
-        } else if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
+        } else if (!TextUtils.isEmpty(msg.getThumbnail_pic()) && GlobalContext.getInstance().isEnablePic()) {
             buildContentPic(msg, holder, position);
         }
 
@@ -140,7 +143,7 @@ public class StatusesListAdapter extends BaseAdapter {
             holder.repost_content.setText(repost_msg.getText());
 
         }
-        if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
+        if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic()) && GlobalContext.getInstance().isEnablePic()) {
             holder.repost_content_pic.setVisibility(View.VISIBLE);
             commander.downContentPic(holder.repost_content_pic, repost_msg.getThumbnail_pic(), position, listView);
             holder.repost_content_pic.setOnClickListener(new View.OnClickListener() {

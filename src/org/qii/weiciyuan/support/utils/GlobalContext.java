@@ -21,6 +21,16 @@ public final class GlobalContext extends Application {
 
     private LruCache<String, Bitmap> avatarCache;
 
+    private boolean enablePic = true;
+
+    public boolean isEnablePic() {
+        return enablePic;
+    }
+
+    public void setEnablePic(boolean enablePic) {
+        this.enablePic = enablePic;
+    }
+
     //for userinfo and topic
 
     public String getSpecialToken() {
@@ -31,7 +41,7 @@ public final class GlobalContext extends Application {
         this.specialToken = specialToken;
     }
 
-    private String specialToken="";
+    private String specialToken = "";
 
     public LruCache<String, Bitmap> getAvatarCache() {
         return avatarCache;
@@ -46,12 +56,12 @@ public final class GlobalContext extends Application {
         super.onCreate();
         globalContext = this;
         buildCache();
+
     }
 
     public static GlobalContext getInstance() {
         return globalContext;
     }
-
 
 
     public Activity getActivity() {
@@ -68,7 +78,7 @@ public final class GlobalContext extends Application {
 
         final int cacheSize = 1024 * 1024 * memClass / 8;
 
-        avatarCache = new LruCache<String, Bitmap>(cacheSize){
+        avatarCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
                 // The cache size will be measured in bytes rather than number of items.

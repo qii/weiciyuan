@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.othercomponent.FetchNewMsgService;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
@@ -20,6 +21,9 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  * Date: 12-8-6
  */
 public class SettingActivity extends Activity {
+
+    public static final String ENABLE_PIC="show_picture";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +77,15 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//        Toast.makeText(getActivity(), "clgggggear", Toast.LENGTH_SHORT).show();
+
+        if (key.equals("show_picture")) {
+            boolean value = sharedPreferences.getBoolean("show_picture", true);
+            if (value) {
+                GlobalContext.getInstance().setEnablePic(true);
+            } else {
+                GlobalContext.getInstance().setEnablePic(false);
+            }
+        }
 
         if (key.equals("enable_fetch_msg")) {
             boolean value = sharedPreferences.getBoolean("enable_fetch_msg", false);
