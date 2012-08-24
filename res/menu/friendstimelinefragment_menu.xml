@@ -4,7 +4,8 @@
 
     <item android:id="@+id/friendstimelinefragment_new_weibo"
           android:icon="@drawable/friendstimelinefragment_write"
-          android:showAsAction="ifRoom|withText"
+          android:showAsAction="ifRoom"
+          android:title="@string/write_weibo"
             />
 
     <item android:id="@+id/friendstimelinefragment_name"
@@ -14,7 +15,8 @@
 
     <item android:id="@+id/friendstimelinefragment_refresh"
           android:icon="@drawable/refresh"
-          android:showAsAction="ifRoom|withText"
+          android:title="@string/refresh"
+          android:showAsAction="ifRoom"
             />
 
 </menu>
