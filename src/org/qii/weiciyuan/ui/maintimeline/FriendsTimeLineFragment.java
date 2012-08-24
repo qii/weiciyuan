@@ -88,6 +88,9 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         intent.putExtra("msg", bean.getStatuses().get(position));
         intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
         startActivity(intent);
+
+        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
     }
 
 

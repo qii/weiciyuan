@@ -15,7 +15,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
@@ -118,8 +120,25 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         iv = (ImageView) findViewById(R.id.iv);
         content = ((EditText) findViewById(R.id.status_new_content));
-
+        content.addTextChangedListener(onEditorActionListener);
     }
+
+    private TextWatcher onEditorActionListener = new TextWatcher() {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String num = getString(R.string.left) + (140 - content.getText().toString().length());
+            getActionBar().setSubtitle(num);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

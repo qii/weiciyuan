@@ -99,6 +99,11 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
     private void buildPhoneInterface() {
         buildViewPager();
         buildActionBarAndViewPagerTitles();
@@ -188,6 +193,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
             case R.id.menu_setting:
                 startActivity(new Intent(this, SettingActivity.class));
+                overridePendingTransition(R.anim.slide_in_up, R.anim.stay);
                 break;
         }
 

@@ -291,4 +291,10 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         content.setText(ss);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 }

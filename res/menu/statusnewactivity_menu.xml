@@ -5,18 +5,18 @@
     <item android:id="@+id/menu_add_gps"
           android:icon="@drawable/statusnewactivity_gps"
           android:title="GPS"
-          android:showAsAction="ifRoom|withText"
+          android:showAsAction="ifRoom"
             />
 
     <item android:id="@+id/menu_add_pic"
           android:icon="@drawable/statusnewactivity_camera"
-          android:title="照片"
-          android:showAsAction="ifRoom|withText"
+          android:title="@string/photo"
+          android:showAsAction="ifRoom"
             />
 
     <item android:id="@+id/menu_send"
           android:icon="@drawable/statusnewactivity_send"
-          android:title="发送"
+          android:title="@string/send"
           android:showAsAction="ifRoom|withText"
             />
 
