@@ -33,7 +33,7 @@ public class FileManager {
 
     private static String getFileAbsolutePathFromRelativePath(String relativePath) {
         String result = SDCARD_PATH + File.separator + APP_NAME + relativePath;
-        ;
+
         return result;
     }
 
@@ -70,33 +70,73 @@ public class FileManager {
     }
 
 
+    public static File createNoMediaFile() {
+
+        String noMediaFilePath = SDCARD_PATH + File.separator + APP_NAME + File.separator + ".nomedia";
+
+        return createNewFileInSDCard(noMediaFilePath);
+    }
+
     public static File createNewFileInSDCard(String absolutePath) {
         if (!isExternalStorageMounted()) {
             AppLogger.e("sdcard unavailiable");
             return null;
         }
 
-        String absoluteFileDirPath = absolutePath.substring(0, absolutePath.length() - 1);
         File file = new File(absolutePath);
         if (file.exists()) {
             return file;
         } else {
+            String absoluteFileDirPath = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
+            File dir = new File(absoluteFileDirPath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
 
-            File dirFile = new File(absoluteFileDirPath);
-            if (dirFile.mkdirs()) {
 
-                try {
-                    if (file.createNewFile()) {
-                        return file;
-                    }
-                } catch (IOException e) {
-                    AppLogger.d(e.getMessage());
-                    return null;
+            try {
+                if (file.createNewFile()) {
+                    return file;
                 }
+            } catch (IOException e) {
+                AppLogger.d(e.getMessage());
+                return null;
+
             }
 
         }
         return null;
 
+    }
+
+    public static String getCacheSize() {
+        if (isExternalStorageMounted()) {
+            String path = SDCARD_PATH + File.separator + APP_NAME;
+            FileSize size = new FileSize(new File(path));
+            return size.toString();
+        }
+        return "0MB";
+    }
+
+    public static boolean deleteCache() {
+        String path = SDCARD_PATH + File.separator + APP_NAME;
+        return deleteDirectory(new File(path));
+    }
+
+    private static boolean deleteDirectory(File path) {
+        if (path.exists()) {
+            File[] files = path.listFiles();
+            if (files == null) {
+                return true;
+            }
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
+                    deleteDirectory(files[i]);
+                } else {
+                    files[i].delete();
+                }
+            }
+        }
+        return (path.delete());
     }
 }

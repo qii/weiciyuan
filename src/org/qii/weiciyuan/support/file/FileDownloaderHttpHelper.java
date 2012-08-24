@@ -39,6 +39,7 @@ public class FileDownloaderHttpHelper {
 
     private static String saveFileAndGetFileAbsolutePath(HttpResponse response, String path) {
         HttpEntity httpEntity = response.getEntity();
+        FileManager.createNoMediaFile();
         File file = FileManager.createNewFileInSDCard(path);
         FileOutputStream out = null;
         InputStream in = null;

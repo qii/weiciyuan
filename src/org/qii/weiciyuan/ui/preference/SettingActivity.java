@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.othercomponent.FetchNewMsgService;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -22,7 +24,8 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  */
 public class SettingActivity extends Activity {
 
-    public static final String ENABLE_PIC="show_picture";
+    public static final String ENABLE_PIC = "show_picture";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,10 @@ public class SettingActivity extends Activity {
 }
 
 class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private Preference clear_cache;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,12 +67,17 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
-        findPreference("clear_cache").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        clear_cache = findPreference("clear_cache");
+
+        clear_cache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                return false;
+                FileManager.deleteCache();
+                return true;
             }
         });
+
+        new calcCacheSize().execute();
     }
 
     @Override
@@ -122,5 +134,18 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
         Intent intent = new Intent(getActivity(), FetchNewMsgService.class);
         PendingIntent sender = PendingIntent.getService(getActivity(), 195, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarm.cancel(sender);
+    }
+
+    private class calcCacheSize extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            return FileManager.getCacheSize();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            clear_cache.setSummary(getString(R.string.clear_avatar_and_pic) + " " + s);
+        }
     }
 }
