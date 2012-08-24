@@ -59,6 +59,8 @@ public class OAuthActivity extends AbstractAppActivity {
 
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -140,11 +142,13 @@ public class OAuthActivity extends AbstractAppActivity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         if (webView.canGoBack()) {
             webView.goBack();
         } else {
             Toast.makeText(OAuthActivity.this, getString(R.string.you_cancel_login), Toast.LENGTH_SHORT).show();
             finish();
+            overridePendingTransition(R.anim.stay, R.anim.slide_out_down);
         }
     }
 
