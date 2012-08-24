@@ -26,8 +26,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
 
     @Override
     public String getToken() {
-        if(TextUtils.isEmpty(token))
-            token= GlobalContext.getInstance().getSpecialToken();
+        if (TextUtils.isEmpty(token))
+            token = GlobalContext.getInstance().getSpecialToken();
         return token;
     }
 
@@ -59,6 +59,12 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
@@ -66,6 +72,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
                 intent = new Intent(this, MainTimeLineActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 return true;
         }
         return false;

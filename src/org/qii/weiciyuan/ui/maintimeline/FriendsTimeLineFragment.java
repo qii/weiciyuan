@@ -144,6 +144,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
                 intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_in_up,R.anim.stay);
                 break;
             case R.id.friendstimelinefragment_refresh:
                 if (!isBusying) {
