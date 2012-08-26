@@ -64,8 +64,8 @@ public class BrowserRepostAndCommentListActivity extends AbstractAppActivity imp
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         if (getResources().getBoolean(R.bool.is_phone)) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayShowHomeEnabled(false);
+//            actionBar.setDisplayShowTitleEnabled(false);
+//            actionBar.setDisplayShowHomeEnabled(false);
         }
 
         actionBar.addTab(actionBar.newTab()

@@ -45,7 +45,7 @@
         <activity android:name=".ui.preference.SettingActivity"
                   android:logo="@null"/>
         <activity android:name=".ui.browser.BrowserRepostAndCommentListActivity"
-                  android:uiOptions="splitActionBarWhenNarrow"/>
+                 />
         <activity android:name=".ui.userinfo.UserInfoActivity"
                   android:uiOptions="splitActionBarWhenNarrow">
             <intent-filter>
