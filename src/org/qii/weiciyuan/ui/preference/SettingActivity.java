@@ -132,6 +132,8 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
                 GlobalContext.getInstance().setAppTheme(android.R.style.Theme_Holo);
             if (value.equals("2"))
                 GlobalContext.getInstance().setAppTheme(android.R.style.Theme_Holo_Light);
+            if (value.equals("3"))
+                GlobalContext.getInstance().setAppTheme(android.R.style.Theme_Holo_Light_DarkActionBar);
 
             reload();
         }
