@@ -78,6 +78,8 @@
     <string name="personal_info">个人资料</string>
     <string name="my_info">我的资料</string>
     <string name="my_fav_list">我的收藏列表</string>
+    <string name="intro">简介</string>
+
 
     <!-- serach -->
     <string name="search">搜索</string>

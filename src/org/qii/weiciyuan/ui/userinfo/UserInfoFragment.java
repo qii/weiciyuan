@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.Button;
@@ -27,7 +28,7 @@ import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
  * User: Jiang Qi
  * Date: 12-8-14
  */
-public class UserInfoFragment extends android.app.Fragment {
+public class UserInfoFragment extends Fragment {
 
     private UserBean bean;
 
