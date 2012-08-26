@@ -15,6 +15,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
+import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -77,7 +78,7 @@ public class AbstractAppActivity extends FragmentActivity {
     //only execute in AccountActivity and MainTimeLineActivity
     protected void buildThemeSetting() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String value = sharedPref.getString("theme", "1");
+        String value = sharedPref.getString(SettingActivity.THEME, "1");
         if (value.equals("1"))
             GlobalContext.getInstance().setAppTheme(android.R.style.Theme_Holo);
         if (value.equals("2"))

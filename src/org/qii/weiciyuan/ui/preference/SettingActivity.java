@@ -26,6 +26,10 @@ public class SettingActivity extends AbstractAppActivity {
 
 
     public static final String ENABLE_PIC = "show_picture";
+    public static final String THEME = "theme";
+    public static final String FREQUENCY = "frequency";
+    public static final String ENABLE_FETCH_MSG = "enable_fetch_msg";
+    public static final String CLEAR_CACHE = "clear_cache";
 
 
     @Override
@@ -76,7 +80,7 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
-        clear_cache = findPreference("clear_cache");
+        clear_cache = findPreference(SettingActivity.CLEAR_CACHE);
 
         clear_cache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -99,8 +103,8 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        if (key.equals("show_picture")) {
-            boolean value = sharedPreferences.getBoolean("show_picture", true);
+        if (key.equals(SettingActivity.ENABLE_PIC)) {
+            boolean value = sharedPreferences.getBoolean(key, true);
             if (value) {
                 GlobalContext.getInstance().setEnablePic(true);
             } else {
@@ -108,13 +112,13 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
             }
         }
 
-        if (key.equals("enable_fetch_msg")) {
-            boolean value = sharedPreferences.getBoolean("enable_fetch_msg", false);
+        if (key.equals(SettingActivity.ENABLE_FETCH_MSG)) {
+            boolean value = sharedPreferences.getBoolean(key, false);
             if (!value)
                 cancelAlarm();
         }
 
-        if (key.equals("frequency")) {
+        if (key.equals(SettingActivity.FREQUENCY)) {
             String value = sharedPreferences.getString(key, "1");
 
             if (value.equals("1"))
@@ -126,7 +130,7 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
 
         }
 
-        if (key.equals("theme")) {
+        if (key.equals(SettingActivity.THEME)) {
             String value = sharedPreferences.getString(key, "1");
             if (value.equals("1"))
                 GlobalContext.getInstance().setAppTheme(android.R.style.Theme_Holo);
