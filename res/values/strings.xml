@@ -104,6 +104,7 @@
     <string name="new_message">新消息</string>
     <string name="enable_fetch_new_msg">后台自动获取回复、评论</string>
     <string name="frequency">频率</string>
+    <string name="theme">主题</string>
     <string name="other">其它</string>
     <string name="clear_sd_cache">清缓存</string>
     <string name="clear_avatar_and_pic">清除缓存的头像和照片，释放存储空间</string>

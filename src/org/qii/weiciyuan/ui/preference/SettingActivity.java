@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.preference;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -16,19 +15,22 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.othercomponent.FetchNewMsgService;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
  * User: Jiang Qi
  * Date: 12-8-6
  */
-public class SettingActivity extends Activity {
+public class SettingActivity extends AbstractAppActivity {
+
 
     public static final String ENABLE_PIC = "show_picture";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.setting));
@@ -42,7 +44,6 @@ public class SettingActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.stay, R.anim.slide_out_down);
     }
 
     @Override
@@ -58,7 +59,9 @@ public class SettingActivity extends Activity {
         return false;
     }
 
+
 }
+
 
 class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -122,7 +125,29 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
                 startAlarm(AlarmManager.INTERVAL_HALF_HOUR);
 
         }
+
+        if (key.equals("theme")) {
+            String value = sharedPreferences.getString(key, "1");
+            if (value.equals("1"))
+                GlobalContext.getInstance().setAppTheme(android.R.style.Theme_Holo);
+            if (value.equals("2"))
+                GlobalContext.getInstance().setAppTheme(android.R.style.Theme_Holo_Light);
+
+            reload();
+        }
     }
+
+    private void reload() {
+
+        Intent intent = getActivity().getIntent();
+        getActivity().overridePendingTransition(0, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        getActivity().finish();
+
+        getActivity().overridePendingTransition(0, 0);
+        startActivity(intent);
+    }
+
 
     private void startAlarm(long time) {
         AlarmManager alarm = (AlarmManager) getActivity().getSystemService(

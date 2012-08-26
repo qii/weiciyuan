@@ -36,7 +36,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
+        buildThemeSetting();
         //jumpToHomeLine();
 
         super.onCreate(savedInstanceState);
@@ -54,6 +54,8 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         new GetAccountListDBTask().execute(null, null, null);
 
     }
+
+
 
     private AbsListView.MultiChoiceModeListener multiChoiceModeLinstener = new AbsListView.MultiChoiceModeListener() {
 
@@ -145,7 +147,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
         Intent intent = new Intent(this, OAuthActivity.class);
         startActivityForResult(intent, 0);
-     }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

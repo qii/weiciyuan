@@ -23,6 +23,16 @@ public final class GlobalContext extends Application {
 
     private boolean enablePic = true;
 
+    private int theme = 0;
+
+    public int getAppTheme() {
+        return theme;
+    }
+
+    public void setAppTheme(int theme) {
+        this.theme = theme;
+    }
+
     public boolean isEnablePic() {
         return enablePic;
     }
