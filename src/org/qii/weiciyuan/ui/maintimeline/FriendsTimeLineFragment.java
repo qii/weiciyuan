@@ -89,7 +89,6 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
         startActivity(intent);
 
-        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
     }
 
@@ -142,10 +141,9 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
         switch (item.getItemId()) {
             case R.id.friendstimelinefragment_new_weibo:
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
-                intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
                 startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_in_up,R.anim.stay);
-                break;
+                 break;
             case R.id.friendstimelinefragment_refresh:
                 if (!isBusying) {
                     refresh();

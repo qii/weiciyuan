@@ -5,7 +5,9 @@
             />
     <item android:id="@+id/menu_search"
           android:title="@string/search"
-            />
+          android:actionViewClass="android.widget.SearchView"
+          android:icon="@drawable/search"
+             />
 
     <item android:id="@+id/menu_setting"
           android:title="@string/setting"

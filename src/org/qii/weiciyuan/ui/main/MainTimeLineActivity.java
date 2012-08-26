@@ -193,8 +193,8 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
             case R.id.menu_setting:
                 startActivity(new Intent(this, SettingActivity.class));
-                overridePendingTransition(R.anim.slide_in_up, R.anim.stay);
                 break;
+
         }
 
         return super.onOptionsItemSelected(item);

@@ -148,8 +148,7 @@ public class OAuthActivity extends AbstractAppActivity {
         } else {
             Toast.makeText(OAuthActivity.this, getString(R.string.you_cancel_login), Toast.LENGTH_SHORT).show();
             finish();
-            overridePendingTransition(R.anim.stay, R.anim.slide_out_down);
-        }
+         }
     }
 
     class OAuthTask extends AsyncTask<String, UserBean, DBResult> {

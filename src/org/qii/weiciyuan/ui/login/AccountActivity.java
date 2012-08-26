@@ -145,8 +145,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
         Intent intent = new Intent(this, OAuthActivity.class);
         startActivityForResult(intent, 0);
-        overridePendingTransition(R.anim.slide_in_up, R.anim.stay);
-    }
+     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

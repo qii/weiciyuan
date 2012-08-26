@@ -131,8 +131,7 @@ public class StatusesListAdapter extends BaseAdapter {
                 intent.putExtra("token", ((IToken) activity).getToken());
                 intent.putExtra("user", msg.getUser());
                 activity.startActivity(intent);
-                activity.overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
-            }
+             }
         });
     }
 
