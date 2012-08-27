@@ -3,20 +3,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/commentsbyidtimelinefragment_comment"
-          android:icon="@drawable/comment_black"
+          android:icon="?comment"
           android:title="@string/comments"
           android:showAsAction="ifRoom|withText"
             />
 
     <item android:id="@+id/commentsbyidtimelinefragment_search"
-          android:icon="@drawable/search_black"
+          android:icon="?search"
           android:title="@string/search"
           android:actionViewClass="android.widget.SearchView"
           android:showAsAction="collapseActionView|withText"
             />
 
     <item android:id="@+id/commentsbyidtimelinefragment_refresh"
-          android:icon="@drawable/refresh_black"
+          android:icon="?refresh"
           android:title="@string/refresh"
           android:showAsAction="ifRoom|withText"
             />

@@ -7,7 +7,7 @@
             />
 
     <item android:id="@+id/menu_send"
-          android:icon="@drawable/statusnewactivity_send_black"
+          android:icon="?statusnewactivity_send"
           android:title="发送"
           android:showAsAction="ifRoom|withText"
             />

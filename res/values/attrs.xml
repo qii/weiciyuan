@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="accountactivity_new" format="reference"/>
+
     <attr name="account" format="reference"/>
-     <attr name="friendstimelinefragment_write" format="reference"/>
+    <attr name="accountactivity_new" format="reference"/>
+    <attr name="accountactivity_remove" format="reference"/>
+    <attr name="accountactivity_select_all" format="reference"/>
+    <attr name="accountactivity_select_none" format="reference"/>
+    <attr name="comment" format="reference"/>
+    <attr name="edit" format="reference"/>
+    <attr name="fav_en" format="reference"/>
+    <attr name="fav_un" format="reference"/>
+    <attr name="friendstimelinefragment_search" format="reference"/>
+    <attr name="friendstimelinefragment_write" format="reference"/>
+    <attr name="location_place" format="reference"/>
+    <attr name="maintimelineactivity_account_management" format="reference"/>
+    <attr name="maintimelineactivity_settings" format="reference"/>
+    <attr name="picture" format="reference"/>
+    <attr name="refresh" format="reference"/>
+    <attr name="repost" format="reference"/>
+    <attr name="search" format="reference"/>
+    <attr name="share" format="reference"/>
+    <attr name="statusnewactivity_camera" format="reference"/>
+    <attr name="statusnewactivity_gps" format="reference"/>
+    <attr name="statusnewactivity_send" format="reference"/>
+
 </resources>

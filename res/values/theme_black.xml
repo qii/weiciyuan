@@ -11,8 +11,28 @@
         <item name="android:radioButtonStyle">@style/RadioButton</item>
         <!--<item name="android:actionBarStyle">@style/MyActionBar</item>-->
         <!--<item name="android:actionBarTabStyle">@style/MyActionBar.TabView</item>-->
+        <item name="account">@drawable/account_light</item>
         <item name="accountactivity_new">@drawable/accountactivity_new_white</item>
+        <item name="accountactivity_remove">@drawable/accountactivity_remove_light</item>
+        <item name="accountactivity_select_all">@drawable/accountactivity_select_all_light</item>
+        <item name="accountactivity_select_none">@drawable/accountactivity_select_none_light</item>
+        <item name="comment">@drawable/comment_light</item>
+        <item name="edit">@drawable/edit_light</item>
+        <item name="fav_en">@drawable/fav_en_light</item>
+        <item name="fav_un">@drawable/fav_un_light</item>
+        <item name="friendstimelinefragment_search">@drawable/friendstimelinefragment_search_light</item>
         <item name="friendstimelinefragment_write">@drawable/friendstimelinefragment_write_light</item>
+        <item name="location_place">@drawable/location_place_light</item>
+        <item name="maintimelineactivity_account_management">@drawable/maintimelineactivity_account_management_light</item>
+        <item name="maintimelineactivity_settings">@drawable/maintimelineactivity_settings_light</item>
+        <item name="picture">@drawable/picture_light</item>
+        <item name="refresh">@drawable/refresh_light</item>
+        <item name="repost">@drawable/repost_light</item>
+        <item name="search">@drawable/search_light</item>
+        <item name="share">@drawable/share_light</item>
+        <item name="statusnewactivity_camera">@drawable/statusnewactivity_camera_light</item>
+        <item name="statusnewactivity_gps">@drawable/statusnewactivity_gps_light</item>
+        <item name="statusnewactivity_send">@drawable/statusnewactivity_send_light</item>
 
     </style>
 </resources>

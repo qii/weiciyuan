@@ -4,7 +4,7 @@
 
 
     <item android:id="@+id/menu_refresh"
-          android:icon="@drawable/refresh_black"
+          android:icon="?refresh"
           android:title="刷新"
           android:showAsAction="ifRoom|withText"
             />

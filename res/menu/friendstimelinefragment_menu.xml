@@ -14,7 +14,7 @@
             />
 
     <item android:id="@+id/friendstimelinefragment_refresh"
-          android:icon="@drawable/refresh_black"
+          android:icon="?refresh"
           android:title="@string/refresh"
           android:showAsAction="ifRoom"
             />
