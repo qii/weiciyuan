@@ -119,9 +119,11 @@ public class AbstractAppActivity extends FragmentActivity {
         for (String task : avatarBitmapWorkerTaskHashMap.keySet()) {
             avatarBitmapWorkerTaskHashMap.get(task).cancel(true);
         }
+        avatarBitmapWorkerTaskHashMap=null;
         for (String task : pictureBitmapWorkerTaskMap.keySet()) {
             pictureBitmapWorkerTaskMap.get(task).cancel(true);
         }
+        pictureBitmapWorkerTaskMap=null;
     }
 
     private void reload() {

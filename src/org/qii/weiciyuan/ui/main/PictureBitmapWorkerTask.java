@@ -56,7 +56,7 @@ public class PictureBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             lruCache.put(data, bitmap);
 
         }
-        if (taskMap.get(data) != null) {
+        if (taskMap != null && taskMap.get(data) != null) {
             taskMap.remove(data);
         }
         super.onCancelled(bitmap);
