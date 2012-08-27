@@ -37,6 +37,8 @@ public class MyInfoFragment extends Fragment {
 
     protected ICommander commander;
 
+    private AsyncTask<Object, UserBean, UserBean> task;
+
 
     public MyInfoFragment() {
         super();
@@ -159,10 +161,20 @@ public class MyInfoFragment extends Fragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        if (task != null)
+            task.cancel(true);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                new SimpleTask().execute();
+                if (task == null || task.getStatus() == AsyncTask.Status.FINISHED) {
+                    task = new SimpleTask();
+                    task.execute();
+                }
                 break;
 
 
