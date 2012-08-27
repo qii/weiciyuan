@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
@@ -112,6 +113,16 @@ public class AbstractAppActivity extends FragmentActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        for (String task : avatarBitmapWorkerTaskHashMap.keySet()) {
+            avatarBitmapWorkerTaskHashMap.get(task).cancel(true);
+        }
+        for (String task : pictureBitmapWorkerTaskMap.keySet()) {
+            pictureBitmapWorkerTaskMap.get(task).cancel(true);
+        }
+    }
 
     private void reload() {
 
