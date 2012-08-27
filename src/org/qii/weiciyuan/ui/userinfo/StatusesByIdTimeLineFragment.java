@@ -76,8 +76,6 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     }
 
 
-
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -106,6 +104,10 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     protected MessageListBean getDoInBackgroundNewData() {
         StatusesTimeLineDao dao = new StatusesTimeLineDao(token, uid);
 
+        if (TextUtils.isEmpty(uid)) {
+            dao.setScreen_name(((IUserInfo) getActivity()).getUser().getScreen_name());
+        }
+
         if (getList().getStatuses().size() > 0) {
             dao.setSince_id(getList().getStatuses().get(0).getId());
         }
@@ -117,6 +119,9 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     @Override
     protected MessageListBean getDoInBackgroundOldData() {
         StatusesTimeLineDao dao = new StatusesTimeLineDao(token, uid);
+        if (TextUtils.isEmpty(uid)) {
+            dao.setScreen_name(((IUserInfo) getActivity()).getUser().getScreen_name());
+        }
         if (getList().getStatuses().size() > 0) {
             dao.setMax_id(getList().getStatuses().get(getList().getStatuses().size() - 1).getId());
         }

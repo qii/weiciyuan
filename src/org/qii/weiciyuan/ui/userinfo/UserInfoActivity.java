@@ -135,7 +135,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
             super(fm);
 
             list.add(new UserInfoFragment());
-            list.add(new StatusesByIdTimeLineFragment(token, bean.getId()));
+            list.add(new StatusesByIdTimeLineFragment(getToken(), bean.getId()));
         }
 
         @Override
