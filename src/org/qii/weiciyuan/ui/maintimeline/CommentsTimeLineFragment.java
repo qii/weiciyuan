@@ -23,7 +23,7 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  * Date: 12-7-29
  * Time: 下午1:15
  */
-public class CommentsTimeLineFragment extends PowerFragment<CommentListBean> {
+public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentListBean> {
 
 
     @Override

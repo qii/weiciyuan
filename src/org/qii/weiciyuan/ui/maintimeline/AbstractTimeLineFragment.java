@@ -24,7 +24,7 @@ import java.util.Set;
  * User: qii
  * Date: 12-8-27
  */
-public abstract class PowerFragment<T extends ListBean> extends Fragment {
+public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragment {
 
     protected T bean;
 
