@@ -4,5 +4,5 @@
           android:icon="?refresh"
           android:title="刷新"
           android:showAsAction="ifRoom|withText"
-          android:onClick="refresh"/>
+          />
 </menu>

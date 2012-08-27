@@ -4,5 +4,5 @@
           android:icon="?attr/accountactivity_new"
           android:title="添加"
           android:showAsAction="ifRoom|withText"
-          android:onClick="addAccount"/>
+            />
 </menu>

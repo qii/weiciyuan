@@ -56,7 +56,6 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     }
 
 
-
     private AbsListView.MultiChoiceModeListener multiChoiceModeLinstener = new AbsListView.MultiChoiceModeListener() {
 
         boolean checkAll = false;
@@ -140,6 +139,13 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.accountactivity_menu_main, menu);
+        menu.findItem(R.id.menu_add_account).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                addAccount(item);
+                return true;
+            }
+        });
         return true;
     }
 
