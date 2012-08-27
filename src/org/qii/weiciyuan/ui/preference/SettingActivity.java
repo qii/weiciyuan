@@ -70,7 +70,7 @@ public class SettingActivity extends AbstractAppActivity {
 class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Preference clear_cache;
-
+    private CalcCacheSize task;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,7 +90,8 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
             }
         });
 
-        new calcCacheSize().execute();
+        task = new CalcCacheSize();
+       // task.execute();
     }
 
     @Override
@@ -98,6 +99,7 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
         super.onStop();
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
+        task.cancel(true);
     }
 
     @Override
@@ -173,7 +175,7 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
         alarm.cancel(sender);
     }
 
-    private class calcCacheSize extends AsyncTask<Void, Void, String> {
+    private class CalcCacheSize extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {
@@ -184,5 +186,7 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
         protected void onPostExecute(String s) {
             clear_cache.setSummary(getString(R.string.clear_avatar_and_pic) + " " + s);
         }
+
+
     }
 }

@@ -87,8 +87,7 @@ public class FileManager {
         if (file.exists()) {
             return file;
         } else {
-            String absoluteFileDirPath = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
-            File dir = new File(absoluteFileDirPath);
+             File dir = file.getParentFile();
             if (!dir.exists()) {
                 dir.mkdirs();
             }
