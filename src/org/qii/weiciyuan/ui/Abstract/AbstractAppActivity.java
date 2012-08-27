@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
@@ -33,6 +32,10 @@ public class AbstractAppActivity extends FragmentActivity {
     Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = new ConcurrentHashMap<String, AvatarBitmapWorkerTask>();
     Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = new ConcurrentHashMap<String, PictureBitmapWorkerTask>();
 
+    protected String getMemCacheKey(String urlKey, int position) {
+        return urlKey + position;
+    }
+
     protected ICommander commander = new ICommander() {
 
 
@@ -42,13 +45,13 @@ public class AbstractAppActivity extends FragmentActivity {
             Bitmap bitmap = getBitmapFromMemCache(urlKey);
             if (bitmap != null) {
                 view.setImageBitmap(bitmap);
-                avatarBitmapWorkerTaskHashMap.remove(urlKey);
+                avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey,position));
             } else {
                 view.setImageDrawable(getResources().getDrawable(R.drawable.account_black));
-                if (avatarBitmapWorkerTaskHashMap.get(urlKey) == null) {
+                if (avatarBitmapWorkerTaskHashMap.get(getMemCacheKey(urlKey,position)) == null) {
                     AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, listView, position);
                     avatarTask.execute(urlKey);
-                    avatarBitmapWorkerTaskHashMap.put(urlKey, avatarTask);
+                    avatarBitmapWorkerTaskHashMap.put(getMemCacheKey(urlKey,position), avatarTask);
                 }
             }
 
@@ -119,11 +122,11 @@ public class AbstractAppActivity extends FragmentActivity {
         for (String task : avatarBitmapWorkerTaskHashMap.keySet()) {
             avatarBitmapWorkerTaskHashMap.get(task).cancel(true);
         }
-        avatarBitmapWorkerTaskHashMap=null;
+        avatarBitmapWorkerTaskHashMap = null;
         for (String task : pictureBitmapWorkerTaskMap.keySet()) {
             pictureBitmapWorkerTaskMap.get(task).cancel(true);
         }
-        pictureBitmapWorkerTaskMap=null;
+        pictureBitmapWorkerTaskMap = null;
     }
 
     private void reload() {
