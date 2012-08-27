@@ -17,12 +17,7 @@ import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
-import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * User: qii
@@ -76,35 +71,6 @@ public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
     }
 
 
-    @Override
-    protected void listViewFooterViewClick(View view) {
-        if (!isBusying) {
-
-            new TimeLineGetOlderMsgListTask().execute();
-
-        }
-    }
-
-
-    public void refresh() {
-        Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((MainTimeLineActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
-        Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = ((MainTimeLineActivity) getActivity()).getPictureBitmapWorkerTaskMap();
-
-
-        new TimeLineGetNewMsgListTask().execute();
-        Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
-        for (String key : keys) {
-            avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
-            avatarBitmapWorkerTaskHashMap.remove(key);
-        }
-
-        Set<String> pKeys = pictureBitmapWorkerTaskMap.keySet();
-        for (String pkey : pKeys) {
-            pictureBitmapWorkerTaskMap.get(pkey).cancel(true);
-            pictureBitmapWorkerTaskMap.remove(pkey);
-        }
-
-    }
 
 
     @Override

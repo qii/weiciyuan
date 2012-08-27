@@ -15,11 +15,7 @@ import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.maintimeline.AbstractTimeLineFragment;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * User: Jiang Qi
@@ -80,28 +76,6 @@ public class StatusesByIdTimeLineFragment extends AbstractTimeLineFragment {
     }
 
 
-    protected void listViewFooterViewClick(View view) {
-        if (!isBusying) {
-            oldTask = new TimeLineGetOlderMsgListTask();
-            oldTask.execute();
-        }
-    }
-
-
-    public void refresh() {
-        Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
-
-
-        newTask = new TimeLineGetNewMsgListTask();
-        newTask.execute();
-        Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
-        for (String key : keys) {
-            avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
-            avatarBitmapWorkerTaskHashMap.remove(key);
-        }
-
-
-    }
 
 
     @Override

@@ -15,7 +15,12 @@ import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
+import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
+import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
 import org.qii.weiciyuan.ui.userinfo.StatusesListAdapter;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * User: qii
@@ -31,7 +36,6 @@ public abstract class AbstractTimeLineFragment extends Fragment {
     protected MessageListBean bean = new MessageListBean();
     protected View headerView;
     protected View footerView;
-    public volatile boolean isBusying = false;
     protected ICommander commander;
 
     protected TimeLineGetNewMsgListTask newTask;
@@ -59,7 +63,38 @@ public abstract class AbstractTimeLineFragment extends Fragment {
 
     protected abstract void listViewItemClick(AdapterView parent, View view, int position, long id);
 
-    protected abstract void listViewFooterViewClick(View view);
+    protected void listViewFooterViewClick(View view) {
+        if (oldTask == null || oldTask.getStatus() == AsyncTask.Status.FINISHED) {
+
+            oldTask = new TimeLineGetOlderMsgListTask();
+            oldTask.execute();
+
+        }
+    }
+
+    protected void refresh() {
+        if (newTask == null || newTask.getStatus() == AsyncTask.Status.FINISHED) {
+
+            newTask = new TimeLineGetNewMsgListTask();
+            newTask.execute();
+            Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
+            Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = ((AbstractAppActivity) getActivity()).getPictureBitmapWorkerTaskMap();
+
+
+            Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
+            for (String key : keys) {
+                avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
+                avatarBitmapWorkerTaskHashMap.remove(key);
+            }
+
+            Set<String> pKeys = pictureBitmapWorkerTaskMap.keySet();
+            for (String pkey : pKeys) {
+                pictureBitmapWorkerTaskMap.get(pkey).cancel(true);
+                pictureBitmapWorkerTaskMap.remove(pkey);
+            }
+        }
+
+    }
 
 
     @Override
@@ -143,7 +178,6 @@ public abstract class AbstractTimeLineFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             showListView();
-            isBusying = true;
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
             headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
@@ -196,7 +230,7 @@ public abstract class AbstractTimeLineFragment extends Fragment {
             headerView.findViewById(R.id.header_progress).clearAnimation();
             headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
-            isBusying = false;
+
             if (bean.getStatuses().size() == 0) {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
             } else {
@@ -222,7 +256,6 @@ public abstract class AbstractTimeLineFragment extends Fragment {
         protected void onPreExecute() {
             showListView();
 
-            isBusying = true;
 
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
             View view = footerView.findViewById(R.id.refresh);
@@ -267,7 +300,7 @@ public abstract class AbstractTimeLineFragment extends Fragment {
         }
 
         private void cleanWork() {
-            isBusying = false;
+
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.click_to_load_older_message));
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);

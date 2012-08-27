@@ -18,14 +18,9 @@ import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
-import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * User: qii
@@ -94,38 +89,6 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
 
 
     @Override
-    protected void listViewFooterViewClick(View view) {
-        if (!isBusying) {
-
-            new TimeLineGetOlderMsgListTask().execute();
-
-        }
-    }
-
-
-    public void refresh() {
-        Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((MainTimeLineActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
-        Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = ((MainTimeLineActivity) getActivity()).getPictureBitmapWorkerTaskMap();
-
-
-        new TimeLineGetNewMsgListTask().execute();
-
-        Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
-        for (String key : keys) {
-            avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
-            avatarBitmapWorkerTaskHashMap.remove(key);
-        }
-
-        Set<String> pKeys = pictureBitmapWorkerTaskMap.keySet();
-        for (String pkey : pKeys) {
-            pictureBitmapWorkerTaskMap.get(pkey).cancel(true);
-            pictureBitmapWorkerTaskMap.remove(pkey);
-        }
-
-    }
-
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.friendstimelinefragment_menu, menu);
@@ -143,11 +106,11 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 startActivity(intent);
-                 break;
+                break;
             case R.id.friendstimelinefragment_refresh:
-                if (!isBusying) {
-                    refresh();
-                }
+
+                refresh();
+
                 break;
             case R.id.friendstimelinefragment_name:
                 intent = new Intent(getActivity(), MyInfoActivity.class);
