@@ -173,6 +173,16 @@ public class MessageBean implements Serializable {
                 return "" + (nowMonth - month) + GlobalContext.getInstance().getString(R.string.month);
             }
             if (nowDay > day) {
+                if (nowDay == day + 1) {
+                    long calTime = cal.getTimeInMillis();
+                    long messageCalTime = messageCal.getTimeInMillis();
+                    //minutes
+                    long time = (calTime - messageCalTime) / (1000 * 60);
+                    if (time < 60)
+                        return "" + time + GlobalContext.getInstance().getString(R.string.min);
+                    if (time < 60 * 60)
+                        return "" + time / (60 * 60) + GlobalContext.getInstance().getString(R.string.hour);
+                }
                 return "" + (nowDay - day) + GlobalContext.getInstance().getString(R.string.day);
             }
             if (nowHour > hour) {
