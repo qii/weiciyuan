@@ -13,10 +13,8 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
-import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.Abstract.ICommander;
-import org.qii.weiciyuan.ui.Abstract.IToken;
-import org.qii.weiciyuan.ui.Abstract.IUserInfo;
+import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.ui.Abstract.*;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 
 /**
@@ -180,6 +178,7 @@ public class MyInfoFragment extends Fragment {
                     .setUid(bean.getId()).getUserInfo();
             if (user != null) {
                 bean = user;
+                DatabaseManager.getInstance().updateAccountMyInfo(((IAccountInfo) getActivity()).getAccount(), bean);
             } else {
                 cancel(true);
             }

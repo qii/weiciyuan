@@ -79,6 +79,18 @@ public class DatabaseManager {
 
     }
 
+    public void updateAccountMyInfo(AccountBean account, UserBean myUserBean) {
+        String uid = account.getUid();
+        String json = new Gson().toJson(myUserBean);
+
+        ContentValues cv = new ContentValues();
+        cv.put(AccountTable.UID, uid);
+        cv.put(AccountTable.INFOJSON, json);
+
+        int c = rsd.update(AccountTable.TABLE_NAME, cv, AccountTable.UID + "=?",
+                new String[]{uid});
+     }
+
 
     public List<AccountBean> getAccountList() {
         List<AccountBean> accountList = new ArrayList<AccountBean>();

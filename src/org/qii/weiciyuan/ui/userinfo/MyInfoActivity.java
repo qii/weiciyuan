@@ -10,8 +10,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -24,10 +26,12 @@ import java.util.List;
  * Date: 12-8-15
  */
 public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
-        IToken {
+        IToken, IAccountInfo {
     private String token;
 
     private UserBean bean;
+
+    private AccountBean account;
 
     private ViewPager mViewPager = null;
 
@@ -51,6 +55,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
         getActionBar().setTitle(getString(R.string.my_info));
         token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
+        account = (AccountBean) getIntent().getSerializableExtra("account");
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
@@ -108,6 +113,11 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public AccountBean getAccount() {
+        return account;
     }
 
     class TimeLinePagerAdapter extends

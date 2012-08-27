@@ -153,6 +153,7 @@ public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
                 intent = new Intent(getActivity(), MyInfoActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("user", ((IUserInfo) getActivity()).getUser());
+                intent.putExtra("account", ((IAccountInfo) getActivity()).getAccount());
                 startActivity(intent);
                 break;
         }
