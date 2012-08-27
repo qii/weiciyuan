@@ -133,11 +133,11 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
         if (key.equals(SettingActivity.THEME)) {
             String value = sharedPreferences.getString(key, "1");
             if (value.equals("1"))
-                GlobalContext.getInstance().setAppTheme(android.R.style.Theme_Holo);
+                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black);
             if (value.equals("2"))
-                GlobalContext.getInstance().setAppTheme(android.R.style.Theme_Holo_Light);
+                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_White);
             if (value.equals("3"))
-                GlobalContext.getInstance().setAppTheme(android.R.style.Theme_Holo_Light_DarkActionBar);
+                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black_White);
 
             reload();
         }

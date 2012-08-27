@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme_Black" parent="@android:style/Theme.Holo">
+
+        <!-- set default widget styles -->
+        <item name="android:buttonStyle">@style/Button</item>
+        <item name="android:listViewStyle">@style/ListView</item>
+        <item name="android:textViewStyle">@style/TextView</item>
+        <item name="android:editTextStyle">@style/EditText</item>
+        <item name="android:checkboxStyle">@style/CheckBox</item>
+        <item name="android:radioButtonStyle">@style/RadioButton</item>
+        <!--<item name="android:actionBarStyle">@style/MyActionBar</item>-->
+        <!--<item name="android:actionBarTabStyle">@style/MyActionBar.TabView</item>-->
+
+    </style>
+</resources>

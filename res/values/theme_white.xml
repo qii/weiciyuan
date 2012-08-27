@@ -2,7 +2,7 @@
 
     <!-- global theme -->
 
-    <style name="AppTheme" parent="@android:style/Theme.Holo.Light">
+    <style name="AppTheme_White" parent="@android:style/Theme.Holo.Light">
 
         <!-- set default widget styles -->
         <item name="android:buttonStyle">@style/Button</item>
