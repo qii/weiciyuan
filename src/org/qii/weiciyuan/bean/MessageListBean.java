@@ -1,14 +1,13 @@
 package org.qii.weiciyuan.bean;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
-  * User: qii
+ * User: qii
  * Date: 12-7-29
-   */
-public class MessageListBean implements Serializable{
+ */
+public class MessageListBean extends ListBean {
     public List<MessageBean> getStatuses() {
         return statuses;
     }
@@ -45,5 +44,11 @@ public class MessageListBean implements Serializable{
     private String previous_cursor = "";
     private String next_cursor = "0";
     private String total_number = "";
+
+    @Override
+    public int getSize() {
+        return statuses.size();
+    }
+
 
 }

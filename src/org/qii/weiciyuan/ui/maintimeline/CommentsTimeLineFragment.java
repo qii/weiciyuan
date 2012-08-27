@@ -4,12 +4,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.*;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
@@ -20,55 +16,15 @@ import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
-import org.qii.weiciyuan.ui.Abstract.ICommander;
-import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
-import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * User: qii
  * Date: 12-7-29
  * Time: 下午1:15
  */
-public class CommentsTimeLineFragment extends Fragment {
+public class CommentsTimeLineFragment extends PowerFragment<CommentListBean> {
 
-    protected View headerView;
-    protected View footerView;
-    public volatile boolean isBusying = false;
-    protected ICommander commander;
-    protected ListView listView;
-    protected TextView empty;
-    protected ProgressBar progressBar;
-    protected TimeLineAdapter timeLineAdapter;
-    protected CommentListBean bean = new CommentListBean();
-
-    public CommentListBean getList() {
-        return bean;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("bean", bean);
-    }
-
-
-    protected void refreshLayout(CommentListBean bean) {
-        if (bean.getComments().size() > 0) {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            empty.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-            listView.setVisibility(View.VISIBLE);
-        } else {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
-            empty.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-            listView.setVisibility(View.INVISIBLE);
-        }
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -85,6 +41,7 @@ public class CommentsTimeLineFragment extends Fragment {
         }
 
     }
+
 
     private class SimpleTask extends AsyncTask<Object, Object, Object> {
 
@@ -111,40 +68,9 @@ public class CommentsTimeLineFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
-        empty = (TextView) view.findViewById(R.id.empty);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
-        listView = (ListView) view.findViewById(R.id.listView);
-        listView.setScrollingCacheEnabled(false);
-        headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
-        listView.addHeaderView(headerView);
-        listView.setHeaderDividersEnabled(false);
-        footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
-        listView.addFooterView(footerView);
-
-        if (bean.getComments().size() == 0) {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-        }
-
-
+    protected void buildListAdapter() {
         timeLineAdapter = new TimeLineAdapter();
         listView.setAdapter(timeLineAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                if (position - 1 < getList().getComments().size()) {
-
-                    listViewItemClick(parent, view, position - 1, id);
-                } else {
-
-                    listViewFooterViewClick(view);
-                }
-            }
-        });
-        return view;
     }
 
     protected class TimeLineAdapter extends BaseAdapter {
@@ -256,39 +182,12 @@ public class CommentsTimeLineFragment extends Fragment {
     }
 
 
-    protected void listViewFooterViewClick(View view) {
-        if (!isBusying) {
-            new FriendsTimeLineGetOlderMsgListTask().execute();
-        }
-    }
-
     protected void downloadAvatar(ImageView view, String url, int position, ListView listView) {
         commander.downloadAvatar(view, url, position, listView);
     }
 
     protected void downContentPic(ImageView view, String url, int position, ListView listView) {
         commander.downContentPic(view, url, position, listView);
-    }
-
-
-    public void refresh() {
-        Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((MainTimeLineActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
-        Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = ((MainTimeLineActivity) getActivity()).getPictureBitmapWorkerTaskMap();
-
-
-        new FriendsTimeLineGetNewMsgListTask().execute();
-        Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
-        for (String key : keys) {
-            avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
-            avatarBitmapWorkerTaskHashMap.remove(key);
-        }
-
-        Set<String> pKeys = pictureBitmapWorkerTaskMap.keySet();
-        for (String pkey : pKeys) {
-            pictureBitmapWorkerTaskMap.get(pkey).cancel(true);
-            pictureBitmapWorkerTaskMap.remove(pkey);
-        }
-
     }
 
 
@@ -313,136 +212,63 @@ public class CommentsTimeLineFragment extends Fragment {
     }
 
 
-    class FriendsTimeLineGetNewMsgListTask extends AsyncTask<Void, CommentListBean, CommentListBean> {
-
-        @Override
-        protected void onPreExecute() {
-            showListView();
-            isBusying = true;
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
-            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
-            Animation rotateAnimation = new RotateAnimation(0f, 360f,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotateAnimation.setDuration(1000);
-            rotateAnimation.setRepeatCount(-1);
-            rotateAnimation.setRepeatMode(Animation.RESTART);
-            rotateAnimation.setInterpolator(new LinearInterpolator());
-            headerView.findViewById(R.id.header_progress).startAnimation(rotateAnimation);
-            listView.setSelection(0);
+    @Override
+    protected CommentListBean getDoInBackgroundNewData() {
+        MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
+        if (getList().getComments().size() > 0) {
+            dao.setSince_id(getList().getComments().get(0).getId());
         }
-
-
-        @Override
-        protected CommentListBean doInBackground(Void... params) {
-            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
-            if (getList().getComments().size() > 0) {
-                dao.setSince_id(getList().getComments().get(0).getId());
-            }
-            CommentListBean result = dao.getGSONMsgList();
-            if (result != null) {
-                if (result.getComments().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                    DatabaseManager.getInstance().addCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
-                } else {
-                    DatabaseManager.getInstance().replaceCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
-                }
-            }
-            return result;
-
-        }
-
-        @Override
-        protected void onPostExecute(CommentListBean newValue) {
-            if (newValue != null) {
-                if (newValue.getComments().size() == 0) {
-                    Toast.makeText(getActivity(), "no new message", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    Toast.makeText(getActivity(), "total " + newValue.getComments().size() + " new messages", Toast.LENGTH_SHORT).show();
-                    if (newValue.getComments().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                        newValue.getComments().addAll(getList().getComments());
-                    }
-
-                    bean = newValue;
-                    timeLineAdapter.notifyDataSetChanged();
-                    listView.setSelectionAfterHeaderView();
-                    headerView.findViewById(R.id.header_progress).clearAnimation();
-
-
-                }
-            }
-            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
-            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
-            isBusying = false;
-            if (bean.getComments().size() == 0) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+        CommentListBean result = dao.getGSONMsgList();
+        if (result != null) {
+            if (result.getComments().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                DatabaseManager.getInstance().addCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
             } else {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+                DatabaseManager.getInstance().replaceCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
             }
-            getActivity().getActionBar().getTabAt(2).setText(getString(R.string.comments));
-            NotificationManager notificationManager = (NotificationManager) getActivity()
-                    .getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancelAll();
-            super.onPostExecute(newValue);
-
         }
+        return result;
     }
 
-
-    class FriendsTimeLineGetOlderMsgListTask extends AsyncTask<Void, CommentListBean, CommentListBean> {
-        @Override
-        protected void onPreExecute() {
-            showListView();
-            isBusying = true;
-
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("loading");
-            View view = footerView.findViewById(R.id.refresh);
-            view.setVisibility(View.VISIBLE);
-
-            Animation rotateAnimation = new RotateAnimation(0f, 360f,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotateAnimation.setDuration(1000);
-            rotateAnimation.setRepeatCount(-1);
-            rotateAnimation.setRepeatMode(Animation.RESTART);
-            rotateAnimation.setInterpolator(new LinearInterpolator());
-            view.startAnimation(rotateAnimation);
-
+    @Override
+    protected CommentListBean getDoInBackgroundOldData() {
+        MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
+        if (getList().getComments().size() > 0) {
+            dao.setMax_id(getList().getComments().get(getList().getComments().size() - 1).getId());
         }
-
-        @Override
-        protected CommentListBean doInBackground(Void... params) {
-
-            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
-            if (getList().getComments().size() > 0) {
-                dao.setMax_id(getList().getComments().get(getList().getComments().size() - 1).getId());
-            }
-            CommentListBean result = dao.getGSONMsgList();
-
-            return result;
-
-        }
-
-        @Override
-        protected void onPostExecute(CommentListBean newValue) {
-            if (newValue != null) {
-                Toast.makeText(getActivity(), "total " + newValue.getComments().size() + " old messages", Toast.LENGTH_SHORT).show();
-
-                getList().getComments().addAll(newValue.getComments().subList(1, newValue.getComments().size() - 1));
-
-            }
-
-            isBusying = false;
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText("click to load older message");
-            footerView.findViewById(R.id.refresh).clearAnimation();
-            footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
-            timeLineAdapter.notifyDataSetChanged();
-            super.onPostExecute(newValue);
-        }
+        CommentListBean result = dao.getGSONMsgList();
+        return result;
     }
 
-    private void showListView() {
-        empty.setVisibility(View.INVISIBLE);
-        listView.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
+    @Override
+    protected void newMsgOnPostExecute(CommentListBean newValue) {
+        if (newValue != null) {
+            if (newValue.getComments().size() == 0) {
+                Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getComments().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
+                if (newValue.getComments().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                    newValue.getComments().addAll(getList().getComments());
+                }
+
+                bean = newValue;
+                timeLineAdapter.notifyDataSetChanged();
+                listView.setSelectionAfterHeaderView();
+            }
+        }
+        getActivity().getActionBar().getTabAt(2).setText(getString(R.string.comments));
+        NotificationManager notificationManager = (NotificationManager) getActivity()
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+    }
+
+    @Override
+    protected void oldMsgOnPostExecute(CommentListBean newValue) {
+        if (newValue != null) {
+            Toast.makeText(getActivity(), getString(R.string.total) + newValue.getComments().size() + getString(R.string.old_messages), Toast.LENGTH_SHORT).show();
+
+            getList().getComments().addAll(newValue.getComments().subList(1, newValue.getComments().size() - 1));
+
+        }
     }
 }

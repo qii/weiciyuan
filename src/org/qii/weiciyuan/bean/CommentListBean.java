@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.bean;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,7 @@ import java.util.List;
  * Date: 12-8-2
  * Time: 下午3:28
  */
-public class CommentListBean implements Serializable {
+public class CommentListBean extends ListBean {
     private List<CommentBean> comments = new ArrayList<CommentBean>();
     private String previous_cursor = "";
     private String next_cursor = "0";
@@ -46,5 +45,10 @@ public class CommentListBean implements Serializable {
 
     public void setTotal_number(String total_number) {
         this.total_number = total_number;
+    }
+
+    @Override
+    public int getSize() {
+        return comments.size();
     }
 }
