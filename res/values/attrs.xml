@@ -24,4 +24,6 @@
     <attr name="statusnewactivity_gps" format="reference"/>
     <attr name="statusnewactivity_send" format="reference"/>
 
+    <attr name="listview_item_background_selector" format="reference"/>
+
 </resources>

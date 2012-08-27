@@ -38,6 +38,8 @@
         <item name="statusnewactivity_gps">@drawable/statusnewactivity_gps_black</item>
         <item name="statusnewactivity_send">@drawable/statusnewactivity_send_black</item>
 
+        <item name="listview_item_background_selector">@drawable/listview_item_background_selector</item>
+
     </style>
     <!-- detail style -->
     <style name="Button" parent="@android:style/Widget.Holo.Button">

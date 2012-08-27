@@ -4,7 +4,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:background="@drawable/listview_item_background_selector">
+                android:background="?listview_item_background_selector">
 
     <ImageView
             android:id="@+id/avatar"
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="username"
-            android:textColor="@drawable/listview_item_text_selector"
+
             android:layout_toRightOf="@id/avatar"
             />
 
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="12:00"
-            android:textColor="@drawable/listview_item_text_selector"
+
             android:layout_alignParentRight="true"
             android:layout_alignBottom="@id/username"
             />
@@ -40,7 +40,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="content"
-            android:textColor="@drawable/listview_item_text_selector"
+
             android:layout_below="@id/username"
             android:layout_toRightOf="@id/avatar"
             android:layerType="software"
@@ -63,7 +63,6 @@
                     android:layout_height="80dp"
                     android:visibility="gone"
                     android:clickable="true"
-
                     />
         </LinearLayout>
         <LinearLayout
@@ -80,7 +79,6 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="content"
-                    android:textColor="@drawable/listview_item_text_selector"
                     android:visibility="gone"
                     android:layerType="software"
                     />
@@ -88,7 +86,6 @@
                           android:layout_width="fill_parent"
                           android:gravity="center">
                 <ImageView
-
                         android:id="@+id/repost_content_pic"
                         android:layout_width="wrap_content"
                         android:layout_height="80dp"
