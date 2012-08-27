@@ -206,9 +206,9 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
         boolean fav = msg.isFavorited();
         if (fav) {
-            menu.findItem(R.id.menu_fav).setIcon(R.drawable.fav_un);
+            menu.findItem(R.id.menu_fav).setIcon(R.drawable.fav_un_black);
         } else {
-            menu.findItem(R.id.menu_fav).setIcon(R.drawable.fav_en);
+            menu.findItem(R.id.menu_fav).setIcon(R.drawable.fav_en_black);
         }
 
         return super.onCreateOptionsMenu(menu);

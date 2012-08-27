@@ -37,7 +37,7 @@ public class PhotoUploadService extends Service {
                 .setContentTitle(getString(R.string.background_sending))
                 .setContentText(content)
                 .setProgress(100, 100, true)
-                .setSmallIcon(R.drawable.upload);
+                .setSmallIcon(R.drawable.upload_white);
         notification = builder.getNotification();
 
         new UploadTask().execute();

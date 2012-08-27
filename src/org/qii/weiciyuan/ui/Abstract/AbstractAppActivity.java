@@ -43,7 +43,7 @@ public class AbstractAppActivity extends FragmentActivity {
                 view.setImageBitmap(bitmap);
                 avatarBitmapWorkerTaskHashMap.remove(urlKey);
             } else {
-                view.setImageDrawable(getResources().getDrawable(R.drawable.account));
+                view.setImageDrawable(getResources().getDrawable(R.drawable.account_black));
                 if (avatarBitmapWorkerTaskHashMap.get(urlKey) == null) {
                     AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, listView, position);
                     avatarTask.execute(urlKey);
@@ -61,7 +61,7 @@ public class AbstractAppActivity extends FragmentActivity {
                 view.setImageBitmap(bitmap);
                 pictureBitmapWorkerTaskMap.remove(urlKey);
             } else {
-                view.setImageDrawable(getResources().getDrawable(R.drawable.picture));
+                view.setImageDrawable(getResources().getDrawable(R.drawable.picture_black));
                 if (pictureBitmapWorkerTaskMap.get(urlKey) == null) {
                     PictureBitmapWorkerTask avatarTask = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, listView, position);
                     avatarTask.execute(urlKey);

@@ -3,13 +3,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/repostsbyidtimelinefragment_repost"
-          android:icon="@drawable/repost"
+          android:icon="@drawable/repost_black"
           android:title="@string/repost"
           android:showAsAction="ifRoom|withText"
             />
 
     <item android:id="@+id/repostsbyidtimelinefragment_repost_refresh"
-          android:icon="@drawable/refresh"
+          android:icon="@drawable/refresh_black"
           android:title="@string/refresh"
           android:showAsAction="ifRoom|withText"
             />

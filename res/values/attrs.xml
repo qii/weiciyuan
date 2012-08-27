@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="accountactivity_new" format="reference" />
+    <attr name="accountactivity_new" format="reference"/>
+    <attr name="account" format="reference"/>
+     <attr name="friendstimelinefragment_write" format="reference"/>
 </resources>

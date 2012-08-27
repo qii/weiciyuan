@@ -3,26 +3,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/menu_repost"
-          android:icon="@drawable/repost"
+          android:icon="@drawable/repost_black"
           android:title="@string/repost"
 
           android:showAsAction="ifRoom|withText"
             />
     <item android:id="@+id/menu_comment"
-          android:icon="@drawable/comment"
+          android:icon="@drawable/comment_black"
           android:title="@string/comments"
           android:showAsAction="ifRoom|withText"
             />
 
     <item android:id="@+id/menu_fav"
           android:title="@string/favourite"
-          android:icon="@drawable/fav_un"
+          android:icon="@drawable/fav_un_black"
           android:showAsAction="ifRoom|withText"
             />
 
     <item android:id="@+id/menu_share"
           android:title="@string/share"
-          android:icon="@drawable/share"
+          android:icon="@drawable/share_black"
           android:showAsAction="ifRoom|withText"
             />
 

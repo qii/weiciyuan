@@ -14,6 +14,7 @@
         <!--<item name="android:actionBarStyle">@style/MyActionBar</item>-->
         <!--<item name="android:actionBarTabStyle">@style/MyActionBar.TabView</item>-->
         <item name="accountactivity_new">@drawable/accountactivity_new_black</item>
+        <item name="friendstimelinefragment_write">@drawable/friendstimelinefragment_write_black</item>
 
     </style>
     <!-- detail style -->

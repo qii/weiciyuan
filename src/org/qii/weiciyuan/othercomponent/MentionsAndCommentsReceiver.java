@@ -54,7 +54,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         Notification.Builder notification = new Notification.Builder(context)
                 .setContentTitle(title)
                 .setContentText(content)
-                .setSmallIcon(R.drawable.new_msg)
+                .setSmallIcon(R.drawable.new_msg_white)
                 .setAutoCancel(true)
                 .setContentIntent(activity);
         if (sum > 0) {

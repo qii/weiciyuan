@@ -75,11 +75,11 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
                     if (!checkAll) {
                         listAdapter.selectAll();
                         checkAll = true;
-                        item.setIcon(R.drawable.accountactivity_select_none);
+                        item.setIcon(R.drawable.accountactivity_select_none_black);
                     } else {
                         listAdapter.unSelectButRemainCheckBoxAll();
                         checkAll = false;
-                        item.setIcon(R.drawable.accountactivity_select_all);
+                        item.setIcon(R.drawable.accountactivity_select_all_black);
                     }
                     return true;
                 case R.id.menu_remove_account:

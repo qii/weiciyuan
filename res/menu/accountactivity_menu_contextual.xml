@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_select_all"
-          android:icon="@drawable/accountactivity_select_all"
+          android:icon="@drawable/accountactivity_select_all_black"
           android:title="全选"
           android:checkable="true"
           android:showAsAction="ifRoom|withText"
             />
     <item android:id="@+id/menu_remove_account"
-          android:icon="@drawable/accountactivity_remove"
+          android:icon="@drawable/accountactivity_remove_black"
           android:title="删除"
           android:showAsAction="ifRoom|withText"
             />
