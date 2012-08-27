@@ -15,13 +15,13 @@ import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.maintimeline.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.maintimeline.AbstractMessageTimeLineFragment;
 
 /**
  * User: Jiang Qi
  * Date: 12-8-16
  */
-public class StatusesByIdTimeLineFragment extends AbstractTimeLineFragment {
+public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragment {
 
 
     private UserBean userBean = new UserBean();

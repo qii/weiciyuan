@@ -12,7 +12,7 @@ import org.qii.weiciyuan.ui.userinfo.StatusesListAdapter;
  * User: qii
  * Date: 12-7-29
  */
-public abstract class AbstractTimeLineFragment extends PowerFragment<MessageListBean> {
+public abstract class AbstractMessageTimeLineFragment extends PowerFragment<MessageListBean> {
 
 
     protected void clearAndReplaceValue(MessageListBean value) {

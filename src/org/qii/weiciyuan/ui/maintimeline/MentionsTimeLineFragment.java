@@ -23,7 +23,7 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  * User: qii
  * Date: 12-7-29
  */
-public class MentionsTimeLineFragment extends AbstractTimeLineFragment {
+public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

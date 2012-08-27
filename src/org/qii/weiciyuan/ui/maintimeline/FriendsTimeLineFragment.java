@@ -26,7 +26,7 @@ import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
  * User: qii
  * Date: 12-7-29
  */
-public class FriendsTimeLineFragment extends AbstractTimeLineFragment {
+public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     UserBean userBean;
 
