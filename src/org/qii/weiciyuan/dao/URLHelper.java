@@ -47,6 +47,14 @@ public class URLHelper {
         return URLManager.getRealUrl("comment");
     }
 
+    public static String remove_Comment() {
+        return URLManager.getRealUrl("comment_destroy");
+    }
+
+    public static String reply_Comment() {
+        return URLManager.getRealUrl("comment_reply");
+    }
+
     public static String getUser() {
         return URLManager.getRealUrl("usershow");
     }

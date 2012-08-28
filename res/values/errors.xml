@@ -5,4 +5,6 @@
     <string name="code20506">already followed</string>
     <string name="code21332">invalid_access_token</string>
     <string name="code10006">source paramter(appkey) is missing</string>
+    <string name="code21301">auth faild!</string>
+
 </resources>

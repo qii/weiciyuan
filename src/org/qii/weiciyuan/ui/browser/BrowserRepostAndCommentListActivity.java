@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.List;
  * User: Jiang Qi
  * Date: 12-8-14
  */
-public class BrowserRepostAndCommentListActivity extends AbstractAppActivity implements IWeiboMsgInfo {
+public class BrowserRepostAndCommentListActivity extends AbstractAppActivity implements IWeiboMsgInfo,IToken {
 
     private String token = "";
     private String id = "";
@@ -106,6 +107,11 @@ public class BrowserRepostAndCommentListActivity extends AbstractAppActivity imp
 
         }
     };
+
+    @Override
+    public String getToken() {
+        return token;
+    }
 
     class TimeLinePagerAdapter extends
             FragmentPagerAdapter {

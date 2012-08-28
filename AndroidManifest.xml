@@ -66,7 +66,8 @@
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.userinfo.MyFavActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
-        <activity android:name=".ui.send.ReplyToCommentNewActivity"/>
+        <activity android:name=".ui.send.ReplyToCommentNewActivity"
+                  android:uiOptions="splitActionBarWhenNarrow"/>
 
         <service android:name=".othercomponent.FetchNewMsgService"/>
         <service android:name=".othercomponent.PhotoUploadService"/>
