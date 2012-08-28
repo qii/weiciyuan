@@ -27,7 +27,7 @@ public class CommentOperatorDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        String[] items = {getString(R.string.reply), getString(R.string.delete)};
+        String[] items = {getString(R.string.reply)};
         builder.setTitle(getString(R.string.and_then));
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
