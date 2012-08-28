@@ -19,7 +19,7 @@ public class TimeTool {
             Calendar cal = Calendar.getInstance();
             int nowMonth = cal.get(Calendar.MONTH) + 1;
             int nowDay = cal.get(Calendar.DAY_OF_MONTH);
-            int nowHour = cal.get(Calendar.HOUR);
+            int nowHour = cal.get(Calendar.HOUR_OF_DAY);
             int nowMinute = cal.get(Calendar.MINUTE);
             int nowSeconds = cal.get(Calendar.SECOND);
 
@@ -27,7 +27,7 @@ public class TimeTool {
             messageCal.setTime(new Date(created_at));
             int month = messageCal.get(Calendar.MONTH) + 1;
             int day = messageCal.get(Calendar.DAY_OF_MONTH);
-            int hour = messageCal.get(Calendar.HOUR);
+            int hour = messageCal.get(Calendar.HOUR_OF_DAY);
             int minute = messageCal.get(Calendar.MINUTE);
             int seconds = messageCal.get(Calendar.SECOND);
 
