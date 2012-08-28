@@ -234,7 +234,8 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-
+        CommentOperatorDialog progressFragment = new CommentOperatorDialog(bean.getComments().get(position));
+        progressFragment.show(getFragmentManager(), "");
     }
 
 

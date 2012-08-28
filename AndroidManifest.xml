@@ -45,9 +45,9 @@
         <activity android:name=".ui.preference.SettingActivity"
                   android:logo="@null"/>
         <activity android:name=".ui.browser.BrowserRepostAndCommentListActivity"
-                 />
+                />
         <activity android:name=".ui.userinfo.UserInfoActivity"
-                   >
+                >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <action android:name="android.intent.action.VIEW"/>
@@ -55,7 +55,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.userinfo.MyInfoActivity"
-                  />
+                />
         <activity android:name=".ui.userinfo.UserInfoStatusesActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.userinfo.FriendListActivity"
@@ -66,6 +66,7 @@
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.userinfo.MyFavActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".ui.send.ReplyToCommentNewActivity"/>
 
         <service android:name=".othercomponent.FetchNewMsgService"/>
         <service android:name=".othercomponent.PhotoUploadService"/>

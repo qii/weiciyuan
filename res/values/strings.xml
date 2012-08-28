@@ -97,6 +97,11 @@
     <!-- mute -->
     <string name="mute">过滤</string>
 
+    <!-- comment -->
+    <string name="and_then">你是要？</string>
+    <string name="reply">回复</string>
+    <string name="delete">删除</string>
+
     <!---Setting  -->
     <string name="setting">设置</string>
     <string name="normal">常规</string>
