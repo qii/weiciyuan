@@ -10,6 +10,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,8 +28,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.othercomponent.PhotoUploadService;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
@@ -49,6 +54,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     private String picPath = "";
 
     private String imageFilePath = "";
+
+    private GeoBean geoBean;
 
 
     @Override
@@ -94,7 +101,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             try {
                 bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageFileUri), null, bmpFactoryOptions);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                AppLogger.e(e.getMessage());
             }
             iv.setImageBitmap(bmp);
 
@@ -156,7 +163,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 onBackPressed();
                 break;
             case R.id.menu_add_gps:
-
+                getLocation();
                 break;
             case R.id.menu_add_pic:
                 new MyAlertDialogFragment().show(getFragmentManager(), "");
@@ -182,6 +189,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             intent.putExtra("token", token);
             intent.putExtra("picPath", picPath);
             intent.putExtra("content", content);
+            intent.putExtra("geo", geoBean);
             startService(intent);
             finish();
         }
@@ -217,7 +225,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         @Override
         protected String doInBackground(Void... params) {
-            boolean result = new StatusNewMsgDao(token).sendNewMsg(content);
+            boolean result = new StatusNewMsgDao(token).setGeoBean(geoBean).sendNewMsg(content);
 
             return null;
         }
@@ -240,7 +248,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     }
 
 
-    class MyAlertDialogFragment extends DialogFragment {
+    private class MyAlertDialogFragment extends DialogFragment {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -253,4 +261,53 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             return builder.create();
         }
     }
+
+    private void getLocation() {
+        LocationManager locationManager = (LocationManager) StatusNewActivity.this
+                .getSystemService(Context.LOCATION_SERVICE);
+
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Toast.makeText(StatusNewActivity.this, "GPS正在获取...", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(StatusNewActivity.this, "请开启GPS！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0,
+                locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0,
+                locationListener);
+    }
+
+
+    private void updateWithNewLocation(Location result) {
+        geoBean = new GeoBean();
+        geoBean.setLatitude(result.getLatitude());
+        geoBean.setLongitude(result.getLongitude());
+
+        AppLogger.e("location 维度：" + result.getLatitude() + ",经度:"
+                + result.getLongitude());
+        ((LocationManager) StatusNewActivity.this
+                .getSystemService(Context.LOCATION_SERVICE)).removeUpdates(locationListener);
+
+    }
+
+    private final LocationListener locationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            updateWithNewLocation(location);
+
+        }
+
+        public void onProviderDisabled(String provider) {
+
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onStatusChanged(String provider, int status,
+                                    Bundle extras) {
+        }
+    };
+
 }

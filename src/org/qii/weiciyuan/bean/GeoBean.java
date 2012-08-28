@@ -3,15 +3,13 @@ package org.qii.weiciyuan.bean;
 import java.io.Serializable;
 
 /**
- * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-7-31
- * Time: 下午8:14
- * To change this template use File | Settings | File Templates.
+ * "geo":{"type":"Point","coordinates":[30.1953,120.199235]}
  */
 public class GeoBean implements Serializable {
     private String type;
-    private String[] coordinates;
+    private double[] coordinates = {0.0, 0.0};
 
     public String getType() {
         return type;
@@ -21,11 +19,27 @@ public class GeoBean implements Serializable {
         this.type = type;
     }
 
-    public String[] getCoordinates() {
+    public double[] getCoordinates() {
         return coordinates;
     }
 
-    public void setCoordinates(String[] coordinates) {
+    public void setCoordinates(double[] coordinates) {
         this.coordinates = coordinates;
+    }
+
+    public double getLat() {
+        return coordinates[0];
+    }
+
+    public double getLon() {
+        return coordinates[1];
+    }
+
+    public void setLatitude(double lat) {
+        coordinates[0] = lat;
+    }
+
+    public void setLongitude(double lon) {
+        coordinates[1] = lon;
     }
 }
