@@ -102,6 +102,11 @@
     <string name="reply">回复</string>
     <string name="delete">删除</string>
 
+    <!--location -->
+    <string name="gps_is_searching">正在获取坐标...</string>
+    <string name="please_open_gps">请打开GPS</string>
+    <string name="get_location">已经获得地址</string>
+
     <!---Setting  -->
     <string name="setting">设置</string>
     <string name="normal">常规</string>

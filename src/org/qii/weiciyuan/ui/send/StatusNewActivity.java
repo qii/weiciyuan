@@ -266,10 +266,11 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         LocationManager locationManager = (LocationManager) StatusNewActivity.this
                 .getSystemService(Context.LOCATION_SERVICE);
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(StatusNewActivity.this, "GPS正在获取...", Toast.LENGTH_SHORT).show();
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            Toast.makeText(StatusNewActivity.this, getString(R.string.gps_is_searching), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(StatusNewActivity.this, "请开启GPS！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(StatusNewActivity.this, getString(R.string.please_open_gps), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -281,12 +282,11 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
 
     private void updateWithNewLocation(Location result) {
+        Toast.makeText(this, getString(R.string.get_location), Toast.LENGTH_SHORT).show();
         geoBean = new GeoBean();
         geoBean.setLatitude(result.getLatitude());
         geoBean.setLongitude(result.getLongitude());
 
-        AppLogger.e("location 维度：" + result.getLatitude() + ",经度:"
-                + result.getLongitude());
         ((LocationManager) StatusNewActivity.this
                 .getSystemService(Context.LOCATION_SERVICE)).removeUpdates(locationListener);
 
