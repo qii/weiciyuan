@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.maintimeline;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
+import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
@@ -178,7 +180,10 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-
+        Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
+        intent.putExtra("msg", bean.getComments().get(position).getStatus());
+        intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
+        startActivity(intent);
     }
 
 
