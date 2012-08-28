@@ -135,7 +135,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             }
 
             holder.content.setText(msg.getText());
-
+            holder.time.setText(msg.getListviewItemShowTime());
 
             holder.repost_content.setVisibility(View.GONE);
             holder.repost_content_pic.setVisibility(View.GONE);
