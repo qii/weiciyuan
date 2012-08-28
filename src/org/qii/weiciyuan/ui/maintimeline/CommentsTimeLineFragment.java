@@ -17,8 +17,10 @@ import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
+import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
  * User: qii
@@ -126,7 +128,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
         private void bindViewData(ViewHolder holder, int position) {
 
-            CommentBean msg = getList().getComments().get(position);
+            final CommentBean msg = getList().getComments().get(position);
             MessageBean repost_msg = msg.getStatus();
 
 
@@ -134,6 +136,15 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             String image_url = msg.getUser().getProfile_image_url();
             if (!TextUtils.isEmpty(image_url)) {
                 downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
+                holder.avatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                        intent.putExtra("token", ((IToken) getActivity()).getToken());
+                        intent.putExtra("user", msg.getUser());
+                        startActivity(intent);
+                    }
+                });
             }
 
             holder.content.setText(msg.getText());
