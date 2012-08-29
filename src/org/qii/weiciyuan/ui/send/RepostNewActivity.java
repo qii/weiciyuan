@@ -41,6 +41,9 @@ public class RepostNewActivity extends AbstractAppActivity {
         getActionBar().setTitle(getString(R.string.repost));
 
         et = ((EditText) findViewById(R.id.status_new_content));
+        if (msg.getRetweeted_status() != null) {
+            et.setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
+        }
     }
 
     @Override
@@ -92,7 +95,8 @@ public class RepostNewActivity extends AbstractAppActivity {
             }
 
             RepostNewMsgDao dao = new RepostNewMsgDao(token, id);
-            dao.setStatus(content + "//@" + msg.getUser().getScreen_name() + ":" + msg.getText());
+//            dao.setStatus(content + "//@" + msg.getUser().getScreen_name() + ":" + msg.getText());
+            dao.setStatus(content);
             return dao.sendNewMsg();
         }
 
