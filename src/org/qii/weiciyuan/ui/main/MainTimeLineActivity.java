@@ -72,6 +72,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     @Override
     public void onCreate(Bundle savedInstanceState) {
         buildThemeSetting();
+        buildFontSetting();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.maintimelineactivity_viewpager_layout);
 

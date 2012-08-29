@@ -45,13 +45,13 @@ public class AbstractAppActivity extends FragmentActivity {
             Bitmap bitmap = getBitmapFromMemCache(urlKey);
             if (bitmap != null) {
                 view.setImageBitmap(bitmap);
-                avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey,position));
+                avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey, position));
             } else {
                 view.setImageDrawable(getResources().getDrawable(R.drawable.account_black));
-                if (avatarBitmapWorkerTaskHashMap.get(getMemCacheKey(urlKey,position)) == null) {
+                if (avatarBitmapWorkerTaskHashMap.get(getMemCacheKey(urlKey, position)) == null) {
                     AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, listView, position);
                     avatarTask.execute(urlKey);
-                    avatarBitmapWorkerTaskHashMap.put(getMemCacheKey(urlKey,position), avatarTask);
+                    avatarBitmapWorkerTaskHashMap.put(getMemCacheKey(urlKey, position), avatarTask);
                 }
             }
 
@@ -89,6 +89,13 @@ public class AbstractAppActivity extends FragmentActivity {
             GlobalContext.getInstance().setAppTheme(R.style.AppTheme_White);
         if (value.equals("3"))
             GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black_White);
+    }
+
+    //only execute in AccountActivity and MainTimeLineActivity
+    protected void buildFontSetting() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String value = sharedPref.getString(SettingActivity.FONT_SIZE, "15");
+        GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
     }
 
     @Override

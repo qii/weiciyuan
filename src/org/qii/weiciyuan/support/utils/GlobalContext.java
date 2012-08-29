@@ -25,6 +25,16 @@ public final class GlobalContext extends Application {
 
     private int theme = 0;
 
+    private int fontSize=0;
+
+    public int getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(int fontSize) {
+        this.fontSize = fontSize;
+    }
+
     public int getAppTheme() {
         return theme;
     }

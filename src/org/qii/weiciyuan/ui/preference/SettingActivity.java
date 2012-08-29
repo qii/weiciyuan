@@ -30,6 +30,7 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String FREQUENCY = "frequency";
     public static final String ENABLE_FETCH_MSG = "enable_fetch_msg";
     public static final String CLEAR_CACHE = "clear_cache";
+    public static final String FONT_SIZE = "font_size";
 
 
     @Override
@@ -91,7 +92,7 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
         });
 
         task = new CalcCacheSize();
-       // task.execute();
+        // task.execute();
     }
 
     @Override
@@ -142,6 +143,11 @@ class SettingsFragment extends PreferenceFragment implements SharedPreferences.O
                 GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black_White);
 
             reload();
+        }
+
+        if (key.equals(SettingActivity.FONT_SIZE)) {
+            String value = sharedPreferences.getString(key, "15");
+            GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
         }
     }
 

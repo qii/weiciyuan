@@ -37,6 +37,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         buildThemeSetting();
+        buildFontSetting();
         //jumpToHomeLine();
 
         super.onCreate(savedInstanceState);

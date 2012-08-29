@@ -10,6 +10,14 @@
                 android:title="@string/show_pic"
                 android:defaultValue="true"/>
         <ListPreference
+                android:key="font_size"
+                android:title="@string/font_size"
+                android:summary="@string/only_timeline_font"
+                android:dialogTitle="@string/font_size"
+                android:entries="@array/font"
+                android:entryValues="@array/font_value"
+                android:defaultValue="15"/>
+        <ListPreference
                 android:key="theme"
                 android:title="@string/theme"
                 android:dialogTitle="@string/theme"

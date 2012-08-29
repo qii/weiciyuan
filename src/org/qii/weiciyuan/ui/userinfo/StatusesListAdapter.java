@@ -108,7 +108,7 @@ public class StatusesListAdapter extends BaseAdapter {
             holder.username.setVisibility(View.INVISIBLE);
             holder.avatar.setVisibility(View.INVISIBLE);
         }
-
+        holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
         holder.content.setText(msg.getText());
         setTextViewLink(holder.content);
         if (!TextUtils.isEmpty(msg.getListviewItemShowTime())) {
@@ -141,6 +141,8 @@ public class StatusesListAdapter extends BaseAdapter {
 
     private void buildRepostContent(final MessageBean repost_msg, ViewHolder holder, int position) {
         holder.repost_content.setVisibility(View.VISIBLE);
+        holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
+
         if (repost_msg.getUser() != null) {
             holder.repost_content.setText("@" + repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
             setTextViewLink(holder.repost_content);

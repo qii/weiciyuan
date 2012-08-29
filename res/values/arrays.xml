@@ -19,4 +19,14 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+    <string-array name="font">
+        <item>小</item>
+        <item>中等</item>
+        <item>大</item>
+    </string-array>
+    <string-array name="font_value">
+        <item>12</item>
+        <item>15</item>
+        <item>18</item>
+    </string-array>
 </resources>
