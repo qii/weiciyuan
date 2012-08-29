@@ -28,6 +28,7 @@ import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsTimeLineFragment;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
+import org.qii.weiciyuan.ui.search.SearchMainActivity;
 import org.qii.weiciyuan.ui.userinfo.MyInfoFragment;
 
 import java.util.ArrayList;
@@ -194,6 +195,10 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
             case R.id.menu_setting:
                 startActivity(new Intent(this, SettingActivity.class));
+                break;
+
+            case R.id.menu_search:
+                startActivity(new Intent(this, SearchMainActivity.class));
                 break;
 
         }
