@@ -44,7 +44,8 @@ public class TimeTool {
                         return "" + calMin + GlobalContext.getInstance().getString(R.string.min);
                     } else if (60 < calMin) {
                         long calHour = calMin / 60;
-                        return "" + calHour + GlobalContext.getInstance().getString(R.string.hour);
+                        if (calHour < 24)
+                            return "" + calHour + GlobalContext.getInstance().getString(R.string.hour);
                     }
                 }
                 return "" + (nowDay - day) + GlobalContext.getInstance().getString(R.string.day);
@@ -54,7 +55,8 @@ public class TimeTool {
                     long calTime = cal.getTimeInMillis();
                     long messageCalTime = messageCal.getTimeInMillis();
                     long time = (calTime - messageCalTime) / (MILL_MIN);
-                    return "" + time + GlobalContext.getInstance().getString(R.string.min);
+                    if (time < 60)
+                        return "" + time + GlobalContext.getInstance().getString(R.string.min);
                 }
                 return "" + (nowHour - hour) + GlobalContext.getInstance().getString(R.string.hour);
 
