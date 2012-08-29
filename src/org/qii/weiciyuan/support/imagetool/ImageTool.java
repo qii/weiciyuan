@@ -9,9 +9,11 @@ import org.qii.weiciyuan.support.http.HttpUtility;
 /**
  * User: Jiang Qi
  * Date: 12-8-3
- * Time: 上午9:25
  */
 public class ImageTool {
+
+    private static final int MAX_WIDTH = 480;
+    private static final int MAX_HEIGHT = 800 * 2;
 
 
     private static Bitmap decodeBitmapFromSDCard(String path,
@@ -76,11 +78,11 @@ public class ImageTool {
 
         absoluteFilePath = absoluteFilePath + ".jpg";
 
-        Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, 480, 1600);
+        Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, MAX_WIDTH, MAX_HEIGHT);
 
         if (bitmap == null) {
             String path = getBitmapFromNetWork(url, absoluteFilePath);
-            bitmap = decodeBitmapFromSDCard(path, 480, 1600);
+            bitmap = decodeBitmapFromSDCard(path, MAX_WIDTH, MAX_HEIGHT);
         }
         if (bitmap != null) {
             bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
