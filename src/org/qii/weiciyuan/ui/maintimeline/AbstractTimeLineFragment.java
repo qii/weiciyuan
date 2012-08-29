@@ -53,11 +53,16 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             empty.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             listView.setVisibility(View.VISIBLE);
-        } else {
+        } else if (bean.getSize() == 0) {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
             empty.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             listView.setVisibility(View.INVISIBLE);
+        } else if (bean.getSize() == bean.getTotal_number()) {
+            footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
+            empty.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            listView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -86,7 +91,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         listView.addFooterView(footerView);
 
-        if (bean==null||bean.getSize() == 0) {
+        if (bean == null || bean.getSize() == 0) {
 
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
         }
@@ -201,6 +206,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         }
 
         private void cleanWork() {
+            refreshLayout(getList());
             headerView.findViewById(R.id.header_progress).clearAnimation();
             headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
@@ -249,6 +255,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         @Override
         protected void onPostExecute(T newValue) {
             oldMsgOnPostExecute(newValue);
+            if (newValue.getSize() > 1) {
+                ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.click_to_load_older_message));
+            } else if (newValue.getSize() == 1) {
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+            }
             cleanWork();
             super.onPostExecute(newValue);
         }
@@ -256,13 +267,13 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         @Override
         protected void onCancelled(T messageListBean) {
             super.onCancelled(messageListBean);
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.click_to_load_older_message));
             cleanWork();
 
         }
 
         private void cleanWork() {
 
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.click_to_load_older_message));
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();

@@ -280,8 +280,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     @Override
     protected void oldMsgOnPostExecute(CommentListBean newValue) {
-        if (newValue != null) {
-            Toast.makeText(getActivity(), getString(R.string.total) + newValue.getComments().size() + getString(R.string.old_messages), Toast.LENGTH_SHORT).show();
+        if (newValue != null && newValue.getSize() > 1) {
 
             getList().getComments().addAll(newValue.getComments().subList(1, newValue.getComments().size() - 1));
 

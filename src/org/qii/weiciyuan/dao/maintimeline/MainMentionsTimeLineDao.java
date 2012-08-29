@@ -33,6 +33,7 @@ public class MainMentionsTimeLineDao {
         map.put("page", page);
         map.put("filter_by_author", filter_by_author);
         map.put("filter_by_source", filter_by_source);
+        map.put("filter_by_type",filter_by_type);
         map.put("trim_user", trim_user);
 
         String jsonData = null;

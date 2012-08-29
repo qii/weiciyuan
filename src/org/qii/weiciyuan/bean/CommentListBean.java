@@ -12,7 +12,6 @@ public class CommentListBean extends ListBean {
     private List<CommentBean> comments = new ArrayList<CommentBean>();
     private String previous_cursor = "";
     private String next_cursor = "0";
-    private String total_number = "";
 
 
     public List<CommentBean> getComments() {
@@ -39,11 +38,11 @@ public class CommentListBean extends ListBean {
         this.next_cursor = next_cursor;
     }
 
-    public String getTotal_number() {
+    public int getTotal_number() {
         return total_number;
     }
 
-    public void setTotal_number(String total_number) {
+    public void setTotal_number(int total_number) {
         this.total_number = total_number;
     }
 

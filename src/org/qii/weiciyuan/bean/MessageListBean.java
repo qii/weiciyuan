@@ -32,18 +32,13 @@ public class MessageListBean extends ListBean {
         this.next_cursor = next_cursor;
     }
 
-    public String getTotal_number() {
-        return total_number;
-    }
-
-    public void setTotal_number(String total_number) {
+    public void setTotal_number(int total_number) {
         this.total_number = total_number;
     }
 
     private List<MessageBean> statuses = new ArrayList<MessageBean>();
     private String previous_cursor = "";
     private String next_cursor = "0";
-    private String total_number = "";
 
     @Override
     public int getSize() {

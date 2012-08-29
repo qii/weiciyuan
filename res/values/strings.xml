@@ -33,6 +33,7 @@
     <string name="old_messages">条旧消息</string>
     <string name="loading">载入中……</string>
     <string name="click_to_load_older_message">点击载入旧消息</string>
+    <string name="older_message_empty">没有更早的消息了</string>
     <string name="more">载入更多</string>
     <string name="message_list">消息列表</string>
     <string name="message_number">微博消息</string>
@@ -73,6 +74,12 @@
     <string name="photo">照片</string>
     <string name="say_something">说点什么吧……</string>
     <string name="left">剩余</string>
+
+    <!-- mentions -->
+    <string name="select_group">选择分组</string>
+    <string name="all_people">所有人</string>
+    <string name="all_following">关注的人</string>
+    <string name="original">原创</string>
 
     <!--info -->
     <string name="personal_info">个人资料</string>

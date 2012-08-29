@@ -42,10 +42,17 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
 
     @Override
     protected void oldMsgOnPostExecute(MessageListBean newValue) {
-        if (newValue != null) {
-            Toast.makeText(getActivity(), getString(R.string.total) + newValue.getStatuses().size() + getString(R.string.old_messages), Toast.LENGTH_SHORT).show();
+        if (newValue != null && newValue.getSize() > 1) {
 
-            getList().getStatuses().addAll(newValue.getStatuses().subList(1, newValue.getStatuses().size() - 1));
+            int index = newValue.getStatuses().size() - 1;
+
+            if (index > 1) {
+
+                getList().getStatuses().addAll(newValue.getStatuses().subList(1, index));
+            }
+
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
 
         }
 
