@@ -40,7 +40,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="content"
-
+            android:textSize="15sp"
             android:layout_below="@id/username"
             android:layout_toRightOf="@id/avatar"
             android:layerType="software"
@@ -79,6 +79,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="content"
+                    android:textSize="15sp"
                     android:visibility="gone"
                     android:layerType="software"
                     />

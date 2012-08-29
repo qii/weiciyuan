@@ -13,10 +13,14 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.support.lib.MyLinkify;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * User: qii
@@ -106,7 +110,7 @@ public class StatusesListAdapter extends BaseAdapter {
         }
 
         holder.content.setText(msg.getText());
-
+        setTextViewLink(holder.content);
         if (!TextUtils.isEmpty(msg.getListviewItemShowTime())) {
             holder.time.setText(msg.getListviewItemShowTime());
         } else {
@@ -131,14 +135,15 @@ public class StatusesListAdapter extends BaseAdapter {
                 intent.putExtra("token", ((IToken) activity).getToken());
                 intent.putExtra("user", msg.getUser());
                 activity.startActivity(intent);
-             }
+            }
         });
     }
 
     private void buildRepostContent(final MessageBean repost_msg, ViewHolder holder, int position) {
         holder.repost_content.setVisibility(View.VISIBLE);
         if (repost_msg.getUser() != null) {
-            holder.repost_content.setText(repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
+            holder.repost_content.setText("@" + repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
+            setTextViewLink(holder.repost_content);
         } else {
             holder.repost_content.setText(repost_msg.getText());
 
@@ -177,5 +182,18 @@ public class StatusesListAdapter extends BaseAdapter {
         ImageView avatar;
         ImageView content_pic;
         ImageView repost_content_pic;
+    }
+
+    private void setTextViewLink(TextView view) {
+        MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
+            public final String transformUrl(final Matcher match, String url) {
+                return match.group(1);
+            }
+        };
+
+        // Match @mentions and capture just the username portion of the text.
+        Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)");
+        String scheme = "org.qii.weiciyuan://";
+        MyLinkify.addJustHighLightLinks(view, pattern, scheme, null, mentionFilter);
     }
 }

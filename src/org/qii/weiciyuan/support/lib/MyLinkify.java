@@ -297,6 +297,16 @@ public class MyLinkify {
         }
     }
 
+    public static final void addJustHighLightLinks(TextView text, Pattern p, String scheme,
+                                                   MatchFilter matchFilter, TransformFilter transformFilter) {
+        SpannableString s = SpannableString.valueOf(text.getText());
+
+        if (addLinks(s, p, scheme, matchFilter, transformFilter)) {
+            text.setText(s);
+
+        }
+    }
+
     /**
      * Applies a regex to a Spannable turning the matches into
      * links.
