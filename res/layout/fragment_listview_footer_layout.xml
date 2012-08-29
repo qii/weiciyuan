@@ -8,7 +8,7 @@
     <ImageView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:background="?refresh"
+            android:background="?listview_item_refresh_animation"
             android:id="@+id/refresh"
             android:visibility="gone"
             />

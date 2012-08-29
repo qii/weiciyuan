@@ -81,6 +81,9 @@
     <string name="all_following">关注的人</string>
     <string name="original">原创</string>
 
+    <!--comments -->
+    <string name="all_people_send_to_me">所有人发给我</string>
+
     <!--info -->
     <string name="personal_info">个人资料</string>
     <string name="my_info">我的资料</string>
