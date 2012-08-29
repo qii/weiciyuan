@@ -28,4 +28,19 @@ public class ListViewTool {
         Pattern dd = Pattern.compile("#([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)#");
         MyLinkify.addJustHighLightLinks(view, dd, scheme, null, mentionFilter);
     }
+
+    public static void addLinks(TextView view) {
+        MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
+            public final String transformUrl(final Matcher match, String url) {
+                return match.group(1);
+            }
+        };
+
+        // Match @mentions and capture just the username portion of the text.
+        Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)");
+        String scheme = "org.qii.weiciyuan://";
+        MyLinkify.addLinks(view, pattern, scheme, null, mentionFilter);
+        MyLinkify.addLinks(view, MyLinkify.WEB_URLS);
+
+    }
 }
