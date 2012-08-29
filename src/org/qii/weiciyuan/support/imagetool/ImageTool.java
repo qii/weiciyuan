@@ -14,29 +14,20 @@ import org.qii.weiciyuan.support.http.HttpUtility;
 public class ImageTool {
 
 
-    private static Bitmap decodeBitmapFromSDCard(String url,
+    private static Bitmap decodeBitmapFromSDCard(String path,
                                                  int reqWidth, int reqHeight) {
 
 
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
-        absoluteFilePath = absoluteFilePath + ".jpg";
+        options.inJustDecodeBounds = false;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
-        if (bitmap != null) {
+        return BitmapFactory.decodeFile(path, options);
 
-            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-            options.inJustDecodeBounds = false;
-
-            return BitmapFactory.decodeFile(absoluteFilePath, options);
-        } else {
-
-            return null;
-        }
     }
 
 
@@ -48,11 +39,14 @@ public class ImageTool {
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
         if (bitmap != null) {
-            return bitmap;
+            return ImageEdit.getRoundedCornerBitmap(bitmap);
         } else {
-            return getBitmapFromNetWork(url, absoluteFilePath);
+            String path = getBitmapFromNetWork(url, absoluteFilePath);
+            bitmap = BitmapFactory.decodeFile(path);
+            if (bitmap != null)
+                return ImageEdit.getRoundedCornerBitmap(bitmap);
         }
-
+        return null;
 
     }
 
@@ -66,7 +60,8 @@ public class ImageTool {
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
         if (bitmap == null) {
-            bitmap = getBitmapFromNetWork(url, absoluteFilePath);
+            String path = getBitmapFromNetWork(url, absoluteFilePath);
+            bitmap = BitmapFactory.decodeFile(path);
         }
         if (bitmap != null) {
             bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
@@ -74,29 +69,41 @@ public class ImageTool {
         return bitmap;
     }
 
+    public static Bitmap getNormalBitmap(String url) {
 
-    private static Bitmap getBitmapFromNetWork(String url, String path) {
+
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar);
+
+        absoluteFilePath = absoluteFilePath + ".jpg";
+
+        Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, 480, 1600);
+
+        if (bitmap == null) {
+            String path = getBitmapFromNetWork(url, absoluteFilePath);
+            bitmap = decodeBitmapFromSDCard(path, 480, 1600);
+        }
+        if (bitmap != null) {
+            bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+        }
+        return bitmap;
+    }
+
+    private static String getBitmapFromNetWork(String url, String path) {
 
         HttpUtility.getInstance().executeDownloadTask(url, path);
-        Bitmap bitmap = BitmapFactory.decodeFile(path);
-
-        if (bitmap != null) {
-            return bitmap;
-        } else {
-            return null;
-        }
+        return path;
 
     }
 
     private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
+
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
 
         if (height > reqHeight || width > reqWidth) {
-            if (width > height) {
+            if (height > reqHeight) {
                 inSampleSize = Math.round((float) height / (float) reqHeight);
             } else {
                 inSampleSize = Math.round((float) width / (float) reqWidth);

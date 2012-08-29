@@ -84,7 +84,7 @@ public class PictureDialogFragment extends DialogFragment {
         protected Bitmap doInBackground(String... url) {
             data = url[0];
             if (!isCancelled()) {
-                return ImageTool.getAvatarBitmap(data);
+                return ImageTool.getNormalBitmap(data);
             }
 
             return null;
