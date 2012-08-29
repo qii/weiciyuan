@@ -15,12 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.dao.location.LocationInfoDao;
 import org.qii.weiciyuan.dao.show.ShowStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyLinkify;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
-import org.qii.weiciyuan.support.lib.MyLinkify;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.regex.Matcher;
@@ -40,6 +42,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
     private TextView content;
     private TextView recontent;
     private TextView time;
+    private TextView location;
 
     private ImageView avatar;
     private ImageView content_pic;
@@ -85,7 +88,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         content = (TextView) findViewById(R.id.content);
         recontent = (TextView) findViewById(R.id.repost_content);
         time = (TextView) findViewById(R.id.time);
-
+        location = (TextView) findViewById(R.id.location);
 
         avatar = (ImageView) findViewById(R.id.avatar);
         content_pic = (ImageView) findViewById(R.id.content_pic);
@@ -141,6 +144,11 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         setTextViewLink(content);
 
         time.setText(msg.getCreated_at());
+
+        if (msg.getGeo() != null) {
+            location.setVisibility(View.VISIBLE);
+            new GetGoogleLocationInfo(msg.getGeo()).execute();
+        }
 
         comment_sum = msg.getComments_count();
         retweet_sum = msg.getReposts_count();
@@ -295,5 +303,25 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-     }
+    }
+
+    private class GetGoogleLocationInfo extends AsyncTask<Void, String, String> {
+
+        GeoBean geoBean;
+
+        public GetGoogleLocationInfo(GeoBean geoBean) {
+            this.geoBean = geoBean;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            return new LocationInfoDao(geoBean).getInfo();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            location.setText(s);
+            super.onPostExecute(s);
+        }
+    }
 }

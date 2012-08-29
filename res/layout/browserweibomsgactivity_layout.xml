@@ -10,7 +10,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-             >
+            >
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:id="@+id/first"
@@ -60,6 +60,7 @@
                 android:layout_below="@id/content"
                 android:layout_toRightOf="@id/avatar"
                 android:layout_marginTop="8dp"
+                android:id="@+id/third"
                 >
             <ImageView
                     android:id="@+id/content_pic"
@@ -97,6 +98,13 @@
             </LinearLayout>
 
         </FrameLayout>
+        <TextView android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/third"
+                  android:id="@+id/location"
+                  android:visibility="gone"
+                  android:onClick="true"
+                  android:layout_marginTop="8dp"/>
 
     </RelativeLayout>
 
