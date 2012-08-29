@@ -2,6 +2,9 @@ package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -25,6 +28,7 @@ import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,6 +94,24 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         time = (TextView) findViewById(R.id.time);
         location = (TextView) findViewById(R.id.location);
 
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GeoBean bean = msg.getGeo();
+                String geoUriString = "geo:" + bean.getLat() + "," + bean.getLon() + "?q=" + location.getText();
+                Uri geoUri = Uri.parse(geoUriString);
+                Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
+                PackageManager packageManager = getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(mapCall, 0);
+                boolean isIntentSafe = activities.size() > 0;
+                if (isIntentSafe) {
+                    startActivity(mapCall);
+                }
+
+
+            }
+        });
+
         avatar = (ImageView) findViewById(R.id.avatar);
         content_pic = (ImageView) findViewById(R.id.content_pic);
         repost_pic = (ImageView) findViewById(R.id.repost_content_pic);
@@ -146,7 +168,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         time.setText(msg.getCreated_at());
 
         if (msg.getGeo() != null) {
-            location.setVisibility(View.VISIBLE);
             new GetGoogleLocationInfo(msg.getGeo()).execute();
         }
 
@@ -320,6 +341,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
         @Override
         protected void onPostExecute(String s) {
+            location.setVisibility(View.VISIBLE);
             location.setText(s);
             super.onPostExecute(s);
         }

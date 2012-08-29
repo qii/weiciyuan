@@ -50,8 +50,13 @@ public class LocationInfoDao {
             JSONArray results = jsonObject.optJSONArray("results");
             JSONObject jsonObject1 = results.getJSONObject(0);
             String formatAddress = jsonObject1.optString("formatted_address");
-            String location=formatAddress.substring(0,formatAddress.indexOf(" "));
-            return location;
+            int index = formatAddress.indexOf(" ");
+            if (index > 0) {
+                String location = formatAddress.substring(0, index);
+                return location;
+            }else {
+                return formatAddress;
+            }
         } catch (JSONException e) {
             AppLogger.e(e.getMessage());
         }
