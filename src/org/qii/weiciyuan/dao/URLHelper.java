@@ -90,4 +90,8 @@ public class URLHelper {
     public static String getUnFavitUrl() {
         return URLManager.getRealUrl("unfavit");
     }
+
+    public static String getGoogleLocatonUrl() {
+        return URLManager.getGoogleRealUrl("googlelocation");
+    }
 }

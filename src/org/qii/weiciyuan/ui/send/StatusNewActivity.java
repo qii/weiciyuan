@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
+import org.qii.weiciyuan.dao.location.LocationInfoDao;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.othercomponent.PhotoUploadService;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -282,11 +283,10 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
 
     private void updateWithNewLocation(Location result) {
-        Toast.makeText(this, getString(R.string.get_location), Toast.LENGTH_SHORT).show();
         geoBean = new GeoBean();
         geoBean.setLatitude(result.getLatitude());
         geoBean.setLongitude(result.getLongitude());
-
+        new GetGoogleLocationInfo().execute();
         ((LocationManager) StatusNewActivity.this
                 .getSystemService(Context.LOCATION_SERVICE)).removeUpdates(locationListener);
 
@@ -310,4 +310,18 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         }
     };
 
+
+    private class GetGoogleLocationInfo extends AsyncTask<Void, String, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            return new LocationInfoDao(geoBean).getInfo();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Toast.makeText(StatusNewActivity.this, s, Toast.LENGTH_SHORT).show();
+            super.onPostExecute(s);
+        }
+    }
 }

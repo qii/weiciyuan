@@ -39,11 +39,20 @@ public final class URLManager {
         if (TextUtils.isEmpty(urlContent))
             return null;
 
-        String url=getUrl(urlContent);
+        String url = getUrl(urlContent);
         if (!url.startsWith("/")) {
             url = "/" + url;
         }
 
-        return String.format(URL_FORMAT, URL_SINA_WEIBO,url);
+        return String.format(URL_FORMAT, URL_SINA_WEIBO, url);
+    }
+
+    public static String getGoogleRealUrl(String urlContent) {
+
+        if (TextUtils.isEmpty(urlContent))
+            return null;
+
+        String url = getUrl(urlContent);
+        return url;
     }
 }
