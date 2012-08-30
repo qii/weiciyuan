@@ -68,6 +68,7 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone"
                     android:clickable="true"
+                    android:layout_gravity="center"
                     />
             <LinearLayout
                     android:id="@+id/repost_layout"
@@ -94,6 +95,7 @@
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         android:clickable="true"
+                        android:layout_gravity="center"
                         />
             </LinearLayout>
 
