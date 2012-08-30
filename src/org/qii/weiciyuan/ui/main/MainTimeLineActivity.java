@@ -73,13 +73,13 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     public void onCreate(Bundle savedInstanceState) {
         buildThemeSetting();
         buildFontSetting();
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.maintimelineactivity_viewpager_layout);
-
         Intent intent = getIntent();
         accountBean = (AccountBean) intent.getSerializableExtra("account");
         token = accountBean.getAccess_token();
         GlobalContext.getInstance().setSpecialToken(token);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.maintimelineactivity_viewpager_layout);
+
 
         buildSetting();
 

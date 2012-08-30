@@ -37,7 +37,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         ((MainTimeLineActivity) getActivity()).setCommentsListView(listView);
-        if (savedInstanceState != null && bean.getComments().size() == 0) {
+        if (savedInstanceState != null && (bean == null || bean.getComments().size() == 0)) {
             bean = (CommentListBean) savedInstanceState.getSerializable("bean");
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
@@ -179,8 +179,6 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 downContentPic(holder.repost_content_pic, repost_msg.getThumbnail_pic(), position, listView);
             }
         }
-
-
 
 
     }

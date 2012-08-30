@@ -48,12 +48,12 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
 
     protected void refreshLayout(T bean) {
-        if (bean.getSize() > 0) {
+        if (bean != null && bean.getSize() > 0) {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             empty.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             listView.setVisibility(View.VISIBLE);
-        } else if (bean.getSize() == 0) {
+        } else if (bean == null || bean.getSize() == 0) {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
             empty.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
