@@ -24,7 +24,7 @@ import org.qii.weiciyuan.ui.maintimeline.AbstractMessageTimeLineFragment;
 public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragment {
 
 
-    private UserBean userBean = new UserBean();
+    private UserBean userBean;
 
 
     private String token;
@@ -35,10 +35,17 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         this.uid = uid;
     }
 
+    public StatusesByIdTimeLineFragment() {
+
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
+        outState.putString("token", token);
+        outState.putString("uid", uid);
+        outState.putSerializable("userbean", userBean);
     }
 
 
@@ -48,6 +55,8 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         if (savedInstanceState != null && bean.getStatuses().size() == 0) {
             bean = (MessageListBean) savedInstanceState.getSerializable("bean");
+            token = savedInstanceState.getString("token");
+            uid = savedInstanceState.getString("uid");
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
@@ -61,7 +70,12 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        userBean = ((IUserInfo) getActivity()).getUser();
+
+        if (userBean == null && savedInstanceState != null) {
+            userBean = (UserBean) savedInstanceState.getSerializable("userbean");
+        } else {
+            userBean = ((IUserInfo) getActivity()).getUser();
+        }
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);

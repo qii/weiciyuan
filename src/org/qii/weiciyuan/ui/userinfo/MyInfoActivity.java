@@ -48,15 +48,16 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.maintimelineactivity_viewpager_layout);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(getString(R.string.my_info));
+        super.onCreate(savedInstanceState);
+
         token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
         account = (AccountBean) getIntent().getSerializableExtra("account");
 
+        setContentView(R.layout.maintimelineactivity_viewpager_layout);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+             getActionBar().setTitle(getString(R.string.my_info));
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
         mViewPager.setOffscreenPageLimit(5);
