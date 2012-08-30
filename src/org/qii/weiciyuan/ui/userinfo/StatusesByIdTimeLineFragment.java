@@ -94,10 +94,15 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
     @Override
     protected MessageListBean getDoInBackgroundNewData() {
-        StatusesTimeLineDao dao = new StatusesTimeLineDao(((IToken) getActivity()).getToken(), ((IUserInfo) getActivity()).getUser().getId());
 
-        if (TextUtils.isEmpty(((IUserInfo) getActivity()).getUser().getId())) {
-            dao.setScreen_name(((IUserInfo) getActivity()).getUser().getScreen_name());
+        String token = ((IToken) getActivity()).getToken();
+        String id = ((IUserInfo) getActivity()).getUser().getId();
+        String screenName = ((IUserInfo) getActivity()).getUser().getScreen_name();
+
+        StatusesTimeLineDao dao = new StatusesTimeLineDao(token, id);
+
+        if (TextUtils.isEmpty(id)) {
+            dao.setScreen_name(screenName);
         }
 
         if (getList().getStatuses().size() > 0) {
@@ -110,9 +115,13 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
     @Override
     protected MessageListBean getDoInBackgroundOldData() {
-        StatusesTimeLineDao dao = new StatusesTimeLineDao(((IToken) getActivity()).getToken(), ((IUserInfo) getActivity()).getUser().getId());
-        if (TextUtils.isEmpty(((IUserInfo) getActivity()).getUser().getId())) {
-            dao.setScreen_name(((IUserInfo) getActivity()).getUser().getScreen_name());
+        String token = ((IToken) getActivity()).getToken();
+        String id = ((IUserInfo) getActivity()).getUser().getId();
+        String screenName = ((IUserInfo) getActivity()).getUser().getScreen_name();
+
+        StatusesTimeLineDao dao = new StatusesTimeLineDao(token, id);
+        if (TextUtils.isEmpty(id)) {
+            dao.setScreen_name(screenName);
         }
         if (getList().getStatuses().size() > 0) {
             dao.setMax_id(getList().getStatuses().get(getList().getStatuses().size() - 1).getId());
