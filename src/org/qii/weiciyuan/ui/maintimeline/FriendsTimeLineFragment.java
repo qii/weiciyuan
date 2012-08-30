@@ -45,6 +45,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
+    protected void newMsgOnPostExecute(MessageListBean newValue) {
+        super.newMsgOnPostExecute(newValue);
+        showNewMsgToastMessage(newValue);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((MainTimeLineActivity) getActivity()).setHomeListView(listView);

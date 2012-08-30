@@ -51,6 +51,12 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
+    protected void newMsgOnPostExecute(MessageListBean newValue) {
+        super.newMsgOnPostExecute(newValue);
+        showNewMsgToastMessage(newValue);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((MainTimeLineActivity) getActivity()).setMentionsListView(listView);
