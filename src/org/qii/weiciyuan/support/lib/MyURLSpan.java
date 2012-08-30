@@ -28,7 +28,7 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
     }
 
     public int getSpanTypeId() {
-        return -1;
+        return 11;
     }
 
     public int describeContents() {
