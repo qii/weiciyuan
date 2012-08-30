@@ -60,7 +60,6 @@ public class OAuthActivity extends AbstractAppActivity {
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -155,7 +154,7 @@ public class OAuthActivity extends AbstractAppActivity {
         } else {
             Toast.makeText(OAuthActivity.this, getString(R.string.you_cancel_login), Toast.LENGTH_SHORT).show();
             finish();
-         }
+        }
     }
 
     class OAuthTask extends AsyncTask<String, UserBean, DBResult> {
@@ -200,7 +199,7 @@ public class OAuthActivity extends AbstractAppActivity {
         @Override
         protected void onCancelled(DBResult dbResult) {
             super.onCancelled(dbResult);
-            if (progressFragment.isVisible()) {
+            if (progressFragment != null) {
                 progressFragment.dismissAllowingStateLoss();
             }
             Toast.makeText(OAuthActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
