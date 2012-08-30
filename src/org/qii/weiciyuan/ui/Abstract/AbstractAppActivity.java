@@ -3,7 +3,9 @@ package org.qii.weiciyuan.ui.Abstract;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
@@ -49,7 +51,10 @@ public class AbstractAppActivity extends FragmentActivity {
                 view.setImageBitmap(bitmap);
                 avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey, position));
             } else {
-                view.setImageDrawable(getResources().getDrawable(R.drawable.account_black));
+                int[] attrs = new int[]{R.attr.account};
+                TypedArray ta = obtainStyledAttributes(attrs);
+                Drawable drawableFromTheme = ta.getDrawable(0);
+                view.setImageDrawable(drawableFromTheme);
                 if (avatarBitmapWorkerTaskHashMap.get(getMemCacheKey(urlKey, position)) == null) {
                     AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, listView, position);
                     avatarTask.execute(urlKey);
@@ -67,7 +72,10 @@ public class AbstractAppActivity extends FragmentActivity {
                 view.setImageBitmap(bitmap);
                 pictureBitmapWorkerTaskMap.remove(urlKey);
             } else {
-                view.setImageDrawable(getResources().getDrawable(R.drawable.picture_black));
+                int[] attrs = new int[]{R.attr.picture};
+                TypedArray ta = obtainStyledAttributes(attrs);
+                Drawable drawableFromTheme = ta.getDrawable(0);
+                view.setImageDrawable(drawableFromTheme);
                 if (pictureBitmapWorkerTaskMap.get(urlKey) == null) {
                     PictureBitmapWorkerTask avatarTask = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, listView, position);
                     avatarTask.execute(urlKey);
