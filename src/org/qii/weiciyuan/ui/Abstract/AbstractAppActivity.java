@@ -32,6 +32,9 @@ public class AbstractAppActivity extends FragmentActivity {
 
     private int theme = 0;
 
+    private Drawable defaultAvatar = null;
+    private Drawable defaultPic = null;
+
 
     Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = new ConcurrentHashMap<String, AvatarBitmapWorkerTask>();
     Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = new ConcurrentHashMap<String, PictureBitmapWorkerTask>();
@@ -51,10 +54,7 @@ public class AbstractAppActivity extends FragmentActivity {
                 view.setImageBitmap(bitmap);
                 avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey, position));
             } else {
-                int[] attrs = new int[]{R.attr.account};
-                TypedArray ta = obtainStyledAttributes(attrs);
-                Drawable drawableFromTheme = ta.getDrawable(0);
-                view.setImageDrawable(drawableFromTheme);
+                view.setImageDrawable(defaultAvatar);
                 if (avatarBitmapWorkerTaskHashMap.get(getMemCacheKey(urlKey, position)) == null) {
                     AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, listView, position);
                     avatarTask.execute(urlKey);
@@ -72,10 +72,7 @@ public class AbstractAppActivity extends FragmentActivity {
                 view.setImageBitmap(bitmap);
                 pictureBitmapWorkerTaskMap.remove(urlKey);
             } else {
-                int[] attrs = new int[]{R.attr.picture};
-                TypedArray ta = obtainStyledAttributes(attrs);
-                Drawable drawableFromTheme = ta.getDrawable(0);
-                view.setImageDrawable(drawableFromTheme);
+                view.setImageDrawable(defaultPic);
                 if (pictureBitmapWorkerTaskMap.get(urlKey) == null) {
                     PictureBitmapWorkerTask avatarTask = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, listView, position);
                     avatarTask.execute(urlKey);
@@ -132,7 +129,22 @@ public class AbstractAppActivity extends FragmentActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         forceShowActionBarOverflowMenu();
+        initDefaultAvatar();
+        initDefaultPic();
 
+    }
+
+
+    private void initDefaultAvatar() {
+        int[] attrs = new int[]{R.attr.account};
+        TypedArray ta = obtainStyledAttributes(attrs);
+        defaultAvatar = ta.getDrawable(0);
+    }
+
+    private void initDefaultPic() {
+        int[] attrs = new int[]{R.attr.picture};
+        TypedArray ta = obtainStyledAttributes(attrs);
+        defaultPic = ta.getDrawable(0);
     }
 
     private void forceShowActionBarOverflowMenu() {
@@ -159,6 +171,9 @@ public class AbstractAppActivity extends FragmentActivity {
             pictureBitmapWorkerTaskMap.get(task).cancel(true);
         }
         pictureBitmapWorkerTaskMap = null;
+
+        defaultAvatar = null;
+        defaultPic = null;
     }
 
     private void reload() {
