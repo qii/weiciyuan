@@ -56,11 +56,18 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         this.id = id;
     }
 
+    public CommentsByIdTimeLineFragment() {
+
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
+        outState.putString("id",id);
+        outState.putString("token",token);
     }
+
 
 
     protected void refreshLayout(CommentListBean bean) {
@@ -86,6 +93,8 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         if (savedInstanceState != null && bean.getComments().size() == 0) {
             bean = (CommentListBean) savedInstanceState.getSerializable("bean");
+            token=savedInstanceState.getString("token");
+            id=savedInstanceState.getString("id");
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {

@@ -56,10 +56,16 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         this.id = id;
     }
 
+    public RepostsByIdTimeLineFragment() {
+
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
+        outState.putString("id", id);
+        outState.putString("token", token);
     }
 
 
@@ -86,6 +92,8 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         if (savedInstanceState != null && bean.getReposts().size() == 0) {
             bean = (RepostListBean) savedInstanceState.getSerializable("bean");
+            token = savedInstanceState.getString("token");
+            id = savedInstanceState.getString("id");
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
