@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.view.ViewConfiguration;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -120,6 +122,21 @@ public class AbstractAppActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         if (getResources().getBoolean(R.bool.is_phone)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        showActinBarOverflowMenu();
+
+    }
+
+    private void showActinBarOverflowMenu() {
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if (menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ignored) {
+
         }
     }
 
