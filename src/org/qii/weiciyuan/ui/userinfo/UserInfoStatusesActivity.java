@@ -39,7 +39,7 @@ public class UserInfoStatusesActivity extends AbstractAppActivity implements IUs
         token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
         getSupportFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new StatusesByIdTimeLineFragment(token, bean.getId()))
+                .replace(android.R.id.content, new StatusesByIdTimeLineFragment())
                 .commit();
 
     }

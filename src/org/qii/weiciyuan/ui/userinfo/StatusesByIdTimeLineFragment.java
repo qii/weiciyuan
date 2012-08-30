@@ -13,6 +13,7 @@ import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.maintimeline.AbstractMessageTimeLineFragment;
@@ -27,14 +28,6 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     private UserBean userBean;
 
 
-    private String token;
-    private String uid;
-
-    public StatusesByIdTimeLineFragment(String token, String uid) {
-        this.token = token;
-        this.uid = uid;
-    }
-
     public StatusesByIdTimeLineFragment() {
 
     }
@@ -43,48 +36,33 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
-        outState.putString("token", token);
-        outState.putString("uid", uid);
         outState.putSerializable("userbean", userBean);
     }
 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+
         commander = ((AbstractAppActivity) getActivity()).getCommander();
-        if (savedInstanceState != null && bean.getStatuses().size() == 0) {
-            bean = (MessageListBean) savedInstanceState.getSerializable("bean");
-            token = savedInstanceState.getString("token");
-            uid = savedInstanceState.getString("uid");
+
+        if (savedInstanceState != null) {
+            clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
+            userBean = (UserBean) savedInstanceState.getSerializable("userbean");
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
+            userBean = ((IUserInfo) getActivity()).getUser();
             refresh();
 
         }
 
-
-    }
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-
-        if (userBean == null && savedInstanceState != null) {
-            userBean = (UserBean) savedInstanceState.getSerializable("userbean");
-        } else {
-            userBean = ((IUserInfo) getActivity()).getUser();
-        }
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        setRetainInstance(true);
+        super.onActivityCreated(savedInstanceState);
     }
 
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("token", token);
+        intent.putExtra("token", ((IToken) getActivity()).getToken());
         intent.putExtra("msg", bean.getStatuses().get(position));
         startActivity(intent);
     }
@@ -116,9 +94,9 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
     @Override
     protected MessageListBean getDoInBackgroundNewData() {
-        StatusesTimeLineDao dao = new StatusesTimeLineDao(token, uid);
+        StatusesTimeLineDao dao = new StatusesTimeLineDao(((IToken) getActivity()).getToken(), ((IUserInfo) getActivity()).getUser().getId());
 
-        if (TextUtils.isEmpty(uid)) {
+        if (TextUtils.isEmpty(((IUserInfo) getActivity()).getUser().getId())) {
             dao.setScreen_name(((IUserInfo) getActivity()).getUser().getScreen_name());
         }
 
@@ -132,8 +110,8 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
     @Override
     protected MessageListBean getDoInBackgroundOldData() {
-        StatusesTimeLineDao dao = new StatusesTimeLineDao(token, uid);
-        if (TextUtils.isEmpty(uid)) {
+        StatusesTimeLineDao dao = new StatusesTimeLineDao(((IToken) getActivity()).getToken(), ((IUserInfo) getActivity()).getUser().getId());
+        if (TextUtils.isEmpty(((IUserInfo) getActivity()).getUser().getId())) {
             dao.setScreen_name(((IUserInfo) getActivity()).getUser().getScreen_name());
         }
         if (getList().getStatuses().size() > 0) {

@@ -62,8 +62,12 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bean = new MessageListBean();
+      }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        setRetainInstance(true);
     }
 
     @Override
