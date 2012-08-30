@@ -123,11 +123,11 @@ public class AbstractAppActivity extends FragmentActivity {
         if (getResources().getBoolean(R.bool.is_phone)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
-        forceShowActinBarOverflowMenu();
+        forceShowActionBarOverflowMenu();
 
     }
 
-    private void forceShowActinBarOverflowMenu() {
+    private void forceShowActionBarOverflowMenu() {
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
             Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
