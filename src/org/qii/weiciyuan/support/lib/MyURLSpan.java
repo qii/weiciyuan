@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.lib;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Parcel;
 import android.provider.Browser;
@@ -10,6 +11,7 @@ import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 /**
  * User: qii
@@ -53,7 +55,10 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
 
     @Override
     public void updateDrawState(TextPaint tp) {
-        tp.setColor(R.color.deepskyblue);
+        int[] attrs = new int[]{R.attr.link_color};
+        TypedArray ta = GlobalContext.getInstance().getActivity().obtainStyledAttributes(attrs);
+        int drawableFromTheme = ta.getColor(0, 430);
+        tp.setColor(drawableFromTheme);
 //        tp.setUnderlineText(true);
     }
 }

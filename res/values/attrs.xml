@@ -26,5 +26,5 @@
 
     <attr name="listview_item_background_selector" format="reference"/>
     <attr name="listview_item_refresh_animation" format="reference"/>
-
+    <attr name="link_color" format="reference"/>
 </resources>

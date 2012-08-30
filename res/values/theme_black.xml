@@ -36,6 +36,6 @@
 
         <item name="listview_item_background_selector">@null</item>
         <item name="listview_item_refresh_animation">@drawable/refresh_light</item>
-
+        <item name="link_color">@color/mintcream</item>
     </style>
 </resources>

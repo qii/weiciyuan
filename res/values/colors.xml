@@ -299,4 +299,5 @@
     <color name="light_orange">#FF7A0F</color>
     <color name="divide_line">#FFC5CCD1</color>
     <color name="listview_divide">#FFC5CCD1</color>
+    <color name="dark_blue">#7874b8</color>
 </resources>  

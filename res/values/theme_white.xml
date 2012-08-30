@@ -40,6 +40,7 @@
 
         <item name="listview_item_background_selector">@drawable/listview_item_background_selector</item>
         <item name="listview_item_refresh_animation">@drawable/refresh_black</item>
+        <item name="link_color">@color/dark_blue</item>
 
     </style>
     <!-- detail style -->
