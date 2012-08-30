@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.file;
 
 import android.os.Environment;
 import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +13,8 @@ import java.io.IOException;
  * Time: 上午10:06
  */
 public class FileManager {
-    private static final String SDCARD_PATH = Environment.getExternalStorageDirectory().getPath();
-    private static final String APP_NAME = "weiciyuan";
+    //    private static final String SDCARD_PATH = Environment.getExternalStorageDirectory().getPath();
+    private static final String SDCARD_PATH = GlobalContext.getInstance().getExternalCacheDir().getAbsolutePath();
     private static final String AVATAR_CACHE = "avatar";
     private static final String PICTURE_THUMBNAIL_CACHE = "picture_thumbnail";
     private static final String PICTURE_BMIDDLE = "picture_bmiddle";
@@ -32,7 +33,7 @@ public class FileManager {
     }
 
     private static String getFileAbsolutePathFromRelativePath(String relativePath) {
-        String result = SDCARD_PATH + File.separator + APP_NAME + relativePath;
+        String result = SDCARD_PATH + File.separator + relativePath;
 
         return result;
     }
@@ -70,12 +71,12 @@ public class FileManager {
     }
 
 
-    public static File createNoMediaFile() {
-
-        String noMediaFilePath = SDCARD_PATH + File.separator + APP_NAME + File.separator + ".nomedia";
-
-        return createNewFileInSDCard(noMediaFilePath);
-    }
+//    public static File createNoMediaFile() {
+//
+//        String noMediaFilePath = SDCARD_PATH + File.separator  + File.separator + ".nomedia";
+//
+//        return createNewFileInSDCard(noMediaFilePath);
+//    }
 
     public static File createNewFileInSDCard(String absolutePath) {
         if (!isExternalStorageMounted()) {
@@ -87,7 +88,7 @@ public class FileManager {
         if (file.exists()) {
             return file;
         } else {
-             File dir = file.getParentFile();
+            File dir = file.getParentFile();
             if (!dir.exists()) {
                 dir.mkdirs();
             }
@@ -110,7 +111,7 @@ public class FileManager {
 
     public static String getCacheSize() {
         if (isExternalStorageMounted()) {
-            String path = SDCARD_PATH + File.separator + APP_NAME;
+            String path = SDCARD_PATH + File.separator;
             FileSize size = new FileSize(new File(path));
             return size.toString();
         }
@@ -118,7 +119,7 @@ public class FileManager {
     }
 
     public static boolean deleteCache() {
-        String path = SDCARD_PATH + File.separator + APP_NAME;
+        String path = SDCARD_PATH + File.separator;
         return deleteDirectory(new File(path));
     }
 
