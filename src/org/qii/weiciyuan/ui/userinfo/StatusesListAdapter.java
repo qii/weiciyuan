@@ -12,12 +12,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
+
+import java.util.List;
 
 /**
  * User: qii
@@ -27,11 +28,11 @@ public class StatusesListAdapter extends BaseAdapter {
 
     Activity activity;
     LayoutInflater inflater;
-    MessageListBean bean;
+    List<MessageBean> bean;
     ListView listView;
     ICommander commander;
 
-    public StatusesListAdapter(Activity activity, ICommander commander, MessageListBean bean, ListView listView) {
+    public StatusesListAdapter(Activity activity, ICommander commander, List<MessageBean> bean, ListView listView) {
         this.activity = activity;
         inflater = activity.getLayoutInflater();
         this.bean = bean;
@@ -44,8 +45,8 @@ public class StatusesListAdapter extends BaseAdapter {
     @Override
     public int getCount() {
 
-        if (bean != null && bean.getStatuses() != null) {
-            return bean.getStatuses().size();
+        if (bean != null && bean.size() != 0) {
+            return bean.size();
         } else {
             return 0;
         }
@@ -53,7 +54,7 @@ public class StatusesListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return bean.getStatuses().get(position);
+        return bean.get(position);
     }
 
     @Override
@@ -88,7 +89,7 @@ public class StatusesListAdapter extends BaseAdapter {
 
     private void bindViewData(ViewHolder holder, int position) {
 
-        final MessageBean msg = bean.getStatuses().get(position);
+        final MessageBean msg = bean.get(position);
         MessageBean repost_msg = msg.getRetweeted_status();
 
         if (msg.getUser() != null) {

@@ -81,7 +81,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusesListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList(), listView);
+        timeLineAdapter = new StatusesListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getStatuses(), listView);
         listView.setAdapter(timeLineAdapter);
     }
 }
