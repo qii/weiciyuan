@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,11 +23,14 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
@@ -57,6 +62,10 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     private String imageFilePath = "";
 
     private GeoBean geoBean;
+
+    private Bitmap pic = null;
+
+    private TextView contentNumber = null;
 
 
     @Override
@@ -92,7 +101,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             bmpFactoryOptions.inSampleSize = 8;
             Bitmap bmp = BitmapFactory.decodeFile(imageFilePath, bmpFactoryOptions);
             iv.setImageBitmap(bmp);
-
+            pic = bmp;
+            invalidateOptionsMenu();
             picPath = imageFilePath;
         } else if (requestCode == PIC_RESULT && resultCode == RESULT_OK) {
             Uri imageFileUri = intent.getData();
@@ -105,7 +115,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 AppLogger.e(e.getMessage());
             }
             iv.setImageBitmap(bmp);
-
+            pic = bmp;
+            invalidateOptionsMenu();
             String[] proj = {MediaStore.Images.Media.DATA};
             Cursor cursor = managedQuery(imageFileUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -123,6 +134,11 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.write_weibo);
 
+        View title = getLayoutInflater().inflate(R.layout.statusnewactivity_title_layout, null);
+        contentNumber = (TextView) title.findViewById(R.id.content_number);
+        actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
+//        actionBar.setCustomView(R.layout.statusnewactivity_title_layout);
+        actionBar.setDisplayShowCustomEnabled(true);
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
 
@@ -139,8 +155,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String num = getString(R.string.left) + (140 - content.getText().toString().length());
-            getActionBar().setSubtitle(num);
+            String num = "" + (140 - content.getText().toString().length());
+            contentNumber.setText(num);
         }
 
         @Override
@@ -151,6 +167,10 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.statusnewactivity_menu, menu);
+        if (pic != null) {
+            Drawable drawable = new BitmapDrawable(getResources(), pic);
+            menu.findItem(R.id.menu_add_pic).setIcon(drawable);
+        }
         return true;
     }
 
@@ -320,6 +340,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         @Override
         protected void onPostExecute(String s) {
+            contentNumber.setText(s);
             Toast.makeText(StatusNewActivity.this, s, Toast.LENGTH_SHORT).show();
             super.onPostExecute(s);
         }
