@@ -40,6 +40,7 @@ import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 /**
  * User: qii
@@ -104,6 +105,24 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             Bitmap bmp = null;
             switch (requestCode) {
                 case CAMERA_RESULT:
+
+                    File file = new File(imageFilePath);
+                    long fileSize = file.length();
+                    //size in kb
+                    double size = (double) fileSize / 1024;
+                    if (size > 500) {
+                        final BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inSampleSize = Math.round((float) size / (float) 500);
+                        options.inJustDecodeBounds = false;
+                        Bitmap result = BitmapFactory.decodeFile(imageFilePath, options);
+                        FileOutputStream out = null;
+                        try {
+                            out = new FileOutputStream(imageFilePath);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        }
+                        result.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                    }
 
                     bmp = BitmapFactory.decodeFile(imageFilePath, bmpFactoryOptions);
                     pic = bmp;
