@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.LruCache;
@@ -106,14 +108,18 @@ public class PictureDialogFragment extends DialogFragment {
 
             if (bitmap != null) {
 
-
                 lruCache.put(data, bitmap);
-
                 fl.setLayoutParams(new LinearLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
                 pb.setVisibility(View.INVISIBLE);
                 imageView.setImageBitmap(bitmap);
 
 
+            } else {
+                pb.setVisibility(View.INVISIBLE);
+                int[] attrs = new int[]{R.attr.error};
+                TypedArray ta = getActivity().obtainStyledAttributes(attrs);
+                Drawable drawableFromTheme = ta.getDrawable(0);
+                imageView.setImageDrawable(drawableFromTheme);
             }
 
         }

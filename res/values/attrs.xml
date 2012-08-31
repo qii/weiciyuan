@@ -23,6 +23,7 @@
     <attr name="statusnewactivity_camera" format="reference"/>
     <attr name="statusnewactivity_gps" format="reference"/>
     <attr name="statusnewactivity_send" format="reference"/>
+    <attr name="error" format="reference"/>
 
     <attr name="listview_item_background_selector" format="reference"/>
     <attr name="listview_item_refresh_animation" format="reference"/>

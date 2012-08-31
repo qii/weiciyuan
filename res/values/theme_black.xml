@@ -23,7 +23,8 @@
         <item name="friendstimelinefragment_search">@drawable/friendstimelinefragment_search_light</item>
         <item name="friendstimelinefragment_write">@drawable/friendstimelinefragment_write_light</item>
         <item name="location_place">@drawable/location_place_light</item>
-        <item name="maintimelineactivity_account_management">@drawable/maintimelineactivity_account_management_light</item>
+        <item name="maintimelineactivity_account_management">@drawable/maintimelineactivity_account_management_light
+        </item>
         <item name="maintimelineactivity_settings">@drawable/maintimelineactivity_settings_light</item>
         <item name="picture">@drawable/picture_light</item>
         <item name="refresh">@drawable/refresh_light</item>
@@ -33,9 +34,18 @@
         <item name="statusnewactivity_camera">@drawable/statusnewactivity_camera_light</item>
         <item name="statusnewactivity_gps">@drawable/statusnewactivity_gps_light</item>
         <item name="statusnewactivity_send">@drawable/statusnewactivity_send_light</item>
+        <item name="error">@drawable/error_light</item>
 
         <item name="listview_item_background_selector">@null</item>
         <item name="listview_item_refresh_animation">@drawable/refresh_light</item>
         <item name="link_color">@color/mintcream</item>
+
+        <item name="android:progressBarStyle">@style/Widget.Holo.ProgressBar</item>
+
+
+    </style>
+
+    <style name="Widget.Holo.ProgressBar" parent="android:Widget.Holo.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/progress_medium_holo</item>
     </style>
 </resources>
