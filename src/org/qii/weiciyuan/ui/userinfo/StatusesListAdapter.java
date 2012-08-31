@@ -12,12 +12,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
-import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 
 import java.util.List;
@@ -33,15 +31,13 @@ public class StatusesListAdapter extends BaseAdapter {
     List<MessageBean> bean;
     ListView listView;
     ICommander commander;
-    UserBean user;
 
-    public StatusesListAdapter(Activity activity, IUserInfo user, ICommander commander, List<MessageBean> bean, ListView listView) {
+    public StatusesListAdapter(Activity activity, ICommander commander, List<MessageBean> bean, ListView listView) {
         this.activity = activity;
         inflater = activity.getLayoutInflater();
         this.bean = bean;
         this.commander = commander;
         this.listView = listView;
-        this.user = user.getUser();
 
     }
 
@@ -69,7 +65,7 @@ public class StatusesListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if (bean.get(position).getUser().getId().equals(user.getId())) {
+        if (bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getAccountBean().getUid())) {
             ViewHolder holder = new ViewHolder();
             if (convertView == null || convertView.getTag(R.drawable.app) == null) {
                 convertView = inflater.inflate(R.layout.fragment_listview_item_myself_layout, parent, false);

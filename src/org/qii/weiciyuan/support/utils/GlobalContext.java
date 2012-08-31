@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.LruCache;
+import org.qii.weiciyuan.bean.AccountBean;
 
 /**
  * User: Jiang Qi
@@ -26,6 +27,16 @@ public final class GlobalContext extends Application {
     private int theme = 0;
 
     private int fontSize=0;
+
+    private AccountBean accountBean=null;
+
+    public AccountBean getAccountBean() {
+        return accountBean;
+    }
+
+    public void setAccountBean(AccountBean accountBean) {
+        this.accountBean = accountBean;
+    }
 
     public int getFontSize() {
         return fontSize;

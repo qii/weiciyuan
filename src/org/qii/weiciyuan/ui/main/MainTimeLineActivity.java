@@ -100,6 +100,8 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             GlobalContext.getInstance().setEnablePic(false);
         }
 
+        GlobalContext.getInstance().setAccountBean(accountBean);
+
     }
 
     @Override
@@ -220,8 +222,8 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         if (getResources().getBoolean(R.bool.is_phone)) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayShowHomeEnabled(false);
+//            actionBar.setDisplayShowTitleEnabled(false);
+//            actionBar.setDisplayShowHomeEnabled(false);
         }
 
         actionBar.addTab(actionBar.newTab()
