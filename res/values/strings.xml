@@ -74,6 +74,7 @@
     <string name="photo">照片</string>
     <string name="say_something">说点什么吧……</string>
     <string name="left">剩余</string>
+    <string name="share_pic">分享图片</string>
 
     <!-- mentions -->
     <string name="select_group">选择分组</string>

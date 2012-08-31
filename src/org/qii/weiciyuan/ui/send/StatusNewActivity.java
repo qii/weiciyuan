@@ -29,7 +29,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
@@ -51,8 +50,6 @@ import java.io.FileNotFoundException;
 public class StatusNewActivity extends AbstractAppActivity implements DialogInterface.OnClickListener {
 
 
-    private ImageView iv;
-    private EditText content;
     private static final int CAMERA_RESULT = 0;
     private static final int PIC_RESULT = 1;
     protected String token = "";
@@ -66,6 +63,9 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     private Bitmap pic = null;
 
     private TextView contentNumber = null;
+    private EditText content = null;
+
+    private boolean canSend = false;
 
 
     @Override
@@ -100,10 +100,13 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
             bmpFactoryOptions.inSampleSize = 8;
             Bitmap bmp = BitmapFactory.decodeFile(imageFilePath, bmpFactoryOptions);
-            iv.setImageBitmap(bmp);
             pic = bmp;
             invalidateOptionsMenu();
             picPath = imageFilePath;
+            if (TextUtils.isEmpty(content.getText().toString())) {
+                content.setText(getString(R.string.share_pic));
+                content.setSelection(content.getText().toString().length());
+            }
         } else if (requestCode == PIC_RESULT && resultCode == RESULT_OK) {
             Uri imageFileUri = intent.getData();
             BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
@@ -114,7 +117,6 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             } catch (FileNotFoundException e) {
                 AppLogger.e(e.getMessage());
             }
-            iv.setImageBitmap(bmp);
             pic = bmp;
             invalidateOptionsMenu();
             String[] proj = {MediaStore.Images.Media.DATA};
@@ -123,6 +125,10 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             cursor.moveToFirst();
 
             picPath = cursor.getString(column_index);
+            if (TextUtils.isEmpty(content.getText().toString())) {
+                content.setText(getString(R.string.share_pic));
+                content.setSelection(content.getText().toString().length());
+            }
         }
     }
 
@@ -137,12 +143,11 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         View title = getLayoutInflater().inflate(R.layout.statusnewactivity_title_layout, null);
         contentNumber = (TextView) title.findViewById(R.id.content_number);
         actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
-//        actionBar.setCustomView(R.layout.statusnewactivity_title_layout);
         actionBar.setDisplayShowCustomEnabled(true);
+
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
 
-        iv = (ImageView) findViewById(R.id.iv);
         content = ((EditText) findViewById(R.id.status_new_content));
         content.addTextChangedListener(onEditorActionListener);
     }
@@ -155,8 +160,13 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String num = "" + (140 - content.getText().toString().length());
-            contentNumber.setText(num);
+            int num = 140 - content.getText().toString().length();
+            contentNumber.setText(String.valueOf(num));
+            if (num < 0) {
+                canSend = false;
+            } else {
+                canSend = true;
+            }
         }
 
         @Override
@@ -191,10 +201,11 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 break;
 
             case R.id.menu_send:
-
-                String value = content.getText().toString();
-                if (!TextUtils.isEmpty(value)) {
-                    executeTask(value);
+                if (canSend) {
+                    String value = content.getText().toString();
+                    if (!TextUtils.isEmpty(value)) {
+                        executeTask(value);
+                    }
                 }
                 break;
         }
