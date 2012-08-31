@@ -6,6 +6,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.userinfo.StatusesListAdapter;
 
 /**
@@ -81,7 +82,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusesListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getStatuses(), listView);
+        timeLineAdapter = new StatusesListAdapter(getActivity(), (IUserInfo) getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getStatuses(), listView);
         listView.setAdapter(timeLineAdapter);
     }
 }
