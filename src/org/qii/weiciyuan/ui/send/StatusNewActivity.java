@@ -10,8 +10,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -94,40 +92,45 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        if (requestCode == CAMERA_RESULT) {
-//            Bundle extras = intent.getExtras();
-//            Bitmap bmp = (Bitmap) extras.get("data");
-            BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
-            bmpFactoryOptions.inSampleSize = 8;
-            Bitmap bmp = BitmapFactory.decodeFile(imageFilePath, bmpFactoryOptions);
-            pic = bmp;
-            invalidateOptionsMenu();
-            picPath = imageFilePath;
+        if (resultCode == RESULT_OK) {
+
             if (TextUtils.isEmpty(content.getText().toString())) {
                 content.setText(getString(R.string.share_pic));
                 content.setSelection(content.getText().toString().length());
             }
-        } else if (requestCode == PIC_RESULT && resultCode == RESULT_OK) {
-            Uri imageFileUri = intent.getData();
+
             BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
             bmpFactoryOptions.inSampleSize = 8;
             Bitmap bmp = null;
-            try {
-                bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageFileUri), null, bmpFactoryOptions);
-            } catch (FileNotFoundException e) {
-                AppLogger.e(e.getMessage());
-            }
-            pic = bmp;
-            invalidateOptionsMenu();
-            String[] proj = {MediaStore.Images.Media.DATA};
-            Cursor cursor = managedQuery(imageFileUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
+            switch (requestCode) {
+                case CAMERA_RESULT:
 
-            picPath = cursor.getString(column_index);
-            if (TextUtils.isEmpty(content.getText().toString())) {
-                content.setText(getString(R.string.share_pic));
-                content.setSelection(content.getText().toString().length());
+                    bmp = BitmapFactory.decodeFile(imageFilePath, bmpFactoryOptions);
+                    pic = bmp;
+                    invalidateOptionsMenu();
+                    picPath = imageFilePath;
+
+                    break;
+                case PIC_RESULT:
+                    Uri imageFileUri = intent.getData();
+
+                    try {
+                        bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageFileUri), null, bmpFactoryOptions);
+                    } catch (FileNotFoundException e) {
+                        AppLogger.e(e.getMessage());
+                    }
+                    pic = bmp;
+                    invalidateOptionsMenu();
+                    String[] proj = {MediaStore.Images.Media.DATA};
+                    Cursor cursor = managedQuery(imageFileUri, proj, null, null, null);
+                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    cursor.moveToFirst();
+
+                    picPath = cursor.getString(column_index);
+
+                    break;
+
+
             }
         }
     }
@@ -177,10 +180,10 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.statusnewactivity_menu, menu);
-        if (pic != null) {
-            Drawable drawable = new BitmapDrawable(getResources(), pic);
-            menu.findItem(R.id.menu_add_pic).setIcon(drawable);
-        }
+//        if (pic != null) {
+//            Drawable drawable = new BitmapDrawable(getResources(), pic);
+//            menu.findItem(R.id.menu_add_pic).setIcon(drawable);
+//        }
         return true;
     }
 
@@ -201,11 +204,11 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 break;
 
             case R.id.menu_send:
-                if (canSend) {
-                    String value = content.getText().toString();
-                    if (!TextUtils.isEmpty(value)) {
-                        executeTask(value);
-                    }
+                String value = content.getText().toString();
+                if (canSend && !TextUtils.isEmpty(value)) {
+
+                    executeTask(value);
+
                 }
                 break;
         }
