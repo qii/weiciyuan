@@ -32,6 +32,8 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
 
     private ViewPager mViewPager = null;
 
+    private TimeLinePagerAdapter adapter;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
 
     private void buildViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
+        adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
@@ -80,6 +82,14 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
         @Override
         public void onPageSelected(int position) {
             getActionBar().setSelectedNavigationItem(position);
+            switch (position) {
+                case 1:
+                    ((CommentsByIdTimeLineFragment)adapter.getItem(1)).load();
+                    break;
+                case 2:
+                    ((RepostsByIdTimeLineFragment)adapter.getItem(2)).load();
+                    break;
+            }
         }
     };
 

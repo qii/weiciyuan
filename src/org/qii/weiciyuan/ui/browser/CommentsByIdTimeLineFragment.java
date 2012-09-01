@@ -64,10 +64,15 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
-        outState.putString("id",id);
-        outState.putString("token",token);
+        outState.putString("id", id);
+        outState.putString("token", token);
     }
 
+    public void load() {
+        if (bean == null || bean.getComments().size() == 0) {
+            refresh();
+        }
+    }
 
 
     protected void refreshLayout(CommentListBean bean) {
@@ -93,12 +98,12 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         if (savedInstanceState != null && bean.getComments().size() == 0) {
             bean = (CommentListBean) savedInstanceState.getSerializable("bean");
-            token=savedInstanceState.getString("token");
-            id=savedInstanceState.getString("id");
+            token = savedInstanceState.getString("token");
+            id = savedInstanceState.getString("id");
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
-            new SimpleTask().execute();
+//            new SimpleTask().execute();
 
         }
 
@@ -260,6 +265,10 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
 
     public void refresh() {
+
+        if (getActivity() == null)
+            return;
+
         Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
 
 

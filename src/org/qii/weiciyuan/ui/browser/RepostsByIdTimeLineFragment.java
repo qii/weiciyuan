@@ -60,6 +60,12 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
     }
 
+    public void load() {
+        if (bean == null || bean.getReposts().size() == 0) {
+            refresh();
+        }
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -97,7 +103,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
-            new SimpleTask().execute();
+            //new SimpleTask().execute();
 
         }
 
@@ -258,6 +264,9 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
 
     public void refresh() {
+        if (getActivity() == null)
+            return;
+
         Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
 
 
