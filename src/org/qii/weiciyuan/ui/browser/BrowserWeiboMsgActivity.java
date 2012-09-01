@@ -59,7 +59,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
     private void buildActionBarAndViewPagerTitles() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(getString(R.string.weibo));
+        actionBar.setTitle(getString(R.string.homepage));
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 

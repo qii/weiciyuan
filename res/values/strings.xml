@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">微次元</string>
 
+    <string name="homepage">首页</string>
     <string name="detail">详细</string>
     <string name="weibo">微博</string>
 

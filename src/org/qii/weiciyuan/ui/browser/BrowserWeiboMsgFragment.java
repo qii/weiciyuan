@@ -282,7 +282,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
                     task = new UpdateMsgTask();
                     task.execute();
                 }
-
+                break;
             case R.id.menu_share:
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
@@ -292,5 +292,6 @@ public class BrowserWeiboMsgFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 }
