@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
             android:text="username"
             android:layout_alignParentLeft="true"
-
+            android:textStyle="bold"
             />
 
     <ImageView

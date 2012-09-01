@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.userinfo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +71,8 @@ public class StatusesListAdapter extends BaseAdapter {
             if (convertView == null || convertView.getTag(R.drawable.app) == null) {
                 convertView = inflater.inflate(R.layout.fragment_listview_item_myself_layout, parent, false);
                 holder.username = (TextView) convertView.findViewById(R.id.username);
+                TextPaint tp = holder.username.getPaint();
+                tp.setFakeBoldText(true);
                 holder.content = (TextView) convertView.findViewById(R.id.content);
                 holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
@@ -89,6 +92,8 @@ public class StatusesListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
             holder.username = (TextView) convertView.findViewById(R.id.username);
+            TextPaint tp = holder.username.getPaint();
+            tp.setFakeBoldText(true);
             holder.content = (TextView) convertView.findViewById(R.id.content);
             holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
             holder.time = (TextView) convertView.findViewById(R.id.time);

@@ -22,7 +22,7 @@
             android:text="username"
 
             android:layout_toRightOf="@id/avatar"
-            />
+            android:textStyle="bold"/>
 
     <TextView
             android:id="@+id/time"

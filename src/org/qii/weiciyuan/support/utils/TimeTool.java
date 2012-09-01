@@ -13,6 +13,8 @@ import java.util.Date;
 public class TimeTool {
 
     private static int MILL_MIN = 1000 * 60;
+    private static int MILL_HOUR = MILL_MIN * 60;
+    private static int MILL_DAY = MILL_HOUR * 24;
 
     public static String getListTime(String created_at) {
         if (!TextUtils.isEmpty(created_at)) {
@@ -32,6 +34,24 @@ public class TimeTool {
             int seconds = messageCal.get(Calendar.SECOND);
 
             if (nowMonth > month) {
+                if (nowMonth == month + 1) {
+                    long calTime = cal.getTimeInMillis();
+                    long messageCalTime = messageCal.getTimeInMillis();
+                    long calMin = (calTime - messageCalTime) / (MILL_MIN);
+                    if (calMin < 60) {
+                        return "" + calMin + GlobalContext.getInstance().getString(R.string.min);
+                    } else if (60 < calMin) {
+                        long calHour = calMin / 60;
+                        if (calHour < 24) {
+                            return "" + calHour + GlobalContext.getInstance().getString(R.string.hour);
+                        } else if (calHour > 24) {
+                            long calDay = calHour / 24;
+                            if (calDay < 31)
+                                return "" + calDay + GlobalContext.getInstance().getString(R.string.day);
+                        }
+                    }
+
+                }
                 return "" + (nowMonth - month) + GlobalContext.getInstance().getString(R.string.month);
             }
             if (nowDay > day) {
