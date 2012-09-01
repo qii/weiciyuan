@@ -59,8 +59,17 @@ public class BrowserWeiboMsgFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("msg", msg);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            msg = (MessageBean) savedInstanceState.getSerializable("msg");
+        }
         buildViewData();
         setHasOptionsMenu(true);
         setRetainInstance(true);
