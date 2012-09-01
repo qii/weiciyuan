@@ -34,14 +34,29 @@
 
         </LinearLayout>
 
-        <TextView
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignBottom="@id/username"
-                android:id="@+id/time"/>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_below="@id/first"
+                      android:layout_marginTop="5dp"
+                      android:orientation="horizontal"
+                      android:id="@+id/second">
+            <TextView
 
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="w"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:id="@+id/time"/>
+            <TextView
+                    android:gravity="right"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="w"
+                    android:id="@+id/source"/>
+        </LinearLayout>
         <TextView
                 android:layout_marginTop="8dp"
                 android:id="@+id/content"
@@ -50,7 +65,7 @@
                 android:text="content"
                 android:textSize="17sp"
                 android:lineSpacingMultiplier="1.2"
-                android:layout_below="@id/first"
+                android:layout_below="@id/second"
                 />
 
         <FrameLayout

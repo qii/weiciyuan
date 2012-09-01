@@ -7,9 +7,11 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.text.style.StrikethroughSpan;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +47,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
     private TextView recontent;
     private TextView time;
     private TextView location;
+    private TextView source;
 
     private ImageView avatar;
     private ImageView content_pic;
@@ -91,6 +94,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         recontent = (TextView) findViewById(R.id.repost_content);
         time = (TextView) findViewById(R.id.time);
         location = (TextView) findViewById(R.id.location);
+        source = (TextView) findViewById(R.id.source);
 
         location.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,6 +172,9 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
         if (msg.getGeo() != null) {
             new GetGoogleLocationInfo(msg.getGeo()).execute();
         }
+
+        source.setText(Html.fromHtml(msg.getSource()));
+        source.setMovementMethod(LinkMovementMethod.getInstance());
 
         comment_sum = msg.getComments_count();
         retweet_sum = msg.getReposts_count();
