@@ -77,6 +77,11 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         accountBean = (AccountBean) intent.getSerializableExtra("account");
         token = accountBean.getAccess_token();
         GlobalContext.getInstance().setSpecialToken(token);
+        GlobalContext.getInstance().setAccountBean(accountBean);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("id", accountBean.getUid());
+        editor.commit();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.maintimelineactivity_viewpager_layout);
 
@@ -99,9 +104,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         } else {
             GlobalContext.getInstance().setEnablePic(false);
         }
-
-        GlobalContext.getInstance().setAccountBean(accountBean);
-
     }
 
     @Override
@@ -187,13 +189,21 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        GlobalContext.getInstance().startedApp = false;
+        finish();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_account:
                 intent = new Intent(this, AccountActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("launcher", false);
                 startActivity(intent);
+                finish();
                 break;
 
             case R.id.menu_setting:

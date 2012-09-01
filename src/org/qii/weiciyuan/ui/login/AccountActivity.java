@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
@@ -43,7 +44,8 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     public void onCreate(Bundle savedInstanceState) {
         buildThemeSetting();
         buildFontSetting();
-        //jumpToHomeLine();
+        jumpToHomeLine();
+        GlobalContext.getInstance().startedApp = true;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.accountactivity_layout);
@@ -59,8 +61,12 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
         getTask = new GetAccountListDBTask();
         getTask.execute();
+    }
 
-//        new TestAccount().show(getSupportFragmentManager(), "");
+    @Override
+    public void onBackPressed() {
+        GlobalContext.getInstance().startedApp = false;
+        super.onBackPressed();
     }
 
     @Override
@@ -142,28 +148,27 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     };
 
     private void jumpToHomeLine() {
-        SharedPreferences settings = getPreferences(MODE_PRIVATE);
-        String username = settings.getString("username", "");
-        String token = settings.getString("token", "");
-        String expires = settings.getString("expires", "");
+        Intent intent = getIntent();
+        if (intent != null) {
+            boolean launcher = intent.getBooleanExtra("launcher", true);
+            if (launcher) {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+                String id = sharedPref.getString("id", "");
+                if (!TextUtils.isEmpty(id)) {
+                    AccountBean bean = DatabaseManager.getInstance().getAccount(id);
+                    if (bean != null) {
+                        Intent start = new Intent(AccountActivity.this, MainTimeLineActivity.class);
+                        start.putExtra("account", bean);
+                        startActivity(start);
 
-        boolean haveToken = !TextUtils.isEmpty(token) && !TextUtils.isEmpty(expires);
-
-        boolean haveUsername = !TextUtils.isEmpty(username);
-
-        if (haveToken) {
-            Intent intent = new Intent(AccountActivity.this, MainTimeLineActivity.class);
-            intent.putExtra("token", token);
-            intent.putExtra("expires", expires);
-
-            if (haveUsername) {
-                intent.putExtra("username", username);
+                    }
+                }
             }
-
-            startActivity(intent);
-            finish();
         }
+
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

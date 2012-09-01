@@ -30,6 +30,8 @@ public final class GlobalContext extends Application {
 
     private AccountBean accountBean=null;
 
+    public boolean startedApp=false;
+
     public AccountBean getAccountBean() {
         return accountBean;
     }

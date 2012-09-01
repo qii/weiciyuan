@@ -89,7 +89,7 @@ public class DatabaseManager {
 
         int c = rsd.update(AccountTable.TABLE_NAME, cv, AccountTable.UID + "=?",
                 new String[]{uid});
-     }
+    }
 
 
     public List<AccountBean> getAccountList() {
@@ -124,6 +124,39 @@ public class DatabaseManager {
 
         return accountList;
     }
+
+    public AccountBean getAccount(String id) {
+
+        String sql = "select * from " + AccountTable.TABLE_NAME + " where " + AccountTable.UID + " = " + id;
+        Cursor c = rsd.rawQuery(sql, null);
+        while (c.moveToNext()) {
+            AccountBean account = new AccountBean();
+            int colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN);
+            account.setAccess_token(c.getString(colid));
+
+            colid = c.getColumnIndex(AccountTable.USERNICK);
+            account.setUsernick(c.getString(colid));
+
+            colid = c.getColumnIndex(AccountTable.UID);
+            account.setUid(c.getString(colid));
+
+            colid = c.getColumnIndex(AccountTable.AVATAR_URL);
+            account.setAvatar_url(c.getString(colid));
+
+            Gson gson = new Gson();
+            String json = c.getString(c.getColumnIndex(AccountTable.INFOJSON));
+            try {
+                UserBean value = gson.fromJson(json, UserBean.class);
+                account.setInfo(value);
+            } catch (JsonSyntaxException e) {
+                AppLogger.e(e.getMessage());
+            }
+
+            return account;
+        }
+        return null;
+
+     }
 
     public List<AccountBean> removeAndGetNewAccountList(Set<String> checkedItemPosition) {
         String[] args = checkedItemPosition.toArray(new String[0]);
