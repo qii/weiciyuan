@@ -2,6 +2,8 @@ package org.qii.weiciyuan.ui.login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -34,6 +36,9 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
     private ActionMode mActionMode;
 
+    private GetAccountListDBTask getTask = null;
+    private RemoveAccountDBTask removeTask = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         buildThemeSetting();
@@ -52,10 +57,21 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
         listView.setMultiChoiceModeListener(multiChoiceModeLinstener);
 
-        new GetAccountListDBTask().execute(null, null, null);
+        getTask = new GetAccountListDBTask();
+        getTask.execute();
 
+//        new TestAccount().show(getSupportFragmentManager(), "");
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (getTask != null)
+            getTask.cancel(true);
+
+        if (removeTask != null)
+            removeTask.cancel(true);
+    }
 
     private AbsListView.MultiChoiceModeListener multiChoiceModeLinstener = new AbsListView.MultiChoiceModeListener() {
 
@@ -75,15 +91,28 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
                     if (!checkAll) {
                         listAdapter.selectAll();
                         checkAll = true;
-                        item.setIcon(R.drawable.accountactivity_select_none_black);
+                        int[] attrs = new int[]{R.attr.accountactivity_select_none};
+                        TypedArray ta = AccountActivity.this.obtainStyledAttributes(attrs);
+                        Drawable drawableFromTheme = ta.getDrawable(0);
+                        item.setIcon(drawableFromTheme);
                     } else {
                         listAdapter.unSelectButRemainCheckBoxAll();
                         checkAll = false;
-                        item.setIcon(R.drawable.accountactivity_select_all_black);
+                        int[] attrs = new int[]{R.attr.accountactivity_select_all};
+                        TypedArray ta = AccountActivity.this.obtainStyledAttributes(attrs);
+                        Drawable drawableFromTheme = ta.getDrawable(0);
+                        item.setIcon(drawableFromTheme);
                     }
                     return true;
                 case R.id.menu_remove_account:
-                    new RemoveAccountDBTask().execute();
+                    if (removeTask == null || removeTask.getStatus() == AsyncTask.Status.FINISHED) {
+                        removeTask = new RemoveAccountDBTask();
+                        removeTask.execute();
+                    } else if (removeTask.getStatus() == AsyncTask.Status.PENDING || removeTask.getStatus() == AsyncTask.Status.RUNNING) {
+                        removeTask.cancel(true);
+                        removeTask = new RemoveAccountDBTask();
+                        removeTask.execute();
+                    }
                     mode.finish();
                     return true;
                 default:
@@ -159,6 +188,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
+//            if(getTask==null||getTask)
             new GetAccountListDBTask().execute();
 
         }
@@ -319,4 +349,6 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
         }
     }
+
+
 }
