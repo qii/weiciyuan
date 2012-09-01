@@ -22,6 +22,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.location.LocationInfoDao;
 import org.qii.weiciyuan.dao.show.ShowStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -85,7 +86,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
         }
     }
 
-    class UpdateMsgTask extends AsyncTask<Void, Void, MessageBean> {
+    class UpdateMsgTask extends MyAsyncTask<Void, Void, MessageBean> {
         WeiboException e;
 
         @Override
@@ -287,7 +288,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
                 return true;
 
             case R.id.menu_refresh:
-                if (task == null | task.getStatus() == AsyncTask.Status.FINISHED) {
+                if (task == null | task.getStatus() == MyAsyncTask.Status.FINISHED) {
                     task = new UpdateMsgTask();
                     task.execute();
                 }

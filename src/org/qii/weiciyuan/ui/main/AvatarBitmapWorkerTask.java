@@ -1,11 +1,11 @@
 package org.qii.weiciyuan.ui.main;
 
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.util.LruCache;
 import android.widget.ImageView;
 import android.widget.ListView;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import java.util.Map;
  * Date: 12-8-3
  * Time: 下午12:25
  */
-public class AvatarBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     private int position;
     private ListView listView;

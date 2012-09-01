@@ -46,8 +46,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     @Override
     protected void newMsgOnPostExecute(MessageListBean newValue) {
-        super.newMsgOnPostExecute(newValue);
         showNewMsgToastMessage(newValue);
+        super.newMsgOnPostExecute(newValue);
+
     }
 
     @Override

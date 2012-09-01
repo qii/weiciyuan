@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ListBean;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
@@ -69,7 +69,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     protected abstract void listViewItemClick(AdapterView parent, View view, int position, long id);
 
     protected void listViewFooterViewClick(View view) {
-        if (oldTask == null || oldTask.getStatus() == AsyncTask.Status.FINISHED) {
+        if (oldTask == null || oldTask.getStatus() == MyAsyncTask.Status.FINISHED) {
 
             oldTask = new TimeLineGetOlderMsgListTask();
             oldTask.execute();
@@ -129,7 +129,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
 
     protected void refresh() {
-        if (newTask == null || newTask.getStatus() == AsyncTask.Status.FINISHED) {
+        if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
 
             newTask = new TimeLineGetNewMsgListTask();
             newTask.execute();
@@ -166,7 +166,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     }
 
 
-    public class TimeLineGetNewMsgListTask extends AsyncTask<Object, T, T> {
+    public class TimeLineGetNewMsgListTask extends MyAsyncTask<Object, T, T> {
 
 
         @Override
@@ -224,7 +224,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     protected abstract void oldMsgOnPostExecute(T newValue);
 
 
-    public class TimeLineGetOlderMsgListTask extends AsyncTask<Object, T, T> {
+    public class TimeLineGetOlderMsgListTask extends MyAsyncTask<Object, T, T> {
 
         @Override
         protected void onPreExecute() {

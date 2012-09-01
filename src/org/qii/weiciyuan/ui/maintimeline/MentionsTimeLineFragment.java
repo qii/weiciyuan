@@ -18,6 +18,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
@@ -52,8 +53,9 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     @Override
     protected void newMsgOnPostExecute(MessageListBean newValue) {
-        super.newMsgOnPostExecute(newValue);
         showNewMsgToastMessage(newValue);
+        super.newMsgOnPostExecute(newValue);
+
     }
 
     @Override
@@ -113,7 +115,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
                 break;
             case R.id.mentionstimelinefragment_group:
-                if (newTask == null || newTask.getStatus() == AsyncTask.Status.FINISHED) {
+                if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                     GroupDialog dialog = new GroupDialog();
                     dialog.show(getFragmentManager(), "");
                 }

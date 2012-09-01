@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -13,6 +12,7 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
@@ -111,10 +111,10 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
                     }
                     return true;
                 case R.id.menu_remove_account:
-                    if (removeTask == null || removeTask.getStatus() == AsyncTask.Status.FINISHED) {
+                    if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                         removeTask = new RemoveAccountDBTask();
                         removeTask.execute();
-                    } else if (removeTask.getStatus() == AsyncTask.Status.PENDING || removeTask.getStatus() == AsyncTask.Status.RUNNING) {
+                    } else if (removeTask.getStatus() == MyAsyncTask.Status.PENDING || removeTask.getStatus() == MyAsyncTask.Status.RUNNING) {
                         removeTask.cancel(true);
                         removeTask = new RemoveAccountDBTask();
                         removeTask.execute();
@@ -324,7 +324,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
     }
 
-    class GetAccountListDBTask extends AsyncTask<Void, List<AccountBean>, List<AccountBean>> {
+    class GetAccountListDBTask extends MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
 
         @Override
         protected List<AccountBean> doInBackground(Void... params) {
@@ -339,7 +339,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         }
     }
 
-    class RemoveAccountDBTask extends AsyncTask<Void, List<AccountBean>, List<AccountBean>> {
+    class RemoveAccountDBTask extends MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
 
         @Override
         protected List<AccountBean> doInBackground(Void... params) {
