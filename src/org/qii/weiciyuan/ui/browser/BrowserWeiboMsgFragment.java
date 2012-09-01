@@ -245,6 +245,9 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
         }
 
+        getActivity().getActionBar().getTabAt(1).setText(getString(R.string.comments) + "(" + msg.getComments_count() + ")");
+        getActivity().getActionBar().getTabAt(2).setText(getString(R.string.repost) + "(" + msg.getReposts_count() + ")");
+
 
     }
 
