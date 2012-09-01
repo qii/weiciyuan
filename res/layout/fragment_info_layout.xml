@@ -72,12 +72,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
-            <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:text="@string/message_number"
-                    android:gravity="center"
-                    android:id="@+id/weibo_number" android:singleLine="false"/>
+
             <Button
                     android:layout_width="match_parent"
                     android:layout_height="60dp"

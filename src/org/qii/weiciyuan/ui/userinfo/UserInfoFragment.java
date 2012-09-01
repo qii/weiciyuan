@@ -38,7 +38,6 @@ public class UserInfoFragment extends Fragment {
     private TextView blog_url;
     private TextView location;
     private TextView relationship;
-    private Button weibo_number;
     private Button following_number;
     private Button fans_number;
 
@@ -106,7 +105,6 @@ public class UserInfoFragment extends Fragment {
             blog_url.setVisibility(View.GONE);
         }
         location.setText(bean.getLocation());
-        setTextViewNum(weibo_number, bean.getStatuses_count());
         setTextViewNum(fans_number, bean.getFollowers_count());
         setTextViewNum(following_number, bean.getFriends_count());
         if (bean.isFollow_me()) {
@@ -122,6 +120,8 @@ public class UserInfoFragment extends Fragment {
             unfollow_it.setVisibility(View.GONE);
             follow_it.setVisibility(View.VISIBLE);
         }
+
+        getActivity().getActionBar().getTabAt(1).setText(getString(R.string.weibo) + "(" + bean.getStatuses_count() + ")");
     }
 
     @Override
@@ -135,7 +135,6 @@ public class UserInfoFragment extends Fragment {
         blog_url = (TextView) view.findViewById(R.id.blog_url);
         location = (TextView) view.findViewById(R.id.location);
         relationship = (TextView) view.findViewById(R.id.relationship);
-        weibo_number = (Button) view.findViewById(R.id.weibo_number);
         following_number = (Button) view.findViewById(R.id.following_number);
         fans_number = (Button) view.findViewById(R.id.fans_number);
 
@@ -145,15 +144,6 @@ public class UserInfoFragment extends Fragment {
         follow_it.setOnClickListener(onClickListener);
         unfollow_it.setOnClickListener(onClickListener);
 
-        weibo_number.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UserInfoStatusesActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
-                intent.putExtra("user", bean);
-                startActivity(intent);
-            }
-        });
 
         following_number.setOnClickListener(new View.OnClickListener() {
             @Override

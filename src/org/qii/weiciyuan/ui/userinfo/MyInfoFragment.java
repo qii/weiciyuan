@@ -30,7 +30,6 @@ public class MyInfoFragment extends Fragment {
     private TextView info;
     private TextView blog_url;
     private TextView location;
-    private Button weibo_number;
     private Button following_number;
     private Button fans_number;
     private Button fav_number;
@@ -88,10 +87,10 @@ public class MyInfoFragment extends Fragment {
         }
         location.setText(bean.getLocation());
 
-        setTextViewNum(weibo_number, bean.getStatuses_count());
         setTextViewNum(fans_number, bean.getFollowers_count());
         setTextViewNum(following_number, bean.getFriends_count());
         setTextViewNum(fav_number, bean.getFavourites_count());
+        getActivity().getActionBar().getTabAt(1).setText(getString(R.string.weibo) + "(" + bean.getStatuses_count() + ")");
 
     }
 
@@ -105,19 +104,10 @@ public class MyInfoFragment extends Fragment {
         info = (TextView) view.findViewById(R.id.textView_info);
         blog_url = (TextView) view.findViewById(R.id.blog_url);
         location = (TextView) view.findViewById(R.id.location);
-        weibo_number = (Button) view.findViewById(R.id.weibo_number);
         following_number = (Button) view.findViewById(R.id.following_number);
         fans_number = (Button) view.findViewById(R.id.fans_number);
         fav_number = (Button) view.findViewById(R.id.fav_number);
-        weibo_number.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UserInfoStatusesActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
-                intent.putExtra("user", bean);
-                startActivity(intent);
-            }
-        });
+
         following_number.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -38,8 +38,8 @@
     <string name="more">载入更多</string>
     <string name="message_list">消息列表</string>
     <string name="message_number">微博消息</string>
-    <string name="following_number">关注</string>
-    <string name="fan_number">粉丝</string>
+    <string name="following_number">关注数</string>
+    <string name="fan_number">粉丝数</string>
     <string name="following_list">关注列表</string>
     <string name="fan_list">粉丝列表</string>
     <string name="topic_number">话题</string>
@@ -101,7 +101,7 @@
     <string name="he_is_following_you">他关注了你</string>
 
     <!--fav-->
-    <string name="favourite">收藏</string>
+    <string name="favourite">收藏数</string>
 
     <!-- account -->
     <string name="account">帐号</string>
