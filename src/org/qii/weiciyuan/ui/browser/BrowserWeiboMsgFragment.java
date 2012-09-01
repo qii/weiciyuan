@@ -48,6 +48,8 @@ public class BrowserWeiboMsgFragment extends Fragment {
     private ImageView content_pic;
     private ImageView repost_pic;
 
+    private UpdateMsgTask task = null;
+
     public BrowserWeiboMsgFragment() {
     }
 
@@ -61,8 +63,17 @@ public class BrowserWeiboMsgFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         buildViewData();
         setHasOptionsMenu(true);
-        UpdateMsgTask task = new UpdateMsgTask();
+        setRetainInstance(true);
+        task = new UpdateMsgTask();
         task.execute();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (task != null) {
+            task.cancel(true);
+        }
     }
 
     class UpdateMsgTask extends AsyncTask<Void, Void, MessageBean> {
@@ -253,43 +264,33 @@ public class BrowserWeiboMsgFragment extends Fragment {
         inflater.inflate(R.menu.browserweibomsgactivity_menu, menu);
 
 
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
-               switch (item.getItemId()) {
-                   case android.R.id.home:
-                       intent = new Intent(getActivity(), MainTimeLineActivity.class);
-                       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                       startActivity(intent);
-                       return true;
-                   case R.id.menu_repost:
-                       intent = new Intent(getActivity(), BrowserRepostAndCommentListActivity.class);
-                       intent.putExtra("token", ((IToken)getActivity()).getToken());
-                       intent.putExtra("id", msg.getId());
-                       intent.putExtra("msg", msg);
-                       intent.putExtra("tabindex", 0);
-                       startActivity(intent);
-                       return true;
-                   case R.id.menu_comment:
-                       intent = new Intent(getActivity(), BrowserRepostAndCommentListActivity.class);
-                       intent.putExtra("token", ((IToken)getActivity()).getToken());
-                       intent.putExtra("id", msg.getId());
-                       intent.putExtra("msg", msg);
-                       intent.putExtra("tabindex", 1);
-                       startActivity(intent);
-                       return true;
-                   case R.id.menu_share:
-                       Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                       sharingIntent.setType("text/plain");
-                       sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, msg.getText());
-                       startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_to)));
-                       return true;
-                   default:
-                       return super.onOptionsItemSelected(item);
-               }
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                intent = new Intent(getActivity(), MainTimeLineActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                return true;
+
+            case R.id.menu_refresh:
+                if (task == null | task.getStatus() == AsyncTask.Status.FINISHED) {
+                    task = new UpdateMsgTask();
+                    task.execute();
+                }
+
+            case R.id.menu_share:
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, msg.getText());
+                startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_to)));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

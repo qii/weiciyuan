@@ -372,7 +372,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
     private void invlidateTabText() {
         Activity activity = getActivity();
         if (activity != null) {
-            ActionBar.Tab tab = activity.getActionBar().getTabAt(0);
+            ActionBar.Tab tab = activity.getActionBar().getTabAt(2);
             String name = tab.getText().toString();
             String num = "(" + bean.getReposts().size() + ")";
             if (!name.endsWith(")")) {

@@ -2,17 +2,13 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/menu_repost"
-          android:icon="?repost"
-          android:title="@string/repost"
+    <item android:id="@+id/menu_refresh"
+          android:icon="?refresh"
+          android:title="@string/refresh"
 
           android:showAsAction="ifRoom|withText"
             />
-    <item android:id="@+id/menu_comment"
-          android:icon="?comment"
-          android:title="@string/comments"
-          android:showAsAction="ifRoom|withText"
-            />
+
 
     <item android:id="@+id/menu_fav"
           android:title="@string/favourite"
