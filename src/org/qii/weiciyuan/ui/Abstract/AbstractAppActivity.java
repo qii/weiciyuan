@@ -163,17 +163,25 @@ public class AbstractAppActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        for (String task : avatarBitmapWorkerTaskHashMap.keySet()) {
-            avatarBitmapWorkerTaskHashMap.get(task).cancel(true);
-        }
-        avatarBitmapWorkerTaskHashMap = null;
-        for (String task : pictureBitmapWorkerTaskMap.keySet()) {
-            pictureBitmapWorkerTaskMap.get(task).cancel(true);
-        }
-        pictureBitmapWorkerTaskMap = null;
+        totalStopLoadPicture();
 
         defaultAvatar = null;
         defaultPic = null;
+    }
+
+    protected void totalStopLoadPicture() {
+        if (avatarBitmapWorkerTaskHashMap != null) {
+            for (String task : avatarBitmapWorkerTaskHashMap.keySet()) {
+                avatarBitmapWorkerTaskHashMap.get(task).cancel(true);
+            }
+            avatarBitmapWorkerTaskHashMap = null;
+        }
+        if (pictureBitmapWorkerTaskMap != null) {
+            for (String task : pictureBitmapWorkerTaskMap.keySet()) {
+                pictureBitmapWorkerTaskMap.get(task).cancel(true);
+            }
+            pictureBitmapWorkerTaskMap = null;
+        }
     }
 
     private void reload() {
