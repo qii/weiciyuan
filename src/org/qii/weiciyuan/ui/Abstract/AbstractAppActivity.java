@@ -89,7 +89,7 @@ public class AbstractAppActivity extends FragmentActivity {
     //only execute in AccountActivity and MainTimeLineActivity
     protected void buildThemeSetting() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String value = sharedPref.getString(SettingActivity.THEME, "1");
+        String value = sharedPref.getString(SettingActivity.THEME, "3");
         if (value.equals("1"))
             GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black);
         if (value.equals("2"))
