@@ -3,7 +3,6 @@ package org.qii.weiciyuan.ui.browser;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -16,11 +15,12 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.RepostListBean;
 import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
-import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.send.RepostNewActivity;
 
 import java.util.List;
@@ -36,13 +36,16 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
     protected View headerView;
     protected View footerView;
-    public volatile boolean isBusying = false;
     protected ICommander commander;
     protected ListView listView;
     protected TextView empty;
     protected ProgressBar progressBar;
     protected TimeLineAdapter timeLineAdapter;
     protected RepostListBean bean = new RepostListBean();
+
+    private FriendsTimeLineGetNewMsgListTask newTask;
+    private FriendsTimeLineGetOlderMsgListTask oldTask;
+
 
     public RepostListBean getList() {
         return bean;
@@ -60,8 +63,19 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (newTask != null)
+            newTask.cancel(true);
+
+        if (oldTask != null)
+            oldTask.cancel(true);
+    }
+
     public void load() {
-        if (bean == null || bean.getReposts().size() == 0) {
+        if ((bean == null || bean.getReposts().size() == 0) && newTask == null) {
+
             refresh();
         }
     }
@@ -102,33 +116,9 @@ public class RepostsByIdTimeLineFragment extends Fragment {
             id = savedInstanceState.getString("id");
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
-        } else {
-            //new SimpleTask().execute();
-
-        }
-
-    }
-
-    private class SimpleTask extends AsyncTask<Object, Object, Object> {
-
-        @Override
-        protected Object doInBackground(Object... params) {
-            RepostListBean newValue = new RepostsTimeLineByIdDao(token, id).getGSONMsgList();
-            if (newValue != null) {
-                bean = newValue;
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(bean);
-            invlidateTabText();
-            super.onPostExecute(o);
         }
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -253,8 +243,9 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
 
     protected void listViewFooterViewClick(View view) {
-        if (!isBusying) {
-            new FriendsTimeLineGetOlderMsgListTask().execute();
+        if (oldTask == null || oldTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            oldTask = new FriendsTimeLineGetOlderMsgListTask();
+            oldTask.execute();
         }
     }
 
@@ -270,7 +261,10 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
 
 
-        new FriendsTimeLineGetNewMsgListTask().execute();
+        if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            newTask = new FriendsTimeLineGetNewMsgListTask();
+            newTask.execute();
+        }
         Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
         for (String key : keys) {
             avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
@@ -310,12 +304,11 @@ public class RepostsByIdTimeLineFragment extends Fragment {
     }
 
 
-    class FriendsTimeLineGetNewMsgListTask extends AsyncTask<Void, RepostListBean, RepostListBean> {
+    class FriendsTimeLineGetNewMsgListTask extends MyAsyncTask<Void, RepostListBean, RepostListBean> {
 
         @Override
         protected void onPreExecute() {
             showListView();
-            isBusying = true;
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
             headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
@@ -365,7 +358,6 @@ public class RepostsByIdTimeLineFragment extends Fragment {
             }
             headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
-            isBusying = false;
             if (bean.getReposts().size() == 0) {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
             } else {
@@ -389,11 +381,10 @@ public class RepostsByIdTimeLineFragment extends Fragment {
     }
 
 
-    class FriendsTimeLineGetOlderMsgListTask extends AsyncTask<Void, RepostListBean, RepostListBean> {
+    class FriendsTimeLineGetOlderMsgListTask extends MyAsyncTask<Void, RepostListBean, RepostListBean> {
         @Override
         protected void onPreExecute() {
             showListView();
-            isBusying = true;
 
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
             View view = footerView.findViewById(R.id.refresh);
@@ -425,13 +416,11 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         @Override
         protected void onPostExecute(RepostListBean newValue) {
             if (newValue != null && newValue.getReposts().size() > 1) {
-                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getReposts().size() + getString(R.string.old_messages), Toast.LENGTH_SHORT).show();
                 List<MessageBean> list = newValue.getReposts();
                 getList().getReposts().addAll(list.subList(1, list.size() - 1));
 
             }
 
-            isBusying = false;
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);

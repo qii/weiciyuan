@@ -84,12 +84,13 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
             getActionBar().setSelectedNavigationItem(position);
             switch (position) {
                 case 1:
-                    ((CommentsByIdTimeLineFragment)adapter.getItem(1)).load();
+                    ((CommentsByIdTimeLineFragment) adapter.getItem(1)).load();
                     break;
                 case 2:
-                    ((RepostsByIdTimeLineFragment)adapter.getItem(2)).load();
+                    ((RepostsByIdTimeLineFragment) adapter.getItem(2)).load();
                     break;
             }
+
         }
     };
 

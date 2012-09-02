@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -18,6 +17,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.dao.timeline.CommentsTimeLineByIdDao;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
@@ -36,13 +36,16 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
     protected View headerView;
     protected View footerView;
-    public volatile boolean isBusying = false;
     protected ICommander commander;
     protected ListView listView;
     protected TextView empty;
     protected ProgressBar progressBar;
     protected TimeLineAdapter timeLineAdapter;
     protected CommentListBean bean = new CommentListBean();
+
+    private FriendsTimeLineGetNewMsgListTask newTask;
+    private FriendsTimeLineGetOlderMsgListTask oldTask;
+
 
     public CommentListBean getList() {
         return bean;
@@ -61,6 +64,16 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        if (newTask != null)
+            newTask.cancel(true);
+
+        if (oldTask != null)
+            oldTask.cancel(true);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
@@ -69,7 +82,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     }
 
     public void load() {
-        if (bean == null || bean.getComments().size() == 0) {
+        if ((bean == null || bean.getComments().size() == 0) && newTask == null) {
             refresh();
         }
     }
@@ -102,32 +115,10 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             id = savedInstanceState.getString("id");
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
-        } else {
-//            new SimpleTask().execute();
-
         }
 
     }
 
-    private class SimpleTask extends AsyncTask<Object, Object, Object> {
-
-        @Override
-        protected Object doInBackground(Object... params) {
-            CommentListBean newValue = new CommentsTimeLineByIdDao(token, id).getGSONMsgList();
-            if (newValue != null) {
-                bean = newValue;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(bean);
-            invlidateTabText();
-            super.onPostExecute(o);
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -254,8 +245,9 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
 
     protected void listViewFooterViewClick(View view) {
-        if (!isBusying) {
-            new FriendsTimeLineGetOlderMsgListTask().execute();
+        if (oldTask == null || oldTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            oldTask = new FriendsTimeLineGetOlderMsgListTask();
+            oldTask.execute();
         }
     }
 
@@ -271,8 +263,10 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
         Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
 
-
-        new FriendsTimeLineGetNewMsgListTask().execute();
+        if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            newTask = new FriendsTimeLineGetNewMsgListTask();
+            newTask.execute();
+        }
         Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
         for (String key : keys) {
             avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
@@ -316,12 +310,11 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     }
 
 
-    class FriendsTimeLineGetNewMsgListTask extends AsyncTask<Void, CommentListBean, CommentListBean> {
+    class FriendsTimeLineGetNewMsgListTask extends MyAsyncTask<Void, CommentListBean, CommentListBean> {
 
         @Override
         protected void onPreExecute() {
             showListView();
-            isBusying = true;
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
             headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
@@ -371,7 +364,6 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             }
             headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
-            isBusying = false;
             if (bean.getComments().size() == 0) {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
             } else {
@@ -384,11 +376,10 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     }
 
 
-    class FriendsTimeLineGetOlderMsgListTask extends AsyncTask<Void, CommentListBean, CommentListBean> {
+    class FriendsTimeLineGetOlderMsgListTask extends MyAsyncTask<Void, CommentListBean, CommentListBean> {
         @Override
         protected void onPreExecute() {
             showListView();
-            isBusying = true;
 
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
             View view = footerView.findViewById(R.id.refresh);
@@ -420,7 +411,6 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         @Override
         protected void onPostExecute(CommentListBean newValue) {
             if (newValue != null && newValue.getComments().size() > 1) {
-                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getComments().size() + getString(R.string.old_messages), Toast.LENGTH_SHORT).show();
                 List<CommentBean> list = newValue.getComments();
                 getList().getComments().addAll(list.subList(1, list.size() - 1));
                 ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
@@ -430,7 +420,6 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
             }
 
-            isBusying = false;
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
