@@ -114,6 +114,7 @@ public class OAuthActivity extends AbstractAppActivity {
             case android.R.id.home:
                 Intent intent = new Intent(this, AccountActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("launcher",false);
                 startActivity(intent);
                 return true;
             default:
