@@ -84,6 +84,9 @@ public class BrowserWeiboMsgFragment extends Fragment {
         if (task != null) {
             task.cancel(true);
         }
+        if (geoTask != null) {
+            geoTask.cancel(true);
+        }
     }
 
     class UpdateMsgTask extends MyAsyncTask<Void, Void, MessageBean> {
