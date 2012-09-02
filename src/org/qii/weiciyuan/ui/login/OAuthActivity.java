@@ -10,10 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.*;
@@ -59,6 +56,8 @@ public class OAuthActivity extends AbstractAppActivity {
         settings.setJavaScriptEnabled(true);
         settings.setSaveFormData(false);
         settings.setSavePassword(false);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
 
         CookieSyncManager.createInstance(this);
         CookieManager cookieManager = CookieManager.getInstance();
@@ -67,6 +66,11 @@ public class OAuthActivity extends AbstractAppActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        webView.clearCache(true);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,7 +89,8 @@ public class OAuthActivity extends AbstractAppActivity {
     }
 
     public void refresh() {
-
+        webView.clearView();
+        webView.loadUrl("about:blank");
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
 
@@ -93,7 +98,6 @@ public class OAuthActivity extends AbstractAppActivity {
         iv.startAnimation(rotation);
 
         refreshItem.setActionView(iv);
-
         webView.loadUrl(getWeiboOAuthUrl());
     }
 
@@ -151,7 +155,8 @@ public class OAuthActivity extends AbstractAppActivity {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            completeRefresh();
+            if (!url.equals("about:blank"))
+                completeRefresh();
         }
     }
 
