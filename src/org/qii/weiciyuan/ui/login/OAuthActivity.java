@@ -4,15 +4,20 @@ import android.app.ActionBar;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.*;
+import android.widget.ImageView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -37,6 +42,7 @@ public class OAuthActivity extends AbstractAppActivity {
     private static final String DIRECT_URL = "https://api.weibo.com/oauth2/default.html";
 
     private WebView webView;
+    private MenuItem refreshItem;
 
 
     @Override
@@ -58,7 +64,6 @@ public class OAuthActivity extends AbstractAppActivity {
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
 
-        webView.loadUrl(getWeiboOAuthUrl());
 
     }
 
@@ -67,19 +72,36 @@ public class OAuthActivity extends AbstractAppActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.oauthactivity_menu, menu);
-        menu.findItem(R.id.menu_add_account).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        refreshItem = menu.findItem(R.id.menu_add_account);
+        refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                refresh(item);
+                refresh();
                 return true;
             }
         });
+        refresh();
         return true;
     }
 
-    public void refresh(MenuItem menu) {
+    public void refresh() {
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
+
+        Animation rotation = AnimationUtils.loadAnimation(this, R.anim.refresh);
+        iv.startAnimation(rotation);
+
+        refreshItem.setActionView(iv);
 
         webView.loadUrl(getWeiboOAuthUrl());
+    }
+
+    private void completeRefresh() {
+        if (refreshItem.getActionView() != null) {
+            refreshItem.getActionView().clearAnimation();
+            refreshItem.setActionView(null);
+        }
     }
 
     @Override
@@ -126,7 +148,11 @@ public class OAuthActivity extends AbstractAppActivity {
 
         }
 
-
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            completeRefresh();
+        }
     }
 
     private void handleRedirectUrl(WebView view, String url) {
