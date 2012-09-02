@@ -178,10 +178,6 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             }
         });
 
-//        int[] attrs = new int[]{android.R.attr.textColorPrimaryDisableOnly};
-//        TypedArray ta = getActivity().obtainStyledAttributes(attrs);
-//        int drawableFromTheme = ta.getColor(0, 430);
-//        view.findViewById(R.id.line).setBackgroundColor(drawableFromTheme);  #ffb2b2b2
         return view;
     }
 
@@ -228,7 +224,6 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         protected void onPostExecute(CommentBean s) {
             progressFragment.dismissAllowingStateLoss();
             if (s != null) {
-                Toast.makeText(getActivity(), getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
                 et.setText("");
                 refresh();
             } else {

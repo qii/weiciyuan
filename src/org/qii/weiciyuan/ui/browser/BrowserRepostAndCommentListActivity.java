@@ -122,7 +122,7 @@ public class BrowserRepostAndCommentListActivity extends AbstractAppActivity imp
         public TimeLinePagerAdapter(FragmentManager fm) {
             super(fm);
 
-            list.add(new RepostsByIdTimeLineFragment(token, id));
+            list.add(new RepostsByIdTimeLineFragment(token, id,msg));
             list.add(new CommentsByIdTimeLineFragment(token, id));
 
         }

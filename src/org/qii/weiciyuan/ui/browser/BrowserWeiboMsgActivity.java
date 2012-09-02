@@ -125,7 +125,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
             super(fm);
             list.add(new BrowserWeiboMsgFragment(msg));
             list.add(new CommentsByIdTimeLineFragment(token, msg.getId()));
-            list.add(new RepostsByIdTimeLineFragment(token, msg.getId()));
+            list.add(new RepostsByIdTimeLineFragment(token, msg.getId(),msg));
         }
 
         @Override

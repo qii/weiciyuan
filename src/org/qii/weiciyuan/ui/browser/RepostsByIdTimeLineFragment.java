@@ -2,7 +2,9 @@ package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -14,6 +16,7 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.RepostListBean;
+import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
@@ -22,6 +25,7 @@ import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.send.RepostNewActivity;
+import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.util.List;
 import java.util.Map;
@@ -42,9 +46,12 @@ public class RepostsByIdTimeLineFragment extends Fragment {
     protected ProgressBar progressBar;
     protected TimeLineAdapter timeLineAdapter;
     protected RepostListBean bean = new RepostListBean();
+    private MessageBean msg;
 
     private FriendsTimeLineGetNewMsgListTask newTask;
     private FriendsTimeLineGetOlderMsgListTask oldTask;
+
+    private EditText et;
 
 
     public RepostListBean getList() {
@@ -54,9 +61,10 @@ public class RepostsByIdTimeLineFragment extends Fragment {
     private String token;
     private String id;
 
-    public RepostsByIdTimeLineFragment(String token, String id) {
+    public RepostsByIdTimeLineFragment(String token, String id, MessageBean msg) {
         this.token = token;
         this.id = id;
+        this.msg = msg;
     }
 
     public RepostsByIdTimeLineFragment() {
@@ -86,6 +94,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         outState.putSerializable("bean", bean);
         outState.putString("id", id);
         outState.putString("token", token);
+        outState.putSerializable("msg", msg);
     }
 
 
@@ -114,6 +123,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
             bean = (RepostListBean) savedInstanceState.getSerializable("bean");
             token = savedInstanceState.getString("token");
             id = savedInstanceState.getString("id");
+            msg = (MessageBean) savedInstanceState.getSerializable("msg");
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         }
@@ -131,7 +141,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_repost_listview_layout, container, false);
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         listView = (ListView) view.findViewById(R.id.listView);
@@ -162,7 +172,83 @@ public class RepostsByIdTimeLineFragment extends Fragment {
                 }
             }
         });
+
+        if (savedInstanceState == null && msg != null) {
+            if (msg.getRetweeted_status() == null) {
+                view.findViewById(R.id.quick_repost).setVisibility(View.VISIBLE);
+            }
+        } else if (savedInstanceState != null) {
+            msg = (MessageBean) savedInstanceState.getSerializable("msg");
+            if (msg.getRetweeted_status() == null) {
+                view.findViewById(R.id.quick_repost).setVisibility(View.VISIBLE);
+            }
+        }
+
+        et = (EditText) view.findViewById(R.id.content);
+        view.findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendRepost();
+            }
+        });
+
         return view;
+    }
+
+    private void sendRepost() {
+        new SimpleTask().execute();
+    }
+
+
+    class SimpleTask extends AsyncTask<Void, Void, MessageBean> {
+
+        SendProgressFragment progressFragment = new SendProgressFragment();
+
+        @Override
+        protected void onPreExecute() {
+            progressFragment.onCancel(new DialogInterface() {
+
+                @Override
+                public void cancel() {
+                    SimpleTask.this.cancel(true);
+                }
+
+                @Override
+                public void dismiss() {
+                    SimpleTask.this.cancel(true);
+                }
+            });
+
+            progressFragment.show(getFragmentManager(), "");
+
+        }
+
+        @Override
+        protected MessageBean doInBackground(Void... params) {
+
+            String content = et.getText().toString();
+            if (TextUtils.isEmpty(content)) {
+                content = getString(R.string.repost);
+            }
+
+            RepostNewMsgDao dao = new RepostNewMsgDao(token, id);
+            dao.setStatus(content);
+            return dao.sendNewMsg();
+        }
+
+        @Override
+        protected void onPostExecute(MessageBean s) {
+            if (progressFragment != null)
+                progressFragment.dismissAllowingStateLoss();
+            if (s != null) {
+                et.setText("");
+                refresh();
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
+            }
+            super.onPostExecute(s);
+
+        }
     }
 
     protected class TimeLineAdapter extends BaseAdapter {

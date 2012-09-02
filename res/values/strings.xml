@@ -86,7 +86,10 @@
 
     <!--comments -->
     <string name="all_people_send_to_me">所有人发给我</string>
-    <string name="comment_something">快速评论</string>
+    <string name="quick_comment">快速评论</string>
+
+    <!-- reposts -->
+    <string name="quick_repost">快速转发原创微博</string>
 
     <!--info -->
     <string name="personal_info">个人资料</string>
