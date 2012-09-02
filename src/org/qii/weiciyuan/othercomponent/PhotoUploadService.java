@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
+import org.qii.weiciyuan.support.error.WeiboException;
 
 /**
  * User: qii
@@ -57,7 +58,12 @@ public class PhotoUploadService extends Service {
 
         @Override
         protected Void doInBackground(Void... params) {
-            boolean result = new StatusNewMsgDao(token).setPic(picPath).sendNewMsg(content);
+            boolean result = false;
+            try {
+                result = new StatusNewMsgDao(token).setPic(picPath).sendNewMsg(content);
+            } catch (WeiboException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
             if (!result)
                 cancel(true);
             return null;

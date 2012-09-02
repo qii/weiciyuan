@@ -53,9 +53,11 @@ public class OAuthActivity extends AbstractAppActivity {
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-
+        settings.setSaveFormData(false);
+        settings.setSavePassword(false);
 
         webView.loadUrl(getWeiboOAuthUrl());
+
 
     }
 
