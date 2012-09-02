@@ -56,7 +56,7 @@
     <string name="info">资料</string>
 
     <!--new activity -->
-    <string name="write_weibo">发消息</string>
+    <string name="write_weibo">写微博</string>
     <string name="comment_cant_be_empty">评论不能为空</string>
     <string name="send_successfully">发送成功</string>
     <string name="send_failed">发送失败</string>

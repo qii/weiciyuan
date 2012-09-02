@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -185,10 +186,16 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             int num = 140 - content.getText().toString().length();
             contentNumber.setText(String.valueOf(num));
             if (num < 0) {
+                contentNumber.setTextColor(getResources().getColor(R.color.red));
                 canSend = false;
-            } else {
+            } else if (num > 0 && num < 140) {
+                int[] attrs = new int[]{android.R.attr.actionMenuTextColor};
+                TypedArray ta = obtainStyledAttributes(attrs);
+                int drawableFromTheme = ta.getColor(0, 430);
+                contentNumber.setTextColor(drawableFromTheme);
                 canSend = true;
             }
+
         }
 
         @Override
