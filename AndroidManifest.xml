@@ -29,11 +29,11 @@
         <activity
                 android:name=".ui.login.AccountActivity"
                 android:uiOptions="splitActionBarWhenNarrow"
-
                 />
 
         <activity android:name=".ui.main.MainTimeLineActivity"
                   android:uiOptions="splitActionBarWhenNarrow"
+                  android:launchMode="singleTask"
                 />
         <activity android:name=".ui.send.StatusNewActivity"
                   android:uiOptions="splitActionBarWhenNarrow"
@@ -42,7 +42,7 @@
                   android:label="授权"/>
         <activity android:name=".ui.browser.BrowserWeiboMsgActivity"
                   android:label="detail"
-                   />
+                />
         <activity android:name=".ui.send.RepostNewActivity"
                   android:uiOptions="splitActionBarWhenNarrow"
                   android:windowSoftInputMode="stateVisible|adjustResize"/>
