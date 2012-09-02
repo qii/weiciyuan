@@ -14,6 +14,7 @@ import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -156,13 +157,17 @@ public class DatabaseManager {
         }
         return null;
 
-     }
+    }
 
     public List<AccountBean> removeAndGetNewAccountList(Set<String> checkedItemPosition) {
         String[] args = checkedItemPosition.toArray(new String[0]);
+        String asString = Arrays.toString(args);
+        asString = asString.replace("[", "(");
+        asString = asString.replace("]", ")");
 
-        String column = AccountTable.UID;
-        long result = wsd.delete(AccountTable.TABLE_NAME, column + "=?", args);
+        String sql = "delete from " + AccountTable.TABLE_NAME + " where " + AccountTable.UID + " in " + asString;
+
+        wsd.execSQL(sql);
 
         return getAccountList();
     }

@@ -53,41 +53,37 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         listAdapter = new AccountAdapter();
         listView = (ListView) findViewById(R.id.listView);
         listView.setOnItemClickListener(this);
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                startActionMode(mActionModeCallback);
+                return true;
+            }
+        });
         listView.setAdapter(listAdapter);
-
-
-        listView.setMultiChoiceModeListener(multiChoiceModeLinstener);
 
         getTask = new GetAccountListDBTask();
         getTask.execute();
     }
 
-    @Override
-    public void onBackPressed() {
-        GlobalContext.getInstance().startedApp = false;
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (getTask != null)
-            getTask.cancel(true);
-
-        if (removeTask != null)
-            removeTask.cancel(true);
-    }
-
-    private AbsListView.MultiChoiceModeListener multiChoiceModeLinstener = new AbsListView.MultiChoiceModeListener() {
+    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
         boolean checkAll = false;
 
+
         @Override
-        public void onItemCheckedStateChanged(ActionMode mode, int position,
-                                              long id, boolean checked) {
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.accountactivity_menu_contextual, menu);
+            return true;
+        }
 
 
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            listAdapter.addCheckbox();
+
+            return false;
         }
 
         @Override
@@ -128,24 +124,30 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
             }
         }
 
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.accountactivity_menu_contextual, menu);
-            return true;
-        }
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            mActionMode = null;
             listAdapter.unSelectAll();
         }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            listAdapter.addCheckbox();
-            return false;
-        }
     };
+
+    @Override
+    public void onBackPressed() {
+        GlobalContext.getInstance().startedApp = false;
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (getTask != null)
+            getTask.cancel(true);
+
+        if (removeTask != null)
+            removeTask.cancel(true);
+    }
+
 
     private void jumpToHomeLine() {
         Intent intent = getIntent();
@@ -292,6 +294,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
             return mView;
         }
+
 
         public void addCheckbox() {
             needCheckbox = true;
