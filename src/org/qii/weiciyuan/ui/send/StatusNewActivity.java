@@ -32,6 +32,7 @@ import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.dao.location.LocationInfoDao;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.othercomponent.PhotoUploadService;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
@@ -169,18 +170,13 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         token = intent.getStringExtra("token");
 
         content = ((EditText) findViewById(R.id.status_new_content));
-        content.addTextChangedListener(new TextNumLimitWatcher(contentNumber,content,this));
+        content.addTextChangedListener(new TextNumLimitWatcher(contentNumber, content, this));
     }
-
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.statusnewactivity_menu, menu);
-//        if (pic != null) {
-//            Drawable drawable = new BitmapDrawable(getResources(), pic);
-//            menu.findItem(R.id.menu_add_pic).setIcon(drawable);
-//        }
         return true;
     }
 
@@ -257,7 +253,11 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         @Override
         protected String doInBackground(Void... params) {
-            boolean result = new StatusNewMsgDao(token).setGeoBean(geoBean).sendNewMsg(content);
+            try {
+                boolean result = new StatusNewMsgDao(token).setGeoBean(geoBean).sendNewMsg(content);
+            } catch (WeiboException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
 
             return null;
         }

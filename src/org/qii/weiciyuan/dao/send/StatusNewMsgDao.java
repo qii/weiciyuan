@@ -37,7 +37,7 @@ public class StatusNewMsgDao {
         this.access_token = access_token;
     }
 
-    public boolean sendNewMsg(String str) {
+    public boolean sendNewMsg(String str) throws WeiboException {
 
         if (!TextUtils.isEmpty(pic)) {
             return sendNewMsgWithPic(str);
@@ -51,13 +51,9 @@ public class StatusNewMsgDao {
             map.put("lat", String.valueOf(geoBean.getLat()));
             map.put("long", String.valueOf(geoBean.getLon()));
         }
-        try {
-            HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
-            return true;
-        } catch (WeiboException e) {
-            e.printStackTrace();
-        }
-        return false;
+
+        HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
+        return true;
 
     }
 
