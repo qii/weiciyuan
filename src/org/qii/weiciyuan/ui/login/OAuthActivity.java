@@ -12,9 +12,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.webkit.*;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -56,8 +54,11 @@ public class OAuthActivity extends AbstractAppActivity {
         settings.setSaveFormData(false);
         settings.setSavePassword(false);
 
-        webView.loadUrl(getWeiboOAuthUrl());
+        CookieSyncManager.createInstance(this);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.removeAllCookie();
 
+        webView.loadUrl(getWeiboOAuthUrl());
 
     }
 
