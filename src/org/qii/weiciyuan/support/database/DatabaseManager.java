@@ -191,8 +191,8 @@ public class DatabaseManager {
     public void replaceHomeLineMsg(MessageListBean list, String accountId) {
 
 
-        wsd.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
-        wsd.execSQL(DatabaseHelper.CREATE_HOME_TABLE_SQL);
+//        wsd.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
+//        wsd.execSQL(DatabaseHelper.CREATE_HOME_TABLE_SQL);
 
         addHomeLineMsg(list, accountId);
     }
@@ -203,7 +203,7 @@ public class DatabaseManager {
 
         List<MessageBean> msgList = new ArrayList<MessageBean>();
         String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
-                + accountId + " order by " + HomeTable.MBLOGID + " desc";
+                + accountId + " order by " + HomeTable.MBLOGID + " desc limit 50";
         Cursor c = rsd.rawQuery(sql, null);
         while (c.moveToNext()) {
             String json = c.getString(c.getColumnIndex(HomeTable.JSONDATA));
@@ -228,7 +228,7 @@ public class DatabaseManager {
 
         List<MessageBean> msgList = new ArrayList<MessageBean>();
         String sql = "select * from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID + "  = "
-                + accountId + " order by " + RepostsTable.MBLOGID + " desc";
+                + accountId + " order by " + RepostsTable.MBLOGID + " desc limit 50";
         Cursor c = rsd.rawQuery(sql, null);
         while (c.moveToNext()) {
             String json = c.getString(c.getColumnIndex(RepostsTable.JSONDATA));
@@ -268,8 +268,8 @@ public class DatabaseManager {
     public void replaceRepostLineMsg(MessageListBean list, String accountId) {
 
         //need modification
-        wsd.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
-        wsd.execSQL(DatabaseHelper.CREATE_REPOSTS_TABLE_SQL);
+//        wsd.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
+//        wsd.execSQL(DatabaseHelper.CREATE_REPOSTS_TABLE_SQL);
 
         addRepostLineMsg(list, accountId);
     }
@@ -295,7 +295,7 @@ public class DatabaseManager {
 
         List<CommentBean> msgList = new ArrayList<CommentBean>();
         String sql = "select * from " + CommentsTable.TABLE_NAME + " where " + CommentsTable.ACCOUNTID + "  = "
-                + accountId + " order by " + CommentsTable.MBLOGID + " desc";
+                + accountId + " order by " + CommentsTable.MBLOGID + " desc limit 50";
         Cursor c = rsd.rawQuery(sql, null);
         Gson gson = new Gson();
         while (c.moveToNext()) {
@@ -317,8 +317,8 @@ public class DatabaseManager {
     public void replaceCommentLineMsg(CommentListBean list, String accountId) {
 
         //need modification
-        wsd.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
-        wsd.execSQL(DatabaseHelper.CREATE_COMMENTS_TABLE_SQL);
+//        wsd.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
+//        wsd.execSQL(DatabaseHelper.CREATE_COMMENTS_TABLE_SQL);
 
         addCommentLineMsg(list, accountId);
     }
