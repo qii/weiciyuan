@@ -351,7 +351,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         protected void onPostExecute(List<AccountBean> accounts) {
             accountList = accounts;
             listAdapter.notifyDataSetChanged();
-            Toast.makeText(AccountActivity.this, "remove successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AccountActivity.this, getString(R.string.remove_successfully), Toast.LENGTH_SHORT).show();
 
         }
     }
