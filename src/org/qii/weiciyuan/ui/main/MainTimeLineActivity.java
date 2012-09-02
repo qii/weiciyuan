@@ -70,11 +70,21 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("account", accountBean);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         buildThemeSetting();
         buildFontSetting();
-        Intent intent = getIntent();
-        accountBean = (AccountBean) intent.getSerializableExtra("account");
+        if (savedInstanceState == null) {
+            Intent intent = getIntent();
+            accountBean = (AccountBean) intent.getSerializableExtra("account");
+        } else {
+            accountBean = (AccountBean) savedInstanceState.getSerializable("account");
+        }
         token = accountBean.getAccess_token();
         GlobalContext.getInstance().setSpecialToken(token);
         GlobalContext.getInstance().setAccountBean(accountBean);

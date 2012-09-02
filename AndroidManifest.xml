@@ -29,7 +29,7 @@
         <activity
                 android:name=".ui.login.AccountActivity"
                 android:uiOptions="splitActionBarWhenNarrow"
-                android:noHistory="true"
+
                 />
 
         <activity android:name=".ui.main.MainTimeLineActivity"

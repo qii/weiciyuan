@@ -160,7 +160,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
                         Intent start = new Intent(AccountActivity.this, MainTimeLineActivity.class);
                         start.putExtra("account", bean);
                         startActivity(start);
-
+                        finish();
                     }
                 }
             }
@@ -217,6 +217,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         intent.putExtra("uid", accountList.get(i).getUid());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        finish();
 
 
     }

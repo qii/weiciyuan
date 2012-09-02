@@ -6,5 +6,5 @@
     <string name="code21332">invalid_access_token</string>
     <string name="code10006">source paramter(appkey) is missing</string>
     <string name="code21301">auth faild!</string>
-
+    <string name="code20012">字数太多了，最多140字！</string>
 </resources>
