@@ -93,7 +93,7 @@ public class CommentNewActivity extends AbstractAppActivity {
                 }
             });
 
-            progressFragment.show(getFragmentManager(), "");
+            progressFragment.show(getSupportFragmentManager(), "");
 
         }
 

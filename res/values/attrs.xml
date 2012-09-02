@@ -18,6 +18,7 @@
     <attr name="picture" format="reference"/>
     <attr name="refresh" format="reference"/>
     <attr name="repost" format="reference"/>
+    <attr name="send" format="reference"/>
     <attr name="search" format="reference"/>
     <attr name="share" format="reference"/>
     <attr name="statusnewactivity_camera" format="reference"/>
@@ -28,4 +29,5 @@
     <attr name="listview_item_background_selector" format="reference"/>
     <attr name="listview_item_refresh_animation" format="reference"/>
     <attr name="link_color" format="reference"/>
+    <attr name="line_drawable" format="reference"/>
 </resources>

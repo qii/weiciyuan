@@ -31,6 +31,7 @@
         <item name="repost">@drawable/repost_light</item>
         <item name="search">@drawable/search_light</item>
         <item name="share">@drawable/share_light</item>
+        <item name="send">@drawable/send_light</item>
         <item name="statusnewactivity_camera">@drawable/statusnewactivity_camera_light</item>
         <item name="statusnewactivity_gps">@drawable/statusnewactivity_gps_light</item>
         <item name="statusnewactivity_send">@drawable/statusnewactivity_send_light</item>
@@ -39,6 +40,7 @@
         <item name="listview_item_background_selector">@null</item>
         <item name="listview_item_refresh_animation">@drawable/refresh_light</item>
         <item name="link_color">@color/mintcream</item>
+        <item name="line_drawable">@drawable/list_divider_holo_dark</item>
 
         <item name="android:progressBarStyle">@style/Widget.Holo.ProgressBar</item>
 

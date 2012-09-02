@@ -82,7 +82,7 @@ public class RepostNewActivity extends AbstractAppActivity {
                 }
             });
 
-            progressFragment.show(getFragmentManager(), "");
+            progressFragment.show(getSupportFragmentManager(), "");
 
         }
 

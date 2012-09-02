@@ -1,9 +1,9 @@
 package org.qii.weiciyuan.ui.widgets;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 
 /**
  * User: qii
@@ -12,12 +12,12 @@ import android.os.Bundle;
  */
 public class SendProgressFragment extends DialogFragment {
 
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            ProgressDialog dialog = new ProgressDialog(getActivity());
-            dialog.setMessage("发送中");
-            dialog.setIndeterminate(false);
-            dialog.setCancelable(true);
-            return dialog;
-        }
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        ProgressDialog dialog = new ProgressDialog(getActivity());
+        dialog.setMessage("发送中");
+        dialog.setIndeterminate(false);
+        dialog.setCancelable(true);
+        return dialog;
     }
+}

@@ -42,7 +42,7 @@
                   android:label="授权"/>
         <activity android:name=".ui.browser.BrowserWeiboMsgActivity"
                   android:label="detail"
-                  android:uiOptions="splitActionBarWhenNarrow"/>
+                   />
         <activity android:name=".ui.send.RepostNewActivity"
                   android:uiOptions="splitActionBarWhenNarrow"
                   android:windowSoftInputMode="stateVisible|adjustResize"/>

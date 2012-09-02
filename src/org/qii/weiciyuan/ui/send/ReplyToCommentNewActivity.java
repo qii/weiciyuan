@@ -81,7 +81,7 @@ public class ReplyToCommentNewActivity extends AbstractAppActivity {
                 }
             });
 
-            progressFragment.show(getFragmentManager(), "");
+            progressFragment.show(getSupportFragmentManager(), "");
 
         }
 

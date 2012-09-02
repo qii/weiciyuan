@@ -31,7 +31,8 @@
         <item name="repost">@drawable/repost_light</item>
         <item name="search">@drawable/search_light</item>
         <item name="share">@drawable/share_light</item>
-        <item name="statusnewactivity_camera">@drawable/statusnewactivity_camera_light</item>
+        <item name="send">@drawable/send_black</item>
+         <item name="statusnewactivity_camera">@drawable/statusnewactivity_camera_light</item>
         <item name="statusnewactivity_gps">@drawable/statusnewactivity_gps_light</item>
         <item name="statusnewactivity_send">@drawable/statusnewactivity_send_light</item>
         <item name="error">@drawable/error_black</item>
@@ -40,5 +41,7 @@
         <item name="listview_item_background_selector">@drawable/listview_item_background_selector</item>
         <item name="listview_item_refresh_animation">@drawable/refresh_black</item>
         <item name="link_color">@color/dark_blue</item>
+        <item name="line_drawable">@drawable/list_divider_holo_light</item>
+
     </style>
 </resources>

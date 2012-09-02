@@ -4,7 +4,9 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -16,6 +18,7 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.CommentsTimeLineByIdDao;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
@@ -23,6 +26,7 @@ import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.send.CommentNewActivity;
+import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.util.List;
 import java.util.Map;
@@ -45,6 +49,9 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
     private FriendsTimeLineGetNewMsgListTask newTask;
     private FriendsTimeLineGetOlderMsgListTask oldTask;
+
+
+    private EditText et;
 
 
     public CommentListBean getList() {
@@ -131,7 +138,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_comment_listview_layout, container, false);
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         listView = (ListView) view.findViewById(R.id.listView);
@@ -162,7 +169,74 @@ public class CommentsByIdTimeLineFragment extends Fragment {
                 }
             }
         });
+
+        et = (EditText) view.findViewById(R.id.content);
+        view.findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendComment();
+            }
+        });
+
+//        int[] attrs = new int[]{android.R.attr.textColorPrimaryDisableOnly};
+//        TypedArray ta = getActivity().obtainStyledAttributes(attrs);
+//        int drawableFromTheme = ta.getColor(0, 430);
+//        view.findViewById(R.id.line).setBackgroundColor(drawableFromTheme);  #ffb2b2b2
         return view;
+    }
+
+    private void sendComment() {
+        final String content = et.getText().toString();
+
+        if (!TextUtils.isEmpty(content)) {
+            new SimpleTask().execute();
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.comment_cant_be_empty), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    class SimpleTask extends AsyncTask<Void, Void, CommentBean> {
+
+        SendProgressFragment progressFragment = new SendProgressFragment();
+
+        @Override
+        protected void onPreExecute() {
+            progressFragment.onCancel(new DialogInterface() {
+
+                @Override
+                public void cancel() {
+                    SimpleTask.this.cancel(true);
+                }
+
+                @Override
+                public void dismiss() {
+                    SimpleTask.this.cancel(true);
+                }
+            });
+
+            progressFragment.show(getFragmentManager(), "");
+
+        }
+
+        @Override
+        protected CommentBean doInBackground(Void... params) {
+            CommentNewMsgDao dao = new CommentNewMsgDao(token, id, et.getText().toString());
+            return dao.sendNewMsg();
+        }
+
+        @Override
+        protected void onPostExecute(CommentBean s) {
+            progressFragment.dismissAllowingStateLoss();
+            if (s != null) {
+                Toast.makeText(getActivity(), getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
+                et.setText("");
+                refresh();
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
+            }
+            super.onPostExecute(s);
+
+        }
     }
 
     protected class TimeLineAdapter extends BaseAdapter {

@@ -247,7 +247,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 }
             });
 
-            progressFragment.show(getFragmentManager(), "");
+            progressFragment.show(getSupportFragmentManager(), "");
 
         }
 
