@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -50,6 +49,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
     private ImageView repost_pic;
 
     private UpdateMsgTask task = null;
+    private GetGoogleLocationInfo geoTask = null;
 
     public BrowserWeiboMsgFragment() {
     }
@@ -204,7 +204,10 @@ public class BrowserWeiboMsgFragment extends Fragment {
         time.setText(msg.getCreated_at());
 
         if (msg.getGeo() != null) {
-            new GetGoogleLocationInfo(msg.getGeo()).execute();
+            if (geoTask == null || geoTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                geoTask = new GetGoogleLocationInfo(msg.getGeo());
+                geoTask.execute();
+            }
         }
 
         source.setText(Html.fromHtml(msg.getSource()));
@@ -251,7 +254,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
     }
 
-    private class GetGoogleLocationInfo extends AsyncTask<Void, String, String> {
+    private class GetGoogleLocationInfo extends MyAsyncTask<Void, String, String> {
 
         GeoBean geoBean;
 
