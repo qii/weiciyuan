@@ -173,7 +173,7 @@ public class OAuthActivity extends AbstractAppActivity {
         if (error == null && error_code == null) {
 
             String access_token = values.getString("access_token");
-            setResult(0, intent);
+            setResult(RESULT_OK, intent);
             new OAuthTask().execute(access_token);
 
         } else {

@@ -192,9 +192,11 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data != null) {
-//            if(getTask==null||getTask)
-            new GetAccountListDBTask().execute();
+        if (resultCode == RESULT_OK) {
+            if (getTask == null || getTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                getTask = new GetAccountListDBTask();
+                getTask.execute();
+            }
 
         }
     }
