@@ -7,7 +7,6 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,9 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -172,36 +169,10 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         token = intent.getStringExtra("token");
 
         content = ((EditText) findViewById(R.id.status_new_content));
-        content.addTextChangedListener(onEditorActionListener);
+        content.addTextChangedListener(new TextNumLimitWatcher(contentNumber,content,this));
     }
 
-    private TextWatcher onEditorActionListener = new TextWatcher() {
 
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            int num = 140 - content.getText().toString().length();
-            contentNumber.setText(String.valueOf(num));
-            if (num < 0) {
-                contentNumber.setTextColor(getResources().getColor(R.color.red));
-                canSend = false;
-            } else if (num > 0 && num < 140) {
-                int[] attrs = new int[]{android.R.attr.actionMenuTextColor};
-                TypedArray ta = obtainStyledAttributes(attrs);
-                int drawableFromTheme = ta.getColor(0, 430);
-                contentNumber.setTextColor(drawableFromTheme);
-                canSend = true;
-            }
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
