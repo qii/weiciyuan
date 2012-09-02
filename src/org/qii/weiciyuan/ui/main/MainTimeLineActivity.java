@@ -18,6 +18,7 @@ import android.widget.SpinnerAdapter;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
@@ -82,8 +83,10 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         if (savedInstanceState == null) {
             Intent intent = getIntent();
             accountBean = (AccountBean) intent.getSerializableExtra("account");
+            AppLogger.d(accountBean.getUsernick());
         } else {
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
+            AppLogger.d(accountBean.getUsernick());
         }
         token = accountBean.getAccess_token();
         GlobalContext.getInstance().setSpecialToken(token);
