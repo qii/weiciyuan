@@ -8,11 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,6 +116,17 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
         }
     };
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(this, MainTimeLineActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     class TimeLinePagerAdapter extends
             FragmentPagerAdapter {
@@ -125,7 +138,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
             super(fm);
             list.add(new BrowserWeiboMsgFragment(msg));
             list.add(new CommentsByIdTimeLineFragment(token, msg.getId()));
-            list.add(new RepostsByIdTimeLineFragment(token, msg.getId(),msg));
+            list.add(new RepostsByIdTimeLineFragment(token, msg.getId(), msg));
         }
 
         @Override
