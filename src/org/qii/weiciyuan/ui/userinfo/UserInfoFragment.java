@@ -17,6 +17,7 @@ import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
@@ -80,15 +81,12 @@ public class UserInfoFragment extends Fragment {
         bean = ((IUserInfo) getActivity()).getUser();
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         setValue();
-
+        if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
+            task = new SimpleTask();
+            task.execute();
+        }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        task = new SimpleTask();
-        task.execute();
-    }
 
     private void setValue() {
         username.setText(bean.getScreen_name());
@@ -183,11 +181,11 @@ public class UserInfoFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                task = new SimpleTask();
-                task.execute();
+                if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    task = new SimpleTask();
+                    task.execute();
+                }
                 break;
-
-
         }
         return true;
     }
@@ -304,7 +302,7 @@ public class UserInfoFragment extends Fragment {
     }
 
 
-    private class SimpleTask extends AsyncTask<Object, UserBean, UserBean> {
+    private class SimpleTask extends MyAsyncTask<Object, UserBean, UserBean> {
 
         @Override
         protected UserBean doInBackground(Object... params) {
