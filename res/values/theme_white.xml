@@ -41,6 +41,7 @@
         <item name="statusnewactivity_pic">@drawable/picture_black</item>
 
         <item name="error">@drawable/error_black</item>
+        <item name="location_map">@drawable/location_map_black</item>
 
 
         <item name="listview_item_background_selector">@drawable/listview_item_background_selector</item>

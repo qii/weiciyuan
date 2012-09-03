@@ -10,7 +10,7 @@
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="?statusnewactivity_gps"
+            android:src="?location_map"
             android:layout_marginRight="8dp"
             android:id="@+id/have_gps"
             android:visibility="gone"
