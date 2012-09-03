@@ -1,20 +1,9 @@
 package org.qii.weiciyuan.ui.preference;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.view.MenuItem;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.othercomponent.FetchNewMsgService;
-import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -31,6 +20,7 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String ENABLE_FETCH_MSG = "enable_fetch_msg";
     public static final String CLEAR_CACHE = "clear_cache";
     public static final String FONT_SIZE = "font_size";
+    public static final String OFFICIAL_WEIBO = "official_weibo";
 
 
     @Override

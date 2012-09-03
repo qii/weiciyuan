@@ -11,9 +11,11 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.othercomponent.FetchNewMsgService;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
  * User: qii
@@ -44,6 +46,20 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         task = new CalcCacheSize();
         // task.execute();
+
+        findPreference(SettingActivity.OFFICIAL_WEIBO).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                UserBean bean = new UserBean();
+                bean.setScreen_name(getString(R.string.app_name));
+                String token = GlobalContext.getInstance().getSpecialToken();
+                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                intent.putExtra("token", token);
+                intent.putExtra("user", bean);
+                startActivity(intent);
+                return true;
+            }
+        });
     }
 
     @Override

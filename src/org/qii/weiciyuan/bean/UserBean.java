@@ -3,11 +3,8 @@ package org.qii.weiciyuan.bean;
 import java.io.Serializable;
 
 /**
- * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-7-29
- * Time: 下午7:42
- * To change this template use File | Settings | File Templates.
  */
 public class UserBean implements Serializable {
 
@@ -222,7 +219,7 @@ public class UserBean implements Serializable {
     private String profile_image_url;
     private String domain;
     private String gender;
-    private String  statuses_count;
+    private String statuses_count="0";
     private String favourites_count;
     private String created_at;
     private boolean following;
