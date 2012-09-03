@@ -35,6 +35,7 @@
         <item name="statusnewactivity_camera">@drawable/statusnewactivity_camera_light</item>
         <item name="statusnewactivity_gps">@drawable/statusnewactivity_gps_light</item>
         <item name="statusnewactivity_send">@drawable/statusnewactivity_send_light</item>
+        <item name="statusnewactivity_pic">@drawable/picture_light</item>
         <item name="error">@drawable/error_light</item>
 
         <item name="listview_item_background_selector">@null</item>

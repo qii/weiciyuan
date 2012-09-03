@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
@@ -60,6 +61,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
 
     private TextView contentNumber = null;
+    private ImageView haveGPS = null;
+    private ImageView havePic = null;
     private EditText content = null;
 
 
@@ -105,6 +108,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                     picPath = getPicPathFromUri(imageFileUri);
                     break;
             }
+            havePic.setVisibility(View.VISIBLE);
         }
     }
 
@@ -118,6 +122,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         View title = getLayoutInflater().inflate(R.layout.statusnewactivity_title_layout, null);
         contentNumber = (TextView) title.findViewById(R.id.content_number);
+        haveGPS = (ImageView) title.findViewById(R.id.have_gps);
+        havePic = (ImageView) title.findViewById(R.id.have_pic);
         actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
         actionBar.setDisplayShowCustomEnabled(true);
         content = ((EditText) findViewById(R.id.status_new_content));
@@ -353,6 +359,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
 
     private void updateWithNewLocation(Location result) {
+        haveGPS.setVisibility(View.VISIBLE);
         geoBean = new GeoBean();
         geoBean.setLatitude(result.getLatitude());
         geoBean.setLongitude(result.getLongitude());
@@ -390,7 +397,6 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         @Override
         protected void onPostExecute(String s) {
-            contentNumber.setText(s);
             Toast.makeText(StatusNewActivity.this, s, Toast.LENGTH_SHORT).show();
             super.onPostExecute(s);
         }
