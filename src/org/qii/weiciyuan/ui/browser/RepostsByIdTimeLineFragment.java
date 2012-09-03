@@ -98,6 +98,27 @@ public class RepostsByIdTimeLineFragment extends Fragment {
     }
 
 
+    private boolean canSend() {
+
+        boolean haveToken = !TextUtils.isEmpty(token);
+        boolean contentNumBelow140 = (et.getText().toString().length() < 140);
+
+        if (haveToken && contentNumBelow140) {
+            return true;
+        } else {
+            if (!haveToken) {
+                Toast.makeText(getActivity(), getString(R.string.dont_have_account), Toast.LENGTH_SHORT).show();
+            }
+
+            if (!contentNumBelow140) {
+                et.setError(getString(R.string.content_words_number_too_many));
+            }
+
+        }
+
+        return false;
+    }
+
     protected void refreshLayout(RepostListBean bean) {
         if (bean.getReposts().size() > 0) {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
@@ -196,7 +217,9 @@ public class RepostsByIdTimeLineFragment extends Fragment {
     }
 
     private void sendRepost() {
-        new SimpleTask().execute();
+        if (canSend()) {
+            new SimpleTask().execute();
+        }
     }
 
 

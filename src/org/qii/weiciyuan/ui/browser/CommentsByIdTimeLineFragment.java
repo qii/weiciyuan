@@ -94,6 +94,32 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         }
     }
 
+    private boolean canSend() {
+
+        boolean haveContent = !TextUtils.isEmpty(et.getText().toString());
+        boolean haveToken = !TextUtils.isEmpty(token);
+        boolean contentNumBelow140 = (et.getText().toString().length() < 140);
+
+        if (haveContent && haveToken && contentNumBelow140) {
+            return true;
+        } else {
+            if (!haveContent && !haveToken) {
+                Toast.makeText(getActivity(), getString(R.string.content_cant_be_empty_and_dont_have_account), Toast.LENGTH_SHORT).show();
+            } else if (!haveContent) {
+                et.setError(getString(R.string.content_cant_be_empty));
+            } else if (!haveToken) {
+                Toast.makeText(getActivity(), getString(R.string.dont_have_account), Toast.LENGTH_SHORT).show();
+            }
+
+            if (!contentNumBelow140) {
+                et.setError(getString(R.string.content_words_number_too_many));
+            }
+
+        }
+
+        return false;
+    }
+
 
     protected void refreshLayout(CommentListBean bean) {
         if (bean.getComments().size() > 0) {
@@ -182,12 +208,9 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     }
 
     private void sendComment() {
-        final String content = et.getText().toString();
 
-        if (!TextUtils.isEmpty(content)) {
+        if (canSend()) {
             new SimpleTask().execute();
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.comment_cant_be_empty), Toast.LENGTH_SHORT).show();
         }
     }
 
