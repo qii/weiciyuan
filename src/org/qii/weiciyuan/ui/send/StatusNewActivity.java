@@ -150,7 +150,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 getActionBar().setSubtitle(bean.getUsernick());
             } else {
                 List<AccountBean> accountList = DatabaseManager.getInstance().getAccountList();
-                if (accountList != null || accountList.size() > 0) {
+                if (accountList != null && accountList.size() > 0) {
                     AccountBean account = accountList.get(0);
                     token = account.getAccess_token();
                     getActionBar().setSubtitle(account.getUsernick());
