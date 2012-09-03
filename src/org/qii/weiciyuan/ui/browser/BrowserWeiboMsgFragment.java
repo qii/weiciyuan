@@ -10,7 +10,6 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.text.style.StrikethroughSpan;
 import android.view.*;
 import android.widget.ImageView;
@@ -212,9 +211,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
             }
         }
 
-        source.setText(Html.fromHtml(msg.getSource()));
-        source.setMovementMethod(LinkMovementMethod.getInstance());
-
+        source.setText(Html.fromHtml(msg.getSource()).toString());
 
         if (msg.getRetweeted_status() != null) {
             recontent.setVisibility(View.VISIBLE);
