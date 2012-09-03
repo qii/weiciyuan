@@ -25,6 +25,7 @@
 
     <!--system -->
     <string name="timeout">请求超时</string>
+    <string name="unknown_error_error_code">未知错误，错误代码</string>
 
     <!-- timeline -->
     <string name="refresh">刷新</string>

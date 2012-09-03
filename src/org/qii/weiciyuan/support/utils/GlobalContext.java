@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.LruCache;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -26,7 +27,7 @@ public final class GlobalContext extends Application {
 
     private LruCache<String, Bitmap> avatarCache;
 
-    private boolean enablePic = true;
+    private Boolean enablePic = null;
 
     private int theme = 0;
 
@@ -35,6 +36,9 @@ public final class GlobalContext extends Application {
     private AccountBean accountBean = null;
 
     public boolean startedApp = false;
+
+    private String specialToken = "";
+
 
     public AccountBean getAccountBean() {
         return accountBean;
@@ -56,10 +60,6 @@ public final class GlobalContext extends Application {
         }
     }
 
-    public void setFontSize(int fontSize) {
-        this.fontSize = fontSize;
-    }
-
     public int getAppTheme() {
         if (theme != 0) {
             return theme;
@@ -78,13 +78,31 @@ public final class GlobalContext extends Application {
         }
     }
 
+    public LruCache<String, Bitmap> getAvatarCache() {
+        if (avatarCache != null) {
+            return avatarCache;
+        } else {
+            AppLogger.e("GlobalContext is empty by system");
+            buildCache();
+            return avatarCache;
+        }
+    }
+
+    public boolean isEnablePic() {
+        if (enablePic != null) {
+            return enablePic;
+        } else {
+            AppLogger.e("GlobalContext is empty by system");
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            enablePic = sharedPref.getBoolean(SettingActivity.ENABLE_PIC, true);
+            return enablePic;
+        }
+    }
+
     public void setAppTheme(int theme) {
         this.theme = theme;
     }
 
-    public boolean isEnablePic() {
-        return enablePic;
-    }
 
     public void setEnablePic(boolean enablePic) {
         this.enablePic = enablePic;
@@ -93,22 +111,28 @@ public final class GlobalContext extends Application {
     //for userinfo and topic
 
     public String getSpecialToken() {
-        return specialToken;
+        if (!TextUtils.isEmpty(specialToken)) {
+            return specialToken;
+        } else {
+            AppLogger.e("GlobalContext is empty by system");
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            String token = sharedPref.getString("token", "");
+            this.specialToken = token;
+            return specialToken;
+        }
     }
 
     public void setSpecialToken(String specialToken) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref.edit().putString("token", specialToken).commit();
         this.specialToken = specialToken;
     }
 
-    private String specialToken = "";
 
-    public LruCache<String, Bitmap> getAvatarCache() {
-        return avatarCache;
+    public void setFontSize(int fontSize) {
+        this.fontSize = fontSize;
     }
 
-    public void setAvatarCache(LruCache<String, Bitmap> avatarCache) {
-        this.avatarCache = avatarCache;
-    }
 
     @Override
     public void onCreate() {

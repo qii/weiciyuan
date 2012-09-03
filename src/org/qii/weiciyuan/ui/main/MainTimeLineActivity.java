@@ -97,9 +97,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.maintimelineactivity_viewpager_layout);
 
-
-        buildSetting();
-
         if (getResources().getBoolean(R.bool.is_phone)) {
             buildPhoneInterface();
         } else {
@@ -108,15 +105,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     }
 
-    private void buildSetting() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean enablePic = sharedPref.getBoolean(SettingActivity.ENABLE_PIC, true);
-        if (enablePic) {
-            GlobalContext.getInstance().setEnablePic(true);
-        } else {
-            GlobalContext.getInstance().setEnablePic(false);
-        }
-    }
 
     @Override
     protected void onPause() {

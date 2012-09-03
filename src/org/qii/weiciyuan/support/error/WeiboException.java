@@ -1,6 +1,8 @@
 package org.qii.weiciyuan.support.error;
 
+import android.content.res.Resources;
 import android.text.TextUtils;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 /**
@@ -17,7 +19,12 @@ public class WeiboException extends Exception {
         String name = "code" + error_code;
         int i = GlobalContext.getInstance().getResources()
                 .getIdentifier(name, "string", GlobalContext.getInstance().getPackageName());
-        String result = GlobalContext.getInstance().getString(i);
+        String result = null;
+        try {
+            result = GlobalContext.getInstance().getString(i);
+        } catch (Resources.NotFoundException e) {
+            result = GlobalContext.getInstance().getString(R.string.unknown_error_error_code) + error_code;
+        }
         if (!TextUtils.isEmpty(result)) {
             return result;
         }
