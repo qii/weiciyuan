@@ -19,19 +19,15 @@ import java.util.Map;
  */
 public class ShowUserDao {
 
-    public UserBean getUserInfo() {
+    public UserBean getUserInfo() throws WeiboException {
         String url = URLHelper.getUser();
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         map.put("uid", uid);
         map.put("screen_name", screen_name);
 
-        String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();
-        }
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+
 
         Gson gson = new Gson();
 

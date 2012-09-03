@@ -303,6 +303,7 @@ public class UserInfoFragment extends Fragment {
 
 
     private class SimpleTask extends MyAsyncTask<Object, UserBean, UserBean> {
+        WeiboException e;
 
         @Override
         protected UserBean doInBackground(Object... params) {
@@ -319,7 +320,13 @@ public class UserInfoFragment extends Fragment {
                     return null;
                 }
 
-                UserBean user = dao.getUserInfo();
+                UserBean user = null;
+                try {
+                    user = dao.getUserInfo();
+                } catch (WeiboException e) {
+                    this.e = e;
+                    cancel(true);
+                }
                 if (user != null) {
                     bean = user;
                 } else {
@@ -328,6 +335,14 @@ public class UserInfoFragment extends Fragment {
                 return user;
             } else {
                 return null;
+            }
+        }
+
+        @Override
+        protected void onCancelled(UserBean userBean) {
+            super.onCancelled(userBean);
+            if (e != null) {
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             }
         }
 

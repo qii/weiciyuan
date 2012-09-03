@@ -10,10 +10,12 @@ import android.view.*;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.*;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 
@@ -173,11 +175,18 @@ public class MyInfoFragment extends Fragment {
     }
 
     private class SimpleTask extends AsyncTask<Object, UserBean, UserBean> {
+        WeiboException e;
 
         @Override
         protected UserBean doInBackground(Object... params) {
-            UserBean user = new ShowUserDao(((IToken) getActivity()).getToken())
-                    .setUid(bean.getId()).getUserInfo();
+            UserBean user = null;
+            try {
+                user = new ShowUserDao(((IToken) getActivity()).getToken())
+                        .setUid(bean.getId()).getUserInfo();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+            }
             if (user != null) {
                 bean = user;
                 DatabaseManager.getInstance().updateAccountMyInfo(((IAccountInfo) getActivity()).getAccount(), bean);
@@ -185,6 +194,14 @@ public class MyInfoFragment extends Fragment {
                 cancel(true);
             }
             return user;
+        }
+
+        @Override
+        protected void onCancelled(UserBean userBean) {
+            super.onCancelled(userBean);
+            if (e != null) {
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
