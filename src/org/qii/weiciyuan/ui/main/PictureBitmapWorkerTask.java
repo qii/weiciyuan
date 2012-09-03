@@ -3,7 +3,6 @@ package org.qii.weiciyuan.ui.main;
 import android.graphics.Bitmap;
 import android.util.LruCache;
 import android.widget.ImageView;
-import android.widget.ListView;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 
@@ -17,8 +16,6 @@ import java.util.Map;
 public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
 
-    private int position;
-    private ListView listView;
     private LruCache<String, Bitmap> lruCache;
     private String data = "";
     private ImageView view;
@@ -28,21 +25,23 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     public PictureBitmapWorkerTask(LruCache<String, Bitmap> lruCache,
                                    Map<String, PictureBitmapWorkerTask> taskMap,
-                                   ImageView view,
-                                   ListView listView,
-                                   int position) {
+                                   ImageView view, String url) {
 
         this.lruCache = lruCache;
         this.taskMap = taskMap;
         this.view = view;
-        this.position = position;
-        this.listView = listView;
+        this.data = url;
 
     }
 
     @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        view.setTag(data);
+    }
+
+    @Override
     protected Bitmap doInBackground(String... url) {
-        data = url[0];
         if (!isCancelled()) {
             return ImageTool.getPictureThumbnailBitmap(data);
         }
@@ -69,7 +68,8 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
             lruCache.put(data, bitmap);
 
-            if (position >= listView.getFirstVisiblePosition() && position <= listView.getLastVisiblePosition()) {
+
+            if (view != null && view.getTag().equals(data)) {
                 view.setImageBitmap(bitmap);
             }
 

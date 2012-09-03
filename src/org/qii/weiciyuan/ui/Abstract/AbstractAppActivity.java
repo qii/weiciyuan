@@ -53,8 +53,8 @@ public class AbstractAppActivity extends FragmentActivity {
             } else {
                 view.setImageDrawable(defaultAvatar);
                 if (avatarBitmapWorkerTaskHashMap.get(getMemCacheKey(urlKey, position)) == null) {
-                    AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, listView, position);
-                    avatarTask.execute(urlKey);
+                    AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey);
+                    avatarTask.execute();
                     avatarBitmapWorkerTaskHashMap.put(getMemCacheKey(urlKey, position), avatarTask);
                 }
             }
@@ -71,8 +71,8 @@ public class AbstractAppActivity extends FragmentActivity {
             } else {
                 view.setImageDrawable(defaultPic);
                 if (pictureBitmapWorkerTaskMap.get(urlKey) == null) {
-                    PictureBitmapWorkerTask avatarTask = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, listView, position);
-                    avatarTask.execute(urlKey);
+                    PictureBitmapWorkerTask avatarTask = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, urlKey);
+                    avatarTask.execute();
                     pictureBitmapWorkerTaskMap.put(urlKey, avatarTask);
                 }
             }
