@@ -100,8 +100,19 @@ public class AbstractAppActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("theme", theme);
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
-        theme = GlobalContext.getInstance().getAppTheme();
+        if (savedInstanceState == null) {
+            theme = GlobalContext.getInstance().getAppTheme();
+        } else {
+            theme = savedInstanceState.getInt("theme");
+        }
         setTheme(theme);
         super.onCreate(savedInstanceState);
         if (getResources().getBoolean(R.bool.is_phone)) {
