@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.text.style.StrikethroughSpan;
 import android.view.*;
 import android.widget.ImageView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
@@ -48,6 +49,9 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
     private UpdateMsgTask task = null;
     private GetGoogleLocationInfo geoTask = null;
+
+    private ShareActionProvider mShareActionProvider;
+
 
     public BrowserWeiboMsgFragment() {
     }
@@ -278,13 +282,15 @@ public class BrowserWeiboMsgFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.browserweibomsgactivity_menu, menu);
 
+        MenuItem item = menu.findItem(R.id.menu_share);
+        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
 
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-         switch (item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.menu_refresh:
                 if (task == null | task.getStatus() == MyAsyncTask.Status.FINISHED) {
                     task = new UpdateMsgTask();
@@ -292,10 +298,16 @@ public class BrowserWeiboMsgFragment extends Fragment {
                 }
                 break;
             case R.id.menu_share:
+
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, msg.getText());
-                startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_to)));
+                PackageManager packageManager = getActivity().getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
+                boolean isIntentSafe = activities.size() > 0;
+                if (isIntentSafe && mShareActionProvider != null) {
+                    mShareActionProvider.setShareIntent(sharingIntent);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

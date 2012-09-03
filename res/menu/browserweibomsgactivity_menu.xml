@@ -19,6 +19,7 @@
           android:title="@string/share"
           android:icon="?share"
           android:showAsAction="ifRoom|withText"
+          android:actionProviderClass="android.widget.ShareActionProvider"
             />
 
 
