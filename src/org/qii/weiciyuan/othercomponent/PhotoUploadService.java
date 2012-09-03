@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 
@@ -18,6 +19,7 @@ public class PhotoUploadService extends Service {
     private String token;
     private String picPath;
     private String content;
+    private GeoBean geoBean;
 
     private Notification notification;
 
@@ -32,6 +34,7 @@ public class PhotoUploadService extends Service {
         token = intent.getStringExtra("token");
         picPath = intent.getStringExtra("picPath");
         content = intent.getStringExtra("content");
+        geoBean = (GeoBean) intent.getSerializableExtra("geo");
 
         Notification.Builder builder = new Notification.Builder(PhotoUploadService.this)
                 .setTicker(getString(R.string.send_photo))
@@ -60,7 +63,7 @@ public class PhotoUploadService extends Service {
         protected Void doInBackground(Void... params) {
             boolean result = false;
             try {
-                result = new StatusNewMsgDao(token).setPic(picPath).sendNewMsg(content);
+                result = new StatusNewMsgDao(token).setPic(picPath).setGeoBean(geoBean).sendNewMsg(content);
             } catch (WeiboException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
