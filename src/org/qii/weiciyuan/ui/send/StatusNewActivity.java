@@ -9,8 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -37,13 +35,10 @@ import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.othercomponent.PhotoUploadService;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.util.List;
 
 /**
@@ -63,7 +58,6 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
     private GeoBean geoBean;
 
-    private Bitmap pic = null;
 
     private TextView contentNumber = null;
     private EditText content = null;
@@ -102,56 +96,14 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 content.setSelection(content.getText().toString().length());
             }
 
-            BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
-            bmpFactoryOptions.inSampleSize = 8;
-            Bitmap bmp = null;
             switch (requestCode) {
                 case CAMERA_RESULT:
-
-                    File file = new File(imageFilePath);
-                    long fileSize = file.length();
-                    //size in kb
-                    double size = (double) fileSize / 1024;
-                    if (size > 500) {
-                        final BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inSampleSize = Math.round((float) size / (float) 500);
-                        options.inJustDecodeBounds = false;
-                        Bitmap result = BitmapFactory.decodeFile(imageFilePath, options);
-                        FileOutputStream out = null;
-                        try {
-                            out = new FileOutputStream(imageFilePath);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                        }
-                        result.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                    }
-
-                    bmp = BitmapFactory.decodeFile(imageFilePath, bmpFactoryOptions);
-                    pic = bmp;
-                    invalidateOptionsMenu();
                     picPath = imageFilePath;
-
                     break;
                 case PIC_RESULT:
                     Uri imageFileUri = intent.getData();
-
-                    try {
-                        bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageFileUri), null, bmpFactoryOptions);
-                    } catch (FileNotFoundException e) {
-                        AppLogger.e(e.getMessage());
-                    }
-                    pic = bmp;
-                    invalidateOptionsMenu();
-                    String[] proj = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = managedQuery(imageFileUri, proj, null, null, null);
-                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    cursor.moveToFirst();
-
-                    picPath = cursor.getString(column_index);
-
+                    picPath = getPicPathFromUri(imageFileUri);
                     break;
-
-
             }
         }
     }
@@ -212,6 +164,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
         if (!TextUtils.isEmpty(sharedText)) {
             content.setText(sharedText);
+            content.setSelection(content.getText().toString().length());
         }
 
     }
@@ -221,26 +174,18 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         getAccountInfo();
 
         Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
-        bmpFactoryOptions.inSampleSize = 8;
-        Bitmap bmp = null;
-        if (imageUri != null) {
-            try {
-                bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri), null, bmpFactoryOptions);
-            } catch (FileNotFoundException e) {
-                AppLogger.e(e.getMessage());
-            }
-            pic = bmp;
-            invalidateOptionsMenu();
-            String[] proj = {MediaStore.Images.Media.DATA};
-            Cursor cursor = managedQuery(imageUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
+        picPath = getPicPathFromUri(imageUri);
+        content.setText(getString(R.string.share_pic));
+        content.setSelection(content.getText().toString().length());
+    }
 
-            picPath = cursor.getString(column_index);
-            content.setText(getString(R.string.share_pic));
-        }
+    private String getPicPathFromUri(Uri uri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(uri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
 
+        return cursor.getString(column_index);
     }
 
     private boolean canSend() {
