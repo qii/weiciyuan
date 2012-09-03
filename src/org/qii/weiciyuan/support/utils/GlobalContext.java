@@ -10,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.LruCache;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 /**
@@ -33,19 +32,29 @@ public final class GlobalContext extends Application {
 
     private int fontSize = 0;
 
-    private AccountBean accountBean = null;
+    private String currentAccountId = null;
 
     public boolean startedApp = false;
 
     private String specialToken = "";
 
 
-    public AccountBean getAccountBean() {
-        return accountBean;
+    public String getCurrentAccountId() {
+        if (!TextUtils.isEmpty(currentAccountId)) {
+            return currentAccountId;
+        } else {
+            AppLogger.e("GlobalContext is empty by system");
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            String value = sharedPref.getString("currentAccountId", "");
+            GlobalContext.getInstance().setCurrentAccountId(value);
+            return currentAccountId;
+        }
     }
 
-    public void setAccountBean(AccountBean accountBean) {
-        this.accountBean = accountBean;
+    public void setCurrentAccountId(String id) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref.edit().putString("currentAccountId", id).commit();
+        this.currentAccountId = id;
     }
 
     public int getFontSize() {

@@ -66,7 +66,7 @@ public class StatusesListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if (bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getAccountBean().getUid())) {
+        if (bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
             ViewHolder holder = new ViewHolder();
             if (convertView == null || convertView.getTag(R.drawable.app) == null) {
                 convertView = inflater.inflate(R.layout.fragment_listview_item_myself_layout, parent, false);
