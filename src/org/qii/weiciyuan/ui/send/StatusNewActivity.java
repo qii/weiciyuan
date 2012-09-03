@@ -44,6 +44,7 @@ import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.List;
 
 /**
  * User: qii
@@ -181,6 +182,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             }
         } else {
             token = intent.getStringExtra("token");
+            AccountBean account = (AccountBean) intent.getSerializableExtra("account");
+            getActionBar().setSubtitle(account.getUsernick());
         }
     }
 
@@ -193,6 +196,13 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             if (bean != null) {
                 token = bean.getAccess_token();
                 getActionBar().setSubtitle(bean.getUsernick());
+            } else {
+                List<AccountBean> accountList = DatabaseManager.getInstance().getAccountList();
+                if (accountList != null || accountList.size() > 0) {
+                    AccountBean account = accountList.get(0);
+                    token = account.getAccess_token();
+                    getActionBar().setSubtitle(account.getUsernick());
+                }
             }
         }
     }
