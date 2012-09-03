@@ -151,11 +151,28 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             }
         });
         havePic = (ImageView) title.findViewById(R.id.have_pic);
+
         havePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(android.content.Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.fromFile(new File(picPath)), "image/png");
+                PackageManager packageManager = getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+                boolean isIntentSafe = activities.size() > 0;
+                if (isIntentSafe) {
+                    startActivity(intent);
+                }
+            }
+        });
+
+        havePic.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
                 havePic.setVisibility(View.GONE);
                 picPath = "";
+                return true;
             }
         });
         actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
