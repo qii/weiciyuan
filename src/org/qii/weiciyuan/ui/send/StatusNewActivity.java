@@ -123,7 +123,21 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         View title = getLayoutInflater().inflate(R.layout.statusnewactivity_title_layout, null);
         contentNumber = (TextView) title.findViewById(R.id.content_number);
         haveGPS = (ImageView) title.findViewById(R.id.have_gps);
+        haveGPS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                haveGPS.setVisibility(View.GONE);
+                geoBean = null;
+            }
+        });
         havePic = (ImageView) title.findViewById(R.id.have_pic);
+        havePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                havePic.setVisibility(View.GONE);
+                picPath = "";
+            }
+        });
         actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
         actionBar.setDisplayShowCustomEnabled(true);
         content = ((EditText) findViewById(R.id.status_new_content));

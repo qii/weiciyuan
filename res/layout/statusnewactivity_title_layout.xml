@@ -14,6 +14,7 @@
             android:layout_marginRight="5dp"
             android:id="@+id/have_gps"
             android:visibility="gone"
+            android:clickable="true"
             />
     <ImageView
             android:layout_width="wrap_content"
@@ -22,6 +23,7 @@
             android:layout_marginRight="5dp"
             android:id="@+id/have_pic"
             android:visibility="gone"
+            android:clickable="true"
             />
 
     <TextView
