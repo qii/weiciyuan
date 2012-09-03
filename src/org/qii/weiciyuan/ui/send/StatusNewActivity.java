@@ -184,54 +184,53 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         }
     }
 
-    private void handleSendText(Intent intent) {
+
+    private void getAccountInfo() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String id = sharedPref.getString("id", "");
         if (!TextUtils.isEmpty(id)) {
             AccountBean bean = DatabaseManager.getInstance().getAccount(id);
             if (bean != null) {
                 token = bean.getAccess_token();
-                String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-                if (!TextUtils.isEmpty(sharedText)) {
-                    content.setText(sharedText);
-                }
-            } else {
-                Toast.makeText(this, getString(R.string.dont_have_account), Toast.LENGTH_SHORT).show();
+                getActionBar().setSubtitle(bean.getUsernick());
             }
         }
     }
 
-    private void handleSendImage(Intent intent) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String id = sharedPref.getString("id", "");
-        if (!TextUtils.isEmpty(id)) {
-            AccountBean bean = DatabaseManager.getInstance().getAccount(id);
-            if (bean != null) {
-                token = bean.getAccess_token();
-                Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
-                bmpFactoryOptions.inSampleSize = 8;
-                Bitmap bmp = null;
-                if (imageUri != null) {
-                    try {
-                        bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri), null, bmpFactoryOptions);
-                    } catch (FileNotFoundException e) {
-                        AppLogger.e(e.getMessage());
-                    }
-                    pic = bmp;
-                    invalidateOptionsMenu();
-                    String[] proj = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = managedQuery(imageUri, proj, null, null, null);
-                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    cursor.moveToFirst();
-
-                    picPath = cursor.getString(column_index);
-                    content.setText(getString(R.string.share_pic));
-                }
-            } else {
-                Toast.makeText(this, getString(R.string.dont_have_account), Toast.LENGTH_SHORT).show();
-            }
+    private void handleSendText(Intent intent) {
+        getAccountInfo();
+        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if (!TextUtils.isEmpty(sharedText)) {
+            content.setText(sharedText);
         }
+
+    }
+
+
+    private void handleSendImage(Intent intent) {
+        getAccountInfo();
+
+        Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+        bmpFactoryOptions.inSampleSize = 8;
+        Bitmap bmp = null;
+        if (imageUri != null) {
+            try {
+                bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri), null, bmpFactoryOptions);
+            } catch (FileNotFoundException e) {
+                AppLogger.e(e.getMessage());
+            }
+            pic = bmp;
+            invalidateOptionsMenu();
+            String[] proj = {MediaStore.Images.Media.DATA};
+            Cursor cursor = managedQuery(imageUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+
+            picPath = cursor.getString(column_index);
+            content.setText(getString(R.string.share_pic));
+        }
+
     }
 
     private boolean canSend() {
