@@ -1,13 +1,10 @@
 package org.qii.weiciyuan.bean;
 
 import android.text.TextUtils;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -170,8 +167,8 @@ public class MessageBean implements Serializable {
     private String in_reply_to_user_id;
     private String in_reply_to_screen_name;
     private String mid;
-    private String reposts_count;
-    private String comments_count;
+    private String reposts_count="0";
+    private String comments_count="0";
     //    private Object annotations;
     private UserBean user;
     private MessageBean retweeted_status;

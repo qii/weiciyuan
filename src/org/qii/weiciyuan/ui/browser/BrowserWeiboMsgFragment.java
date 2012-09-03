@@ -214,9 +214,9 @@ public class BrowserWeiboMsgFragment extends Fragment {
                 geoTask.execute();
             }
         }
-
-        source.setText(Html.fromHtml(msg.getSource()).toString());
-
+        if (!TextUtils.isEmpty(msg.getSource())) {
+            source.setText(Html.fromHtml(msg.getSource()).toString());
+        }
         if (msg.getRetweeted_status() != null) {
             recontent.setVisibility(View.VISIBLE);
             if (msg.getRetweeted_status().getUser() != null) {
