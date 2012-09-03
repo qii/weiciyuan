@@ -200,13 +200,13 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             if (!haveContent && !haveToken) {
                 Toast.makeText(this, getString(R.string.content_cant_be_empty_and_dont_have_account), Toast.LENGTH_SHORT).show();
             } else if (!haveContent) {
-                Toast.makeText(this, getString(R.string.content_cant_be_empty), Toast.LENGTH_SHORT).show();
+                content.setError(getString(R.string.content_cant_be_empty));
             } else if (!haveToken) {
                 Toast.makeText(this, getString(R.string.dont_have_account), Toast.LENGTH_SHORT).show();
             }
 
             if (!contentNumBelow140) {
-                Toast.makeText(this, getString(R.string.content_words_number_too_many), Toast.LENGTH_SHORT).show();
+                content.setError(getString(R.string.content_words_number_too_many));
             }
 
         }
