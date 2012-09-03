@@ -15,7 +15,6 @@ import org.qii.weiciyuan.ui.preference.SettingActivity;
 /**
  * User: Jiang Qi
  * Date: 12-7-27
- * Time: 上午11:26
  */
 public final class GlobalContext extends Application {
 
@@ -24,7 +23,7 @@ public final class GlobalContext extends Application {
 
     private Activity activity = null;
 
-    private LruCache<String, Bitmap> avatarCache;
+    private LruCache<String, Bitmap> avatarCache = null;
 
     private Boolean enablePic = null;
 
