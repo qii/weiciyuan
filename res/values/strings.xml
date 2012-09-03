@@ -62,6 +62,11 @@
     <string name="send_failed">发送失败</string>
     <string name="background_sending">后台发送中</string>
     <string name="send_photo">发送照片</string>
+    <string name="dont_have_account">没用可用的发微博帐号</string>
+    <string name="content_cant_be_empty">内容不能为空</string>
+    <string name="content_cant_be_empty_and_dont_have_account">内容不能为空，当前也没可用的发微博帐号</string>
+    <string name="content_words_number_too_many">字数太多了</string>
+
     <!--accountactivity_layout-->
     <string name="you_cancel_login">你取消了授权</string>
     <string name="login_success">授权成功</string>

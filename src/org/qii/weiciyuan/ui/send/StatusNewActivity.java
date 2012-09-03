@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +18,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -28,10 +30,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.dao.location.LocationInfoDao;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.othercomponent.PhotoUploadService;
+import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -62,8 +66,6 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
     private TextView contentNumber = null;
     private EditText content = null;
-
-    private boolean canSend = false;
 
 
     @Override
@@ -165,12 +167,97 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         contentNumber = (TextView) title.findViewById(R.id.content_number);
         actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
         actionBar.setDisplayShowCustomEnabled(true);
-
-        Intent intent = getIntent();
-        token = intent.getStringExtra("token");
-
         content = ((EditText) findViewById(R.id.status_new_content));
         content.addTextChangedListener(new TextNumLimitWatcher(contentNumber, content, this));
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                handleSendText(intent);
+            } else if (type.startsWith("image/")) {
+                handleSendImage(intent);
+            }
+        } else {
+            token = intent.getStringExtra("token");
+        }
+    }
+
+    private void handleSendText(Intent intent) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String id = sharedPref.getString("id", "");
+        if (!TextUtils.isEmpty(id)) {
+            AccountBean bean = DatabaseManager.getInstance().getAccount(id);
+            if (bean != null) {
+                token = bean.getAccess_token();
+                String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+                if (!TextUtils.isEmpty(sharedText)) {
+                    content.setText(sharedText);
+                }
+            } else {
+                Toast.makeText(this, getString(R.string.dont_have_account), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void handleSendImage(Intent intent) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String id = sharedPref.getString("id", "");
+        if (!TextUtils.isEmpty(id)) {
+            AccountBean bean = DatabaseManager.getInstance().getAccount(id);
+            if (bean != null) {
+                token = bean.getAccess_token();
+                Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+                bmpFactoryOptions.inSampleSize = 8;
+                Bitmap bmp = null;
+                if (imageUri != null) {
+                    try {
+                        bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri), null, bmpFactoryOptions);
+                    } catch (FileNotFoundException e) {
+                        AppLogger.e(e.getMessage());
+                    }
+                    pic = bmp;
+                    invalidateOptionsMenu();
+                    String[] proj = {MediaStore.Images.Media.DATA};
+                    Cursor cursor = managedQuery(imageUri, proj, null, null, null);
+                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    cursor.moveToFirst();
+
+                    picPath = cursor.getString(column_index);
+                    content.setText(getString(R.string.share_pic));
+                }
+            } else {
+                Toast.makeText(this, getString(R.string.dont_have_account), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private boolean canSend() {
+
+        boolean haveContent = !TextUtils.isEmpty(content.getText().toString());
+        boolean haveToken = !TextUtils.isEmpty(token);
+        boolean contentNumBelow140 = (content.getText().toString().length() < 140);
+
+        if (haveContent && haveToken && contentNumBelow140) {
+            return true;
+        } else {
+            if (!haveContent && !haveToken) {
+                Toast.makeText(this, getString(R.string.content_cant_be_empty_and_dont_have_account), Toast.LENGTH_SHORT).show();
+            } else if (!haveContent) {
+                Toast.makeText(this, getString(R.string.content_cant_be_empty), Toast.LENGTH_SHORT).show();
+            } else if (!haveToken) {
+                Toast.makeText(this, getString(R.string.dont_have_account), Toast.LENGTH_SHORT).show();
+            }
+
+            if (!contentNumBelow140) {
+                Toast.makeText(this, getString(R.string.content_words_number_too_many), Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        return false;
     }
 
 
@@ -198,10 +285,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
             case R.id.menu_send:
                 String value = content.getText().toString();
-                if (canSend && !TextUtils.isEmpty(value)) {
-
+                if (canSend()) {
                     executeTask(value);
-
                 }
                 break;
         }
