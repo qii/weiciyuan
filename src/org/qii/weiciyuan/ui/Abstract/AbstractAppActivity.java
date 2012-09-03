@@ -1,13 +1,11 @@
 package org.qii.weiciyuan.ui.Abstract;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
@@ -18,7 +16,6 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
-import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -86,24 +83,6 @@ public class AbstractAppActivity extends FragmentActivity {
 
     };
 
-    //only execute in AccountActivity and MainTimeLineActivity
-    protected void buildThemeSetting() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String value = sharedPref.getString(SettingActivity.THEME, "3");
-        if (value.equals("1"))
-            GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black);
-        if (value.equals("2"))
-            GlobalContext.getInstance().setAppTheme(R.style.AppTheme_White);
-        if (value.equals("3"))
-            GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black_White);
-    }
-
-    //only execute in AccountActivity and MainTimeLineActivity
-    protected void buildFontSetting() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String value = sharedPref.getString(SettingActivity.FONT_SIZE, "15");
-        GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
-    }
 
     @Override
     protected void onResume() {

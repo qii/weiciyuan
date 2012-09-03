@@ -78,8 +78,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        buildThemeSetting();
-        buildFontSetting();
+
         if (savedInstanceState == null) {
             Intent intent = getIntent();
             accountBean = (AccountBean) intent.getSerializableExtra("account");
