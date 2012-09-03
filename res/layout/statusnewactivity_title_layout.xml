@@ -31,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="140"
+            android:textColor="?android:actionMenuTextColor"
             android:textSize="21sp"
             android:layout_marginRight="8dp"
             android:id="@+id/content_number" android:layout_weight="1"/>
