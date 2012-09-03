@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
@@ -64,6 +66,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     private ImageView haveGPS = null;
     private ImageView havePic = null;
     private EditText content = null;
+
+    private String location;
 
 
     @Override
@@ -126,8 +130,24 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         haveGPS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String geoUriString = "geo:" + geoBean.getLat() + "," + geoBean.getLon() + "?q=" + location;
+                Uri geoUri = Uri.parse(geoUriString);
+                Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
+                PackageManager packageManager = getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(mapCall, 0);
+                boolean isIntentSafe = activities.size() > 0;
+                if (isIntentSafe) {
+                    startActivity(mapCall);
+                }
+            }
+        });
+        haveGPS.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
                 haveGPS.setVisibility(View.GONE);
                 geoBean = null;
+                return true;
             }
         });
         havePic = (ImageView) title.findViewById(R.id.have_pic);
@@ -412,6 +432,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         @Override
         protected void onPostExecute(String s) {
             Toast.makeText(StatusNewActivity.this, s, Toast.LENGTH_SHORT).show();
+            location = s;
             super.onPostExecute(s);
         }
     }
