@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,7 +25,6 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.dao.location.LocationInfoDao;
 import org.qii.weiciyuan.dao.show.ShowStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -31,7 +32,9 @@ import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * User: qii
@@ -293,7 +296,27 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
         @Override
         protected String doInBackground(Void... params) {
-            return new LocationInfoDao(geoBean).getInfo();
+
+            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+
+            List<Address> addresses = null;
+            try {
+                addresses = geocoder.getFromLocation(geoBean.getLat(), geoBean.getLon(), 1);
+            } catch (IOException e) {
+                cancel(true);
+            }
+            if (addresses != null && addresses.size() > 0) {
+                Address address = addresses.get(0);
+
+                StringBuilder builder = new StringBuilder();
+                int size = address.getMaxAddressLineIndex();
+                for (int i = 0; i < size; i++) {
+                    builder.append(address.getAddressLine(i));
+                }
+                return builder.toString();
+            }
+
+            return "";
         }
 
         @Override

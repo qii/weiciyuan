@@ -11,9 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.location.*;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,16 +31,18 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
-import org.qii.weiciyuan.dao.location.LocationInfoDao;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.othercomponent.PhotoUploadService;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * User: qii
@@ -195,7 +195,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             getActionBar().setSubtitle(accountName);
             String contentTxt = intent.getStringExtra("content");
             if (!TextUtils.isEmpty(contentTxt)) {
-                content.setText(contentTxt+" ");
+                content.setText(contentTxt + " ");
                 content.setSelection(content.getText().toString().length());
             }
         }
@@ -419,7 +419,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         geoBean = new GeoBean();
         geoBean.setLatitude(result.getLatitude());
         geoBean.setLongitude(result.getLongitude());
-        new GetGoogleLocationInfo().execute();
+        new GetGoogleLocationInfo(geoBean).execute();
         ((LocationManager) StatusNewActivity.this
                 .getSystemService(Context.LOCATION_SERVICE)).removeUpdates(locationListener);
 
@@ -444,11 +444,37 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     };
 
 
-    private class GetGoogleLocationInfo extends AsyncTask<Void, String, String> {
+    private class GetGoogleLocationInfo extends MyAsyncTask<Void, String, String> {
+
+        GeoBean geoBean;
+
+        public GetGoogleLocationInfo(GeoBean geoBean) {
+            this.geoBean = geoBean;
+        }
 
         @Override
         protected String doInBackground(Void... params) {
-            return new LocationInfoDao(geoBean).getInfo();
+
+            Geocoder geocoder = new Geocoder(StatusNewActivity.this, Locale.getDefault());
+
+            List<Address> addresses = null;
+            try {
+                addresses = geocoder.getFromLocation(geoBean.getLat(), geoBean.getLon(), 1);
+            } catch (IOException e) {
+                cancel(true);
+            }
+            if (addresses != null && addresses.size() > 0) {
+                Address address = addresses.get(0);
+
+                StringBuilder builder = new StringBuilder();
+                int size = address.getMaxAddressLineIndex();
+                for (int i = 0; i < size; i++) {
+                    builder.append(address.getAddressLine(i));
+                }
+                return builder.toString();
+            }
+
+            return "";
         }
 
         @Override
