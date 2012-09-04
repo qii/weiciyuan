@@ -116,6 +116,11 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             String value = sharedPreferences.getString(key, "13");
             GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
         }
+
+        if (key.equals(SettingActivity.SHOW_BIG_PIC)) {
+            boolean value = sharedPreferences.getBoolean(key, false);
+            GlobalContext.getInstance().setEnableBigPic(value);
+        }
     }
 
     private void reload() {

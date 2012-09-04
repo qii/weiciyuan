@@ -175,9 +175,15 @@ public class StatusesListAdapter extends BaseAdapter {
 
 
     private void buildPic(final MessageBean msg, ImageView view, int position) {
-        final String main_thumbnail_pic_url = msg.getThumbnail_pic();
+        String picUrl;
+        if (GlobalContext.getInstance().getEnableBigPic()) {
+            picUrl = msg.getBmiddle_pic();
+        } else {
+            picUrl = msg.getThumbnail_pic();
+        }
+
         view.setVisibility(View.VISIBLE);
-        commander.downContentPic(view, main_thumbnail_pic_url, position, listView);
+        commander.downContentPic(view, picUrl, position, listView);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

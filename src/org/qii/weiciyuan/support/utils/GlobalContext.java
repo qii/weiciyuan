@@ -27,6 +27,9 @@ public final class GlobalContext extends Application {
 
     private Boolean enablePic = null;
 
+    private Boolean enableBigPic = null;
+
+
     private int theme = 0;
 
     private int fontSize = 0;
@@ -105,6 +108,23 @@ public final class GlobalContext extends Application {
             enablePic = sharedPref.getBoolean(SettingActivity.ENABLE_PIC, true);
             return enablePic;
         }
+    }
+
+    public Boolean getEnableBigPic() {
+
+        if (enableBigPic != null) {
+            return enableBigPic;
+        } else {
+            AppLogger.e("GlobalContext is empty by system");
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            enableBigPic = sharedPref.getBoolean(SettingActivity.SHOW_BIG_PIC, false);
+            return enableBigPic;
+        }
+
+    }
+
+    public void setEnableBigPic(Boolean enableBigPic) {
+        this.enableBigPic = enableBigPic;
     }
 
     public void setAppTheme(int theme) {

@@ -9,6 +9,11 @@
                 android:key="show_picture"
                 android:title="@string/show_pic"
                 android:defaultValue="true"/>
+
+        <CheckBoxPreference
+                android:key="show_big_pic"
+                android:title="@string/show_big_pic"
+                android:defaultValue="false"/>
         <ListPreference
                 android:key="font_size"
                 android:title="@string/font_size"
