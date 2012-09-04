@@ -2,8 +2,6 @@ package org.qii.weiciyuan.ui.login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -92,17 +90,11 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
                     if (!checkAll) {
                         listAdapter.selectAll();
                         checkAll = true;
-                        int[] attrs = new int[]{R.attr.accountactivity_select_none};
-                        TypedArray ta = AccountActivity.this.obtainStyledAttributes(attrs);
-                        Drawable drawableFromTheme = ta.getDrawable(0);
-                        item.setIcon(drawableFromTheme);
+
                     } else {
                         listAdapter.unSelectButRemainCheckBoxAll();
                         checkAll = false;
-                        int[] attrs = new int[]{R.attr.accountactivity_select_all};
-                        TypedArray ta = AccountActivity.this.obtainStyledAttributes(attrs);
-                        Drawable drawableFromTheme = ta.getDrawable(0);
-                        item.setIcon(drawableFromTheme);
+
                     }
                     return true;
                 case R.id.menu_remove_account:
@@ -117,7 +109,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
                     mode.finish();
                     return true;
                 default:
-                    Toast.makeText(AccountActivity.this, "删除", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountActivity.this, getString(R.string.delete), Toast.LENGTH_SHORT).show();
                     mode.finish();
                     return false;
             }
@@ -286,7 +278,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
             ImageView imageView = (ImageView) mView.findViewById(R.id.imageView_avatar);
 
             if (!TextUtils.isEmpty(accountList.get(i).getAvatar_url())) {
-                AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), null, imageView, accountList.get(i).getAvatar_url(),i);
+                AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), null, imageView, accountList.get(i).getAvatar_url(), i);
                 avatarTask.execute();
             }
 

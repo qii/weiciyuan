@@ -7,6 +7,10 @@
     <string name="detail">详细</string>
     <string name="weibo">微博</string>
 
+    <!--account -->
+    <string name="select_all">全选</string>
+    <string name="select_none">反选</string>
+
     <!-- listview-->
     <string name="empty">空</string>
 
