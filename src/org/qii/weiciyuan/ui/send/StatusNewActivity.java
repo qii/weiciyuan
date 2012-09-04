@@ -191,8 +191,13 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             }
         } else {
             token = intent.getStringExtra("token");
-            AccountBean account = (AccountBean) intent.getSerializableExtra("account");
-            getActionBar().setSubtitle(account.getUsernick());
+            String accountName = intent.getStringExtra("accountName");
+            getActionBar().setSubtitle(accountName);
+            String contentTxt = intent.getStringExtra("content");
+            if (!TextUtils.isEmpty(contentTxt)) {
+                content.setText(contentTxt+" ");
+                content.setSelection(content.getText().toString().length());
+            }
         }
     }
 

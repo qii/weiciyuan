@@ -112,7 +112,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             case R.id.friendstimelinefragment_new_weibo:
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
-                intent.putExtra("account",((IAccountInfo)getActivity()).getAccount());
+                intent.putExtra("accountName",((IAccountInfo)getActivity()).getAccount().getUsernick());
                 startActivity(intent);
                 break;
             case R.id.friendstimelinefragment_refresh:

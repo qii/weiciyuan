@@ -90,6 +90,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         token = accountBean.getAccess_token();
         GlobalContext.getInstance().setSpecialToken(token);
         GlobalContext.getInstance().setCurrentAccountId(accountBean.getUid());
+        GlobalContext.getInstance().setCurrentAccountName(accountBean.getUsernick());
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("id", accountBean.getUid());

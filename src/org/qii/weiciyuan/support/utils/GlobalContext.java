@@ -36,6 +36,8 @@ public final class GlobalContext extends Application {
 
     private String currentAccountId = null;
 
+    private String currentAccountName = null;
+
     public boolean startedApp = false;
 
     private String specialToken = "";
@@ -58,6 +60,24 @@ public final class GlobalContext extends Application {
         sharedPref.edit().putString("currentAccountId", id).commit();
         this.currentAccountId = id;
     }
+
+    public String getCurrentAccountName() {
+          if (!TextUtils.isEmpty(currentAccountName)) {
+              return currentAccountName;
+          } else {
+              AppLogger.e("GlobalContext is empty by system");
+              SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+              String value = sharedPref.getString("currentAccountName", "");
+              GlobalContext.getInstance().setCurrentAccountName(value);
+              return currentAccountName;
+          }
+      }
+
+      public void setCurrentAccountName(String currentAccountName) {
+          SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+          sharedPref.edit().putString("currentAccountName", currentAccountName).commit();
+          this.currentAccountName = currentAccountName;
+      }
 
     public int getFontSize() {
         if (fontSize != 0) {

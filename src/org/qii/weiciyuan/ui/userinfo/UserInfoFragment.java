@@ -19,11 +19,10 @@ import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppLogger;
-import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.Abstract.ICommander;
-import org.qii.weiciyuan.ui.Abstract.IToken;
-import org.qii.weiciyuan.ui.Abstract.IUserInfo;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.Abstract.*;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
+import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
 /**
  * User: Jiang Qi
@@ -89,6 +88,7 @@ public class UserInfoFragment extends Fragment {
 
 
     private void setValue() {
+        getActivity().getActionBar().setTitle(bean.getScreen_name());
         username.setText(bean.getScreen_name());
         info.setText(bean.getDescription());
 
@@ -185,6 +185,13 @@ public class UserInfoFragment extends Fragment {
                     task = new SimpleTask();
                     task.execute();
                 }
+                break;
+            case R.id.menu_at:
+                Intent intent = new Intent(getActivity(), StatusNewActivity.class);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("content", "@" + bean.getScreen_name());
+                intent.putExtra("accountName", GlobalContext.getInstance().getCurrentAccountName());
+                startActivity(intent);
                 break;
         }
         return true;
