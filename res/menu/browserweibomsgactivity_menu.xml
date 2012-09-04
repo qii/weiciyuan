@@ -22,5 +22,10 @@
           android:actionProviderClass="android.widget.ShareActionProvider"
             />
 
+    <item android:id="@+id/menu_copy"
+          android:title="@string/copy_to_clipboard"
+          android:icon="?share"
+            />
+
 
 </menu>

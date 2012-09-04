@@ -1,5 +1,8 @@
 package org.qii.weiciyuan.ui.browser;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -309,6 +312,10 @@ public class BrowserWeiboMsgFragment extends Fragment {
                     mShareActionProvider.setShareIntent(sharingIntent);
                 }
                 return true;
+            case R.id.menu_copy:
+                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", content.getText().toString()));
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
