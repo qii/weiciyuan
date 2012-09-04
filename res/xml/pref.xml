@@ -13,7 +13,7 @@
         <CheckBoxPreference
                 android:key="show_big_pic"
                 android:title="@string/show_big_pic"
-                android:defaultValue="false"/>
+                android:defaultValue="true"/>
         <ListPreference
                 android:key="font_size"
                 android:title="@string/font_size"
