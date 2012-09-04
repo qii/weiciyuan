@@ -22,9 +22,11 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
+import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.send.RepostNewActivity;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.util.List;
@@ -34,7 +36,6 @@ import java.util.Set;
 /**
  * User: qii
  * Date: 12-8-13
- * Time: 下午10:03
  */
 public class RepostsByIdTimeLineFragment extends Fragment {
 
@@ -322,13 +323,20 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
         private void bindViewData(ViewHolder holder, int position) {
 
-            MessageBean msg = getList().getReposts().get(position);
-
-
+            final MessageBean msg = getList().getReposts().get(position);
             holder.username.setText(msg.getUser().getScreen_name());
             String image_url = msg.getUser().getProfile_image_url();
             if (!TextUtils.isEmpty(image_url)) {
                 downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
+                holder.avatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                        intent.putExtra("token", ((IToken) getActivity()).getToken());
+                        intent.putExtra("user", msg.getUser());
+                        startActivity(intent);
+                    }
+                });
             }
             holder.time.setText(msg.getListviewItemShowTime());
             holder.content.setText(msg.getText());
