@@ -15,6 +15,8 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.StrikethroughSpan;
 import android.view.*;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
@@ -55,6 +57,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
     private ShareActionProvider mShareActionProvider;
 
+    private MenuItem refreshItem;
 
     public BrowserWeiboMsgFragment() {
     }
@@ -98,6 +101,18 @@ public class BrowserWeiboMsgFragment extends Fragment {
         WeiboException e;
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
+
+            Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh);
+            iv.startAnimation(rotation);
+
+            refreshItem.setActionView(iv);
+        }
+
+        @Override
         protected MessageBean doInBackground(Void... params) {
             try {
                 return new ShowStatusDao(((IToken) getActivity()).getToken(), msg.getId()).getMsg();
@@ -112,6 +127,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
         protected void onCancelled(MessageBean weiboMsgBean) {
 //            Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             setTextViewDeleted();
+            completeRefresh();
             super.onCancelled(weiboMsgBean);
         }
 
@@ -120,10 +136,17 @@ public class BrowserWeiboMsgFragment extends Fragment {
             if (newValue != null && e == null) {
                 msg = newValue;
                 buildViewData();
-                getActivity().invalidateOptionsMenu();
-            }
 
+            }
+            completeRefresh();
             super.onPostExecute(newValue);
+        }
+    }
+
+    private void completeRefresh() {
+        if (refreshItem.getActionView() != null) {
+            refreshItem.getActionView().clearAnimation();
+            refreshItem.setActionView(null);
         }
     }
 
@@ -287,6 +310,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+        refreshItem = menu.findItem(R.id.menu_refresh);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -295,7 +319,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                if (task == null | task.getStatus() == MyAsyncTask.Status.FINISHED) {
+                if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
                     task = new UpdateMsgTask();
                     task.execute();
                 }
