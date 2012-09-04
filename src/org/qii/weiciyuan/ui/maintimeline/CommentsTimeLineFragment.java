@@ -175,7 +175,13 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             }
             if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
                 holder.repost_content_pic.setVisibility(View.VISIBLE);
-                downContentPic(holder.repost_content_pic, repost_msg.getThumbnail_pic(), position, listView);
+                String picUrl;
+                if (GlobalContext.getInstance().getEnableBigPic()) {
+                    picUrl = repost_msg.getBmiddle_pic();
+                } else {
+                    picUrl = repost_msg.getThumbnail_pic();
+                }
+                downContentPic(holder.repost_content_pic, picUrl, position, listView);
             }
         }
 
