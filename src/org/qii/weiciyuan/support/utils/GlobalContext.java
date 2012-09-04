@@ -62,7 +62,7 @@ public final class GlobalContext extends Application {
         } else {
             AppLogger.e("GlobalContext is empty by system");
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            String value = sharedPref.getString(SettingActivity.FONT_SIZE, "15");
+            String value = sharedPref.getString(SettingActivity.FONT_SIZE, "13");
             GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
             return fontSize;
         }
