@@ -206,7 +206,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
         content.setText(msg.getText());
         ListViewTool.addLinks(content);
 
-        time.setText(msg.getCreated_at());
+        time.setText(msg.getTimeInFormat());
 
         if (msg.getGeo() != null) {
             if (geoTask == null || geoTask.getStatus() == MyAsyncTask.Status.FINISHED) {

@@ -16,6 +16,11 @@ public class MessageBean implements Serializable {
 
 
     public String getCreated_at() {
+
+        return created_at;
+    }
+
+    public String getTimeInFormat() {
         if (!TextUtils.isEmpty(created_at)) {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 
@@ -150,7 +155,7 @@ public class MessageBean implements Serializable {
     }
 
     public String getListviewItemShowTime() {
-        return TimeTool.getListTime(created_at);
+        return TimeTool.getListTime(this);
     }
 
     public void setListviewItemShowTime(String listviewItemShowTime) {
@@ -167,8 +172,8 @@ public class MessageBean implements Serializable {
     private String in_reply_to_user_id;
     private String in_reply_to_screen_name;
     private String mid;
-    private String reposts_count="0";
-    private String comments_count="0";
+    private String reposts_count = "0";
+    private String comments_count = "0";
     //    private Object annotations;
     private UserBean user;
     private MessageBean retweeted_status;
@@ -177,6 +182,16 @@ public class MessageBean implements Serializable {
     private String thumbnail_pic;
     private String bmiddle_pic;
     private String original_pic;
+
+    private long mills;
+
+    public long getMills() {
+        return mills;
+    }
+
+    public void setMills(long mills) {
+        this.mills = mills;
+    }
 
     public String getThumbnail_pic() {
         return thumbnail_pic;

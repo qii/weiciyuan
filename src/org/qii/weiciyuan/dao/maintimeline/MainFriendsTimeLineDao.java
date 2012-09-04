@@ -2,6 +2,7 @@ package org.qii.weiciyuan.dao.maintimeline;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -10,6 +11,7 @@ import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +57,9 @@ public class MainFriendsTimeLineDao {
             ActivityUtils.showTips("发生错误，请重刷");
             AppLogger.e(e.getMessage());
         }
-
+        for (MessageBean b : value.getStatuses()) {
+            TimeTool.dealMills(b);
+        }
         return value;
     }
 
