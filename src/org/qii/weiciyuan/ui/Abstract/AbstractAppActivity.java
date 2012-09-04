@@ -51,9 +51,11 @@ public class AbstractAppActivity extends FragmentActivity {
                 view.setImageBitmap(bitmap);
                 avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey, position));
             } else {
-                view.setImageDrawable(defaultAvatar);
+                view.setImageDrawable(null);
                 if (avatarBitmapWorkerTaskHashMap.get(getMemCacheKey(urlKey, position)) == null) {
-                    AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey);
+                    AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey, position);
+                    //because I want listview can load avatar when user refresh timeline
+//                    avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     avatarTask.execute();
                     avatarBitmapWorkerTaskHashMap.put(getMemCacheKey(urlKey, position), avatarTask);
                 }
@@ -64,14 +66,14 @@ public class AbstractAppActivity extends FragmentActivity {
         @Override
         public void downContentPic(ImageView view, String urlKey, int position, ListView listView) {
 
-            Bitmap bitmap = getBitmapFromMemCache(urlKey);
+            Bitmap bitmap = getBitmapFromMemCache(getMemCacheKey(urlKey, position));
             if (bitmap != null) {
                 view.setImageBitmap(bitmap);
                 pictureBitmapWorkerTaskMap.remove(urlKey);
             } else {
                 view.setImageDrawable(defaultPic);
                 if (pictureBitmapWorkerTaskMap.get(urlKey) == null) {
-                    PictureBitmapWorkerTask avatarTask = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, urlKey);
+                    PictureBitmapWorkerTask avatarTask = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, urlKey, listView, position);
                     avatarTask.execute();
                     pictureBitmapWorkerTaskMap.put(urlKey, avatarTask);
                 }

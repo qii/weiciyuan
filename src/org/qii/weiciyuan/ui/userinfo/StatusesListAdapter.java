@@ -142,7 +142,8 @@ public class StatusesListAdapter extends BaseAdapter {
         if (repost_msg != null) {
             buildRepostContent(repost_msg, holder, position);
         } else if (!TextUtils.isEmpty(msg.getThumbnail_pic()) && GlobalContext.getInstance().isEnablePic()) {
-            buildContentPic(msg, holder, position);
+            buildPic(msg, holder.content_pic, position);
+
         }
 
         holder.avatar.setOnClickListener(new View.OnClickListener() {
@@ -167,24 +168,17 @@ public class StatusesListAdapter extends BaseAdapter {
             holder.repost_content.setText(repost_msg.getText());
 
         }
-        if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic()) && GlobalContext.getInstance().isEnablePic()) {
-            holder.repost_content_pic.setVisibility(View.VISIBLE);
-            commander.downContentPic(holder.repost_content_pic, repost_msg.getThumbnail_pic(), position, listView);
-            holder.repost_content_pic.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PictureDialogFragment progressFragment = new PictureDialogFragment(repost_msg);
-                    progressFragment.show(activity.getFragmentManager(), "");
-                }
-            });
+        if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic()) && GlobalContext.getInstance().isEnablePic()) {
+            buildPic(repost_msg, holder.repost_content_pic, position);
         }
     }
 
-    private void buildContentPic(final MessageBean msg, ViewHolder holder, int position) {
+
+    private void buildPic(final MessageBean msg, ImageView view, int position) {
         final String main_thumbnail_pic_url = msg.getThumbnail_pic();
-        holder.content_pic.setVisibility(View.VISIBLE);
-        commander.downContentPic(holder.content_pic, main_thumbnail_pic_url, position, listView);
-        holder.content_pic.setOnClickListener(new View.OnClickListener() {
+        view.setVisibility(View.VISIBLE);
+        commander.downContentPic(view, main_thumbnail_pic_url, position, listView);
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PictureDialogFragment progressFragment = new PictureDialogFragment(msg);

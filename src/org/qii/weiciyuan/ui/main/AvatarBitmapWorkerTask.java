@@ -21,17 +21,18 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     private ImageView view;
 
     private Map<String, AvatarBitmapWorkerTask> taskMap;
+    private int position;
 
 
     public AvatarBitmapWorkerTask(LruCache<String, Bitmap> lruCache,
                                   Map<String, AvatarBitmapWorkerTask> taskMap,
-                                  ImageView view, String url) {
+                                  ImageView view, String url, int position) {
 
         this.lruCache = lruCache;
         this.taskMap = taskMap;
         this.view = view;
         this.data = url;
-
+        this.position = position;
     }
 
     @Override
@@ -59,6 +60,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         if (taskMap != null && taskMap.get(data) != null) {
             taskMap.remove(data);
         }
+        view.setTag("");
         super.onCancelled(bitmap);
     }
 
@@ -71,13 +73,18 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
             if (view != null && view.getTag().equals(data)) {
                 view.setImageBitmap(bitmap);
+                view.setTag("");
             }
 
         }
 
-        if (taskMap != null && taskMap.get(data) != null) {
-            taskMap.remove(data);
+        if (taskMap != null && taskMap.get(getMemCacheKey(data, position)) != null) {
+            taskMap.remove(getMemCacheKey(data, position));
         }
+    }
+
+    protected String getMemCacheKey(String urlKey, int position) {
+        return urlKey + position;
     }
 
 

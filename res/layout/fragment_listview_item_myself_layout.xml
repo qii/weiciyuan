@@ -18,8 +18,7 @@
             android:id="@+id/avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/account_black"
-
+            android:background="?account"
             android:layout_alignParentRight="true"
             android:layout_gravity="right|center_vertical"
             android:layout_marginLeft="5dp"

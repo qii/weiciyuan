@@ -52,6 +52,57 @@ public class ImageTool {
 
     }
 
+
+    private static Bitmap cutPic(Bitmap ori, int reqWidth, int reqHeight) {
+        Bitmap bitmap = ori;
+//        int reqWidth = 396;
+//        int reqHeight = 135;
+
+        //resize width to reqWidth
+//        if (bitmap.getWidth() < reqWidth) {
+//            float width = bitmap.getWidth();
+//            float s = reqWidth / width;
+//            Matrix matrix = new Matrix();
+//            matrix.setScale(s, s);
+//            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+//        }
+        //then cut middle
+        int height = reqHeight < bitmap.getHeight() ? reqHeight : bitmap.getHeight();
+        if (height > 0) {
+            int needStart = (bitmap.getHeight() - height) / 2;
+            Bitmap cropped = Bitmap.createBitmap(bitmap, 0, needStart, bitmap.getWidth(), height);
+            return cropped;
+        } else {
+            return bitmap;
+        }
+    }
+
+    public static Bitmap getPictureHighDensityThumbnailBitmap(String url) {
+        int reqWidth = 396;
+        int reqHeight = 120;
+
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
+
+        absoluteFilePath = absoluteFilePath + ".jpg";
+
+        Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, reqWidth, MAX_HEIGHT);
+
+        if (bitmap == null) {
+            String path = getBitmapFromNetWork(url, absoluteFilePath);
+            bitmap = decodeBitmapFromSDCard(path, reqWidth, MAX_HEIGHT);
+        }
+
+        if (bitmap != null) {
+            if (bitmap.getHeight() > reqHeight) {
+                bitmap = cutPic(bitmap, reqWidth, reqHeight);
+            }
+            bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+        }
+
+        return bitmap;
+
+    }
+
     public static Bitmap getAvatarBitmap(String url) {
 
 
@@ -74,7 +125,7 @@ public class ImageTool {
     public static Bitmap getNormalBitmap(String url) {
 
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar);
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
 
         absoluteFilePath = absoluteFilePath + ".jpg";
 
@@ -105,9 +156,9 @@ public class ImageTool {
         int inSampleSize = 1;
 
         if (height > reqHeight || width > reqWidth) {
-            if (height > reqHeight) {
+            if (height > reqHeight && reqHeight != 0) {
                 inSampleSize = Math.round((float) height / (float) reqHeight);
-            } else {
+            } else if (width > reqWidth && reqWidth != 0) {
                 inSampleSize = Math.round((float) width / (float) reqWidth);
             }
 

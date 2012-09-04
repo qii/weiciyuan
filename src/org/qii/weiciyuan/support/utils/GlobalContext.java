@@ -86,7 +86,7 @@ public final class GlobalContext extends Application {
         }
     }
 
-    public LruCache<String, Bitmap> getAvatarCache() {
+    public synchronized LruCache<String, Bitmap> getAvatarCache() {
         if (avatarCache != null) {
             return avatarCache;
         } else {
@@ -167,7 +167,7 @@ public final class GlobalContext extends Application {
         final int memClass = ((ActivityManager) getSystemService(
                 Context.ACTIVITY_SERVICE)).getMemoryClass();
 
-        final int cacheSize = 1024 * 1024 * memClass / 8;
+        final int cacheSize = 1024 * 1024 * memClass / 5;
 
         avatarCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
