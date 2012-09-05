@@ -11,9 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.*;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
@@ -438,13 +436,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
             headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
-            Animation rotateAnimation = new RotateAnimation(0f, 360f,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotateAnimation.setDuration(1000);
-            rotateAnimation.setRepeatCount(-1);
-            rotateAnimation.setRepeatMode(Animation.RESTART);
-            rotateAnimation.setInterpolator(new LinearInterpolator());
-            headerView.findViewById(R.id.header_progress).startAnimation(rotateAnimation);
+            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
             listView.setSelection(0);
         }
 
@@ -527,14 +519,8 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
             View view = footerView.findViewById(R.id.refresh);
             view.setVisibility(View.VISIBLE);
+            view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
 
-            Animation rotateAnimation = new RotateAnimation(0f, 360f,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotateAnimation.setDuration(1000);
-            rotateAnimation.setRepeatCount(-1);
-            rotateAnimation.setRepeatMode(Animation.RESTART);
-            rotateAnimation.setInterpolator(new LinearInterpolator());
-            view.startAnimation(rotateAnimation);
 
         }
 
