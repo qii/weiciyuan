@@ -13,6 +13,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.AvatarBitmapDrawable;
+import org.qii.weiciyuan.support.lib.PictureBitmapDrawable;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
@@ -45,19 +47,18 @@ public class AbstractAppActivity extends FragmentActivity {
 
         @Override
         public void downloadAvatar(ImageView view, String urlKey, int position, ListView listView) {
-            view.setImageDrawable(null);
+
             Bitmap bitmap = getBitmapFromMemCache(urlKey);
             if (bitmap != null) {
                 view.setImageBitmap(bitmap);
                 avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey, position));
             } else {
-                view.setImageDrawable(null);
-                if (avatarBitmapWorkerTaskHashMap.get(getMemCacheKey(urlKey, position)) == null) {
-                    AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey, position);
-                    //because I want listview can load avatar when user refresh timeline
-//                    avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                    avatarTask.execute();
-                    avatarBitmapWorkerTaskHashMap.put(getMemCacheKey(urlKey, position), avatarTask);
+                if (cancelPotentialAvatarDownload(urlKey, view)) {
+                    AvatarBitmapWorkerTask task = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey, position);
+                    AvatarBitmapDrawable downloadedDrawable = new AvatarBitmapDrawable(task);
+                    view.setImageDrawable(downloadedDrawable);
+                    task.execute();
+                    avatarBitmapWorkerTaskHashMap.put(getMemCacheKey(urlKey, position), task);
                 }
             }
 
@@ -65,18 +66,19 @@ public class AbstractAppActivity extends FragmentActivity {
 
         @Override
         public void downContentPic(ImageView view, String urlKey, int position, ListView listView) {
-            view.setImageDrawable(defaultPic);
             Bitmap bitmap = getBitmapFromMemCache(getMemCacheKey(urlKey, position));
             if (bitmap != null) {
                 view.setImageBitmap(bitmap);
                 pictureBitmapWorkerTaskMap.remove(urlKey);
             } else {
-                view.setImageDrawable(defaultPic);
-                if (pictureBitmapWorkerTaskMap.get(urlKey) == null) {
-                    PictureBitmapWorkerTask avatarTask = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, urlKey, listView, position);
-                    avatarTask.execute();
-                    pictureBitmapWorkerTaskMap.put(urlKey, avatarTask);
+                if (cancelPotentialDownload(urlKey, view)) {
+                    PictureBitmapWorkerTask task = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, urlKey, position);
+                    PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(task);
+                    view.setImageDrawable(downloadedDrawable);
+                    task.execute();
+                    pictureBitmapWorkerTaskMap.put(urlKey, task);
                 }
+
             }
 
 
@@ -84,6 +86,59 @@ public class AbstractAppActivity extends FragmentActivity {
 
 
     };
+
+    private static boolean cancelPotentialDownload(String url, ImageView imageView) {
+        PictureBitmapWorkerTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
+
+        if (bitmapDownloaderTask != null) {
+            String bitmapUrl = bitmapDownloaderTask.getUrl();
+            if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
+                bitmapDownloaderTask.cancel(true);
+            } else {
+                // The same URL is already being downloaded.
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    private static boolean cancelPotentialAvatarDownload(String url, ImageView imageView) {
+        AvatarBitmapWorkerTask bitmapDownloaderTask = getAvatarBitmapDownloaderTask(imageView);
+
+        if (bitmapDownloaderTask != null) {
+            String bitmapUrl = bitmapDownloaderTask.getUrl();
+            if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
+                bitmapDownloaderTask.cancel(true);
+            } else {
+                // The same URL is already being downloaded.
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static AvatarBitmapWorkerTask getAvatarBitmapDownloaderTask(ImageView imageView) {
+        if (imageView != null) {
+            Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AvatarBitmapDrawable) {
+                AvatarBitmapDrawable downloadedDrawable = (AvatarBitmapDrawable) drawable;
+                return downloadedDrawable.getBitmapDownloaderTask();
+            }
+        }
+        return null;
+    }
+
+    private static PictureBitmapWorkerTask getBitmapDownloaderTask(ImageView imageView) {
+        if (imageView != null) {
+            Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof PictureBitmapDrawable) {
+                PictureBitmapDrawable downloadedDrawable = (PictureBitmapDrawable) drawable;
+                return downloadedDrawable.getBitmapDownloaderTask();
+            }
+        }
+        return null;
+    }
 
 
     @Override

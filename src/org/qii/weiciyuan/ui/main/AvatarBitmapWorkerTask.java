@@ -1,9 +1,11 @@
 package org.qii.weiciyuan.ui.main;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.LruCache;
 import android.widget.ImageView;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.lib.AvatarBitmapDrawable;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 
 import java.lang.ref.WeakReference;
@@ -21,6 +23,11 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     private final WeakReference<ImageView> view;
     private Map<String, AvatarBitmapWorkerTask> taskMap;
     private int position;
+
+
+    public String getUrl() {
+        return data;
+    }
 
 
     public AvatarBitmapWorkerTask(LruCache<String, Bitmap> lruCache,
@@ -64,12 +71,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         if (taskMap != null && taskMap.get(data) != null) {
             taskMap.remove(data);
         }
-        if (view != null) {
-            ImageView imageView = view.get();
-            if (imageView != null && imageView.getTag().equals(data)) {
-                imageView.setTag("");
-            }
-        }
+
 
         super.onCancelled(bitmap);
     }
@@ -83,9 +85,12 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
             if (view != null) {
                 ImageView imageView = view.get();
-                if (imageView != null && imageView.getTag().equals(data)) {
+
+                AvatarBitmapWorkerTask bitmapDownloaderTask = getAvatarBitmapDownloaderTask(imageView);
+                if (this == bitmapDownloaderTask) {
                     imageView.setImageBitmap(bitmap);
                 }
+
             }
 
 
@@ -101,4 +106,14 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     }
 
 
+    private static AvatarBitmapWorkerTask getAvatarBitmapDownloaderTask(ImageView imageView) {
+        if (imageView != null) {
+            Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AvatarBitmapDrawable) {
+                AvatarBitmapDrawable downloadedDrawable = (AvatarBitmapDrawable) drawable;
+                return downloadedDrawable.getBitmapDownloaderTask();
+            }
+        }
+        return null;
+    }
 }
