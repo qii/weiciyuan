@@ -98,6 +98,10 @@ public class UserInfoFragment extends Fragment {
     private void setValue() {
         getActivity().getActionBar().setTitle(bean.getScreen_name());
         username.setText(bean.getScreen_name());
+
+        if (bean.isVerified())
+            username.setText(username.getText().toString() + getString(R.string.verified_user));
+
         info.setText(bean.getDescription());
 
         String avatarUrl = bean.getAvatar_large();

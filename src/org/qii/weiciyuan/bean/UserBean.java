@@ -160,11 +160,11 @@ public class UserBean implements Serializable {
         this.geo_enabled = geo_enabled;
     }
 
-    public String getVerified() {
+    public boolean isVerified() {
         return verified;
     }
 
-    public void setVerified(String verified) {
+    public void setVerified(boolean verified) {
         this.verified = verified;
     }
 
@@ -219,14 +219,14 @@ public class UserBean implements Serializable {
     private String profile_image_url;
     private String domain;
     private String gender;
-    private String statuses_count="0";
+    private String statuses_count = "0";
     private String favourites_count;
     private String created_at;
     private boolean following;
     private String allow_all_act_msg;
     private String remark;
     private String geo_enabled;
-    private String verified;
+    private boolean verified;
     private String allow_all_comment;
     private String avatar_large;
     private String verified_reason;
