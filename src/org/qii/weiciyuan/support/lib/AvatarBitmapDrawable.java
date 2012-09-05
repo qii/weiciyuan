@@ -14,7 +14,7 @@ public class AvatarBitmapDrawable extends ColorDrawable {
     private final WeakReference<AvatarBitmapWorkerTask> bitmapDownloaderTaskReference;
 
     public AvatarBitmapDrawable(AvatarBitmapWorkerTask bitmapDownloaderTask) {
-        super(Color.BLACK);
+        super(Color.TRANSPARENT);
         bitmapDownloaderTaskReference =
                 new WeakReference<AvatarBitmapWorkerTask>(bitmapDownloaderTask);
     }
