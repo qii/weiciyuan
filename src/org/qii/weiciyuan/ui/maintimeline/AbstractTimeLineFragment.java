@@ -100,7 +100,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (position - 1 < getList().getSize() && position - 1 > 0) {
+                if (position - 1 < getList().getSize() && position - 1 >= 0) {
 
                     listViewItemClick(parent, view, position - 1, id);
                 } else if (position - 1 >= getList().getSize()) {
