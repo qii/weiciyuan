@@ -7,19 +7,19 @@ import android.widget.ListView;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 
+import java.lang.ref.WeakReference;
 import java.util.Map;
 
 /**
  * User: Jiang Qi
  * Date: 12-8-3
- * Time: 下午4:09
  */
 public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
 
     private LruCache<String, Bitmap> lruCache;
     private String data = "";
-    private ImageView view;
+    private final WeakReference<ImageView> view;
 
     private Map<String, PictureBitmapWorkerTask> taskMap;
     private ListView listView;
@@ -32,7 +32,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
         this.lruCache = lruCache;
         this.taskMap = taskMap;
-        this.view = view;
+        this.view = new WeakReference<ImageView>(view);
         this.data = url;
         this.listView = listView;
         this.position = position;
@@ -41,7 +41,13 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        view.setTag(data);
+        if (view != null) {
+            ImageView imageView = view.get();
+            if (imageView != null) {
+                imageView.setTag(data);
+            }
+        }
+
     }
 
     int reqHeight;
@@ -50,14 +56,6 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... url) {
 
-
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                reqHeight = view.getHeight();
-                reqWidth = view.getWidth();
-            }
-        });
 
         if (!isCancelled()) {
             return ImageTool.getPictureHighDensityThumbnailBitmap(data);
@@ -69,11 +67,17 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     protected void onCancelled(Bitmap bitmap) {
         if (bitmap != null) {
 
-            lruCache.put(getMemCacheKey(data,position), bitmap);
+            lruCache.put(getMemCacheKey(data, position), bitmap);
 
         }
         if (taskMap != null && taskMap.get(data) != null) {
             taskMap.remove(data);
+        }
+        if (view != null) {
+            ImageView imageView = view.get();
+            if (imageView != null && imageView.getTag().equals(data)) {
+                imageView.setTag("");
+            }
         }
         super.onCancelled(bitmap);
     }
@@ -83,17 +87,23 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
         if (bitmap != null) {
 
-            lruCache.put(getMemCacheKey(data,position), bitmap);
-            if (view != null && view.getTag().equals(data) && position <= listView.getLastVisiblePosition() && position >= listView.getFirstVisiblePosition()) {
-                view.setImageBitmap(bitmap);
-            }
+            lruCache.put(getMemCacheKey(data, position), bitmap);
 
+            if (view != null) {
+                ImageView imageView = view.get();
+                if (imageView != null && imageView.getTag().equals(data)
+                        && position <= listView.getLastVisiblePosition()
+                        && position >= listView.getFirstVisiblePosition()) {
+                    imageView.setImageBitmap(bitmap);
+                }
+            }
         }
 
         if (taskMap.get(data) != null) {
             taskMap.remove(data);
         }
     }
+
     protected String getMemCacheKey(String urlKey, int position) {
         return urlKey + position;
     }

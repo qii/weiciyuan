@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 
+import java.lang.ref.WeakReference;
 import java.util.Map;
 
 /**
@@ -17,8 +18,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     private LruCache<String, Bitmap> lruCache;
     private String data = "";
-    private ImageView view;
-
+    private final WeakReference<ImageView> view;
     private Map<String, AvatarBitmapWorkerTask> taskMap;
     private int position;
 
@@ -29,7 +29,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
         this.lruCache = lruCache;
         this.taskMap = taskMap;
-        this.view = view;
+        this.view = new WeakReference<ImageView>(view);
         this.data = url;
         this.position = position;
     }
@@ -37,7 +37,12 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        view.setTag(data);
+        if (view != null) {
+            ImageView imageView = view.get();
+            if (imageView != null) {
+                imageView.setTag(data);
+            }
+        }
     }
 
     @Override
@@ -59,7 +64,13 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         if (taskMap != null && taskMap.get(data) != null) {
             taskMap.remove(data);
         }
-        view.setTag("");
+        if (view != null) {
+            ImageView imageView = view.get();
+            if (imageView != null && imageView.getTag().equals(data)) {
+                imageView.setTag("");
+            }
+        }
+
         super.onCancelled(bitmap);
     }
 
@@ -70,10 +81,13 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
             lruCache.put(data, bitmap);
 
-            if (view != null && view.getTag().equals(data)) {
-                view.setImageBitmap(bitmap);
-                view.setTag("");
+            if (view != null) {
+                ImageView imageView = view.get();
+                if (imageView != null && imageView.getTag().equals(data)) {
+                    imageView.setImageBitmap(bitmap);
+                }
             }
+
 
         }
 
