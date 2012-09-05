@@ -116,13 +116,14 @@ public class UserInfoFragment extends Fragment {
         }
         location.setText(bean.getLocation());
         String s = bean.getGender();
-        if (s.equals("m"))
-            sex.setText(getString(R.string.m));
-        else if (s.equals("f"))
-            sex.setText(getString(R.string.f));
-        else
-            sex.setVisibility(View.GONE);
-
+        if (!TextUtils.isEmpty(s)) {
+            if (s.equals("m"))
+                sex.setText(getString(R.string.m));
+            else if (s.equals("f"))
+                sex.setText(getString(R.string.f));
+            else
+                sex.setVisibility(View.GONE);
+        }
         setTextViewNum(fans_number, bean.getFollowers_count());
         setTextViewNum(following_number, bean.getFriends_count());
         if (bean.isFollow_me()) {

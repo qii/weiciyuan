@@ -123,8 +123,8 @@
     <string name="search">搜索</string>
 
     <!-- relationship-->
-    <string name="he_is_not_following_you">他没关注你</string>
-    <string name="he_is_following_you">他关注了你</string>
+    <string name="he_is_not_following_you">Ta没关注你</string>
+    <string name="he_is_following_you">Ta关注了你</string>
 
     <!--fav-->
     <string name="favourite">收藏数</string>
