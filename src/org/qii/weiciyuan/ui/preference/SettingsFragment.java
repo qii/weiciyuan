@@ -118,7 +118,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         }
 
         if (key.equals(SettingActivity.SHOW_BIG_PIC)) {
-            boolean value = sharedPreferences.getBoolean(key, true);
+            boolean value = sharedPreferences.getBoolean(key, false);
             GlobalContext.getInstance().setEnableBigPic(value);
         }
     }

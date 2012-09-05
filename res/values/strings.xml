@@ -144,6 +144,7 @@
     <string name="normal">常规</string>
     <string name="show_pic">显示头像图片</string>
     <string name="show_big_pic">列表显示大图</string>
+    <string name="show_big_pic_summary">非常费流量</string>
     <string name="new_message">新消息</string>
     <string name="enable_fetch_new_msg">后台自动获取回复、评论</string>
     <string name="frequency">频率</string>

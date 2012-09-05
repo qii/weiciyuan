@@ -137,7 +137,7 @@ public final class GlobalContext extends Application {
         } else {
             AppLogger.e("GlobalContext is empty by system");
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            enableBigPic = sharedPref.getBoolean(SettingActivity.SHOW_BIG_PIC, true);
+            enableBigPic = sharedPref.getBoolean(SettingActivity.SHOW_BIG_PIC, false);
             return enableBigPic;
         }
 
