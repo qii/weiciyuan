@@ -11,7 +11,6 @@ import java.util.Map;
 /**
  * User: Jiang Qi
  * Date: 12-8-3
- * Time: 下午12:25
  */
 public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
