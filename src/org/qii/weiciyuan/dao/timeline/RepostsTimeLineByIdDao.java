@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class RepostsTimeLineByIdDao {
 
-    public RepostListBean getGSONMsgList() {
+    public RepostListBean getGSONMsgList() throws WeiboException {
 
         String url = URLHelper.getRepostListById();
 
@@ -33,13 +33,7 @@ public class RepostsTimeLineByIdDao {
         map.put("filter_by_author", filter_by_author);
 
 
-        String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();
-        }
-
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
         Gson gson = new Gson();
 

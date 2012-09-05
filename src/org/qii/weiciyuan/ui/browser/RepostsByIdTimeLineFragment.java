@@ -439,6 +439,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
 
     class FriendsTimeLineGetNewMsgListTask extends MyAsyncTask<Void, RepostListBean, RepostListBean> {
+        WeiboException e;
 
         @Override
         protected void onPreExecute() {
@@ -465,10 +466,25 @@ public class RepostsByIdTimeLineFragment extends Fragment {
             if (getList().getReposts().size() > 0) {
                 dao.setSince_id(getList().getReposts().get(0).getId());
             }
-            RepostListBean result = dao.getGSONMsgList();
+            RepostListBean result = null;
+            try {
+                result = dao.getGSONMsgList();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return null;
+            }
 
             return result;
 
+        }
+
+        @Override
+        protected void onCancelled(RepostListBean newValue) {
+            super.onCancelled(newValue);
+            cleanWork();
+            if (this.e != null)
+                Toast.makeText(getActivity(), this.e.getError(), Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -490,6 +506,15 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
                 }
             }
+            cleanWork();
+            invlidateTabText();
+
+            super.onPostExecute(newValue);
+
+        }
+
+        private void cleanWork() {
+            headerView.findViewById(R.id.header_progress).clearAnimation();
             headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
             if (bean.getReposts().size() == 0) {
@@ -497,10 +522,6 @@ public class RepostsByIdTimeLineFragment extends Fragment {
             } else {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             }
-            invlidateTabText();
-
-            super.onPostExecute(newValue);
-
         }
     }
 
@@ -516,6 +537,8 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
 
     class FriendsTimeLineGetOlderMsgListTask extends MyAsyncTask<Void, RepostListBean, RepostListBean> {
+        WeiboException e;
+
         @Override
         protected void onPreExecute() {
             showListView();
@@ -541,10 +564,27 @@ public class RepostsByIdTimeLineFragment extends Fragment {
             if (getList().getReposts().size() > 0) {
                 dao.setMax_id(getList().getReposts().get(getList().getReposts().size() - 1).getId());
             }
-            RepostListBean result = dao.getGSONMsgList();
+            RepostListBean result = null;
+            try {
+                result = dao.getGSONMsgList();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return null;
+            }
 
             return result;
 
+        }
+
+        @Override
+        protected void onCancelled(RepostListBean newValue) {
+            super.onCancelled(newValue);
+            footerView.findViewById(R.id.refresh).clearAnimation();
+            footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
+            if (this.e != null)
+                Toast.makeText(getActivity(), this.e.getError(), Toast.LENGTH_SHORT).show();
         }
 
         @Override
