@@ -2,11 +2,12 @@ package org.qii.weiciyuan.ui.userinfo;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.*;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,7 +21,10 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.Abstract.*;
+import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.Abstract.ICommander;
+import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
@@ -48,7 +52,10 @@ public class UserInfoFragment extends Fragment {
 
     private SimpleTask task;
 
-    private volatile boolean isBusying = false;
+    private MyAsyncTask<Void, UserBean, UserBean> followOrUnfollowTask;
+
+
+    private MenuItem refreshItem;
 
 
     public UserInfoFragment() {
@@ -169,12 +176,28 @@ public class UserInfoFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.infofragment_menu, menu);
+        refreshItem = menu.findItem(R.id.menu_refresh);
 
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+    }
+
+    private void startRefreshMenuAnimation() {
+        ImageView iv = (ImageView) getActivity().getLayoutInflater().inflate(R.layout.refresh_action_view, null);
+        Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh);
+        iv.startAnimation(rotation);
+        if (refreshItem != null)
+            refreshItem.setActionView(iv);
+    }
+
+    private void stopRefreshMenuAnimation() {
+        if (refreshItem.getActionView() != null) {
+            refreshItem.getActionView().clearAnimation();
+            refreshItem.setActionView(null);
+        }
     }
 
     @Override
@@ -206,14 +229,16 @@ public class UserInfoFragment extends Fragment {
             switch (v.getId()) {
                 case R.id.follow:
 
-                    if (!isBusying) {
-                        new FollowTask().execute();
+                    if (followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                        followOrUnfollowTask = new FollowTask();
+                        followOrUnfollowTask.execute();
                     }
                     break;
                 case R.id.unfollow:
 
-                    if (!isBusying) {
-                        new UnFollowTask().execute();
+                    if (followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                        followOrUnfollowTask = new UnFollowTask();
+                        followOrUnfollowTask.execute();
                     }
                     break;
             }
@@ -221,13 +246,18 @@ public class UserInfoFragment extends Fragment {
     };
 
 
-    private class FollowTask extends AsyncTask<Void, UserBean, UserBean> {
+    private class FollowTask extends MyAsyncTask<Void, UserBean, UserBean> {
         WeiboException e;
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            startRefreshMenuAnimation();
+        }
+
+        @Override
         protected UserBean doInBackground(Void... params) {
-            if (isBusying)
-                return null;
+
             FriendshipsDao dao = new FriendshipsDao(((IToken) getActivity()).getToken());
             if (!TextUtils.isEmpty(bean.getId())) {
                 dao.setUid(bean.getId());
@@ -247,7 +277,7 @@ public class UserInfoFragment extends Fragment {
         @Override
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
-            isBusying = false;
+            stopRefreshMenuAnimation();
             if (e != null) {
                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 switch (e.getError_code()) {
@@ -264,18 +294,23 @@ public class UserInfoFragment extends Fragment {
         protected void onPostExecute(UserBean o) {
             super.onPostExecute(o);
             bean = o;
-            isBusying = false;
+            stopRefreshMenuAnimation();
             setValue();
         }
     }
 
-    private class UnFollowTask extends AsyncTask<Void, UserBean, UserBean> {
+    private class UnFollowTask extends MyAsyncTask<Void, UserBean, UserBean> {
         WeiboException e;
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            startRefreshMenuAnimation();
+        }
+
+        @Override
         protected UserBean doInBackground(Void... params) {
-            if (isBusying)
-                return null;
+
             FriendshipsDao dao = new FriendshipsDao(((IToken) getActivity()).getToken());
             if (!TextUtils.isEmpty(bean.getId())) {
                 dao.setUid(bean.getId());
@@ -296,14 +331,14 @@ public class UserInfoFragment extends Fragment {
         @Override
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
-            isBusying = false;
+            stopRefreshMenuAnimation();
         }
 
         @Override
         protected void onPostExecute(UserBean o) {
             super.onPostExecute(o);
             bean = o;
-            isBusying = false;
+            stopRefreshMenuAnimation();
             setValue();
         }
     }
@@ -311,6 +346,12 @@ public class UserInfoFragment extends Fragment {
 
     private class SimpleTask extends MyAsyncTask<Object, UserBean, UserBean> {
         WeiboException e;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            startRefreshMenuAnimation();
+        }
 
         @Override
         protected UserBean doInBackground(Object... params) {
@@ -351,11 +392,12 @@ public class UserInfoFragment extends Fragment {
             if (e != null) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             }
+            stopRefreshMenuAnimation();
         }
 
         @Override
         protected void onPostExecute(UserBean o) {
-
+            stopRefreshMenuAnimation();
             setValue();
             super.onPostExecute(o);
         }
