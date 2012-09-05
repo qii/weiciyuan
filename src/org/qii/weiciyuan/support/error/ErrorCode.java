@@ -6,4 +6,5 @@ package org.qii.weiciyuan.support.error;
  */
 public class ErrorCode {
     public static final int ALREADY_FOLLOWED = 20506;
+    public static final int DELETED=20101;
 }

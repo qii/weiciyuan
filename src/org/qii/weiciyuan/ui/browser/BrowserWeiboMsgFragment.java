@@ -22,10 +22,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.show.ShowStatusDao;
+import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -128,8 +130,12 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
         @Override
         protected void onCancelled(MessageBean weiboMsgBean) {
-//            Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-            setTextViewDeleted();
+            if (this.e != null) {
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+                if (e.getError_code() == ErrorCode.DELETED) {
+                    setTextViewDeleted();
+                }
+            }
             completeRefresh();
             super.onCancelled(weiboMsgBean);
         }
