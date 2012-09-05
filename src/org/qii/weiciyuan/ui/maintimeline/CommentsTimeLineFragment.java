@@ -17,6 +17,7 @@ import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -27,7 +28,6 @@ import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 /**
  * User: qii
  * Date: 12-7-29
- * Time: 下午1:15
  */
 public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentListBean> {
 
@@ -150,7 +150,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             }
             holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
             holder.content.setText(msg.getText());
-//            ListViewTool.addJustHighLightLinks(holder.content);
+            ListViewTool.addJustHighLightLinks(holder.content);
             holder.time.setText(msg.getListviewItemShowTime());
 
             holder.repost_content.setVisibility(View.GONE);
@@ -169,7 +169,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             if (repost_msg.getUser() != null) {
                 holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
                 holder.repost_content.setText("@" + repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
-//                ListViewTool.addJustHighLightLinks(holder.repost_content);
+                ListViewTool.addJustHighLightLinks(holder.repost_content);
             } else {
                 holder.repost_content.setText(repost_msg.getText());
 
