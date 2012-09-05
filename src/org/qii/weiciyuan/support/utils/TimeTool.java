@@ -114,7 +114,7 @@ public class TimeTool {
         long calSeconds = calcMills / 1000;
 
         if (calSeconds < 60) {
-            return GlobalContext.getInstance().getString(R.string.justnow);
+            return ""+calSeconds+GlobalContext.getInstance().getString(R.string.sec);
         }
 
         long calMins = calSeconds / 60;

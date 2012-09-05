@@ -20,6 +20,7 @@
     <string name="day">天前</string>
     <string name="hour">小时前</string>
     <string name="min">分钟前</string>
+    <string name="sec">秒前</string>
     <string name="justnow">刚才</string>
 
     <!--button -->
