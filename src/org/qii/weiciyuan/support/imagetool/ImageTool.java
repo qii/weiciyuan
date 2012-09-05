@@ -71,6 +71,7 @@ public class ImageTool {
         if (height > 0) {
             int needStart = (bitmap.getHeight() - height) / 2;
             Bitmap cropped = Bitmap.createBitmap(bitmap, 0, needStart, bitmap.getWidth(), height);
+            bitmap.recycle();
             return cropped;
         } else {
             return bitmap;

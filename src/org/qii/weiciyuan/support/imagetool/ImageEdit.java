@@ -25,6 +25,7 @@ public class ImageEdit {
 
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
+        bitmap.recycle();
         return output;
     }
 
