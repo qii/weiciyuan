@@ -48,6 +48,7 @@ public class OAuthActivity extends AbstractAppActivity {
         setContentView(R.layout.oauthactivity_layout);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setSubtitle(getString(R.string.only_oauth_one_week));
         webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new WeiboWebViewClient());
 
@@ -114,7 +115,7 @@ public class OAuthActivity extends AbstractAppActivity {
             case android.R.id.home:
                 Intent intent = new Intent(this, AccountActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("launcher",false);
+                intent.putExtra("launcher", false);
                 startActivity(intent);
                 return true;
             default:

@@ -10,6 +10,7 @@
     <!--account -->
     <string name="select_all">全选</string>
     <string name="select_none">反选</string>
+    <string name="only_oauth_one_week">微次元的授权只能维持一周的哦</string>
 
     <!-- listview-->
     <string name="empty">空</string>
