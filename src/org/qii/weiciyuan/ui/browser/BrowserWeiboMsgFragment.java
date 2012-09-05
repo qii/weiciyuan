@@ -368,6 +368,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
             case R.id.menu_copy:
                 ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                 cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", content.getText().toString()));
+                Toast.makeText(getActivity(),getString(R.string.copy_successfully),Toast.LENGTH_SHORT).show();
                 break;
             default:
                 return super.onOptionsItemSelected(item);

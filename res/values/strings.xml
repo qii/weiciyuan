@@ -29,6 +29,7 @@
     <string name="share">分享</string>
     <string name="share_to">分享到</string>
     <string name="copy_to_clipboard">复制到剪切板</string>
+    <string name="copy_successfully">复制完成</string>
 
     <!--system -->
     <string name="timeout">请求超时</string>
@@ -111,6 +112,7 @@
     <string name="my_fav_list">我的收藏列表</string>
     <string name="intro">简介</string>
     <string name="at">"@TA"</string>
+
 
 
     <!-- serach -->

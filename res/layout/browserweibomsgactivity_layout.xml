@@ -18,7 +18,7 @@
             <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/app"
+                    android:background="?account"
                     android:id="@+id/avatar" android:layout_gravity="left|center_vertical"
                     android:layout_marginRight="5dp"
                     />
