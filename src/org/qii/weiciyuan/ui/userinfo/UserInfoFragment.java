@@ -46,7 +46,6 @@ public class UserInfoFragment extends Fragment {
     private Button following_number;
     private Button fans_number;
 
-    private Button follow_it;
     private Button unfollow_it;
 
     protected ICommander commander;
@@ -132,13 +131,14 @@ public class UserInfoFragment extends Fragment {
             relationship.setText(getString(R.string.he_is_not_following_you));
         }
 
+
         if (bean.isFollowing()) {
-            follow_it.setVisibility(View.GONE);
-            unfollow_it.setVisibility(View.VISIBLE);
+            unfollow_it.setText(getString(R.string.unfollow_he));
         } else {
-            unfollow_it.setVisibility(View.GONE);
-            follow_it.setVisibility(View.VISIBLE);
+            unfollow_it.setText(getString(R.string.follow_he));
+
         }
+        unfollow_it.setVisibility(View.VISIBLE);
 
         getActivity().getActionBar().getTabAt(1).setText(getString(R.string.weibo) + "(" + bean.getStatuses_count() + ")");
     }
@@ -158,10 +158,8 @@ public class UserInfoFragment extends Fragment {
         following_number = (Button) view.findViewById(R.id.following_number);
         fans_number = (Button) view.findViewById(R.id.fans_number);
 
-        follow_it = (Button) view.findViewById(R.id.follow);
         unfollow_it = (Button) view.findViewById(R.id.unfollow);
 
-        follow_it.setOnClickListener(onClickListener);
         unfollow_it.setOnClickListener(onClickListener);
 
 
@@ -240,22 +238,20 @@ public class UserInfoFragment extends Fragment {
         @Override
         public void onClick(View v) {
 
+            boolean a = followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED;
+            boolean b = followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED;
 
-            switch (v.getId()) {
-                case R.id.follow:
+            if (a && b) {
+                if (bean.isFollowing()) {
+                    followOrUnfollowTask = new UnFollowTask();
+                    followOrUnfollowTask.execute();
 
-                    if (followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                        followOrUnfollowTask = new FollowTask();
-                        followOrUnfollowTask.execute();
-                    }
-                    break;
-                case R.id.unfollow:
+                } else {
+                    followOrUnfollowTask = new FollowTask();
+                    followOrUnfollowTask.execute();
 
-                    if (followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                        followOrUnfollowTask = new UnFollowTask();
-                        followOrUnfollowTask.execute();
-                    }
-                    break;
+                }
+
             }
         }
     };
@@ -297,7 +293,6 @@ public class UserInfoFragment extends Fragment {
                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 switch (e.getError_code()) {
                     case ErrorCode.ALREADY_FOLLOWED:
-                        follow_it.setVisibility(View.GONE);
                         unfollow_it.setVisibility(View.VISIBLE);
                         break;
                 }
