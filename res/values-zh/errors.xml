@@ -4,7 +4,7 @@
     <string name="code21321">应用还没通过审核，登录用户受限制</string>
     <string name="code20506">已经关注了，不要重复操作</string>
     <string name="code21332">授权信息错误</string>
-    <string name="code10006">source paramter(appkey) is missing</string>
+    <string name="code10006">授权信息丢失</string>
     <string name="code21301">认证失败</string>
     <string name="code20012">字数太多了，最多140字！</string>
     <string name="code20019">内容重复！</string>
