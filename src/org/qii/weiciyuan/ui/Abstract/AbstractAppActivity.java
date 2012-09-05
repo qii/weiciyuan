@@ -45,7 +45,7 @@ public class AbstractAppActivity extends FragmentActivity {
 
         @Override
         public void downloadAvatar(ImageView view, String urlKey, int position, ListView listView) {
-
+            view.setImageDrawable(null);
             Bitmap bitmap = getBitmapFromMemCache(urlKey);
             if (bitmap != null) {
                 view.setImageBitmap(bitmap);
@@ -65,7 +65,7 @@ public class AbstractAppActivity extends FragmentActivity {
 
         @Override
         public void downContentPic(ImageView view, String urlKey, int position, ListView listView) {
-
+            view.setImageDrawable(defaultPic);
             Bitmap bitmap = getBitmapFromMemCache(getMemCacheKey(urlKey, position));
             if (bitmap != null) {
                 view.setImageBitmap(bitmap);
