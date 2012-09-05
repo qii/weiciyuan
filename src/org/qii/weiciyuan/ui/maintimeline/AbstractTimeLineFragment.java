@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ListBean;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
@@ -165,6 +166,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
 
     public class TimeLineGetNewMsgListTask extends MyAsyncTask<Object, T, T> {
+        WeiboException e;
 
 
         @Override
@@ -180,7 +182,13 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         @Override
         protected T doInBackground(Object... params) {
 
-            return getDoInBackgroundNewData();
+            try {
+                return getDoInBackgroundNewData();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+            }
+            return null;
 
         }
 
@@ -194,6 +202,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         @Override
         protected void onCancelled(T messageListBean) {
             super.onCancelled(messageListBean);
+            if (this.e != null)
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             cleanWork();
         }
 
@@ -218,6 +228,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
     public class TimeLineGetOlderMsgListTask extends MyAsyncTask<Object, T, T> {
 
+        WeiboException e;
+
         @Override
         protected void onPreExecute() {
             showListView();
@@ -232,7 +244,13 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         @Override
         protected T doInBackground(Object... params) {
 
-            return getDoInBackgroundOldData();
+            try {
+                return getDoInBackgroundOldData();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+            }
+            return null;
 
         }
 
@@ -252,6 +270,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         protected void onCancelled(T messageListBean) {
             super.onCancelled(messageListBean);
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.click_to_load_older_message));
+            if (this.e != null)
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             cleanWork();
 
         }
@@ -278,8 +298,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
     }
 
-    protected abstract T getDoInBackgroundNewData();
+    protected abstract T getDoInBackgroundNewData() throws WeiboException;
 
 
-    protected abstract T getDoInBackgroundOldData();
+    protected abstract T getDoInBackgroundOldData() throws WeiboException;
 }

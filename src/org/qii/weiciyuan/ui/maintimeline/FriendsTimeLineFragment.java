@@ -13,6 +13,7 @@ import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -133,7 +134,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
 
     @Override
-    protected MessageListBean getDoInBackgroundNewData() {
+    protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
         MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
         if (getList().getStatuses().size() > 0) {
             dao.setSince_id(getList().getStatuses().get(0).getId());
@@ -150,7 +151,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
-    protected MessageListBean getDoInBackgroundOldData() {
+    protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
         MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
         if (getList().getStatuses().size() > 0) {
             dao.setMax_id(getList().getStatuses().get(getList().getStatuses().size() - 1).getId());

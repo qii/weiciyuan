@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class MainFriendsTimeLineDao {
 
-    private String getMsgListJson() {
+    private String getMsgListJson() throws WeiboException {
         String url = URLHelper.getFriendsTimeLine();
 
         Map<String, String> map = new HashMap<String, String>();
@@ -35,17 +35,13 @@ public class MainFriendsTimeLineDao {
         map.put("feature", feature);
         map.put("trim_user", trim_user);
 
-        String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();
-        }
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+
 
         return jsonData;
     }
 
-    public MessageListBean getGSONMsgList() {
+    public MessageListBean getGSONMsgList() throws WeiboException {
 
         String json = getMsgListJson();
         Gson gson = new Gson();
@@ -58,8 +54,10 @@ public class MainFriendsTimeLineDao {
             AppLogger.e(e.getMessage());
             return null;
         }
-        for (MessageBean b : value.getStatuses()) {
-            TimeTool.dealMills(b);
+        if (value != null && value.getSize() > 0) {
+            for (MessageBean b : value.getStatuses()) {
+                TimeTool.dealMills(b);
+            }
         }
         return value;
     }
