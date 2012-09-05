@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.main;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.LruCache;
 import android.widget.ImageView;
@@ -76,6 +77,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                 PictureBitmapWorkerTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
                 if (this == bitmapDownloaderTask) {
                     imageView.setImageBitmap(bitmap);
+                    imageView.setBackgroundColor(Color.TRANSPARENT);
                 }
             }
         }

@@ -71,6 +71,7 @@ public class AbstractAppActivity extends FragmentActivity {
                 view.setImageBitmap(bitmap);
                 pictureBitmapWorkerTaskMap.remove(urlKey);
             } else {
+                view.setBackgroundDrawable(defaultPic);
                 if (cancelPotentialDownload(urlKey, view)) {
                     PictureBitmapWorkerTask task = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, urlKey, position);
                     PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(task);
