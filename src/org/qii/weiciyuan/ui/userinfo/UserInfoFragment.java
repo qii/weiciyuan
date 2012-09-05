@@ -87,10 +87,7 @@ public class UserInfoFragment extends Fragment {
         bean = ((IUserInfo) getActivity()).getUser();
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         setValue();
-        if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
-            task = new SimpleTask();
-            task.execute();
-        }
+        refresh();
     }
 
 
@@ -217,10 +214,7 @@ public class UserInfoFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    task = new SimpleTask();
-                    task.execute();
-                }
+                refresh();
                 break;
             case R.id.menu_at:
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
@@ -231,6 +225,13 @@ public class UserInfoFragment extends Fragment {
                 break;
         }
         return true;
+    }
+
+    private void refresh() {
+        if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
+            task = new SimpleTask();
+            task.execute();
+        }
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -306,6 +307,7 @@ public class UserInfoFragment extends Fragment {
             bean = o;
             stopRefreshMenuAnimation();
             setValue();
+            refresh();
         }
     }
 
