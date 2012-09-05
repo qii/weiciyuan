@@ -18,7 +18,7 @@ import java.util.Map;
  * Date: 12-8-13
  */
 public class CommentNewMsgDao {
-    public CommentBean sendNewMsg() {
+    public CommentBean sendNewMsg() throws WeiboException {
         String url = URLHelper.new_Comment();
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
@@ -26,12 +26,8 @@ public class CommentNewMsgDao {
         map.put("comment", comment);
         map.put("comment_ori", comment_ori);
 
-        String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
 
         Gson gson = new Gson();
 

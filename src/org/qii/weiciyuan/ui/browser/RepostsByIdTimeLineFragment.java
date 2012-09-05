@@ -18,6 +18,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.RepostListBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -225,6 +226,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
 
     class SimpleTask extends AsyncTask<Void, Void, MessageBean> {
+        WeiboException e;
 
         SendProgressFragment progressFragment = new SendProgressFragment();
 
@@ -257,7 +259,22 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
             RepostNewMsgDao dao = new RepostNewMsgDao(token, id);
             dao.setStatus(content);
-            return dao.sendNewMsg();
+            try {
+                return dao.sendNewMsg();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onCancelled(MessageBean s) {
+            super.onCancelled(s);
+            if (this.e != null) {
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+
+            }
         }
 
         @Override

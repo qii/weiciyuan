@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class RepostNewMsgDao {
 
-    public MessageBean sendNewMsg() {
+    public MessageBean sendNewMsg() throws WeiboException {
         String url = URLHelper.new_Repost();
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
@@ -28,12 +28,8 @@ public class RepostNewMsgDao {
         map.put("status", status);
         map.put("is_comment", is_comment);
 
-        String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
 
         Gson gson = new Gson();
 

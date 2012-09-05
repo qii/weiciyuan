@@ -11,6 +11,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
@@ -77,6 +78,7 @@ public class CommentNewActivity extends AbstractAppActivity {
     class SimpleTask extends AsyncTask<Void, Void, CommentBean> {
 
         SendProgressFragment progressFragment = new SendProgressFragment();
+        WeiboException e;
 
         @Override
         protected void onPreExecute() {
@@ -100,8 +102,24 @@ public class CommentNewActivity extends AbstractAppActivity {
         @Override
         protected CommentBean doInBackground(Void... params) {
             CommentNewMsgDao dao = new CommentNewMsgDao(token, id, ((EditText) findViewById(R.id.status_new_content)).getText().toString());
-            return dao.sendNewMsg();
+            try {
+                return dao.sendNewMsg();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return null;
+            }
         }
+
+        @Override
+        protected void onCancelled(CommentBean commentBean) {
+            super.onCancelled(commentBean);
+            if (this.e != null) {
+                Toast.makeText(CommentNewActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
+
+            }
+        }
+
 
         @Override
         protected void onPostExecute(CommentBean s) {

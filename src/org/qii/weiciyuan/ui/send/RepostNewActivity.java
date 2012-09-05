@@ -11,6 +11,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
@@ -66,6 +67,7 @@ public class RepostNewActivity extends AbstractAppActivity {
     class SimpleTask extends AsyncTask<Void, Void, MessageBean> {
 
         SendProgressFragment progressFragment = new SendProgressFragment();
+        WeiboException e;
 
         @Override
         protected void onPreExecute() {
@@ -97,7 +99,22 @@ public class RepostNewActivity extends AbstractAppActivity {
             RepostNewMsgDao dao = new RepostNewMsgDao(token, id);
 //            dao.setStatus(content + "//@" + msg.getUser().getScreen_name() + ":" + msg.getText());
             dao.setStatus(content);
-            return dao.sendNewMsg();
+            try {
+                return dao.sendNewMsg();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onCancelled(MessageBean s) {
+            super.onCancelled(s);
+            if (this.e != null) {
+                Toast.makeText(RepostNewActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
+
+            }
         }
 
         @Override

@@ -20,7 +20,7 @@ import java.util.Map;
 public class CommentsTimeLineByIdDao {
 
 
-    public CommentListBean getGSONMsgList() {
+    public CommentListBean getGSONMsgList() throws WeiboException {
 
         String url = URLHelper.getCommentListById();
 
@@ -34,12 +34,7 @@ public class CommentsTimeLineByIdDao {
         map.put("filter_by_author", filter_by_author);
 
 
-        String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();
-        }
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
 
         Gson gson = new Gson();

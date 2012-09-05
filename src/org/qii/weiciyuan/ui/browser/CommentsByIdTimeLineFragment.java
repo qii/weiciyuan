@@ -20,6 +20,7 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.CommentsTimeLineByIdDao;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -217,7 +218,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     }
 
     class SimpleTask extends AsyncTask<Void, Void, CommentBean> {
-
+        WeiboException e;
         SendProgressFragment progressFragment = new SendProgressFragment();
 
         @Override
@@ -242,7 +243,22 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         @Override
         protected CommentBean doInBackground(Void... params) {
             CommentNewMsgDao dao = new CommentNewMsgDao(token, id, et.getText().toString());
-            return dao.sendNewMsg();
+            try {
+                return dao.sendNewMsg();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onCancelled(CommentBean commentBean) {
+            super.onCancelled(commentBean);
+            if (this.e != null) {
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+
+            }
         }
 
         @Override
@@ -414,6 +430,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
 
     class FriendsTimeLineGetNewMsgListTask extends MyAsyncTask<Void, CommentListBean, CommentListBean> {
+        WeiboException e;
 
         @Override
         protected void onPreExecute() {
@@ -440,10 +457,25 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             if (getList().getComments().size() > 0) {
                 dao.setSince_id(getList().getComments().get(0).getId());
             }
-            CommentListBean result = dao.getGSONMsgList();
+            CommentListBean result = null;
+            try {
+                result = dao.getGSONMsgList();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return null;
+            }
 
             return result;
 
+        }
+
+        @Override
+        protected void onCancelled(CommentListBean commentListBean) {
+            super.onCancelled(commentListBean);
+            cleanWork();
+            if (this.e != null)
+                Toast.makeText(getActivity(), this.e.getError(), Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -465,6 +497,15 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
                 }
             }
+            cleanWork();
+            invlidateTabText();
+            super.onPostExecute(newValue);
+
+        }
+
+
+        private void cleanWork() {
+            headerView.findViewById(R.id.header_progress).clearAnimation();
             headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
             if (bean.getComments().size() == 0) {
@@ -472,14 +513,13 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             } else {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             }
-            invlidateTabText();
-            super.onPostExecute(newValue);
-
         }
     }
 
 
     class FriendsTimeLineGetOlderMsgListTask extends MyAsyncTask<Void, CommentListBean, CommentListBean> {
+        WeiboException e;
+
         @Override
         protected void onPreExecute() {
             showListView();
@@ -505,11 +545,28 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             if (getList().getComments().size() > 0) {
                 dao.setMax_id(getList().getComments().get(getList().getComments().size() - 1).getId());
             }
-            CommentListBean result = dao.getGSONMsgList();
+            CommentListBean result = null;
+            try {
+                result = dao.getGSONMsgList();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return null;
+            }
 
             return result;
 
         }
+
+        @Override
+        protected void onCancelled(CommentListBean commentListBean) {
+            super.onCancelled(commentListBean);
+            cleanWork();
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
+            if (this.e != null)
+                Toast.makeText(getActivity(), this.e.getError(), Toast.LENGTH_SHORT).show();
+        }
+
 
         @Override
         protected void onPostExecute(CommentListBean newValue) {
@@ -523,11 +580,16 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
             }
 
-            footerView.findViewById(R.id.refresh).clearAnimation();
-            footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
+            cleanWork();
             timeLineAdapter.notifyDataSetChanged();
             invlidateTabText();
             super.onPostExecute(newValue);
+        }
+
+        private void cleanWork() {
+            footerView.findViewById(R.id.refresh).clearAnimation();
+            footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
+            timeLineAdapter.notifyDataSetChanged();
         }
     }
 
