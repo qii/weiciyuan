@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class StatusesTimeLineDao {
 
-    public MessageListBean getGSONMsgList() {
+    public MessageListBean getGSONMsgList() throws WeiboException {
 
         String url = URLHelper.getStatusesTimeLineById();
 
@@ -36,12 +36,7 @@ public class StatusesTimeLineDao {
         map.put("trim_user", trim_user);
 
 
-        String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();
-        }
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
 
         Gson gson = new Gson();

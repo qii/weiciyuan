@@ -6,13 +6,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.*;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
@@ -271,6 +270,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     }
 
     class UserListGetNewDataTask extends AsyncTask<Void, UserListBean, UserListBean> {
+        WeiboException e;
 
         @Override
         protected void onPreExecute() {
@@ -279,23 +279,31 @@ public abstract class AbstractUserListFragment extends Fragment {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
             headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
-            Animation rotateAnimation = new RotateAnimation(0f, 360f,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotateAnimation.setDuration(1000);
-            rotateAnimation.setRepeatCount(-1);
-            rotateAnimation.setRepeatMode(Animation.RESTART);
-            rotateAnimation.setInterpolator(new LinearInterpolator());
-            headerView.findViewById(R.id.header_progress).startAnimation(rotateAnimation);
+            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
             listView.setSelection(0);
         }
 
 
         @Override
         protected UserListBean doInBackground(Void... params) {
-
-            return getDoInBackgroundNewData();
+            try {
+                return getDoInBackgroundNewData();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+            }
+            return null;
 
         }
+
+        @Override
+        protected void onCancelled(UserListBean newValue) {
+            super.onCancelled(newValue);
+            if (this.e != null)
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+            cleanWork();
+        }
+
 
         @Override
         protected void onPostExecute(UserListBean newValue) {
@@ -315,6 +323,14 @@ public abstract class AbstractUserListFragment extends Fragment {
 
                 }
             }
+            cleanWork();
+            getActivity().invalidateOptionsMenu();
+            super.onPostExecute(newValue);
+
+        }
+
+        private void cleanWork() {
+            headerView.findViewById(R.id.header_progress).clearAnimation();
             headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
             headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
             isBusying = false;
@@ -323,9 +339,6 @@ public abstract class AbstractUserListFragment extends Fragment {
             } else {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             }
-            getActivity().invalidateOptionsMenu();
-            super.onPostExecute(newValue);
-
         }
     }
 
@@ -338,6 +351,8 @@ public abstract class AbstractUserListFragment extends Fragment {
 
 
     class UserListGetOlderDataTask extends AsyncTask<Void, UserListBean, UserListBean> {
+        WeiboException e;
+
         @Override
         protected void onPreExecute() {
             showListView();
@@ -346,14 +361,7 @@ public abstract class AbstractUserListFragment extends Fragment {
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
             View view = footerView.findViewById(R.id.refresh);
             view.setVisibility(View.VISIBLE);
-
-            Animation rotateAnimation = new RotateAnimation(0f, 360f,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotateAnimation.setDuration(1000);
-            rotateAnimation.setRepeatCount(-1);
-            rotateAnimation.setRepeatMode(Animation.RESTART);
-            rotateAnimation.setInterpolator(new LinearInterpolator());
-            view.startAnimation(rotateAnimation);
+            view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
 
         }
 
@@ -361,7 +369,23 @@ public abstract class AbstractUserListFragment extends Fragment {
         protected UserListBean doInBackground(Void... params) {
 
 
-            return getDoInBackgroundOldData();
+            try {
+                return getDoInBackgroundOldData();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onCancelled(UserListBean newValue) {
+            super.onCancelled(newValue);
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.click_to_load_older_message));
+            if (this.e != null)
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+            cleanWork();
 
         }
 
@@ -373,19 +397,24 @@ public abstract class AbstractUserListFragment extends Fragment {
 
             }
 
-            isBusying = false;
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
-            footerView.findViewById(R.id.refresh).clearAnimation();
-            footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
+            cleanWork();
             timeLineAdapter.notifyDataSetChanged();
             getActivity().invalidateOptionsMenu();
             super.onPostExecute(newValue);
         }
+
+
+        private void cleanWork() {
+            isBusying = false;
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
+            footerView.findViewById(R.id.refresh).clearAnimation();
+            footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
+        }
     }
 
-    protected abstract UserListBean getDoInBackgroundNewData();
+    protected abstract UserListBean getDoInBackgroundNewData() throws WeiboException;
 
-    protected abstract UserListBean getDoInBackgroundOldData();
+    protected abstract UserListBean getDoInBackgroundOldData() throws WeiboException;
 
 
 }

@@ -11,6 +11,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.dao.send.ReplyToCommentMsgDao;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
@@ -32,7 +33,7 @@ public class ReplyToCommentNewActivity extends AbstractAppActivity {
 
         token = getIntent().getStringExtra("token");
         bean = (CommentBean) getIntent().getSerializableExtra("msg");
-        getActionBar().setTitle("@"+bean.getUser().getScreen_name());
+        getActionBar().setTitle("@" + bean.getUser().getScreen_name());
         et = (EditText) findViewById(R.id.status_new_content);
     }
 
@@ -65,6 +66,7 @@ public class ReplyToCommentNewActivity extends AbstractAppActivity {
     class SimpleTask extends AsyncTask<Void, Void, CommentBean> {
 
         SendProgressFragment progressFragment = new SendProgressFragment();
+        WeiboException e;
 
         @Override
         protected void onPreExecute() {
@@ -88,7 +90,22 @@ public class ReplyToCommentNewActivity extends AbstractAppActivity {
         @Override
         protected CommentBean doInBackground(Void... params) {
             ReplyToCommentMsgDao dao = new ReplyToCommentMsgDao(token, bean, ((EditText) findViewById(R.id.status_new_content)).getText().toString());
-            return dao.reply();
+            try {
+                return dao.reply();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onCancelled(CommentBean commentBean) {
+            super.onCancelled(commentBean);
+            if (this.e != null) {
+                Toast.makeText(ReplyToCommentNewActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
+
+            }
         }
 
         @Override

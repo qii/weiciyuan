@@ -18,7 +18,7 @@ import java.util.*;
  */
 public class FriendsTimeLineTagDao {
 
-    private String getMsgListJson() {
+    private String getMsgListJson() throws WeiboException {
         String url = URLHelper.getTags();
 
         Map<String, String> map = new HashMap<String, String>();
@@ -27,17 +27,14 @@ public class FriendsTimeLineTagDao {
         map.put("count", count);
         map.put("page", page);
 
-        String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();
-        }
+
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+
 
         return jsonData;
     }
 
-    public List<TagBean> getGSONMsgList() {
+    public List<TagBean> getGSONMsgList() throws WeiboException {
 
         String json = getMsgListJson();
         List<TagBean> tagBeanList = new ArrayList<TagBean>();

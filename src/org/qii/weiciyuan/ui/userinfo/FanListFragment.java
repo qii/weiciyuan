@@ -6,6 +6,7 @@ import android.view.MenuInflater;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.user.FanListDao;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 
 /**
@@ -28,7 +29,7 @@ public class FanListFragment extends AbstractUserListFragment {
     }
 
     @Override
-    protected UserListBean getDoInBackgroundNewData() {
+    protected UserListBean getDoInBackgroundNewData() throws WeiboException {
         FanListDao dao = new FanListDao(((IToken) getActivity()).getToken(), uid);
 
         if (getList().getUsers().size() > 0) {
@@ -39,7 +40,7 @@ public class FanListFragment extends AbstractUserListFragment {
     }
 
     @Override
-    protected UserListBean getDoInBackgroundOldData() {
+    protected UserListBean getDoInBackgroundOldData() throws WeiboException {
         FanListDao dao = new FanListDao(((IToken) getActivity()).getToken(), uid);
         if (getList().getUsers().size() > 0) {
             dao.setCursor(bean.getNext_cursor());

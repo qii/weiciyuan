@@ -53,7 +53,7 @@ public class MainCommentsTimeLineDao {
         this.access_token = access_token;
     }
 
-    public CommentListBean getGSONMsgList() {
+    public CommentListBean getGSONMsgList() throws WeiboException {
 
         String url = URLHelper.getCommentList();
 
@@ -67,12 +67,7 @@ public class MainCommentsTimeLineDao {
         map.put("filter_by_source", filter_by_source);
 
 
-        String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
 
         Gson gson = new Gson();

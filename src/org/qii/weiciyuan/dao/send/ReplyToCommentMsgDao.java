@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class ReplyToCommentMsgDao {
 
-    public CommentBean reply() {
+    public CommentBean reply() throws WeiboException {
         String url = URLHelper.reply_Comment();
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
@@ -29,13 +29,9 @@ public class ReplyToCommentMsgDao {
         map.put("comment_ori", comment_ori);
         map.put("without_mention", without_mention);
 
-        String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();
 
-        }
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
+
 
         Gson gson = new Gson();
 

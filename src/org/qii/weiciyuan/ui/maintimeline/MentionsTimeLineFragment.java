@@ -18,6 +18,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
@@ -126,7 +127,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
 
     @Override
-    protected MessageListBean getDoInBackgroundNewData() {
+    protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
         MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
         if (getList().getStatuses().size() > 0) {
             dao.setSince_id(getList().getStatuses().get(0).getId());
@@ -153,7 +154,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
-    protected MessageListBean getDoInBackgroundOldData() {
+    protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
         MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
         if (getList().getStatuses().size() > 0) {
             dao.setMax_id(getList().getStatuses().get(getList().getStatuses().size() - 1).getId());

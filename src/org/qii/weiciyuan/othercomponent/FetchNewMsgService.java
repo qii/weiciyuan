@@ -10,6 +10,7 @@ import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.error.WeiboException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +40,7 @@ public class FetchNewMsgService extends Service {
 
 
     class SimpleTask extends AsyncTask<Void, Void, Map<String, Integer>> {
-
+        WeiboException e;
         AccountBean accountBean;
 
         @Override
@@ -61,7 +62,13 @@ public class FetchNewMsgService extends Service {
             if (commentLineBean.getComments().size() > 0) {
                 commentDao.setSince_id(commentLineBean.getComments().get(0).getId());
             }
-            commentResult = commentDao.getGSONMsgList();
+            try {
+                commentResult = commentDao.getGSONMsgList();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return null;
+            }
             if (commentResult != null) {
                 map.put("comment", commentResult.getComments().size());
             } else {
@@ -72,7 +79,12 @@ public class FetchNewMsgService extends Service {
             if (messageListBean.getStatuses().size() > 0) {
                 mentionDao.setSince_id(messageListBean.getStatuses().get(0).getId());
             }
-            repostResult = mentionDao.getGSONMsgList();
+            try {
+                repostResult = mentionDao.getGSONMsgList();
+            } catch (WeiboException e) {
+                cancel(true);
+                return null;
+            }
             if (repostResult != null) {
                 map.put("repost", repostResult.getStatuses().size());
             } else {

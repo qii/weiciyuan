@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class MainMentionsTimeLineDao {
 
-    private String getMsgListJson() {
+    private String getMsgListJson() throws WeiboException {
         String url = URLHelper.getMentionsTimeLine();
 
         Map<String, String> map = new HashMap<String, String>();
@@ -33,20 +33,16 @@ public class MainMentionsTimeLineDao {
         map.put("page", page);
         map.put("filter_by_author", filter_by_author);
         map.put("filter_by_source", filter_by_source);
-        map.put("filter_by_type",filter_by_type);
+        map.put("filter_by_type", filter_by_type);
         map.put("trim_user", trim_user);
 
-        String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
         return jsonData;
     }
 
-    public MessageListBean getGSONMsgList() {
+    public MessageListBean getGSONMsgList() throws WeiboException {
 
         String json = getMsgListJson();
         Gson gson = new Gson();

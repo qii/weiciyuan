@@ -16,11 +16,10 @@ import java.util.Map;
 /**
  * User: Jiang Qi
  * Date: 12-8-16
- * Time: 下午4:18
  */
 public class FanListDao {
 
-    public UserListBean getGSONMsgList() {
+    public UserListBean getGSONMsgList() throws WeiboException {
 
         String url = URLHelper.getFanListById();
 
@@ -32,12 +31,8 @@ public class FanListDao {
         map.put("count", count);
         map.put("screen_name", screen_name);
 
-        String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();
-        }
+
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
 
         Gson gson = new Gson();

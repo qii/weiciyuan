@@ -12,6 +12,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
@@ -93,7 +94,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
 
     @Override
-    protected MessageListBean getDoInBackgroundNewData() {
+    protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
 
         String token = ((IToken) getActivity()).getToken();
         String id = ((IUserInfo) getActivity()).getUser().getId();
@@ -114,7 +115,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     }
 
     @Override
-    protected MessageListBean getDoInBackgroundOldData() {
+    protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
         String token = ((IToken) getActivity()).getToken();
         String id = ((IUserInfo) getActivity()).getUser().getId();
         String screenName = ((IUserInfo) getActivity()).getUser().getScreen_name();
