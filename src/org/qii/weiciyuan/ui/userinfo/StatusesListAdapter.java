@@ -14,6 +14,7 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
@@ -131,7 +132,7 @@ public class StatusesListAdapter extends BaseAdapter {
         }
         holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
         holder.content.setText(msg.getText());
-//        ListViewTool.addJustHighLightLinks(holder.content);
+        ListViewTool.addJustHighLightLinks(holder.content);
         holder.time.setText(msg.getListviewItemShowTime());
 
 
@@ -163,7 +164,7 @@ public class StatusesListAdapter extends BaseAdapter {
 
         if (repost_msg.getUser() != null) {
             holder.repost_content.setText("@" + repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
-//            ListViewTool.addJustHighLightLinks(holder.repost_content);
+            ListViewTool.addJustHighLightLinks(holder.repost_content);
         } else {
             holder.repost_content.setText(repost_msg.getText());
 
