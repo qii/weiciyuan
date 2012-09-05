@@ -382,7 +382,7 @@ public abstract class AbstractUserListFragment extends Fragment {
         @Override
         protected void onCancelled(UserListBean newValue) {
             super.onCancelled(newValue);
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.click_to_load_older_message));
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
             if (this.e != null)
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             cleanWork();

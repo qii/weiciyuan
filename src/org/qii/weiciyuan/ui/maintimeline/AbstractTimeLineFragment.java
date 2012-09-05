@@ -258,7 +258,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         protected void onPostExecute(T newValue) {
             oldMsgOnPostExecute(newValue);
             if (newValue.getSize() > 1) {
-                ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.click_to_load_older_message));
+                ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
             } else if (newValue.getSize() == 1) {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
             }
@@ -269,7 +269,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         @Override
         protected void onCancelled(T messageListBean) {
             super.onCancelled(messageListBean);
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.click_to_load_older_message));
+            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
             if (this.e != null)
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             cleanWork();
