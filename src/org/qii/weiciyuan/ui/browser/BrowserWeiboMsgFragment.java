@@ -339,9 +339,22 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+        buildShareActionMenu();
         refreshItem = menu.findItem(R.id.menu_refresh);
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void buildShareActionMenu() {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, msg.getText());
+        PackageManager packageManager = getActivity().getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
+        boolean isIntentSafe = activities.size() > 0;
+        if (isIntentSafe && mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(sharingIntent);
+        }
     }
 
     @Override
@@ -355,20 +368,12 @@ public class BrowserWeiboMsgFragment extends Fragment {
                 break;
             case R.id.menu_share:
 
-                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, msg.getText());
-                PackageManager packageManager = getActivity().getPackageManager();
-                List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
-                boolean isIntentSafe = activities.size() > 0;
-                if (isIntentSafe && mShareActionProvider != null) {
-                    mShareActionProvider.setShareIntent(sharingIntent);
-                }
+                buildShareActionMenu();
                 return true;
             case R.id.menu_copy:
                 ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                 cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", content.getText().toString()));
-                Toast.makeText(getActivity(),getString(R.string.copy_successfully),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
                 break;
             default:
                 return super.onOptionsItemSelected(item);

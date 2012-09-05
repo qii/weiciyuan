@@ -184,10 +184,10 @@ public class RepostsByIdTimeLineFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (position - 1 < getList().getReposts().size()) {
+                if (position - 1 < getList().getReposts().size() && position - 1 > 0) {
 
                     listViewItemClick(parent, view, position - 1, id);
-                } else {
+                } else if (position - 1 >= getList().getReposts().size()) {
 
                     listViewFooterViewClick(view);
                 }

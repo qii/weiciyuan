@@ -2,6 +2,13 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:id="@+id/menu_share"
+          android:title="@string/share"
+          android:icon="?share"
+          android:showAsAction="ifRoom|withText"
+          android:actionProviderClass="android.widget.ShareActionProvider"
+            />
+
     <item android:id="@+id/menu_refresh"
           android:icon="?refresh"
           android:title="@string/refresh"
@@ -15,12 +22,6 @@
           android:showAsAction="ifRoom|withText"
             />
 
-    <item android:id="@+id/menu_share"
-          android:title="@string/share"
-          android:icon="?share"
-          android:showAsAction="ifRoom|withText"
-          android:actionProviderClass="android.widget.ShareActionProvider"
-            />
 
     <item android:id="@+id/menu_copy"
           android:title="@string/copy_to_clipboard"
