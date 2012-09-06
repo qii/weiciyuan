@@ -135,7 +135,7 @@ public class StatusesListAdapter extends BaseAdapter {
             holder.content.setText(msg.getSpannableString());
         } else {
             ListViewTool.addJustHighLightLinks(msg);
-            holder.content.setText(msg.getText());
+            holder.content.setText(msg.getSpannableString());
         }
         holder.time.setText(msg.getListviewItemShowTime());
 
