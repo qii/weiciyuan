@@ -241,7 +241,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     @Override
     protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
         MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
-        if (getList().getComments().size() > 0) {
+        if (getList() != null && getList().getComments().size() > 0) {
             dao.setSince_id(getList().getComments().get(0).getId());
         }
         CommentListBean result = dao.getGSONMsgList();
