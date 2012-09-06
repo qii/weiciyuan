@@ -23,6 +23,7 @@ import android.os.Bundle;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -49,8 +50,13 @@ public class Utility {
                 first = false;
             else
                 sb.append("&");
-            sb.append(URLEncoder.encode(parameters.getKey(loc)) + "="
-                    + URLEncoder.encode(parameters.getValue(loc)));
+            try {
+                sb.append(URLEncoder.encode(parameters.getKey(loc), "UTF-8") + "="
+                        + URLEncoder.encode(parameters.getValue(loc), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+
+            }
         }
         return sb.toString();
     }
@@ -61,7 +67,12 @@ public class Utility {
             String array[] = s.split("&");
             for (String parameter : array) {
                 String v[] = parameter.split("=");
-                params.putString(URLDecoder.decode(v[0]), URLDecoder.decode(v[1]));
+                try {
+                    params.putString(URLDecoder.decode(v[0], "UTF-8"), URLDecoder.decode(v[1], "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+
+                }
             }
         }
         return params;

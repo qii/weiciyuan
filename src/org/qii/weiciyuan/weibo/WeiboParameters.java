@@ -22,10 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * A list queue for saving keys and values.
- * Using it to construct http header or get/post parameters.
- */
+
 public class WeiboParameters {
 
 	private Bundle mParameters = new Bundle();
@@ -59,12 +56,7 @@ public class WeiboParameters {
 	}
 	
 	
-	public int getLocation(String key){
-		if(this.mKeys.contains(key)){
-			return this.mKeys.indexOf(key);
-		}
-		return -1;
-	}
+
 	
 	public String getKey(int location){
 		if(location >= 0 && location < this.mKeys.size()){
@@ -73,12 +65,7 @@ public class WeiboParameters {
 		return "";
 	}
 	
-	
-	public String getValue(String key){
-		String rlt = this.mParameters.getString(key);
-		return rlt;
-	}
-	
+
 	public String getValue(int location){
 		String key = this.mKeys.get(location);
 		String rlt = this.mParameters.getString(key);
@@ -90,16 +77,6 @@ public class WeiboParameters {
 		return mKeys.size();
 	}
 	
-	public void addAll(WeiboParameters parameters){
-		for(int i = 0; i < parameters.size(); i++){
-			this.add(parameters.getKey(i), parameters.getValue(i));
-		}
-		
-	}
-	
-	public void clear(){
-		this.mKeys.clear();
-		this.mParameters.clear();
-	}
+
 	
 }
