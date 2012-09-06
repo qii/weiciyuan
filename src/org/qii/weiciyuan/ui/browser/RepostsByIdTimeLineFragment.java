@@ -339,19 +339,24 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         private void bindViewData(ViewHolder holder, int position) {
 
             final MessageBean msg = getList().getReposts().get(position);
-            holder.username.setText(msg.getUser().getScreen_name());
-            String image_url = msg.getUser().getProfile_image_url();
-            if (!TextUtils.isEmpty(image_url)) {
-                downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
-                holder.avatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                        intent.putExtra("token", ((IToken) getActivity()).getToken());
-                        intent.putExtra("user", msg.getUser());
-                        startActivity(intent);
-                    }
-                });
+            if (msg.getUser() != null) {
+                holder.username.setText(msg.getUser().getScreen_name());
+                String image_url = msg.getUser().getProfile_image_url();
+                if (!TextUtils.isEmpty(image_url)) {
+                    downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
+                    holder.avatar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                            intent.putExtra("token", ((IToken) getActivity()).getToken());
+                            intent.putExtra("user", msg.getUser());
+                            startActivity(intent);
+                        }
+                    });
+                }
+            } else {
+                holder.username.setVisibility(View.INVISIBLE);
+                holder.avatar.setVisibility(View.INVISIBLE);
             }
             holder.time.setText(msg.getListviewItemShowTime());
             holder.content.setText(msg.getListViewSpannableString());

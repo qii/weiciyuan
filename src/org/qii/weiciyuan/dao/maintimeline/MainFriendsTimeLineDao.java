@@ -11,6 +11,8 @@ import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.utils.*;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,11 +53,21 @@ public class MainFriendsTimeLineDao {
             AppLogger.e(e.getMessage());
             return null;
         }
-        if (value != null && value.getSize() > 0) {
-            for (MessageBean b : value.getStatuses()) {
-                b.getListViewSpannableString();
+        if (value != null && value.getStatuses().size() > 0) {
+            List<MessageBean> msgList = value.getStatuses();
+            Iterator<MessageBean> iterator = msgList.iterator();
+            while (iterator.hasNext()) {
+                MessageBean msg = iterator.next();
+                if (msg.getUser() == null) {
+                    iterator.remove();
+                } else {
+                    msg.getListViewSpannableString();
+                }
             }
+
         }
+
+
         return value;
     }
 

@@ -12,6 +12,8 @@ import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,9 +49,18 @@ public class RepostsTimeLineByIdDao {
         }
 
         if (value != null && value.getReposts().size() > 0) {
-            for (MessageBean b : value.getReposts()) {
-                b.getListViewSpannableString();
+            List<MessageBean> msgList = value.getReposts();
+            Iterator<MessageBean> iterator = msgList.iterator();
+            while (iterator.hasNext()) {
+
+                MessageBean msg = iterator.next();
+                if (msg.getUser() == null) {
+                    iterator.remove();
+                } else {
+                    msg.getListViewSpannableString();
+                }
             }
+
         }
 
         return value;

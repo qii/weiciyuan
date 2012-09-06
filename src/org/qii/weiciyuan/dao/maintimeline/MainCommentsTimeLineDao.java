@@ -12,6 +12,8 @@ import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -81,10 +83,19 @@ public class MainCommentsTimeLineDao {
             AppLogger.e(e.getMessage().toString());
         }
 
-        if (value != null) {
-            for (CommentBean b : value.getComments()) {
-                b.getListViewSpannableString();
+        if (value != null && value.getComments().size() > 0) {
+            List<CommentBean> msgList = value.getComments();
+            Iterator<CommentBean> iterator = msgList.iterator();
+            while (iterator.hasNext()) {
+
+                CommentBean msg = iterator.next();
+                if (msg.getUser() == null) {
+                    iterator.remove();
+                } else {
+                    msg.getListViewSpannableString();
+                }
             }
+
         }
         return value;
     }
