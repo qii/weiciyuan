@@ -31,6 +31,11 @@ import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
  */
 public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentListBean> {
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("bean", bean);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
