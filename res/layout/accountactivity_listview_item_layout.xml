@@ -12,7 +12,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/imageView_avatar" android:layout_gravity="center"
-            android:background="@drawable/account_black"
+            android:background="?account"
             android:layout_marginRight="5dp"/>
     <TextView
             android:gravity="center_vertical"
