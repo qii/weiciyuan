@@ -45,7 +45,7 @@ public class UpdateString implements CharSequence {
             @Override
             public void run() {
                 while (!Thread.currentThread().isInterrupted()) {
-                    SystemClock.sleep(1000);
+                    SystemClock.sleep(500);
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
