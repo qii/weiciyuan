@@ -275,6 +275,34 @@ public class MyLinkify {
         }
     }
 
+
+    public static final SpannableString addJUstHighLightLinks(CharSequence text, int mask) {
+        if (mask == 0) {
+            return SpannableString.valueOf(text);
+        }
+
+        CharSequence t = text;
+
+        if (t instanceof Spannable) {
+            if (addLinks((Spannable) t, mask)) {
+                //addLinkMovementMethod(text);
+                return SpannableString.valueOf(t);
+            }
+
+        } else {
+            SpannableString s = SpannableString.valueOf(t);
+
+            if (addLinks(s, mask)) {
+                // addLinkMovementMethod(text);
+                return s;
+
+            }
+
+        }
+
+        return SpannableString.valueOf(text);
+    }
+
     private static final void addLinkMovementMethod(TextView t) {
         MovementMethod m = t.getMovementMethod();
 

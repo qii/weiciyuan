@@ -46,6 +46,8 @@ public class ListViewTool {
         String scheme = "org.qii.weiciyuan://";
         value = MyLinkify.getJustHighLightLinks(txt, pattern, scheme, null, mentionFilter);
 
+        value = MyLinkify.addJUstHighLightLinks(value, MyLinkify.WEB_URLS);
+
 
         Pattern dd = Pattern.compile("#([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)#");
         value = MyLinkify.getJustHighLightLinks(value, dd, scheme, null, mentionFilter);
