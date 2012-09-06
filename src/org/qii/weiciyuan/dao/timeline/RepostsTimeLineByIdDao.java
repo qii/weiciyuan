@@ -10,8 +10,6 @@ import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
-import org.qii.weiciyuan.support.utils.ListViewTool;
-import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,9 +48,7 @@ public class RepostsTimeLineByIdDao {
 
         if (value != null && value.getReposts().size() > 0) {
             for (MessageBean b : value.getReposts()) {
-                TimeTool.dealMills(b);
-                ListViewTool.addJustHighLightLinks(b);
-
+                b.getListViewSpannableString();
             }
         }
 

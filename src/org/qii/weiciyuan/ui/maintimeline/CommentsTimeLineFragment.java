@@ -17,7 +17,6 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -168,8 +167,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             holder.repost_content.setVisibility(View.VISIBLE);
             if (repost_msg.getUser() != null) {
                 holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
-                holder.repost_content.setText("@" + repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
-                ListViewTool.addJustHighLightLinks(holder.repost_content);
+                holder.repost_content.setText(repost_msg.getListViewSpannableString());
             } else {
                 holder.repost_content.setText(repost_msg.getText());
 

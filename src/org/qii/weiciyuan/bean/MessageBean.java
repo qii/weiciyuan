@@ -2,6 +2,7 @@ package org.qii.weiciyuan.bean;
 
 import android.text.SpannableString;
 import android.text.TextUtils;
+import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.io.Serializable;
@@ -187,7 +188,12 @@ public class MessageBean implements Serializable {
     private transient SpannableString listViewSpannableString;
 
     public SpannableString getListViewSpannableString() {
-        return listViewSpannableString;
+        if (!TextUtils.isEmpty(listViewSpannableString)) {
+            return listViewSpannableString;
+        } else {
+            ListViewTool.addJustHighLightLinks(this);
+            return listViewSpannableString;
+        }
     }
 
     public void setListViewSpannableString(SpannableString listViewSpannableString) {

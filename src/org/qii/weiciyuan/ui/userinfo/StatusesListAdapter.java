@@ -165,20 +165,8 @@ public class StatusesListAdapter extends BaseAdapter {
     private void buildRepostContent(final MessageBean repost_msg, ViewHolder holder, int position) {
         holder.repost_content.setVisibility(View.VISIBLE);
         holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
+        holder.repost_content.setText(repost_msg.getListViewSpannableString());
 
-        if (repost_msg.getUser() != null) {
-            holder.repost_content.setText("@" + repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
-            if (!TextUtils.isEmpty(repost_msg.getListViewSpannableString())) {
-                holder.repost_content.setText(repost_msg.getListViewSpannableString());
-            } else {
-                ListViewTool.addJustHighLightLinks(repost_msg);
-                holder.repost_content.setText(repost_msg.getListViewSpannableString());
-            }
-
-        } else {
-            holder.repost_content.setText(repost_msg.getText());
-
-        }
         if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic()) && GlobalContext.getInstance().isEnablePic()) {
             buildPic(repost_msg, holder.repost_content_pic, position);
         }

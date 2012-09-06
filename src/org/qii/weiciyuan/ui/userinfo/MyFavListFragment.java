@@ -208,7 +208,7 @@ public class MyFavListFragment extends Fragment {
                 downloadAvatar(holder.avatar, user.getProfile_image_url(), position, listView);
             }
             holder.time.setText(getList().getFavorites().get(position).getStatus().getTimeInFormat());
-            holder.content.setText(getList().getFavorites().get(position).getStatus().getText());
+            holder.content.setText(getList().getFavorites().get(position).getStatus().getListViewSpannableString());
 
         }
 

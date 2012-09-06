@@ -2,6 +2,7 @@ package org.qii.weiciyuan.dao.fav;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import org.qii.weiciyuan.bean.FavBean;
 import org.qii.weiciyuan.bean.FavListBean;
 import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -49,6 +50,12 @@ public class FavListDao {
         } catch (JsonSyntaxException e) {
             ActivityUtils.showTips("发生错误，请重刷");
             AppLogger.e(e.getMessage());
+        }
+
+        if (value != null) {
+            for (FavBean b : value.getFavorites()) {
+                b.getStatus().getListViewSpannableString();
+            }
         }
 
         return value;

@@ -354,7 +354,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
                 });
             }
             holder.time.setText(msg.getListviewItemShowTime());
-            holder.content.setText(msg.getText());
+            holder.content.setText(msg.getListViewSpannableString());
 
         }
 

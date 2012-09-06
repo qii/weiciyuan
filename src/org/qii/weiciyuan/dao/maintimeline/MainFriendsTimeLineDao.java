@@ -53,9 +53,7 @@ public class MainFriendsTimeLineDao {
         }
         if (value != null && value.getSize() > 0) {
             for (MessageBean b : value.getStatuses()) {
-                TimeTool.dealMills(b);
-                ListViewTool.addJustHighLightLinks(b);
-
+                b.getListViewSpannableString();
             }
         }
         return value;

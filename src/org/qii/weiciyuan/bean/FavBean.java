@@ -5,10 +5,9 @@ import java.io.Serializable;
 /**
  * User: qii
  * Date: 12-8-18
- * Time: 上午10:32
  */
 public class FavBean implements Serializable {
-    private MessageBean status ;
+    private MessageBean status;
     private String favorited_time;
 
     public MessageBean getStatus() {

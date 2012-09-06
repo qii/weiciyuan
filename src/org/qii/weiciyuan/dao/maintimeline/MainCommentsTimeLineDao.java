@@ -2,6 +2,7 @@ package org.qii.weiciyuan.dao.maintimeline;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -80,7 +81,11 @@ public class MainCommentsTimeLineDao {
             AppLogger.e(e.getMessage().toString());
         }
 
-
+        if (value != null) {
+            for (CommentBean b : value.getComments()) {
+                b.getListViewSpannableString();
+            }
+        }
         return value;
     }
 }

@@ -73,6 +73,12 @@ public class MainMentionsTimeLineDao {
 
         }
 
+        if (value != null) {
+            for (MessageBean b : value.getStatuses()) {
+                b.getListViewSpannableString();
+            }
+        }
+
         return value;
     }
 
