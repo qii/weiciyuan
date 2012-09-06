@@ -55,7 +55,7 @@ public class UpdateString implements CharSequence {
                         mActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (mTextView.getTag().equals(bean.getText())) {
+                                if (mTextView.getTag().equals(bean.getId())) {
                                     String newValue = bean.getListviewItemShowTime();
                                     if (!newValue.equals(mTextView.getText().toString()))
                                         mTextView.setText(newValue);

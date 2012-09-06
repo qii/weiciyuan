@@ -342,7 +342,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             if (!holder.time.getText().toString().equals(time)) {
                 holder.time.setText(updateString);
             }
-            holder.time.setTag(msg.getText());
+            holder.time.setTag(msg.getId());
 
             holder.content.setText(msg.getListViewSpannableString());
 

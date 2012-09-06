@@ -164,7 +164,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             if (!holder.time.getText().toString().equals(time)) {
                 holder.time.setText(updateString);
             }
-            holder.time.setTag(msg.getText());
+            holder.time.setTag(msg.getId());
 
             holder.repost_content.setVisibility(View.GONE);
             holder.repost_content_pic.setVisibility(View.GONE);

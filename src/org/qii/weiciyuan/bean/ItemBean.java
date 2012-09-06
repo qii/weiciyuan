@@ -20,4 +20,6 @@ public abstract class ItemBean implements Serializable {
     public abstract void setMills(long mills);
 
     public abstract long getMills();
+
+    public abstract String getId();
 }
