@@ -19,6 +19,10 @@ public class CommentOperatorDialog extends DialogFragment {
 
     private CommentBean bean;
 
+    public CommentOperatorDialog() {
+
+    }
+
     public CommentOperatorDialog(CommentBean bean) {
         this.bean = bean;
     }
@@ -36,7 +40,7 @@ public class CommentOperatorDialog extends DialogFragment {
                     case 0:
                         Intent intent = new Intent(getActivity(), ReplyToCommentNewActivity.class);
                         intent.putExtra("msg", bean);
-                        intent.putExtra("token",((IToken)getActivity()).getToken());
+                        intent.putExtra("token", ((IToken) getActivity()).getToken());
                         startActivity(intent);
                         break;
                     case 1:

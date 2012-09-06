@@ -92,6 +92,7 @@
     <string name="take_camera">拍照</string>
     <string name="select_pic">图库</string>
     <string name="send">发送</string>
+    <string name="sending">发送中</string>
     <string name="photo">照片</string>
     <string name="say_something">说点什么吧……</string>
     <string name="left">剩余</string>
