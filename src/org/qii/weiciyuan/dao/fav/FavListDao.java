@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.FavBean;
 import org.qii.weiciyuan.bean.FavListBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
@@ -12,8 +13,7 @@ import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: qii
@@ -53,9 +53,24 @@ public class FavListDao {
         }
 
         if (value != null) {
-            for (FavBean b : value.getFavorites()) {
-                b.getStatus().getListViewSpannableString();
+            List<MessageBean> msgList = new ArrayList<MessageBean>();
+            int size = value.getFavorites().size();
+            for (int i = 0; i < size; i++) {
+                msgList.add(value.getFavorites().get(i).getStatus());
             }
+
+            Iterator<FavBean> iterator = value.getFavorites().iterator();
+
+            while (iterator.hasNext()) {
+
+                FavBean msg = iterator.next();
+                if (msg.getStatus().getUser() == null) {
+                    iterator.remove();
+                } else {
+                    msg.getStatus().getListViewSpannableString();
+                }
+            }
+
         }
 
         return value;
