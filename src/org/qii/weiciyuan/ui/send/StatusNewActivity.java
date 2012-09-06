@@ -1,9 +1,6 @@
 package org.qii.weiciyuan.ui.send;
 
 import android.app.ActionBar;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -381,19 +378,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     }
 
 
-    private class MyAlertDialogFragment extends DialogFragment {
 
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-            String[] items = {getString(R.string.take_camera), getString(R.string.select_pic)};
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(StatusNewActivity.this)
-                    .setTitle(getString(R.string.select))
-                    .setItems(items, StatusNewActivity.this);
-            return builder.create();
-        }
-    }
 
     private void getLocation() {
         LocationManager locationManager = (LocationManager) StatusNewActivity.this
