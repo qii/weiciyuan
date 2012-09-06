@@ -20,6 +20,7 @@ import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.CommentsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.UpdateString;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
@@ -336,7 +337,12 @@ public class CommentsByIdTimeLineFragment extends Fragment {
                     }
                 });
             }
-            holder.time.setText(msg.getListviewItemShowTime());
+            String time = msg.getListviewItemShowTime();
+            UpdateString updateString = new UpdateString(time, holder.time, msg, getActivity());
+            if (!holder.time.getText().toString().equals(time)) {
+                holder.time.setText(updateString);
+            }
+            holder.time.setTag(msg.getText());
 
             holder.content.setText(msg.getListViewSpannableString());
 

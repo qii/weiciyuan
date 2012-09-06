@@ -5,15 +5,11 @@ import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * User: Jiang Qi
  * Date: 12-8-2
  */
-public class CommentBean implements Serializable {
+public class CommentBean extends ItemBean {
     private String created_at;
     private String id;
     private String text;
@@ -37,16 +33,23 @@ public class CommentBean implements Serializable {
         this.listViewSpannableString = listViewSpannableString;
     }
 
+    private long mills;
+
+    public long getMills() {
+        return mills;
+    }
+
+    public void setMills(long mills) {
+        this.mills = mills;
+    }
+
     public String getCreated_at() {
-        if (!TextUtils.isEmpty(created_at)) {
-            SimpleDateFormat format = new SimpleDateFormat("kk:mm");
-            return format.format(new Date(created_at));
-        }
-        return "";
+
+        return created_at;
     }
 
     public String getListviewItemShowTime() {
-        return TimeTool.getListTime(created_at);
+        return TimeTool.getListTime(this);
     }
 
 

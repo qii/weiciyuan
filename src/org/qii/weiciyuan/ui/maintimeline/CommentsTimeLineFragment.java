@@ -16,6 +16,7 @@ import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.UpdateString;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -158,7 +159,12 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
             holder.content.setText(msg.getListViewSpannableString());
 
-            holder.time.setText(msg.getListviewItemShowTime());
+            String time = msg.getListviewItemShowTime();
+            UpdateString updateString = new UpdateString(time, holder.time, msg, getActivity());
+            if (!holder.time.getText().toString().equals(time)) {
+                holder.time.setText(updateString);
+            }
+            holder.time.setTag(msg.getText());
 
             holder.repost_content.setVisibility(View.GONE);
             holder.repost_content_pic.setVisibility(View.GONE);

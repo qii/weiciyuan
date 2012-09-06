@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,7 +13,7 @@ import java.util.Date;
  * Date: 12-7-29
  */
 
-public class MessageBean implements Serializable {
+public class MessageBean extends ItemBean {
 
 
     public String getCreated_at() {
