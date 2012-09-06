@@ -14,6 +14,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.othercomponent.FetchNewMsgService;
 import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
@@ -45,7 +46,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         });
 
         task = new CalcCacheSize();
-        // task.execute();
+        task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
         findPreference(SettingActivity.OFFICIAL_WEIBO).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -67,7 +68,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         super.onStop();
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
-        task.cancel(true);
+        if (task != null)
+            task.cancel(true);
     }
 
     @Override
@@ -132,7 +134,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         getActivity().overridePendingTransition(0, 0);
         startActivity(intent);
-        getActivity().overridePendingTransition(R.anim.stay,R.anim.alphaout);
+        getActivity().overridePendingTransition(R.anim.stay, R.anim.alphaout);
     }
 
 
