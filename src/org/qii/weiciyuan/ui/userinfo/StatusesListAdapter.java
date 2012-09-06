@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.support.lib.UpdateString;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
@@ -137,8 +138,8 @@ public class StatusesListAdapter extends BaseAdapter {
             ListViewTool.addJustHighLightLinks(msg);
             holder.content.setText(msg.getListViewSpannableString());
         }
-        holder.time.setText(msg.getListviewItemShowTime());
-
+        holder.time.setText(new UpdateString(msg.getListviewItemShowTime(), holder.time, msg, activity));
+        holder.time.setTag(msg.getText());
 
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);
