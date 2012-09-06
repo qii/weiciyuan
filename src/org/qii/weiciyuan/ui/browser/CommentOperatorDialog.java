@@ -28,7 +28,16 @@ public class CommentOperatorDialog extends DialogFragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("msg", bean);
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        if (savedInstanceState != null)
+            bean = (CommentBean) savedInstanceState.getSerializable("msg");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String[] items = {getString(R.string.reply)};

@@ -23,7 +23,6 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 /**
  * User: qii
  * Date: 12-8-15
- * Time: 下午9:29
  */
 public class PictureDialogFragment extends DialogFragment {
     private MessageBean msg;
@@ -31,6 +30,10 @@ public class PictureDialogFragment extends DialogFragment {
     private ProgressBar pb;
     private FrameLayout fl;
     private PicSimpleBitmapWorkerTask avatarTask;
+
+    public PictureDialogFragment() {
+
+    }
 
     public PictureDialogFragment(MessageBean msg) {
         this.msg = msg;
@@ -54,8 +57,16 @@ public class PictureDialogFragment extends DialogFragment {
             }
         });
 
+        if(savedInstanceState!=null)
+            msg=(MessageBean)savedInstanceState.getSerializable("msg");
 
         return builder.create();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("msg", msg);
     }
 
     @Override
