@@ -1,8 +1,10 @@
 package org.qii.weiciyuan.support.utils;
 
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.widget.TextView;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.lib.MyLinkify;
 
 import java.util.regex.Matcher;
@@ -59,7 +61,21 @@ public class ListViewTool {
 
         bean.setSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
         if (bean.getRetweeted_status() != null) {
-            bean.getRetweeted_status().setSpannableString(ListViewTool.getJustHighLightLinks("@" + bean.getRetweeted_status().getUser().getScreen_name() + "：" + bean.getRetweeted_status().getText()));
+            String name = "";
+            UserBean reUser = bean.getRetweeted_status().getUser();
+            if (reUser != null) {
+                name = reUser.getScreen_name();
+            }
+
+            SpannableString value;
+
+            if (!TextUtils.isEmpty(name)) {
+                value = ListViewTool.getJustHighLightLinks("@" + name + "：" + bean.getRetweeted_status().getText());
+            } else {
+                value = ListViewTool.getJustHighLightLinks(bean.getRetweeted_status().getText());
+            }
+
+            bean.getRetweeted_status().setSpannableString(value);
         }
     }
 
