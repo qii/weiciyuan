@@ -2,6 +2,7 @@ package org.qii.weiciyuan.dao.timeline;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.RepostListBean;
 import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -9,6 +10,8 @@ import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +46,14 @@ public class RepostsTimeLineByIdDao {
         } catch (JsonSyntaxException e) {
             ActivityUtils.showTips("发生错误，请重刷");
             AppLogger.e(e.getMessage());
+        }
+
+        if (value != null && value.getReposts().size() > 0) {
+            for (MessageBean b : value.getReposts()) {
+                TimeTool.dealMills(b);
+                ListViewTool.addJustHighLightLinks(b);
+
+            }
         }
 
         return value;
