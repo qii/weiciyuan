@@ -13,7 +13,6 @@ import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         listView.setAdapter(listAdapter);
 
         getTask = new GetAccountListDBTask();
-        getTask.execute();
+        getTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -100,11 +99,11 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
                 case R.id.menu_remove_account:
                     if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                         removeTask = new RemoveAccountDBTask();
-                        removeTask.execute();
+                        removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     } else if (removeTask.getStatus() == MyAsyncTask.Status.PENDING || removeTask.getStatus() == MyAsyncTask.Status.RUNNING) {
                         removeTask.cancel(true);
                         removeTask = new RemoveAccountDBTask();
-                        removeTask.execute();
+                        removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     }
                     mode.finish();
                     return true;
@@ -188,7 +187,8 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         if (resultCode == RESULT_OK) {
             if (getTask == null || getTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                 getTask = new GetAccountListDBTask();
-                getTask.execute();
+//                getTask.execute();
+                getTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
 
         }
@@ -278,8 +278,8 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
             ImageView imageView = (ImageView) mView.findViewById(R.id.imageView_avatar);
 
             if (!TextUtils.isEmpty(accountList.get(i).getAvatar_url())) {
-                AvatarBitmapWorkerTask avatarTask = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), null, imageView, accountList.get(i).getAvatar_url(), i);
-                avatarTask.execute();
+                commander.downContentPic(imageView,accountList.get(i).getAvatar_url(),i,listView);
+
             }
 
             return mView;

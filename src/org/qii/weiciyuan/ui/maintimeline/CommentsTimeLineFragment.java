@@ -3,7 +3,6 @@ package org.qii.weiciyuan.ui.maintimeline;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.*;
@@ -15,6 +14,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -42,14 +42,14 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
-            new SimpleTask().execute();
+            new SimpleTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
         }
 
     }
 
 
-    private class SimpleTask extends AsyncTask<Object, Object, Object> {
+    private class SimpleTask extends MyAsyncTask<Object, Object, Object> {
 
         @Override
         protected Object doInBackground(Object... params) {

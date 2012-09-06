@@ -131,8 +131,12 @@ public class StatusesListAdapter extends BaseAdapter {
             holder.avatar.setVisibility(View.INVISIBLE);
         }
         holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
-        holder.content.setText(msg.getText());
-        ListViewTool.addJustHighLightLinks(holder.content);
+        if (!TextUtils.isEmpty(msg.getSpannableString())) {
+            holder.content.setText(msg.getSpannableString());
+        } else {
+            ListViewTool.addJustHighLightLinks(msg);
+            holder.content.setText(msg.getText());
+        }
         holder.time.setText(msg.getListviewItemShowTime());
 
 
@@ -164,7 +168,13 @@ public class StatusesListAdapter extends BaseAdapter {
 
         if (repost_msg.getUser() != null) {
             holder.repost_content.setText("@" + repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
-            ListViewTool.addJustHighLightLinks(holder.repost_content);
+            if (!TextUtils.isEmpty(repost_msg.getSpannableString())) {
+                holder.repost_content.setText(repost_msg.getSpannableString());
+            } else {
+                ListViewTool.addJustHighLightLinks(repost_msg);
+                holder.repost_content.setText(repost_msg.getSpannableString());
+            }
+
         } else {
             holder.repost_content.setText(repost_msg.getText());
 

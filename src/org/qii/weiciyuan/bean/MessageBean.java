@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.bean;
 
+import android.text.SpannableString;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
@@ -182,6 +183,16 @@ public class MessageBean implements Serializable {
     private String thumbnail_pic;
     private String bmiddle_pic;
     private String original_pic;
+
+     private transient SpannableString spannableString;
+
+    public SpannableString getSpannableString() {
+        return spannableString;
+    }
+
+    public void setSpannableString(SpannableString spannableString) {
+        this.spannableString = spannableString;
+    }
 
     private long mills;
 

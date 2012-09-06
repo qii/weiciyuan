@@ -248,32 +248,32 @@ public class MyLinkify {
 
 
     public static final boolean addJUstHighLightLinks(TextView text, int mask) {
-          if (mask == 0) {
-              return false;
-          }
+        if (mask == 0) {
+            return false;
+        }
 
-          CharSequence t = text.getText();
+        CharSequence t = text.getText();
 
-          if (t instanceof Spannable) {
-              if (addLinks((Spannable) t, mask)) {
-                  //addLinkMovementMethod(text);
-                  return true;
-              }
+        if (t instanceof Spannable) {
+            if (addLinks((Spannable) t, mask)) {
+                //addLinkMovementMethod(text);
+                return true;
+            }
 
-              return false;
-          } else {
-              SpannableString s = SpannableString.valueOf(t);
+            return false;
+        } else {
+            SpannableString s = SpannableString.valueOf(t);
 
-              if (addLinks(s, mask)) {
-                 // addLinkMovementMethod(text);
-                  text.setText(s);
+            if (addLinks(s, mask)) {
+                // addLinkMovementMethod(text);
+                text.setText(s);
 
-                  return true;
-              }
+                return true;
+            }
 
-              return false;
-          }
-      }
+            return false;
+        }
+    }
 
     private static final void addLinkMovementMethod(TextView t) {
         MovementMethod m = t.getMovementMethod();
@@ -334,6 +334,17 @@ public class MyLinkify {
             text.setText(s);
 
         }
+    }
+
+    public static final SpannableString getJustHighLightLinks(CharSequence s, Pattern p, String scheme,
+                                                              MatchFilter matchFilter, TransformFilter transformFilter) {
+        SpannableString value = SpannableString.valueOf(s);
+
+        if (addLinks(value, p, scheme, matchFilter, transformFilter)) {
+            return value;
+        }
+
+        return new SpannableString(s);
     }
 
     /**

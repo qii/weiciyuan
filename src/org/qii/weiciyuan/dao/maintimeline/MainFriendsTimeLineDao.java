@@ -8,10 +8,7 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
-import org.qii.weiciyuan.support.utils.AppConfig;
-import org.qii.weiciyuan.support.utils.AppLogger;
-import org.qii.weiciyuan.support.utils.TimeTool;
+import org.qii.weiciyuan.support.utils.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +54,8 @@ public class MainFriendsTimeLineDao {
         if (value != null && value.getSize() > 0) {
             for (MessageBean b : value.getStatuses()) {
                 TimeTool.dealMills(b);
+                ListViewTool.addJustHighLightLinks(b);
+
             }
         }
         return value;

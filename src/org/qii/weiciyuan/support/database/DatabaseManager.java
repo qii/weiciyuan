@@ -11,6 +11,7 @@ import org.qii.weiciyuan.support.database.table.CommentsTable;
 import org.qii.weiciyuan.support.database.table.HomeTable;
 import org.qii.weiciyuan.support.database.table.RepostsTable;
 import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
 import java.util.ArrayList;
@@ -209,6 +210,9 @@ public class DatabaseManager {
             String json = c.getString(c.getColumnIndex(HomeTable.JSONDATA));
             try {
                 MessageBean value = gson.fromJson(json, MessageBean.class);
+                value.setSpannableString(ListViewTool.getJustHighLightLinks(value.getText()));
+                ListViewTool.addJustHighLightLinks(value);
+
                 msgList.add(value);
             } catch (JsonSyntaxException e) {
                 AppLogger.e(e.getMessage());

@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
@@ -69,12 +68,12 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
             refreshLayout(bean);
 
         } else {
-            new SimpleTask().execute();
+            new SimpleTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
 
     }
 
-    private class SimpleTask extends AsyncTask<Object, Object, Object> {
+    private class SimpleTask extends MyAsyncTask<Object, Object, Object> {
 
         @Override
         protected Object doInBackground(Object... params) {

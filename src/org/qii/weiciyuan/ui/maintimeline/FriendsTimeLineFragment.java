@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +13,7 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -62,13 +62,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
             refreshLayout(bean);
         } else {
-            new SimpleTask().execute();
+            new SimpleTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
         getActivity().invalidateOptionsMenu();
     }
 
 
-    private class SimpleTask extends AsyncTask<Object, Object, Object> {
+    private class SimpleTask extends MyAsyncTask<Object, Object, Object> {
 
         @Override
         protected Object doInBackground(Object... params) {
@@ -113,7 +113,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             case R.id.friendstimelinefragment_new_weibo:
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
-                intent.putExtra("accountName",((IAccountInfo)getActivity()).getAccount().getUsernick());
+                intent.putExtra("accountName", ((IAccountInfo) getActivity()).getAccount().getUsernick());
                 startActivity(intent);
                 break;
             case R.id.friendstimelinefragment_refresh:
