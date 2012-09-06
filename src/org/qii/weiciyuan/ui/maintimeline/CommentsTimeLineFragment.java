@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
@@ -110,6 +111,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 holder = new ViewHolder();
                 convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
                 holder.username = (TextView) convertView.findViewById(R.id.username);
+                TextPaint tp = holder.username.getPaint();
+                tp.setFakeBoldText(true);
                 holder.content = (TextView) convertView.findViewById(R.id.content);
                 holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
