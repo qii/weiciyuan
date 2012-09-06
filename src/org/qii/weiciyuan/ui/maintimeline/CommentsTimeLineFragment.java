@@ -149,8 +149,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 });
             }
             holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
-            holder.content.setText(msg.getText());
-            ListViewTool.addJustHighLightLinks(holder.content);
+            holder.content.setText(msg.getListViewSpannableString());
+
             holder.time.setText(msg.getListviewItemShowTime());
 
             holder.repost_content.setVisibility(View.GONE);

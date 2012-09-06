@@ -210,7 +210,7 @@ public class DatabaseManager {
             String json = c.getString(c.getColumnIndex(HomeTable.JSONDATA));
             try {
                 MessageBean value = gson.fromJson(json, MessageBean.class);
-                value.setSpannableString(ListViewTool.getJustHighLightLinks(value.getText()));
+                value.setListViewSpannableString(ListViewTool.getJustHighLightLinks(value.getText()));
                 ListViewTool.addJustHighLightLinks(value);
 
                 msgList.add(value);

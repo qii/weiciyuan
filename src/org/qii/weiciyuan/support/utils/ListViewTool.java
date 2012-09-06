@@ -3,6 +3,7 @@ package org.qii.weiciyuan.support.utils;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.widget.TextView;
+import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.lib.MyLinkify;
@@ -59,7 +60,7 @@ public class ListViewTool {
 
     public static void addJustHighLightLinks(MessageBean bean) {
 
-        bean.setSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
+        bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
         if (bean.getRetweeted_status() != null) {
             String name = "";
             UserBean reUser = bean.getRetweeted_status().getUser();
@@ -75,7 +76,29 @@ public class ListViewTool {
                 value = ListViewTool.getJustHighLightLinks(bean.getRetweeted_status().getText());
             }
 
-            bean.getRetweeted_status().setSpannableString(value);
+            bean.getRetweeted_status().setListViewSpannableString(value);
+        }
+    }
+
+    public static void addJustHighLightLinks(CommentBean bean) {
+
+        bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
+        if (bean.getStatus() != null) {
+            String name = "";
+            UserBean reUser = bean.getStatus().getUser();
+            if (reUser != null) {
+                name = reUser.getScreen_name();
+            }
+
+            SpannableString value;
+
+            if (!TextUtils.isEmpty(name)) {
+                value = ListViewTool.getJustHighLightLinks("@" + name + "：" + bean.getStatus().getText());
+            } else {
+                value = ListViewTool.getJustHighLightLinks(bean.getStatus().getText());
+            }
+
+            bean.getStatus().setListViewSpannableString(value);
         }
     }
 

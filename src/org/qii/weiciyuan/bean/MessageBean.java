@@ -184,14 +184,14 @@ public class MessageBean implements Serializable {
     private String bmiddle_pic;
     private String original_pic;
 
-     private transient SpannableString spannableString;
+    private transient SpannableString listViewSpannableString;
 
-    public SpannableString getSpannableString() {
-        return spannableString;
+    public SpannableString getListViewSpannableString() {
+        return listViewSpannableString;
     }
 
-    public void setSpannableString(SpannableString spannableString) {
-        this.spannableString = spannableString;
+    public void setListViewSpannableString(SpannableString listViewSpannableString) {
+        this.listViewSpannableString = listViewSpannableString;
     }
 
     private long mills;

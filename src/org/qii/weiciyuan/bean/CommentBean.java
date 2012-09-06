@@ -1,6 +1,8 @@
 package org.qii.weiciyuan.bean;
 
+import android.text.SpannableString;
 import android.text.TextUtils;
+import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.io.Serializable;
@@ -10,7 +12,6 @@ import java.util.Date;
 /**
  * User: Jiang Qi
  * Date: 12-8-2
- * Time: 下午3:30
  */
 public class CommentBean implements Serializable {
     private String created_at;
@@ -20,6 +21,21 @@ public class CommentBean implements Serializable {
     private String mid;
     private UserBean user;
     private MessageBean status;
+
+    private transient SpannableString listViewSpannableString;
+
+    public SpannableString getListViewSpannableString() {
+        if (!TextUtils.isEmpty(listViewSpannableString)) {
+            return listViewSpannableString;
+        } else {
+            ListViewTool.addJustHighLightLinks(this);
+            return listViewSpannableString;
+        }
+    }
+
+    public void setListViewSpannableString(SpannableString listViewSpannableString) {
+        this.listViewSpannableString = listViewSpannableString;
+    }
 
     public String getCreated_at() {
         if (!TextUtils.isEmpty(created_at)) {

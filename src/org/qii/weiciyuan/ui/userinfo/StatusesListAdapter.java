@@ -131,11 +131,11 @@ public class StatusesListAdapter extends BaseAdapter {
             holder.avatar.setVisibility(View.INVISIBLE);
         }
         holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
-        if (!TextUtils.isEmpty(msg.getSpannableString())) {
-            holder.content.setText(msg.getSpannableString());
+        if (!TextUtils.isEmpty(msg.getListViewSpannableString())) {
+            holder.content.setText(msg.getListViewSpannableString());
         } else {
             ListViewTool.addJustHighLightLinks(msg);
-            holder.content.setText(msg.getSpannableString());
+            holder.content.setText(msg.getListViewSpannableString());
         }
         holder.time.setText(msg.getListviewItemShowTime());
 
@@ -168,11 +168,11 @@ public class StatusesListAdapter extends BaseAdapter {
 
         if (repost_msg.getUser() != null) {
             holder.repost_content.setText("@" + repost_msg.getUser().getScreen_name() + "：" + repost_msg.getText());
-            if (!TextUtils.isEmpty(repost_msg.getSpannableString())) {
-                holder.repost_content.setText(repost_msg.getSpannableString());
+            if (!TextUtils.isEmpty(repost_msg.getListViewSpannableString())) {
+                holder.repost_content.setText(repost_msg.getListViewSpannableString());
             } else {
                 ListViewTool.addJustHighLightLinks(repost_msg);
-                holder.repost_content.setText(repost_msg.getSpannableString());
+                holder.repost_content.setText(repost_msg.getListViewSpannableString());
             }
 
         } else {
