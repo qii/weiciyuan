@@ -83,7 +83,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
             lruCache.put(data, bitmap);
 
-            if (view != null) {
+            if (view != null && view.get() != null) {
                 ImageView imageView = view.get();
 
                 AvatarBitmapWorkerTask bitmapDownloaderTask = getAvatarBitmapDownloaderTask(imageView);

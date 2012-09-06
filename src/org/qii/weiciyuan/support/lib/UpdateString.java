@@ -49,7 +49,7 @@ public class UpdateString implements CharSequence {
             public void run() {
                 while (!Thread.currentThread().isInterrupted()) {
                     SystemClock.sleep(500);
-                    if (time != null && activity != null) {
+                    if (time != null && time.get() != null && activity != null && activity.get() != null) {
                         Activity mActivity = activity.get();
                         final TextView mTextView = time.get();
                         mActivity.runOnUiThread(new Runnable() {

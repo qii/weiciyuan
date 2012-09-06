@@ -71,7 +71,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
             lruCache.put(getMemCacheKey(data, position), bitmap);
 
-            if (view != null) {
+            if (view != null && view.get() != null) {
                 ImageView imageView = view.get();
 
                 PictureBitmapWorkerTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
