@@ -293,7 +293,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 getLocation();
                 break;
             case R.id.menu_add_pic:
-                new MyAlertDialogFragment().show(getFragmentManager(), "");
+                new PictureSelectDialog().show(getFragmentManager(), "");
                 break;
 
             case R.id.menu_send:
