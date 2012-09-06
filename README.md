@@ -1,4 +1,4 @@
-weiciyuan
+微次元 weiciyuan
 =========
 Sina Weibo Android Client, require Android 4.0+, Holo GUI Style
 
