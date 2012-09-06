@@ -15,6 +15,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AvatarBitmapDrawable;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.PictureBitmapDrawable;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
@@ -58,7 +59,8 @@ public class AbstractAppActivity extends FragmentActivity {
                     AvatarBitmapWorkerTask task = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey, position);
                     AvatarBitmapDrawable downloadedDrawable = new AvatarBitmapDrawable(task);
                     view.setImageDrawable(downloadedDrawable);
-                    task.execute();
+//                    task.execute();
+                    task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     avatarBitmapWorkerTaskHashMap.put(getMemCacheKey(urlKey, position), task);
                 }
             }
@@ -78,7 +80,8 @@ public class AbstractAppActivity extends FragmentActivity {
                     PictureBitmapWorkerTask task = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, urlKey, position);
                     PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(task);
                     view.setImageDrawable(downloadedDrawable);
-                    task.execute();
+//                    task.execute();
+                    task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     pictureBitmapWorkerTaskMap.put(urlKey, task);
                 }
 

@@ -46,16 +46,16 @@ public class HttpUtility {
 
     private static HttpUtility httpUtility = new HttpUtility();
     private HttpClient httpClient = null;
-    private HttpGet httpGet = new HttpGet();
-    private HttpPost httpPost = new HttpPost();
+
 
     private HttpUtility() {
 
         HttpParams params = new BasicHttpParams();
         params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+        PoolingClientConnectionManager connectionManager=new PoolingClientConnectionManager();
+        connectionManager.setMaxTotal(5);
 
-        //default 2 connections
-        httpClient = new DefaultHttpClient(new PoolingClientConnectionManager());
+        httpClient = new DefaultHttpClient(connectionManager);
         HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 8000);
         HttpConnectionParams.setSoTimeout(httpClient.getParams(), 8000);
 
@@ -89,6 +89,8 @@ public class HttpUtility {
 
     private String doPost(String url, Map<String, String> param) throws WeiboException {
         AppLogger.d(url);
+        HttpPost httpPost = new HttpPost();
+
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
         Set<String> keys = param.keySet();
@@ -124,14 +126,11 @@ public class HttpUtility {
 
     /**
      * don't need error message to show
-     *
-     * @param url
-     * @param path
-     * @return
      */
     private String doGetSaveFile(String url, String path) {
 
         URIBuilder uriBuilder;
+        HttpGet httpGet = new HttpGet();
         try {
             uriBuilder = new URIBuilder(url);
 
@@ -173,7 +172,7 @@ public class HttpUtility {
 
     private String doGet(String url, Map<String, String> param) throws WeiboException {
 
-
+        HttpGet httpGet = new HttpGet();
         URIBuilder uriBuilder;
         try {
             uriBuilder = new URIBuilder(url);
