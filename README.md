@@ -1,6 +1,8 @@
 weiciyuan
 =========
-Sina Weibo Android Client, require Android 4.0+
+Sina Weibo Android Client, require Android 4.0+, Holo GUI Style
+
+Download http://apk.gfan.com/Product/App343196.html
 
 黄粱一梦二十年
 
