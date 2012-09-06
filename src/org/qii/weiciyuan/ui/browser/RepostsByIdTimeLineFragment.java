@@ -18,6 +18,7 @@ import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.UpdateString;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
@@ -358,7 +359,13 @@ public class RepostsByIdTimeLineFragment extends Fragment {
                 holder.username.setVisibility(View.INVISIBLE);
                 holder.avatar.setVisibility(View.INVISIBLE);
             }
-            holder.time.setText(msg.getListviewItemShowTime());
+            String time = msg.getListviewItemShowTime();
+            UpdateString updateString = new UpdateString(time, holder.time, msg, getActivity());
+            if (!holder.time.getText().toString().equals(time)) {
+                holder.time.setText(updateString);
+            }
+            holder.time.setTag(msg.getText());
+
             holder.content.setText(msg.getListViewSpannableString());
 
         }
