@@ -17,11 +17,6 @@
 package org.qii.weiciyuan.weibo;
 
 
-/**
- * Encapsulation a Weibo error, when weibo request can not be implemented successful.
- *
- * @author  ZhangJie (zhangjie2@staff.sina.com.cn)
- */
 public class WeiboException extends Exception {
 
 	private static final long serialVersionUID = 475022994858770424L;

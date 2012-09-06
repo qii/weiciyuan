@@ -25,8 +25,6 @@ import java.util.List;
 /**
  * A list queue for saving keys and values.
  * Using it to construct http header or get/post parameters.
- *
- * @author  ZhangJie (zhangjie2@staff.sina.com.cn)
  */
 public class WeiboParameters {
 
