@@ -82,7 +82,10 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         if (savedInstanceState == null) {
             Intent intent = getIntent();
             accountBean = (AccountBean) intent.getSerializableExtra("account");
-            AppLogger.d(accountBean.getUsernick());
+            if (accountBean != null)
+                AppLogger.d(accountBean.getUsernick());
+            else
+                AppLogger.e("MainTneActivity dont have account");
         } else {
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
             AppLogger.d(accountBean.getUsernick());
