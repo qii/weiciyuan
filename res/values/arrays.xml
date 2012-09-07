@@ -12,7 +12,7 @@
     <string-array name="theme">
         <item>黑色</item>
         <item>白色</item>
-        <item>黑色标题、白色正文</item>
+        <item>黑白</item>
         <item>纯黑</item>
     </string-array>
     <string-array name="theme_value">
