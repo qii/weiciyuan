@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.*;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -15,10 +17,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class AccountActivity extends AbstractAppActivity implements AdapterView.OnItemClickListener {
     /**
@@ -65,6 +64,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
         boolean checkAll = false;
+        boolean isCancel = true;
 
 
         @Override
@@ -78,7 +78,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             listAdapter.addCheckbox();
-
+            isCancel = true;
             return false;
         }
 
@@ -97,6 +97,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
                     }
                     return true;
                 case R.id.menu_remove_account:
+                    isCancel = false;
                     if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                         removeTask = new RemoveAccountDBTask();
                         removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
@@ -118,7 +119,10 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
-            listAdapter.unSelectAll();
+            if (isCancel)
+                listAdapter.removeCheckbox();
+
+
         }
     };
 
@@ -185,12 +189,16 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (getTask == null || getTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                getTask = new GetAccountListDBTask();
-//                getTask.execute();
-                getTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            }
+            refresh();
 
+        }
+    }
+
+    private void refresh() {
+        if (getTask == null || getTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            getTask = new GetAccountListDBTask();
+//                getTask.execute();
+            getTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -223,7 +231,9 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
         boolean allChecked = false;
 
-        Set<String> checkedItemPostion = new HashSet<String>();
+        Set<String> checkedItemId = new HashSet<String>();
+
+        Set<Integer> checkedItemListViewPosition = new HashSet<Integer>();
 
         @Override
         public int getCount() {
@@ -257,9 +267,11 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
                         AccountBean account = accountList.get(i);
                         String uid = account.getUid();
                         if (isChecked) {
-                            checkedItemPostion.add(uid);
-                        } else if (checkedItemPostion.contains(uid)) {
-                            checkedItemPostion.remove(uid);
+                            checkedItemId.add(uid);
+                            checkedItemListViewPosition.add(i);
+                        } else if (checkedItemId.contains(uid)) {
+                            checkedItemId.remove(uid);
+                            checkedItemListViewPosition.remove(i);
                         }
 
                     }
@@ -268,6 +280,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
                 if (allChecked)
                     cb.setChecked(true);
 
+                cb.setId(R.id.webView);
                 linearLayout.addView(cb, 0);
 
             }
@@ -278,8 +291,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
             ImageView imageView = (ImageView) mView.findViewById(R.id.imageView_avatar);
 
             if (!TextUtils.isEmpty(accountList.get(i).getAvatar_url())) {
-                commander.downContentPic(imageView,accountList.get(i).getAvatar_url(),i,listView);
-
+                commander.downContentPic(imageView, accountList.get(i).getAvatar_url(), i, listView);
             }
 
             return mView;
@@ -293,6 +305,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
         public void removeCheckbox() {
             needCheckbox = false;
+            unSelectAll();
             notifyDataSetChanged();
         }
 
@@ -314,8 +327,12 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
             notifyDataSetChanged();
         }
 
-        public Set<String> getCheckedItemPosition() {
-            return checkedItemPostion;
+        public Set<String> getCheckedItemId() {
+            return checkedItemId;
+        }
+
+        public Set<Integer> getCheckedItemListViewPosition() {
+            return checkedItemListViewPosition;
         }
 
     }
@@ -339,14 +356,63 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
         @Override
         protected List<AccountBean> doInBackground(Void... params) {
-            return DatabaseManager.getInstance().removeAndGetNewAccountList(listAdapter.getCheckedItemPosition());
+            return DatabaseManager.getInstance().removeAndGetNewAccountList(listAdapter.getCheckedItemId());
         }
 
         @Override
         protected void onPostExecute(List<AccountBean> accounts) {
             accountList = accounts;
-            listAdapter.notifyDataSetChanged();
-            Toast.makeText(AccountActivity.this, getString(R.string.remove_successfully), Toast.LENGTH_SHORT).show();
+
+            Animation anim = AnimationUtils.loadAnimation(
+                    AccountActivity.this, R.anim.account_delete_slide_out_right
+            );
+
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    listAdapter.removeCheckbox();
+                    listAdapter.notifyDataSetChanged();
+//                    refresh();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            Set<Integer> position = listAdapter.getCheckedItemListViewPosition();
+            int start = listView.getFirstVisiblePosition();
+            int end = listView.getLastVisiblePosition();
+
+            Iterator<Integer> iterator = position.iterator();
+            while (iterator.hasNext()) {
+                Integer i = iterator.next();
+                if (i < start || i > end) {
+                    iterator.remove();
+                }
+            }
+            Integer[] array = position.toArray(new Integer[1]);
+            int arraySize = array.length;
+            for (int i = 0; i < arraySize; i++) {
+                array[i] = array[i] - start;
+            }
+
+            if (arraySize <= listView.getChildCount()) {
+                for (int i = 0; i < arraySize; i++) {
+                    listView.getChildAt(array[i]).startAnimation(anim);
+                }
+            }
+
+            int listViewChildCount = listView.getChildCount();
+            for (int i = 0; i < listViewChildCount; i++) {
+                listView.getChildAt(i).findViewById(R.id.webView).startAnimation(anim);
+            }
+
 
         }
     }
