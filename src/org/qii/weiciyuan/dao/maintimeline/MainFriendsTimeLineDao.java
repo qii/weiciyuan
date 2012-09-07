@@ -62,6 +62,7 @@ public class MainFriendsTimeLineDao {
                     iterator.remove();
                 } else {
                     msg.getListViewSpannableString();
+                    TimeTool.dealMills(msg);
                 }
             }
 

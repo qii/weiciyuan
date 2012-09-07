@@ -10,6 +10,7 @@ import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -93,6 +94,7 @@ public class MainCommentsTimeLineDao {
                     iterator.remove();
                 } else {
                     msg.getListViewSpannableString();
+                    TimeTool.dealMills(msg);
                 }
             }
 
