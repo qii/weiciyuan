@@ -16,8 +16,12 @@ import java.io.*;
  */
 public class FileDownloaderHttpHelper {
 
+    public static interface DownloadListener {
+        public void pushProgress(int progress, int max);
+    }
 
-    public static String saveFile(HttpResponse response, String path) {
+
+    public static String saveFile(HttpResponse response, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
         StatusLine status = response.getStatusLine();
         int statusCode = status.getStatusCode();
@@ -28,7 +32,7 @@ public class FileDownloaderHttpHelper {
         }
 
 
-        return saveFileAndGetFileAbsolutePath(response, path);
+        return saveFileAndGetFileAbsolutePath(response, path, downloadListener);
 
     }
 
@@ -37,7 +41,7 @@ public class FileDownloaderHttpHelper {
         return "";
     }
 
-    private static String saveFileAndGetFileAbsolutePath(HttpResponse response, String path) {
+    private static String saveFileAndGetFileAbsolutePath(HttpResponse response, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
         HttpEntity httpEntity = response.getEntity();
 //        FileManager.createNoMediaFile();
         File file = FileManager.createNewFileInSDCard(path);
@@ -47,6 +51,7 @@ public class FileDownloaderHttpHelper {
 
         if (file != null) {
             try {
+                int bytetotal = (int) httpEntity.getContentLength();
                 int bytesum = 0;
                 int byteread = 0;
                 out = new FileOutputStream(file);
@@ -55,6 +60,9 @@ public class FileDownloaderHttpHelper {
                 while ((byteread = in.read(buffer)) != -1) {
                     bytesum += byteread;
                     out.write(buffer, 0, byteread);
+                    if (downloadListener != null && bytetotal > 0) {
+                        downloadListener.pushProgress(bytesum, bytetotal);
+                    }
                 }
                 result = path;
             } catch (FileNotFoundException ignored) {

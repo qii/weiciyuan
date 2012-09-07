@@ -12,8 +12,9 @@
             >
         <ProgressBar
                 android:layout_gravity="center"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:id="@+id/pb"/>
         <ImageView android:layout_width="wrap_content"
                    android:layout_gravity="center"

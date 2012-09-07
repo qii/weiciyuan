@@ -46,6 +46,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     }
 
 
+
     @Override
     protected Bitmap doInBackground(String... url) {
 
@@ -53,7 +54,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         int reqHeight = 500;
 
         if (!isCancelled()) {
-            return ImageTool.getPictureHighDensityThumbnailBitmap(data, reqWidth, reqHeight);
+            return ImageTool.getPictureHighDensityThumbnailBitmap(data, reqWidth, reqHeight, null);
         }
         return null;
     }

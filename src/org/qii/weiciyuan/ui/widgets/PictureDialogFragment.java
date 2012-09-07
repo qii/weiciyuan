@@ -2,13 +2,13 @@ package org.qii.weiciyuan.ui.widgets;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.LruCache;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
@@ -25,7 +25,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
  * Date: 12-8-15
  */
 public class PictureDialogFragment extends DialogFragment {
-    private MessageBean msg;
+    private String url;
     private ImageView imageView;
     private ProgressBar pb;
     private FrameLayout fl;
@@ -35,8 +35,8 @@ public class PictureDialogFragment extends DialogFragment {
 
     }
 
-    public PictureDialogFragment(MessageBean msg) {
-        this.msg = msg;
+    public PictureDialogFragment(String url) {
+        this.url = url;
     }
 
     @Override
@@ -57,8 +57,8 @@ public class PictureDialogFragment extends DialogFragment {
             }
         });
 
-        if(savedInstanceState!=null)
-            msg=(MessageBean)savedInstanceState.getSerializable("msg");
+        if (savedInstanceState != null)
+            url = savedInstanceState.getString("url");
 
         return builder.create();
     }
@@ -66,14 +66,14 @@ public class PictureDialogFragment extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("msg", msg);
+        outState.putString("url", url);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         avatarTask = new PicSimpleBitmapWorkerTask();
-        avatarTask.execute(msg.getBmiddle_pic());
+        avatarTask.execute(url);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class PictureDialogFragment extends DialogFragment {
         super.onCancel(dialog);
     }
 
-    class PicSimpleBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+    class PicSimpleBitmapWorkerTask extends AsyncTask<String, Integer, Bitmap> {
 
         private LruCache<String, Bitmap> lruCache;
         private String data = "";
@@ -94,13 +94,37 @@ public class PictureDialogFragment extends DialogFragment {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pb.setIndeterminate(true);
+        }
+
+        @Override
         protected Bitmap doInBackground(String... url) {
+
+            FileDownloaderHttpHelper.DownloadListener downloadListener = new FileDownloaderHttpHelper.DownloadListener() {
+                @Override
+                public void pushProgress(int progress, int max) {
+                    publishProgress(progress, max);
+                }
+            };
+
             data = url[0];
             if (!isCancelled()) {
-                return ImageTool.getNormalBitmap(data);
+                return ImageTool.getNormalBitmap(data, downloadListener);
             }
 
             return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            int progress = values[0];
+            int max = values[1];
+            pb.setIndeterminate(false);
+            pb.setMax(max);
+            pb.setProgress(progress);
         }
 
         @Override

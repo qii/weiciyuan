@@ -1,7 +1,7 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -28,13 +28,13 @@ import java.util.List;
  */
 public class StatusesListAdapter extends BaseAdapter {
 
-    Activity activity;
+    FragmentActivity activity;
     LayoutInflater inflater;
     List<MessageBean> bean;
     ListView listView;
     ICommander commander;
 
-    public StatusesListAdapter(Activity activity, ICommander commander, List<MessageBean> bean, ListView listView) {
+    public StatusesListAdapter(FragmentActivity activity, ICommander commander, List<MessageBean> bean, ListView listView) {
         this.activity = activity;
         inflater = activity.getLayoutInflater();
         this.bean = bean;
@@ -222,8 +222,8 @@ public class StatusesListAdapter extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PictureDialogFragment progressFragment = new PictureDialogFragment(msg);
-                progressFragment.show(activity.getFragmentManager(), "");
+                PictureDialogFragment progressFragment = new PictureDialogFragment(msg.getBmiddle_pic());
+                progressFragment.show(activity.getSupportFragmentManager(), "");
             }
         });
     }

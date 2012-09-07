@@ -29,7 +29,7 @@ public class SimpleBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... url) {
         data = url[0];
         if (!isCancelled()) {
-            return ImageTool.getNormalBitmap(data);
+            return ImageTool.getNormalBitmap(data,null);
         }
 
         return null;

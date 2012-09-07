@@ -80,8 +80,8 @@ public class HttpUtility {
         return "";
     }
 
-    public String executeDownloadTask(String url, String path) {
-        return doGetSaveFile(url, path);
+    public String executeDownloadTask(String url, String path,FileDownloaderHttpHelper.DownloadListener downloadListener) {
+        return doGetSaveFile(url, path,downloadListener);
     }
 
     public boolean executeUploadTask(String url, Map<String, String> param, String path) {
@@ -128,7 +128,7 @@ public class HttpUtility {
     /**
      * don't need error message to show
      */
-    private String doGetSaveFile(String url, String path) {
+    private String doGetSaveFile(String url, String path,FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
         URIBuilder uriBuilder;
         HttpGet httpGet = new HttpGet();
@@ -164,7 +164,7 @@ public class HttpUtility {
 
         if (response != null) {
 
-            return FileDownloaderHttpHelper.saveFile(response, path);
+            return FileDownloaderHttpHelper.saveFile(response, path,downloadListener);
 
         } else {
             return "";

@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.imagetool;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpUtility;
@@ -43,7 +44,7 @@ public class ImageTool {
         if (bitmap != null) {
             return ImageEdit.getRoundedCornerBitmap(bitmap);
         } else {
-            String path = getBitmapFromNetWork(url, absoluteFilePath);
+            String path = getBitmapFromNetWork(url, absoluteFilePath, null);
             bitmap = BitmapFactory.decodeFile(path);
             if (bitmap != null)
                 return ImageEdit.getRoundedCornerBitmap(bitmap);
@@ -71,37 +72,33 @@ public class ImageTool {
         if (height > 0) {
             int needStart = (bitmap.getHeight() - height) / 2;
             Bitmap cropped = Bitmap.createBitmap(bitmap, 0, needStart, bitmap.getWidth(), height);
-            bitmap.recycle();
             return cropped;
         } else {
             return bitmap;
         }
     }
 
-    public static Bitmap getPictureHighDensityThumbnailBitmap(String url) {
-        int reqWidth = 396;
-        int reqHeight = 120;
+    public static Bitmap getPictureHighDensityThumbnailBitmap(String url, int reqWidth, int reqHeight, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+
 
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
-
         absoluteFilePath = absoluteFilePath + ".jpg";
 
-        Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, reqWidth, MAX_HEIGHT);
+        Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, reqWidth, reqHeight);
 
         if (bitmap == null) {
-            String path = getBitmapFromNetWork(url, absoluteFilePath);
-            bitmap = decodeBitmapFromSDCard(path, reqWidth, MAX_HEIGHT);
+            String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
+            bitmap = decodeBitmapFromSDCard(path, reqWidth, reqHeight);
         }
 
         if (bitmap != null) {
-            if (bitmap.getHeight() > reqHeight) {
+            if (bitmap.getHeight() > reqHeight || bitmap.getWidth() > reqWidth) {
                 bitmap = cutPic(bitmap, reqWidth, reqHeight);
             }
             bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
         }
 
         return bitmap;
-
     }
 
     public static Bitmap getAvatarBitmap(String url) {
@@ -114,7 +111,7 @@ public class ImageTool {
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
         if (bitmap == null) {
-            String path = getBitmapFromNetWork(url, absoluteFilePath);
+            String path = getBitmapFromNetWork(url, absoluteFilePath, null);
             bitmap = BitmapFactory.decodeFile(path);
         }
         if (bitmap != null) {
@@ -123,7 +120,7 @@ public class ImageTool {
         return bitmap;
     }
 
-    public static Bitmap getNormalBitmap(String url) {
+    public static Bitmap getNormalBitmap(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
 
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
@@ -133,7 +130,7 @@ public class ImageTool {
         Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, MAX_WIDTH, MAX_HEIGHT);
 
         if (bitmap == null) {
-            String path = getBitmapFromNetWork(url, absoluteFilePath);
+            String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
             bitmap = decodeBitmapFromSDCard(path, MAX_WIDTH, MAX_HEIGHT);
         }
         if (bitmap != null) {
@@ -142,9 +139,9 @@ public class ImageTool {
         return bitmap;
     }
 
-    private static String getBitmapFromNetWork(String url, String path) {
+    private static String getBitmapFromNetWork(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
-        HttpUtility.getInstance().executeDownloadTask(url, path);
+        HttpUtility.getInstance().executeDownloadTask(url, path, downloadListener);
         return path;
 
     }

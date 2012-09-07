@@ -33,6 +33,7 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
+import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 
 import java.io.IOException;
 import java.util.List;
@@ -209,8 +210,8 @@ public class BrowserWeiboMsgFragment extends Fragment {
             }
         });
 
-//        content_pic.setOnClickListener(picOnClickListener);
-//        repost_pic.setOnClickListener(picOnClickListener);
+        content_pic.setOnClickListener(picOnClickListener);
+        repost_pic.setOnClickListener(picOnClickListener);
 
         //        LinearLayout repost_layout = (LinearLayout) findViewById(R.id.repost_layout);
         recontent.setOnClickListener(new View.OnClickListener() {
@@ -380,4 +381,26 @@ public class BrowserWeiboMsgFragment extends Fragment {
         }
         return true;
     }
+
+    private View.OnClickListener picOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String url="";
+            switch (v.getId()) {
+                case R.id.content_pic:
+                    url = msg.getOriginal_pic();
+                    break;
+                case R.id.repost_content_pic:
+                    url = msg.getRetweeted_status().getOriginal_pic();
+                    break;
+            }
+            if (!TextUtils.isEmpty(url)) {
+                PictureDialogFragment progressFragment = new PictureDialogFragment(url);
+
+                progressFragment.show(getFragmentManager(), "");
+            }
+        }
+
+
+    };
 }
