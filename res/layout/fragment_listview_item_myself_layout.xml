@@ -66,6 +66,7 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone"
                     android:clickable="true"
+                    android:minWidth="70dp"
                     />
         </LinearLayout>
         <LinearLayout
@@ -95,6 +96,7 @@
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         android:clickable="true"
+                        android:minWidth="70dp"
                         />
             </LinearLayout>
         </LinearLayout>

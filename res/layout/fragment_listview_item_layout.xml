@@ -62,7 +62,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:minWidth="70dp"
                     android:clickable="true"
+
                     />
         </LinearLayout>
         <LinearLayout
@@ -91,6 +93,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:visibility="gone"
+                        android:minWidth="70dp"
                         android:clickable="true"
                         />
             </LinearLayout>
