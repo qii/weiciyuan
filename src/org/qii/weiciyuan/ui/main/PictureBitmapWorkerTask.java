@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.main;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -26,6 +27,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     private Map<String, PictureBitmapWorkerTask> taskMap;
     private int position;
 
+    private Activity activity;
 
     public String getUrl() {
         return data;
@@ -33,21 +35,25 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     public PictureBitmapWorkerTask(LruCache<String, Bitmap> lruCache,
                                    Map<String, PictureBitmapWorkerTask> taskMap,
-                                   ImageView view, String url, int position) {
+                                   ImageView view, String url, int position, Activity activity) {
 
         this.lruCache = lruCache;
         this.taskMap = taskMap;
         this.view = new WeakReference<ImageView>(view);
         this.data = url;
         this.position = position;
+        this.activity = activity;
     }
 
 
     @Override
     protected Bitmap doInBackground(String... url) {
 
+        int reqWidth = 396;
+        int reqHeight = 500;
+
         if (!isCancelled()) {
-            return ImageTool.getPictureHighDensityThumbnailBitmap(data);
+            return ImageTool.getPictureHighDensityThumbnailBitmap(data, reqWidth, reqHeight);
         }
         return null;
     }

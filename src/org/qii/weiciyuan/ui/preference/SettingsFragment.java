@@ -77,6 +77,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         if (key.equals(SettingActivity.ENABLE_PIC)) {
             boolean value = sharedPreferences.getBoolean(key, true);
+            GlobalContext.getInstance().getAvatarCache().evictAll();
             if (value) {
                 GlobalContext.getInstance().setEnablePic(true);
             } else {
