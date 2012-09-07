@@ -47,7 +47,7 @@
         <item name="android:progressBarStyle">@style/Widget.Holo.ProgressBar</item>
 
 
-    </style>
+     </style>
 
     <style name="Widget.Holo.ProgressBar" parent="android:Widget.Holo.ProgressBar">
         <item name="android:indeterminateDrawable">@drawable/progress_medium_holo</item>
