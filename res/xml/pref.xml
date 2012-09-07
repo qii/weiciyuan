@@ -11,6 +11,7 @@
                 android:defaultValue="true"/>
 
         <CheckBoxPreference
+                android:dependency="show_picture"
                 android:key="show_big_pic"
                 android:title="@string/show_big_pic"
                 android:summary="@string/show_big_pic_summary"
