@@ -68,74 +68,69 @@ public class StatusesListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
-            ViewHolder holder = new ViewHolder();
+            ViewHolder holder;
             if (convertView == null || convertView.getTag(R.drawable.app) == null) {
-                convertView = initMylayout(holder, parent);
+                convertView = initMylayout(parent);
+                holder = buildHolder(convertView);
             } else {
                 boolean enableBigPic = (Boolean) convertView.getTag(R.drawable.account_black);
                 if (enableBigPic == GlobalContext.getInstance().getEnableBigPic()) {
                     holder = (ViewHolder) convertView.getTag(R.drawable.app);
                 } else {
-                    convertView = initMylayout(holder, parent);
+                    convertView = initMylayout(parent);
+                    holder = buildHolder(convertView);
                 }
             }
+            convertView.setTag(R.drawable.app, holder);
+            convertView.setTag(R.drawable.account_black, GlobalContext.getInstance().getEnableBigPic());
             bindViewData(holder, position);
             return convertView;
         }
 
         ViewHolder holder;
         if (convertView == null || convertView.getTag(R.drawable.ic_launcher) == null) {
-            holder = new ViewHolder();
-            convertView = initNormallayout(holder, parent);
+            convertView = initNormallayout(parent);
+            holder = buildHolder(convertView);
         } else {
             boolean enableBigPic = (Boolean) convertView.getTag(R.drawable.account_black);
-
             if (enableBigPic == GlobalContext.getInstance().getEnableBigPic()) {
                 holder = (ViewHolder) convertView.getTag(R.drawable.ic_launcher);
             } else {
-                holder = new ViewHolder();
-                convertView = initNormallayout(holder, parent);
+                convertView = initNormallayout(parent);
+                holder = buildHolder(convertView);
             }
         }
-
+        convertView.setTag(R.drawable.ic_launcher, holder);
+        convertView.setTag(R.drawable.account_black, GlobalContext.getInstance().getEnableBigPic());
         bindViewData(holder, position);
-
 
         return convertView;
     }
 
-    /*
-    * rubbish code....
-    */
-    private View initMylayout(ViewHolder holder, ViewGroup parent) {
+
+    private View initMylayout(ViewGroup parent) {
         View convertView;
         if (GlobalContext.getInstance().getEnableBigPic()) {
             convertView = inflater.inflate(R.layout.fragment_listview_item_myself_big_pic_layout, parent, false);
         } else {
             convertView = inflater.inflate(R.layout.fragment_listview_item_myself_layout, parent, false);
         }
-
-        holder.username = (TextView) convertView.findViewById(R.id.username);
-        TextPaint tp = holder.username.getPaint();
-        tp.setFakeBoldText(true);
-        holder.content = (TextView) convertView.findViewById(R.id.content);
-        holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
-        holder.time = (TextView) convertView.findViewById(R.id.time);
-        holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
-        holder.content_pic = (ImageView) convertView.findViewById(R.id.content_pic);
-        holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
-        convertView.setTag(R.drawable.app, holder);
-        convertView.setTag(R.drawable.account_black, GlobalContext.getInstance().getEnableBigPic());
         return convertView;
     }
 
-    private View initNormallayout(ViewHolder holder, ViewGroup parent) {
+    private View initNormallayout(ViewGroup parent) {
         View convertView;
         if (GlobalContext.getInstance().getEnableBigPic()) {
             convertView = inflater.inflate(R.layout.fragment_listview_item_big_pic_layout, parent, false);
         } else {
             convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
         }
+        return convertView;
+    }
+
+
+    private ViewHolder buildHolder(View convertView) {
+        ViewHolder holder = new ViewHolder();
         holder.username = (TextView) convertView.findViewById(R.id.username);
         TextPaint tp = holder.username.getPaint();
         tp.setFakeBoldText(true);
@@ -145,9 +140,7 @@ public class StatusesListAdapter extends BaseAdapter {
         holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
         holder.content_pic = (ImageView) convertView.findViewById(R.id.content_pic);
         holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
-        convertView.setTag(R.drawable.ic_launcher, holder);
-        convertView.setTag(R.drawable.account_black, GlobalContext.getInstance().getEnableBigPic());
-        return convertView;
+        return holder;
     }
 
     private void bindViewData(ViewHolder holder, int position) {
