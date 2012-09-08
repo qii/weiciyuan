@@ -57,12 +57,12 @@
                 android:summary="@string/clear_avatar_and_pic"
                 />
         <Preference
-                android:title="@string/version"
-                android:summary="1.0 alpha"
-                />
-        <Preference
                 android:key="official_weibo"
                 android:title="@string/official_weibo"
+                />
+        <Preference
+                android:title="@string/version"
+                android:summary="1.0 alpha"
                 />
     </PreferenceCategory>
 

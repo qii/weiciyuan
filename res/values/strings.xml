@@ -162,6 +162,6 @@
     <string name="only_timeline_font">只影响列表字体大小</string>
     <string name="other">其它</string>
     <string name="clear_sd_cache">删除缓存</string>
-    <string name="clear_avatar_and_pic">清除已下载的头像和照片</string>
+    <string name="clear_avatar_and_pic">清除已下载的头像和图片</string>
     <string name="version">版本</string>
 </resources>
