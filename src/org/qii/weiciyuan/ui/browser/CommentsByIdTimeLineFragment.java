@@ -288,7 +288,9 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
         @Override
         public Object getItem(int position) {
-            return getList().getComments().get(position);
+            if (getList() != null && getList().getSize() > 0)
+                return getList().getComments().get(position);
+            return null;
         }
 
         @Override
