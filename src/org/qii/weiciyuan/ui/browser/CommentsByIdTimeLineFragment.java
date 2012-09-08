@@ -20,14 +20,12 @@ import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.CommentsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.UpdateString;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
-import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.send.CommentNewActivity;
-import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.util.List;
@@ -49,12 +47,17 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     protected ListView listView;
     protected TextView empty;
     protected ProgressBar progressBar;
-    protected TimeLineAdapter timeLineAdapter;
+    protected CommentListAdapter timeLineAdapter;
     protected CommentListBean bean = new CommentListBean();
 
     private FriendsTimeLineGetNewMsgListTask newTask;
     private FriendsTimeLineGetOlderMsgListTask oldTask;
 
+
+    protected void clearAndReplaceValue(CommentListBean value) {
+        bean.getComments().clear();
+        bean.getComments().addAll(value.getComments());
+    }
 
     private EditText et;
 
@@ -150,7 +153,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         if (savedInstanceState != null && bean.getComments().size() == 0) {
-            bean = (CommentListBean) savedInstanceState.getSerializable("bean");
+            clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
             token = savedInstanceState.getString("token");
             id = savedInstanceState.getString("id");
             timeLineAdapter.notifyDataSetChanged();
@@ -163,6 +166,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bean = new CommentListBean();
         setHasOptionsMenu(true);
         setRetainInstance(true);
     }
@@ -187,7 +191,8 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         }
 
 
-        timeLineAdapter = new TimeLineAdapter();
+        timeLineAdapter = new CommentListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getComments(), listView, false);
+
         listView.setAdapter(timeLineAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -277,94 +282,6 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         }
     }
 
-    protected class TimeLineAdapter extends BaseAdapter {
-
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        @Override
-        public int getCount() {
-
-            if (getList() != null && getList().getComments() != null) {
-                return getList().getComments().size();
-            } else {
-                return 0;
-            }
-        }
-
-        @Override
-        public Object getItem(int position) {
-            if (getList() != null && getList().getSize() > 0 && position < getList().getSize())
-                return getList().getComments().get(position);
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder;
-            if (convertView == null) {
-                holder = new ViewHolder();
-                convertView = inflater.inflate(R.layout.fragment_listview_item_comments_layout, parent, false);
-                holder.username = (TextView) convertView.findViewById(R.id.username);
-                holder.content = (TextView) convertView.findViewById(R.id.content);
-                holder.time = (TextView) convertView.findViewById(R.id.time);
-                holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            bindViewData(holder, position);
-
-
-            return convertView;
-        }
-
-        private void bindViewData(ViewHolder holder, int position) {
-
-            final CommentBean msg = getList().getComments().get(position);
-
-
-            holder.username.setText(msg.getUser().getScreen_name());
-            String image_url = msg.getUser().getProfile_image_url();
-            if (!TextUtils.isEmpty(image_url)) {
-                downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
-                holder.avatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                        intent.putExtra("token", ((IToken) getActivity()).getToken());
-                        intent.putExtra("user", msg.getUser());
-                        startActivity(intent);
-                    }
-                });
-            }
-            String time = msg.getListviewItemShowTime();
-            UpdateString updateString = new UpdateString(time, holder.time, msg, getActivity());
-            if (!holder.time.getText().toString().equals(time)) {
-                holder.time.setText(updateString);
-            }
-            holder.time.setTag(msg.getId());
-
-            holder.content.setText(msg.getListViewSpannableString());
-
-        }
-
-    }
-
-    static class ViewHolder {
-        TextView username;
-        TextView content;
-        TextView time;
-        ImageView avatar;
-
-    }
-
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         CommentOperatorDialog progressFragment = new CommentOperatorDialog(bean.getComments().get(position));
@@ -377,10 +294,6 @@ public class CommentsByIdTimeLineFragment extends Fragment {
             oldTask = new FriendsTimeLineGetOlderMsgListTask();
             oldTask.execute();
         }
-    }
-
-    protected void downloadAvatar(ImageView view, String url, int position, ListView listView) {
-        commander.downloadAvatar(view, url, position, listView);
     }
 
 
@@ -493,7 +406,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
                         newValue.getComments().addAll(getList().getComments());
                     }
 
-                    bean = newValue;
+                    clearAndReplaceValue(newValue);
                     timeLineAdapter.notifyDataSetChanged();
                     listView.setSelectionAfterHeaderView();
                     headerView.findViewById(R.id.header_progress).clearAnimation();
