@@ -600,7 +600,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
         Activity activity = getActivity();
         if (activity != null) {
             ActionBar.Tab tab = activity.getActionBar().getTabAt(1);
-            String num = getString(R.string.comments) + "(" + bean.getComments().size() + ")";
+            String num = getString(R.string.comments) + "(" + bean.getTotal_number() + ")";
             tab.setText(num);
 
         }

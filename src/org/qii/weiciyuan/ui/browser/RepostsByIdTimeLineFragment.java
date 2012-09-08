@@ -547,7 +547,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         Activity activity = getActivity();
         if (activity != null) {
             ActionBar.Tab tab = activity.getActionBar().getTabAt(2);
-            String num = getString(R.string.repost) + "(" + bean.getReposts().size() + ")";
+            String num = getString(R.string.repost) + "(" + bean.getTotal_number() + ")";
             tab.setText(num);
 
         }
