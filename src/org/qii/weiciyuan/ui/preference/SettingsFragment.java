@@ -63,9 +63,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         });
     }
 
+
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
         if (task != null)
