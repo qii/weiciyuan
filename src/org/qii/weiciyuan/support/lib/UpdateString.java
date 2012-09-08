@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.support.lib;
 
 import android.app.Activity;
-import android.os.SystemClock;
 import android.widget.TextView;
 import org.qii.weiciyuan.bean.ItemBean;
 
@@ -44,35 +43,37 @@ public class UpdateString implements CharSequence {
 
     @Override
     public String toString() {
-        update = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (!Thread.currentThread().isInterrupted()) {
-                    SystemClock.sleep(500);
-                    if (time != null && time.get() != null && activity != null && activity.get() != null) {
-                        Activity mActivity = activity.get();
-                        final TextView mTextView = time.get();
-                        mActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (mTextView.getTag().equals(bean.getId())) {
-                                    String newValue = bean.getListviewItemShowTime();
-                                    if (!newValue.equals(mTextView.getText().toString()))
-                                        mTextView.setText(newValue);
-                                } else {
-                                    Thread.currentThread().interrupt();
-                                    update = null;
-                                }
-                            }
-                        });
-                    } else {
-                        Thread.currentThread().interrupt();
-                        update = null;
-                    }
-                }
-            }
-        });
-        update.start();
+//        update = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (!Thread.currentThread().isInterrupted()) {
+//                    SystemClock.sleep(500);
+//                    if (time != null && time.get() != null && activity != null && activity.get() != null) {
+//                        Activity mActivity = activity.get();
+//                        final TextView mTextView = time.get();
+//                        mActivity.runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                if (mTextView.getTag().equals(bean.getId())) {
+//                                    String newValue = bean.getListviewItemShowTime();
+//                                    if (!newValue.equals(mTextView.getText().toString()))
+//                                        mTextView.setText(newValue);
+//                                } else {
+//                                    Thread.currentThread().interrupt();
+//                                    update = null;
+//
+//                                }
+//                            }
+//                        });
+//                    } else {
+//                        Thread.currentThread().interrupt();
+//                        update = null;
+//                        break;
+//                    }
+//                }
+//            }
+//        });
+//        update.start();
         return s.toString();
     }
 }

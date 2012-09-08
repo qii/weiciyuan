@@ -32,6 +32,9 @@ import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * User: qii
@@ -80,6 +83,12 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
         if (oldTask != null)
             oldTask.cancel(true);
+
+        removeListViewTimeRefresh();
+    }
+
+    private void removeListViewTimeRefresh() {
+        scheduledExecutorService.shutdownNow();
     }
 
     public void load() {
@@ -149,6 +158,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         }
+        addListViewTimeRefresh();
     }
 
 
@@ -307,7 +317,10 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
         @Override
         public Object getItem(int position) {
-            return getList().getReposts().get(position);
+            if (getList() != null && getList().getReposts().size() > 0)
+                return getList().getReposts().get(position);
+            else
+                return null;
         }
 
         @Override
@@ -607,6 +620,82 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         empty.setVisibility(View.INVISIBLE);
         listView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    private volatile boolean enableRefreshTime = true;
+    private ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+
+    private class refreshTimeWorker implements Runnable {
+        @Override
+        public void run() {
+            if (!enableRefreshTime)
+                return;
+            Activity activity = getActivity();
+            if (activity == null)
+                return;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    int start = listView.getFirstVisiblePosition();
+                    int end = listView.getLastVisiblePosition();
+
+
+                    int visibleItemNum = listView.getChildCount();
+                    for (int i = 0; i < visibleItemNum; i++) {
+                        if (start + i > 0 && timeLineAdapter != null) {
+                            Object object = timeLineAdapter.getItem(start + i - 1);
+                            if (object instanceof MessageBean) {
+                                MessageBean msg = (MessageBean) object;
+                                TextView time = (TextView) listView.getChildAt(i).findViewById(R.id.time);
+                                if (time != null)
+                                    time.setText(msg.getListviewItemShowTime());
+                            }
+                        }
+                    }
+                }
+            });
+
+
+        }
+
+    }
+
+    protected void addListViewTimeRefresh() {
+
+        scheduledExecutorService.scheduleAtFixedRate(new refreshTimeWorker(), 1, 1, TimeUnit.SECONDS);
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+
+                        enableRefreshTime = true;
+                        break;
+
+
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+
+                        enableRefreshTime = false;
+                        break;
+
+                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+
+                        enableRefreshTime = false;
+                        break;
+
+
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        }
+
+        );
     }
 }
 
