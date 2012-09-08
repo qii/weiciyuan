@@ -64,7 +64,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
         }
 
         if (bean.getScreen_name().equals(GlobalContext.getInstance().getCurrentAccountName())
-                || bean.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+                || (bean.getId() != null && bean.getId().equals(GlobalContext.getInstance().getCurrentAccountId()))) {
             Intent intent = new Intent(this, MyInfoActivity.class);
             intent.putExtra("token", getToken());
 
