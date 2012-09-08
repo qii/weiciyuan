@@ -19,7 +19,6 @@ import java.util.Map;
 /**
  * User: Jiang Qi
  * Date: 12-7-31
- * Time: 上午9:04
  */
 public class FetchNewMsgService extends Service {
     CommentListBean commentResult;
