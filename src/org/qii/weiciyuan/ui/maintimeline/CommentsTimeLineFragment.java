@@ -101,7 +101,9 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
         @Override
         public Object getItem(int position) {
-            return getList().getComments().get(position);
+            if (getList() != null && getList().getSize() > 0)
+                return getList().getComments().get(position);
+            return null;
         }
 
         @Override

@@ -56,7 +56,10 @@ public class StatusesListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return bean.get(position);
+        if (bean != null && bean.size() > 0)
+            return bean.get(position);
+        else
+            return null;
     }
 
     @Override
