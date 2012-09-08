@@ -154,6 +154,7 @@
     <string name="show_big_pic_summary">非常费流量</string>
     <string name="new_message">新消息</string>
     <string name="enable_fetch_new_msg">后台自动获取回复、评论</string>
+    <string name="start_fetch_msg">开始后台自动获取……</string>
     <string name="frequency">频率</string>
     <string name="theme">主题</string>
     <string name="font_size">字体大小</string>

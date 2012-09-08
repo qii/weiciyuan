@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
@@ -88,19 +89,19 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         if (key.equals(SettingActivity.ENABLE_FETCH_MSG)) {
             boolean value = sharedPreferences.getBoolean(key, false);
-            if (!value)
+            if (!value) {
                 cancelAlarm();
+            } else {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String frequency = sharedPref.getString(SettingActivity.FREQUENCY, "1");
+                scheduleReceiveMessage(frequency);
+            }
         }
 
         if (key.equals(SettingActivity.FREQUENCY)) {
             String value = sharedPreferences.getString(key, "1");
 
-            if (value.equals("1"))
-                startAlarm(3 * 60 * 1000);
-            if (value.equals("2"))
-                startAlarm(AlarmManager.INTERVAL_FIFTEEN_MINUTES);
-            if (value.equals("3"))
-                startAlarm(AlarmManager.INTERVAL_HALF_HOUR);
+            scheduleReceiveMessage(value);
 
         }
 
@@ -128,6 +129,15 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         }
     }
 
+    private void scheduleReceiveMessage(String value) {
+        if (value.equals("1"))
+            startAlarm(3 * 60 * 1000);
+        if (value.equals("2"))
+            startAlarm(AlarmManager.INTERVAL_FIFTEEN_MINUTES);
+        if (value.equals("3"))
+            startAlarm(AlarmManager.INTERVAL_HALF_HOUR);
+    }
+
     private void reload() {
 
         Intent intent = getActivity().getIntent();
@@ -147,7 +157,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         Intent intent = new Intent(getActivity(), FetchNewMsgService.class);
         PendingIntent sender = PendingIntent.getService(getActivity(), 195, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, time, time, sender);
-        Toast.makeText(getActivity(), "start fetch new message", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), getString(R.string.start_fetch_msg), Toast.LENGTH_SHORT).show();
 
     }
 
