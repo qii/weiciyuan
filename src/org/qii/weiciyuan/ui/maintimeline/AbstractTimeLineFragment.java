@@ -377,7 +377,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
                     case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
 
-                        enableRefreshTime = false;
+                        enableRefreshTime = true;
                         break;
 
 

@@ -670,7 +670,7 @@ public class CommentsByIdTimeLineFragment extends Fragment {
 
                     case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
 
-                        enableRefreshTime = false;
+                        enableRefreshTime = true;
                         break;
 
 
