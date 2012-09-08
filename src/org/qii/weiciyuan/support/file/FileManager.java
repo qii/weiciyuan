@@ -123,6 +123,11 @@ public class FileManager {
         return deleteDirectory(new File(path));
     }
 
+    public static boolean deletePictureCache() {
+        String path = SDCARD_PATH + File.separator + PICTURE_THUMBNAIL_CACHE;
+        return deleteDirectory(new File(path));
+    }
+
     private static boolean deleteDirectory(File path) {
         if (path.exists()) {
             File[] files = path.listFiles();

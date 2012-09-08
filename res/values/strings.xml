@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">微次元</string>
-    <string name="official_weibo">"@微次元"</string>
+    <string name="official_weibo">"@叛逆的心之所在"</string>
+    <string name="official_weibo_link">叛逆的心之所在</string>
 
     <string name="homepage">首页</string>
     <string name="detail">详细</string>
@@ -163,5 +164,6 @@
     <string name="other">其它</string>
     <string name="clear_sd_cache">删除缓存</string>
     <string name="clear_avatar_and_pic">清除已下载的头像和图片</string>
+    <string name="remove_ing">删除中……</string>
     <string name="version">版本</string>
 </resources>
