@@ -317,7 +317,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
         @Override
         public Object getItem(int position) {
-            if (getList() != null && getList().getReposts().size() > 0)
+            if (getList() != null && getList().getReposts().size() > 0 && position < getList().getReposts().size())
                 return getList().getReposts().get(position);
             else
                 return null;
