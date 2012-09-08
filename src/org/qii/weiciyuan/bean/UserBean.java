@@ -220,7 +220,7 @@ public class UserBean implements Serializable {
     private String domain;
     private String gender;
     private String statuses_count = "0";
-    private String favourites_count;
+    private String favourites_count= "0";
     private String created_at;
     private boolean following;
     private String allow_all_act_msg;
@@ -250,7 +250,7 @@ public class UserBean implements Serializable {
         this.friends_count = friends_count;
     }
 
-    private String followers_count;
-    private String friends_count;
+    private String followers_count= "0";
+    private String friends_count= "0";
 
 }

@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -60,6 +61,23 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
             bean = new UserBean();
             bean.setScreen_name(newValue);
 
+        }
+
+        if (bean.getScreen_name().equals(GlobalContext.getInstance().getCurrentAccountName())
+                || bean.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+            Intent intent = new Intent(this, MyInfoActivity.class);
+            intent.putExtra("token", getToken());
+
+            AccountBean accountBean = new AccountBean();
+            accountBean.setAccess_token(token);
+            accountBean.setUsernick(GlobalContext.getInstance().getCurrentAccountName());
+            accountBean.setUid(GlobalContext.getInstance().getCurrentAccountId());
+            UserBean userBean = new UserBean();
+            userBean.setId(GlobalContext.getInstance().getCurrentAccountId());
+            intent.putExtra("user", userBean);
+            intent.putExtra("account", accountBean);
+            startActivity(intent);
+            finish();
         }
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
