@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.ListBean;
-import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -335,8 +335,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
                     for (int i = 0; i < visibleItemNum; i++) {
                         if (start + i > 0 && timeLineAdapter != null) {
                             Object object = timeLineAdapter.getItem(start + i - 1);
-                            if (object instanceof MessageBean) {
-                                MessageBean msg = (MessageBean) object;
+                            if (object instanceof ItemBean) {
+                                ItemBean msg = (ItemBean) object;
                                 TextView time = (TextView) listView.getChildAt(i).findViewById(R.id.time);
                                 if (time != null)
                                     time.setText(msg.getListviewItemShowTime());

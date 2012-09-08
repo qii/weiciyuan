@@ -27,6 +27,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
     protected void clearAndReplaceValue(MessageListBean value) {
         bean.getStatuses().clear();
         bean.getStatuses().addAll(value.getStatuses());
+        bean.setTotal_number(value.getTotal_number());
     }
 
     @Override
@@ -81,7 +82,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusesListAdapter(getActivity(),((AbstractAppActivity) getActivity()).getCommander(), getList().getStatuses(), listView);
+        timeLineAdapter = new StatusesListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getStatuses(), listView);
         listView.setAdapter(timeLineAdapter);
     }
 }
