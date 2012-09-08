@@ -8,6 +8,7 @@ import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.user.FanListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
 
 /**
  * User: Jiang Qi

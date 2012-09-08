@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.ui.maintimeline;
+package org.qii.weiciyuan.ui.basefragment;
 
 import android.os.Bundle;
 import android.widget.Toast;

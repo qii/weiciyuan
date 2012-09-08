@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.ui.userinfo;
+package org.qii.weiciyuan.ui.basefragment;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -18,6 +18,8 @@ import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
+import org.qii.weiciyuan.ui.userinfo.FriendsListFragment;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -197,7 +199,7 @@ public abstract class AbstractUserListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    static class ViewHolder {
+    public static class ViewHolder {
         TextView username;
         TextView content;
         TextView time;

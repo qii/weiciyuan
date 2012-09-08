@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.ui.maintimeline;
+package org.qii.weiciyuan.ui.basefragment;
 
 import android.app.Activity;
 import android.os.Bundle;

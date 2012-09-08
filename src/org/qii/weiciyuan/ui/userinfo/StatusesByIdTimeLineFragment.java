@@ -17,7 +17,7 @@ import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.maintimeline.AbstractMessageTimeLineFragment;
+import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 
 /**
  * User: Jiang Qi

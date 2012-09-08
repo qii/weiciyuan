@@ -20,7 +20,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
-import org.qii.weiciyuan.ui.maintimeline.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.CommentNewActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
