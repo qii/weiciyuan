@@ -153,14 +153,15 @@
     <string name="show_big_pic">列表显示大图</string>
     <string name="show_big_pic_summary">非常费流量</string>
     <string name="new_message">新消息</string>
-    <string name="enable_fetch_new_msg">后台自动获取回复、评论</string>
+    <string name="notification">通知</string>
+    <string name="enable_fetch_new_msg">定时获取回复和评论</string>
     <string name="start_fetch_msg">开始后台自动获取……</string>
-    <string name="frequency">频率</string>
+    <string name="frequency">间隔</string>
     <string name="theme">主题</string>
     <string name="font_size">字体大小</string>
     <string name="only_timeline_font">只影响列表字体大小</string>
     <string name="other">其它</string>
-    <string name="clear_sd_cache">清缓存</string>
-    <string name="clear_avatar_and_pic">清除缓存的头像和照片，释放存储空间</string>
+    <string name="clear_sd_cache">删除缓存</string>
+    <string name="clear_avatar_and_pic">清除已下载的头像和照片</string>
     <string name="version">版本</string>
 </resources>

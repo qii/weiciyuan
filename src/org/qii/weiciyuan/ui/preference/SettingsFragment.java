@@ -178,7 +178,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         @Override
         protected void onPostExecute(String s) {
-            clear_cache.setSummary(getString(R.string.clear_avatar_and_pic) + " " + s);
+            clear_cache.setSummary(getString(R.string.clear_avatar_and_pic) + "(" + s + ")");
         }
 
 
