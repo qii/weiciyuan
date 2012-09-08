@@ -6,7 +6,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.userinfo.StatusesListAdapter;
+import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
 
 /**
  * User: qii

@@ -86,7 +86,6 @@ public class CommentListAdapter extends BaseAdapter {
             holder.time = (TextView) convertView.findViewById(R.id.time);
             holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
             holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
-            holder.content_pic = (ImageView) convertView.findViewById(R.id.content_pic);
             holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
 
             convertView.setTag(holder);
@@ -132,7 +131,6 @@ public class CommentListAdapter extends BaseAdapter {
 
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);
-        holder.content_pic.setVisibility(View.GONE);
 
         if (repost_msg != null && showOriStatus) {
             buildRepostContent(repost_msg, holder, position);
@@ -162,16 +160,16 @@ public class CommentListAdapter extends BaseAdapter {
         }
     }
 
+    static class ViewHolder {
+        TextView username;
+        TextView content;
+        TextView repost_content;
+        TextView time;
+        ImageView avatar;
+        ImageView repost_content_pic;
+    }
+
 
 }
 
 
-class ViewHolder {
-    TextView username;
-    TextView content;
-    TextView repost_content;
-    TextView time;
-    ImageView avatar;
-    ImageView content_pic;
-    ImageView repost_content_pic;
-}

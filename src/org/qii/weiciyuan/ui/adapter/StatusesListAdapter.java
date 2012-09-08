@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.ui.userinfo;
+package org.qii.weiciyuan.ui.adapter;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +18,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 
 import java.util.List;
