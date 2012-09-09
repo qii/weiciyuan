@@ -130,7 +130,8 @@
     <string name="he_is_following_you">Ta关注了你</string>
 
     <!--fav-->
-    <string name="favourite">收藏数</string>
+    <string name="favourite">收藏</string>
+    <string name="fav_number">收藏数</string>
 
     <!-- account -->
     <string name="account">帐号</string>
