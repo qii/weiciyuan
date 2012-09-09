@@ -49,6 +49,9 @@ public class CommentListAdapter extends BaseAdapter {
         return bean;
     }
 
+    public boolean hasStableIds() {
+        return true;
+    }
 
     @Override
     public int getCount() {
@@ -62,14 +65,17 @@ public class CommentListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        if (getList() != null && getList().size() > 0 && position < getList().size())
+        if (position >= 0 && getList() != null && getList().size() > 0 && position < getList().size())
             return getList().get(position);
         return null;
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        if (getList() != null && getList().size() > 0 && position < getList().size())
+            return Long.valueOf(getList().get(position).getId());
+        else
+            return -1;
     }
 
     @Override
