@@ -44,6 +44,10 @@ public class StatusesListAdapter extends BaseAdapter {
 
     }
 
+    public boolean hasStableIds() {
+        return true;
+    }
+
 
     @Override
     public int getCount() {
@@ -57,7 +61,7 @@ public class StatusesListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        if (bean != null && bean.size() > 0 && position < bean.size())
+        if (position >= 0 && bean != null && bean.size() > 0 && position < bean.size())
             return bean.get(position);
         else
             return null;
@@ -65,7 +69,12 @@ public class StatusesListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return 0;
+
+
+        if (bean != null && bean.size() > 0 && position < bean.size())
+            return Long.valueOf(bean.get(position).getId());
+        else
+            return -1;
     }
 
     @Override

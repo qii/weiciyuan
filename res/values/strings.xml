@@ -43,6 +43,7 @@
     <string name="total">共计</string>
     <string name="new_messages">条新消息</string>
     <string name="old_messages">条旧消息</string>
+    <string name="weibos">条微博</string>
     <string name="loading">载入中……</string>
     <string name="click_to_load_older_message">点击载入旧消息</string>
     <string name="older_message_empty">没有更早的消息了</string>
