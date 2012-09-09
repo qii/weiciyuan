@@ -118,6 +118,9 @@ public class CommentNewActivity extends AbstractAppActivity {
                 Toast.makeText(CommentNewActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
 
             }
+
+            if (progressFragment != null)
+                progressFragment.dismissAllowingStateLoss();
         }
 
 
