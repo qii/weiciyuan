@@ -112,7 +112,7 @@ public class StatusMultiChoiceModeListener implements AbsListView.MultiChoiceMod
                 MessageBean msg = (MessageBean) adapter.getItem(listView.getCheckedItemPositions().keyAt(listView.getCheckedItemCount() - 1) - 1);
                 intent = new Intent(getActivity(), RepostNewActivity.class);
                 intent.putExtra("token", ((IToken) activity).getToken());
-                intent.putExtra("id", ids[0]);
+                intent.putExtra("id", String.valueOf(ids[0]));
                 intent.putExtra("msg", msg);
                 getActivity().startActivity(intent);
                 mode.finish();
@@ -120,7 +120,7 @@ public class StatusMultiChoiceModeListener implements AbsListView.MultiChoiceMod
             case R.id.menu_comment:
                 intent = new Intent(getActivity(), CommentNewActivity.class);
                 intent.putExtra("token", ((IToken) activity).getToken());
-                intent.putExtra("id", ids[0]);
+                intent.putExtra("id", String.valueOf(ids[0]));
                 getActivity().startActivity(intent);
                 mode.finish();
                 break;

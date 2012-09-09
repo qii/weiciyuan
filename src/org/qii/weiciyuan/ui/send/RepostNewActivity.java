@@ -115,6 +115,9 @@ public class RepostNewActivity extends AbstractAppActivity {
                 Toast.makeText(RepostNewActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
 
             }
+
+            if (progressFragment != null)
+                progressFragment.dismissAllowingStateLoss();
         }
 
         @Override
