@@ -185,8 +185,13 @@ public class MyInfoFragment extends Fragment {
         protected UserBean doInBackground(Object... params) {
             UserBean user = null;
             try {
-                user = new ShowUserDao(((IToken) getActivity()).getToken())
-                        .setUid(bean.getId()).getUserInfo();
+                ShowUserDao dao = new ShowUserDao(((IToken) getActivity()).getToken());
+                if (!TextUtils.isEmpty(bean.getId()))
+                    dao.setUid(bean.getId());
+                else
+                    dao.setScreen_name(bean.getScreen_name());
+
+                user = dao.getUserInfo();
             } catch (WeiboException e) {
                 this.e = e;
                 cancel(true);
