@@ -67,7 +67,9 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         outState.putString("token", token);
     }
 
+    //restore from activity destroy
     public void load() {
+        String sss=token;
         if ((bean == null || bean.getComments().size() == 0) && newTask == null) {
             if (listView != null) {
                 refresh();

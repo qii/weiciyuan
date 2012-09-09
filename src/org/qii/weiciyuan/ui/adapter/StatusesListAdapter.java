@@ -46,7 +46,7 @@ public class StatusesListAdapter extends BaseAdapter {
         this.showOriStatus = showOriStatus;
 
         int[] attrs = new int[]{R.attr.listview_checked_color};
-        TypedArray ta = GlobalContext.getInstance().getActivity().obtainStyledAttributes(attrs);
+        TypedArray ta = activity.obtainStyledAttributes(attrs);
         checkedBG = ta.getColor(0, 430);
         defaultBG = activity.getResources().getColor(R.color.transparent);
 
