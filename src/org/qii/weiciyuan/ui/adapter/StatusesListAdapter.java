@@ -34,14 +34,15 @@ public class StatusesListAdapter extends BaseAdapter {
     List<MessageBean> bean;
     ListView listView;
     ICommander commander;
+    boolean showOriStatus = true;
 
-    public StatusesListAdapter(FragmentActivity activity, ICommander commander, List<MessageBean> bean, ListView listView) {
+    public StatusesListAdapter(FragmentActivity activity, ICommander commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
         this.activity = activity;
         inflater = activity.getLayoutInflater();
         this.bean = bean;
         this.commander = commander;
         this.listView = listView;
-
+        this.showOriStatus = showOriStatus;
     }
 
     public boolean hasStableIds() {
@@ -193,7 +194,7 @@ public class StatusesListAdapter extends BaseAdapter {
         holder.repost_content_pic.setVisibility(View.GONE);
         holder.content_pic.setVisibility(View.GONE);
 
-        if (repost_msg != null) {
+        if (repost_msg != null && showOriStatus) {
             buildRepostContent(repost_msg, holder, position);
         } else if (!TextUtils.isEmpty(msg.getThumbnail_pic()) && GlobalContext.getInstance().isEnablePic()) {
             buildPic(msg, holder.content_pic, position);
