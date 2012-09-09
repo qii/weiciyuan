@@ -1,20 +1,17 @@
 package org.qii.weiciyuan.bean;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * User: Jiang Qi
  * Date: 12-8-7
- * Time: 下午3:58
- */
-public class RepostListBean implements Serializable{
+  */
+public class RepostListBean extends ListBean {
 
     private List<MessageBean> reposts = new ArrayList<MessageBean>();
     private String previous_cursor = "";
     private String next_cursor = "0";
-    private String total_number = "";
 
     public List<MessageBean> getReposts() {
         return reposts;
@@ -40,11 +37,16 @@ public class RepostListBean implements Serializable{
         this.next_cursor = next_cursor;
     }
 
-    public String getTotal_number() {
+    @Override
+    public int getSize() {
+        return getReposts().size();
+    }
+
+    public int getTotal_number() {
         return total_number;
     }
 
-    public void setTotal_number(String total_number) {
+    public void setTotal_number(int total_number) {
         this.total_number = total_number;
     }
 }

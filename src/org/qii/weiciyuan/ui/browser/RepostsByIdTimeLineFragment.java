@@ -6,10 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.*;
-import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -17,49 +15,32 @@ import org.qii.weiciyuan.bean.RepostListBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
 import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
-import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.RepostNewActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * User: qii
  * Date: 12-8-13
  */
-public class RepostsByIdTimeLineFragment extends Fragment {
+public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<RepostListBean> {
 
-    protected View headerView;
-    protected View footerView;
-    protected ICommander commander;
-    protected ListView listView;
-    protected TextView empty;
-    protected ProgressBar progressBar;
-    protected StatusesListAdapter timeLineAdapter;
-    protected RepostListBean bean = new RepostListBean();
+
     private MessageBean msg;
-
-    private FriendsTimeLineGetNewMsgListTask newTask;
-    private FriendsTimeLineGetOlderMsgListTask oldTask;
 
     private EditText et;
 
     protected void clearAndReplaceValue(RepostListBean value) {
-           bean.getReposts().clear();
-           bean.getReposts().addAll(value.getReposts());
-           bean.setTotal_number(value.getTotal_number());
-       }
+        bean.getReposts().clear();
+        bean.getReposts().addAll(value.getReposts());
+        bean.setTotal_number(value.getTotal_number());
+    }
 
 
     public RepostListBean getList() {
@@ -79,21 +60,6 @@ public class RepostsByIdTimeLineFragment extends Fragment {
 
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if (newTask != null)
-            newTask.cancel(true);
-
-        if (oldTask != null)
-            oldTask.cancel(true);
-
-        removeListViewTimeRefresh();
-    }
-
-    private void removeListViewTimeRefresh() {
-        scheduledExecutorService.shutdownNow();
-    }
 
     public void load() {
         if ((bean == null || bean.getReposts().size() == 0) && newTask == null) {
@@ -133,22 +99,6 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         return false;
     }
 
-    protected void refreshLayout(RepostListBean bean) {
-        if (bean.getReposts().size() > 0) {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            empty.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-            listView.setVisibility(View.VISIBLE);
-            if (bean.getReposts().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            }
-        } else {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
-            empty.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-            listView.setVisibility(View.INVISIBLE);
-        }
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -162,13 +112,13 @@ public class RepostsByIdTimeLineFragment extends Fragment {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         }
-        addListViewTimeRefresh();
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bean = new RepostListBean();
         setHasOptionsMenu(true);
         setRetainInstance(true);
     }
@@ -193,8 +143,6 @@ public class RepostsByIdTimeLineFragment extends Fragment {
         }
 
 
-        timeLineAdapter = new StatusesListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getReposts(), listView, false);
-        listView.setAdapter(timeLineAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -227,8 +175,13 @@ public class RepostsByIdTimeLineFragment extends Fragment {
                 sendRepost();
             }
         });
-
+        buildListAdapter();
         return view;
+    }
+
+    protected void buildListAdapter() {
+        timeLineAdapter = new StatusesListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getReposts(), listView, false);
+        listView.setAdapter(timeLineAdapter);
     }
 
     private void sendRepost() {
@@ -306,42 +259,7 @@ public class RepostsByIdTimeLineFragment extends Fragment {
     }
 
 
-
-
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-
-    }
-
-
-    protected void listViewFooterViewClick(View view) {
-        if (oldTask == null || oldTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            oldTask = new FriendsTimeLineGetOlderMsgListTask();
-            oldTask.execute();
-        }
-    }
-
-    protected void downloadAvatar(ImageView view, String url, int position, ListView listView) {
-        commander.downloadAvatar(view, url, position, listView);
-    }
-
-
-    public void refresh() {
-        if (getActivity() == null)
-            return;
-
-        Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
-
-
-        if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            newTask = new FriendsTimeLineGetNewMsgListTask();
-            newTask.execute();
-        }
-        Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
-        for (String key : keys) {
-            avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
-            avatarBitmapWorkerTaskHashMap.remove(key);
-        }
-
 
     }
 
@@ -375,88 +293,6 @@ public class RepostsByIdTimeLineFragment extends Fragment {
     }
 
 
-    class FriendsTimeLineGetNewMsgListTask extends MyAsyncTask<Void, RepostListBean, RepostListBean> {
-        WeiboException e;
-
-        @Override
-        protected void onPreExecute() {
-            showListView();
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
-            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
-            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
-
-            listView.setSelection(0);
-        }
-
-
-        @Override
-        protected RepostListBean doInBackground(Void... params) {
-
-            RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, id);
-
-            if (getList().getReposts().size() > 0) {
-                dao.setSince_id(getList().getReposts().get(0).getId());
-            }
-            RepostListBean result = null;
-            try {
-                result = dao.getGSONMsgList();
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-                return null;
-            }
-
-            return result;
-
-        }
-
-        @Override
-        protected void onCancelled(RepostListBean newValue) {
-            super.onCancelled(newValue);
-            cleanWork();
-            if (this.e != null)
-                Toast.makeText(getActivity(), this.e.getError(), Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected void onPostExecute(RepostListBean newValue) {
-            if (newValue != null) {
-                if (newValue.getReposts().size() == 0) {
-                    Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
-
-                } else {
-                    Toast.makeText(getActivity(), getString(R.string.total) + newValue.getReposts().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
-                    if (newValue.getReposts().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                        newValue.getReposts().addAll(getList().getReposts());
-                    }
-
-                    clearAndReplaceValue(newValue);
-                    timeLineAdapter.notifyDataSetChanged();
-                    listView.setSelectionAfterHeaderView();
-                    headerView.findViewById(R.id.header_progress).clearAnimation();
-
-                }
-            }
-            cleanWork();
-            invlidateTabText();
-
-            super.onPostExecute(newValue);
-
-        }
-
-        private void cleanWork() {
-            headerView.findViewById(R.id.header_progress).clearAnimation();
-            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
-            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
-            if (bean.getReposts().size() == 0) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            } else {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
     private void invlidateTabText() {
         Activity activity = getActivity();
         if (activity != null) {
@@ -468,148 +304,57 @@ public class RepostsByIdTimeLineFragment extends Fragment {
     }
 
 
-    class FriendsTimeLineGetOlderMsgListTask extends MyAsyncTask<Void, RepostListBean, RepostListBean> {
-        WeiboException e;
+    @Override
+    protected RepostListBean getDoInBackgroundNewData() throws WeiboException {
+        RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, id);
 
-        @Override
-        protected void onPreExecute() {
-            showListView();
-
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
-            View view = footerView.findViewById(R.id.refresh);
-            view.setVisibility(View.VISIBLE);
-            view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
-
-
+        if (getList().getReposts().size() > 0) {
+            dao.setSince_id(getList().getReposts().get(0).getId());
         }
 
-        @Override
-        protected RepostListBean doInBackground(Void... params) {
+        return dao.getGSONMsgList();
+    }
 
-            RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, id);
-            if (getList().getReposts().size() > 0) {
-                dao.setMax_id(getList().getReposts().get(getList().getReposts().size() - 1).getId());
-            }
-            RepostListBean result = null;
-            try {
-                result = dao.getGSONMsgList();
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-                return null;
-            }
-
-            return result;
-
+    @Override
+    protected RepostListBean getDoInBackgroundOldData() throws WeiboException {
+        RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, id);
+        if (getList().getReposts().size() > 0) {
+            dao.setMax_id(getList().getReposts().get(getList().getReposts().size() - 1).getId());
         }
+        return dao.getGSONMsgList();
 
-        @Override
-        protected void onCancelled(RepostListBean newValue) {
-            super.onCancelled(newValue);
-            footerView.findViewById(R.id.refresh).clearAnimation();
-            footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
-            if (this.e != null)
-                Toast.makeText(getActivity(), this.e.getError(), Toast.LENGTH_SHORT).show();
-        }
+    }
 
-        @Override
-        protected void onPostExecute(RepostListBean newValue) {
-            if (newValue != null && newValue.getReposts().size() > 1) {
-                List<MessageBean> list = newValue.getReposts();
-                getList().getReposts().addAll(list.subList(1, list.size() - 1));
 
+    @Override
+    protected void newMsgOnPostExecute(RepostListBean newValue) {
+        if (newValue != null) {
+            if (newValue.getReposts().size() == 0) {
+                Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getReposts().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
+                if (newValue.getReposts().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                    newValue.getReposts().addAll(getList().getReposts());
+                }
+
+                clearAndReplaceValue(newValue);
+                timeLineAdapter.notifyDataSetChanged();
             }
-
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
-            footerView.findViewById(R.id.refresh).clearAnimation();
-            footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
-            timeLineAdapter.notifyDataSetChanged();
             invlidateTabText();
-            super.onPostExecute(newValue);
         }
     }
 
-    private void showListView() {
-        empty.setVisibility(View.INVISIBLE);
-        listView.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
-    }
-
-    private volatile boolean enableRefreshTime = true;
-    private ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-
-    private class refreshTimeWorker implements Runnable {
-        @Override
-        public void run() {
-            if (!enableRefreshTime)
-                return;
-            Activity activity = getActivity();
-            if (activity == null)
-                return;
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    int start = listView.getFirstVisiblePosition();
-                    int end = listView.getLastVisiblePosition();
-
-
-                    int visibleItemNum = listView.getChildCount();
-                    for (int i = 0; i < visibleItemNum; i++) {
-                        if (start + i > 0 && timeLineAdapter != null) {
-                            Object object = timeLineAdapter.getItem(start + i - 1);
-                            if (object instanceof MessageBean) {
-                                MessageBean msg = (MessageBean) object;
-                                TextView time = (TextView) listView.getChildAt(i).findViewById(R.id.time);
-                                if (time != null)
-                                    time.setText(msg.getListviewItemShowTime());
-                            }
-                        }
-                    }
-                }
-            });
-
+    @Override
+    protected void oldMsgOnPostExecute(RepostListBean newValue) {
+        if (newValue != null && newValue.getReposts().size() > 1) {
+            List<MessageBean> list = newValue.getReposts();
+            getList().getReposts().addAll(list.subList(1, list.size() - 1));
 
         }
 
-    }
-
-    protected void addListViewTimeRefresh() {
-
-        scheduledExecutorService.scheduleAtFixedRate(new refreshTimeWorker(), 1, 1, TimeUnit.SECONDS);
-
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                switch (scrollState) {
-
-                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-
-                        enableRefreshTime = true;
-                        break;
-
-
-                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-
-                        enableRefreshTime = false;
-                        break;
-
-                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-
-                        enableRefreshTime = true;
-                        break;
-
-
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        }
-
-        );
+        timeLineAdapter.notifyDataSetChanged();
+        invlidateTabText();
     }
 }
 
