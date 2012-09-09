@@ -43,9 +43,11 @@ public class StatusMultiChoiceModeListener implements AbsListView.MultiChoiceMod
         SparseBooleanArray size = listView.getCheckedItemPositions();
         for (int i = 0; i < size.size(); i++) {
             int position = size.keyAt(i);
-            MessageBean msg = (MessageBean) adapter.getItem(position - 1);
-            if (!msg.getUser().getId().equals(currentUserId))
-                return false;
+            if (size.valueAt(i)) {
+                MessageBean msg = (MessageBean) adapter.getItem(position - 1);
+                if (!msg.getUser().getId().equals(currentUserId))
+                    return false;
+            }
         }
         return true;
     }
