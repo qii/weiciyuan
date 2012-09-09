@@ -14,6 +14,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.util.ArrayList;
@@ -36,6 +37,17 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
 
     private TimeLinePagerAdapter adapter;
 
+    private AbstractTimeLineFragment commentFragment;
+    private AbstractTimeLineFragment repostFragment;
+
+
+    public void setCommentFragment(AbstractTimeLineFragment commentFragment) {
+        this.commentFragment = commentFragment;
+    }
+
+    public void setRepostFragment(AbstractTimeLineFragment repostFragment) {
+        this.repostFragment = repostFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,10 +98,10 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
             getActionBar().setSelectedNavigationItem(position);
             switch (position) {
                 case 1:
-                    ((CommentsByIdTimeLineFragment) adapter.getItem(1)).load();
+                    ((CommentsByIdTimeLineFragment) commentFragment).load();
                     break;
                 case 2:
-                    ((RepostsByIdTimeLineFragment) adapter.getItem(2)).load();
+                    ((RepostsByIdTimeLineFragment) repostFragment).load();
                     break;
             }
 

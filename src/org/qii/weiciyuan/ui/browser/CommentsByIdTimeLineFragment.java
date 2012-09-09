@@ -108,6 +108,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
+        ((BrowserWeiboMsgActivity)getActivity()).setCommentFragment(this);
+
         if (savedInstanceState != null && bean.getComments().size() == 0) {
             clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
             token = savedInstanceState.getString("token");
