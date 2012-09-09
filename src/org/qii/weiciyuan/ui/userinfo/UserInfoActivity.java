@@ -74,7 +74,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
             accountBean.setUid(GlobalContext.getInstance().getCurrentAccountId());
             UserBean userBean = new UserBean();
             userBean.setId(GlobalContext.getInstance().getCurrentAccountId());
-            intent.putExtra("user", userBean);
+            intent.putExtra("user", bean);
             intent.putExtra("account", accountBean);
             startActivity(intent);
             finish();

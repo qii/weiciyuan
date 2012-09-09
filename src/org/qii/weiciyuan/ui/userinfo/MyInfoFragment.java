@@ -63,7 +63,7 @@ public class MyInfoFragment extends Fragment {
         bean = ((IUserInfo) getActivity()).getUser();
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         setValue();
-
+        refresh();
     }
 
     @Override
@@ -163,15 +163,19 @@ public class MyInfoFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                if (task == null || task.getStatus() == AsyncTask.Status.FINISHED) {
-                    task = new SimpleTask();
-                    task.execute();
-                }
+                refresh();
                 break;
 
 
         }
         return true;
+    }
+
+    private void refresh() {
+        if (task == null || task.getStatus() == AsyncTask.Status.FINISHED) {
+            task = new SimpleTask();
+            task.execute();
+        }
     }
 
     private class SimpleTask extends AsyncTask<Object, UserBean, UserBean> {
