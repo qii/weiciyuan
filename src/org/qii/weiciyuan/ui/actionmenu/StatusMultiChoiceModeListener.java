@@ -28,6 +28,12 @@ public class StatusMultiChoiceModeListener implements AbsListView.MultiChoiceMod
     ListView listView;
     BaseAdapter adapter;
     Activity activity;
+    ActionMode mode;
+
+    public void finish() {
+        if (mode != null)
+            mode.finish();
+    }
 
     public StatusMultiChoiceModeListener(ListView listView, BaseAdapter adapter, Activity activity) {
         this.listView = listView;
@@ -72,6 +78,9 @@ public class StatusMultiChoiceModeListener implements AbsListView.MultiChoiceMod
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        if (this.mode == null)
+            this.mode = mode;
+
         return true;
 
     }
@@ -140,7 +149,7 @@ public class StatusMultiChoiceModeListener implements AbsListView.MultiChoiceMod
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-
+        this.mode = null;
 
     }
 }

@@ -57,6 +57,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((MainTimeLineActivity) getActivity()).setHomeListView(listView);
+        ((MainTimeLineActivity) getActivity()).setHomeMode(multiChoiceModeListener);
         if (savedInstanceState != null) {
             clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();

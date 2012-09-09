@@ -24,6 +24,7 @@ import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
+import org.qii.weiciyuan.ui.actionmenu.StatusMultiChoiceModeListener;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
@@ -52,6 +53,21 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     private ListView mentionsListView = null;
     private ListView commentsListView = null;
 
+    private StatusMultiChoiceModeListener homeMode = null;
+    private StatusMultiChoiceModeListener mentionMode = null;
+    private StatusMultiChoiceModeListener commeMode = null;
+
+    public void setHomeMode(StatusMultiChoiceModeListener homeMode) {
+        this.homeMode = homeMode;
+    }
+
+    public void setMentionMode(StatusMultiChoiceModeListener mentionMode) {
+        this.mentionMode = mentionMode;
+    }
+
+    public void setCommeMode(StatusMultiChoiceModeListener commeMode) {
+        this.commeMode = commeMode;
+    }
 
     public void setHomeListView(ListView homeListView) {
         this.homeListView = homeListView;
@@ -274,6 +290,11 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                                   FragmentTransaction ft) {
 
             mViewPager.setCurrentItem(tab.getPosition());
+            if (homeMode != null)
+                homeMode.finish();
+            if (mentionMode != null)
+                mentionMode.finish();
+
             switch (tab.getPosition()) {
                 case 0:
                     home = true;

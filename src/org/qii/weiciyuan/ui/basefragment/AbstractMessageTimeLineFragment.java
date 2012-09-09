@@ -81,7 +81,8 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setMultiChoiceModeListener(new StatusMultiChoiceModeListener(listView, timeLineAdapter, getActivity()));
+        multiChoiceModeListener = new StatusMultiChoiceModeListener(listView, timeLineAdapter, getActivity());
+        listView.setMultiChoiceModeListener(multiChoiceModeListener);
     }
 
     @Override
@@ -90,5 +91,6 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
         listView.setAdapter(timeLineAdapter);
     }
 
+    protected StatusMultiChoiceModeListener multiChoiceModeListener;
 
 }
