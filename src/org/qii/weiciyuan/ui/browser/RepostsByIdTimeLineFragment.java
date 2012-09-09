@@ -63,11 +63,13 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
 
     }
 
-
+    //restore from activity destroy
     public void load() {
         if ((bean == null || bean.getReposts().size() == 0) && newTask == null) {
+            if (listView != null) {
+                refresh();
+            }
 
-            refresh();
         }
     }
 

@@ -64,7 +64,7 @@
 
     <!--maintimelineactivity_layout -->
     <string name="home">首页</string>
-    <string name="mentions">回复</string>
+    <string name="mentions">提及</string>
     <string name="comments">评论</string>
     <string name="repost">转发</string>
     <string name="mail">私信</string>

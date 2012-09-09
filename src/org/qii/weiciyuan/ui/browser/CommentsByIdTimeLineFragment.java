@@ -69,7 +69,9 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     public void load() {
         if ((bean == null || bean.getComments().size() == 0) && newTask == null) {
-            refresh();
+            if (listView != null) {
+                refresh();
+            }
         }
     }
 
