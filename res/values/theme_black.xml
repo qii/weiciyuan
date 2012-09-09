@@ -43,6 +43,7 @@
         <item name="listview_item_refresh_animation">@drawable/refresh_light</item>
         <item name="link_color">@color/mintcream</item>
         <item name="line_drawable">@drawable/list_divider_holo_dark</item>
+        <item name="listview_checked_color">@color/listview_checked_color_holo_dark</item>
 
         <item name="android:progressBarStyle">@style/Widget.Holo.ProgressBar</item>
 

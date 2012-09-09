@@ -48,6 +48,8 @@
         <item name="listview_item_refresh_animation">@drawable/refresh_black</item>
         <item name="link_color">@color/dark_blue</item>
         <item name="line_drawable">@drawable/list_divider_holo_light</item>
+        <item name="listview_checked_color">@color/listview_checked_color_holo_light</item>
+
 
     </style>
     <!-- detail style -->

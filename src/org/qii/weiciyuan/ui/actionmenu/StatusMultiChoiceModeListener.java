@@ -66,6 +66,7 @@ public class StatusMultiChoiceModeListener implements AbsListView.MultiChoiceMod
             }
         }
 
+        adapter.notifyDataSetChanged();
 
     }
 

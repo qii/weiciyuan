@@ -4,7 +4,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:background="?listview_item_background_selector">
+                 android:id="@+id/listview_root">
     <TextView
             android:id="@+id/username"
             android:layout_width="wrap_content"

@@ -4,7 +4,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:background="?listview_item_background_selector">
+                 android:id="@+id/listview_root">
 
     <ImageView
             android:id="@+id/avatar"

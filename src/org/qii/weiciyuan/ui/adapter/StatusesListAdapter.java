@@ -1,16 +1,14 @@
 package org.qii.weiciyuan.ui.adapter;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.lib.UpdateString;
@@ -36,6 +34,9 @@ public class StatusesListAdapter extends BaseAdapter {
     ICommander commander;
     boolean showOriStatus = true;
 
+    int checkedBG;
+    int defaultBG;
+
     public StatusesListAdapter(FragmentActivity activity, ICommander commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
         this.activity = activity;
         inflater = activity.getLayoutInflater();
@@ -43,6 +44,12 @@ public class StatusesListAdapter extends BaseAdapter {
         this.commander = commander;
         this.listView = listView;
         this.showOriStatus = showOriStatus;
+
+        int[] attrs = new int[]{R.attr.listview_checked_color};
+        TypedArray ta = GlobalContext.getInstance().getActivity().obtainStyledAttributes(attrs);
+        checkedBG = ta.getColor(0, 430);
+        defaultBG = activity.getResources().getColor(R.color.transparent);
+
     }
 
     public boolean hasStableIds() {
@@ -154,10 +161,22 @@ public class StatusesListAdapter extends BaseAdapter {
         holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
         holder.content_pic = (ImageView) convertView.findViewById(R.id.content_pic);
         holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
+        holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
         return holder;
     }
 
     private void bindViewData(ViewHolder holder, int position) {
+
+
+        long[] checkedItemIds = listView.getCheckedItemIds();
+        holder.listview_root.setBackgroundColor(defaultBG);
+        String currentId = bean.get(position).getId();
+        for (long id : checkedItemIds) {
+            if (String.valueOf(id).equals(currentId)) {
+                holder.listview_root.setBackgroundColor(checkedBG);
+            }
+        }
+
 
         final MessageBean msg = bean.get(position);
         MessageBean repost_msg = msg.getRetweeted_status();
@@ -250,6 +269,7 @@ public class StatusesListAdapter extends BaseAdapter {
         ImageView avatar;
         ImageView content_pic;
         ImageView repost_content_pic;
+        RelativeLayout listview_root;
     }
 
 
