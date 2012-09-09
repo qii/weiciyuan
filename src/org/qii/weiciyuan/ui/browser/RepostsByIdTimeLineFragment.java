@@ -18,6 +18,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
+import org.qii.weiciyuan.ui.actionmenu.RepostMultiChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.RepostNewActivity;
@@ -35,6 +36,8 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
     private MessageBean msg;
 
     private EditText et;
+
+    private LinearLayout quick_repost;
 
     protected void clearAndReplaceValue(RepostListBean value) {
         bean.getReposts().clear();
@@ -112,6 +115,8 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         }
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setMultiChoiceModeListener(new RepostMultiChoiceModeListener(listView, timeLineAdapter, getActivity(), quick_repost));
     }
 
 
@@ -130,6 +135,7 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
         View view = inflater.inflate(R.layout.fragment_repost_listview_layout, container, false);
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        quick_repost = (LinearLayout) view.findViewById(R.id.quick_repost);
         listView = (ListView) view.findViewById(R.id.listView);
         listView.setScrollingCacheEnabled(false);
         headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
@@ -159,12 +165,12 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
 
         if (savedInstanceState == null && msg != null) {
             if (msg.getRetweeted_status() == null) {
-                view.findViewById(R.id.quick_repost).setVisibility(View.VISIBLE);
+                quick_repost.setVisibility(View.VISIBLE);
             }
         } else if (savedInstanceState != null) {
             msg = (MessageBean) savedInstanceState.getSerializable("msg");
             if (msg.getRetweeted_status() == null) {
-                view.findViewById(R.id.quick_repost).setVisibility(View.VISIBLE);
+                quick_repost.setVisibility(View.VISIBLE);
             }
         }
 
@@ -356,5 +362,7 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
         timeLineAdapter.notifyDataSetChanged();
         invlidateTabText();
     }
+
+
 }
 
