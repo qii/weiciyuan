@@ -30,7 +30,7 @@ public class CommentNewActivity extends AbstractAppActivity {
     private String token;
     private EditText et;
     private boolean enableRepost = false;
-    private String enableRepostString = "同时转发（ ）";
+    private String enableRepostString;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class CommentNewActivity extends AbstractAppActivity {
         getActionBar().setTitle(getString(R.string.comments));
         et = (EditText) findViewById(R.id.status_new_content);
         et.addTextChangedListener(new TextNumLimitWatcher(contentNumber, et, this));
-
+        enableRepostString = getString(R.string.disable_repost_when_comment);
     }
 
     @Override
@@ -97,9 +97,9 @@ public class CommentNewActivity extends AbstractAppActivity {
             case R.id.menu_enable_repost:
                 if (enableRepost) {
                     enableRepost = false;
-                    enableRepostString = "同时转发（ ）";
-                } else if (!enableRepost) {
-                    enableRepostString = "同时转发（√）";
+                    enableRepostString = getString(R.string.disable_repost_when_comment);
+                } else {
+                    enableRepostString =getString(R.string.enable_repost_when_comment);
                     enableRepost = true;
                 }
                 invalidateOptionsMenu();

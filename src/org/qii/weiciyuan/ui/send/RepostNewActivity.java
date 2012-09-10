@@ -35,7 +35,7 @@ public class RepostNewActivity extends AbstractAppActivity {
     private MessageBean msg;
 
     private boolean enableComment = false;
-    private String enableCommentString = "同时评论（ ）";
+    private String enableCommentString;
 
 
     @Override
@@ -61,7 +61,7 @@ public class RepostNewActivity extends AbstractAppActivity {
         if (msg.getRetweeted_status() != null) {
             et.setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
         }
-
+        enableCommentString = getString(R.string.disable_comment_when_repost);
     }
 
     @Override
@@ -82,9 +82,9 @@ public class RepostNewActivity extends AbstractAppActivity {
             case R.id.menu_enable_comment:
                 if (enableComment) {
                     enableComment = false;
-                    enableCommentString = "同时评论（ ）";
-                } else if (!enableComment) {
-                    enableCommentString = "同时评论（√）";
+                    enableCommentString = getString(R.string.disable_comment_when_repost);
+                } else {
+                    enableCommentString = getString(R.string.enable_comment_when_repost);
                     enableComment = true;
                 }
                 invalidateOptionsMenu();

@@ -81,6 +81,10 @@
     <string name="content_cant_be_empty">内容不能为空</string>
     <string name="content_cant_be_empty_and_dont_have_account">内容不能为空，当前也没可用的发微博帐号</string>
     <string name="content_words_number_too_many">字数太多了</string>
+    <string name="enable_comment_when_repost">同时评论（√）</string>
+    <string name="disable_comment_when_repost">同时评论（ ）</string>
+    <string name="enable_repost_when_comment">同时转发（√）</string>
+    <string name="disable_repost_when_comment">同时转发（ ）</string>
 
     <!--accountactivity_layout-->
     <string name="you_cancel_login">你取消了授权</string>
@@ -119,7 +123,6 @@
     <string name="my_fav_list">我的收藏列表</string>
     <string name="intro">简介</string>
     <string name="at">"@TA"</string>
-
 
 
     <!-- serach -->
