@@ -27,7 +27,7 @@ import java.util.List;
  * User: qii
  * Date: 12-9-9
  */
-public class StatusMultiChoiceModeListener implements ActionMode.Callback {
+public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
     ListView listView;
     BaseAdapter adapter;
@@ -40,7 +40,7 @@ public class StatusMultiChoiceModeListener implements ActionMode.Callback {
             mode.finish();
     }
 
-    public StatusMultiChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment activity, MessageBean bean) {
+    public StatusSingleChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment activity, MessageBean bean) {
         this.listView = listView;
         this.activity = activity;
         this.adapter = adapter;
@@ -66,9 +66,9 @@ public class StatusMultiChoiceModeListener implements ActionMode.Callback {
         MenuInflater inflater = mode.getMenuInflater();
         menu.clear();
         if (bean.getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
-            inflater.inflate(R.menu.fragment_listview_item_contexual_menu_myself, menu);
+            inflater.inflate(R.menu.fragment_status_listview_item_contextual_menu_myself, menu);
         } else {
-            inflater.inflate(R.menu.fragment_listview_item_contexual_menu, menu);
+            inflater.inflate(R.menu.fragment_status_listview_item_contextual_menu, menu);
         }
 
         mode.setTitle(bean.getUser().getScreen_name());

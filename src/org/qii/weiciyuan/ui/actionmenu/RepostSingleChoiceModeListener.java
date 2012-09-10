@@ -13,10 +13,10 @@ import org.qii.weiciyuan.bean.MessageBean;
 * User: qii
 * Date: 12-9-9
 */
-public class RepostMultiChoiceModeListener extends StatusMultiChoiceModeListener {
+public class RepostSingleChoiceModeListener extends StatusSingleChoiceModeListener {
     LinearLayout quick_repost;
 
-    public RepostMultiChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment activity, LinearLayout quick_repost,MessageBean bean) {
+    public RepostSingleChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment activity, LinearLayout quick_repost, MessageBean bean) {
         super(listView, adapter, activity,bean);
         this.quick_repost = quick_repost;
 

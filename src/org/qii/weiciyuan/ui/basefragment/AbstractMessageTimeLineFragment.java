@@ -9,7 +9,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.actionmenu.StatusMultiChoiceModeListener;
+import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
 
 /**
@@ -91,12 +91,12 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
                     mActionMode = null;
                     listView.setItemChecked(position, true);
                     timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new StatusMultiChoiceModeListener(listView, timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getStatuses().get(position - 1)));
+                    mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getStatuses().get(position - 1)));
                     return true;
                 } else {
                     listView.setItemChecked(position, true);
                     timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new StatusMultiChoiceModeListener(listView, timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getStatuses().get(position - 1)));
+                    mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getStatuses().get(position - 1)));
                     return true;
                 }
             }
@@ -111,6 +111,6 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
         listView.setAdapter(timeLineAdapter);
     }
 
-    protected StatusMultiChoiceModeListener multiChoiceModeListener;
+    protected StatusSingleChoiceModeListener multiChoiceModeListener;
 
 }

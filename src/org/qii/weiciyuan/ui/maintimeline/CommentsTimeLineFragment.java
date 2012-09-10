@@ -8,7 +8,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
@@ -18,6 +20,7 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
+import org.qii.weiciyuan.ui.actionmenu.CommentChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
@@ -53,6 +56,28 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             new SimpleTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
         }
+
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mActionMode != null) {
+                    mActionMode.finish();
+                    mActionMode = null;
+                    listView.setItemChecked(position, true);
+                    timeLineAdapter.notifyDataSetChanged();
+                    mActionMode = getActivity().startActionMode(new CommentChoiceModeListener(listView, timeLineAdapter, CommentsTimeLineFragment.this, bean.getComments().get(position - 1)));
+                    return true;
+                } else {
+                    listView.setItemChecked(position, true);
+                    timeLineAdapter.notifyDataSetChanged();
+                    mActionMode = getActivity().startActionMode(new CommentChoiceModeListener(listView, timeLineAdapter, CommentsTimeLineFragment.this, bean.getComments().get(position - 1)));
+                    return true;
+                }
+            }
+        }
+
+        );
 
     }
 
@@ -90,16 +115,12 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     }
 
 
-
-
-
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("msg", bean.getComments().get(position).getStatus());
         intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
         startActivity(intent);
     }
-
 
 
     @Override

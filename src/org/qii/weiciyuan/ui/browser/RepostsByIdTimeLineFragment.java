@@ -18,7 +18,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
-import org.qii.weiciyuan.ui.actionmenu.StatusMultiChoiceModeListener;
+import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.RepostNewActivity;
@@ -128,12 +128,12 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
                            mActionMode = null;
                            listView.setItemChecked(position, true);
                            timeLineAdapter.notifyDataSetChanged();
-                           mActionMode = getActivity().startActionMode(new StatusMultiChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this, bean.getReposts().get(position - 1)));
+                           mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this, bean.getReposts().get(position - 1)));
                            return true;
                        } else {
                            listView.setItemChecked(position, true);
                            timeLineAdapter.notifyDataSetChanged();
-                           mActionMode = getActivity().startActionMode(new StatusMultiChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this, bean.getReposts().get(position-1)));
+                           mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this, bean.getReposts().get(position-1)));
                            return true;
                        }
                    }
