@@ -29,8 +29,8 @@ public class CommentNewActivity extends AbstractAppActivity {
     private String id;
     private String token;
     private EditText et;
-    private boolean enableRepost = false;
-    private String enableRepostString;
+    private boolean enableCommentOri = false;
+    private String enableCommentOriString;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,13 +48,13 @@ public class CommentNewActivity extends AbstractAppActivity {
         getActionBar().setTitle(getString(R.string.comments));
         et = (EditText) findViewById(R.id.status_new_content);
         et.addTextChangedListener(new TextNumLimitWatcher(contentNumber, et, this));
-        enableRepostString = getString(R.string.disable_repost_when_comment);
+        enableCommentOriString = getString(R.string.disable_comment_to_ori_when_comment);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.commentnewactivity_menu, menu);
-        menu.findItem(R.id.menu_enable_repost).setTitle(enableRepostString);
+        menu.findItem(R.id.menu_enable_repost).setTitle(enableCommentOriString);
         return true;
     }
 
@@ -95,12 +95,12 @@ public class CommentNewActivity extends AbstractAppActivity {
                 }
                 break;
             case R.id.menu_enable_repost:
-                if (enableRepost) {
-                    enableRepost = false;
-                    enableRepostString = getString(R.string.disable_repost_when_comment);
+                if (enableCommentOri) {
+                    enableCommentOri = false;
+                    enableCommentOriString = getString(R.string.disable_comment_to_ori_when_comment);
                 } else {
-                    enableRepostString = getString(R.string.enable_repost_when_comment);
-                    enableRepost = true;
+                    enableCommentOriString = getString(R.string.enable_comment_to_ori_when_comment);
+                    enableCommentOri = true;
                 }
                 invalidateOptionsMenu();
                 break;
@@ -136,7 +136,7 @@ public class CommentNewActivity extends AbstractAppActivity {
         @Override
         protected CommentBean doInBackground(Void... params) {
             CommentNewMsgDao dao = new CommentNewMsgDao(token, id, ((EditText) findViewById(R.id.status_new_content)).getText().toString());
-            if (enableRepost)
+            if (enableCommentOri)
                 dao.enableComment_ori(true);
             else
                 dao.enableComment_ori(false);
