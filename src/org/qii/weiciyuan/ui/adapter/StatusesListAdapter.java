@@ -168,15 +168,10 @@ public class StatusesListAdapter extends BaseAdapter {
     private void bindViewData(ViewHolder holder, int position) {
 
 
-        long[] checkedItemIds = listView.getCheckedItemIds();
         holder.listview_root.setBackgroundColor(defaultBG);
-        String currentId = bean.get(position).getId();
-        for (long id : checkedItemIds) {
-            if (String.valueOf(id).equals(currentId)) {
-                holder.listview_root.setBackgroundColor(checkedBG);
-            }
-        }
 
+        if (listView.getCheckedItemPosition() == position + 1)
+            holder.listview_root.setBackgroundColor(checkedBG);
 
         final MessageBean msg = bean.get(position);
         MessageBean repost_msg = msg.getRetweeted_status();

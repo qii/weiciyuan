@@ -3,6 +3,7 @@ package org.qii.weiciyuan.ui.basefragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
     protected TimeLineGetNewMsgListTask newTask;
     protected TimeLineGetOlderMsgListTask oldTask;
+    protected ActionMode mActionMode;
 
     public T getList() {
         return bean;
@@ -105,6 +107,13 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                if (mActionMode != null) {
+                    listView.clearChoices();
+                    mActionMode.finish();
+                    mActionMode = null;
+                    return;
+                }
+                listView.clearChoices();
                 if (position - 1 < getList().getSize() && position - 1 >= 0) {
 
                     listViewItemClick(parent, view, position - 1, id);
@@ -171,6 +180,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         commander = ((AbstractAppActivity) getActivity()).getCommander();
 
         addListViewTimeRefresh();
+    }
+
+    public void setmActionMode(ActionMode mActionMode) {
+        this.mActionMode = mActionMode;
     }
 
 

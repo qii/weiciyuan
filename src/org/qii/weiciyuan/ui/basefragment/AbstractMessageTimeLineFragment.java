@@ -1,7 +1,9 @@
 package org.qii.weiciyuan.ui.basefragment;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageListBean;
@@ -80,9 +82,27 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-        multiChoiceModeListener = new StatusMultiChoiceModeListener(listView, timeLineAdapter, getActivity());
-        listView.setMultiChoiceModeListener(multiChoiceModeListener);
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mActionMode != null) {
+                    mActionMode.finish();
+                    mActionMode = null;
+                    listView.setItemChecked(position, true);
+                    timeLineAdapter.notifyDataSetChanged();
+                    mActionMode = getActivity().startActionMode(new StatusMultiChoiceModeListener(listView, timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getStatuses().get(position - 1)));
+                    return true;
+                } else {
+                    listView.setItemChecked(position, true);
+                    timeLineAdapter.notifyDataSetChanged();
+                    mActionMode = getActivity().startActionMode(new StatusMultiChoiceModeListener(listView, timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getStatuses().get(position - 1)));
+                    return true;
+                }
+            }
+        }
+
+        );
     }
 
     @Override
