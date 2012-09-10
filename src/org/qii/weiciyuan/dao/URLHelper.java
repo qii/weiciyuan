@@ -94,4 +94,8 @@ public class URLHelper {
     public static String getGoogleLocatonUrl() {
         return URLManager.getGoogleRealUrl("googlelocation");
     }
+
+    public static String getDestroyStatus() {
+           return URLManager.getRealUrl("destroy_status");
+       }
 }
