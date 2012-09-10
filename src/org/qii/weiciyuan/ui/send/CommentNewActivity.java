@@ -99,7 +99,7 @@ public class CommentNewActivity extends AbstractAppActivity {
                     enableRepost = false;
                     enableRepostString = getString(R.string.disable_repost_when_comment);
                 } else {
-                    enableRepostString =getString(R.string.enable_repost_when_comment);
+                    enableRepostString = getString(R.string.enable_repost_when_comment);
                     enableRepost = true;
                 }
                 invalidateOptionsMenu();
@@ -136,6 +136,10 @@ public class CommentNewActivity extends AbstractAppActivity {
         @Override
         protected CommentBean doInBackground(Void... params) {
             CommentNewMsgDao dao = new CommentNewMsgDao(token, id, ((EditText) findViewById(R.id.status_new_content)).getText().toString());
+            if (enableRepost)
+                dao.enableComment_ori(true);
+            else
+                dao.enableComment_ori(false);
             try {
                 return dao.sendNewMsg();
             } catch (WeiboException e) {

@@ -52,8 +52,11 @@ public class CommentNewMsgDao {
     }
 
 
-    public void setComment_ori(String comment_ori) {
-        this.comment_ori = comment_ori;
+    public void enableComment_ori(boolean enable) {
+        if (enable)
+            this.comment_ori = "1";
+        else
+            this.comment_ori = "0";
     }
 
     private String access_token;

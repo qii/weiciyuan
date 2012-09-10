@@ -60,6 +60,8 @@ public class RepostNewActivity extends AbstractAppActivity {
 
         if (msg.getRetweeted_status() != null) {
             et.setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
+        } else {
+            et.setHint(getString(R.string.repost));
         }
         enableCommentString = getString(R.string.disable_comment_when_repost);
     }
