@@ -2,11 +2,13 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-
+    <item android:id="@+id/menu_enable_comment"
+              android:showAsAction="ifRoom|withText"
+               />
 
     <item android:id="@+id/menu_send"
           android:icon="?statusnewactivity_send"
-          android:title="发送"
+          android:title="@string/send"
           android:showAsAction="ifRoom|withText"
             />
 

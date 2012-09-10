@@ -34,6 +34,9 @@ public class RepostNewActivity extends AbstractAppActivity {
 
     private MessageBean msg;
 
+    private boolean enableComment = false;
+    private String enableCommentString = "同时评论（ ）";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,9 +60,6 @@ public class RepostNewActivity extends AbstractAppActivity {
 
         if (msg.getRetweeted_status() != null) {
             et.setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
-        } else {
-            et.setText(getString(R.string.repost));
-            et.setSelection(et.getText().toString().length());
         }
 
     }
@@ -67,6 +67,8 @@ public class RepostNewActivity extends AbstractAppActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.repostnewactivity_menu, menu);
+        menu.findItem(R.id.menu_enable_comment).setTitle(enableCommentString);
+
         return true;
     }
 
@@ -77,24 +79,29 @@ public class RepostNewActivity extends AbstractAppActivity {
                 if (canSend())
                     new SimpleTask().execute();
                 break;
+            case R.id.menu_enable_comment:
+                if (enableComment) {
+                    enableComment = false;
+                    enableCommentString = "同时评论（ ）";
+                } else if (!enableComment) {
+                    enableCommentString = "同时评论（√）";
+                    enableComment = true;
+                }
+                invalidateOptionsMenu();
+                break;
         }
         return true;
     }
 
     private boolean canSend() {
 
-        boolean haveContent = !TextUtils.isEmpty(et.getText().toString());
         boolean haveToken = !TextUtils.isEmpty(token);
         boolean contentNumBelow140 = (et.getText().toString().length() < 140);
 
-        if (haveContent && haveToken && contentNumBelow140) {
+        if (haveToken && contentNumBelow140) {
             return true;
         } else {
-            if (!haveContent && !haveToken) {
-                Toast.makeText(this, getString(R.string.content_cant_be_empty_and_dont_have_account), Toast.LENGTH_SHORT).show();
-            } else if (!haveContent) {
-                et.setError(getString(R.string.content_cant_be_empty));
-            } else if (!haveToken) {
+            if (!haveToken) {
                 Toast.makeText(this, getString(R.string.dont_have_account), Toast.LENGTH_SHORT).show();
             }
 
@@ -141,7 +148,9 @@ public class RepostNewActivity extends AbstractAppActivity {
             }
 
             RepostNewMsgDao dao = new RepostNewMsgDao(token, id);
-//            dao.setStatus(content + "//@" + msg.getUser().getScreen_name() + ":" + msg.getText());
+            if (enableComment) {
+                dao.setIs_comment(true);
+            }
             dao.setStatus(content);
             try {
                 return dao.sendNewMsg();
