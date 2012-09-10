@@ -1,16 +1,14 @@
 package org.qii.weiciyuan.ui.adapter;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -35,6 +33,9 @@ public class CommentListAdapter extends BaseAdapter {
     ICommander commander;
     boolean showOriStatus = true;
 
+    int checkedBG;
+    int defaultBG;
+
     public CommentListAdapter(FragmentActivity activity, ICommander commander, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
         this.activity = activity;
         this.inflater = activity.getLayoutInflater();
@@ -42,6 +43,11 @@ public class CommentListAdapter extends BaseAdapter {
         this.commander = commander;
         this.listView = listView;
         this.showOriStatus = showOriStatus;
+
+        int[] attrs = new int[]{R.attr.listview_checked_color};
+        TypedArray ta = activity.obtainStyledAttributes(attrs);
+        checkedBG = ta.getColor(0, 430);
+        defaultBG = activity.getResources().getColor(R.color.transparent);
 
     }
 
@@ -93,6 +99,7 @@ public class CommentListAdapter extends BaseAdapter {
             holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
             holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
             holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
+            holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
 
             convertView.setTag(holder);
         } else {
@@ -106,6 +113,11 @@ public class CommentListAdapter extends BaseAdapter {
     }
 
     private void bindViewData(ViewHolder holder, int position) {
+
+        holder.listview_root.setBackgroundColor(defaultBG);
+
+        if (listView.getCheckedItemPosition() == position + 1)
+            holder.listview_root.setBackgroundColor(checkedBG);
 
         final CommentBean msg = getList().get(position);
         MessageBean repost_msg = msg.getStatus();
@@ -173,6 +185,7 @@ public class CommentListAdapter extends BaseAdapter {
         TextView time;
         ImageView avatar;
         ImageView repost_content_pic;
+        RelativeLayout listview_root;
     }
 
 
