@@ -31,6 +31,7 @@ public class CommentChoiceModeListener implements ActionMode.Callback {
     Fragment activity;
     ActionMode mode;
     CommentBean bean;
+    ShareActionProvider mShareActionProvider;
 
     public void finish() {
         if (mode != null)
@@ -68,7 +69,7 @@ public class CommentChoiceModeListener implements ActionMode.Callback {
         mode.setTitle(bean.getUser().getScreen_name());
 
         MenuItem item = menu.findItem(R.id.menu_share);
-        ShareActionProvider mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
 
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
@@ -94,13 +95,24 @@ public class CommentChoiceModeListener implements ActionMode.Callback {
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("msg", bean);
                 getActivity().startActivity(intent);
+                listView.clearChoices();
+                mode.finish();
 
+                break;
+            case R.id.menu_share:
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, bean.getText());
+                PackageManager packageManager = getActivity().getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
+                boolean isIntentSafe = activities.size() > 0;
+                if (isIntentSafe && mShareActionProvider != null) {
+                    mShareActionProvider.setShareIntent(sharingIntent);
+                }
                 break;
 
         }
 
-        listView.clearChoices();
-        mode.finish();
 
         return true;
     }
