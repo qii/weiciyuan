@@ -2,6 +2,8 @@ package org.qii.weiciyuan.ui.actionmenu;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.support.v4.app.Fragment;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -9,11 +11,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.ShareActionProvider;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.ReplyToCommentNewActivity;
+
+import java.util.List;
 
 /**
  * User: qii
@@ -62,6 +67,18 @@ public class CommentChoiceModeListener implements ActionMode.Callback {
 
         mode.setTitle(bean.getUser().getScreen_name());
 
+        MenuItem item = menu.findItem(R.id.menu_share);
+        ShareActionProvider mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, bean.getText());
+        PackageManager packageManager = getActivity().getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
+        boolean isIntentSafe = activities.size() > 0;
+        if (isIntentSafe && mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(sharingIntent);
+        }
 
         return true;
 
