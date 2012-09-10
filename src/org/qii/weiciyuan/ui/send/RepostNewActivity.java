@@ -57,6 +57,9 @@ public class RepostNewActivity extends AbstractAppActivity {
 
         if (msg.getRetweeted_status() != null) {
             et.setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
+        } else {
+            et.setText(getString(R.string.repost));
+            et.setSelection(et.getText().toString().length());
         }
 
     }
