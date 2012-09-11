@@ -114,6 +114,10 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
                                   FragmentTransaction ft) {
 
             mViewPager.setCurrentItem(tab.getPosition());
+            if (commentFragment != null)
+                commentFragment.clearActionMode();
+            if (repostFragment != null)
+                repostFragment.clearActionMode();
 
         }
 
