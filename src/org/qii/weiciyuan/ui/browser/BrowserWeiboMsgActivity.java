@@ -35,18 +35,25 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
 
     private ViewPager mViewPager = null;
 
-    private TimeLinePagerAdapter adapter;
 
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("msg", msg);
+        outState.putString("token", token);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        Intent intent = getIntent();
-        token = intent.getStringExtra("token");
-        msg = (MessageBean) intent.getSerializableExtra("msg");
+        if (savedInstanceState != null) {
+            msg = (MessageBean) savedInstanceState.getSerializable("msg");
+            token = savedInstanceState.getString("token");
+        } else {
+            Intent intent = getIntent();
+            token = intent.getStringExtra("token");
+            msg = (MessageBean) intent.getSerializableExtra("msg");
+        }
         setContentView(R.layout.maintimelineactivity_viewpager_layout);
 
         buildViewPager();
@@ -55,7 +62,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
 
     private void buildViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
+        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
@@ -100,14 +107,14 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
 
 
     private AbstractTimeLineFragment getRepostFragment() {
-          return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
-                  RepostsByIdTimeLineFragment.class.getName()));
-      }
+        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+                RepostsByIdTimeLineFragment.class.getName()));
+    }
 
-      private AbstractTimeLineFragment getCommentFragment() {
-          return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
-                  CommentsByIdTimeLineFragment.class.getName()));
-      }
+    private AbstractTimeLineFragment getCommentFragment() {
+        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+                CommentsByIdTimeLineFragment.class.getName()));
+    }
 
     ActionBar.TabListener tabListener = new ActionBar.TabListener() {
         boolean comment = false;
