@@ -101,6 +101,29 @@ public class ImageTool {
         return bitmap;
     }
 
+
+    public static Bitmap getPictureHighDensityThumbnailWithoutRoundedCornerBitmap(String url, int reqWidth, int reqHeight, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+
+
+           String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
+           absoluteFilePath = absoluteFilePath + ".jpg";
+
+           Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, reqWidth, reqHeight);
+
+           if (bitmap == null) {
+               String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
+               bitmap = decodeBitmapFromSDCard(path, reqWidth, reqHeight);
+           }
+
+           if (bitmap != null) {
+               if (bitmap.getHeight() > reqHeight || bitmap.getWidth() > reqWidth) {
+                   bitmap = cutPic(bitmap, reqWidth, reqHeight);
+               }
+            }
+
+           return bitmap;
+       }
+
     public static Bitmap getAvatarBitmap(String url) {
 
 
