@@ -124,20 +124,24 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mActionMode != null) {
-                    mActionMode.finish();
-                    mActionMode = null;
-                    listView.setItemChecked(position, true);
-                    timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(listView, timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getComments().get(position - 1)));
-                    return true;
-                } else {
-                    listView.setItemChecked(position, true);
-                    timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(listView, timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getComments().get(position - 1)));
-                    return true;
+                if (position - 1 < getList().getSize() && position - 1 >= 0) {
+                    if (mActionMode != null) {
+                        mActionMode.finish();
+                        mActionMode = null;
+                        listView.setItemChecked(position, true);
+                        timeLineAdapter.notifyDataSetChanged();
+                        mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(listView, timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getComments().get(position - 1)));
+                        return true;
+                    } else {
+                        listView.setItemChecked(position, true);
+                        timeLineAdapter.notifyDataSetChanged();
+                        mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(listView, timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getComments().get(position - 1)));
+                        return true;
+                    }
                 }
+                return false;
             }
+
         }
 
         );

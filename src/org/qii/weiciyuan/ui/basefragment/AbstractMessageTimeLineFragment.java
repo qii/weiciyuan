@@ -86,19 +86,23 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mActionMode != null) {
-                    mActionMode.finish();
-                    mActionMode = null;
-                    listView.setItemChecked(position, true);
-                    timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getStatuses().get(position - 1)));
-                    return true;
-                } else {
-                    listView.setItemChecked(position, true);
-                    timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getStatuses().get(position - 1)));
-                    return true;
+
+                if (position - 1 < getList().getSize() && position - 1 >= 0) {
+                    if (mActionMode != null) {
+                        mActionMode.finish();
+                        mActionMode = null;
+                        listView.setItemChecked(position, true);
+                        timeLineAdapter.notifyDataSetChanged();
+                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getStatuses().get(position - 1)));
+                        return true;
+                    } else {
+                        listView.setItemChecked(position, true);
+                        timeLineAdapter.notifyDataSetChanged();
+                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getStatuses().get(position - 1)));
+                        return true;
+                    }
                 }
+                return false;
             }
         }
 
