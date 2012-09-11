@@ -17,6 +17,7 @@ import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
 import org.qii.weiciyuan.ui.actionmenu.RepostSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
@@ -109,7 +110,7 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
-        ((BrowserWeiboMsgActivity)getActivity()).setRepostFragment(this);
+        ((BrowserWeiboMsgActivity) getActivity()).setRepostFragment(this);
         if (savedInstanceState != null && bean.getReposts().size() == 0) {
             clearAndReplaceValue((RepostListBean) savedInstanceState.getSerializable("bean"));
             token = savedInstanceState.getString("token");
@@ -120,26 +121,26 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
         }
 
         listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-               listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                   @Override
-                   public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                       if (mActionMode != null) {
-                           mActionMode.finish();
-                           mActionMode = null;
-                           listView.setItemChecked(position, true);
-                           timeLineAdapter.notifyDataSetChanged();
-                           mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this,quick_repost, bean.getReposts().get(position - 1)));
-                           return true;
-                       } else {
-                           listView.setItemChecked(position, true);
-                           timeLineAdapter.notifyDataSetChanged();
-                           mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this,quick_repost, bean.getReposts().get(position-1)));
-                           return true;
-                       }
-                   }
-               }
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mActionMode != null) {
+                    mActionMode.finish();
+                    mActionMode = null;
+                    listView.setItemChecked(position, true);
+                    timeLineAdapter.notifyDataSetChanged();
+                    mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getReposts().get(position - 1)));
+                    return true;
+                } else {
+                    listView.setItemChecked(position, true);
+                    timeLineAdapter.notifyDataSetChanged();
+                    mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getReposts().get(position - 1)));
+                    return true;
+                }
+            }
+        }
 
-               );
+        );
 
 
     }
@@ -172,7 +173,6 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
         if (bean.getReposts().size() == 0) {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
         }
-
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -299,7 +299,10 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
 
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-
+        Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
+        intent.putExtra("msg", bean.getReposts().get(position));
+        intent.putExtra("token", ((IToken) getActivity()).getToken());
+        startActivity(intent);
     }
 
 
