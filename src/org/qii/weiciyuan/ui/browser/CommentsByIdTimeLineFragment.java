@@ -19,6 +19,7 @@ import org.qii.weiciyuan.dao.timeline.CommentsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.actionmenu.CommentByIdSingleChoiceModeLinstener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.CommentNewActivity;
@@ -32,6 +33,7 @@ import java.util.List;
  */
 public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<CommentListBean> {
 
+    private LinearLayout quick_repost;
 
     protected void clearAndReplaceValue(CommentListBean value) {
         bean.getComments().clear();
@@ -69,7 +71,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     //restore from activity destroy
     public void load() {
-        String sss=token;
+        String sss = token;
         if ((bean == null || bean.getComments().size() == 0) && newTask == null) {
             if (listView != null) {
                 refresh();
@@ -108,7 +110,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
-        ((BrowserWeiboMsgActivity)getActivity()).setCommentFragment(this);
+        ((BrowserWeiboMsgActivity) getActivity()).setCommentFragment(this);
 
         if (savedInstanceState != null && bean.getComments().size() == 0) {
             clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
@@ -117,6 +119,28 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         }
+
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mActionMode != null) {
+                    mActionMode.finish();
+                    mActionMode = null;
+                    listView.setItemChecked(position, true);
+                    timeLineAdapter.notifyDataSetChanged();
+                    mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(listView, timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getComments().get(position - 1)));
+                    return true;
+                } else {
+                    listView.setItemChecked(position, true);
+                    timeLineAdapter.notifyDataSetChanged();
+                    mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(listView, timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getComments().get(position - 1)));
+                    return true;
+                }
+            }
+        }
+
+        );
     }
 
 
@@ -135,6 +159,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         View view = inflater.inflate(R.layout.fragment_comment_listview_layout, container, false);
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        quick_repost = (LinearLayout) view.findViewById(R.id.quick_repost);
         listView = (ListView) view.findViewById(R.id.listView);
         listView.setScrollingCacheEnabled(false);
         headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
@@ -151,7 +176,13 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                if (mActionMode != null) {
+                    listView.clearChoices();
+                    mActionMode.finish();
+                    mActionMode = null;
+                    return;
+                }
+                listView.clearChoices();
                 if (position - 1 < getList().getComments().size() && position - 1 >= 0) {
                     listViewItemClick(parent, view, position - 1, id);
                 } else if (position - 1 >= getList().getComments().size()) {

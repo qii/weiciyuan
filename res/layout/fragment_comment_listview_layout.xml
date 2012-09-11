@@ -44,7 +44,7 @@
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:layout_margin="5dp"
-
+                  android:id="@+id/quick_repost"
             >
         <EditText android:layout_height="wrap_content"
                   android:layout_width="0dp"
