@@ -24,7 +24,7 @@ import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
-import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
@@ -53,20 +53,20 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     private ListView mentionsListView = null;
     private ListView commentsListView = null;
 
-    private StatusSingleChoiceModeListener homeMode = null;
-    private StatusSingleChoiceModeListener mentionMode = null;
-    private StatusSingleChoiceModeListener commeMode = null;
+    private AbstractTimeLineFragment homeFragment = null;
+    private AbstractTimeLineFragment mentionFragment = null;
+    private AbstractTimeLineFragment commentFragment = null;
 
-    public void setHomeMode(StatusSingleChoiceModeListener homeMode) {
-        this.homeMode = homeMode;
+    public void setHomeFragment(AbstractTimeLineFragment homeFragment) {
+        this.homeFragment = homeFragment;
     }
 
-    public void setMentionMode(StatusSingleChoiceModeListener mentionMode) {
-        this.mentionMode = mentionMode;
+    public void setMentionFragment(AbstractTimeLineFragment mentionFragment) {
+        this.mentionFragment = mentionFragment;
     }
 
-    public void setCommeMode(StatusSingleChoiceModeListener commeMode) {
-        this.commeMode = commeMode;
+    public void setCommentFragment(AbstractTimeLineFragment commentFragment) {
+        this.commentFragment = commentFragment;
     }
 
     public void setHomeListView(ListView homeListView) {
@@ -290,10 +290,12 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                                   FragmentTransaction ft) {
 
             mViewPager.setCurrentItem(tab.getPosition());
-            if (homeMode != null)
-                homeMode.finish();
-            if (mentionMode != null)
-                mentionMode.finish();
+            if (homeFragment != null)
+                homeFragment.clearActionMode();
+            if (mentionFragment != null)
+                mentionFragment.clearActionMode();
+            if (commentFragment != null)
+                commentFragment.clearActionMode();
 
             switch (tab.getPosition()) {
                 case 0:

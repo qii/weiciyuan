@@ -63,7 +63,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((MainTimeLineActivity) getActivity()).setMentionsListView(listView);
-        ((MainTimeLineActivity) getActivity()).setMentionMode(multiChoiceModeListener);
+        ((MainTimeLineActivity) getActivity()).setMentionFragment(this);
 
         if (savedInstanceState != null) {
             clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
