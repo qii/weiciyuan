@@ -10,22 +10,25 @@ import android.widget.ListView;
 import org.qii.weiciyuan.bean.MessageBean;
 
 /**
-* User: qii
-* Date: 12-9-9
-*/
+ * User: qii
+ * Date: 12-9-9
+ */
 public class RepostSingleChoiceModeListener extends StatusSingleChoiceModeListener {
     LinearLayout quick_repost;
+    int initState;
 
     public RepostSingleChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment activity, LinearLayout quick_repost, MessageBean bean) {
-        super(listView, adapter, activity,bean);
+        super(listView, adapter, activity, bean);
         this.quick_repost = quick_repost;
+        initState = this.quick_repost.getVisibility();
 
     }
 
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        quick_repost.setVisibility(View.GONE);
+        if (initState == View.VISIBLE)
+            quick_repost.setVisibility(View.GONE);
         return super.onCreateActionMode(mode, menu);
 
     }
@@ -33,7 +36,8 @@ public class RepostSingleChoiceModeListener extends StatusSingleChoiceModeListen
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        quick_repost.setVisibility(View.VISIBLE);
+        if (initState == View.VISIBLE)
+            quick_repost.setVisibility(View.VISIBLE);
         super.onDestroyActionMode(mode);
     }
 }
