@@ -9,14 +9,17 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.dao.destroy.DestroyStatusDao;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.CommentNewActivity;
 import org.qii.weiciyuan.ui.send.RepostNewActivity;
@@ -30,7 +33,7 @@ import java.util.List;
 public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
     ListView listView;
-    BaseAdapter adapter;
+    StatusesListAdapter adapter;
     Fragment activity;
     ActionMode mode;
     MessageBean bean;
@@ -41,7 +44,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
             mode.finish();
     }
 
-    public StatusSingleChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment activity, MessageBean bean) {
+    public StatusSingleChoiceModeListener(ListView listView, StatusesListAdapter adapter, Fragment activity, MessageBean bean) {
         this.listView = listView;
         this.activity = activity;
         this.adapter = adapter;
@@ -123,7 +126,9 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
                 mode.finish();
                 break;
             case R.id.menu_remove:
-                Toast.makeText(getActivity(), "remove", Toast.LENGTH_SHORT).show();
+                String token = ((IToken) getActivity()).getToken();
+                int position = listView.getCheckedItemPosition() - 1;
+                new RemoveTask(token, bean.getId(),position).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 listView.clearChoices();
                 mode.finish();
                 break;
@@ -151,5 +156,48 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
         adapter.notifyDataSetChanged();
         ((AbstractTimeLineFragment) activity).setmActionMode(null);
 
+    }
+
+
+    class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
+
+        String token;
+        String id;
+        int positon;
+        WeiboException e;
+
+        public RemoveTask(String token, String id, int positon) {
+            this.token = token;
+            this.id = id;
+            this.positon = positon;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            DestroyStatusDao dao = new DestroyStatusDao(token, id);
+            try {
+                return dao.destroy();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return false;
+            }
+        }
+
+        @Override
+        protected void onCancelled(Boolean aBoolean) {
+            super.onCancelled(aBoolean);
+            if (this.e != null) {
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (aBoolean) {
+                adapter.removeItem(positon);
+            }
+        }
     }
 }

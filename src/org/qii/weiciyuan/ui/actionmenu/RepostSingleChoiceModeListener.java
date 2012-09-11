@@ -4,10 +4,10 @@ import android.support.v4.app.Fragment;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
 
 /**
  * User: qii
@@ -17,7 +17,7 @@ public class RepostSingleChoiceModeListener extends StatusSingleChoiceModeListen
     LinearLayout quick_repost;
     int initState;
 
-    public RepostSingleChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment activity, LinearLayout quick_repost, MessageBean bean) {
+    public RepostSingleChoiceModeListener(ListView listView, StatusesListAdapter adapter, Fragment activity, LinearLayout quick_repost, MessageBean bean) {
         super(listView, adapter, activity, bean);
         this.quick_repost = quick_repost;
         initState = this.quick_repost.getVisibility();

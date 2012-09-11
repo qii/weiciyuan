@@ -131,12 +131,12 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
                         mActionMode = null;
                         listView.setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getReposts().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, (StatusesListAdapter)timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getReposts().get(position - 1)));
                         return true;
                     } else {
                         listView.setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getReposts().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, (StatusesListAdapter)timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getReposts().get(position - 1)));
                         return true;
                     }
 

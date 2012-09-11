@@ -267,5 +267,10 @@ public class StatusesListAdapter extends BaseAdapter {
         RelativeLayout listview_root;
     }
 
-
+    public void removeItem(int postion) {
+        if (postion >= 0 && postion < bean.size()) {
+            bean.remove(postion);
+            this.notifyDataSetChanged();
+        }
+    }
 }
