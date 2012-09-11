@@ -6,12 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
-import android.widget.ListView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
@@ -38,27 +37,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
 
     private TimeLinePagerAdapter adapter;
 
-    private AbstractTimeLineFragment commentFragment;
-    private AbstractTimeLineFragment repostFragment;
 
-    private ListView commentListView = null;
-    private ListView repostListView = null;
-
-    public void setCommentListView(ListView commentListView) {
-        this.commentListView = commentListView;
-    }
-
-    public void setRepostListView(ListView repostListView) {
-        this.repostListView = repostListView;
-    }
-
-    public void setCommentFragment(AbstractTimeLineFragment commentFragment) {
-        this.commentFragment = commentFragment;
-    }
-
-    public void setRepostFragment(AbstractTimeLineFragment repostFragment) {
-        this.repostFragment = repostFragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,15 +88,26 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
             getActionBar().setSelectedNavigationItem(position);
             switch (position) {
                 case 1:
-                    ((CommentsByIdTimeLineFragment) commentFragment).load();
+                    ((CommentsByIdTimeLineFragment) getCommentFragment()).load();
                     break;
                 case 2:
-                    ((RepostsByIdTimeLineFragment) repostFragment).load();
+                    ((RepostsByIdTimeLineFragment) getRepostFragment()).load();
                     break;
             }
 
         }
     };
+
+
+    private AbstractTimeLineFragment getRepostFragment() {
+          return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+                  RepostsByIdTimeLineFragment.class.getName()));
+      }
+
+      private AbstractTimeLineFragment getCommentFragment() {
+          return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+                  CommentsByIdTimeLineFragment.class.getName()));
+      }
 
     ActionBar.TabListener tabListener = new ActionBar.TabListener() {
         boolean comment = false;
@@ -127,10 +117,10 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
                                   FragmentTransaction ft) {
 
             mViewPager.setCurrentItem(tab.getPosition());
-            if (commentFragment != null)
-                commentFragment.clearActionMode();
-            if (repostFragment != null)
-                repostFragment.clearActionMode();
+            if (getCommentFragment() != null)
+                getCommentFragment().clearActionMode();
+            if (getRepostFragment() != null)
+                getRepostFragment().clearActionMode();
 
             switch (tab.getPosition()) {
 
@@ -164,10 +154,10 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
             switch (tab.getPosition()) {
 
                 case 1:
-                    if (comment) commentListView.setSelection(0);
+                    if (comment) getCommentFragment().getListView().setSelection(0);
                     break;
                 case 2:
-                    if (repost) repostListView.setSelection(0);
+                    if (repost) getRepostFragment().getListView().setSelection(0);
                     break;
                 case 3:
                     break;
@@ -188,7 +178,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
     }
 
     class TimeLinePagerAdapter extends
-            FragmentPagerAdapter {
+            AppFragmentPagerAdapter {
 
         List<Fragment> list = new ArrayList<Fragment>();
 
@@ -203,6 +193,15 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
         @Override
         public Fragment getItem(int i) {
             return list.get(i);
+        }
+
+        @Override
+        protected String getTag(int position) {
+            List<String> tagList = new ArrayList<String>();
+            tagList.add(BrowserWeiboMsgFragment.class.getName());
+            tagList.add(CommentsByIdTimeLineFragment.class.getName());
+            tagList.add(RepostsByIdTimeLineFragment.class.getName());
+            return tagList.get(position);
         }
 
         @Override
