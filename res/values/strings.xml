@@ -176,5 +176,5 @@
     <!-- menu-->
     <string name="askdelete">删除?</string>
     <string name="cancel">取消</string>
-    <string name="askdeletemessage">用久删除这条消息?</string>
+    <string name="askdeletemessage">永久删除这条消息?</string>
 </resources>

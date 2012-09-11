@@ -14,9 +14,6 @@ import android.widget.ShareActionProvider;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.dao.destroy.DestroyStatusDao;
-import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
@@ -34,27 +31,26 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
     ListView listView;
     StatusesListAdapter adapter;
-    Fragment activity;
+    Fragment fragment;
     ActionMode mode;
     MessageBean bean;
     ShareActionProvider mShareActionProvider;
 
-    RemoveTask removeTask;
 
     public void finish() {
         if (mode != null)
             mode.finish();
     }
 
-    public StatusSingleChoiceModeListener(ListView listView, StatusesListAdapter adapter, Fragment activity, MessageBean bean) {
+    public StatusSingleChoiceModeListener(ListView listView, StatusesListAdapter adapter, Fragment fragment, MessageBean bean) {
         this.listView = listView;
-        this.activity = activity;
+        this.fragment = fragment;
         this.adapter = adapter;
         this.bean = bean;
     }
 
     private Activity getActivity() {
-        return activity.getActivity();
+        return fragment.getActivity();
     }
 
 
@@ -128,14 +124,12 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
                 mode.finish();
                 break;
             case R.id.menu_remove:
-                String token = ((IToken) getActivity()).getToken();
+
                 int position = listView.getCheckedItemPosition() - 1;
-                if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    removeTask = new RemoveTask(token, bean.getId(), position);
-                    removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                }
-                listView.clearChoices();
-                mode.finish();
+                RemoveDialog dialog = new RemoveDialog(position);
+                dialog.setTargetFragment(fragment, 0);
+                dialog.show(fragment.getFragmentManager(), "");
+
                 break;
             case R.id.menu_share:
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
@@ -159,50 +153,10 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
         this.mode = null;
         listView.clearChoices();
         adapter.notifyDataSetChanged();
-        ((AbstractTimeLineFragment) activity).setmActionMode(null);
+        ((AbstractTimeLineFragment) fragment).setmActionMode(null);
 
     }
 
 
-    class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
 
-        String token;
-        String id;
-        int positon;
-        WeiboException e;
-
-        public RemoveTask(String token, String id, int positon) {
-            this.token = token;
-            this.id = id;
-            this.positon = positon;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            DestroyStatusDao dao = new DestroyStatusDao(token, id);
-            try {
-                return dao.destroy();
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-                return false;
-            }
-        }
-
-        @Override
-        protected void onCancelled(Boolean aBoolean) {
-            super.onCancelled(aBoolean);
-            if (this.e != null) {
-                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if (aBoolean) {
-                adapter.removeItem(positon);
-            }
-        }
-    }
 }
