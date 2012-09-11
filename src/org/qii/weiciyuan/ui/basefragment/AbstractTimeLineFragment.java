@@ -137,8 +137,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             mActionMode.finish();
             mActionMode = null;
         }
-        listView.clearChoices();
-        timeLineAdapter.notifyDataSetChanged();
+        if (listView != null) listView.clearChoices();
+        if (timeLineAdapter != null) timeLineAdapter.notifyDataSetChanged();
     }
 
     protected abstract void buildListAdapter();
