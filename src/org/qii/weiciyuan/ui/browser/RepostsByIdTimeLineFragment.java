@@ -111,6 +111,7 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         ((BrowserWeiboMsgActivity) getActivity()).setRepostFragment(this);
+        ((BrowserWeiboMsgActivity) getActivity()).setRepostListView(listView);
         if (savedInstanceState != null && bean.getReposts().size() == 0) {
             clearAndReplaceValue((RepostListBean) savedInstanceState.getSerializable("bean"));
             token = savedInstanceState.getString("token");

@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
+import android.widget.ListView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -40,6 +41,16 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
     private AbstractTimeLineFragment commentFragment;
     private AbstractTimeLineFragment repostFragment;
 
+    private ListView commentListView = null;
+    private ListView repostListView = null;
+
+    public void setCommentListView(ListView commentListView) {
+        this.commentListView = commentListView;
+    }
+
+    public void setRepostListView(ListView repostListView) {
+        this.repostListView = repostListView;
+    }
 
     public void setCommentFragment(AbstractTimeLineFragment commentFragment) {
         this.commentFragment = commentFragment;
@@ -109,6 +120,8 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
     };
 
     ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+        boolean comment = false;
+        boolean repost = false;
 
         public void onTabSelected(ActionBar.Tab tab,
                                   FragmentTransaction ft) {
@@ -119,16 +132,46 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
             if (repostFragment != null)
                 repostFragment.clearActionMode();
 
+            switch (tab.getPosition()) {
+
+                case 1:
+                    comment = true;
+                    break;
+                case 2:
+                    repost = true;
+                    break;
+                case 3:
+                    break;
+            }
         }
 
         public void onTabUnselected(ActionBar.Tab tab,
                                     FragmentTransaction ft) {
+            switch (tab.getPosition()) {
 
+                case 1:
+                    comment = false;
+                    break;
+                case 2:
+                    repost = false;
+                    break;
+
+            }
         }
 
         public void onTabReselected(ActionBar.Tab tab,
                                     FragmentTransaction ft) {
+            switch (tab.getPosition()) {
 
+                case 1:
+                    if (comment) commentListView.setSelection(0);
+                    break;
+                case 2:
+                    if (repost) repostListView.setSelection(0);
+                    break;
+                case 3:
+                    break;
+            }
         }
     };
 
