@@ -52,6 +52,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         return bean;
     }
 
+    public ListView getListView() {
+        return listView;
+    }
+
 
     protected void refreshLayout(T bean) {
         if (bean != null && bean.getSize() > 0) {

@@ -47,8 +47,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
-        ((MainTimeLineActivity) getActivity()).setCommentsListView(listView);
-        ((MainTimeLineActivity) getActivity()).setCommentFragment(this);
+
         if (savedInstanceState != null && (bean == null || bean.getComments().size() == 0)) {
             clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();

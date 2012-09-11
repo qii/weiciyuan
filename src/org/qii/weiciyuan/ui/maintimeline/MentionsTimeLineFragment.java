@@ -53,6 +53,11 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
     protected void newMsgOnPostExecute(MessageListBean newValue) {
         showNewMsgToastMessage(newValue);
         super.newMsgOnPostExecute(newValue);
@@ -62,8 +67,6 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((MainTimeLineActivity) getActivity()).setMentionsListView(listView);
-        ((MainTimeLineActivity) getActivity()).setMentionFragment(this);
 
         if (savedInstanceState != null) {
             clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));

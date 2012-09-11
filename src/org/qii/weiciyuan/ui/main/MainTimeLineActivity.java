@@ -8,16 +8,13 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SpinnerAdapter;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -30,7 +27,6 @@ import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsTimeLineFragment;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
-import org.qii.weiciyuan.ui.userinfo.MyInfoFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +34,6 @@ import java.util.List;
 /**
  * User: Jiang Qi
  * Date: 12-7-27
- * Time: 下午1:02
  */
 public class MainTimeLineActivity extends AbstractAppActivity implements IUserInfo,
         IToken,
@@ -49,38 +44,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     private AccountBean accountBean = null;
 
 
-    private ListView homeListView = null;
-    private ListView mentionsListView = null;
-    private ListView commentsListView = null;
-
-    private AbstractTimeLineFragment homeFragment = null;
-    private AbstractTimeLineFragment mentionFragment = null;
-    private AbstractTimeLineFragment commentFragment = null;
-
-    public void setHomeFragment(AbstractTimeLineFragment homeFragment) {
-        this.homeFragment = homeFragment;
-    }
-
-    public void setMentionFragment(AbstractTimeLineFragment mentionFragment) {
-        this.mentionFragment = mentionFragment;
-    }
-
-    public void setCommentFragment(AbstractTimeLineFragment commentFragment) {
-        this.commentFragment = commentFragment;
-    }
-
-    public void setHomeListView(ListView homeListView) {
-        this.homeListView = homeListView;
-    }
-
-    public void setMentionsListView(ListView mentionsListView) {
-        this.mentionsListView = mentionsListView;
-    }
-
-    public void setCommentsListView(ListView commentsListView) {
-        this.commentsListView = commentsListView;
-    }
-
     public String getToken() {
         return token;
     }
@@ -89,6 +52,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("account", accountBean);
+        outState.putString("token", token);
     }
 
     @Override
@@ -97,15 +61,16 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         if (savedInstanceState == null) {
             Intent intent = getIntent();
             accountBean = (AccountBean) intent.getSerializableExtra("account");
-            if (accountBean != null)
-                AppLogger.d(accountBean.getUsernick());
-            else
+            if (accountBean != null) {
+                token = accountBean.getAccess_token();
+            } else {
                 AppLogger.e("MainTneActivity dont have account");
+            }
+
         } else {
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
-            AppLogger.d(accountBean.getUsernick());
+            token = savedInstanceState.getString("token");
         }
-        token = accountBean.getAccess_token();
         GlobalContext.getInstance().setSpecialToken(token);
         GlobalContext.getInstance().setCurrentAccountId(accountBean.getUid());
         GlobalContext.getInstance().setCurrentAccountName(accountBean.getUsernick());
@@ -116,11 +81,8 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.maintimelineactivity_viewpager_layout);
 
-        if (getResources().getBoolean(R.bool.is_phone)) {
-            buildPhoneInterface();
-        } else {
-            buildPadInterface();
-        }
+        buildPhoneInterface();
+
 
     }
 
@@ -142,33 +104,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         buildTabTitle(intent);
     }
 
-    private void buildPadInterface() {
-
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.maintimelineactivity_list,
-                android.R.layout.simple_spinner_dropdown_item);
-        final List<Fragment> list = new ArrayList<Fragment>();
-        list.add(new FriendsTimeLineFragment());
-        list.add(new MentionsTimeLineFragment());
-        list.add(new CommentsTimeLineFragment());
-        list.add(new MyInfoFragment());
-        ActionBar.OnNavigationListener mOnNavigationListener = new ActionBar.OnNavigationListener() {
-
-            @Override
-            public boolean onNavigationItemSelected(int position, long itemId) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(android.R.id.content, list.get(position))
-                        .commit();
-
-                return true;
-            }
-        };
-        actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
-
-    }
 
     private void buildTabTitle(Intent intent) {
         int commentsum = intent.getIntExtra("commentsum", 0);
@@ -244,6 +179,24 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
+
+
+    }
+
+
+    private AbstractTimeLineFragment getHomeFragment() {
+        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+                FriendsTimeLineFragment.class.getName()));
+    }
+
+    private AbstractTimeLineFragment getMentionFragment() {
+        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+                MentionsTimeLineFragment.class.getName()));
+    }
+
+    private AbstractTimeLineFragment getCommentFragment() {
+        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+                CommentsTimeLineFragment.class.getName()));
     }
 
     private void buildActionBarAndViewPagerTitles() {
@@ -268,9 +221,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 .setTabListener(tabListener));
 
 
-//        actionBar.addTab(actionBar.newTab()
-//                .setText(getString(R.string.info))
-//                .setTabListener(tabListener));
     }
 
 
@@ -290,12 +240,20 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                                   FragmentTransaction ft) {
 
             mViewPager.setCurrentItem(tab.getPosition());
-            if (homeFragment != null)
-                homeFragment.clearActionMode();
-            if (mentionFragment != null)
-                mentionFragment.clearActionMode();
-            if (commentFragment != null)
-                commentFragment.clearActionMode();
+
+
+            if (getHomeFragment() != null) {
+                getHomeFragment().clearActionMode();
+            }
+
+            if (getMentionFragment() != null) {
+                getMentionFragment().clearActionMode();
+            }
+
+            if (getCommentFragment() != null) {
+                getCommentFragment().clearActionMode();
+            }
+
 
             switch (tab.getPosition()) {
                 case 0:
@@ -334,13 +292,16 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                                     FragmentTransaction ft) {
             switch (tab.getPosition()) {
                 case 0:
-                    if (home) homeListView.setSelection(0);
+                    if (home)
+                        getHomeFragment().getListView().setSelection(0);
                     break;
                 case 1:
-                    if (mentions) mentionsListView.setSelection(0);
+                    if (mentions)
+                        getMentionFragment().getListView().setSelection(0);
                     break;
                 case 2:
-                    if (comments) commentsListView.setSelection(0);
+                    if (comments)
+                        getCommentFragment().getListView().setSelection(0);
                     break;
                 case 3:
                     break;
@@ -361,31 +322,39 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     }
 
 
-    class TimeLinePagerAdapter extends
-            FragmentPagerAdapter {
+    class TimeLinePagerAdapter extends AppFragmentPagerAdapter {
+
 
         List<Fragment> list = new ArrayList<Fragment>();
 
 
         public TimeLinePagerAdapter(FragmentManager fm) {
             super(fm);
-
             list.add(new FriendsTimeLineFragment());
             list.add(new MentionsTimeLineFragment());
             list.add(new CommentsTimeLineFragment());
-            // list.add(new MyInfoFragment());
+        }
+
+
+        public Fragment getItem(int position) {
+            return list.get(position);
         }
 
         @Override
-        public Fragment getItem(int i) {
-            return list.get(i);
+        protected String getTag(int position) {
+            List<String> tagList = new ArrayList<String>();
+            tagList.add(FriendsTimeLineFragment.class.getName());
+            tagList.add(MentionsTimeLineFragment.class.getName());
+            tagList.add(CommentsTimeLineFragment.class.getName());
+            return tagList.get(position);
         }
+
 
         @Override
         public int getCount() {
             return list.size();
         }
+
+
     }
-
-
 }

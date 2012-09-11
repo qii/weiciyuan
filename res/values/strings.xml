@@ -171,4 +171,10 @@
     <string name="clear_avatar_and_pic">清除已下载的头像和图片</string>
     <string name="remove_ing">删除中……</string>
     <string name="version">版本</string>
+
+
+    <!-- menu-->
+    <string name="askdelete">删除?</string>
+    <string name="cancel">取消</string>
+    <string name="askdeletemessage">用久删除这条消息?</string>
 </resources>
