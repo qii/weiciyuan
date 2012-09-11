@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_repost"
-          android:icon="?repost"
-          android:title="@string/repost"
-          android:showAsAction="ifRoom|withText"
-            />
+
     <item android:id="@+id/menu_comment"
           android:icon="?comment"
           android:title="@string/comments"
-          android:showAsAction="ifRoom|withText"
-            />
-
-    <item android:id="@+id/menu_fav"
-          android:icon="?fav_en"
-          android:title="@string/favourite"
           android:showAsAction="ifRoom|withText"
             />
 
@@ -21,6 +11,11 @@
           android:title="@string/share"
           android:icon="?share"
           android:actionProviderClass="android.widget.ShareActionProvider"
+            />
+
+    <item android:id="@+id/menu_copy"
+          android:title="@string/copy_to_clipboard"
+          android:icon="?copy"
             />
 
     <item android:id="@+id/menu_remove"

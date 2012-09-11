@@ -18,6 +18,7 @@ import android.widget.ShareActionProvider;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.ReplyToCommentNewActivity;
@@ -68,7 +69,12 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         MenuInflater inflater = mode.getMenuInflater();
         menu.clear();
 
-        inflater.inflate(R.menu.fragment_comment_listview_item_contextual_menu, menu);
+        if (bean.getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+            inflater.inflate(R.menu.fragment_comment_listview_item_contextual_menu_myself, menu);
+        } else {
+            inflater.inflate(R.menu.fragment_comment_listview_item_contextual_menu, menu);
+        }
+
 
         mode.setTitle(bean.getUser().getScreen_name());
 
@@ -120,6 +126,14 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
                 Toast.makeText(getActivity(), getActivity().getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
                 listView.clearChoices();
                 mode.finish();
+                break;
+            case R.id.menu_remove:
+
+                int position = listView.getCheckedItemPosition() - 1;
+                RemoveDialog dialog = new RemoveDialog(position);
+                dialog.setTargetFragment(activity, 0);
+                dialog.show(activity.getFragmentManager(), "");
+
                 break;
 
         }

@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
@@ -188,7 +190,44 @@ public class CommentListAdapter extends BaseAdapter {
         RelativeLayout listview_root;
     }
 
+    public void removeItem(final int postion) {
+        if (postion >= 0 && postion < bean.size()) {
 
+            Animation anim = AnimationUtils.loadAnimation(
+                    activity, R.anim.account_delete_slide_out_right
+            );
+
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    bean.remove(postion);
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                    CommentListAdapter.this.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            int positonInListView = postion + 1;
+            int start = listView.getFirstVisiblePosition();
+            int end = listView.getLastVisiblePosition();
+
+            if (positonInListView >= start && positonInListView <= end) {
+                int positionInCurrentScreen = postion - start;
+                listView.getChildAt(positionInCurrentScreen + 1).startAnimation(anim);
+            } else {
+                bean.remove(postion);
+                CommentListAdapter.this.notifyDataSetChanged();
+            }
+        }
+    }
 }
 
 
