@@ -18,7 +18,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
-import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
+import org.qii.weiciyuan.ui.actionmenu.RepostSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.RepostNewActivity;
@@ -128,12 +128,12 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
                            mActionMode = null;
                            listView.setItemChecked(position, true);
                            timeLineAdapter.notifyDataSetChanged();
-                           mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this, bean.getReposts().get(position - 1)));
+                           mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this,quick_repost, bean.getReposts().get(position - 1)));
                            return true;
                        } else {
                            listView.setItemChecked(position, true);
                            timeLineAdapter.notifyDataSetChanged();
-                           mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this, bean.getReposts().get(position-1)));
+                           mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, timeLineAdapter, RepostsByIdTimeLineFragment.this,quick_repost, bean.getReposts().get(position-1)));
                            return true;
                        }
                    }
@@ -174,14 +174,22 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
         }
 
 
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (position - 1 < getList().getReposts().size() && position - 1 >= 0) {
+                if (mActionMode != null) {
+                    listView.clearChoices();
+                    mActionMode.finish();
+                    mActionMode = null;
+                    return;
+                }
+                listView.clearChoices();
+                if (position - 1 < getList().getSize() && position - 1 >= 0) {
 
                     listViewItemClick(parent, view, position - 1, id);
-                } else if (position - 1 >= getList().getReposts().size()) {
+                } else if (position - 1 >= getList().getSize()) {
 
                     listViewFooterViewClick(view);
                 }
