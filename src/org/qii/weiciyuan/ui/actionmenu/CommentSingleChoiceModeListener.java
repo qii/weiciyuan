@@ -33,7 +33,7 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
 
     ListView listView;
     BaseAdapter adapter;
-    Fragment activity;
+    Fragment fragment;
     ActionMode mode;
     CommentBean bean;
     ShareActionProvider mShareActionProvider;
@@ -43,15 +43,15 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
             mode.finish();
     }
 
-    public CommentSingleChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment activity, CommentBean bean) {
+    public CommentSingleChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment fragment, CommentBean bean) {
         this.listView = listView;
-        this.activity = activity;
+        this.fragment = fragment;
         this.adapter = adapter;
         this.bean = bean;
     }
 
     private Activity getActivity() {
-        return activity.getActivity();
+        return fragment.getActivity();
     }
 
 
@@ -131,8 +131,8 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
 
                 int position = listView.getCheckedItemPosition() - 1;
                 RemoveDialog dialog = new RemoveDialog(position);
-                dialog.setTargetFragment(activity, 0);
-                dialog.show(activity.getFragmentManager(), "");
+                dialog.setTargetFragment(fragment, 0);
+                dialog.show(fragment.getFragmentManager(), "");
 
                 break;
 
@@ -147,7 +147,7 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         this.mode = null;
         listView.clearChoices();
         adapter.notifyDataSetChanged();
-        ((AbstractTimeLineFragment) activity).setmActionMode(null);
+        ((AbstractTimeLineFragment) fragment).setmActionMode(null);
 
     }
 }
