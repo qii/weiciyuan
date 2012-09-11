@@ -39,6 +39,8 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
     MessageBean bean;
     ShareActionProvider mShareActionProvider;
 
+    RemoveTask removeTask;
+
     public void finish() {
         if (mode != null)
             mode.finish();
@@ -128,7 +130,10 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
             case R.id.menu_remove:
                 String token = ((IToken) getActivity()).getToken();
                 int position = listView.getCheckedItemPosition() - 1;
-                new RemoveTask(token, bean.getId(),position).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    removeTask = new RemoveTask(token, bean.getId(), position);
+                    removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
                 listView.clearChoices();
                 mode.finish();
                 break;
