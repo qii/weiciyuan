@@ -139,43 +139,43 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
 
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
 
-        String token;
-        String id;
-        int positon;
-        WeiboException e;
+                String token;
+                String id;
+                int positon;
+                WeiboException e;
 
-        public RemoveTask(String token, String id, int positon) {
-            this.token = token;
-            this.id = id;
-            this.positon = positon;
-        }
+                public RemoveTask(String token, String id, int positon) {
+                    this.token = token;
+                    this.id = id;
+                    this.positon = positon;
+                }
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            DestroyStatusDao dao = new DestroyStatusDao(token, id);
-            try {
-                return dao.destroy();
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-                return false;
-            }
-        }
+                @Override
+                protected Boolean doInBackground(Void... params) {
+                    DestroyStatusDao dao = new DestroyStatusDao(token, id);
+                    try {
+                        return dao.destroy();
+                    } catch (WeiboException e) {
+                        this.e = e;
+                        cancel(true);
+                        return false;
+                    }
+                }
 
-        @Override
-        protected void onCancelled(Boolean aBoolean) {
-            super.onCancelled(aBoolean);
-            if (this.e != null) {
-                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-            }
-        }
+                @Override
+                protected void onCancelled(Boolean aBoolean) {
+                    super.onCancelled(aBoolean);
+                    if (this.e != null) {
+                        Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if (aBoolean) {
-                ((StatusesListAdapter) timeLineAdapter).removeItem(positon);
-            }
-        }
+                @Override
+                protected void onPostExecute(Boolean aBoolean) {
+                    super.onPostExecute(aBoolean);
+                    if (aBoolean) {
+                        ((StatusesListAdapter) timeLineAdapter).removeItem(positon);
+                    }
+                }
     }
 }

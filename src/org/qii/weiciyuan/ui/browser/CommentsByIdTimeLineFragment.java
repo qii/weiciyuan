@@ -276,6 +276,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             super.onPostExecute(aBoolean);
             if (aBoolean) {
                 ((CommentListAdapter) timeLineAdapter).removeItem(positon);
+
             }
         }
     }
@@ -402,6 +403,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     protected void newMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null) {
+            bean.setTotal_number(newValue.getTotal_number());
             if (newValue.getComments().size() == 0) {
                 Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
 
