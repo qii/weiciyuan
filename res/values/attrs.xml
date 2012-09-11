@@ -17,6 +17,7 @@
     <attr name="maintimelineactivity_settings" format="reference"/>
     <attr name="picture" format="reference"/>
     <attr name="refresh" format="reference"/>
+    <attr name="copy" format="reference"/>
     <attr name="repost" format="reference"/>
     <attr name="send" format="reference"/>
     <attr name="search" format="reference"/>

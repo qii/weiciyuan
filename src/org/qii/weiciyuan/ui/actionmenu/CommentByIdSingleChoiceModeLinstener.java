@@ -13,7 +13,7 @@ import org.qii.weiciyuan.bean.CommentBean;
  * User: qii
  * Date: 12-9-11
  */
-public class CommentByIdSingleChoiceModeLinstener extends CommentChoiceModeListener {
+public class CommentByIdSingleChoiceModeLinstener extends CommentSingleChoiceModeListener {
     LinearLayout quick_repost;
     int initState;
 

@@ -20,7 +20,7 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
-import org.qii.weiciyuan.ui.actionmenu.CommentChoiceModeListener;
+import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
@@ -67,12 +67,12 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                         mActionMode = null;
                         listView.setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentChoiceModeListener(listView, timeLineAdapter, CommentsTimeLineFragment.this, bean.getComments().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(listView, timeLineAdapter, CommentsTimeLineFragment.this, bean.getComments().get(position - 1)));
                         return true;
                     } else {
                         listView.setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentChoiceModeListener(listView, timeLineAdapter, CommentsTimeLineFragment.this, bean.getComments().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(listView, timeLineAdapter, CommentsTimeLineFragment.this, bean.getComments().get(position - 1)));
                         return true;
                     }
                 }

@@ -1,6 +1,9 @@
 package org.qii.weiciyuan.ui.actionmenu;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -12,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -24,7 +28,7 @@ import java.util.List;
  * User: qii
  * Date: 12-9-10
  */
-public class CommentChoiceModeListener implements ActionMode.Callback {
+public class CommentSingleChoiceModeListener implements ActionMode.Callback {
 
     ListView listView;
     BaseAdapter adapter;
@@ -38,7 +42,7 @@ public class CommentChoiceModeListener implements ActionMode.Callback {
             mode.finish();
     }
 
-    public CommentChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment activity, CommentBean bean) {
+    public CommentSingleChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment activity, CommentBean bean) {
         this.listView = listView;
         this.activity = activity;
         this.adapter = adapter;
@@ -109,6 +113,13 @@ public class CommentChoiceModeListener implements ActionMode.Callback {
                 if (isIntentSafe && mShareActionProvider != null) {
                     mShareActionProvider.setShareIntent(sharingIntent);
                 }
+                break;
+            case R.id.menu_copy:
+                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", bean.getText().toString()));
+                Toast.makeText(getActivity(), getActivity().getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
+                listView.clearChoices();
+                mode.finish();
                 break;
 
         }

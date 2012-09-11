@@ -28,6 +28,7 @@
         <item name="maintimelineactivity_settings">@drawable/maintimelineactivity_settings_light</item>
         <item name="picture">@drawable/picture_black</item>
         <item name="refresh">@drawable/refresh_light</item>
+        <item name="copy">@drawable/copy_light</item>
         <item name="repost">@drawable/repost_light</item>
         <item name="search">@drawable/search_light</item>
         <item name="share">@drawable/share_light</item>
