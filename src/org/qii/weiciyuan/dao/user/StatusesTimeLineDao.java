@@ -53,7 +53,7 @@ public class StatusesTimeLineDao {
         }
 
         if (value != null && value.getSize() > 0) {
-            for (MessageBean b : value.getStatuses()) {
+            for (MessageBean b : value.getItemList()) {
                 TimeTool.dealMills(b);
                 ListViewTool.addJustHighLightLinks(b);
 

@@ -174,7 +174,7 @@ public class DatabaseManager {
 
     public void addHomeLineMsg(MessageListBean list, String accountId) {
         Gson gson = new Gson();
-        List<MessageBean> msgList = list.getStatuses();
+        List<MessageBean> msgList = list.getItemList();
 
         for (MessageBean msg : msgList) {
             ContentValues cv = new ContentValues();
@@ -251,7 +251,7 @@ public class DatabaseManager {
 
     public void addRepostLineMsg(MessageListBean list, String accountId) {
         Gson gson = new Gson();
-        List<MessageBean> msgList = list.getStatuses();
+        List<MessageBean> msgList = list.getItemList();
         int size = msgList.size();
         for (int i = 0; i < size; i++) {
             MessageBean msg = msgList.get(i);
@@ -278,7 +278,7 @@ public class DatabaseManager {
 
     public void addCommentLineMsg(CommentListBean list, String accountId) {
         Gson gson = new Gson();
-        List<CommentBean> msgList = list.getComments();
+        List<CommentBean> msgList = list.getItemList();
         for (CommentBean msg : msgList) {
             ContentValues cv = new ContentValues();
             cv.put(CommentsTable.MBLOGID, msg.getId());

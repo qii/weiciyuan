@@ -6,15 +6,13 @@ import java.util.List;
 /**
  * User: Jiang Qi
  * Date: 12-8-2
- * Time: 下午3:28
  */
-public class CommentListBean extends ListBean {
+public class CommentListBean extends ListBean<CommentBean> {
+
     private List<CommentBean> comments = new ArrayList<CommentBean>();
-    private String previous_cursor = "";
-    private String next_cursor = "0";
 
 
-    public List<CommentBean> getComments() {
+    private List<CommentBean> getComments() {
         return comments;
     }
 
@@ -22,28 +20,15 @@ public class CommentListBean extends ListBean {
         this.comments = comments;
     }
 
-    public String getPrevious_cursor() {
-        return previous_cursor;
+
+    @Override
+    public CommentBean getItem(int position) {
+        return getComments().get(position);
     }
 
-    public void setPrevious_cursor(String previous_cursor) {
-        this.previous_cursor = previous_cursor;
-    }
-
-    public String getNext_cursor() {
-        return next_cursor;
-    }
-
-    public void setNext_cursor(String next_cursor) {
-        this.next_cursor = next_cursor;
-    }
-
-    public int getTotal_number() {
-        return total_number;
-    }
-
-    public void setTotal_number(int total_number) {
-        this.total_number = total_number;
+    @Override
+    public List<CommentBean> getItemList() {
+        return getComments();
     }
 
     @Override

@@ -6,14 +6,12 @@ import java.util.List;
 /**
  * User: Jiang Qi
  * Date: 12-8-7
-  */
-public class RepostListBean extends ListBean {
+ */
+public class RepostListBean extends ListBean<MessageBean> {
 
     private List<MessageBean> reposts = new ArrayList<MessageBean>();
-    private String previous_cursor = "";
-    private String next_cursor = "0";
 
-    public List<MessageBean> getReposts() {
+    private List<MessageBean> getReposts() {
         return reposts;
     }
 
@@ -21,32 +19,20 @@ public class RepostListBean extends ListBean {
         this.reposts = reposts;
     }
 
-    public String getPrevious_cursor() {
-        return previous_cursor;
-    }
-
-    public void setPrevious_cursor(String previous_cursor) {
-        this.previous_cursor = previous_cursor;
-    }
-
-    public String getNext_cursor() {
-        return next_cursor;
-    }
-
-    public void setNext_cursor(String next_cursor) {
-        this.next_cursor = next_cursor;
-    }
 
     @Override
     public int getSize() {
         return getReposts().size();
     }
 
-    public int getTotal_number() {
-        return total_number;
+    @Override
+    public MessageBean getItem(int position) {
+        return getReposts().get(position);
     }
 
-    public void setTotal_number(int total_number) {
-        this.total_number = total_number;
+    @Override
+    public List<MessageBean> getItemList() {
+        return getReposts();
     }
+
 }

@@ -49,8 +49,8 @@ public class RepostsTimeLineByIdDao {
             AppLogger.e(e.getMessage());
         }
 
-        if (value != null && value.getReposts().size() > 0) {
-            List<MessageBean> msgList = value.getReposts();
+        if (value != null && value.getItemList().size() > 0) {
+            List<MessageBean> msgList = value.getItemList();
             Iterator<MessageBean> iterator = msgList.iterator();
             while (iterator.hasNext()) {
 

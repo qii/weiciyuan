@@ -7,8 +7,12 @@ import java.util.List;
  * User: qii
  * Date: 12-7-29
  */
-public class MessageListBean extends ListBean {
-    public List<MessageBean> getStatuses() {
+public class MessageListBean extends ListBean<MessageBean> {
+
+    private List<MessageBean> statuses = new ArrayList<MessageBean>();
+
+
+    private List<MessageBean> getStatuses() {
         return statuses;
     }
 
@@ -16,34 +20,20 @@ public class MessageListBean extends ListBean {
         this.statuses = statuses;
     }
 
-    public String getPrevious_cursor() {
-        return previous_cursor;
-    }
-
-    public void setPrevious_cursor(String previous_cursor) {
-        this.previous_cursor = previous_cursor;
-    }
-
-    public String getNext_cursor() {
-        return next_cursor;
-    }
-
-    public void setNext_cursor(String next_cursor) {
-        this.next_cursor = next_cursor;
-    }
-
-    public void setTotal_number(int total_number) {
-        this.total_number = total_number;
-    }
-
-    private List<MessageBean> statuses = new ArrayList<MessageBean>();
-    private String previous_cursor = "";
-    private String next_cursor = "0";
 
     @Override
     public int getSize() {
         return statuses.size();
     }
 
+    @Override
+    public MessageBean getItem(int position) {
+        return getStatuses().get(position);
+    }
+
+    @Override
+    public List<MessageBean> getItemList() {
+        return getStatuses();
+    }
 
 }

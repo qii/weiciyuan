@@ -51,8 +51,8 @@ public class CommentsTimeLineByIdDao {
             AppLogger.e(e.getMessage());
         }
 
-        if (value != null && value.getComments().size() > 0) {
-            List<CommentBean> msgList = value.getComments();
+        if (value != null && value.getItemList().size() > 0) {
+            List<CommentBean> msgList = value.getItemList();
             Iterator<CommentBean> iterator = msgList.iterator();
             while (iterator.hasNext()) {
 

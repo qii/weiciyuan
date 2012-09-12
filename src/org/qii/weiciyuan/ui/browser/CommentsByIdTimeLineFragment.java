@@ -42,8 +42,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
 
     protected void clearAndReplaceValue(CommentListBean value) {
-        bean.getComments().clear();
-        bean.getComments().addAll(value.getComments());
+        bean.getItemList().clear();
+        bean.getItemList().addAll(value.getItemList());
         bean.setTotal_number(value.getTotal_number());
     }
 
@@ -78,7 +78,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     //restore from activity destroy
     public void load() {
         String sss = token;
-        if ((bean == null || bean.getComments().size() == 0) && newTask == null) {
+        if ((bean == null || bean.getItemList().size() == 0) && newTask == null) {
             if (listView != null) {
                 refresh();
             }
@@ -117,7 +117,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
 
-        if (savedInstanceState != null && bean.getComments().size() == 0) {
+        if (savedInstanceState != null && bean.getItemList().size() == 0) {
             clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
             token = savedInstanceState.getString("token");
             id = savedInstanceState.getString("id");
@@ -135,12 +135,12 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
                         mActionMode = null;
                         listView.setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(listView, timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getComments().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(listView, timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
                         return true;
                     } else {
                         listView.setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(listView, timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getComments().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(listView, timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
                         return true;
                     }
                 }
@@ -177,7 +177,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         listView.addFooterView(footerView);
 
-        if (bean == null || bean.getComments().size() == 0) {
+        if (bean == null || bean.getItemList().size() == 0) {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
         }
 
@@ -192,9 +192,9 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
                     return;
                 }
                 listView.clearChoices();
-                if (position - 1 < getList().getComments().size() && position - 1 >= 0) {
+                if (position - 1 < getList().getItemList().size() && position - 1 >= 0) {
                     listViewItemClick(parent, view, position - 1, id);
-                } else if (position - 1 >= getList().getComments().size()) {
+                } else if (position - 1 >= getList().getItemList().size()) {
                     listViewFooterViewClick(view);
                 }
             }
@@ -213,7 +213,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new CommentListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getComments(), listView, false);
+        timeLineAdapter = new CommentListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), listView, false);
         listView.setAdapter(timeLineAdapter);
     }
 
@@ -228,7 +228,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     public void removeItem(int position) {
         clearActionMode();
         if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            removeTask = new RemoveTask(((IToken) getActivity()).getToken(), bean.getComments().get(position).getId(), position);
+            removeTask = new RemoveTask(((IToken) getActivity()).getToken(), bean.getItemList().get(position).getId(), position);
             removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -341,7 +341,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-        CommentOperatorDialog progressFragment = new CommentOperatorDialog(bean.getComments().get(position));
+        CommentOperatorDialog progressFragment = new CommentOperatorDialog(bean.getItemList().get(position));
         progressFragment.show(getFragmentManager(), "");
     }
 
@@ -383,8 +383,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
         CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
 
-        if (getList().getComments().size() > 0) {
-            dao.setSince_id(getList().getComments().get(0).getId());
+        if (getList().getItemList().size() > 0) {
+            dao.setSince_id(getList().getItemList().get(0).getId());
         }
         CommentListBean result = dao.getGSONMsgList();
         return result;
@@ -393,8 +393,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     protected CommentListBean getDoInBackgroundOldData() throws WeiboException {
         CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
-        if (getList().getComments().size() > 0) {
-            dao.setMax_id(getList().getComments().get(getList().getComments().size() - 1).getId());
+        if (getList().getItemList().size() > 0) {
+            dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
         }
         CommentListBean result = dao.getGSONMsgList();
         return result;
@@ -404,13 +404,13 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     protected void newMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null) {
             bean.setTotal_number(newValue.getTotal_number());
-            if (newValue.getComments().size() == 0) {
+            if (newValue.getItemList().size() == 0) {
                 Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
 
             } else {
-                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getComments().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
-                if (newValue.getComments().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                    newValue.getComments().addAll(getList().getComments());
+                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
+                if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                    newValue.getItemList().addAll(getList().getItemList());
                 }
 
                 clearAndReplaceValue(newValue);
@@ -426,9 +426,9 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     protected void oldMsgOnPostExecute(CommentListBean newValue) {
-        if (newValue != null && newValue.getComments().size() > 1) {
-            List<CommentBean> list = newValue.getComments();
-            getList().getComments().addAll(list.subList(1, list.size() - 1));
+        if (newValue != null && newValue.getItemList().size() > 1) {
+            List<CommentBean> list = newValue.getItemList();
+            getList().getItemList().addAll(list.subList(1, list.size() - 1));
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
 
         } else {

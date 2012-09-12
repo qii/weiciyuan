@@ -12,48 +12,30 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.RepostListBean;
-import org.qii.weiciyuan.dao.destroy.DestroyStatusDao;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.Abstract.IRemoveItem;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
 import org.qii.weiciyuan.ui.actionmenu.RepostSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.send.RepostNewActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
-
-import java.util.List;
 
 /**
  * User: qii
  * Date: 12-8-13
  */
-public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<RepostListBean> implements IRemoveItem {
+public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment {
 
-    private RemoveTask removeTask;
 
     private MessageBean msg;
 
     private EditText et;
 
     private LinearLayout quick_repost;
-
-    protected void clearAndReplaceValue(RepostListBean value) {
-        bean.getReposts().clear();
-        bean.getReposts().addAll(value.getReposts());
-        bean.setTotal_number(value.getTotal_number());
-    }
-
-
-    public RepostListBean getList() {
-        return bean;
-    }
 
     private String token;
     private String id;
@@ -70,7 +52,7 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
 
     //restore from activity destroy
     public void load() {
-        if ((bean == null || bean.getReposts().size() == 0) && newTask == null) {
+        if ((bean == null || bean.getSize() == 0) && newTask == null) {
             if (listView != null) {
                 refresh();
             }
@@ -114,7 +96,7 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
-        if (savedInstanceState != null && bean.getReposts().size() == 0) {
+        if (savedInstanceState != null && bean.getSize() == 0) {
             clearAndReplaceValue((RepostListBean) savedInstanceState.getSerializable("bean"));
             token = savedInstanceState.getString("token");
             id = savedInstanceState.getString("id");
@@ -133,12 +115,12 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
                         mActionMode = null;
                         listView.setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, (StatusesListAdapter) timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getReposts().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, (StatusesListAdapter) timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
                         return true;
                     } else {
                         listView.setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, (StatusesListAdapter) timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getReposts().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, (StatusesListAdapter) timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
                         return true;
                     }
 
@@ -177,7 +159,7 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
         footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         listView.addFooterView(footerView);
 
-        if (bean.getReposts().size() == 0) {
+        if (bean.getSize() == 0) {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
         }
 
@@ -226,69 +208,13 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
     }
 
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusesListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getReposts(), listView, false);
+        timeLineAdapter = new StatusesListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), listView, false);
         listView.setAdapter(timeLineAdapter);
     }
 
     private void sendRepost() {
         if (canSend()) {
             new SimpleTask().execute();
-        }
-    }
-
-    @Override
-    public void removeItem(int position) {
-        clearActionMode();
-        if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            removeTask = new RemoveTask(((IToken) getActivity()).getToken(), bean.getReposts().get(position).getId(), position);
-            removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        }
-    }
-
-    @Override
-    public void removeCancel() {
-        clearActionMode();
-    }
-
-    class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
-
-        String token;
-        String id;
-        int positon;
-        WeiboException e;
-
-        public RemoveTask(String token, String id, int positon) {
-            this.token = token;
-            this.id = id;
-            this.positon = positon;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            DestroyStatusDao dao = new DestroyStatusDao(token, id);
-            try {
-                return dao.destroy();
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-                return false;
-            }
-        }
-
-        @Override
-        protected void onCancelled(Boolean aBoolean) {
-            super.onCancelled(aBoolean);
-            if (this.e != null) {
-                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if (aBoolean) {
-                ((StatusesListAdapter) timeLineAdapter).removeItem(positon);
-            }
         }
     }
 
@@ -363,7 +289,7 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("msg", bean.getReposts().get(position));
+        intent.putExtra("msg", bean.getItemList().get(position));
         intent.putExtra("token", ((IToken) getActivity()).getToken());
         startActivity(intent);
     }
@@ -413,8 +339,8 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
     protected RepostListBean getDoInBackgroundNewData() throws WeiboException {
         RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, id);
 
-        if (getList().getReposts().size() > 0) {
-            dao.setSince_id(getList().getReposts().get(0).getId());
+        if (getList().getSize() > 0) {
+            dao.setSince_id(getList().getItemList().get(0).getId());
         }
 
         return dao.getGSONMsgList();
@@ -423,8 +349,8 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
     @Override
     protected RepostListBean getDoInBackgroundOldData() throws WeiboException {
         RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, id);
-        if (getList().getReposts().size() > 0) {
-            dao.setMax_id(getList().getReposts().get(getList().getReposts().size() - 1).getId());
+        if (getList().getItemList().size() > 0) {
+            dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
         }
         return dao.getGSONMsgList();
 
@@ -432,34 +358,14 @@ public class RepostsByIdTimeLineFragment extends AbstractTimeLineFragment<Repost
 
 
     @Override
-    protected void newMsgOnPostExecute(RepostListBean newValue) {
-        if (newValue != null) {
-            bean.setTotal_number(newValue.getTotal_number());
-            if (newValue.getReposts().size() == 0) {
-                Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
-
-            } else {
-                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getReposts().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
-                if (newValue.getReposts().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                    newValue.getReposts().addAll(getList().getReposts());
-                }
-
-                clearAndReplaceValue(newValue);
-                timeLineAdapter.notifyDataSetChanged();
-            }
-            invlidateTabText();
-        }
+    protected void afterGetNewMsg() {
+        super.afterGetNewMsg();
+        invlidateTabText();
     }
 
     @Override
-    protected void oldMsgOnPostExecute(RepostListBean newValue) {
-        if (newValue != null && newValue.getReposts().size() > 1) {
-            List<MessageBean> list = newValue.getReposts();
-            getList().getReposts().addAll(list.subList(1, list.size() - 1));
-
-        }
-
-        timeLineAdapter.notifyDataSetChanged();
+    protected void afterGetOldMsg() {
+        super.afterGetOldMsg();
         invlidateTabText();
     }
 

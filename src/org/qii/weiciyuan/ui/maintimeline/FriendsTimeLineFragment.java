@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.ListBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
@@ -47,7 +49,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
-    protected void newMsgOnPostExecute(MessageListBean newValue) {
+    protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
         showNewMsgToastMessage(newValue);
         super.newMsgOnPostExecute(newValue);
 
@@ -89,7 +91,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("msg", bean.getStatuses().get(position));
+        intent.putExtra("msg", bean.getItemList().get(position));
         intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
         startActivity(intent);
 
@@ -137,12 +139,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
         MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
-        if (getList().getStatuses().size() > 0) {
-            dao.setSince_id(getList().getStatuses().get(0).getId());
+        if (getList().getItemList().size() > 0) {
+            dao.setSince_id(getList().getItemList().get(0).getId());
         }
         MessageListBean result = dao.getGSONMsgList();
         if (result != null) {
-            if (result.getStatuses().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+            if (result.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
                 DatabaseManager.getInstance().addHomeLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
             } else {
                 DatabaseManager.getInstance().replaceHomeLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
@@ -154,8 +156,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
         MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
-        if (getList().getStatuses().size() > 0) {
-            dao.setMax_id(getList().getStatuses().get(getList().getStatuses().size() - 1).getId());
+        if (getList().getItemList().size() > 0) {
+            dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
         }
         MessageListBean result = dao.getGSONMsgList();
 

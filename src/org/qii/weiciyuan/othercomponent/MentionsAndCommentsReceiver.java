@@ -45,19 +45,19 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
 
 
         if (comment.getSize() > 0) {
-            title = comment.getComments().get(0).getUser().getScreen_name();
-            content = comment.getComments().get(0).getText();
+            title = comment.getItemList().get(0).getUser().getScreen_name();
+            content = comment.getItemList().get(0).getText();
         } else if (repost.getSize() > 0) {
-            title = repost.getStatuses().get(0).getUser().getScreen_name();
-            content = repost.getStatuses().get(0).getText();
+            title = repost.getItemList().get(0).getUser().getScreen_name();
+            content = repost.getItemList().get(0).getText();
         } else {
             return;
         }
         String avatarUrl;
         if (comment.getSize() > 0)
-            avatarUrl = comment.getComments().get(0).getUser().getAvatar_large();
+            avatarUrl = comment.getItemList().get(0).getUser().getAvatar_large();
         else
-            avatarUrl = repost.getStatuses().get(0).getUser().getAvatar_large();
+            avatarUrl = repost.getItemList().get(0).getUser().getAvatar_large();
 
         new DownloadAvatar(avatarUrl).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 

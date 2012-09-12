@@ -58,8 +58,8 @@ public class FetchNewMsgService extends Service {
             MessageListBean messageListBean = DatabaseManager.getInstance().getRepostLineMsgList(accountId);
 
             MainCommentsTimeLineDao commentDao = new MainCommentsTimeLineDao(token);
-            if (commentLineBean.getComments().size() > 0) {
-                commentDao.setSince_id(commentLineBean.getComments().get(0).getId());
+            if (commentLineBean.getSize() > 0) {
+                commentDao.setSince_id(commentLineBean.getItemList().get(0).getId());
             }
             try {
                 commentResult = commentDao.getGSONMsgList();
@@ -69,14 +69,14 @@ public class FetchNewMsgService extends Service {
                 return null;
             }
             if (commentResult != null) {
-                map.put("comment", commentResult.getComments().size());
+                map.put("comment", commentResult.getSize());
             } else {
                 cancel(true);
             }
 
             MainMentionsTimeLineDao mentionDao = new MainMentionsTimeLineDao(token);
-            if (messageListBean.getStatuses().size() > 0) {
-                mentionDao.setSince_id(messageListBean.getStatuses().get(0).getId());
+            if (messageListBean.getSize() > 0) {
+                mentionDao.setSince_id(messageListBean.getItemList().get(0).getId());
             }
             try {
                 repostResult = mentionDao.getGSONMsgList();
@@ -85,7 +85,7 @@ public class FetchNewMsgService extends Service {
                 return null;
             }
             if (repostResult != null) {
-                map.put("repost", repostResult.getStatuses().size());
+                map.put("repost", repostResult.getSize());
             } else {
                 cancel(true);
             }

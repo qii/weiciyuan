@@ -53,8 +53,8 @@ public class MainFriendsTimeLineDao {
             AppLogger.e(e.getMessage());
             return null;
         }
-        if (value != null && value.getStatuses().size() > 0) {
-            List<MessageBean> msgList = value.getStatuses();
+        if (value != null && value.getItemList().size() > 0) {
+            List<MessageBean> msgList = value.getItemList();
             Iterator<MessageBean> iterator = msgList.iterator();
             while (iterator.hasNext()) {
                 MessageBean msg = iterator.next();

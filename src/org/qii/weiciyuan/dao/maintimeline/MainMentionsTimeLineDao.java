@@ -59,8 +59,8 @@ public class MainMentionsTimeLineDao {
         /**
          * sometime sina weibo may delete message,so data don't have any user information
          */
-        if (value != null && value.getStatuses().size() > 0) {
-            List<MessageBean> msgList = value.getStatuses();
+        if (value != null && value.getItemList().size() > 0) {
+            List<MessageBean> msgList = value.getItemList();
             Iterator<MessageBean> iterator = msgList.iterator();
             while (iterator.hasNext()) {
 

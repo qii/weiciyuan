@@ -6,6 +6,8 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.ListBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.destroy.DestroyStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -21,36 +23,36 @@ import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
  * User: qii
  * Date: 12-7-29
  */
-public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFragment<MessageListBean> implements IRemoveItem {
+public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFragment<ListBean<MessageBean>> implements IRemoveItem {
 
     private RemoveTask removeTask;
 
-    protected void showNewMsgToastMessage(MessageListBean newValue) {
+    protected void showNewMsgToastMessage(ListBean<MessageBean> newValue) {
         if (newValue != null && getActivity() != null) {
-            if (newValue.getStatuses().size() == 0) {
+            if (newValue.getSize() == 0) {
                 Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
-            } else if (newValue.getStatuses().size() > 0) {
-                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getStatuses().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
+            } else if (newValue.getSize() > 0) {
+                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getSize() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    protected void clearAndReplaceValue(MessageListBean value) {
-        bean.getStatuses().clear();
-        bean.getStatuses().addAll(value.getStatuses());
+    protected void clearAndReplaceValue(ListBean<MessageBean> value) {
+        bean.getItemList().clear();
+        bean.getItemList().addAll(value.getItemList());
         bean.setTotal_number(value.getTotal_number());
     }
 
     @Override
-    protected void newMsgOnPostExecute(MessageListBean newValue) {
+    protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
         if (newValue != null && getActivity() != null) {
-            if (newValue.getStatuses().size() == 0) {
+            if (newValue.getSize() == 0) {
 //                Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
-            } else if (newValue.getStatuses().size() > 0) {
+            } else if (newValue.getSize() > 0) {
 //                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getStatuses().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
-                if (newValue.getStatuses().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
                     //for speed, add old data after new data
-                    newValue.getStatuses().addAll(getList().getStatuses());
+                    newValue.getItemList().addAll(getList().getItemList());
                 }
                 clearAndReplaceValue(newValue);
                 timeLineAdapter.notifyDataSetChanged();
@@ -62,14 +64,14 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
     }
 
     @Override
-    protected void oldMsgOnPostExecute(MessageListBean newValue) {
+    protected void oldMsgOnPostExecute(ListBean<MessageBean> newValue) {
         if (newValue != null && newValue.getSize() > 1) {
 
-            int index = newValue.getStatuses().size() - 1;
+            int index = newValue.getSize() - 1;
 
             if (index > 1) {
 
-                getList().getStatuses().addAll(newValue.getStatuses().subList(1, index));
+                getList().getItemList().addAll(newValue.getItemList().subList(1, index));
             }
 
         } else {
@@ -100,12 +102,12 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
                         mActionMode = null;
                         listView.setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, (StatusesListAdapter)timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getStatuses().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, (StatusesListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     } else {
                         listView.setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, (StatusesListAdapter)timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getStatuses().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, (StatusesListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     }
                 }
@@ -118,7 +120,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusesListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getStatuses(), listView, true);
+        timeLineAdapter = new StatusesListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), listView, true);
         listView.setAdapter(timeLineAdapter);
     }
 
@@ -127,7 +129,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
     public void removeItem(int position) {
         clearActionMode();
         if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            removeTask = new RemoveTask(((IToken) getActivity()).getToken(), bean.getStatuses().get(position).getId(), position);
+            removeTask = new RemoveTask(((IToken) getActivity()).getToken(), bean.getItemList().get(position).getId(), position);
             removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -139,43 +141,43 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
 
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
 
-                String token;
-                String id;
-                int positon;
-                WeiboException e;
+        String token;
+        String id;
+        int positon;
+        WeiboException e;
 
-                public RemoveTask(String token, String id, int positon) {
-                    this.token = token;
-                    this.id = id;
-                    this.positon = positon;
-                }
+        public RemoveTask(String token, String id, int positon) {
+            this.token = token;
+            this.id = id;
+            this.positon = positon;
+        }
 
-                @Override
-                protected Boolean doInBackground(Void... params) {
-                    DestroyStatusDao dao = new DestroyStatusDao(token, id);
-                    try {
-                        return dao.destroy();
-                    } catch (WeiboException e) {
-                        this.e = e;
-                        cancel(true);
-                        return false;
-                    }
-                }
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            DestroyStatusDao dao = new DestroyStatusDao(token, id);
+            try {
+                return dao.destroy();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return false;
+            }
+        }
 
-                @Override
-                protected void onCancelled(Boolean aBoolean) {
-                    super.onCancelled(aBoolean);
-                    if (this.e != null) {
-                        Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-                    }
-                }
+        @Override
+        protected void onCancelled(Boolean aBoolean) {
+            super.onCancelled(aBoolean);
+            if (this.e != null) {
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+            }
+        }
 
-                @Override
-                protected void onPostExecute(Boolean aBoolean) {
-                    super.onPostExecute(aBoolean);
-                    if (aBoolean) {
-                        ((StatusesListAdapter) timeLineAdapter).removeItem(positon);
-                    }
-                }
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (aBoolean) {
+                ((StatusesListAdapter) timeLineAdapter).removeItem(positon);
+            }
+        }
     }
 }

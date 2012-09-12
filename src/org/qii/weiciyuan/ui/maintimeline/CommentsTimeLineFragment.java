@@ -33,8 +33,8 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentListBean> {
 
     protected void clearAndReplaceValue(CommentListBean value) {
-        bean.getComments().clear();
-        bean.getComments().addAll(value.getComments());
+        bean.getItemList().clear();
+        bean.getItemList().addAll(value.getItemList());
     }
 
     @Override
@@ -48,7 +48,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
 
-        if (savedInstanceState != null && (bean == null || bean.getComments().size() == 0)) {
+        if (savedInstanceState != null && (bean == null || bean.getItemList().size() == 0)) {
             clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
@@ -67,12 +67,12 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                         mActionMode = null;
                         listView.setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(listView, timeLineAdapter, CommentsTimeLineFragment.this, bean.getComments().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(listView, timeLineAdapter, CommentsTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     } else {
                         listView.setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(listView, timeLineAdapter, CommentsTimeLineFragment.this, bean.getComments().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(listView, timeLineAdapter, CommentsTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     }
                 }
@@ -113,14 +113,14 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new CommentListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getComments(), listView, true);
+        timeLineAdapter = new CommentListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), listView, true);
         listView.setAdapter(timeLineAdapter);
     }
 
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("msg", bean.getComments().get(position).getStatus());
+        intent.putExtra("msg", bean.getItemList().get(position).getStatus());
         intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
         startActivity(intent);
     }
@@ -150,12 +150,12 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     @Override
     protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
         MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
-        if (getList() != null && getList().getComments().size() > 0) {
-            dao.setSince_id(getList().getComments().get(0).getId());
+        if (getList() != null && getList().getItemList().size() > 0) {
+            dao.setSince_id(getList().getItemList().get(0).getId());
         }
         CommentListBean result = dao.getGSONMsgList();
         if (result != null) {
-            if (result.getComments().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+            if (result.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
                 DatabaseManager.getInstance().addCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
             } else {
                 DatabaseManager.getInstance().replaceCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
@@ -167,8 +167,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     @Override
     protected CommentListBean getDoInBackgroundOldData() throws WeiboException {
         MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
-        if (getList().getComments().size() > 0) {
-            dao.setMax_id(getList().getComments().get(getList().getComments().size() - 1).getId());
+        if (getList().getItemList().size() > 0) {
+            dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
         }
         CommentListBean result = dao.getGSONMsgList();
         return result;
@@ -177,13 +177,13 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     @Override
     protected void newMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null) {
-            if (newValue.getComments().size() == 0) {
+            if (newValue.getItemList().size() == 0) {
                 Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
 
             } else {
-                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getComments().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
-                if (newValue.getComments().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                    newValue.getComments().addAll(getList().getComments());
+                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
+                if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                    newValue.getItemList().addAll(getList().getItemList());
                 }
 
                 clearAndReplaceValue(newValue);
@@ -201,7 +201,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     protected void oldMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null && newValue.getSize() > 1) {
 
-            getList().getComments().addAll(newValue.getComments().subList(1, newValue.getComments().size() - 1));
+            getList().getItemList().addAll(newValue.getItemList().subList(1, newValue.getItemList().size() - 1));
 
         }
     }

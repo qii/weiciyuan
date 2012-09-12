@@ -64,7 +64,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("token", ((IToken) getActivity()).getToken());
-        intent.putExtra("msg", bean.getStatuses().get(position));
+        intent.putExtra("msg", bean.getItem(position));
         startActivity(intent);
     }
 
@@ -74,7 +74,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.statusesbyidtimelinefragment_menu, menu);
         if (!TextUtils.isEmpty(userBean.getStatuses_count())) {
-            String number = bean.getStatuses().size() + "/" + userBean.getStatuses_count();
+            String number = bean.getSize() + "/" + userBean.getStatuses_count();
             menu.findItem(R.id.statusesbyidtimelinefragment_status_number).setTitle(number);
         }
     }
@@ -106,8 +106,8 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
             dao.setScreen_name(screenName);
         }
 
-        if (getList().getStatuses().size() > 0) {
-            dao.setSince_id(getList().getStatuses().get(0).getId());
+        if (getList().getSize() > 0) {
+            dao.setSince_id(getList().getItem(0).getId());
         }
         MessageListBean result = dao.getGSONMsgList();
 
@@ -124,8 +124,8 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         if (TextUtils.isEmpty(id)) {
             dao.setScreen_name(screenName);
         }
-        if (getList().getStatuses().size() > 0) {
-            dao.setMax_id(getList().getStatuses().get(getList().getStatuses().size() - 1).getId());
+        if (getList().getSize() > 0) {
+            dao.setMax_id(getList().getItemList().get(getList().getSize() - 1).getId());
         }
         MessageListBean result = dao.getGSONMsgList();
 
