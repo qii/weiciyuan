@@ -30,7 +30,7 @@
                 android:dialogTitle="@string/theme"
                 android:entries="@array/theme"
                 android:entryValues="@array/theme_value"
-                android:defaultValue="1"/>
+                android:defaultValue="3"/>
     </PreferenceCategory>
     <PreferenceCategory
             android:title="@string/new_message"
