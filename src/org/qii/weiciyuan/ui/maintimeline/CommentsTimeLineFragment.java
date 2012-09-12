@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.dao.maintimeline.CommentsTimeLineByMeDao;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
@@ -22,6 +23,8 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
+import org.qii.weiciyuan.ui.Abstract.IRemoveItem;
+import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -32,10 +35,12 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  * User: qii
  * Date: 12-7-29
  */
-public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentListBean> {
+public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentListBean> implements IRemoveItem {
 
     private String[] group = new String[3];
     private int selected = 0;
+    private RemoveTask removeTask;
+
 
     public void setSelected(int positoin) {
         selected = positoin;
@@ -97,6 +102,62 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     }
 
+    @Override
+    public void removeItem(int position) {
+        clearActionMode();
+        if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            removeTask = new RemoveTask(((IToken) getActivity()).getToken(), bean.getItemList().get(position).getId(), position);
+            removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    @Override
+    public void removeCancel() {
+        clearActionMode();
+    }
+
+    class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
+
+        String token;
+        String id;
+        int positon;
+        WeiboException e;
+
+        public RemoveTask(String token, String id, int positon) {
+            this.token = token;
+            this.id = id;
+            this.positon = positon;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            DestroyCommentDao dao = new DestroyCommentDao(token, id);
+            try {
+                return dao.destroy();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return false;
+            }
+        }
+
+        @Override
+        protected void onCancelled(Boolean aBoolean) {
+            super.onCancelled(aBoolean);
+            if (this.e != null) {
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (aBoolean) {
+                ((CommentListAdapter) timeLineAdapter).removeItem(positon);
+
+            }
+        }
+    }
 
     private class SimpleTask extends MyAsyncTask<Object, Object, Object> {
 
