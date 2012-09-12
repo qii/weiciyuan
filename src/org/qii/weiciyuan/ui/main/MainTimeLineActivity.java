@@ -239,7 +239,14 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         public void onTabSelected(ActionBar.Tab tab,
                                   FragmentTransaction ft) {
 
-            mViewPager.setCurrentItem(tab.getPosition());
+            /**
+             * workaround for fragment option menu bug
+             *
+             * http://stackoverflow.com/questions/9338122/action-items-from-viewpager-initial-fragment-not-being-displayed
+             *
+             */
+            if (mViewPager.getCurrentItem() != tab.getPosition())
+                mViewPager.setCurrentItem(tab.getPosition());
 
 
             if (getHomeFragment() != null) {
