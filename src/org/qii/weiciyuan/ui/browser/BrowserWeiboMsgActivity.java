@@ -94,9 +94,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
         public void onPageSelected(int position) {
             getActionBar().setSelectedNavigationItem(position);
             switch (position) {
-                case 1:
-//                    ((CommentsByIdTimeLineFragment) getCommentFragment()).load();
-                    break;
+
                 case 2:
                     ((RepostsByIdTimeLineFragment) getRepostFragment()).load();
                     break;
@@ -217,22 +215,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.browserweibomsgactivity_menu, menu);
-//
-//        menu.getItem(0).setTitle(menu.getItem(0).getTitle() + "(" + retweet_sum + ")");
-//        menu.getItem(1).setTitle(menu.getItem(1).getTitle() + "(" + comment_sum + ")");
-//
-//        boolean fav = msg.isFavorited();
-//        if (fav) {
-//            menu.findItem(R.id.menu_fav).setIcon(R.drawable.fav_un_black);
-//        } else {
-//            menu.findItem(R.id.menu_fav).setIcon(R.drawable.fav_en_black);
-//        }
-//
-//        return super.onCreateOptionsMenu(menu);
-//    }
 
     @Override
     public String getToken() {

@@ -82,14 +82,17 @@ public class BrowserWeiboMsgFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            msg = (MessageBean) savedInstanceState.getSerializable("msg");
-        }
-        buildViewData();
         setHasOptionsMenu(true);
         setRetainInstance(true);
-        task = new UpdateMsgTask();
-        task.execute();
+        if (savedInstanceState != null) {
+            msg = (MessageBean) savedInstanceState.getSerializable("msg");
+        } else {
+            task = new UpdateMsgTask();
+            task.execute();
+        }
+        buildViewData();
+
+
     }
 
     @Override
@@ -290,7 +293,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
         getActivity().getActionBar().getTabAt(1).setText(getString(R.string.comments) + "(" + msg.getComments_count() + ")");
         getActivity().getActionBar().getTabAt(2).setText(getString(R.string.repost) + "(" + msg.getReposts_count() + ")");
 
-
+        buildShareActionMenu();
     }
 
     private class GetGoogleLocationInfo extends MyAsyncTask<Void, String, String> {
@@ -349,12 +352,14 @@ public class BrowserWeiboMsgFragment extends Fragment {
     private void buildShareActionMenu() {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, msg.getText());
-        PackageManager packageManager = getActivity().getPackageManager();
-        List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
-        boolean isIntentSafe = activities.size() > 0;
-        if (isIntentSafe && mShareActionProvider != null) {
-            mShareActionProvider.setShareIntent(sharingIntent);
+        if (msg != null) {
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, msg.getText());
+            PackageManager packageManager = getActivity().getPackageManager();
+            List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
+            boolean isIntentSafe = activities.size() > 0;
+            if (isIntentSafe && mShareActionProvider != null) {
+                mShareActionProvider.setShareIntent(sharingIntent);
+            }
         }
     }
 
@@ -376,6 +381,9 @@ public class BrowserWeiboMsgFragment extends Fragment {
                 cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", content.getText().toString()));
                 Toast.makeText(getActivity(), getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.menu_fav:
+                Toast.makeText(getActivity(), "fav", Toast.LENGTH_SHORT).show();
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -385,7 +393,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
     private View.OnClickListener picOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String url="";
+            String url = "";
             switch (v.getId()) {
                 case R.id.content_pic:
                     url = msg.getOriginal_pic();
