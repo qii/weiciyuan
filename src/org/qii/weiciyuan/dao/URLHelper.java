@@ -23,6 +23,10 @@ public class URLHelper {
         return URLManager.getRealUrl("commentstimeline");
     }
 
+    public static String getCommentListByMe() {
+        return URLManager.getRealUrl("commentsbyme");
+    }
+
     public static String getCommentListById() {
         return URLManager.getRealUrl("commentstimelinebymsgid");
     }
@@ -96,6 +100,6 @@ public class URLHelper {
     }
 
     public static String getDestroyStatus() {
-           return URLManager.getRealUrl("destroy_status");
-       }
+        return URLManager.getRealUrl("destroy_status");
+    }
 }

@@ -8,11 +8,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.dao.maintimeline.CommentsTimeLineByMeDao;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -32,6 +34,13 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  */
 public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentListBean> {
 
+    private String[] group = new String[3];
+    private int selected = 0;
+
+    public void setSelected(int positoin) {
+        selected = positoin;
+    }
+
     protected void clearAndReplaceValue(CommentListBean value) {
         bean.getItemList().clear();
         bean.getItemList().addAll(value.getItemList());
@@ -41,6 +50,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
+        outState.putStringArray("group", group);
+        outState.putInt("selected", selected);
     }
 
     @Override
@@ -49,6 +60,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         commander = ((AbstractAppActivity) getActivity()).getCommander();
 
         if (savedInstanceState != null && (bean == null || bean.getItemList().size() == 0)) {
+            group = savedInstanceState.getStringArray("group");
+            selected = savedInstanceState.getInt("selected");
             clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
@@ -102,10 +115,50 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         }
     }
 
+
+    private class RefreshDBTask extends MyAsyncTask<Object, Object, Object> {
+
+        @Override
+        protected void onPreExecute() {
+            showListView();
+            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
+            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
+            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
+            listView.setSelection(0);
+        }
+
+        @Override
+        protected Object doInBackground(Object... params) {
+            CommentListBean value = DatabaseManager.getInstance().getCommentLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid());
+            clearAndReplaceValue(value);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            timeLineAdapter.notifyDataSetChanged();
+            refreshLayout(bean);
+            headerView.findViewById(R.id.header_progress).clearAnimation();
+            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
+            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
+
+            if (bean.getSize() == 0) {
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+            } else {
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+            }
+            super.onPostExecute(o);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bean = new CommentListBean();
+        group[0] = getString(R.string.all_people_send_to_me);
+        group[1] = getString(R.string.following_people_send_to_me);
+        group[2] = getString(R.string.my_comment);
         setHasOptionsMenu(true);
         setRetainInstance(true);
     }
@@ -130,7 +183,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.mentionstimelinefragment_menu, menu);
-
+        menu.findItem(R.id.mentionstimelinefragment_group).setTitle(group[selected]);
     }
 
     @Override
@@ -142,6 +195,12 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 refresh();
 
                 break;
+            case R.id.mentionstimelinefragment_group:
+                if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    CommentsGroupDialog dialog = new CommentsGroupDialog(group, selected);
+                    dialog.setTargetFragment(CommentsTimeLineFragment.this, 0);
+                    dialog.show(getFragmentManager(), "");
+                }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -149,29 +208,56 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     @Override
     protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
-        MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
-        if (getList() != null && getList().getItemList().size() > 0) {
-            dao.setSince_id(getList().getItemList().get(0).getId());
-        }
-        CommentListBean result = dao.getGSONMsgList();
-        if (result != null) {
-            if (result.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                DatabaseManager.getInstance().addCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
-            } else {
-                DatabaseManager.getInstance().replaceCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
+        if (selected == 0 || selected == 1) {
+            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
+            if (getList() != null && getList().getItemList().size() > 0) {
+                dao.setSince_id(getList().getItemList().get(0).getId());
             }
+
+            if (selected == 1) {
+                dao.setFilter_by_author("1");
+            }
+
+            CommentListBean result = dao.getGSONMsgList();
+            if (result != null && selected == 0) {
+                if (result.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                    DatabaseManager.getInstance().addCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
+                } else {
+                    DatabaseManager.getInstance().replaceCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
+                }
+            }
+            return result;
+        } else {
+            CommentsTimeLineByMeDao dao = new CommentsTimeLineByMeDao(((MainTimeLineActivity) getActivity()).getToken());
+            if (getList() != null && getList().getItemList().size() > 0) {
+                dao.setSince_id(getList().getItemList().get(0).getId());
+            }
+
+            CommentListBean result = dao.getGSONMsgList();
+            return result;
         }
-        return result;
     }
 
     @Override
     protected CommentListBean getDoInBackgroundOldData() throws WeiboException {
-        MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
-        if (getList().getItemList().size() > 0) {
-            dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
+        if (selected == 0 || selected == 1) {
+            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
+            if (getList().getItemList().size() > 0) {
+                dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
+            }
+            if (selected == 1) {
+                dao.setFilter_by_author("1");
+            }
+            CommentListBean result = dao.getGSONMsgList();
+            return result;
+        } else {
+            CommentsTimeLineByMeDao dao = new CommentsTimeLineByMeDao(((MainTimeLineActivity) getActivity()).getToken());
+            if (getList().getItemList().size() > 0) {
+                dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
+            }
+            CommentListBean result = dao.getGSONMsgList();
+            return result;
         }
-        CommentListBean result = dao.getGSONMsgList();
-        return result;
     }
 
     @Override
@@ -204,5 +290,16 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             getList().getItemList().addAll(newValue.getItemList().subList(1, newValue.getItemList().size() - 1));
 
         }
+    }
+
+    public void refreshAnother() {
+        getList().getItemList().clear();
+        timeLineAdapter.notifyDataSetChanged();
+        if (selected != 0) {
+            refresh();
+        } else {
+            new RefreshDBTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        getActivity().invalidateOptionsMenu();
     }
 }
