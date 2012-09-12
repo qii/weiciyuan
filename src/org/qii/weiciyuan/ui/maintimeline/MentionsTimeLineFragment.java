@@ -1,17 +1,14 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ListBean;
@@ -40,6 +37,18 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     private int selected = 0;
 
+    public void setFilter_by_author(String filter_by_author) {
+        this.filter_by_author = filter_by_author;
+    }
+
+    public void setFilter_by_type(String filter_by_type) {
+        this.filter_by_type = filter_by_type;
+    }
+
+    public void setSelected(int selected) {
+        this.selected = selected;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         group[0] = getString(R.string.all_people);
@@ -52,6 +61,10 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
+        outState.putStringArray("group", group);
+        outState.putInt("selected", selected);
+        outState.putString("filter_by_author", filter_by_author);
+        outState.putString("filter_by_type", filter_by_type);
     }
 
 
@@ -67,6 +80,10 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null) {
+            group = savedInstanceState.getStringArray("group");
+            selected = savedInstanceState.getInt("selected");
+            filter_by_author = savedInstanceState.getString("filter_by_author");
+            filter_by_type = savedInstanceState.getString("filter_by_type");
             clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
@@ -79,6 +96,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     private class SimpleTask extends MyAsyncTask<Object, Object, Object> {
 
+
         @Override
         protected Object doInBackground(Object... params) {
             clearAndReplaceValue(DatabaseManager.getInstance().getRepostLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid()));
@@ -89,6 +107,42 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         protected void onPostExecute(Object o) {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
+            super.onPostExecute(o);
+        }
+    }
+
+
+    private class RefreshDBTask extends MyAsyncTask<Object, Object, Object> {
+
+        @Override
+        protected void onPreExecute() {
+            showListView();
+            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
+            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
+            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
+            listView.setSelection(0);
+        }
+
+        @Override
+        protected Object doInBackground(Object... params) {
+            clearAndReplaceValue(DatabaseManager.getInstance().getRepostLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid()));
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            timeLineAdapter.notifyDataSetChanged();
+            refreshLayout(bean);
+            headerView.findViewById(R.id.header_progress).clearAnimation();
+            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
+            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
+
+            if (bean.getSize() == 0) {
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+            } else {
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+            }
             super.onPostExecute(o);
         }
     }
@@ -120,7 +174,8 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 break;
             case R.id.mentionstimelinefragment_group:
                 if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    GroupDialog dialog = new GroupDialog();
+                    MentionsGroupDialog dialog = new MentionsGroupDialog(group, selected);
+                    dialog.setTargetFragment(MentionsTimeLineFragment.this, 0);
                     dialog.show(getFragmentManager(), "");
                 }
 
@@ -170,46 +225,17 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
 
-    private class GroupDialog extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(getString(R.string.select_group));
-            builder.setSingleChoiceItems(group, selected, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        case 0:
-                            filter_by_author = "0";
-                            filter_by_type = "0";
-
-                            break;
-                        case 1:
-                            filter_by_author = "1";
-                            filter_by_type = "0";
-
-                            break;
-                        case 2:
-                            filter_by_author = "0";
-                            filter_by_type = "1";
-
-                            break;
-                    }
-                    if (selected != which) {
-                        selected = which;
-                        getList().getItemList().clear();
-                        timeLineAdapter.notifyDataSetChanged();
-                        refresh();
-                        getActivity().invalidateOptionsMenu();
-                    }
-                    dismiss();
-                }
-
-            });
-
-
-            return builder.create();
+    public void refreshAnother() {
+        getList().getItemList().clear();
+        timeLineAdapter.notifyDataSetChanged();
+        if (selected != 0) {
+            refresh();
+        } else {
+            new RefreshDBTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
+        getActivity().invalidateOptionsMenu();
     }
+
+
 }
 
