@@ -123,6 +123,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             id = savedInstanceState.getString("id");
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
+        } else {
+            refresh();
         }
 
         listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -405,10 +407,10 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         if (newValue != null) {
             bean.setTotal_number(newValue.getTotal_number());
             if (newValue.getItemList().size() == 0) {
-                Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
 
             } else {
-                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
                 if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
                     newValue.getItemList().addAll(getList().getItemList());
                 }
