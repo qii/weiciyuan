@@ -128,7 +128,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         }
 
         if (key.equals(SettingActivity.FONT_SIZE)) {
-            String value = sharedPreferences.getString(key, "13");
+            String value = sharedPreferences.getString(key, "15");
             GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
         }
 
