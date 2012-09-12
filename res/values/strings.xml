@@ -135,6 +135,7 @@
     <!--fav-->
     <string name="favourite">收藏</string>
     <string name="fav_number">收藏数</string>
+    <string name="fav_successfully">收藏成功</string>
 
     <!-- account -->
     <string name="account">帐号</string>

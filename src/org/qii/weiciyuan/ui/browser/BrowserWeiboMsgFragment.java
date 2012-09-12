@@ -32,6 +32,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.task.FavAsyncTask;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 
@@ -60,6 +61,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
     private UpdateMsgTask task = null;
     private GetGoogleLocationInfo geoTask = null;
+    private FavAsyncTask favTask = null;
 
     private ShareActionProvider mShareActionProvider;
 
@@ -382,7 +384,11 @@ public class BrowserWeiboMsgFragment extends Fragment {
                 Toast.makeText(getActivity(), getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menu_fav:
-                Toast.makeText(getActivity(), "fav", Toast.LENGTH_SHORT).show();
+                if (favTask == null || favTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    favTask = new FavAsyncTask(((IToken) getActivity()).getToken(), msg.getId());
+                    favTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
+
                 break;
             default:
                 return super.onOptionsItemSelected(item);
