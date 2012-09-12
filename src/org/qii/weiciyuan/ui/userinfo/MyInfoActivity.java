@@ -57,7 +57,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
 
         setContentView(R.layout.maintimelineactivity_viewpager_layout);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-             getActionBar().setTitle(getString(R.string.my_info));
+        getActionBar().setTitle(getString(R.string.my_info));
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
         mViewPager.setOffscreenPageLimit(5);
@@ -81,7 +81,8 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
 
         public void onTabSelected(ActionBar.Tab tab,
                                   FragmentTransaction ft) {
-            mViewPager.setCurrentItem(tab.getPosition());
+            if (mViewPager.getCurrentItem() != tab.getPosition())
+                mViewPager.setCurrentItem(tab.getPosition());
 
         }
 

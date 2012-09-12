@@ -107,7 +107,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
 
         public void onTabSelected(ActionBar.Tab tab,
                                   FragmentTransaction ft) {
-            mViewPager.setCurrentItem(tab.getPosition());
+            if (mViewPager.getCurrentItem() != tab.getPosition())
+                mViewPager.setCurrentItem(tab.getPosition());
 
         }
 

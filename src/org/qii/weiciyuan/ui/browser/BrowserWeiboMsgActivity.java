@@ -121,7 +121,8 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
         public void onTabSelected(ActionBar.Tab tab,
                                   FragmentTransaction ft) {
 
-            mViewPager.setCurrentItem(tab.getPosition());
+            if (mViewPager.getCurrentItem() != tab.getPosition())
+                mViewPager.setCurrentItem(tab.getPosition());
             if (getCommentFragment() != null)
                 getCommentFragment().clearActionMode();
             if (getRepostFragment() != null)
