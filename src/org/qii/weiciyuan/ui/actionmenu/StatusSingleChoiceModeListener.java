@@ -11,15 +11,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.CommentNewActivity;
 import org.qii.weiciyuan.ui.send.RepostNewActivity;
+import org.qii.weiciyuan.ui.task.FavAsyncTask;
 
 import java.util.List;
 
@@ -29,12 +30,14 @@ import java.util.List;
  */
 public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
-    ListView listView;
-    StatusesListAdapter adapter;
-    Fragment fragment;
-    ActionMode mode;
-    MessageBean bean;
-    ShareActionProvider mShareActionProvider;
+    private ListView listView;
+    private StatusesListAdapter adapter;
+    private Fragment fragment;
+    private ActionMode mode;
+    private MessageBean bean;
+    private ShareActionProvider mShareActionProvider;
+
+    private FavAsyncTask favTask = null;
 
 
     public void finish() {
@@ -118,7 +121,10 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
                 break;
             case R.id.menu_fav:
-                Toast.makeText(getActivity(), "fav", Toast.LENGTH_SHORT).show();
+                if (favTask == null || favTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    favTask = new FavAsyncTask(((IToken) getActivity()).getToken(), bean.getId());
+                    favTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
                 listView.clearChoices();
                 listView.clearChoices();
                 mode.finish();
@@ -156,7 +162,6 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
         ((AbstractTimeLineFragment) fragment).setmActionMode(null);
 
     }
-
 
 
 }

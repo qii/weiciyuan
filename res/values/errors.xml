@@ -9,5 +9,5 @@
     <string name="code20012">Text too long, please input text less than 140 characters!</string>
     <string name="code20019">repeat content!</string>
     <string name="code20003">User does not exists!</string>
-
+    <string name="code20704">you have collected this status!</string>
 </resources>

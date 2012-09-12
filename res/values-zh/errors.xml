@@ -9,4 +9,5 @@
     <string name="code20012">字数太多了，最多140字！</string>
     <string name="code20019">内容重复！</string>
     <string name="code20003">用户不存在！</string>
+    <string name="code20704">已经收藏过了！</string>
 </resources>
