@@ -12,4 +12,20 @@
           android:showAsAction="ifRoom|withText"
             />
 
+    <item android:id="@+id/menu_my_info"
+          android:title="@string/my_info"
+            />
+    <item android:id="@+id/menu_account"
+          android:title="@string/account"
+            />
+    <!--<item android:id="@+id/menu_search"-->
+    <!--android:title="@string/search"-->
+    <!--android:actionViewClass="android.widget.SearchView"-->
+    <!--android:icon="?search"-->
+    <!--/>-->
+
+    <item android:id="@+id/menu_setting"
+          android:title="@string/setting"
+            />
+
 </menu>

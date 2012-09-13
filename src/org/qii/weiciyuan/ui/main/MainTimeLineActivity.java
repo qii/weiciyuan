@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -29,6 +28,7 @@ import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsTimeLineFragment;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
+import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,13 +149,13 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.maintimelineactivity_menu, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//
+//        getMenuInflater().inflate(R.menu.maintimelineactivity_menu, menu);
+//
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
     @Override
     public void onBackPressed() {
@@ -168,16 +168,23 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
+            case R.id.menu_my_info:
+                intent = new Intent(this, MyInfoActivity.class);
+                intent.putExtra("token", getToken());
+                intent.putExtra("user", getUser());
+                intent.putExtra("account",getAccount());
+                startActivity(intent);
+                return true;
+
             case R.id.menu_account:
                 intent = new Intent(this, AccountActivity.class);
                 intent.putExtra("launcher", false);
                 startActivity(intent);
-//                finish();
-                break;
+                return true;
 
             case R.id.menu_setting:
                 startActivity(new Intent(this, SettingActivity.class));
-                break;
+                return true;
 
 //            case R.id.menu_search:
 //                startActivity(new Intent(this, SearchMainActivity.class));
