@@ -108,7 +108,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
                 .setLargeIcon(bitmap)
                 .setAutoCancel(true)
                 .setContentIntent(activity);
-        if (sum > 0) {
+        if (sum > 1) {
             notification.setNumber(sum);
         }
         notificationManager.notify(0, notification.getNotification());
