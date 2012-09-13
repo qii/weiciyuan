@@ -26,11 +26,11 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
 
     private Context context;
     private AccountBean accountBean;
-    private Integer commentsum;
-    private Integer repostsum;
+
     private int sum;
 
-
+    private CommentListBean comment;
+    private MessageListBean repost;
     private String title = "";
     private String content = "";
     private String ticker = "";
@@ -39,12 +39,11 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         this.context = context;
         accountBean = (AccountBean) intent.getSerializableExtra("account");
-        Integer commentsum = intent.getIntExtra("commentsum", 0);
-        Integer repostsum = intent.getIntExtra("repostsum", 0);
-        sum = commentsum + repostsum;
+        comment = (CommentListBean) intent.getSerializableExtra("comment");
+        repost = (MessageListBean) intent.getSerializableExtra("repost");
 
-        CommentListBean comment = (CommentListBean) intent.getSerializableExtra("comment");
-        MessageListBean repost = (MessageListBean) intent.getSerializableExtra("repost");
+        sum = comment.getSize() + repost.getSize();
+
 
         Set<String> peopleNameSet = new HashSet<String>();
 
@@ -95,8 +94,9 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
     private void showNotification(Bitmap bitmap) {
         Intent i = new Intent(context, MainTimeLineActivity.class);
         i.putExtra("account", accountBean);
-        i.putExtra("commentsum", commentsum);
-        i.putExtra("repostsum", repostsum);
+        i.putExtra("comment", comment);
+        i.putExtra("repost", repost);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent activity = PendingIntent.getActivity(context, 0, i, 0);
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);

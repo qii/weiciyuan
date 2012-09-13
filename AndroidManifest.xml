@@ -32,7 +32,7 @@
 
         <activity android:name=".ui.main.MainTimeLineActivity"
                   android:uiOptions="splitActionBarWhenNarrow"
-                  android:launchMode="singleTask"
+                  android:launchMode="singleTop"
                 />
         <activity android:name=".ui.send.StatusNewActivity"
                   android:uiOptions="splitActionBarWhenNarrow"

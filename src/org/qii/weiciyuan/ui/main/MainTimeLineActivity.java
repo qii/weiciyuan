@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -106,15 +108,27 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
 
     private void buildTabTitle(Intent intent) {
-        int commentsum = intent.getIntExtra("commentsum", 0);
-        int repostsum = intent.getIntExtra("repostsum", 0);
 
-        if (repostsum > 0) {
-            invlidateTabText(1, repostsum);
+        AccountBean newAccountBean = (AccountBean) intent.getSerializableExtra("account");
+        if (newAccountBean != null && !newAccountBean.getUid().equals(accountBean.getUid())) {
+            overridePendingTransition(0, 0);
+            finish();
+
+            overridePendingTransition(0, 0);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+
+        }
+
+        CommentListBean comment = (CommentListBean) intent.getSerializableExtra("comment");
+        MessageListBean repost = (MessageListBean) intent.getSerializableExtra("repost");
+
+        if (repost != null && repost.getSize() > 0) {
+            invlidateTabText(1, repost.getSize());
             getActionBar().setSelectedNavigationItem(1);
         }
-        if (commentsum > 0) {
-            invlidateTabText(2, commentsum);
+        if (comment != null && comment.getSize() > 0) {
+            invlidateTabText(2, comment.getSize());
             getActionBar().setSelectedNavigationItem(2);
         }
     }
@@ -157,7 +171,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 intent = new Intent(this, AccountActivity.class);
                 intent.putExtra("launcher", false);
                 startActivity(intent);
-                finish();
+//                finish();
                 break;
 
             case R.id.menu_setting:
