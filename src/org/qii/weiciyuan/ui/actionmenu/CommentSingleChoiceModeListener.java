@@ -90,7 +90,13 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         if (isIntentSafe && mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(sharingIntent);
         }
-
+        mShareActionProvider.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
+            @Override
+            public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
+                finish();
+                return false;
+            }
+        });
         return true;
 
 
@@ -119,6 +125,13 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
                 if (isIntentSafe && mShareActionProvider != null) {
                     mShareActionProvider.setShareIntent(sharingIntent);
                 }
+                mShareActionProvider.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
+                    @Override
+                    public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
+                        finish();
+                        return false;
+                    }
+                });
                 break;
             case R.id.menu_copy:
                 ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);

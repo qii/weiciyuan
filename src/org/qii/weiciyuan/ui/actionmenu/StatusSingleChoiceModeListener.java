@@ -90,7 +90,13 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
         if (isIntentSafe && mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(sharingIntent);
         }
-
+        mShareActionProvider.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
+            @Override
+            public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
+                finish();
+                return false;
+            }
+        });
         return true;
 
 
@@ -147,6 +153,13 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
                 if (isIntentSafe && mShareActionProvider != null) {
                     mShareActionProvider.setShareIntent(sharingIntent);
                 }
+                mShareActionProvider.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
+                    @Override
+                    public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
+                        finish();
+                        return false;
+                    }
+                });
                 break;
         }
 
