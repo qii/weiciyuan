@@ -34,6 +34,8 @@ import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.io.File;
@@ -45,7 +47,7 @@ import java.util.Locale;
  * User: qii
  * Date: 12-7-29
  */
-public class StatusNewActivity extends AbstractAppActivity implements DialogInterface.OnClickListener {
+public class StatusNewActivity extends AbstractAppActivity implements DialogInterface.OnClickListener, IAccountInfo {
 
 
     private static final int CAMERA_RESULT = 0;
@@ -59,12 +61,13 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     private GeoBean geoBean;
 
 
-    private TextView contentNumber = null;
     private ImageView haveGPS = null;
     private ImageView havePic = null;
     private EditText content = null;
 
     private String location;
+
+    private AccountBean accountBean;
 
 
     @Override
@@ -117,12 +120,42 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statusnewactivity_layout);
+        initLayout();
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                handleSendText(intent);
+            } else if (type.startsWith("image/")) {
+                handleSendImage(intent);
+            }
+        } else {
+            token = intent.getStringExtra("token");
+            String accountName = intent.getStringExtra("accountName");
+            String accountId=intent.getStringExtra("accountId");
+            accountBean = new AccountBean();
+            accountBean.setAccess_token(token);
+            accountBean.setUsernick(accountName);
+            accountBean.setUsername(accountName);
+            accountBean.setUid(accountId);
+            getActionBar().setSubtitle(accountName);
+            String contentTxt = intent.getStringExtra("content");
+            if (!TextUtils.isEmpty(contentTxt)) {
+                content.setText(contentTxt + " ");
+                content.setSelection(content.getText().toString().length());
+            }
+        }
+    }
+
+    private void initLayout() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.write_weibo);
 
         View title = getLayoutInflater().inflate(R.layout.statusnewactivity_title_layout, null);
-        contentNumber = (TextView) title.findViewById(R.id.content_number);
+        TextView contentNumber = (TextView) title.findViewById(R.id.content_number);
         haveGPS = (ImageView) title.findViewById(R.id.have_gps);
         haveGPS.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,7 +186,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setAction(android.content.Intent.ACTION_VIEW);
+                intent.setAction(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.fromFile(new File(picPath)), "image/png");
                 PackageManager packageManager = getPackageManager();
                 List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
@@ -176,26 +209,6 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         actionBar.setDisplayShowCustomEnabled(true);
         content = ((EditText) findViewById(R.id.status_new_content));
         content.addTextChangedListener(new TextNumLimitWatcher(contentNumber, content, this));
-
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
-        if (Intent.ACTION_SEND.equals(action) && type != null) {
-            if ("text/plain".equals(type)) {
-                handleSendText(intent);
-            } else if (type.startsWith("image/")) {
-                handleSendImage(intent);
-            }
-        } else {
-            token = intent.getStringExtra("token");
-            String accountName = intent.getStringExtra("accountName");
-            getActionBar().setSubtitle(accountName);
-            String contentTxt = intent.getStringExtra("content");
-            if (!TextUtils.isEmpty(contentTxt)) {
-                content.setText(contentTxt + " ");
-                content.setSelection(content.getText().toString().length());
-            }
-        }
     }
 
 
@@ -203,20 +216,22 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String id = sharedPref.getString("id", "");
         if (!TextUtils.isEmpty(id)) {
-            AccountBean bean = DatabaseManager.getInstance().getAccount(id);
-            if (bean != null) {
-                token = bean.getAccess_token();
-                getActionBar().setSubtitle(bean.getUsernick());
+            accountBean = DatabaseManager.getInstance().getAccount(id);
+            if (accountBean != null) {
+                token = accountBean.getAccess_token();
+                getActionBar().setSubtitle(accountBean.getUsernick());
             } else {
                 List<AccountBean> accountList = DatabaseManager.getInstance().getAccountList();
                 if (accountList != null && accountList.size() > 0) {
                     AccountBean account = accountList.get(0);
+                    accountBean = account;
                     token = account.getAccess_token();
                     getActionBar().setSubtitle(account.getUsernick());
                 }
             }
         }
     }
+
 
     private void handleSendText(Intent intent) {
         getAccountInfo();
@@ -287,7 +302,10 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm.isActive())
                     imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-                onBackPressed();
+                Intent intent = new Intent(this, MainTimeLineActivity.class);
+                intent.putExtra("account", getAccount());
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 break;
             case R.id.menu_add_gps:
                 getLocation();
@@ -319,6 +337,11 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             startService(intent);
             finish();
         }
+    }
+
+    @Override
+    public AccountBean getAccount() {
+        return accountBean;
     }
 
     class StatusNewTask extends AsyncTask<Void, String, String> {
@@ -376,8 +399,6 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         }
     }
-
-
 
 
     private void getLocation() {

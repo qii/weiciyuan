@@ -221,6 +221,7 @@ public class UserInfoFragment extends Fragment {
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("content", "@" + bean.getScreen_name());
                 intent.putExtra("accountName", GlobalContext.getInstance().getCurrentAccountName());
+                intent.putExtra("accountId", GlobalContext.getInstance().getCurrentAccountId());
                 startActivity(intent);
                 break;
         }

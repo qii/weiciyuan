@@ -117,6 +117,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("accountName", ((IAccountInfo) getActivity()).getAccount().getUsernick());
+                intent.putExtra("accountId" , ((IAccountInfo) getActivity()).getAccount().getUid());
                 startActivity(intent);
                 break;
             case R.id.friendstimelinefragment_refresh:

@@ -103,12 +103,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        buildTabTitle(intent);
-    }
-
-
-    private void buildTabTitle(Intent intent) {
-
         AccountBean newAccountBean = (AccountBean) intent.getSerializableExtra("account");
         if (newAccountBean != null && !newAccountBean.getUid().equals(accountBean.getUid())) {
             overridePendingTransition(0, 0);
@@ -118,7 +112,14 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             startActivity(intent);
             overridePendingTransition(0, 0);
 
+        } else {
+            buildTabTitle(intent);
         }
+    }
+
+
+    private void buildTabTitle(Intent intent) {
+
 
         CommentListBean comment = (CommentListBean) intent.getSerializableExtra("comment");
         MessageListBean repost = (MessageListBean) intent.getSerializableExtra("repost");
