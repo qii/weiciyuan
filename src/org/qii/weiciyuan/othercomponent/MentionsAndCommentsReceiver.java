@@ -8,12 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.bean.CommentListBean;
-import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User: Jiang Qi
@@ -24,13 +25,14 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
     public static final String ACTION = "org.qii.weiciyuan.newmsg";
 
     private Context context;
-    AccountBean accountBean;
-    Integer commentsum;
-    Integer repostsum;
-    int sum;
+    private AccountBean accountBean;
+    private Integer commentsum;
+    private Integer repostsum;
+    private int sum;
 
-    String title = "";
-    String content = "";
+
+    private String title = "";
+    private String content = "";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -43,16 +45,37 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         CommentListBean comment = (CommentListBean) intent.getSerializableExtra("comment");
         MessageListBean repost = (MessageListBean) intent.getSerializableExtra("repost");
 
+        Set<String> calcPeopleSum = new HashSet<String>();
+
+        String lastName;
 
         if (comment.getSize() > 0) {
-            title = comment.getItemList().get(0).getUser().getScreen_name();
+            lastName = comment.getItemList().get(0).getUser().getScreen_name();
             content = comment.getItemList().get(0).getText();
+            for (CommentBean bean : comment.getItemList()) {
+                calcPeopleSum.add(bean.getUser().getScreen_name());
+            }
         } else if (repost.getSize() > 0) {
-            title = repost.getItemList().get(0).getUser().getScreen_name();
+            lastName = repost.getItemList().get(0).getUser().getScreen_name();
             content = repost.getItemList().get(0).getText();
+            for (MessageBean bean : repost.getItemList()) {
+                calcPeopleSum.add(bean.getUser().getScreen_name());
+            }
         } else {
             return;
         }
+
+
+        calcPeopleSum.remove(lastName);
+
+        StringBuilder stringBuilder = new StringBuilder(lastName);
+
+        for (String name : calcPeopleSum) {
+            stringBuilder.append("、").append(name);
+        }
+
+        title = stringBuilder.toString();
+
         String avatarUrl;
         if (comment.getSize() > 0)
             avatarUrl = comment.getItemList().get(0).getUser().getAvatar_large();
@@ -77,6 +100,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.notification)
                 .setLargeIcon(bitmap)
                 .setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_SOUND)
                 .setContentIntent(activity);
         if (sum > 0) {
             notification.setNumber(sum);
@@ -100,7 +124,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
             int width = context.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width);
             int height = context.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
 
-            return ImageTool.getPictureHighDensityThumbnailWithoutRoundedCornerBitmap(url, width,height,null);
+            return ImageTool.getPictureHighDensityThumbnailWithoutRoundedCornerBitmap(url, width, height, null);
         }
 
         @Override

@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.preference;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -165,7 +166,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 Context.ALARM_SERVICE);
         Intent intent = new Intent(getActivity(), FetchNewMsgService.class);
         PendingIntent sender = PendingIntent.getService(getActivity(), 195, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, time, time, sender);
+        alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, time, sender);
         Toast.makeText(getActivity(), getString(R.string.start_fetch_msg), Toast.LENGTH_SHORT).show();
 
     }
@@ -176,6 +177,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         Intent intent = new Intent(getActivity(), FetchNewMsgService.class);
         PendingIntent sender = PendingIntent.getService(getActivity(), 195, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarm.cancel(sender);
+        NotificationManager notificationManager = (NotificationManager) getActivity()
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 
     private class CalcCacheSize extends MyAsyncTask<Void, Void, String> {
