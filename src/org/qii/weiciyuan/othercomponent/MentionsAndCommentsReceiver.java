@@ -33,6 +33,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
 
     private String title = "";
     private String content = "";
+    private String ticker = "";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -45,7 +46,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         CommentListBean comment = (CommentListBean) intent.getSerializableExtra("comment");
         MessageListBean repost = (MessageListBean) intent.getSerializableExtra("repost");
 
-        Set<String> calcPeopleSum = new HashSet<String>();
+        Set<String> peopleNameSet = new HashSet<String>();
 
         String lastName;
 
@@ -53,28 +54,33 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
             lastName = comment.getItemList().get(0).getUser().getScreen_name();
             content = comment.getItemList().get(0).getText();
             for (CommentBean bean : comment.getItemList()) {
-                calcPeopleSum.add(bean.getUser().getScreen_name());
+                peopleNameSet.add(bean.getUser().getScreen_name());
             }
         } else if (repost.getSize() > 0) {
             lastName = repost.getItemList().get(0).getUser().getScreen_name();
             content = repost.getItemList().get(0).getText();
             for (MessageBean bean : repost.getItemList()) {
-                calcPeopleSum.add(bean.getUser().getScreen_name());
+                peopleNameSet.add(bean.getUser().getScreen_name());
             }
         } else {
             return;
         }
 
 
-        calcPeopleSum.remove(lastName);
+        peopleNameSet.remove(lastName);
 
-        StringBuilder stringBuilder = new StringBuilder(lastName);
+        StringBuilder nameBuilder = new StringBuilder(lastName);
 
-        for (String name : calcPeopleSum) {
-            stringBuilder.append("、").append(name);
+        for (String name : peopleNameSet) {
+            nameBuilder.append("、").append(name);
         }
 
-        title = stringBuilder.toString();
+        title = nameBuilder.toString();
+        if (content.length() <= 20) {
+            ticker = lastName + ":" + content;
+        } else {
+            ticker = lastName + ":" + content.substring(0, 20) + "……";
+        }
 
         String avatarUrl;
         if (comment.getSize() > 0)
@@ -95,12 +101,12 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         Notification.Builder notification = new Notification.Builder(context)
+                .setTicker(ticker)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setSmallIcon(R.drawable.notification)
                 .setLargeIcon(bitmap)
                 .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_SOUND)
                 .setContentIntent(activity);
         if (sum > 0) {
             notification.setNumber(sum);
