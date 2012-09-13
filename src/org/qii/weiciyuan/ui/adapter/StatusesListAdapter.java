@@ -90,7 +90,8 @@ public class StatusesListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if (bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+        //mylayout time view position have a bug when set avatar view to gone,so init normal layout
+        if (bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId()) && GlobalContext.getInstance().isEnablePic()) {
             ViewHolder holder;
             if (convertView == null || convertView.getTag(R.drawable.app) == null) {
                 convertView = initMylayout(parent);
