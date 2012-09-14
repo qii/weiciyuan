@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 /**
@@ -52,7 +53,7 @@ public class AppNewMsgAlarm {
         if (clearNotification) {
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(MentionsAndCommentsReceiver.NEW_MSG_NOTIFICATION_ID);
+            notificationManager.cancel(Long.valueOf(GlobalContext.getInstance().getCurrentAccountId()).intValue());
         }
     }
 }
