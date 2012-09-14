@@ -2,8 +2,12 @@ package org.qii.weiciyuan.othercomponent;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
+import org.qii.weiciyuan.BuildConfig;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
@@ -11,7 +15,9 @@ import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.ui.preference.SettingActivity;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +30,9 @@ public class FetchNewMsgService extends Service {
     CommentListBean commentResult;
     MessageListBean repostResult;
 
+    private static final int NIGHT_START_TIME_HOUR = 1;
+    private static final int NIGHT_END_TIME_HOUR = 8;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -32,8 +41,28 @@ public class FetchNewMsgService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        new SimpleTask().execute();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean value = sharedPref.getBoolean(SettingActivity.DISABLE_FETCH_AT_NIGHT, true);
+        if (value) {
 
+            Calendar cal = Calendar.getInstance();
+            int hour = cal.get(Calendar.HOUR_OF_DAY);
+            if (hour >= NIGHT_START_TIME_HOUR && hour <= NIGHT_END_TIME_HOUR) {
+
+                if (BuildConfig.DEBUG)
+                    Toast.makeText(getApplicationContext(), "between 1 and 8 clock,stop service", Toast.LENGTH_SHORT).show();
+
+                stopSelf();
+                return super.onStartCommand(intent, flags, startId);
+            } else {
+
+                new SimpleTask().execute();
+            }
+
+        } else {
+
+            new SimpleTask().execute();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
