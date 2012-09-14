@@ -1,9 +1,5 @@
 package org.qii.weiciyuan.ui.preference;
 
-import android.app.AlarmManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,7 +9,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.othercomponent.FetchNewMsgService;
+import org.qii.weiciyuan.othercomponent.AppNewMsgAlarm;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -140,12 +136,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     }
 
     private void scheduleReceiveMessage(String value) {
-        if (value.equals("1"))
-            startAlarm(3 * 60 * 1000);
-        if (value.equals("2"))
-            startAlarm(AlarmManager.INTERVAL_FIFTEEN_MINUTES);
-        if (value.equals("3"))
-            startAlarm(AlarmManager.INTERVAL_HALF_HOUR);
+
+        startAlarm();
+
     }
 
     private void reload() {
@@ -161,25 +154,14 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     }
 
 
-    private void startAlarm(long time) {
-        AlarmManager alarm = (AlarmManager) getActivity().getSystemService(
-                Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), FetchNewMsgService.class);
-        PendingIntent sender = PendingIntent.getService(getActivity(), 195, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, time, sender);
-        Toast.makeText(getActivity(), getString(R.string.start_fetch_msg), Toast.LENGTH_SHORT).show();
+    private void startAlarm() {
 
+        AppNewMsgAlarm.startAlarm(getActivity(),false);
     }
 
     private void cancelAlarm() {
-        AlarmManager alarm = (AlarmManager) getActivity().getSystemService(
-                Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), FetchNewMsgService.class);
-        PendingIntent sender = PendingIntent.getService(getActivity(), 195, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarm.cancel(sender);
-        NotificationManager notificationManager = (NotificationManager) getActivity()
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
+
+        AppNewMsgAlarm.stopAlarm(getActivity(),true);
     }
 
     private class CalcCacheSize extends MyAsyncTask<Void, Void, String> {
