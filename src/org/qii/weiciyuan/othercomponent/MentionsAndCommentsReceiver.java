@@ -23,6 +23,7 @@ import java.util.Set;
 public class MentionsAndCommentsReceiver extends BroadcastReceiver {
 
     public static final String ACTION = "org.qii.weiciyuan.newmsg";
+    public static final int NEW_MSG_NOTIFICATION_ID=55;
 
     private Context context;
     private AccountBean accountBean;
@@ -111,7 +112,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         if (sum > 1) {
             notification.setNumber(sum);
         }
-        notificationManager.notify(0, notification.getNotification());
+        notificationManager.notify(NEW_MSG_NOTIFICATION_ID, notification.getNotification());
     }
 
 

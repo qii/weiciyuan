@@ -52,7 +52,7 @@ public class AppNewMsgAlarm {
         if (clearNotification) {
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancelAll();
+            notificationManager.cancel(MentionsAndCommentsReceiver.NEW_MSG_NOTIFICATION_ID);
         }
     }
 }

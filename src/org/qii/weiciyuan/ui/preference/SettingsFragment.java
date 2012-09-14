@@ -97,7 +97,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             if (value) {
                 AppNewMsgAlarm.startAlarm(getActivity(), true);
             } else {
-                AppNewMsgAlarm.stopAlarm(getActivity(), false);
+                AppNewMsgAlarm.stopAlarm(getActivity(), true);
             }
         }
 
