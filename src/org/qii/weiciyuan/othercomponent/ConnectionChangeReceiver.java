@@ -3,10 +3,13 @@ package org.qii.weiciyuan.othercomponent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 import org.qii.weiciyuan.BuildConfig;
+import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 /**
  * User: Jiang Qi
@@ -25,9 +28,15 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
 
         if (networkInfo != null && networkInfo.isConnected()) {
 
-            AppNewMsgAlarm.startAlarm(context,true);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+            boolean value = sharedPref.getBoolean(SettingActivity.ENABLE_FETCH_MSG, false);
+            if (value) {
+                AppNewMsgAlarm.startAlarm(context, true);
+            } else {
+                AppNewMsgAlarm.stopAlarm(context, false);
+            }
         } else {
-            AppNewMsgAlarm.stopAlarm(context,false);
+            AppNewMsgAlarm.stopAlarm(context, false);
         }
 
     }

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
@@ -95,19 +94,16 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         if (key.equals(SettingActivity.ENABLE_FETCH_MSG)) {
             boolean value = sharedPreferences.getBoolean(key, false);
-            if (!value) {
-                cancelAlarm();
+            if (value) {
+                AppNewMsgAlarm.startAlarm(getActivity(), true);
             } else {
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                String frequency = sharedPref.getString(SettingActivity.FREQUENCY, "1");
-                scheduleReceiveMessage(frequency);
+                AppNewMsgAlarm.stopAlarm(getActivity(), false);
             }
         }
 
         if (key.equals(SettingActivity.FREQUENCY)) {
-            String value = sharedPreferences.getString(key, "1");
 
-            scheduleReceiveMessage(value);
+            AppNewMsgAlarm.startAlarm(getActivity(), false);
 
         }
 
@@ -135,11 +131,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         }
     }
 
-    private void scheduleReceiveMessage(String value) {
-
-        startAlarm();
-
-    }
 
     private void reload() {
 
@@ -154,14 +145,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     }
 
 
-    private void startAlarm() {
-
-        AppNewMsgAlarm.startAlarm(getActivity(),false);
-    }
-
     private void cancelAlarm() {
 
-        AppNewMsgAlarm.stopAlarm(getActivity(),true);
+        AppNewMsgAlarm.stopAlarm(getActivity(), true);
     }
 
     private class CalcCacheSize extends MyAsyncTask<Void, Void, String> {
