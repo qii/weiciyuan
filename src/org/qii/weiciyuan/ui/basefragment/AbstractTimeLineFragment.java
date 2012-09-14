@@ -154,10 +154,17 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         if (oldTask != null)
             oldTask.cancel(true);
 
-        removeListViewTimeRefresh();
+//        removeListViewTimeRefresh();
 
     }
 
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        removeListViewTimeRefresh();
+    }
 
     protected void refresh() {
         if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
@@ -188,6 +195,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     public void onResume() {
         super.onResume();
         timeLineAdapter.notifyDataSetChanged();
+        addListViewTimeRefresh();
     }
 
     @Override
@@ -195,7 +203,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
 
-        addListViewTimeRefresh();
+//        addListViewTimeRefresh();
     }
 
     public void setmActionMode(ActionMode mActionMode) {
@@ -343,7 +351,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
 
     private volatile boolean enableRefreshTime = true;
-    private ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledExecutorService scheduledExecutorService = null;
 
     private class refreshTimeWorker implements Runnable {
         @Override
@@ -386,6 +394,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
     protected void addListViewTimeRefresh() {
 
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutorService.scheduleAtFixedRate(new refreshTimeWorker(), 1, 1, TimeUnit.SECONDS);
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
