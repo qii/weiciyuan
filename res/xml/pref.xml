@@ -40,6 +40,12 @@
                 android:title="@string/notification"
                 android:summary="@string/enable_fetch_new_msg"
                 android:defaultValue="false"/>
+        <CheckBoxPreference
+                android:dependency="enable_fetch_msg"
+                android:key="disable_fetch_at_night"
+                android:title="@string/disable_notification_at_night"
+                android:summary="@string/disable_notification_at_night_summary"
+                android:defaultValue="true"/>
         <ListPreference
                 android:dependency="enable_fetch_msg"
                 android:key="frequency"
