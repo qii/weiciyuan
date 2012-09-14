@@ -97,7 +97,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         i.putExtra("comment", comment);
         i.putExtra("repost", repost);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent activity = PendingIntent.getActivity(context, 0, i, 0);
+        PendingIntent activity = PendingIntent.getActivity(context, Long.valueOf(accountBean.getUid()).intValue(), i, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         Notification.Builder notification = new Notification.Builder(context)

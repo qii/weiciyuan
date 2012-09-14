@@ -95,7 +95,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if (key.equals(SettingActivity.ENABLE_FETCH_MSG)) {
             boolean value = sharedPreferences.getBoolean(key, false);
             if (value) {
-                AppNewMsgAlarm.startAlarm(getActivity(), true);
+                AppNewMsgAlarm.startAlarm(getActivity(), false);
             } else {
                 AppNewMsgAlarm.stopAlarm(getActivity(), true);
             }
