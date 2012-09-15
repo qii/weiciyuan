@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.qii.weiciyuan.weibo;
+package org.qii.weiciyuan.support.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
+import android.text.TextUtils;
 import org.qii.weiciyuan.support.error.WeiboException;
 
 import java.io.BufferedInputStream;
@@ -29,6 +30,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Map;
+import java.util.Set;
 
 
 public class Utility {
@@ -39,25 +42,34 @@ public class Utility {
     public static final String END_MP_BOUNDARY = "--" + BOUNDARY + "--";
 
 
-    public static String encodeUrl(WeiboParameters parameters) {
-        if (parameters == null) {
+
+    public static String encodeUrl(Map<String, String> param) {
+        if (param == null) {
             return "";
         }
 
         StringBuilder sb = new StringBuilder();
-        boolean first = true;
-        for (int loc = 0; loc < parameters.size(); loc++) {
-            if (first)
-                first = false;
-            else
-                sb.append("&");
-            try {
-                sb.append(URLEncoder.encode(parameters.getKey(loc), "UTF-8")).append("=").append(URLEncoder.encode(parameters.getValue(loc), "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
 
+        Set<String> keys = param.keySet();
+        boolean first = true;
+
+        for (String key : keys) {
+            String value = param.get(key);
+            if (!TextUtils.isEmpty(value)) {
+                if (first)
+                    first = false;
+                else
+                    sb.append("&");
+                try {
+                    sb.append(URLEncoder.encode(key, "UTF-8")).append("=").append(URLEncoder.encode(param.get(key), "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+
+                }
             }
+
+
         }
+
         return sb.toString();
     }
 

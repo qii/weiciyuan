@@ -10,7 +10,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.*;
@@ -24,8 +27,10 @@ import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.weibo.Utility;
-import org.qii.weiciyuan.weibo.WeiboParameters;
+import org.qii.weiciyuan.support.utils.Utility;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * User: qii
@@ -124,11 +129,13 @@ public class OAuthActivity extends AbstractAppActivity {
     }
 
     private String getWeiboOAuthUrl() {
-        WeiboParameters parameters = new WeiboParameters();
-        parameters.add("client_id", APP_KEY);
-        parameters.add("response_type", "token");
-        parameters.add("redirect_uri", DIRECT_URL);
-        parameters.add("display", "mobile");
+
+
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("client_id", APP_KEY);
+        parameters.put("response_type", "token");
+        parameters.put("redirect_uri", DIRECT_URL);
+        parameters.put("display", "mobile");
         return URL_OAUTH2_ACCESS_AUTHORIZE + "?" + Utility.encodeUrl(parameters);
     }
 
