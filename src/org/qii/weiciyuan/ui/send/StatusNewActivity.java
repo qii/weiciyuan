@@ -134,7 +134,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         } else {
             token = intent.getStringExtra("token");
             String accountName = intent.getStringExtra("accountName");
-            String accountId=intent.getStringExtra("accountId");
+            String accountId = intent.getStringExtra("accountId");
             accountBean = new AccountBean();
             accountBean.setAccess_token(token);
             accountBean.setUsernick(accountName);
@@ -346,6 +346,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
     class StatusNewTask extends AsyncTask<Void, String, String> {
         String content;
+        WeiboException e;
 
         StatusNewTask(String content) {
             this.content = content;
@@ -377,7 +378,10 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             try {
                 boolean result = new StatusNewMsgDao(token).setGeoBean(geoBean).sendNewMsg(content);
             } catch (WeiboException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                this.e = e;
+                cancel(true);
+                return null;
+
             }
 
             return null;
@@ -387,7 +391,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         protected void onCancelled(String s) {
             super.onCancelled(s);
             progressFragment.dismissAllowingStateLoss();
-            Toast.makeText(StatusNewActivity.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
+            if (e != null)
+                Toast.makeText(StatusNewActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
         }
 
         @Override

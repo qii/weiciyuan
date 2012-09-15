@@ -33,6 +33,7 @@ import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -53,7 +54,7 @@ public class HttpUtility {
 
         HttpParams params = new BasicHttpParams();
         params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
-        PoolingClientConnectionManager connectionManager=new PoolingClientConnectionManager();
+        PoolingClientConnectionManager connectionManager = new PoolingClientConnectionManager();
         connectionManager.setMaxTotal(5);
 
         httpClient = new DecompressingHttpClient(new DefaultHttpClient(connectionManager));
@@ -80,8 +81,8 @@ public class HttpUtility {
         return "";
     }
 
-    public String executeDownloadTask(String url, String path,FileDownloaderHttpHelper.DownloadListener downloadListener) {
-        return doGetSaveFile(url, path,downloadListener);
+    public String executeDownloadTask(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+        return doGetSaveFile(url, path, downloadListener);
     }
 
     public boolean executeUploadTask(String url, Map<String, String> param, String path) {
@@ -128,7 +129,7 @@ public class HttpUtility {
     /**
      * don't need error message to show
      */
-    private String doGetSaveFile(String url, String path,FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    private String doGetSaveFile(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
         URIBuilder uriBuilder;
         HttpGet httpGet = new HttpGet();
@@ -164,7 +165,7 @@ public class HttpUtility {
 
         if (response != null) {
 
-            return FileDownloaderHttpHelper.saveFile(response, path,downloadListener);
+            return FileDownloaderHttpHelper.saveFile(response, path, downloadListener);
 
         } else {
             return "";
@@ -212,7 +213,7 @@ public class HttpUtility {
     }
 
 
-    private HttpResponse getHttpResponse(HttpRequestBase httpRequest, HttpContext localContext) {
+    private HttpResponse getHttpResponse(HttpRequestBase httpRequest, HttpContext localContext) throws WeiboException {
         HttpResponse response = null;
         try {
             if (localContext != null) {
@@ -223,15 +224,15 @@ public class HttpUtility {
         } catch (ConnectTimeoutException e) {
 
             AppLogger.e(e.getMessage());
-            ActivityUtils.showTips(R.string.timeout);
+            throw new WeiboException(GlobalContext.getInstance().getString(R.string.timeout), e);
 
         } catch (ClientProtocolException e) {
             AppLogger.e(e.getMessage());
-            ActivityUtils.showTips(R.string.timeout);
+            throw new WeiboException(GlobalContext.getInstance().getString(R.string.timeout), e);
 
         } catch (IOException e) {
             AppLogger.e(e.getMessage());
-            ActivityUtils.showTips(R.string.timeout);
+            throw new WeiboException(GlobalContext.getInstance().getString(R.string.timeout), e);
         }
         return response;
     }
@@ -291,7 +292,7 @@ public class HttpUtility {
                 errCode = json.getInt("error_code");
                 WeiboException exception = new WeiboException();
                 exception.setError_code(errCode);
-                exception.setError(err);
+                exception.setOriError(err);
                 throw exception;
 
             } catch (JSONException e) {

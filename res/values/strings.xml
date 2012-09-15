@@ -33,7 +33,7 @@
     <string name="copy_successfully">复制完成</string>
 
     <!--system -->
-    <string name="timeout">请求超时</string>
+    <string name="timeout">网络有问题，连不上</string>
     <string name="unknown_error_error_code">未知错误，错误代码</string>
 
     <!-- timeline -->

@@ -11,24 +11,40 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
  */
 public class WeiboException extends Exception {
     private String error;
+    //this error string is from sina weibo request return
+
+    private String oriError;
     private int error_code;
     private String request;
+    private Throwable throwable;
 
     public String getError() {
 
-        String name = "code" + error_code;
-        int i = GlobalContext.getInstance().getResources()
-                .getIdentifier(name, "string", GlobalContext.getInstance().getPackageName());
         String result;
-        try {
-            result = GlobalContext.getInstance().getString(i);
-        } catch (Resources.NotFoundException e) {
-            result = GlobalContext.getInstance().getString(R.string.unknown_error_error_code) + error_code;
+
+        if (!TextUtils.isEmpty(error)) {
+            result = error;
+        } else {
+
+            String name = "code" + error_code;
+            int i = GlobalContext.getInstance().getResources()
+                    .getIdentifier(name, "string", GlobalContext.getInstance().getPackageName());
+
+            try {
+                result = GlobalContext.getInstance().getString(i);
+
+            } catch (Resources.NotFoundException e) {
+
+                if (!TextUtils.isEmpty(oriError)) {
+                    result = oriError;
+                } else {
+
+                    result = GlobalContext.getInstance().getString(R.string.unknown_error_error_code) + error_code;
+                }
+            }
         }
-        if (!TextUtils.isEmpty(result)) {
-            return result;
-        }
-        return error;
+
+        return result;
     }
 
     @Override
@@ -47,6 +63,20 @@ public class WeiboException extends Exception {
 
     public int getError_code() {
         return error_code;
+    }
+
+    public WeiboException() {
+
+    }
+
+    public WeiboException(String detailMessage, Throwable throwable) {
+        this.throwable = throwable;
+        error = detailMessage;
+    }
+
+
+    public void setOriError(String oriError) {
+        this.oriError = oriError;
     }
 
 }
