@@ -12,11 +12,8 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 public class WeiboException extends Exception {
     private String error;
     //this error string is from sina weibo request return
-
     private String oriError;
     private int error_code;
-    private String request;
-    private Throwable throwable;
 
     public String getError() {
 
@@ -52,10 +49,6 @@ public class WeiboException extends Exception {
         return getError();
     }
 
-    public void setError(String error) {
-        this.error = error;
-    }
-
 
     public void setError_code(int error_code) {
         this.error_code = error_code;
@@ -70,7 +63,6 @@ public class WeiboException extends Exception {
     }
 
     public WeiboException(String detailMessage, Throwable throwable) {
-        this.throwable = throwable;
         error = detailMessage;
     }
 

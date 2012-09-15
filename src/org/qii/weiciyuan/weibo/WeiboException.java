@@ -145,10 +145,7 @@ public class WeiboException extends Exception {
         this.statusCode = statusCode;
     }
 
-    public int getStatusCode() {
-        return this.statusCode;
-    }
-    
+
     
 	public WeiboException() {
 		super(); 
@@ -167,8 +164,5 @@ public class WeiboException extends Exception {
 		this.statusCode = statusCode;
 	}
 
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
-	
+
 }
