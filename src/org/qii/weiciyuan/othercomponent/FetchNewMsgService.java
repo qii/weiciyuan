@@ -26,9 +26,9 @@ import java.util.List;
  */
 public class FetchNewMsgService extends Service {
 
-
+     //close service between 1 clock and 8 clock
     private static final int NIGHT_START_TIME_HOUR = 1;
-    private static final int NIGHT_END_TIME_HOUR = 8;
+    private static final int NIGHT_END_TIME_HOUR = 7;
 
     @Override
     public IBinder onBind(Intent intent) {
