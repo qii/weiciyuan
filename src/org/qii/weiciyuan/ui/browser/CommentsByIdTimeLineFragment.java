@@ -434,7 +434,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
 
         } else {
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setVisibility(View.GONE);
+            (footerView.findViewById(R.id.listview_footer)).setVisibility(View.GONE);
 
         }
 
