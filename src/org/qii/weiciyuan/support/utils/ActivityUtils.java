@@ -6,7 +6,6 @@ import android.widget.Toast;
 /**
  * User: Jiang Qi
  * Date: 12-7-31
- * Time: 下午3:22
  */
 public class ActivityUtils {
 
