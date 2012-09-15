@@ -89,29 +89,80 @@ public class CommentListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ViewHolder holder;
-        if (convertView == null) {
-            holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
-            holder.username = (TextView) convertView.findViewById(R.id.username);
-            TextPaint tp = holder.username.getPaint();
-            tp.setFakeBoldText(true);
-            holder.content = (TextView) convertView.findViewById(R.id.content);
-            holder.time = (TextView) convertView.findViewById(R.id.time);
-            holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
-            holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
-            holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
-            holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
-
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
+        //mylayout time view position have a bug when set avatar view to gone,so init normal layout
+        if (bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId()) && GlobalContext.getInstance().isEnablePic()) {
+            ViewHolder holder;
+            if (convertView == null || convertView.getTag(R.drawable.app) == null) {
+                convertView = initMylayout(parent);
+                holder = buildHolder(convertView);
+            } else {
+                boolean enableBigPic = (Boolean) convertView.getTag(R.drawable.account_black);
+                if (enableBigPic == GlobalContext.getInstance().getEnableBigPic()) {
+                    holder = (ViewHolder) convertView.getTag(R.drawable.app);
+                } else {
+                    convertView = initMylayout(parent);
+                    holder = buildHolder(convertView);
+                }
+            }
+            convertView.setTag(R.drawable.app, holder);
+            convertView.setTag(R.drawable.account_black, GlobalContext.getInstance().getEnableBigPic());
+            bindViewData(holder, position);
+            return convertView;
         }
 
+        ViewHolder holder;
+        if (convertView == null || convertView.getTag(R.drawable.ic_launcher) == null) {
+            convertView = initNormallayout(parent);
+            holder = buildHolder(convertView);
+        } else {
+            boolean enableBigPic = (Boolean) convertView.getTag(R.drawable.account_black);
+            if (enableBigPic == GlobalContext.getInstance().getEnableBigPic()) {
+                holder = (ViewHolder) convertView.getTag(R.drawable.ic_launcher);
+            } else {
+                convertView = initNormallayout(parent);
+                holder = buildHolder(convertView);
+            }
+        }
+        convertView.setTag(R.drawable.ic_launcher, holder);
+        convertView.setTag(R.drawable.account_black, GlobalContext.getInstance().getEnableBigPic());
         bindViewData(holder, position);
 
-
         return convertView;
+    }
+
+    private View initMylayout(ViewGroup parent) {
+        View convertView;
+        if (GlobalContext.getInstance().getEnableBigPic()) {
+            convertView = inflater.inflate(R.layout.fragment_listview_item_myself_big_pic_layout, parent, false);
+        } else {
+            convertView = inflater.inflate(R.layout.fragment_listview_item_myself_layout, parent, false);
+        }
+        return convertView;
+    }
+
+    private View initNormallayout(ViewGroup parent) {
+        View convertView;
+        if (GlobalContext.getInstance().getEnableBigPic()) {
+            convertView = inflater.inflate(R.layout.fragment_listview_item_big_pic_layout, parent, false);
+        } else {
+            convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
+        }
+        return convertView;
+    }
+
+
+    private ViewHolder buildHolder(View convertView) {
+        ViewHolder holder = new ViewHolder();
+        holder.username = (TextView) convertView.findViewById(R.id.username);
+        TextPaint tp = holder.username.getPaint();
+        tp.setFakeBoldText(true);
+        holder.content = (TextView) convertView.findViewById(R.id.content);
+        holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
+        holder.time = (TextView) convertView.findViewById(R.id.time);
+        holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
+        holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
+        holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
+        return holder;
     }
 
     private void bindViewData(ViewHolder holder, int position) {
