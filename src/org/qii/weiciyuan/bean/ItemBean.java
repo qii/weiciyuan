@@ -22,4 +22,7 @@ public abstract class ItemBean implements Serializable {
     public abstract long getMills();
 
     public abstract String getId();
+
+    public abstract UserBean getUser();
+
 }
