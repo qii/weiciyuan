@@ -19,6 +19,7 @@ package org.qii.weiciyuan.weibo;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
+import org.qii.weiciyuan.support.error.WeiboException;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -114,13 +115,13 @@ public class Utility {
             out.write("\r\n".getBytes());
             out.write(("\r\n" + END_MP_BOUNDARY).getBytes());
         } catch (IOException e) {
-            throw new WeiboException(e);
+//            throw new WeiboException(e);
         } finally {
             if (null != bis) {
                 try {
                     bis.close();
                 } catch (IOException e) {
-                    throw new WeiboException(e);
+//                    throw new WeiboException(e);
                 }
             }
         }
