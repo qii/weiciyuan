@@ -3,8 +3,7 @@ package org.qii.weiciyuan.support.utils;
 /**
  * User: Jiang Qi
  * Date: 12-7-31
- * Time: 下午5:05
- */
+  */
 
 /**
  * Wrapper API for sending log output.
