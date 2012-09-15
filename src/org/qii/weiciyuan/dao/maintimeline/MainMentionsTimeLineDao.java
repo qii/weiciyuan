@@ -53,7 +53,7 @@ public class MainMentionsTimeLineDao {
             value = gson.fromJson(json, MessageListBean.class);
         } catch (JsonSyntaxException e) {
             ActivityUtils.showTips("发生错误，请重刷");
-            AppLogger.e(e.getMessage().toString());
+            AppLogger.e(e.getMessage());
         }
 
         /**

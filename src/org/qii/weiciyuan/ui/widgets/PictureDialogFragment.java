@@ -76,10 +76,6 @@ public class PictureDialogFragment extends DialogFragment {
         avatarTask.execute(url);
     }
 
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        super.onCancel(dialog);
-    }
 
     class PicSimpleBitmapWorkerTask extends AsyncTask<String, Integer, Bitmap> {
 

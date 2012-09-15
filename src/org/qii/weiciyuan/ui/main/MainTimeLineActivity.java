@@ -89,11 +89,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     }
 
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
     private void buildPhoneInterface() {
         buildViewPager();
         buildActionBarAndViewPagerTitles();

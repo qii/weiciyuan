@@ -19,7 +19,7 @@ public final class URLManager {
     private static final String URL_FORMAT = "%s%s";
     private static Properties properties = new Properties();
 
-    private final static String getUrl(String name) {
+    private static String getUrl(String name) {
         try {
             if (properties.isEmpty()) {
                 Context context = GlobalContext.getInstance();

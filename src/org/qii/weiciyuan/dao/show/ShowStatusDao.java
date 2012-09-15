@@ -44,7 +44,7 @@ public class ShowStatusDao {
             value = gson.fromJson(json, MessageBean.class);
         } catch (JsonSyntaxException e) {
 
-            AppLogger.e(e.getMessage().toString());
+            AppLogger.e(e.getMessage());
         }
 
         return value;

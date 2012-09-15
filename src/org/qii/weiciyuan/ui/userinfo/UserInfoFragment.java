@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -67,11 +66,6 @@ public class UserInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
     }
 
     @Override
@@ -190,10 +184,6 @@ public class UserInfoFragment extends Fragment {
 
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-    }
 
     private void startRefreshMenuAnimation() {
         ImageView iv = (ImageView) getActivity().getLayoutInflater().inflate(R.layout.refresh_action_view, null);

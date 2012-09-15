@@ -3,7 +3,6 @@ package org.qii.weiciyuan.ui.widgets;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 /**
@@ -30,8 +29,5 @@ public class RefreshProgressFragment extends DialogFragment {
         return dialog;
     }
 
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        super.onCancel(dialog);
-    }
+
 }

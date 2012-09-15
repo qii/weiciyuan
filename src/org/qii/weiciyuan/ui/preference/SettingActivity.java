@@ -40,10 +40,6 @@ public class SettingActivity extends AbstractAppActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

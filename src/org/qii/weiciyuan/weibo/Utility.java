@@ -51,8 +51,7 @@ public class Utility {
             else
                 sb.append("&");
             try {
-                sb.append(URLEncoder.encode(parameters.getKey(loc), "UTF-8") + "="
-                        + URLEncoder.encode(parameters.getValue(loc), "UTF-8"));
+                sb.append(URLEncoder.encode(parameters.getKey(loc), "UTF-8")).append("=").append(URLEncoder.encode(parameters.getValue(loc), "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
 

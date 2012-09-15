@@ -32,8 +32,6 @@ public class RepostNewActivity extends AbstractAppActivity {
 
     private EditText et = null;
 
-    private MessageBean msg;
-
     private boolean enableComment = false;
     private String enableCommentString;
 
@@ -45,7 +43,7 @@ public class RepostNewActivity extends AbstractAppActivity {
 
         token = getIntent().getStringExtra("token");
         id = getIntent().getStringExtra("id");
-        msg = (MessageBean) getIntent().getSerializableExtra("msg");
+        MessageBean msg = (MessageBean) getIntent().getSerializableExtra("msg");
         getActionBar().setTitle(getString(R.string.repost));
         getActionBar().setSubtitle(GlobalContext.getInstance().getCurrentAccountName());
 
@@ -61,7 +59,7 @@ public class RepostNewActivity extends AbstractAppActivity {
         if (msg.getRetweeted_status() != null) {
             et.setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
         } else {
-            et.setHint(getString(R.string.repost)+"//@"+msg.getUser().getScreen_name()+"："+msg.getText());
+            et.setHint(getString(R.string.repost)+"//@"+ msg.getUser().getScreen_name()+"："+ msg.getText());
         }
         enableCommentString = getString(R.string.disable_comment_when_repost);
     }

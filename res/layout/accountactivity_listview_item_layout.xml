@@ -16,7 +16,7 @@
             android:layout_marginRight="5dp"/>
     <TextView
             android:gravity="center_vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:text="New Text"
 

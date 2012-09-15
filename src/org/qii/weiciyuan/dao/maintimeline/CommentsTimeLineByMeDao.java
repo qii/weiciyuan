@@ -76,7 +76,7 @@ public class CommentsTimeLineByMeDao {
             value = gson.fromJson(jsonData, CommentListBean.class);
         } catch (JsonSyntaxException e) {
             ActivityUtils.showTips("发生错误，请重刷");
-            AppLogger.e(e.getMessage().toString());
+            AppLogger.e(e.getMessage());
         }
 
         if (value != null && value.getSize() > 0) {

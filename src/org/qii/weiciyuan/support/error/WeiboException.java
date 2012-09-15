@@ -19,7 +19,7 @@ public class WeiboException extends Exception {
         String name = "code" + error_code;
         int i = GlobalContext.getInstance().getResources()
                 .getIdentifier(name, "string", GlobalContext.getInstance().getPackageName());
-        String result = null;
+        String result;
         try {
             result = GlobalContext.getInstance().getString(i);
         } catch (Resources.NotFoundException e) {

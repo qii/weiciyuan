@@ -130,7 +130,7 @@ public class DatabaseManager {
 
         String sql = "select * from " + AccountTable.TABLE_NAME + " where " + AccountTable.UID + " = " + id;
         Cursor c = rsd.rawQuery(sql, null);
-        while (c.moveToNext()) {
+        if (c.moveToNext()) {
             AccountBean account = new AccountBean();
             int colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN);
             account.setAccess_token(c.getString(colid));

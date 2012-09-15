@@ -31,8 +31,6 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
     private List<AccountBean> accountList = new ArrayList<AccountBean>();
 
-    private ActionMode mActionMode;
-
     private GetAccountListDBTask getTask = null;
     private RemoveAccountDBTask removeTask = null;
 
@@ -118,7 +116,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            mActionMode = null;
+            ActionMode mActionMode = null;
             if (isCancel)
                 listAdapter.removeCheckbox();
 

@@ -74,6 +74,6 @@ public class UpdateString implements CharSequence {
 //            }
 //        });
 //        update.start();
-        return s.toString();
+        return s;
     }
 }

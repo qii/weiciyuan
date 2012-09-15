@@ -1,16 +1,11 @@
 package org.qii.weiciyuan.bean;
 
 /**
- * Created with IntelliJ IDEA.
  * User: qii
  * Date: 12-8-5
- * Time: 下午5:59
- * To change this template use File | Settings | File Templates.
  */
 
-/**
- * not defined by sina weibo
- */
+
 public class TagBean {
 
     private int id;

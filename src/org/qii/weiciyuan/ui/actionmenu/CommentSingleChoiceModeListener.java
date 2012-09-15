@@ -135,7 +135,7 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
                 break;
             case R.id.menu_copy:
                 ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", bean.getText().toString()));
+                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", bean.getText()));
                 Toast.makeText(getActivity(), getActivity().getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
                 listView.clearChoices();
                 mode.finish();

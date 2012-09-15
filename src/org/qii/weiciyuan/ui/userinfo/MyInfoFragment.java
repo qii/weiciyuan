@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,10 +51,6 @@ public class MyInfoFragment extends Fragment {
         setRetainInstance(true);
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -147,10 +142,6 @@ public class MyInfoFragment extends Fragment {
 
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-    }
 
     @Override
     public void onDetach() {

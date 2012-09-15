@@ -36,7 +36,7 @@ public class CommentNewMsgDao {
             value = gson.fromJson(jsonData, CommentBean.class);
         } catch (JsonSyntaxException e) {
             ActivityUtils.showTips("发生错误，请重刷");
-            AppLogger.e(e.getMessage().toString());
+            AppLogger.e(e.getMessage());
         }
 
 
