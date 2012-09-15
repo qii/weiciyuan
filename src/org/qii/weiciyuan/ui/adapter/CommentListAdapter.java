@@ -94,7 +94,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             holder.repost_content_pic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PictureDialogFragment progressFragment = new PictureDialogFragment(repost_msg.getBmiddle_pic());
+                    PictureDialogFragment progressFragment = new PictureDialogFragment(repost_msg.getBmiddle_pic(),repost_msg.getOriginal_pic());
                     progressFragment.show(activity.getSupportFragmentManager(), "");
                 }
             });

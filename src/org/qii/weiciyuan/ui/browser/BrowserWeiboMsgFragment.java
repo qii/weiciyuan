@@ -34,7 +34,6 @@ import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.task.FavAsyncTask;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
-import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 
 import java.io.IOException;
 import java.util.List;
@@ -409,9 +408,9 @@ public class BrowserWeiboMsgFragment extends Fragment {
                     break;
             }
             if (!TextUtils.isEmpty(url)) {
-                PictureDialogFragment progressFragment = new PictureDialogFragment(url);
-
-                progressFragment.show(getFragmentManager(), "");
+                Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
+                intent.putExtra("url", url);
+                startActivity(intent);
             }
         }
 

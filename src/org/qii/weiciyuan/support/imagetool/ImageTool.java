@@ -7,6 +7,8 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpUtility;
 
+import java.io.File;
+
 /**
  * User: Jiang Qi
  * Date: 12-8-3
@@ -105,24 +107,24 @@ public class ImageTool {
     public static Bitmap getPictureHighDensityThumbnailWithoutRoundedCornerBitmap(String url, int reqWidth, int reqHeight, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
 
-           String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
-           absoluteFilePath = absoluteFilePath + ".jpg";
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
+        absoluteFilePath = absoluteFilePath + ".jpg";
 
-           Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, reqWidth, reqHeight);
+        Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, reqWidth, reqHeight);
 
-           if (bitmap == null) {
-               String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
-               bitmap = decodeBitmapFromSDCard(path, reqWidth, reqHeight);
-           }
+        if (bitmap == null) {
+            String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
+            bitmap = decodeBitmapFromSDCard(path, reqWidth, reqHeight);
+        }
 
-           if (bitmap != null) {
-               if (bitmap.getHeight() > reqHeight || bitmap.getWidth() > reqWidth) {
-                   bitmap = cutPic(bitmap, reqWidth, reqHeight);
-               }
+        if (bitmap != null) {
+            if (bitmap.getHeight() > reqHeight || bitmap.getWidth() > reqWidth) {
+                bitmap = cutPic(bitmap, reqWidth, reqHeight);
             }
+        }
 
-           return bitmap;
-       }
+        return bitmap;
+    }
 
     public static Bitmap getAvatarBitmap(String url) {
 
@@ -161,6 +163,29 @@ public class ImageTool {
         }
         return bitmap;
     }
+
+
+    public static String getNormalGif(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+
+
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
+
+        absoluteFilePath = absoluteFilePath + ".jpg";
+
+        File file = new File(absoluteFilePath);
+
+        if (file.exists()) {
+            return absoluteFilePath;
+
+        } else {
+            String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
+
+            return absoluteFilePath;
+
+
+        }
+
+     }
 
     private static String getBitmapFromNetWork(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 

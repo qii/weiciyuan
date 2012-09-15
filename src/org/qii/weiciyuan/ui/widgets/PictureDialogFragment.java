@@ -3,6 +3,7 @@ package org.qii.weiciyuan.ui.widgets;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -11,14 +12,17 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.LruCache;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.browser.BrowserBigPicActivity;
+
+import java.io.File;
 
 /**
  * User: qii
@@ -26,17 +30,19 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
  */
 public class PictureDialogFragment extends DialogFragment {
     private String url;
-    private ImageView imageView;
+    private WebView imageView;
     private ProgressBar pb;
     private FrameLayout fl;
     private PicSimpleBitmapWorkerTask avatarTask;
+    private String bigUrl;
 
     public PictureDialogFragment() {
 
     }
 
-    public PictureDialogFragment(String url) {
+    public PictureDialogFragment(String url, String bigUrl) {
         this.url = url;
+        this.bigUrl = bigUrl;
     }
 
     @Override
@@ -44,10 +50,21 @@ public class PictureDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_listview_pic_preview_layout, null);
-        imageView = (ImageView) view.findViewById(R.id.iv);
+        imageView = (WebView) view.findViewById(R.id.iv);
+        imageView.getSettings().setSupportZoom(true);
+        imageView.getSettings().setBuiltInZoomControls(true);
+        imageView.getSettings().setDisplayZoomControls(false);
         pb = (ProgressBar) view.findViewById(R.id.pb);
         fl = (FrameLayout) view.findViewById(R.id.fl);
         builder.setView(view);
+        builder.setPositiveButton(getString(R.string.ori_picture), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
+                intent.putExtra("url", bigUrl);
+                startActivity(intent);
+            }
+        });
         builder.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
 
             @Override
@@ -77,7 +94,7 @@ public class PictureDialogFragment extends DialogFragment {
     }
 
 
-    class PicSimpleBitmapWorkerTask extends AsyncTask<String, Integer, Bitmap> {
+    class PicSimpleBitmapWorkerTask extends AsyncTask<String, Integer, String> {
 
         private LruCache<String, Bitmap> lruCache;
         private String data = "";
@@ -96,7 +113,7 @@ public class PictureDialogFragment extends DialogFragment {
         }
 
         @Override
-        protected Bitmap doInBackground(String... url) {
+        protected String doInBackground(String... url) {
 
             FileDownloaderHttpHelper.DownloadListener downloadListener = new FileDownloaderHttpHelper.DownloadListener() {
                 @Override
@@ -107,7 +124,7 @@ public class PictureDialogFragment extends DialogFragment {
 
             data = url[0];
             if (!isCancelled()) {
-                return ImageTool.getNormalBitmap(data, downloadListener);
+                return ImageTool.getNormalGif(data, downloadListener);
             }
 
             return null;
@@ -124,10 +141,9 @@ public class PictureDialogFragment extends DialogFragment {
         }
 
         @Override
-        protected void onCancelled(Bitmap bitmap) {
+        protected void onCancelled(String bitmap) {
             if (bitmap != null) {
 
-                lruCache.put(data, bitmap);
 
             }
 
@@ -135,14 +151,30 @@ public class PictureDialogFragment extends DialogFragment {
         }
 
         @Override
-        protected void onPostExecute(final Bitmap bitmap) {
+        protected void onPostExecute(final String bitmap) {
 
             if (bitmap != null) {
 
-                lruCache.put(data, bitmap);
-                fl.setLayoutParams(new LinearLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
-                pb.setVisibility(View.INVISIBLE);
-                imageView.setImageBitmap(bitmap);
+
+//                pb.setVisibility(View.INVISIBLE);
+//
+//                String HTML_FORMAT = "<html><body style=\"text-align: center; background-color: black; vertical-align: center;\"><img src = \"%s\" /></body></html>";
+//                 final String html = String.format(HTML_FORMAT, bitmap);
+
+
+//                imageView.getSettings().setUseWideViewPort(false);
+
+//                imageView.loadDataWithBaseURL("", html, "text/html", "UTF-8", "");
+
+//                imageView.loadUrl("file://" + bitmap);
+
+                File file = new File(bitmap);
+
+                AppLogger.e(file.getParent());
+                AppLogger.e(file.getName());
+
+
+                imageView.loadDataWithBaseURL("file://" + file.getParent() + "/", "<html><center><img src=\"" + file.getName() + "\"></html>", "text/html", "utf-8", "");
 
 
             } else {
@@ -150,11 +182,19 @@ public class PictureDialogFragment extends DialogFragment {
                 int[] attrs = new int[]{R.attr.error};
                 TypedArray ta = getActivity().obtainStyledAttributes(attrs);
                 Drawable drawableFromTheme = ta.getDrawable(0);
-                imageView.setImageDrawable(drawableFromTheme);
+//                imageView.setImageDrawable(drawableFromTheme);
             }
 
         }
 
 
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        imageView.loadUrl("about:blank");
+        imageView.stopLoading();
+        imageView = null;
     }
 }

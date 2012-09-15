@@ -104,6 +104,11 @@
     <string name="left">剩余</string>
     <string name="share_pic">分享图片</string>
 
+    <!-- browser weibo -->
+    <string name="ori_picture">原图</string>
+    <string name="browser_picture">查看图片</string>
+    <string name="save_system_album">保存到相册</string>
+
     <!--friends-->
     <string name="bilateral">互相关注</string>
 

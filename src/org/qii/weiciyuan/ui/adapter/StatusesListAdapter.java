@@ -115,7 +115,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PictureDialogFragment progressFragment = new PictureDialogFragment(msg.getBmiddle_pic());
+                PictureDialogFragment progressFragment = new PictureDialogFragment(msg.getBmiddle_pic(),msg.getOriginal_pic());
                 progressFragment.show(activity.getSupportFragmentManager(), "");
             }
         });
