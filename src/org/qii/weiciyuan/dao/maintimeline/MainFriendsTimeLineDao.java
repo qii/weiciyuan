@@ -21,8 +21,12 @@ import java.util.Map;
  */
 public class MainFriendsTimeLineDao {
 
+    protected String getUrl(){
+        return  URLHelper.getFriendsTimeLine();
+    }
+
     private String getMsgListJson() throws WeiboException {
-        String url = URLHelper.getFriendsTimeLine();
+        String url = getUrl();
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);

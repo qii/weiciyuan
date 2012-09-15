@@ -13,6 +13,10 @@ public class URLHelper {
         return URLManager.getRealUrl("friendstimeline");
     }
 
+    public static String getBilateralTimeLine() {
+        return URLManager.getRealUrl("bilateral");
+    }
+
     public static String getMentionsTimeLine() {
 
         return URLManager.getRealUrl("mentionstimeline");
