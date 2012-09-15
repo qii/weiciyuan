@@ -31,7 +31,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
     private WebView imageView;
     private ProgressBar pb;
     private FrameLayout fl;
-    private PicSimpleBitmapWorkerTask avatarTask;
+    private PicSimpleBitmapWorkerTask task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +54,10 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
 
 
         url = getIntent().getStringExtra("url");
-
-        new PicSimpleBitmapWorkerTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
+            task = new PicSimpleBitmapWorkerTask();
+            task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
 
@@ -159,6 +161,8 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (task != null)
+            task.cancel(true);
         imageView.loadUrl("about:blank");
         imageView.stopLoading();
         imageView = null;
