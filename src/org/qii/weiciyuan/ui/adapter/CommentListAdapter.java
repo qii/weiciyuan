@@ -28,15 +28,15 @@ import java.util.List;
  */
 public class CommentListAdapter extends BaseAdapter {
 
-    FragmentActivity activity;
-    LayoutInflater inflater;
-    List<CommentBean> bean;
-    ListView listView;
-    ICommander commander;
-    boolean showOriStatus = true;
+    private FragmentActivity activity;
+    private LayoutInflater inflater;
+    private List<CommentBean> bean;
+    private ListView listView;
+    private ICommander commander;
+    private boolean showOriStatus = true;
 
-    int checkedBG;
-    int defaultBG;
+    private int checkedBG;
+    private int defaultBG;
 
     public CommentListAdapter(FragmentActivity activity, ICommander commander, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
         this.activity = activity;

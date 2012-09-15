@@ -29,15 +29,15 @@ import java.util.List;
  */
 public class StatusesListAdapter extends BaseAdapter {
 
-    FragmentActivity activity;
-    LayoutInflater inflater;
-    List<MessageBean> bean;
-    ListView listView;
-    ICommander commander;
-    boolean showOriStatus = true;
+    private FragmentActivity activity;
+    private LayoutInflater inflater;
+    private List<MessageBean> bean;
+    private ListView listView;
+    private ICommander commander;
+    private boolean showOriStatus = true;
 
-    int checkedBG;
-    int defaultBG;
+    private int checkedBG;
+    private int defaultBG;
 
     public StatusesListAdapter(FragmentActivity activity, ICommander commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
         this.activity = activity;
