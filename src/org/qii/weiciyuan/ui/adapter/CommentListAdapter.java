@@ -19,6 +19,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
+import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 
 import java.util.List;
 
@@ -210,7 +211,7 @@ public class CommentListAdapter extends BaseAdapter {
 
     }
 
-    private void buildRepostContent(MessageBean repost_msg, ViewHolder holder, int position) {
+    private void buildRepostContent(final MessageBean repost_msg, ViewHolder holder, int position) {
         holder.repost_content.setVisibility(View.VISIBLE);
         if (repost_msg.getUser() != null) {
             holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
@@ -227,6 +228,13 @@ public class CommentListAdapter extends BaseAdapter {
             } else {
                 picUrl = repost_msg.getThumbnail_pic();
             }
+            holder.repost_content_pic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PictureDialogFragment progressFragment = new PictureDialogFragment(repost_msg.getBmiddle_pic());
+                    progressFragment.show(activity.getSupportFragmentManager(), "");
+                }
+            });
             commander.downContentPic(holder.repost_content_pic, picUrl, position, listView);
         }
     }
