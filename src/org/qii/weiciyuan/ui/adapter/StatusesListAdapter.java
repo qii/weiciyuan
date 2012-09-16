@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.UpdateString;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -103,19 +104,23 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
 
 
     private void buildPic(final MessageBean msg, ImageView view, int position) {
+        view.setVisibility(View.VISIBLE);
+
         String picUrl;
         if (GlobalContext.getInstance().getEnableBigPic()) {
             picUrl = msg.getBmiddle_pic();
+            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_bmiddle);
+
         } else {
             picUrl = msg.getThumbnail_pic();
+            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_thumbnail);
+
         }
 
-        view.setVisibility(View.VISIBLE);
-        commander.downContentPic(view, picUrl, position, listView);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PictureDialogFragment progressFragment = new PictureDialogFragment(msg.getBmiddle_pic(),msg.getOriginal_pic());
+                PictureDialogFragment progressFragment = new PictureDialogFragment(msg.getBmiddle_pic(), msg.getOriginal_pic());
                 progressFragment.show(activity.getSupportFragmentManager(), "");
             }
         });

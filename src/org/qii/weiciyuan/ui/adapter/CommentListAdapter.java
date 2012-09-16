@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ListView;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.UpdateString;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
@@ -88,17 +89,20 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             String picUrl;
             if (GlobalContext.getInstance().getEnableBigPic()) {
                 picUrl = repost_msg.getBmiddle_pic();
+                commander.downContentPic(holder.repost_content_pic, picUrl, position, listView, FileLocationMethod.picture_bmiddle);
+
             } else {
                 picUrl = repost_msg.getThumbnail_pic();
+                commander.downContentPic(holder.repost_content_pic, picUrl, position, listView, FileLocationMethod.picture_thumbnail);
+
             }
             holder.repost_content_pic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PictureDialogFragment progressFragment = new PictureDialogFragment(repost_msg.getBmiddle_pic(),repost_msg.getOriginal_pic());
+                    PictureDialogFragment progressFragment = new PictureDialogFragment(repost_msg.getBmiddle_pic(), repost_msg.getOriginal_pic());
                     progressFragment.show(activity.getSupportFragmentManager(), "");
                 }
             });
-            commander.downContentPic(holder.repost_content_pic, picUrl, position, listView);
         }
     }
 

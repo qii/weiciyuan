@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.AvatarBitmapDrawable;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.PictureBitmapDrawable;
@@ -68,16 +70,31 @@ public class AbstractAppActivity extends FragmentActivity {
         }
 
         @Override
-        public void downContentPic(ImageView view, String urlKey, int position, ListView listView) {
+        public void downContentPic(ImageView view, String urlKey, int position, ListView listView, FileLocationMethod method) {
             Bitmap bitmap = getBitmapFromMemCache(getMemCacheKey(urlKey, position));
             if (bitmap != null) {
-                view.setImageBitmap(bitmap);
-                view.setBackgroundColor(Color.TRANSPARENT);
-                pictureBitmapWorkerTaskMap.remove(urlKey);
+                switch (method) {
+                    case picture_thumbnail:
+
+                        view.setImageBitmap(bitmap);
+                        view.setBackgroundColor(Color.TRANSPARENT);
+                        pictureBitmapWorkerTaskMap.remove(urlKey);
+
+                        break;
+                    case picture_bmiddle:
+
+                        view.setBackgroundDrawable(new BitmapDrawable(getResources(), bitmap));
+                        pictureBitmapWorkerTaskMap.remove(urlKey);
+                        break;
+                }
+
             } else {
                 view.setBackgroundDrawable(defaultPic);
                 if (cancelPotentialDownload(urlKey, view)) {
-                    PictureBitmapWorkerTask task = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, urlKey, position, AbstractAppActivity.this);
+
+
+
+                    PictureBitmapWorkerTask task = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, urlKey, position, AbstractAppActivity.this, method);
                     PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(task);
                     view.setImageDrawable(downloadedDrawable);
 //                    task.execute();

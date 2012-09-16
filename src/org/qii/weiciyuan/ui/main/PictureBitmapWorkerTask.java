@@ -3,9 +3,11 @@ package org.qii.weiciyuan.ui.main;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.LruCache;
 import android.widget.ImageView;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.PictureBitmapDrawable;
@@ -29,13 +31,18 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     private Activity activity;
 
+    private FileLocationMethod method;
+
+    int reqWidth;
+    int reqHeight;
+
     public String getUrl() {
         return data;
     }
 
     public PictureBitmapWorkerTask(LruCache<String, Bitmap> lruCache,
                                    Map<String, PictureBitmapWorkerTask> taskMap,
-                                   ImageView view, String url, int position, Activity activity) {
+                                   ImageView view, String url, int position, Activity activity, FileLocationMethod method) {
 
         this.lruCache = lruCache;
         this.taskMap = taskMap;
@@ -43,18 +50,30 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         this.data = url;
         this.position = position;
         this.activity = activity;
+        this.method = method;
+        this.reqHeight = reqHeight;
+        this.reqWidth = reqWidth;
     }
-
 
 
     @Override
     protected Bitmap doInBackground(String... url) {
 
-        int reqWidth = 396;
-        int reqHeight = 500;
+//        int reqWidth = view.get().getWidth();
+//        int reqHeight = view.get().getHeight();
 
         if (!isCancelled()) {
-            return ImageTool.getThumbnailPictureWithRoundedCorner(data, reqWidth, reqHeight, null);
+            switch (method) {
+
+                case picture_thumbnail:
+                    return ImageTool.getThumbnailPictureWithRoundedCorner(data);
+
+                case picture_bmiddle:
+                    return ImageTool.getMiddlePictureInTimeLine(data, 640, 120, null);
+//                    return ImageTool.getMiddlePictureInTimeLine(data, reqWidth, reqHeight, null);
+
+
+            }
         }
         return null;
     }
@@ -81,10 +100,25 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             if (view != null && view.get() != null) {
                 ImageView imageView = view.get();
 
+                int iw = imageView.getWidth();
+                int ih = imageView.getHeight();
+                int w = bitmap.getWidth();
+                int h = bitmap.getHeight();
+
                 PictureBitmapWorkerTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
                 if (this == bitmapDownloaderTask) {
-                    imageView.setImageBitmap(bitmap);
-                    imageView.setBackgroundColor(Color.TRANSPARENT);
+                    switch (method) {
+                        case picture_thumbnail:
+                            imageView.setImageBitmap(bitmap);
+                            imageView.setBackgroundColor(Color.TRANSPARENT);
+                            break;
+                        case picture_bmiddle:
+                            imageView.setBackgroundDrawable(new BitmapDrawable(activity.getResources(), bitmap));
+                            break;
+                    }
+//                    imageView.setImageBitmap(bitmap);
+////                    imageView.setBackgroundDrawable(new BitmapDrawable(activity.getResources(),bitmap));
+//                    imageView.setBackgroundColor(Color.TRANSPARENT);
                 }
             }
         }

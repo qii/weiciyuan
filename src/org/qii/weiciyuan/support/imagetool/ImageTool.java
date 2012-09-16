@@ -19,7 +19,7 @@ public class ImageTool {
     private static final int MAX_HEIGHT = 800 * 2;
 
 
-    public static Bitmap getPictureThumbnailBitmap(String url) {
+    public static Bitmap getThumbnailPictureWithRoundedCorner(String url) {
 
 
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
@@ -35,34 +35,41 @@ public class ImageTool {
                 return ImageEdit.getRoundedCornerBitmap(bitmap);
         }
         return null;
-
     }
 
 
-    public static Bitmap getThumbnailPictureWithRoundedCorner(String url, int reqWidth, int reqHeight, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    public static Bitmap getMiddlePictureInTimeLine(String url, int reqWidth, int reqHeight, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_bmiddle);
 
-        Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, reqWidth, reqHeight);
+        Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, 480, MAX_HEIGHT);
 
         if (bitmap == null) {
             String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
-            bitmap = decodeBitmapFromSDCard(path, reqWidth, reqHeight);
+
+            bitmap = decodeBitmapFromSDCard(absoluteFilePath, 480, MAX_HEIGHT);
         }
 
         if (bitmap != null) {
-            if (bitmap.getHeight() > reqHeight || bitmap.getWidth() > reqWidth) {
+            int height = bitmap.getHeight();
+            int width = bitmap.getWidth();
+            if (height > reqHeight || width > reqWidth) {
                 bitmap = cutPic(bitmap, reqWidth, reqHeight);
             }
+            height = bitmap.getHeight();
+            width = bitmap.getWidth();
             bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+
+            height = bitmap.getHeight();
+            width = bitmap.getWidth();
         }
 
         return bitmap;
     }
 
 
-    public static Bitmap getBigAvatarWithoutRoundedCorner(String url, int reqWidth, int reqHeight) {
+    public static Bitmap getNotificationAvatar(String url, int reqWidth, int reqHeight) {
 
 
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_large);
@@ -76,7 +83,11 @@ public class ImageTool {
         }
 
         if (bitmap != null) {
-            return Bitmap.createScaledBitmap(bitmap, reqWidth, reqHeight, true);
+            bitmap = Bitmap.createScaledBitmap(bitmap, reqWidth, reqHeight, true);
+        }
+
+        if (bitmap != null) {
+            bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
         }
 
         return bitmap;
@@ -208,6 +219,36 @@ public class ImageTool {
     }
 
 
+    private static Bitmap decodeBitmapFromSDCardAnother(String path,
+                                                        int reqWidth, int reqHeight) {
+
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            if (height > reqHeight && reqHeight != 0) {
+                inSampleSize = (int) Math.floor((float) height / (float) reqHeight);
+            } else if (width > reqWidth && reqWidth != 0) {
+                inSampleSize = (int) Math.floor((float) width / (float) reqWidth);
+            }
+
+        }
+
+        options.inSampleSize = inSampleSize;
+
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(path, options);
+
+    }
+
+
     private static Bitmap cutPic(Bitmap ori, int reqWidth, int reqHeight) {
         Bitmap bitmap = ori;
 //        int reqWidth = 396;
@@ -221,11 +262,20 @@ public class ImageTool {
 //            matrix.setScale(s, s);
 //            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 //        }
+
+        int h = bitmap.getHeight();
+        int w = bitmap.getWidth();
+
         //then cut middle
         int height = reqHeight < bitmap.getHeight() ? reqHeight : bitmap.getHeight();
+        int width = reqWidth < bitmap.getWidth() ? reqWidth : bitmap.getWidth();
         if (height > 0) {
             int needStart = (bitmap.getHeight() - height) / 2;
-            Bitmap cropped = Bitmap.createBitmap(bitmap, 0, needStart, bitmap.getWidth(), height);
+            int needWidthStart = (bitmap.getWidth() - width) / 2;
+            Bitmap cropped = Bitmap.createBitmap(bitmap, needWidthStart, needStart, width, height);
+            int hh = cropped.getHeight();
+            int ww = cropped.getWidth();
+            int s = 3 + 2;
             return cropped;
         } else {
             return bitmap;
