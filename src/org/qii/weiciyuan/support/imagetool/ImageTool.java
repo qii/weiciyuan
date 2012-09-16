@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.imagetool;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -43,12 +44,14 @@ public class ImageTool {
 
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_bmiddle);
 
-        Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, 480, MAX_HEIGHT);
+
+        Bitmap bitmap = decodeBitmapFromSDCardTimeLine(absoluteFilePath, 480);
+
 
         if (bitmap == null) {
             String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
 
-            bitmap = decodeBitmapFromSDCard(absoluteFilePath, 480, MAX_HEIGHT);
+            bitmap = decodeBitmapFromSDCardTimeLine(absoluteFilePath, 480);
         }
 
         if (bitmap != null) {
@@ -56,18 +59,51 @@ public class ImageTool {
             int width = bitmap.getWidth();
             if (height > reqHeight || width > reqWidth) {
                 bitmap = cutPic(bitmap, reqWidth, reqHeight);
+            } else {
+                bitmap = resizeAndCutPic(bitmap, reqWidth, reqHeight);
             }
-            height = bitmap.getHeight();
-            width = bitmap.getWidth();
+
+//            height = bitmap.getHeight();
+//            width = bitmap.getWidth();
             bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
 
-            height = bitmap.getHeight();
-            width = bitmap.getWidth();
+//            height = bitmap.getHeight();
+//            width = bitmap.getWidth();
         }
 
         return bitmap;
     }
 
+    private static Bitmap decodeBitmapFromSDCardTimeLine(String path, int reqWidth) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (width > 480) {
+            inSampleSize = (int) Math.floor((float) width / (float) reqWidth);
+        }
+
+        if (height > 800 * 8) {
+            inSampleSize = (int) Math.floor((float) height / (float) 800 * 8);
+        }
+
+        options.inSampleSize = inSampleSize;
+
+        options.inJustDecodeBounds = false;
+
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeFile(path, options);
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return bitmap;
+    }
 
     public static Bitmap getNotificationAvatar(String url, int reqWidth, int reqHeight) {
 
@@ -248,6 +284,37 @@ public class ImageTool {
 
     }
 
+    private static Bitmap resizeAndCutPic(Bitmap ori, int reqWidth, int reqHeight) {
+
+        Bitmap bitmap = ori;
+
+        int h = bitmap.getHeight();
+        int w = bitmap.getWidth();
+
+
+        if (reqWidth > w) {
+
+            float s = reqWidth / w;
+            Matrix matrix = new Matrix();
+            matrix.setScale(s, s);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        }
+
+        //then cut middle
+        int height = reqHeight < bitmap.getHeight() ? reqHeight : bitmap.getHeight();
+        int width = reqWidth < bitmap.getWidth() ? reqWidth : bitmap.getWidth();
+        if (height > 0) {
+            int needStart = (bitmap.getHeight() - height) / 2;
+            int needWidthStart = (bitmap.getWidth() - width) / 2;
+            Bitmap cropped = Bitmap.createBitmap(bitmap, needWidthStart, needStart, width, height);
+            int hh = cropped.getHeight();
+            int ww = cropped.getWidth();
+            int s = 3 + 2;
+            return cropped;
+        } else {
+            return bitmap;
+        }
+    }
 
     private static Bitmap cutPic(Bitmap ori, int reqWidth, int reqHeight) {
         Bitmap bitmap = ori;
