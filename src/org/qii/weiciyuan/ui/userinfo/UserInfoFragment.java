@@ -17,6 +17,7 @@ import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -96,7 +97,7 @@ public class UserInfoFragment extends Fragment {
 
         String avatarUrl = bean.getAvatar_large();
         if (!TextUtils.isEmpty(avatarUrl)) {
-            new SimpleBitmapWorkerTask(avatar).execute(avatarUrl);
+            new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_large).execute(avatarUrl);
         }
         if (!TextUtils.isEmpty(bean.getUrl())) {
 

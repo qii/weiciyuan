@@ -131,7 +131,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
             int width = context.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width);
             int height = context.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
 
-            return ImageTool.getNotificationAvatar(url, width, height);
+            return ImageTool.getBigAvatarWithoutRoundedCorner(url, width, height);
         }
 
         @Override

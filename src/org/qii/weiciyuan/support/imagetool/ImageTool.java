@@ -39,11 +39,10 @@ public class ImageTool {
     }
 
 
-    public static Bitmap getPictureHighDensityThumbnailBitmap(String url, int reqWidth, int reqHeight, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    public static Bitmap getThumbnailPictureWithRoundedCorner(String url, int reqWidth, int reqHeight, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
 
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
-        absoluteFilePath = absoluteFilePath + ".jpg";
 
         Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, reqWidth, reqHeight);
 
@@ -63,10 +62,10 @@ public class ImageTool {
     }
 
 
-    public static Bitmap getNotificationAvatar(String url, int reqWidth, int reqHeight) {
+    public static Bitmap getBigAvatarWithoutRoundedCorner(String url, int reqWidth, int reqHeight) {
 
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_large);
         absoluteFilePath = absoluteFilePath + ".jpg";
 
         Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, reqWidth, reqHeight);
@@ -85,10 +84,30 @@ public class ImageTool {
         return bitmap;
     }
 
-    public static Bitmap getAvatarBitmap(String url) {
+    public static Bitmap getBigAvatarWithRoundedCorner(String url) {
 
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar);
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_large);
+        absoluteFilePath = absoluteFilePath + ".jpg";
+
+        Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
+
+        if (bitmap == null) {
+            String path = getBitmapFromNetWork(url, absoluteFilePath, null);
+            bitmap = BitmapFactory.decodeFile(absoluteFilePath);
+        }
+
+        if (bitmap != null) {
+            bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+        }
+
+        return bitmap;
+    }
+
+    public static Bitmap getSmallAvatarWithRoundedCorner(String url) {
+
+
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_small);
 
         absoluteFilePath = absoluteFilePath + ".jpg";
 
@@ -104,12 +123,12 @@ public class ImageTool {
         return bitmap;
     }
 
-    public static Bitmap getNormalBitmap(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    public static Bitmap getMiddlePictureWithRoundedCorner(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_bmiddle);
 
-        absoluteFilePath = absoluteFilePath + ".jpg";
+//        absoluteFilePath = absoluteFilePath + ".jpg";
 
         Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, MAX_WIDTH, MAX_HEIGHT);
 
@@ -124,12 +143,31 @@ public class ImageTool {
     }
 
 
-    public static String getNormalGif(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    public static String getLargePictureWithoutRoundedCorner(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_large);
 
-        absoluteFilePath = absoluteFilePath + ".jpg";
+        File file = new File(absoluteFilePath);
+
+        if (file.exists()) {
+            return absoluteFilePath;
+
+        } else {
+            String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
+
+            return absoluteFilePath;
+
+
+        }
+
+    }
+
+
+    public static String getMiddlePictureWithoutRoundedCorner(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+
+
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_bmiddle);
 
         File file = new File(absoluteFilePath);
 

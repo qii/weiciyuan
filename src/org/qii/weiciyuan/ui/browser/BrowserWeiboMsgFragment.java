@@ -29,6 +29,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.show.ShowStatusDao;
 import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -240,7 +241,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
     private void buildViewData() {
         if (msg.getUser() != null) {
             username.setText(msg.getUser().getScreen_name());
-            SimpleBitmapWorkerTask avatarTask = new SimpleBitmapWorkerTask(avatar);
+            SimpleBitmapWorkerTask avatarTask = new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_small);
             avatarTask.execute(msg.getUser().getProfile_image_url());
         }
         content.setText(msg.getText());
@@ -269,11 +270,11 @@ public class BrowserWeiboMsgFragment extends Fragment {
             }
             if (!TextUtils.isEmpty(msg.getRetweeted_status().getBmiddle_pic())) {
                 repost_pic.setVisibility(View.VISIBLE);
-                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic);
+                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_bmiddle);
                 task.execute(msg.getRetweeted_status().getBmiddle_pic());
             } else if (!TextUtils.isEmpty(msg.getRetweeted_status().getThumbnail_pic())) {
                 repost_pic.setVisibility(View.VISIBLE);
-                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic);
+                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_bmiddle);
                 task.execute(msg.getRetweeted_status().getThumbnail_pic());
 
             }
@@ -282,11 +283,11 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
         if (!TextUtils.isEmpty(msg.getBmiddle_pic())) {
             content_pic.setVisibility(View.VISIBLE);
-            SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(content_pic);
+            SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_bmiddle);
             task.execute(msg.getBmiddle_pic());
         } else if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
             content_pic.setVisibility(View.VISIBLE);
-            SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(content_pic);
+            SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_bmiddle);
             task.execute(msg.getThumbnail_pic());
 
         }

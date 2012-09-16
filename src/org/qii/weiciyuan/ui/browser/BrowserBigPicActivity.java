@@ -93,7 +93,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
             };
 
             if (!isCancelled()) {
-                return ImageTool.getNormalGif(url, downloadListener);
+                return ImageTool.getLargePictureWithoutRoundedCorner(url, downloadListener);
             }
 
             return null;

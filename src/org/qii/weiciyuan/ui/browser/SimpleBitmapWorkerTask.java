@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.LruCache;
 import android.widget.ImageView;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
@@ -16,12 +17,14 @@ public class SimpleBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     private LruCache<String, Bitmap> lruCache;
     private String data = "";
     private ImageView view;
+    private FileLocationMethod method;
 
 
-    public SimpleBitmapWorkerTask(ImageView view) {
+    public SimpleBitmapWorkerTask(ImageView view, FileLocationMethod method) {
 
         this.lruCache = GlobalContext.getInstance().getAvatarCache();
         this.view = view;
+        this.method = method;
 
     }
 
@@ -29,7 +32,14 @@ public class SimpleBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... url) {
         data = url[0];
         if (!isCancelled()) {
-            return ImageTool.getNormalBitmap(data,null);
+            switch (method) {
+                case picture_bmiddle:
+                    return ImageTool.getMiddlePictureWithRoundedCorner(data, null);
+                case avatar_small:
+                    return ImageTool.getSmallAvatarWithRoundedCorner(data);
+                case avatar_large:
+                    return ImageTool.getBigAvatarWithRoundedCorner(data);
+            }
         }
 
         return null;

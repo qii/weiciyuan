@@ -56,7 +56,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... url) {
 
         if (!isCancelled()) {
-            return ImageTool.getAvatarBitmap(data);
+            return ImageTool.getSmallAvatarWithRoundedCorner(data);
         }
         return null;
     }

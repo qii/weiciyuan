@@ -16,7 +16,7 @@ public class FileManager {
     private static final String SDCARD_PATH = GlobalContext.getInstance().getExternalCacheDir().getAbsolutePath();
     private static final String AVATAR_SMAll = "avatar_small";
     private static final String AVATAR_LARGE = "avatar_large";
-    private static final String PICTURE_THUMBNAIL_CACHE = "picture_thumbnail";
+    private static final String PICTURE_THUMBNAIL = "picture_thumbnail";
     private static final String PICTURE_BMIDDLE = "picture_bmiddle";
     private static final String PICTURE_LARGE = "picture_large";
 
@@ -42,11 +42,20 @@ public class FileManager {
         String oldRelativePath = getFileRelativePathFromUrl(url);
         String newRelativePath = "";
         switch (method) {
-            case avatar:
+            case avatar_small:
                 newRelativePath = File.separator + AVATAR_SMAll + oldRelativePath;
                 break;
+            case avatar_large:
+                newRelativePath = File.separator + AVATAR_LARGE + oldRelativePath;
+                break;
             case picture_thumbnail:
-                newRelativePath = File.separator + PICTURE_THUMBNAIL_CACHE + oldRelativePath;
+                newRelativePath = File.separator + PICTURE_THUMBNAIL + oldRelativePath;
+                break;
+            case picture_bmiddle:
+                newRelativePath = File.separator + PICTURE_BMIDDLE + oldRelativePath;
+                break;
+            case picture_large:
+                newRelativePath = File.separator + PICTURE_LARGE + oldRelativePath;
                 break;
 
         }
@@ -69,7 +78,6 @@ public class FileManager {
 
         return result;
     }
-
 
 
     public static File createNewFileInSDCard(String absolutePath) {
@@ -118,7 +126,7 @@ public class FileManager {
     }
 
     public static boolean deletePictureCache() {
-        String path = SDCARD_PATH + File.separator + PICTURE_THUMBNAIL_CACHE;
+        String path = SDCARD_PATH + File.separator + PICTURE_THUMBNAIL;
         return deleteDirectory(new File(path));
     }
 

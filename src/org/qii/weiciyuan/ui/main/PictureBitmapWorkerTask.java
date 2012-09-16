@@ -54,7 +54,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         int reqHeight = 500;
 
         if (!isCancelled()) {
-            return ImageTool.getPictureHighDensityThumbnailBitmap(data, reqWidth, reqHeight, null);
+            return ImageTool.getThumbnailPictureWithRoundedCorner(data, reqWidth, reqHeight, null);
         }
         return null;
     }

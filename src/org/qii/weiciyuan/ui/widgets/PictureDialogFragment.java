@@ -124,7 +124,7 @@ public class PictureDialogFragment extends DialogFragment {
 
             data = url[0];
             if (!isCancelled()) {
-                return ImageTool.getNormalGif(data, downloadListener);
+                return ImageTool.getMiddlePictureWithoutRoundedCorner(data, downloadListener);
             }
 
             return null;
