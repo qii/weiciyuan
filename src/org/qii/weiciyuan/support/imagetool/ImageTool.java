@@ -128,8 +128,6 @@ public class ImageTool {
 
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_bmiddle);
 
-//        absoluteFilePath = absoluteFilePath + ".jpg";
-
         Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, MAX_WIDTH, MAX_HEIGHT);
 
         if (bitmap == null) {
@@ -156,7 +154,12 @@ public class ImageTool {
         } else {
             String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
 
-            return absoluteFilePath;
+            file = new File(path);
+            if (file.exists()) {
+                return absoluteFilePath;
+            } else {
+                return "about:blank";
+            }
 
 
         }
@@ -177,7 +180,12 @@ public class ImageTool {
         } else {
             String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
 
-            return absoluteFilePath;
+            file = new File(path);
+            if (file.exists()) {
+                return absoluteFilePath;
+            } else {
+                return "about:blank";
+            }
 
 
         }
