@@ -19,23 +19,6 @@ public class ImageTool {
     private static final int MAX_HEIGHT = 800 * 2;
 
 
-    private static Bitmap decodeBitmapFromSDCard(String path,
-                                                 int reqWidth, int reqHeight) {
-
-
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        options.inJustDecodeBounds = false;
-
-        return BitmapFactory.decodeFile(path, options);
-
-    }
-
-
     public static Bitmap getPictureThumbnailBitmap(String url) {
 
 
@@ -55,30 +38,6 @@ public class ImageTool {
 
     }
 
-
-    private static Bitmap cutPic(Bitmap ori, int reqWidth, int reqHeight) {
-        Bitmap bitmap = ori;
-//        int reqWidth = 396;
-//        int reqHeight = 135;
-
-        //resize width to reqWidth
-//        if (bitmap.getWidth() < reqWidth) {
-//            float width = bitmap.getWidth();
-//            float s = reqWidth / width;
-//            Matrix matrix = new Matrix();
-//            matrix.setScale(s, s);
-//            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-//        }
-        //then cut middle
-        int height = reqHeight < bitmap.getHeight() ? reqHeight : bitmap.getHeight();
-        if (height > 0) {
-            int needStart = (bitmap.getHeight() - height) / 2;
-            Bitmap cropped = Bitmap.createBitmap(bitmap, 0, needStart, bitmap.getWidth(), height);
-            return cropped;
-        } else {
-            return bitmap;
-        }
-    }
 
     public static Bitmap getPictureHighDensityThumbnailBitmap(String url, int reqWidth, int reqHeight, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
@@ -104,7 +63,7 @@ public class ImageTool {
     }
 
 
-    public static Bitmap getPictureHighDensityThumbnailWithoutRoundedCornerBitmap(String url, int reqWidth, int reqHeight, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    public static Bitmap getNotificationAvatar(String url, int reqWidth, int reqHeight) {
 
 
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
@@ -113,7 +72,7 @@ public class ImageTool {
         Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, reqWidth, reqHeight);
 
         if (bitmap == null) {
-            String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
+            String path = getBitmapFromNetWork(url, absoluteFilePath, null);
             bitmap = decodeBitmapFromSDCard(path, reqWidth, reqHeight);
         }
 
@@ -185,7 +144,50 @@ public class ImageTool {
 
         }
 
-     }
+    }
+
+
+    private static Bitmap decodeBitmapFromSDCard(String path,
+                                                 int reqWidth, int reqHeight) {
+
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(path, options);
+
+    }
+
+
+    private static Bitmap cutPic(Bitmap ori, int reqWidth, int reqHeight) {
+        Bitmap bitmap = ori;
+//        int reqWidth = 396;
+//        int reqHeight = 135;
+
+        //resize width to reqWidth
+//        if (bitmap.getWidth() < reqWidth) {
+//            float width = bitmap.getWidth();
+//            float s = reqWidth / width;
+//            Matrix matrix = new Matrix();
+//            matrix.setScale(s, s);
+//            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+//        }
+        //then cut middle
+        int height = reqHeight < bitmap.getHeight() ? reqHeight : bitmap.getHeight();
+        if (height > 0) {
+            int needStart = (bitmap.getHeight() - height) / 2;
+            Bitmap cropped = Bitmap.createBitmap(bitmap, 0, needStart, bitmap.getWidth(), height);
+            return cropped;
+        } else {
+            return bitmap;
+        }
+    }
+
 
     private static String getBitmapFromNetWork(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
