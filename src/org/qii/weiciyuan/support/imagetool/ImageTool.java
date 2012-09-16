@@ -68,17 +68,15 @@ public class ImageTool {
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_large);
         absoluteFilePath = absoluteFilePath + ".jpg";
 
-        Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, reqWidth, reqHeight);
+        Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
         if (bitmap == null) {
-            String path = getBitmapFromNetWork(url, absoluteFilePath, null);
-            bitmap = decodeBitmapFromSDCard(path, reqWidth, reqHeight);
+            getBitmapFromNetWork(url, absoluteFilePath, null);
+            bitmap = BitmapFactory.decodeFile(absoluteFilePath);
         }
 
         if (bitmap != null) {
-            if (bitmap.getHeight() > reqHeight || bitmap.getWidth() > reqWidth) {
-                bitmap = cutPic(bitmap, reqWidth, reqHeight);
-            }
+            return Bitmap.createScaledBitmap(bitmap, reqWidth, reqHeight, true);
         }
 
         return bitmap;
