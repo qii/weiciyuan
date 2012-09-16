@@ -200,7 +200,7 @@ public class MyInfoFragment extends Fragment {
         @Override
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
-            if (e != null) {
+            if (e != null && getActivity() != null) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             }
         }
