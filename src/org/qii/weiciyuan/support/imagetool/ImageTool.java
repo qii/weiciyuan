@@ -57,7 +57,7 @@ public class ImageTool {
         if (bitmap != null) {
             int height = bitmap.getHeight();
             int width = bitmap.getWidth();
-            if (height > reqHeight || width > reqWidth) {
+            if (height > reqHeight && width > reqWidth) {
                 bitmap = cutPic(bitmap, reqWidth, reqHeight);
             } else {
                 bitmap = resizeAndCutPic(bitmap, reqWidth, reqHeight);
@@ -297,7 +297,8 @@ public class ImageTool {
             float s = reqWidth / w;
             Matrix matrix = new Matrix();
             matrix.setScale(s, s);
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            if (s < 10.0f)
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         }
 
         //then cut middle
