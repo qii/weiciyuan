@@ -81,14 +81,14 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
             ticker = lastName + ":" + content.substring(0, 20) + "……";
         }
 
-        String avatarUrl;
-        if (comment.getSize() > 0)
-            avatarUrl = comment.getItemList().get(0).getUser().getAvatar_large();
-        else
-            avatarUrl = repost.getItemList().get(0).getUser().getAvatar_large();
+//        String avatarUrl;
+//        if (comment.getSize() > 0)
+//            avatarUrl = comment.getItemList().get(0).getUser().getAvatar_large();
+//        else
+//            avatarUrl = repost.getItemList().get(0).getUser().getAvatar_large();
 
-        new DownloadAvatar(avatarUrl).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-
+//        new DownloadAvatar(avatarUrl).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        showNotification(null);
     }
 
     private void showNotification(Bitmap bitmap) {
@@ -105,7 +105,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
                 .setContentTitle(title)
                 .setContentText(content)
                 .setSmallIcon(R.drawable.notification)
-                .setLargeIcon(bitmap)
+//                .setLargeIcon(bitmap)
                 .setAutoCancel(true)
                 .setContentIntent(activity);
         if (sum > 1) {
@@ -131,7 +131,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
             int width = context.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width);
             int height = context.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
 
-            return ImageTool.getBigAvatarWithoutRoundedCorner(url, width, height);
+            return ImageTool.getNotificationAvatar(url, width, height);
         }
 
         @Override
