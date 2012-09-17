@@ -159,7 +159,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     }
 
 
-
     @Override
     public void onPause() {
         super.onPause();
@@ -353,6 +352,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     private volatile boolean enableRefreshTime = true;
     private ScheduledExecutorService scheduledExecutorService = null;
 
+    public boolean isListViewFling() {
+        return !enableRefreshTime;
+    }
+
     private class refreshTimeWorker implements Runnable {
         @Override
         public void run() {
@@ -405,6 +408,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
 
                         enableRefreshTime = true;
+                        timeLineAdapter.notifyDataSetChanged();
                         break;
 
 

@@ -66,7 +66,9 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             if (accountBean != null) {
                 token = accountBean.getAccess_token();
             } else {
+                //because app crash
                 AppLogger.e("MainTneActivity dont have account");
+                finish();
             }
 
         } else {
@@ -167,7 +169,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 intent = new Intent(this, MyInfoActivity.class);
                 intent.putExtra("token", getToken());
                 intent.putExtra("user", getUser());
-                intent.putExtra("account",getAccount());
+                intent.putExtra("account", getAccount());
                 startActivity(intent);
                 return true;
 

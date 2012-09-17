@@ -1,7 +1,7 @@
 package org.qii.weiciyuan.ui.adapter;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
@@ -12,6 +12,7 @@ import org.qii.weiciyuan.support.lib.UpdateString;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 
@@ -24,7 +25,7 @@ import java.util.List;
 public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
 
-    public CommentListAdapter(FragmentActivity activity, ICommander commander, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
+    public CommentListAdapter(Fragment activity, ICommander commander, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
         super(activity, commander, bean, listView, showOriStatus);
     }
 
@@ -48,7 +49,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             holder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(activity, UserInfoActivity.class);
+                    Intent intent = new Intent(activity.getActivity(), UserInfoActivity.class);
                     intent.putExtra("token", ((IToken) activity).getToken());
                     intent.putExtra("user", msg.getUser());
                     activity.startActivity(intent);
@@ -59,7 +60,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         holder.content.setText(msg.getListViewSpannableString());
 
         String time = msg.getListviewItemShowTime();
-        UpdateString updateString = new UpdateString(time, holder.time, msg, activity);
+        UpdateString updateString = new UpdateString(time, holder.time, msg, activity.getActivity());
         if (!holder.time.getText().toString().equals(time)) {
             holder.time.setText(updateString);
         }
@@ -87,20 +88,22 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
             holder.repost_content_pic.setVisibility(View.VISIBLE);
             String picUrl;
+            boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
+
             if (GlobalContext.getInstance().getEnableBigPic()) {
                 picUrl = repost_msg.getBmiddle_pic();
-                commander.downContentPic(holder.repost_content_pic, picUrl, position, listView, FileLocationMethod.picture_bmiddle);
+                commander.downContentPic(holder.repost_content_pic, picUrl, position, listView, FileLocationMethod.picture_bmiddle,isFling);
 
             } else {
                 picUrl = repost_msg.getThumbnail_pic();
-                commander.downContentPic(holder.repost_content_pic, picUrl, position, listView, FileLocationMethod.picture_thumbnail);
+                commander.downContentPic(holder.repost_content_pic, picUrl, position, listView, FileLocationMethod.picture_thumbnail,isFling);
 
             }
             holder.repost_content_pic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PictureDialogFragment progressFragment = new PictureDialogFragment(repost_msg.getBmiddle_pic(), repost_msg.getOriginal_pic());
-                    progressFragment.show(activity.getSupportFragmentManager(), "");
+                    progressFragment.show(activity.getActivity().getSupportFragmentManager(), "");
                 }
             });
         }

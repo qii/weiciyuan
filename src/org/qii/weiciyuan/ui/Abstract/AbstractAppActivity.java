@@ -70,7 +70,7 @@ public class AbstractAppActivity extends FragmentActivity {
         }
 
         @Override
-        public void downContentPic(ImageView view, String urlKey, int position, ListView listView, FileLocationMethod method) {
+        public void downContentPic(ImageView view, String urlKey, int position, ListView listView, FileLocationMethod method, boolean isFling) {
             Bitmap bitmap = getBitmapFromMemCache(getMemCacheKey(urlKey, position));
             if (bitmap != null) {
                 switch (method) {
@@ -90,8 +90,7 @@ public class AbstractAppActivity extends FragmentActivity {
 
             } else {
                 view.setBackgroundDrawable(defaultPic);
-                if (cancelPotentialDownload(urlKey, view)) {
-
+                if (cancelPotentialDownload(urlKey, view) && !isFling) {
 
 
                     PictureBitmapWorkerTask task = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, urlKey, position, AbstractAppActivity.this, method);

@@ -215,7 +215,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new CommentListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), listView, false);
+        timeLineAdapter = new CommentListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), listView, false);
         listView.setAdapter(timeLineAdapter);
     }
 

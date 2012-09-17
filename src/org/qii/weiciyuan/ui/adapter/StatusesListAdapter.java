@@ -1,7 +1,7 @@
 package org.qii.weiciyuan.ui.adapter;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,6 +13,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 
@@ -25,7 +26,7 @@ import java.util.List;
 public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
 
 
-    public StatusesListAdapter(FragmentActivity activity, ICommander commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
+    public StatusesListAdapter(Fragment activity, ICommander commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
         super(activity, commander, bean, listView, showOriStatus);
     }
 
@@ -64,7 +65,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.content.setText(msg.getListViewSpannableString());
         }
         String time = msg.getListviewItemShowTime();
-        UpdateString updateString = new UpdateString(time, holder.time, msg, activity);
+        UpdateString updateString = new UpdateString(time, holder.time, msg, activity.getActivity());
         if (!holder.time.getText().toString().equals(time)) {
             holder.time.setText(updateString);
         }
@@ -84,7 +85,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
         holder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity, UserInfoActivity.class);
+                Intent intent = new Intent(activity.getActivity(), UserInfoActivity.class);
                 intent.putExtra("token", ((IToken) activity).getToken());
                 intent.putExtra("user", msg.getUser());
                 activity.startActivity(intent);
@@ -107,13 +108,16 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
         view.setVisibility(View.VISIBLE);
 
         String picUrl;
+
+        boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
+
         if (GlobalContext.getInstance().getEnableBigPic()) {
             picUrl = msg.getBmiddle_pic();
-            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_bmiddle);
+            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_bmiddle,isFling);
 
         } else {
             picUrl = msg.getThumbnail_pic();
-            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_thumbnail);
+            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_thumbnail,isFling);
 
         }
 
@@ -121,7 +125,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             @Override
             public void onClick(View v) {
                 PictureDialogFragment progressFragment = new PictureDialogFragment(msg.getBmiddle_pic(), msg.getOriginal_pic());
-                progressFragment.show(activity.getSupportFragmentManager(), "");
+                progressFragment.show(activity.getActivity().getSupportFragmentManager(), "");
             }
         });
     }

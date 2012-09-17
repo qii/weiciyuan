@@ -208,7 +208,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     }
 
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusesListAdapter(getActivity(), ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), listView, false);
+        timeLineAdapter = new StatusesListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), listView, false);
         listView.setAdapter(timeLineAdapter);
     }
 

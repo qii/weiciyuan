@@ -1,7 +1,7 @@
 package org.qii.weiciyuan.ui.adapter;
 
 import android.content.res.TypedArray;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAdapter {
     protected List<T> bean;
-    protected FragmentActivity activity;
+    protected Fragment activity;
     protected LayoutInflater inflater;
     protected ListView listView;
     protected ICommander commander;
@@ -30,10 +30,10 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     protected int checkedBG;
     protected int defaultBG;
 
-    public AbstractAppListAdapter(FragmentActivity activity, ICommander commander, List<T> bean, ListView listView, boolean showOriStatus) {
+    public AbstractAppListAdapter(Fragment activity, ICommander commander, List<T> bean, ListView listView, boolean showOriStatus) {
         this.bean = bean;
         this.commander = commander;
-        this.inflater = activity.getLayoutInflater();
+        this.inflater = activity.getActivity().getLayoutInflater();
         this.listView = listView;
         this.showOriStatus = showOriStatus;
         this.activity = activity;
@@ -42,7 +42,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         defaultBG = activity.getResources().getColor(R.color.transparent);
 
         int[] attrs = new int[]{R.attr.listview_checked_color};
-        TypedArray ta = activity.obtainStyledAttributes(attrs);
+        TypedArray ta = activity.getActivity().obtainStyledAttributes(attrs);
         checkedBG = ta.getColor(0, 430);
     }
 
@@ -177,7 +177,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         if (postion >= 0 && postion < bean.size()) {
 
             Animation anim = AnimationUtils.loadAnimation(
-                    activity, R.anim.account_delete_slide_out_right
+                    activity.getActivity(), R.anim.account_delete_slide_out_right
             );
 
             anim.setAnimationListener(new Animation.AnimationListener() {
