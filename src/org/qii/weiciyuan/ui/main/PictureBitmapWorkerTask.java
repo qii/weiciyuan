@@ -51,16 +51,13 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         this.position = position;
         this.activity = activity;
         this.method = method;
-        this.reqHeight = reqHeight;
-        this.reqWidth = reqWidth;
+
     }
 
 
     @Override
     protected Bitmap doInBackground(String... url) {
 
-//        int reqWidth = view.get().getWidth();
-//        int reqHeight = view.get().getHeight();
 
         if (!isCancelled()) {
             switch (method) {
@@ -70,8 +67,6 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
                 case picture_bmiddle:
                     return ImageTool.getMiddlePictureInTimeLine(data, 640, 120, null);
-//                    return ImageTool.getMiddlePictureInTimeLine(data, reqWidth, reqHeight, null);
-
 
             }
         }
@@ -100,10 +95,6 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             if (view != null && view.get() != null) {
                 ImageView imageView = view.get();
 
-                int iw = imageView.getWidth();
-                int ih = imageView.getHeight();
-                int w = bitmap.getWidth();
-                int h = bitmap.getHeight();
 
                 PictureBitmapWorkerTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
                 if (this == bitmapDownloaderTask) {
@@ -116,9 +107,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                             imageView.setBackgroundDrawable(new BitmapDrawable(activity.getResources(), bitmap));
                             break;
                     }
-//                    imageView.setImageBitmap(bitmap);
-////                    imageView.setBackgroundDrawable(new BitmapDrawable(activity.getResources(),bitmap));
-//                    imageView.setBackgroundColor(Color.TRANSPARENT);
+
                 }
             }
         }

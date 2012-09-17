@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -37,6 +38,8 @@ public class AbstractAppActivity extends FragmentActivity {
 
     private Drawable defaultAvatar = null;
     private Drawable defaultPic = null;
+    private Drawable errorPic = null;
+    private Drawable transPic = new ColorDrawable(Color.TRANSPARENT);
 
 
     private Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = new ConcurrentHashMap<String, AvatarBitmapWorkerTask>();
@@ -94,8 +97,8 @@ public class AbstractAppActivity extends FragmentActivity {
                 switch (method) {
                     case picture_thumbnail:
 
-                        view.setImageDrawable(defaultPic);
-                        view.setBackgroundColor(Color.TRANSPARENT);
+                        view.setImageDrawable(transPic);
+                        view.setBackgroundDrawable(defaultPic);
 
                         break;
                     case picture_bmiddle:
@@ -214,6 +217,7 @@ public class AbstractAppActivity extends FragmentActivity {
         forceShowActionBarOverflowMenu();
         initDefaultAvatar();
         initDefaultPic();
+        initErrorPic();
 
     }
 
@@ -228,6 +232,12 @@ public class AbstractAppActivity extends FragmentActivity {
         int[] attrs = new int[]{R.attr.picture};
         TypedArray ta = obtainStyledAttributes(attrs);
         defaultPic = ta.getDrawable(0);
+    }
+
+    private void initErrorPic() {
+        int[] attrs = new int[]{R.attr.error};
+        TypedArray ta = obtainStyledAttributes(attrs);
+        errorPic = ta.getDrawable(0);
     }
 
     private void forceShowActionBarOverflowMenu() {
