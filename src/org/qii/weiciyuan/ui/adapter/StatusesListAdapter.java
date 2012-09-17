@@ -49,7 +49,8 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             String image_url = msg.getUser().getProfile_image_url();
             if (!TextUtils.isEmpty(image_url) && GlobalContext.getInstance().isEnablePic()) {
                 holder.avatar.setVisibility(View.VISIBLE);
-                commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
+                boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
+                commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView,isFling);
             } else {
                 holder.avatar.setVisibility(View.GONE);
             }
@@ -113,11 +114,11 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
 
         if (GlobalContext.getInstance().getEnableBigPic()) {
             picUrl = msg.getBmiddle_pic();
-            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_bmiddle,isFling);
+            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_bmiddle, isFling);
 
         } else {
             picUrl = msg.getThumbnail_pic();
-            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_thumbnail,isFling);
+            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_thumbnail, isFling);
 
         }
 

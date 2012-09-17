@@ -7,7 +7,7 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 public interface ICommander {
 
 
-    public void downloadAvatar(ImageView view, String url, int position, ListView listView);
+    public void downloadAvatar(ImageView view, String url, int position, ListView listView, boolean isFling);
 
     public void downContentPic(ImageView view, String url, int position, ListView listView, FileLocationMethod method,boolean isScroll);
 }

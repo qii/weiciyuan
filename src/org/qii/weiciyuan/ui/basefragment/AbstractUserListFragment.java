@@ -160,7 +160,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     }
 
     protected void downloadAvatar(ImageView view, String url, int position, ListView listView) {
-        commander.downloadAvatar(view, url, position, listView);
+        commander.downloadAvatar(view, url, position, listView,false);
     }
 
     public void refresh() {

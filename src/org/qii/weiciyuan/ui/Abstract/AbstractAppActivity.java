@@ -50,14 +50,15 @@ public class AbstractAppActivity extends FragmentActivity {
 
 
         @Override
-        public void downloadAvatar(ImageView view, String urlKey, int position, ListView listView) {
+        public void downloadAvatar(ImageView view, String urlKey, int position, ListView listView, boolean isFling) {
 
             Bitmap bitmap = getBitmapFromMemCache(urlKey);
             if (bitmap != null) {
                 view.setImageBitmap(bitmap);
                 avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey, position));
             } else {
-                if (cancelPotentialAvatarDownload(urlKey, view)) {
+                view.setImageDrawable(defaultAvatar);
+                if (cancelPotentialAvatarDownload(urlKey, view) && !isFling) {
                     AvatarBitmapWorkerTask task = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey, position);
                     AvatarBitmapDrawable downloadedDrawable = new AvatarBitmapDrawable(task);
                     view.setImageDrawable(downloadedDrawable);

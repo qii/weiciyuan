@@ -289,7 +289,8 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
             ImageView imageView = (ImageView) mView.findViewById(R.id.imageView_avatar);
 
             if (!TextUtils.isEmpty(accountList.get(i).getAvatar_url())) {
-                commander.downloadAvatar(imageView, accountList.get(i).getAvatar_url(), i, listView);
+
+                commander.downloadAvatar(imageView, accountList.get(i).getAvatar_url(), i, listView,false);
             }
 
             return mView;

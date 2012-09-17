@@ -45,7 +45,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         holder.username.setText(msg.getUser().getScreen_name());
         String image_url = msg.getUser().getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
-            commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView);
+            boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
+            commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView,isFling);
             holder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

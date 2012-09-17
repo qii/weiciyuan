@@ -238,7 +238,7 @@ public class MyFavListFragment extends Fragment {
     }
 
     protected void downloadAvatar(ImageView view, String url, int position, ListView listView) {
-        commander.downloadAvatar(view, url, position, listView);
+        commander.downloadAvatar(view, url, position, listView,false);
     }
 
 
