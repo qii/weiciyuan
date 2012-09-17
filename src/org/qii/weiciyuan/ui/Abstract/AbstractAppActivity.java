@@ -90,7 +90,20 @@ public class AbstractAppActivity extends FragmentActivity {
                 }
 
             } else {
-                view.setBackgroundDrawable(defaultPic);
+
+                switch (method) {
+                    case picture_thumbnail:
+
+                        view.setImageDrawable(defaultPic);
+                        view.setBackgroundColor(Color.TRANSPARENT);
+
+                        break;
+                    case picture_bmiddle:
+
+                        view.setBackgroundDrawable(defaultPic);
+                        break;
+
+                }
                 if (cancelPotentialDownload(urlKey, view) && !isFling) {
 
 
