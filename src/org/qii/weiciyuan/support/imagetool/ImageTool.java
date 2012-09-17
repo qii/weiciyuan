@@ -311,7 +311,7 @@ public class ImageTool {
             if (s < 10.0f && bitmap.getHeight() < 1600) {
                 AppLogger.e("s=" + s + "bitmap width=" + bitmap.getWidth() + "height=" + bitmap.getHeight());
 //                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                bitmap = Bitmap.createScaledBitmap(bitmap, reqWidth, (int) (h * s), true);
+//                bitmap = Bitmap.createScaledBitmap(bitmap, reqWidth, (int) (h * s), true);
             }
         }
 
