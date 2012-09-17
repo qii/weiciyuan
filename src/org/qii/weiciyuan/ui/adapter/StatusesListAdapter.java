@@ -87,7 +87,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity.getActivity(), UserInfoActivity.class);
-                intent.putExtra("token", ((IToken) activity).getToken());
+                intent.putExtra("token", ((IToken) activity.getActivity()).getToken());
                 intent.putExtra("user", msg.getUser());
                 activity.startActivity(intent);
             }

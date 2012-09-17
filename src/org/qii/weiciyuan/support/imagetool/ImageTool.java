@@ -102,9 +102,9 @@ public class ImageTool {
 
         options.inJustDecodeBounds = false;
 
-        options.inPurgeable=true;
+        options.inPurgeable = true;
 
-        options.inInputShareable=true;
+        options.inInputShareable = true;
 
         Bitmap bitmap = null;
         try {
@@ -311,7 +311,12 @@ public class ImageTool {
             if (s < 10.0f && bitmap.getHeight() < 1600) {
                 AppLogger.e("s=" + s + "bitmap width=" + bitmap.getWidth() + "height=" + bitmap.getHeight());
 //                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-//                bitmap = Bitmap.createScaledBitmap(bitmap, reqWidth, (int) (h * s), true);
+//                try {
+                    bitmap = Bitmap.createScaledBitmap(bitmap, reqWidth, (int) (h * s), true);
+//                } catch (OutOfMemoryError e) {
+//                    e.printStackTrace();
+//                    System.gc();
+//                }
             }
         }
 
@@ -333,7 +338,7 @@ public class ImageTool {
     }
 
     private static Bitmap cutPic(Bitmap bitmap, int reqWidth, int reqHeight) {
- //        int reqWidth = 396;
+        //        int reqWidth = 396;
 //        int reqHeight = 135;
 
         //resize width to reqWidth
@@ -358,7 +363,7 @@ public class ImageTool {
             int hh = cropped.getHeight();
             int ww = cropped.getWidth();
             int s = 3 + 2;
-            bitmap=null;
+            bitmap = null;
             return cropped;
         } else {
             return bitmap;
