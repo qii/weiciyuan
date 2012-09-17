@@ -7,6 +7,7 @@ import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpUtility;
+import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.io.File;
 
@@ -57,18 +58,24 @@ public class ImageTool {
         if (bitmap != null) {
             int height = bitmap.getHeight();
             int width = bitmap.getWidth();
+
+            Bitmap newValue = null;
+
             if (height > reqHeight && width > reqWidth) {
-                bitmap = cutPic(bitmap, reqWidth, reqHeight);
+                newValue = cutPic(bitmap, reqWidth, reqHeight);
             } else {
-                bitmap = resizeAndCutPic(bitmap, reqWidth, reqHeight);
+                newValue = resizeAndCutPic(bitmap, reqWidth, reqHeight);
             }
 
-//            height = bitmap.getHeight();
-//            width = bitmap.getWidth();
-            bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
 
-//            height = bitmap.getHeight();
-//            width = bitmap.getWidth();
+            Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(newValue);
+
+            newValue.recycle();
+            bitmap.recycle();
+
+            return anotherValue;
+
+
         }
 
         return bitmap;
@@ -94,6 +101,10 @@ public class ImageTool {
         options.inSampleSize = inSampleSize;
 
         options.inJustDecodeBounds = false;
+
+        options.inPurgeable=true;
+
+        options.inInputShareable=true;
 
         Bitmap bitmap = null;
         try {
@@ -297,8 +308,11 @@ public class ImageTool {
             float s = reqWidth / w;
             Matrix matrix = new Matrix();
             matrix.setScale(s, s);
-            if (s < 10.0f)
-                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            if (s < 10.0f && bitmap.getHeight() < 1600) {
+                AppLogger.e("s=" + s + "bitmap width=" + bitmap.getWidth() + "height=" + bitmap.getHeight());
+//                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                bitmap = Bitmap.createScaledBitmap(bitmap, reqWidth, (int) (h * s), true);
+            }
         }
 
         //then cut middle
@@ -311,15 +325,15 @@ public class ImageTool {
             int hh = cropped.getHeight();
             int ww = cropped.getWidth();
             int s = 3 + 2;
+//            bitmap.recycle();
             return cropped;
         } else {
             return bitmap;
         }
     }
 
-    private static Bitmap cutPic(Bitmap ori, int reqWidth, int reqHeight) {
-        Bitmap bitmap = ori;
-//        int reqWidth = 396;
+    private static Bitmap cutPic(Bitmap bitmap, int reqWidth, int reqHeight) {
+ //        int reqWidth = 396;
 //        int reqHeight = 135;
 
         //resize width to reqWidth
@@ -344,6 +358,7 @@ public class ImageTool {
             int hh = cropped.getHeight();
             int ww = cropped.getWidth();
             int s = 3 + 2;
+            bitmap=null;
             return cropped;
         } else {
             return bitmap;
