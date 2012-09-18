@@ -19,7 +19,7 @@ import java.io.IOException;
 public class ImageTool {
 
     private static final int MAX_WIDTH = 480;
-    private static final int MAX_HEIGHT = 800 * 2;
+    private static final int MAX_HEIGHT = 800;
 
 
     public static Bitmap getThumbnailPictureWithRoundedCorner(String url) {
@@ -271,21 +271,27 @@ public class ImageTool {
         return bitmap;
     }
 
-    public static Bitmap getMiddlePictureWithRoundedCorner(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    public static Bitmap getMiddlePictureInBrowserMSGActivity(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
 
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_bmiddle);
 
-        Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, MAX_WIDTH, MAX_HEIGHT);
+        File file = new File(absoluteFilePath);
 
-        if (bitmap == null) {
+
+        if (!file.exists()) {
             String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
-            bitmap = decodeBitmapFromSDCard(path, MAX_WIDTH, MAX_HEIGHT);
+
         }
-        if (bitmap != null) {
-            bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+        file = new File(absoluteFilePath);
+        if (file.exists()) {
+            Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, MAX_WIDTH, MAX_HEIGHT);
+//            Bitmap corner = ImageEdit.getRoundedCornerBitmap(bitmap);
+//            bitmap.recycle();
+//            return corner;
+            return bitmap;
         }
-        return bitmap;
+        return null;
     }
 
 

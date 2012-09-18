@@ -34,7 +34,7 @@ public class SimpleBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         if (!isCancelled()) {
             switch (method) {
                 case picture_bmiddle:
-                    return ImageTool.getMiddlePictureWithRoundedCorner(data, null);
+                    return ImageTool.getMiddlePictureInBrowserMSGActivity(data, null);
                 case avatar_small:
                     return ImageTool.getSmallAvatarWithRoundedCorner(data);
                 case avatar_large:
