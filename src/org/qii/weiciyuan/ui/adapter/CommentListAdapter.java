@@ -46,12 +46,12 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         String image_url = msg.getUser().getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
             boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
-            commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView,isFling);
+            commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView, isFling);
             holder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(activity.getActivity(), UserInfoActivity.class);
-                    intent.putExtra("token", ((IToken) activity).getToken());
+                    intent.putExtra("token", ((IToken) activity.getActivity()).getToken());
                     intent.putExtra("user", msg.getUser());
                     activity.startActivity(intent);
                 }
@@ -93,11 +93,11 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
             if (GlobalContext.getInstance().getEnableBigPic()) {
                 picUrl = repost_msg.getBmiddle_pic();
-                commander.downContentPic(holder.repost_content_pic, picUrl, position, listView, FileLocationMethod.picture_bmiddle,isFling);
+                commander.downContentPic(holder.repost_content_pic, picUrl, position, listView, FileLocationMethod.picture_bmiddle, isFling);
 
             } else {
                 picUrl = repost_msg.getThumbnail_pic();
-                commander.downContentPic(holder.repost_content_pic, picUrl, position, listView, FileLocationMethod.picture_thumbnail,isFling);
+                commander.downContentPic(holder.repost_content_pic, picUrl, position, listView, FileLocationMethod.picture_thumbnail, isFling);
 
             }
             holder.repost_content_pic.setOnClickListener(new View.OnClickListener() {
