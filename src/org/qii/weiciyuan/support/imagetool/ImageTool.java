@@ -4,10 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Rect;
+import android.util.DisplayMetrics;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpUtility;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -285,11 +287,11 @@ public class ImageTool {
         }
         file = new File(absoluteFilePath);
         if (file.exists()) {
-            Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, MAX_WIDTH, MAX_HEIGHT);
-//            Bitmap corner = ImageEdit.getRoundedCornerBitmap(bitmap);
-//            bitmap.recycle();
-//            return corner;
+            DisplayMetrics displayMetrics = GlobalContext.getInstance().getDisplayMetrics();
+
+            Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, displayMetrics.widthPixels, displayMetrics.heightPixels);
             return bitmap;
+
         }
         return null;
     }

@@ -8,7 +8,9 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.LruCache;
+import android.view.Display;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
@@ -41,6 +43,29 @@ public final class GlobalContext extends Application {
     public boolean startedApp = false;
 
     private String specialToken = "";
+
+    private DisplayMetrics displayMetrics = null;
+
+    public DisplayMetrics getDisplayMetrics() {
+        if (displayMetrics != null) {
+            return displayMetrics;
+        } else {
+            Activity a = getActivity();
+            if (a != null) {
+                Display display = getActivity().getWindowManager().getDefaultDisplay();
+                DisplayMetrics metrics = new DisplayMetrics();
+                display.getMetrics(metrics);
+                this.displayMetrics = metrics;
+                return metrics;
+            } else {
+                //default screen is 800x480
+                DisplayMetrics metrics = new DisplayMetrics();
+                metrics.widthPixels = 480;
+                metrics.heightPixels = 800;
+                return metrics;
+            }
+        }
+    }
 
 
     public String getCurrentAccountId() {
