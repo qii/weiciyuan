@@ -8,7 +8,6 @@ import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -190,9 +189,7 @@ public class ImageTool {
             if (cutWidth < width) {
                 startX = (width - cutWidth) / 2;
             }
-            AppLogger.e("" + (startX));
-            AppLogger.e("" + (cutWidth));
-            AppLogger.e("" + (cutWidth + startX));
+
 
             try {
                 BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(absoluteFilePath, false);
