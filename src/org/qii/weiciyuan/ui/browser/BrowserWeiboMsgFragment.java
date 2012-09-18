@@ -33,6 +33,9 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
+import org.qii.weiciyuan.ui.send.CommentNewActivity;
+import org.qii.weiciyuan.ui.send.RepostNewActivity;
 import org.qii.weiciyuan.ui.task.FavAsyncTask;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
@@ -367,7 +370,23 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
+            case R.id.repostsbyidtimelinefragment_repost:
+                intent = new Intent(getActivity(), RepostNewActivity.class);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("id", ((IWeiboMsgInfo) getActivity()).getMsg().getId());
+                intent.putExtra("msg", ((IWeiboMsgInfo) getActivity()).getMsg());
+                startActivity(intent);
+                break;
+            case R.id.commentsbyidtimelinefragment_comment:
+
+                intent = new Intent(getActivity(), CommentNewActivity.class);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("id", ((IWeiboMsgInfo) getActivity()).getMsg().getId());
+                startActivity(intent);
+
+                break;
             case R.id.menu_refresh:
                 if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
                     task = new UpdateMsgTask();

@@ -2,11 +2,17 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/menu_share"
-          android:title="@string/share"
-          android:icon="?share"
+    <item android:id="@+id/repostsbyidtimelinefragment_repost"
+          android:icon="?repost"
+          android:title="@string/repost"
           android:showAsAction="ifRoom|withText"
-          android:actionProviderClass="android.widget.ShareActionProvider"
+            />
+
+
+    <item android:id="@+id/commentsbyidtimelinefragment_comment"
+          android:icon="?comment"
+          android:title="@string/comments"
+          android:showAsAction="ifRoom|withText"
             />
 
     <item android:id="@+id/menu_refresh"
@@ -20,6 +26,13 @@
           android:title="@string/favourite"
           android:icon="?fav_un"
           android:showAsAction="ifRoom|withText"
+            />
+
+    <item android:id="@+id/menu_share"
+          android:title="@string/share"
+          android:icon="?share"
+          android:showAsAction="ifRoom|withText"
+          android:actionProviderClass="android.widget.ShareActionProvider"
             />
 
 
