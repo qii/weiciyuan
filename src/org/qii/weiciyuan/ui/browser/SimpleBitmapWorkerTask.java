@@ -1,18 +1,18 @@
 package org.qii.weiciyuan.ui.browser;
 
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.util.LruCache;
 import android.widget.ImageView;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 /**
  * User: qii
  * Date: 12-8-5
  */
-public class SimpleBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+public class SimpleBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     private LruCache<String, Bitmap> lruCache;
     private String data = "";

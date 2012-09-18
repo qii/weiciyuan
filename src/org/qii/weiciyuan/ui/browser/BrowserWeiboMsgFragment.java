@@ -109,6 +109,9 @@ public class BrowserWeiboMsgFragment extends Fragment {
         if (geoTask != null) {
             geoTask.cancel(true);
         }
+        avatar.setImageDrawable(null);
+        content_pic.setImageDrawable(null);
+        repost_pic.setImageDrawable(null);
     }
 
     class UpdateMsgTask extends MyAsyncTask<Void, Void, MessageBean> {
