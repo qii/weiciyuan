@@ -49,7 +49,14 @@ public class SimpleBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     protected void onCancelled(Bitmap bitmap) {
         if (bitmap != null) {
 
-            lruCache.put(data, bitmap);
+            switch (method) {
+                case avatar_small:
+                    lruCache.put(data, bitmap);
+                    break;
+                case avatar_large:
+                    lruCache.put(data, bitmap);
+                    break;
+            }
 
         }
 
@@ -61,10 +68,17 @@ public class SimpleBitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 
         if (bitmap != null) {
 
-            lruCache.put(data, bitmap);
 
             view.setImageBitmap(bitmap);
 
+            switch (method) {
+                case avatar_small:
+                    lruCache.put(data, bitmap);
+                    break;
+                case avatar_large:
+                    lruCache.put(data, bitmap);
+                    break;
+            }
 
         }
 
