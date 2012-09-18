@@ -99,6 +99,23 @@ public class ImageTool {
             bitmap.recycle();
             region.recycle();
             return anotherValue;
+
+            //Android have bug,you cant use BitmapRegionDecoder to operate gif picture
+//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+//            byte[] bitmapdata = bos.toByteArray();
+//
+//            try {
+//                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(bitmapdata, 0, bitmapdata.length, false);
+//                Bitmap region = decoder.decodeRegion(new Rect(0, 0, cutWidth, cutHeight), null);
+//                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
+//                bitmap.recycle();
+//                region.recycle();
+//                return anotherValue;
+//            } catch (IOException ignored) {
+//
+//            }
+
         }
 
         return null;
@@ -121,58 +138,32 @@ public class ImageTool {
             return getMiddlePictureInTimeLineGif(absoluteFilePath, reqWidth, reqHeight);
         }
 
-        final BitmapFactory.Options options = new BitmapFactory.Options();
+        BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(absoluteFilePath, options);
 
-        final int height = options.outHeight;
-        final int width = options.outWidth;
+        int height = options.outHeight;
+        int width = options.outWidth;
+
+        int cutHeight = 0;
+        int cutWidth = 0;
 
         if (height >= reqHeight && width >= useWidth) {
-            try {
-                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(absoluteFilePath, false);
-                Bitmap region = decoder.decodeRegion(new Rect(10, 10, useWidth - 10, reqHeight - 10), null);
-                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
-                region.recycle();
-                return anotherValue;
-            } catch (IOException ignored) {
-                //do nothing
-            }
+            cutHeight = reqHeight;
+            cutWidth = useWidth;
+
         } else if (height < reqHeight && width >= useWidth) {
 
-            int cutHeight = height;
-            int cutWidth = (useWidth * cutHeight) / reqHeight;
-
-            try {
-                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(absoluteFilePath, false);
-                Bitmap region = decoder.decodeRegion(new Rect(0, 0, cutWidth, cutHeight), null);
-                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
-                region.recycle();
-                return anotherValue;
-            } catch (IOException ignored) {
-                //do nothing
-            }
-
+            cutHeight = height;
+            cutWidth = (useWidth * cutHeight) / reqHeight;
 
         } else if (height >= reqHeight && width < useWidth) {
 
-            int cutWidth = width;
-            int cutHeight = (reqHeight * cutWidth) / useWidth;
-
-            try {
-                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(absoluteFilePath, false);
-                Bitmap region = decoder.decodeRegion(new Rect(0, 0, cutWidth, cutHeight), null);
-                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
-                region.recycle();
-                return anotherValue;
-            } catch (IOException ignored) {
-                //do nothing
-            }
+            cutWidth = width;
+            cutHeight = (reqHeight * cutWidth) / useWidth;
 
         } else if (height < reqHeight && width < useWidth) {
 
-            int cutWidth = 0;
-            int cutHeight = 0;
 
             int betweenWidth = useWidth - width;
             int betweenHeight = reqHeight - height;
@@ -185,6 +176,12 @@ public class ImageTool {
                 cutWidth = (useWidth * cutHeight) / reqHeight;
             }
 
+
+        }
+
+
+        if (cutWidth > 0 && cutHeight > 0) {
+
             try {
                 BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(absoluteFilePath, false);
                 Bitmap region = decoder.decodeRegion(new Rect(0, 0, cutWidth, cutHeight), null);
@@ -194,6 +191,7 @@ public class ImageTool {
             } catch (IOException ignored) {
                 //do nothing
             }
+
         }
 
 
