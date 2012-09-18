@@ -11,11 +11,17 @@
                 android:defaultValue="true"/>
 
         <CheckBoxPreference
-        android:dependency="show_picture"
-        android:key="show_big_pic"
-        android:title="@string/show_big_pic"
-        android:summary="@string/show_big_pic_summary"
-        android:defaultValue="false"/>
+                android:dependency="show_picture"
+                android:key="show_big_pic"
+                android:title="@string/show_big_pic"
+                android:summary="@string/show_big_pic_summary"
+                android:defaultValue="false"/>
+        <CheckBoxPreference
+                android:dependency="show_picture"
+                android:key="auto_show_big_pic"
+                android:title="@string/auto_show_big_pic"
+                android:summary="@string/auto_show_big_pic_summary"
+                android:defaultValue="true"/>
         <ListPreference
                 android:key="font_size"
                 android:title="@string/font_size"
