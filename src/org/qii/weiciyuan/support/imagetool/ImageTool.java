@@ -20,9 +20,6 @@ import java.io.IOException;
  */
 public class ImageTool {
 
-    private static final int MAX_WIDTH = 480;
-    private static final int MAX_HEIGHT = 800;
-
 
     public static Bitmap getThumbnailPictureWithRoundedCorner(String url) {
 
