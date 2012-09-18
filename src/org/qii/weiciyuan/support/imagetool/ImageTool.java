@@ -1,6 +1,9 @@
 package org.qii.weiciyuan.support.imagetool;
 
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
+import android.graphics.Rect;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -182,9 +185,18 @@ public class ImageTool {
 
         if (cutWidth > 0 && cutHeight > 0) {
 
+            int startX = 0;
+
+            if (cutWidth < width) {
+                startX = (width - cutWidth) / 2;
+            }
+            AppLogger.e("" + (startX));
+            AppLogger.e("" + (cutWidth));
+            AppLogger.e("" + (cutWidth + startX));
+
             try {
                 BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(absoluteFilePath, false);
-                Bitmap region = decoder.decodeRegion(new Rect(0, 0, cutWidth, cutHeight), null);
+                Bitmap region = decoder.decodeRegion(new Rect(startX, 0, startX + cutWidth, cutHeight), null);
                 Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
                 region.recycle();
                 return anotherValue;
@@ -197,41 +209,6 @@ public class ImageTool {
 
         return null;
 
-    }
-
-    private static Bitmap decodeBitmapFromSDCardTimeLine(String path, int reqWidth) {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (width > 480) {
-            inSampleSize = (int) Math.floor((float) width / (float) reqWidth);
-        }
-
-        if (height > 800 * 8) {
-            inSampleSize = (int) Math.floor((float) height / (float) 800 * 8);
-        }
-
-        options.inSampleSize = inSampleSize;
-
-        options.inJustDecodeBounds = false;
-
-        options.inPurgeable = true;
-
-        options.inInputShareable = true;
-
-        Bitmap bitmap = null;
-        try {
-            bitmap = BitmapFactory.decodeFile(path, options);
-        } catch (OutOfMemoryError e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        return bitmap;
     }
 
     public static Bitmap getNotificationAvatar(String url, int reqWidth, int reqHeight) {
@@ -381,111 +358,6 @@ public class ImageTool {
 
         return BitmapFactory.decodeFile(path, options);
 
-    }
-
-
-    private static Bitmap decodeBitmapFromSDCardAnother(String path,
-                                                        int reqWidth, int reqHeight) {
-
-
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-            if (height > reqHeight && reqHeight != 0) {
-                inSampleSize = (int) Math.floor((float) height / (float) reqHeight);
-            } else if (width > reqWidth && reqWidth != 0) {
-                inSampleSize = (int) Math.floor((float) width / (float) reqWidth);
-            }
-
-        }
-
-        options.inSampleSize = inSampleSize;
-
-        options.inJustDecodeBounds = false;
-
-        return BitmapFactory.decodeFile(path, options);
-
-    }
-
-    private static Bitmap resizeAndCutPic(Bitmap ori, int reqWidth, int reqHeight) {
-
-        Bitmap bitmap = ori;
-
-        int h = bitmap.getHeight();
-        int w = bitmap.getWidth();
-
-
-        if (reqWidth > w) {
-
-            float s = reqWidth / w;
-            Matrix matrix = new Matrix();
-            matrix.setScale(s, s);
-            if (s < 10.0f && bitmap.getHeight() < 1600) {
-                AppLogger.e("s=" + s + "bitmap width=" + bitmap.getWidth() + "height=" + bitmap.getHeight());
-//                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-//                try {
-                bitmap = Bitmap.createScaledBitmap(bitmap, reqWidth, (int) (h * s), true);
-//                } catch (OutOfMemoryError e) {
-//                    e.printStackTrace();
-//                    System.gc();
-//                }
-            }
-        }
-
-        //then cut middle
-        int height = reqHeight < bitmap.getHeight() ? reqHeight : bitmap.getHeight();
-        int width = reqWidth < bitmap.getWidth() ? reqWidth : bitmap.getWidth();
-        if (height > 0) {
-            int needStart = (bitmap.getHeight() - height) / 2;
-            int needWidthStart = (bitmap.getWidth() - width) / 2;
-            Bitmap cropped = Bitmap.createBitmap(bitmap, needWidthStart, needStart, width, height);
-            int hh = cropped.getHeight();
-            int ww = cropped.getWidth();
-            int s = 3 + 2;
-//            bitmap.recycle();
-            return cropped;
-        } else {
-            return bitmap;
-        }
-    }
-
-    private static Bitmap cutPic(Bitmap bitmap, int reqWidth, int reqHeight) {
-        //        int reqWidth = 396;
-//        int reqHeight = 135;
-
-        //resize width to reqWidth
-//        if (bitmap.getWidth() < reqWidth) {
-//            float width = bitmap.getWidth();
-//            float s = reqWidth / width;
-//            Matrix matrix = new Matrix();
-//            matrix.setScale(s, s);
-//            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-//        }
-
-        int h = bitmap.getHeight();
-        int w = bitmap.getWidth();
-
-        //then cut middle
-        int height = reqHeight < bitmap.getHeight() ? reqHeight : bitmap.getHeight();
-        int width = reqWidth < bitmap.getWidth() ? reqWidth : bitmap.getWidth();
-        if (height > 0) {
-            int needStart = (bitmap.getHeight() - height) / 2;
-            int needWidthStart = (bitmap.getWidth() - width) / 2;
-            Bitmap cropped = Bitmap.createBitmap(bitmap, needWidthStart, needStart, width, height);
-            int hh = cropped.getHeight();
-            int ww = cropped.getWidth();
-            int s = 3 + 2;
-            bitmap = null;
-            return cropped;
-        } else {
-            return bitmap;
-        }
     }
 
 
