@@ -7,7 +7,6 @@ import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -55,57 +54,71 @@ public class ImageTool {
         options.inSampleSize = calculateInSampleSize(options, useWidth, reqHeight);
 
         options.inJustDecodeBounds = false;
+        options.inPurgeable = true;
+        options.inInputShareable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath, options);
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
-        byte[] bitmapdata = bos.toByteArray();
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+//        byte[] bitmapdata = bos.toByteArray();
 //        ByteArrayInputStream bs = new ByteArrayInputStream(bitmapdata);
 
+
         if (height >= reqHeight && width >= useWidth) {
-            try {
-                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(bitmapdata, 0, bitmapdata.length - 1, false);
-                Bitmap region = decoder.decodeRegion(new Rect(10, 10, useWidth - 10, reqHeight - 10), null);
-                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
-                bitmap.recycle();
-                region.recycle();
-                return anotherValue;
-            } catch (IOException ignored) {
-                //do nothing
-            }
+//            try {
+//                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(bitmapdata, 0, bitmapdata.length - 1, false);
+//                Bitmap region = decoder.decodeRegion(new Rect(10, 10, useWidth - 10, reqHeight - 10), null);
+//                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
+//                bitmap.recycle();
+//                region.recycle();
+//                return anotherValue;
+//            } catch (IOException ignored) {
+//                //do nothing
+//            }
+
+            Bitmap region = Bitmap.createBitmap(bitmap, 0, 0, useWidth, reqHeight);
+            bitmap.recycle();
+            return region;
+
         } else if (height < reqHeight && width >= useWidth) {
 
             int cutHeight = height;
             int cutWidth = (useWidth / reqHeight) * cutHeight;
 
-            try {
-                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(bitmapdata, 0, bitmapdata.length - 1, false);
-                Bitmap region = decoder.decodeRegion(new Rect(0, 0, cutWidth, cutHeight), null);
-                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
-                bitmap.recycle();
-                region.recycle();
-                return anotherValue;
-            } catch (IOException ignored) {
-                //do nothing
-            }
+            Bitmap region = Bitmap.createBitmap(bitmap, 0, 0, cutWidth, reqHeight);
+            bitmap.recycle();
+            return region;
+
+//            try {
+//                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(bitmapdata, 0, bitmapdata.length - 1, false);
+//                Bitmap region = decoder.decodeRegion(new Rect(0, 0, cutWidth, cutHeight), null);
+//                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
+//                bitmap.recycle();
+//                region.recycle();
+//                return anotherValue;
+//            } catch (IOException ignored) {
+//                //do nothing
+//            }
 
 
         } else if (height >= reqHeight && width < useWidth) {
 
             int cutWidth = width;
             int cutHeight = (reqHeight * cutWidth) / useWidth;
-
-            try {
-                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(bitmapdata, 0, bitmapdata.length - 1, false);
-                Bitmap region = decoder.decodeRegion(new Rect(0, 0, cutWidth, cutHeight), null);
-                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
-                bitmap.recycle();
-                region.recycle();
-                return anotherValue;
-            } catch (IOException ignored) {
-                //do nothing
-            }
+            Bitmap region = Bitmap.createBitmap(bitmap, 0, 0, cutWidth, reqHeight);
+            bitmap.recycle();
+            return region;
+//            try {
+//                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(bitmapdata, 0, bitmapdata.length - 1, false);
+//                Bitmap region = decoder.decodeRegion(new Rect(0, 0, cutWidth, cutHeight), null);
+//                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
+//                bitmap.recycle();
+//                region.recycle();
+//                return anotherValue;
+//            } catch (IOException ignored) {
+//                //do nothing
+//            }
 
         } else if (height < reqHeight && width < useWidth) {
 
@@ -122,17 +135,19 @@ public class ImageTool {
                 cutHeight = height;
                 cutWidth = (useWidth / reqHeight) * cutHeight;
             }
-
-            try {
-                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(bitmapdata, 0, bitmapdata.length - 1, false);
-                Bitmap region = decoder.decodeRegion(new Rect(0, 0, cutWidth, cutHeight), null);
-                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
-                bitmap.recycle();
-                region.recycle();
-                return anotherValue;
-            } catch (IOException ignored) {
-                //do nothing
-            }
+            Bitmap region = Bitmap.createBitmap(bitmap, 0, 0, cutWidth, reqHeight);
+            bitmap.recycle();
+            return region;
+//            try {
+//                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(bitmapdata, 0, bitmapdata.length - 1, false);
+//                Bitmap region = decoder.decodeRegion(new Rect(0, 0, cutWidth, cutHeight), null);
+//                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
+//                bitmap.recycle();
+//                region.recycle();
+//                return anotherValue;
+//            } catch (IOException ignored) {
+//                //do nothing
+//            }
         }
 
 
