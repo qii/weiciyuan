@@ -7,17 +7,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.util.ArrayList;
@@ -104,22 +106,43 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
     }
 
     ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+        boolean status = false;
 
         public void onTabSelected(ActionBar.Tab tab,
                                   FragmentTransaction ft) {
             if (mViewPager.getCurrentItem() != tab.getPosition())
                 mViewPager.setCurrentItem(tab.getPosition());
 
+            switch (tab.getPosition()) {
+
+                case 1:
+                    status = true;
+                    break;
+
+            }
         }
 
         public void onTabUnselected(ActionBar.Tab tab,
                                     FragmentTransaction ft) {
+            switch (tab.getPosition()) {
 
+                case 1:
+                    status = false;
+                    break;
+
+            }
         }
 
         public void onTabReselected(ActionBar.Tab tab,
                                     FragmentTransaction ft) {
+            switch (tab.getPosition()) {
 
+                case 1:
+                    if (status)
+                        getStatusFragment().getListView().setSelection(0);
+                    break;
+
+            }
         }
     };
 
@@ -144,8 +167,13 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
         return false;
     }
 
+    private AbstractTimeLineFragment getStatusFragment() {
+        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+                StatusesByIdTimeLineFragment.class.getName()));
+    }
+
     class TimeLinePagerAdapter extends
-            FragmentPagerAdapter {
+            AppFragmentPagerAdapter {
 
         List<Fragment> list = new ArrayList<Fragment>();
 
@@ -160,6 +188,14 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
         @Override
         public Fragment getItem(int i) {
             return list.get(i);
+        }
+
+        @Override
+        protected String getTag(int position) {
+            List<String> tagList = new ArrayList<String>();
+            tagList.add(BrowserWeiboMsgFragment.class.getName());
+            tagList.add(StatusesByIdTimeLineFragment.class.getName());
+            return tagList.get(position);
         }
 
         @Override
