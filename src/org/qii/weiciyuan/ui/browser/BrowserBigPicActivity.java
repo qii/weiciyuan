@@ -46,12 +46,16 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         pb = (ProgressBar) findViewById(R.id.pb);
         fl = (FrameLayout) findViewById(R.id.fl);
         imageView = (WebView) findViewById(R.id.iv);
-//        imageView.getSettings().setSupportZoom(true);
-//        imageView.getSettings().setBuiltInZoomControls(true);
-//        imageView.getSettings().setDisplayZoomControls(false);
+        imageView.getSettings().setSupportZoom(true);
+        imageView.getSettings().setBuiltInZoomControls(true);
+        imageView.getSettings().setDisplayZoomControls(false);
         imageView.setBackgroundColor(getResources().getColor(R.color.transparent));
 //        imageView.getSettings().setUseWideViewPort(true);
-
+//        imageView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
+        imageView.getSettings().setUseWideViewPort(true);
+        imageView.getSettings().setLoadWithOverviewMode(true);
+        imageView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        imageView.setScrollbarFadingEnabled(false);
 
         url = getIntent().getStringExtra("url");
         if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
