@@ -73,10 +73,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.statusesbyidtimelinefragment_menu, menu);
-        if (!TextUtils.isEmpty(userBean.getStatuses_count())) {
-            String number = bean.getSize() + "/" + userBean.getStatuses_count();
-            menu.findItem(R.id.statusesbyidtimelinefragment_status_number).setTitle(number);
-        }
+
     }
 
     @Override
