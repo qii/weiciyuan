@@ -11,7 +11,6 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -19,7 +18,6 @@ import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.actionmenu.FriendSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.UserListAdapter;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
-import org.qii.weiciyuan.ui.userinfo.FriendsListFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.List;
@@ -48,9 +46,14 @@ public abstract class AbstractUserListFragment extends Fragment {
     private UserListGetOlderDataTask oldTask;
 
     protected void clearAndReplaceValue(UserListBean value) {
+
+
+        bean.setNext_cursor(value.getNext_cursor());
         bean.getUsers().clear();
         bean.getUsers().addAll(value.getUsers());
         bean.setTotal_number(value.getTotal_number());
+        bean.setPrevious_cursor(value.getPrevious_cursor());
+
     }
 
     protected ActionMode mActionMode;
@@ -282,21 +285,14 @@ public abstract class AbstractUserListFragment extends Fragment {
 
         @Override
         protected void onPostExecute(UserListBean newValue) {
-            if (newValue != null) {
-                if (newValue.getUsers().size() == 0) {
+            if (newValue != null && newValue.getUsers().size() > 0) {
 
-                } else {
+                clearAndReplaceValue(newValue);
+                timeLineAdapter.notifyDataSetChanged();
+                listView.setSelectionAfterHeaderView();
+                headerView.findViewById(R.id.header_progress).clearAnimation();
 
-                    if (newValue.getUsers().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                        newValue.getUsers().addAll(getList().getUsers());
-                    }
 
-                    clearAndReplaceValue(newValue);
-                    timeLineAdapter.notifyDataSetChanged();
-                    listView.setSelectionAfterHeaderView();
-                    headerView.findViewById(R.id.header_progress).clearAnimation();
-
-                }
             }
             cleanWork();
             getActivity().invalidateOptionsMenu();
@@ -311,8 +307,11 @@ public abstract class AbstractUserListFragment extends Fragment {
             isBusying = false;
             if (bean.getUsers().size() == 0) {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            } else {
+            } else if (bean.getUsers().size() > 0 && bean.getUsers().size() < bean.getTotal_number()) {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+            } else if ((bean.getUsers().size() > 0 && bean.getUsers().size() == bean.getTotal_number())) {
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+
             }
         }
     }
@@ -366,10 +365,10 @@ public abstract class AbstractUserListFragment extends Fragment {
 
         @Override
         protected void onPostExecute(UserListBean newValue) {
-            if (newValue != null && newValue.getUsers().size() > 1) {
+            if (newValue != null && newValue.getUsers().size() > 0 && newValue.getPrevious_cursor() != bean.getPrevious_cursor()) {
                 List<UserBean> list = newValue.getUsers();
-                getList().getUsers().addAll(list.subList(1, list.size() - 1));
-
+                getList().getUsers().addAll(list);
+                bean.setNext_cursor(newValue.getNext_cursor());
             }
 
             cleanWork();
@@ -384,6 +383,8 @@ public abstract class AbstractUserListFragment extends Fragment {
             ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
             footerView.findViewById(R.id.refresh).clearAnimation();
             footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
+            if (bean.getNext_cursor() == 0)
+                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
         }
     }
 

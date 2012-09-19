@@ -18,32 +18,32 @@ public class UserListBean implements Serializable{
         this.users = users;
     }
 
-    public String getPrevious_cursor() {
+    public int getPrevious_cursor() {
         return previous_cursor;
     }
 
-    public void setPrevious_cursor(String previous_cursor) {
+    public void setPrevious_cursor(int previous_cursor) {
         this.previous_cursor = previous_cursor;
     }
 
-    public String getNext_cursor() {
+    public int getNext_cursor() {
         return next_cursor;
     }
 
-    public void setNext_cursor(String next_cursor) {
+    public void setNext_cursor(int next_cursor) {
         this.next_cursor = next_cursor;
     }
 
-    public String getTotal_number() {
+    public int getTotal_number() {
         return total_number;
     }
 
-    public void setTotal_number(String total_number) {
+    public void setTotal_number(int total_number) {
         this.total_number = total_number;
     }
 
     private List<UserBean> users = new ArrayList<UserBean>();
-    private String previous_cursor = "";
-    private String next_cursor = "0";
-    private String total_number = "";
+    private int previous_cursor = 0;
+    private int next_cursor = 0;
+    private int total_number = 0;
 }

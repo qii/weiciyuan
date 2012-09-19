@@ -24,7 +24,14 @@ public class FanListFragment extends AbstractUserListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         if (!TextUtils.isEmpty(currentUser.getFollowers_count())) {
-            String number = bean.getUsers().size() + "/" + currentUser.getFollowers_count();
+            int size = Integer.valueOf(currentUser.getFollowers_count());
+            int newSize = bean.getTotal_number();
+            String number = "";
+            if (size >= newSize) {
+                number = bean.getUsers().size() + "/" + size;
+            } else {
+                number = bean.getUsers().size() + "/" + newSize;
+            }
             menu.findItem(R.id.statusesbyidtimelinefragment_status_number).setTitle(number);
         }
     }
@@ -33,9 +40,10 @@ public class FanListFragment extends AbstractUserListFragment {
     protected UserListBean getDoInBackgroundNewData() throws WeiboException {
         FanListDao dao = new FanListDao(((IToken) getActivity()).getToken(), uid);
 
-        if (getList().getUsers().size() > 0) {
-            dao.setCursor(bean.getPrevious_cursor());
+        if (getList().getUsers().size() > 0 && bean.getPrevious_cursor() > 0) {
+            dao.setCursor(String.valueOf(bean.getPrevious_cursor() - 1));
         }
+
         UserListBean result = dao.getGSONMsgList();
         return result;
     }
@@ -44,8 +52,9 @@ public class FanListFragment extends AbstractUserListFragment {
     protected UserListBean getDoInBackgroundOldData() throws WeiboException {
         FanListDao dao = new FanListDao(((IToken) getActivity()).getToken(), uid);
         if (getList().getUsers().size() > 0) {
-            dao.setCursor(bean.getNext_cursor());
+            dao.setCursor(String.valueOf(bean.getNext_cursor()));
         }
+
         UserListBean result = dao.getGSONMsgList();
         return result;
     }

@@ -4,15 +4,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.user.FriendListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.IToken;
-import org.qii.weiciyuan.ui.actionmenu.FriendSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
 
 /**
@@ -27,7 +23,6 @@ public class FriendsListFragment extends AbstractUserListFragment {
     }
 
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -38,8 +33,17 @@ public class FriendsListFragment extends AbstractUserListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         if (!TextUtils.isEmpty(currentUser.getFriends_count())) {
-            String number = bean.getUsers().size() + "/" + currentUser.getFriends_count();
+
+            int size = Integer.valueOf(currentUser.getFriends_count());
+            int newSize = bean.getTotal_number();
+            String number = "";
+            if (size >= newSize) {
+                number = bean.getUsers().size() + "/" + size;
+            } else {
+                number = bean.getUsers().size() + "/" + newSize;
+            }
             menu.findItem(R.id.statusesbyidtimelinefragment_status_number).setTitle(number);
+
         }
     }
 
@@ -48,8 +52,8 @@ public class FriendsListFragment extends AbstractUserListFragment {
     protected UserListBean getDoInBackgroundNewData() throws WeiboException {
         FriendListDao dao = new FriendListDao(((IToken) getActivity()).getToken(), uid);
 
-        if (getList().getUsers().size() > 0) {
-            dao.setCursor(bean.getPrevious_cursor());
+        if (getList().getUsers().size() > 0 && bean.getPrevious_cursor() > 0) {
+            dao.setCursor(String.valueOf(bean.getPrevious_cursor() - 1));
         }
         UserListBean result = dao.getGSONMsgList();
 
@@ -60,7 +64,7 @@ public class FriendsListFragment extends AbstractUserListFragment {
     protected UserListBean getDoInBackgroundOldData() throws WeiboException {
         FriendListDao dao = new FriendListDao(((IToken) getActivity()).getToken(), uid);
         if (getList().getUsers().size() > 0) {
-            dao.setCursor(bean.getNext_cursor());
+            dao.setCursor(String.valueOf(bean.getNext_cursor()));
         }
         UserListBean result = dao.getGSONMsgList();
 
