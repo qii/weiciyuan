@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:id="@+id/friendstimelinefragment_new_weibo"
+          android:icon="?friendstimelinefragment_write"
+          android:showAsAction="ifRoom"
+          android:title="@string/write_weibo"
+            />
+
     <item android:id="@+id/mentionstimelinefragment_group"
           android:showAsAction="ifRoom|withText"
             />
@@ -12,20 +20,5 @@
           android:showAsAction="ifRoom|withText"
             />
 
-    <item android:id="@+id/menu_my_info"
-          android:title="@string/my_info"
-            />
-    <item android:id="@+id/menu_account"
-          android:title="@string/account"
-            />
-    <!--<item android:id="@+id/menu_search"-->
-    <!--android:title="@string/search"-->
-    <!--android:actionViewClass="android.widget.SearchView"-->
-    <!--android:icon="?search"-->
-    <!--/>-->
-
-    <item android:id="@+id/menu_setting"
-          android:title="@string/setting"
-            />
 
 </menu>

@@ -21,9 +21,11 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
+import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
 /**
  * User: qii
@@ -167,6 +169,14 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
+            case R.id.friendstimelinefragment_new_weibo:
+                Intent intent = new Intent(getActivity(), StatusNewActivity.class);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("accountName", ((IAccountInfo) getActivity()).getAccount().getUsernick());
+                intent.putExtra("accountId", ((IAccountInfo) getActivity()).getAccount().getUid());
+                startActivity(intent);
+                break;
 
             case R.id.mentionstimelinefragment_refresh:
 

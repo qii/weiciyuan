@@ -2,6 +2,7 @@
 <resources>
 
     <attr name="account" format="reference"/>
+    <attr name="account_management" format="reference"/>
     <attr name="accountactivity_new" format="reference"/>
     <attr name="accountactivity_remove" format="reference"/>
     <attr name="accountactivity_select_all" format="reference"/>

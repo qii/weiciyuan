@@ -23,6 +23,7 @@ import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.discover.DiscoverFragment;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
@@ -218,6 +219,11 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 CommentsTimeLineFragment.class.getName()));
     }
 
+    private Fragment getDiscoverFragment() {
+        return ((Fragment) getSupportFragmentManager().findFragmentByTag(
+                DiscoverFragment.class.getName()));
+    }
+
     private void buildActionBarAndViewPagerTitles() {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -237,6 +243,10 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         actionBar.addTab(actionBar.newTab()
                 .setText(getString(R.string.comments))
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.discover))
                 .setTabListener(tabListener));
 
 
@@ -359,6 +369,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             list.add(new FriendsTimeLineFragment());
             list.add(new MentionsTimeLineFragment());
             list.add(new CommentsTimeLineFragment());
+            list.add(new DiscoverFragment());
         }
 
 
@@ -372,6 +383,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             tagList.add(FriendsTimeLineFragment.class.getName());
             tagList.add(MentionsTimeLineFragment.class.getName());
             tagList.add(CommentsTimeLineFragment.class.getName());
+            tagList.add(DiscoverFragment.class.getName());
             return tagList.get(position);
         }
 
