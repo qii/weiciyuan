@@ -343,8 +343,17 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-        CommentOperatorDialog progressFragment = new CommentOperatorDialog(bean.getItemList().get(position));
-        progressFragment.show(getFragmentManager(), "");
+//        CommentOperatorDialog progressFragment = new CommentOperatorDialog(bean.getItemList().get(position));
+//        progressFragment.show(getFragmentManager(), "");
+        String oriText = et.getText().toString();
+        if (!TextUtils.isEmpty(oriText)) {
+            String replyName = "@" + bean.getItem(position).getUser().getScreen_name();
+            if (!(oriText.trim()).endsWith(replyName))
+                et.setText(et.getText().toString() + " " + replyName + " ");
+        } else {
+            et.setText("@" + bean.getItem(position).getUser().getScreen_name() + " ");
+        }
+        et.setSelection(et.getText().toString().length());
     }
 
 
