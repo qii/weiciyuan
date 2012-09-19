@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.LruCache;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -54,6 +55,7 @@ public class PictureDialogFragment extends DialogFragment {
         imageView.getSettings().setSupportZoom(true);
         imageView.getSettings().setBuiltInZoomControls(true);
         imageView.getSettings().setDisplayZoomControls(false);
+        imageView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
         pb = (ProgressBar) view.findViewById(R.id.pb);
         fl = (FrameLayout) view.findViewById(R.id.fl);
         builder.setView(view);
