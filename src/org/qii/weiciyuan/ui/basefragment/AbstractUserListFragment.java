@@ -3,7 +3,6 @@ package org.qii.weiciyuan.ui.basefragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.*;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
@@ -17,6 +16,8 @@ import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
+import org.qii.weiciyuan.ui.actionmenu.FriendSingleChoiceModeListener;
+import org.qii.weiciyuan.ui.adapter.UserListAdapter;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.userinfo.FriendsListFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
@@ -38,13 +39,25 @@ public abstract class AbstractUserListFragment extends Fragment {
     protected ListView listView;
     protected TextView empty;
     protected ProgressBar progressBar;
-    protected BaseAdapter timeLineAdapter;
+    protected UserListAdapter timeLineAdapter;
     protected UserBean currentUser;
     protected UserListBean bean = new UserListBean();
     protected String uid;
 
     private UserListGetNewDataTask newTask;
     private UserListGetOlderDataTask oldTask;
+
+    protected void clearAndReplaceValue(UserListBean value) {
+        bean.getUsers().clear();
+        bean.getUsers().addAll(value.getUsers());
+        bean.setTotal_number(value.getTotal_number());
+    }
+
+    protected ActionMode mActionMode;
+
+    public void setmActionMode(ActionMode mActionMode) {
+        this.mActionMode = mActionMode;
+    }
 
     @Override
     public void onDetach() {
@@ -64,13 +77,39 @@ public abstract class AbstractUserListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         if (savedInstanceState != null && bean.getUsers().size() == 0) {
-            bean = (UserListBean) savedInstanceState.getSerializable("bean");
+            clearAndReplaceValue((UserListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
             refresh();
 
         }
+
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if (position - 1 < getList().getUsers().size() && position - 1 >= 0) {
+                    if (mActionMode != null) {
+                        mActionMode.finish();
+                        mActionMode = null;
+                        listView.setItemChecked(position, true);
+                        timeLineAdapter.notifyDataSetChanged();
+                        mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(listView, timeLineAdapter, AbstractUserListFragment.this, bean.getUsers().get(position - 1)));
+                        return true;
+                    } else {
+                        listView.setItemChecked(position, true);
+                        timeLineAdapter.notifyDataSetChanged();
+                        mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(listView, timeLineAdapter, AbstractUserListFragment.this, bean.getUsers().get(position - 1)));
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        );
 
     }
 
@@ -113,12 +152,19 @@ public abstract class AbstractUserListFragment extends Fragment {
         }
 
 
-        timeLineAdapter = new TimeLineAdapter();
+        timeLineAdapter = new UserListAdapter(AbstractUserListFragment.this, ((AbstractAppActivity) getActivity()).getCommander(), bean.getUsers(), listView);
         listView.setAdapter(timeLineAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                if (mActionMode != null) {
+                    listView.clearChoices();
+                    mActionMode.finish();
+                    mActionMode = null;
+                    return;
+                }
+                listView.clearChoices();
                 if (position - 1 < getList().getUsers().size()) {
 
                     listViewItemClick(parent, view, position - 1, id);
@@ -126,6 +172,7 @@ public abstract class AbstractUserListFragment extends Fragment {
 
                     listViewFooterViewClick(view);
                 }
+
             }
         });
         return view;
@@ -159,9 +206,6 @@ public abstract class AbstractUserListFragment extends Fragment {
         }
     }
 
-    protected void downloadAvatar(ImageView view, String url, int position, ListView listView) {
-        commander.downloadAvatar(view, url, position, listView, false);
-    }
 
     public void refresh() {
         Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
@@ -199,77 +243,6 @@ public abstract class AbstractUserListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class ViewHolder {
-        TextView username;
-        TextView content;
-        TextView time;
-        ImageView avatar;
-
-    }
-
-
-    protected class TimeLineAdapter extends BaseAdapter {
-
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        @Override
-        public int getCount() {
-
-            if (getList() != null && getList().getUsers() != null) {
-                return getList().getUsers().size();
-            } else {
-                return 0;
-            }
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return getList().getUsers().get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            FriendsListFragment.ViewHolder holder;
-            if (convertView == null) {
-                holder = new FriendsListFragment.ViewHolder();
-                convertView = inflater.inflate(R.layout.fragment_listview_item_comments_layout, parent, false);
-                holder.username = (TextView) convertView.findViewById(R.id.username);
-                holder.content = (TextView) convertView.findViewById(R.id.content);
-                holder.time = (TextView) convertView.findViewById(R.id.time);
-                holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
-                convertView.setTag(holder);
-            } else {
-                holder = (FriendsListFragment.ViewHolder) convertView.getTag();
-            }
-
-            bindViewData(holder, position);
-
-
-            return convertView;
-        }
-
-        private void bindViewData(FriendsListFragment.ViewHolder holder, int position) {
-
-            UserBean user = getList().getUsers().get(position);
-
-
-            holder.username.setText(user.getScreen_name());
-            String image_url = user.getProfile_image_url();
-            if (!TextUtils.isEmpty(image_url)) {
-                downloadAvatar(holder.avatar, user.getProfile_image_url(), position, listView);
-            }
-            holder.time.setVisibility(View.GONE);
-            holder.content.setText(user.getDescription());
-
-        }
-
-    }
 
     class UserListGetNewDataTask extends MyAsyncTask<Void, UserListBean, UserListBean> {
         WeiboException e;
@@ -318,7 +291,7 @@ public abstract class AbstractUserListFragment extends Fragment {
                         newValue.getUsers().addAll(getList().getUsers());
                     }
 
-                    bean = newValue;
+                    clearAndReplaceValue(newValue);
                     timeLineAdapter.notifyDataSetChanged();
                     listView.setSelectionAfterHeaderView();
                     headerView.findViewById(R.id.header_progress).clearAnimation();

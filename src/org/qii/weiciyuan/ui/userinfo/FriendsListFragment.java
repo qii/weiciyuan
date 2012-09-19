@@ -1,13 +1,18 @@
 package org.qii.weiciyuan.ui.userinfo;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.user.FriendListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.actionmenu.FriendSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
 
 /**
@@ -21,6 +26,13 @@ public class FriendsListFragment extends AbstractUserListFragment {
         super(uid);
     }
 
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
