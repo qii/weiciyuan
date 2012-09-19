@@ -2,8 +2,7 @@ package org.qii.weiciyuan.ui.discover;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.*;
 import org.qii.weiciyuan.R;
 
 /**
@@ -17,6 +16,12 @@ public class DiscoverFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.discoverfragment_layout, container, false);
+        return view;
     }
 
     @Override
