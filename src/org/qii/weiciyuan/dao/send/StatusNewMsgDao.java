@@ -3,6 +3,7 @@ package org.qii.weiciyuan.dao.send;
 import android.text.TextUtils;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.http.URLManager;
@@ -37,10 +38,10 @@ public class StatusNewMsgDao {
         this.access_token = access_token;
     }
 
-    public boolean sendNewMsg(String str) throws WeiboException {
+    public boolean sendNewMsg(String str, FileUploaderHttpHelper.ProgressListener listener) throws WeiboException {
 
         if (!TextUtils.isEmpty(pic)) {
-            return sendNewMsgWithPic(str);
+            return sendNewMsgWithPic(str, listener);
 
         }
         String url = URLManager.getRealUrl("update");
@@ -57,7 +58,7 @@ public class StatusNewMsgDao {
 
     }
 
-    private boolean sendNewMsgWithPic(String str) {
+    private boolean sendNewMsgWithPic(String str, FileUploaderHttpHelper.ProgressListener listener) {
         String url = URLManager.getRealUrl("update_with_pic");
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
@@ -67,7 +68,7 @@ public class StatusNewMsgDao {
             map.put("long", String.valueOf(geoBean.getLon()));
         }
 
-        return HttpUtility.getInstance().executeUploadTask(url, map, pic);
+        return HttpUtility.getInstance().executeUploadTask(url, map, pic, listener);
 
     }
 }

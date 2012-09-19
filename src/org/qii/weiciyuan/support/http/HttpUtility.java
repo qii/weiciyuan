@@ -85,8 +85,8 @@ public class HttpUtility {
         return doGetSaveFile(url, path, downloadListener);
     }
 
-    public boolean executeUploadTask(String url, Map<String, String> param, String path) {
-        return FileUploaderHttpHelper.upload(httpClient, url, param, path);
+    public boolean executeUploadTask(String url, Map<String, String> param, String path, FileUploaderHttpHelper.ProgressListener listener) {
+        return FileUploaderHttpHelper.upload(httpClient, url, param, path, listener);
     }
 
     private String doPost(String url, Map<String, String> param) throws WeiboException {

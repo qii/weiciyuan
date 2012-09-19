@@ -376,7 +376,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         @Override
         protected String doInBackground(Void... params) {
             try {
-                boolean result = new StatusNewMsgDao(token).setGeoBean(geoBean).sendNewMsg(content);
+                boolean result = new StatusNewMsgDao(token).setGeoBean(geoBean).sendNewMsg(content,null);
             } catch (WeiboException e) {
                 this.e = e;
                 cancel(true);

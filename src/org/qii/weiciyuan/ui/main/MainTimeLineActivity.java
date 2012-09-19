@@ -110,7 +110,11 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             startActivity(intent);
             overridePendingTransition(0, 0);
 
-        } else {
+        } else if (newAccountBean != null) {
+
+            accountBean = newAccountBean;
+            token = newAccountBean.getAccess_token();
+            GlobalContext.getInstance().setSpecialToken(token);
             buildTabTitle(intent);
         }
     }

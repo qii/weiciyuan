@@ -10,9 +10,7 @@ import ch.boye.httpclientandroidlib.entity.mime.content.StringBody;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Set;
@@ -22,11 +20,16 @@ import java.util.Set;
  * Date: 12-8-21
  */
 public class FileUploaderHttpHelper {
-    public static boolean upload(HttpClient httpClient, String url, Map<String, String> param, String path) {
+    public static boolean upload(HttpClient httpClient, String url, Map<String, String> param, String path, final ProgressListener listener) {
         AppLogger.d(url);
         HttpPost httpPost = new HttpPost(url);
 
-        MultipartEntity mpEntity = new MultipartEntity();
+        MultipartEntity mpEntity = new MultipartEntity() {
+            @Override
+            public void writeTo(OutputStream outstream) throws IOException {
+                super.writeTo(new CountingOutputStream(outstream, listener));
+            }
+        };
         FileBody filebody = new FileBody(new File(path));
         mpEntity.addPart("pic", filebody);
 
@@ -53,10 +56,9 @@ public class FileUploaderHttpHelper {
         } catch (IOException e) {
             AppLogger.e(e.getMessage());
         }
-        String content = null;
-        try {
+         try {
             if (response != null) {
-                content = EntityUtils.toString(response.getEntity());
+                String   content = EntityUtils.toString(response.getEntity());
                 return true;
             }
         } catch (IOException e) {
@@ -64,5 +66,35 @@ public class FileUploaderHttpHelper {
             return false;
         }
         return false;
+    }
+
+    public static interface ProgressListener {
+        public void transferred(long data);
+    }
+
+    public static class CountingOutputStream extends FilterOutputStream {
+
+        private final ProgressListener listener;
+        private long transferred;
+
+        public CountingOutputStream(final OutputStream out,
+                                    final ProgressListener listener) {
+            super(out);
+            this.listener = listener;
+            this.transferred = 0;
+        }
+
+
+        public void write(byte[] b, int off, int len) throws IOException {
+            out.write(b, off, len);
+            this.transferred += len;
+            this.listener.transferred(this.transferred);
+        }
+
+        public void write(int b) throws IOException {
+            out.write(b);
+            this.transferred++;
+            this.listener.transferred(this.transferred);
+        }
     }
 }
