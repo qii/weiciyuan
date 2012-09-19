@@ -74,6 +74,9 @@ public class UserInfoFragment extends Fragment {
         super.onDetach();
         if (task != null)
             task.cancel(true);
+
+        if (followOrUnfollowTask != null)
+            followOrUnfollowTask.cancel(true);
     }
 
     @Override
@@ -281,8 +284,9 @@ public class UserInfoFragment extends Fragment {
         @Override
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
-            stopRefreshMenuAnimation();
-            if (e != null) {
+            if (getActivity() != null)
+                stopRefreshMenuAnimation();
+            if (e != null && (getActivity() != null)) {
                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 switch (e.getError_code()) {
                     case ErrorCode.ALREADY_FOLLOWED:
@@ -335,7 +339,8 @@ public class UserInfoFragment extends Fragment {
         @Override
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
-            stopRefreshMenuAnimation();
+            if (getActivity() != null)
+                stopRefreshMenuAnimation();
         }
 
         @Override
