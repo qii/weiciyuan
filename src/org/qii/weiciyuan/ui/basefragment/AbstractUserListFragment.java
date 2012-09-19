@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.ui.basefragment;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -12,6 +11,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
@@ -134,7 +134,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     protected void listViewFooterViewClick(View view) {
         if (!isBusying) {
             oldTask = new UserListGetOlderDataTask();
-            oldTask.execute();
+            oldTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -160,7 +160,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     }
 
     protected void downloadAvatar(ImageView view, String url, int position, ListView listView) {
-        commander.downloadAvatar(view, url, position, listView,false);
+        commander.downloadAvatar(view, url, position, listView, false);
     }
 
     public void refresh() {
@@ -168,7 +168,7 @@ public abstract class AbstractUserListFragment extends Fragment {
 
 
         newTask = new UserListGetNewDataTask();
-        newTask.execute();
+        newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
         for (String key : keys) {
             avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
@@ -271,7 +271,7 @@ public abstract class AbstractUserListFragment extends Fragment {
 
     }
 
-    class UserListGetNewDataTask extends AsyncTask<Void, UserListBean, UserListBean> {
+    class UserListGetNewDataTask extends MyAsyncTask<Void, UserListBean, UserListBean> {
         WeiboException e;
 
         @Override
@@ -352,7 +352,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     }
 
 
-    class UserListGetOlderDataTask extends AsyncTask<Void, UserListBean, UserListBean> {
+    class UserListGetOlderDataTask extends MyAsyncTask<Void, UserListBean, UserListBean> {
         WeiboException e;
 
         @Override
