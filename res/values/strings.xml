@@ -86,6 +86,7 @@
     <string name="disable_comment_when_repost">同时评论（ ）</string>
     <string name="enable_comment_to_ori_when_comment">同时评论原文（√）</string>
     <string name="disable_comment_to_ori_when_comment">同时评论原文（ ）</string>
+    <string name="comment_detail">评论</string>
 
     <!--accountactivity_layout-->
     <string name="you_cancel_login">你取消了授权</string>
