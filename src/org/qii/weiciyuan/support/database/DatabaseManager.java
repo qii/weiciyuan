@@ -190,6 +190,9 @@ public class DatabaseManager {
 
     public void replaceHomeLineMsg(MessageListBean list, String accountId) {
 
+        String sql = "delete from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + " in " + "(" + accountId + ")";
+
+        wsd.execSQL(sql);
 
 //        wsd.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
 //        wsd.execSQL(DatabaseHelper.CREATE_HOME_TABLE_SQL);
@@ -269,6 +272,10 @@ public class DatabaseManager {
 
     public void replaceRepostLineMsg(MessageListBean list, String accountId) {
 
+        String sql = "delete from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID + " in " + "(" + accountId + ")";
+
+        wsd.execSQL(sql);
+
         //need modification
 //        wsd.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
 //        wsd.execSQL(DatabaseHelper.CREATE_REPOSTS_TABLE_SQL);
@@ -318,6 +325,10 @@ public class DatabaseManager {
     }
 
     public void replaceCommentLineMsg(CommentListBean list, String accountId) {
+
+        String sql = "delete from " + CommentsTable.TABLE_NAME + " where " + CommentsTable.ACCOUNTID + " in " + "(" + accountId + ")";
+
+        wsd.execSQL(sql);
 
         //need modification
 //        wsd.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
