@@ -38,14 +38,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             @Override
             public boolean onPreferenceClick(Preference preference) {
 
-                if (calcTask != null && calcTask.getStatus() != MyAsyncTask.Status.FINISHED) {
-                    calcTask.cancel(true);
-                }
-
-                if (removeCache == null || removeCache.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    removeCache = new RemoveCache();
-                    removeCache.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                }
+                RemoveCacheDialog dialog = new RemoveCacheDialog();
+                dialog.setTargetFragment(SettingsFragment.this, 0);
+                dialog.show(getFragmentManager(), "");
                 return true;
             }
         });
@@ -68,6 +63,17 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         });
     }
 
+
+    public void removeCache() {
+        if (calcTask != null && calcTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+            calcTask.cancel(true);
+        }
+
+        if (removeCache == null || removeCache.getStatus() == MyAsyncTask.Status.FINISHED) {
+            removeCache = new RemoveCache();
+            removeCache.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
 
     @Override
     public void onDestroy() {
@@ -176,7 +182,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return FileManager.deleteCache();
+            return FileManager.deletePictureCache();
         }
 
         @Override

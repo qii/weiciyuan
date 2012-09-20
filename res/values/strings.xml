@@ -170,7 +170,7 @@
     <string name="normal">常规</string>
     <string name="show_pic">显示头像图片</string>
     <string name="show_big_pic">列表显示大图</string>
-    <string name="show_big_pic_summary">部分图片可能会模糊</string>
+    <string name="show_big_pic_summary">缓存体积会猛增</string>
     <string name="auto_show_big_pic">自动切换大图、缩略图</string>
     <string name="auto_show_big_pic_summary">WIFI、3G 下自动开大图</string>
     <string name="new_message">新消息</string>
@@ -185,7 +185,8 @@
     <string name="only_timeline_font">只影响列表字体大小</string>
     <string name="other">其它</string>
     <string name="clear_sd_cache">删除缓存</string>
-    <string name="clear_avatar_and_pic">清除已下载的头像和图片</string>
+    <string name="clear_avatar_and_pic">清除已下载的图片</string>
+    <string name="clear_these_cache">永久删除这些缓存的图片（不影响头像）</string>
     <string name="remove_ing">删除中……</string>
     <string name="version">版本</string>
 

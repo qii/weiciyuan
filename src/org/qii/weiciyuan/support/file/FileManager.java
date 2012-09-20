@@ -126,8 +126,15 @@ public class FileManager {
     }
 
     public static boolean deletePictureCache() {
-        String path = SDCARD_PATH + File.separator + PICTURE_THUMBNAIL;
-        return deleteDirectory(new File(path));
+        String thumbnailPath = SDCARD_PATH + File.separator + PICTURE_THUMBNAIL;
+        String middlePath = SDCARD_PATH + File.separator + PICTURE_BMIDDLE;
+        String oriPath = SDCARD_PATH + File.separator + PICTURE_LARGE;
+
+        deleteDirectory(new File(thumbnailPath));
+        deleteDirectory(new File(middlePath));
+        deleteDirectory(new File(oriPath));
+
+        return true;
     }
 
     private static boolean deleteDirectory(File path) {
