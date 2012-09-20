@@ -122,7 +122,7 @@ public class DatabaseManager {
 
             accountList.add(account);
         }
-
+        c.close();
         return accountList;
     }
 
@@ -218,7 +218,7 @@ public class DatabaseManager {
         }
 
         result.setStatuses(msgList);
-
+        c.close();
         return result;
 
     }
@@ -244,7 +244,7 @@ public class DatabaseManager {
         }
 
         result.setStatuses(msgList);
-
+        c.close();
         return result;
 
     }
@@ -312,7 +312,7 @@ public class DatabaseManager {
         }
 
         result.setComments(msgList);
-
+        c.close();
         return result;
 
     }
