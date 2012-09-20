@@ -21,8 +21,8 @@ import java.util.Map;
  */
 public class MainFriendsTimeLineDao {
 
-    protected String getUrl(){
-        return  URLHelper.getFriendsTimeLine();
+    protected String getUrl() {
+        return URLHelper.getFriendsTimeLine();
     }
 
     private String getMsgListJson() throws WeiboException {
@@ -60,9 +60,11 @@ public class MainFriendsTimeLineDao {
         if (value != null && value.getItemList().size() > 0) {
             List<MessageBean> msgList = value.getItemList();
             Iterator<MessageBean> iterator = msgList.iterator();
+
+
             while (iterator.hasNext()) {
                 MessageBean msg = iterator.next();
-                if (msg.getUser() == null) {
+                if (msg.getUser() == null || ListViewTool.haveFilterWord(msg)) {
                     iterator.remove();
                 } else {
                     msg.getListViewSpannableString();

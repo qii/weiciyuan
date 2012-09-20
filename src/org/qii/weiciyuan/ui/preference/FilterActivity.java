@@ -18,6 +18,7 @@ public class FilterActivity extends AbstractAppActivity {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.filter));
+        getActionBar().setSubtitle(getString(R.string.include_filter_username_and_content));
 
         getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new FilterFragment())

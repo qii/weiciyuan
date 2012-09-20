@@ -8,16 +8,15 @@ import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 /**
- * User: Jiang Qi
+ * User: qii
  * Date: 12-7-30
- * Time: 上午9:40
  */
 class DatabaseHelper extends SQLiteOpenHelper {
 
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -64,6 +63,13 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + RepostsTable.JSONDATA + " text"
             + ");";
 
+    static final String CREATE_FILTER_TABLE_SQL = "create table " + FilterTable.TABLE_NAME
+            + "("
+            + FilterTable.ID + " integer primary key autoincrement,"
+            + FilterTable.NAME + " text,"
+            + FilterTable.ACTIVE + " text"
+            + ");";
+
     DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -77,6 +83,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_HOME_TABLE_SQL);
         db.execSQL(CREATE_COMMENTS_TABLE_SQL);
         db.execSQL(CREATE_REPOSTS_TABLE_SQL);
+        db.execSQL(CREATE_FILTER_TABLE_SQL);
 
     }
 
@@ -91,6 +98,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
         onCreate(db);
     }
 

@@ -6,22 +6,15 @@ import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.*;
-import org.qii.weiciyuan.support.database.table.AccountTable;
-import org.qii.weiciyuan.support.database.table.CommentsTable;
-import org.qii.weiciyuan.support.database.table.HomeTable;
-import org.qii.weiciyuan.support.database.table.RepostsTable;
+import org.qii.weiciyuan.support.database.table.*;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
- * User: Jiang Qi
+ * User: qii
  * Date: 12-7-30
- * Time: 上午9:40
  */
 public class DatabaseManager {
 
@@ -355,5 +348,51 @@ public class DatabaseManager {
         wsd.execSQL(sql);
     }
 
+
+    public OAuthActivity.DBResult addFilterKeyword(String word) {
+
+        ContentValues cv = new ContentValues();
+        cv.put(FilterTable.NAME, word);
+        cv.put(FilterTable.ACTIVE, "true");
+
+        Cursor c = rsd.query(FilterTable.TABLE_NAME, null, FilterTable.NAME + "=?",
+                new String[]{word}, null, null, null);
+
+        if (c != null && c.getCount() > 0) {
+
+            return OAuthActivity.DBResult.update_successfully;
+        } else {
+
+            wsd.insert(FilterTable.TABLE_NAME,
+                    FilterTable.ID, cv);
+            return OAuthActivity.DBResult.add_successfuly;
+        }
+
+    }
+
+
+    public List<String> getFilterList() {
+
+        List<String> keywordList = new ArrayList<String>();
+        String sql = "select * from " + FilterTable.TABLE_NAME + " order by " + FilterTable.ID + " desc ";
+        Cursor c = rsd.rawQuery(sql, null);
+        while (c.moveToNext()) {
+            String word = c.getString(c.getColumnIndex(FilterTable.NAME));
+            keywordList.add(word);
+        }
+
+        c.close();
+        return keywordList;
+
+    }
+
+    public List<String> removeAndGetNewFilterList(String word) {
+
+        String sql = "delete from " + FilterTable.TABLE_NAME + " where " + FilterTable.NAME + " = " + "\"" + word + "\"";
+
+        wsd.execSQL(sql);
+
+        return getFilterList();
+    }
 
 }

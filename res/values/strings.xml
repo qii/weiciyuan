@@ -185,6 +185,7 @@
     <string name="only_timeline_font">只影响列表字体大小</string>
     <string name="advanced">高级</string>
     <string name="filter">过滤器</string>
+    <string name="include_filter_username_and_content">只过滤首页的用户、原创、转发</string>
     <string name="other">其它</string>
     <string name="clear_sd_cache">删除缓存</string>
     <string name="clear_avatar_and_pic">清除已下载的图片</string>
@@ -192,6 +193,11 @@
     <string name="remove_ing">删除中……</string>
     <string name="version">版本</string>
 
+
+    <!--filter-->
+    <string name="add_filter">添加过滤词</string>
+    <string name="add">添加</string>
+    <string name="input_filter_word">输入过滤词</string>
 
     <!-- menu-->
     <string name="askdelete">删除?</string>

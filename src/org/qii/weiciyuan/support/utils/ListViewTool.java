@@ -6,8 +6,10 @@ import android.widget.TextView;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.lib.MyLinkify;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -117,5 +119,35 @@ public class ListViewTool {
         MyLinkify.addLinks(view, pattern, scheme, null, mentionFilter);
         MyLinkify.addLinks(view, MyLinkify.WEB_URLS);
 
+    }
+
+
+    public static boolean haveFilterWord(MessageBean content) {
+
+        if (content.getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+            return false;
+        }
+
+        List<String> filterWordList = DatabaseManager.getInstance().getFilterList();
+        for (String filterWord : filterWordList) {
+
+            if (content.getUser() != null && content.getUser().getScreen_name().contains(filterWord)) {
+                return true;
+            }
+
+            if (content.getText().contains(filterWord)) {
+                return true;
+            }
+
+            if (content.getRetweeted_status() != null && content.getRetweeted_status().getText().contains(filterWord)) {
+                return true;
+            }
+
+            if (content.getRetweeted_status() != null && content.getRetweeted_status().getUser() != null
+                    && content.getRetweeted_status().getUser().getScreen_name().contains(filterWord)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
