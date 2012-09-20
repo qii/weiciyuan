@@ -46,6 +46,23 @@ public final class GlobalContext extends Application {
 
     private DisplayMetrics displayMetrics = null;
 
+    private Boolean enableFilter = null;
+
+    public Boolean isEnableFilter() {
+        if (enableFilter == null) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            boolean result = sharedPreferences.getBoolean(SettingActivity.FILTER, false);
+            this.enableFilter = result;
+            return result;
+
+        }
+        return enableFilter;
+    }
+
+    public void setEnableFilter(boolean enableFilter) {
+        this.enableFilter = enableFilter;
+    }
+
     public DisplayMetrics getDisplayMetrics() {
         if (displayMetrics != null) {
             return displayMetrics;

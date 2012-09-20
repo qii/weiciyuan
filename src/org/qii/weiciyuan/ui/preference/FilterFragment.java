@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.preference;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.Menu;
@@ -20,7 +19,7 @@ import java.util.List;
  * User: qii
  * Date: 12-9-21
  */
-public class FilterFragment extends ListFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class FilterFragment extends ListFragment  {
 
     ArrayAdapter<String> adapter;
 
@@ -70,11 +69,6 @@ public class FilterFragment extends ListFragment implements SharedPreferences.On
         return true;
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-
-    }
 
     public void addFilter(String word) {
         DatabaseManager.getInstance().addFilterKeyword(word);

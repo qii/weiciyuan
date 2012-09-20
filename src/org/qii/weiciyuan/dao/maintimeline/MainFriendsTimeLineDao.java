@@ -5,6 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
@@ -61,10 +62,13 @@ public class MainFriendsTimeLineDao {
             List<MessageBean> msgList = value.getItemList();
             Iterator<MessageBean> iterator = msgList.iterator();
 
+            List<String> filterWordList = DatabaseManager.getInstance().getFilterList();
 
             while (iterator.hasNext()) {
                 MessageBean msg = iterator.next();
-                if (msg.getUser() == null || ListViewTool.haveFilterWord(msg)) {
+                if (msg.getUser() == null) {
+                    iterator.remove();
+                } else if (GlobalContext.getInstance().isEnableFilter() && ListViewTool.haveFilterWord(msg,filterWordList)) {
                     iterator.remove();
                 } else {
                     msg.getListViewSpannableString();

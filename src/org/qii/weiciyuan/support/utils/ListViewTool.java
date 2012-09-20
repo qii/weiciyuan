@@ -6,7 +6,6 @@ import android.widget.TextView;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.lib.MyLinkify;
 
 import java.util.List;
@@ -122,13 +121,12 @@ public class ListViewTool {
     }
 
 
-    public static boolean haveFilterWord(MessageBean content) {
+    public static boolean haveFilterWord(MessageBean content, List<String> filterWordList) {
 
         if (content.getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
             return false;
         }
 
-        List<String> filterWordList = DatabaseManager.getInstance().getFilterList();
         for (String filterWord : filterWordList) {
 
             if (content.getUser() != null && content.getUser().getScreen_name().contains(filterWord)) {
