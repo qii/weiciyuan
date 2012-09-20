@@ -64,6 +64,7 @@
     <PreferenceCategory
             android:title="@string/advanced">
         <Preference android:title="@string/filter"
+                    android:summary="@string/filter_summary"
                     android:key="filter"
                 >
             <intent
