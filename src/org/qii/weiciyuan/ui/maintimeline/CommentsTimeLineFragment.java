@@ -41,6 +41,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     private String[] group = new String[3];
     private int selected = 0;
     private RemoveTask removeTask;
+    private SimpleTask dbTask;
 
 
     public void setSelected(int positoin) {
@@ -61,6 +62,13 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        if (dbTask != null)
+            dbTask.cancel(true);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
@@ -72,8 +80,10 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
-            new SimpleTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-
+            if (dbTask == null || dbTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                dbTask = new SimpleTask();
+                dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
 
         listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);

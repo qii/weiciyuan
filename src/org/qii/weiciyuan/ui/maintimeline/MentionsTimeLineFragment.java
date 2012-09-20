@@ -33,6 +33,9 @@ import org.qii.weiciyuan.ui.send.StatusNewActivity;
  */
 public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
+    private SimpleTask dbTask;
+
+
     private String[] group = new String[3];
 
     private String filter_by_author = "0";
@@ -50,6 +53,13 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     public void setSelected(int selected) {
         this.selected = selected;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (dbTask != null)
+            dbTask.cancel(true);
     }
 
     @Override
@@ -92,7 +102,10 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
             refreshLayout(bean);
 
         } else {
-            new SimpleTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            if (dbTask == null || dbTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                dbTask = new SimpleTask();
+                dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
 
     }

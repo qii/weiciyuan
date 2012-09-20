@@ -33,6 +33,8 @@ import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     UserBean userBean;
+    private SimpleTask dbTask;
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -56,6 +58,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        if (dbTask != null)
+            dbTask.cancel(true);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -65,7 +74,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
             refreshLayout(bean);
         } else {
-            new SimpleTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            if (dbTask == null || dbTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                dbTask = new SimpleTask();
+                dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
         getActivity().invalidateOptionsMenu();
     }
@@ -117,7 +129,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("accountName", ((IAccountInfo) getActivity()).getAccount().getUsernick());
-                intent.putExtra("accountId" , ((IAccountInfo) getActivity()).getAccount().getUid());
+                intent.putExtra("accountId", ((IAccountInfo) getActivity()).getAccount().getUid());
                 startActivity(intent);
                 break;
             case R.id.friendstimelinefragment_refresh:
