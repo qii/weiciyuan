@@ -183,6 +183,8 @@
     <string name="theme">主题</string>
     <string name="font_size">字体大小</string>
     <string name="only_timeline_font">只影响列表字体大小</string>
+    <string name="advanced">高级</string>
+    <string name="filter">过滤器</string>
     <string name="other">其它</string>
     <string name="clear_sd_cache">删除缓存</string>
     <string name="clear_avatar_and_pic">清除已下载的图片</string>

@@ -62,6 +62,18 @@
                 android:defaultValue="1"/>
     </PreferenceCategory>
     <PreferenceCategory
+            android:title="@string/advanced">
+        <Preference android:title="@string/filter"
+                    android:key="filter"
+                >
+            <intent
+                    android:targetPackage="org.qii.weiciyuan"
+                    android:targetClass="org.qii.weiciyuan.ui.preference.FilterActivity"
+                    />
+        </Preference>
+
+    </PreferenceCategory>
+    <PreferenceCategory
             android:title="@string/other">
         <Preference
                 android:key="clear_cache"

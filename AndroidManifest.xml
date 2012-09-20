@@ -64,6 +64,8 @@
                   android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity android:name=".ui.preference.SettingActivity"
                   android:logo="@null"/>
+        <activity android:name=".ui.preference.FilterActivity"
+                         android:logo="@null"/>
         <activity android:name=".ui.browser.BrowserRepostAndCommentListActivity"
                 />
         <activity android:name=".ui.userinfo.UserInfoActivity"
