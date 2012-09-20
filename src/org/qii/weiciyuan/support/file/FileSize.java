@@ -44,7 +44,7 @@ public class FileSize {
         } else if (file.exists() && file.isDirectory()) {
             getFileSize(file);//递归遍历
         } else {
-            throw new RuntimeException("指定文件不存在");
+
         }
     }
 
@@ -82,28 +82,32 @@ public class FileSize {
                 return "";
             }
 
+            return convertSizeToString(this.longSize);
 
-            if (this.longSize >= 0 && this.longSize < SIZE_BT) {
-                return this.longSize + "B";
-            } else if (this.longSize >= SIZE_BT && this.longSize < SIZE_KB) {
-                return this.longSize / SIZE_BT + "KB";
-            } else if (this.longSize >= SIZE_KB && this.longSize < SIZE_MB) {
-                return this.longSize / SIZE_KB + "MB";
-            } else if (this.longSize >= SIZE_MB && this.longSize < SIZE_GB) {
-                BigDecimal longs = new BigDecimal(Double.valueOf(this.longSize + "").toString());
-                BigDecimal sizeMB = new BigDecimal(Double.valueOf(SIZE_MB + "").toString());
-                String result = longs.divide(sizeMB, SACLE, BigDecimal.ROUND_HALF_UP).toString();
-                //double result=this.longSize/(double)SIZE_MB;
-                return result + "GB";
-            } else {
-                BigDecimal longs = new BigDecimal(Double.valueOf(this.longSize + "").toString());
-                BigDecimal sizeMB = new BigDecimal(Double.valueOf(SIZE_GB + "").toString());
-                String result = longs.divide(sizeMB, SACLE, BigDecimal.ROUND_HALF_UP).toString();
-                return result + "TB";
-            }
         } catch (IOException ex) {
             ex.printStackTrace();
             throw new RuntimeException(ex.getMessage());
+        }
+    }
+
+    public static String convertSizeToString(long fileSize) {
+        if (fileSize >= 0 && fileSize < SIZE_BT) {
+            return fileSize + "B";
+        } else if (fileSize >= SIZE_BT && fileSize < SIZE_KB) {
+            return fileSize / SIZE_BT + "KB";
+        } else if (fileSize >= SIZE_KB && fileSize < SIZE_MB) {
+            return fileSize / SIZE_KB + "MB";
+        } else if (fileSize >= SIZE_MB && fileSize < SIZE_GB) {
+            BigDecimal longs = new BigDecimal(Double.valueOf(fileSize + "").toString());
+            BigDecimal sizeMB = new BigDecimal(Double.valueOf(SIZE_MB + "").toString());
+            String result = longs.divide(sizeMB, SACLE, BigDecimal.ROUND_HALF_UP).toString();
+            //double result=this.longSize/(double)SIZE_MB;
+            return result + "GB";
+        } else {
+            BigDecimal longs = new BigDecimal(Double.valueOf(fileSize + "").toString());
+            BigDecimal sizeMB = new BigDecimal(Double.valueOf(SIZE_GB + "").toString());
+            String result = longs.divide(sizeMB, SACLE, BigDecimal.ROUND_HALF_UP).toString();
+            return result + "TB";
         }
     }
 

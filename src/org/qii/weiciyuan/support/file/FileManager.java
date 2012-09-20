@@ -120,6 +120,20 @@ public class FileManager {
         return "0MB";
     }
 
+    public static String getPictureCacheSize() {
+        long size = 0L;
+        if (isExternalStorageMounted()) {
+            String thumbnailPath = SDCARD_PATH + File.separator + PICTURE_THUMBNAIL;
+            String middlePath = SDCARD_PATH + File.separator + PICTURE_BMIDDLE;
+            String oriPath = SDCARD_PATH + File.separator + PICTURE_LARGE;
+            size += new FileSize(new File(thumbnailPath)).getLongSize();
+            size += new FileSize(new File(middlePath)).getLongSize();
+            size += new FileSize(new File(oriPath)).getLongSize();
+
+        }
+        return FileSize.convertSizeToString(size);
+    }
+
     public static boolean deleteCache() {
         String path = SDCARD_PATH + File.separator;
         return deleteDirectory(new File(path));

@@ -160,7 +160,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         @Override
         protected String doInBackground(Void... params) {
-            return FileManager.getCacheSize();
+            return FileManager.getPictureCacheSize();
         }
 
         @Override
