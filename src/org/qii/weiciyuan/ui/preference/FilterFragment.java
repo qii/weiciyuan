@@ -19,10 +19,19 @@ import java.util.List;
  * User: qii
  * Date: 12-9-21
  */
-public class FilterFragment extends ListFragment  {
+public class FilterFragment extends ListFragment {
 
-    ArrayAdapter<String> adapter;
+    private ArrayAdapter<String> adapter;
 
+    private DBTask task;
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (task != null)
+            task.cancel(true);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +45,11 @@ public class FilterFragment extends ListFragment  {
         super.onActivityCreated(savedInstanceState);
         adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new ArrayList<String>());
         setListAdapter(adapter);
-        new DBTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
+            task = new DBTask();
+            task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+
+        }
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -72,7 +85,11 @@ public class FilterFragment extends ListFragment  {
 
     public void addFilter(String word) {
         DatabaseManager.getInstance().addFilterKeyword(word);
-        new DBTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
+            task = new DBTask();
+            task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+
+        }
     }
 
     class DBTask extends MyAsyncTask<Void, List<String>, List<String>> {
