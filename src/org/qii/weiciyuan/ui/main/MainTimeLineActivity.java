@@ -75,6 +75,10 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         } else {
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
             token = savedInstanceState.getString("token");
+            if (accountBean == null) {
+                AppLogger.e("MainTneActivity dont have account");
+                finish();
+            }
         }
         GlobalContext.getInstance().setSpecialToken(token);
         GlobalContext.getInstance().setCurrentAccountId(accountBean.getUid());
