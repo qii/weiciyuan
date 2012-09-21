@@ -23,11 +23,11 @@ import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.discover.DiscoverFragment;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsTimeLineFragment;
+import org.qii.weiciyuan.ui.maintimeline.MyStatussTimeLineFragment;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
@@ -227,9 +227,9 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 CommentsTimeLineFragment.class.getName()));
     }
 
-    private Fragment getDiscoverFragment() {
-        return ((Fragment) getSupportFragmentManager().findFragmentByTag(
-                DiscoverFragment.class.getName()));
+    private AbstractTimeLineFragment getMyFragment() {
+        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+                MyStatussTimeLineFragment.class.getName()));
     }
 
     private void buildActionBarAndViewPagerTitles() {
@@ -254,7 +254,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 .setTabListener(tabListener));
 
         actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.discover))
+                .setText(getString(R.string.me))
                 .setTabListener(tabListener));
 
 
@@ -272,6 +272,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         boolean home = false;
         boolean mentions = false;
         boolean comments = false;
+        boolean my = false;
 
         public void onTabSelected(ActionBar.Tab tab,
                                   FragmentTransaction ft) {
@@ -298,6 +299,10 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 getCommentFragment().clearActionMode();
             }
 
+            if (getMyFragment() != null) {
+                getMyFragment().clearActionMode();
+            }
+
 
             switch (tab.getPosition()) {
                 case 0:
@@ -310,6 +315,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                     comments = true;
                     break;
                 case 3:
+                    my = true;
                     break;
             }
 
@@ -328,6 +334,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                     comments = false;
                     break;
                 case 3:
+                    my = false;
                     break;
             }
         }
@@ -348,6 +355,8 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                         getCommentFragment().getListView().setSelection(0);
                     break;
                 case 3:
+                    if (my)
+                        getMyFragment().getListView().setSelection(0);
                     break;
             }
         }
@@ -377,7 +386,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             list.add(new FriendsTimeLineFragment());
             list.add(new MentionsTimeLineFragment());
             list.add(new CommentsTimeLineFragment());
-            list.add(new DiscoverFragment());
+            list.add(new MyStatussTimeLineFragment());
         }
 
 
@@ -391,7 +400,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             tagList.add(FriendsTimeLineFragment.class.getName());
             tagList.add(MentionsTimeLineFragment.class.getName());
             tagList.add(CommentsTimeLineFragment.class.getName());
-            tagList.add(DiscoverFragment.class.getName());
+            tagList.add(MyStatussTimeLineFragment.class.getName());
             return tagList.get(position);
         }
 

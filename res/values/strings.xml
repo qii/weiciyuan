@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">微次元</string>
-    <string name="official_weibo">"@叛逆的心之所在"</string>
-    <string name="official_weibo_link">叛逆的心之所在</string>
+    <string name="app_name">四次元</string>
+    <string name="official_weibo">"@四次元App</string>
+    <string name="official_weibo_link">四次元App</string>
 
     <string name="homepage">首页</string>
     <string name="detail">详细</string>
@@ -11,7 +11,7 @@
     <!--account -->
     <string name="select_all">全选</string>
     <string name="select_none">反选</string>
-    <string name="only_oauth_one_week">微次元的授权只能维持一周的哦</string>
+    <string name="only_oauth_one_week">四次元的授权只能维持一周的哦</string>
 
     <!-- listview-->
     <string name="empty">空</string>
@@ -67,6 +67,7 @@
     <string name="mentions">提及</string>
     <string name="comments">评论</string>
     <string name="discover">探索</string>
+    <string name="me">个人</string>
     <string name="repost">转发</string>
     <string name="mail">私信</string>
     <string name="info">资料</string>
