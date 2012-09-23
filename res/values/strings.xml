@@ -76,7 +76,8 @@
     <string name="write_weibo">写微博</string>
     <string name="draft">草稿箱</string>
     <string name="at_other">At其他人</string>
-    <string name="emoji">表情</string>
+    <string name="emoticon">表情</string>
+    <string name="word_emoticon">颜文字</string>
     <string name="topic">话题</string>
     <string name="clear_content">清空内容</string>
     <string name="are_you_sure">确定吗？</string>
