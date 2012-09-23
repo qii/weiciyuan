@@ -49,7 +49,7 @@
 
         <item name="android:progressBarStyle">@style/Widget.Holo.ProgressBar</item>
 
-        <item name="backgroundSplit">@color/transparent</item>
+        <item name="backgroundSplit">@drawable/ab_bottom_transparent_dark_holo</item>
 
 
      </style>

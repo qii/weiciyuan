@@ -53,7 +53,7 @@
         <item name="listview_checked_color">@color/listview_checked_color_holo_light</item>
 
 
-        <item name="backgroundSplit">@color/transparent</item>
+        <item name="backgroundSplit">@drawable/ab_bottom_solid_light_holo</item>
 
     </style>
     <!-- detail style -->
