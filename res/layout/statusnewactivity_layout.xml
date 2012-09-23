@@ -16,7 +16,7 @@
         <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                 android:hint="@string/say_something"
+                android:hint="@string/say_something"
                 android:id="@+id/status_new_content" android:gravity="left|top"/>
 
 
@@ -44,7 +44,7 @@
 
         <Button style="?android:actionButtonStyle" android:layout_width="wrap_content"
                 android:drawableRight="?statusnewactivity_send"
-                android:text="发送"
+                android:text="@string/send"
                 android:id="@+id/menu_send"
                 android:textColor="?android:actionMenuTextColor"
                 android:textAppearance="?android:attr/actionMenuTextAppearance"
