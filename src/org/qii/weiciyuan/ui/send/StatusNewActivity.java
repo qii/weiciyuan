@@ -1,10 +1,7 @@
 package org.qii.weiciyuan.ui.send;
 
 import android.app.ActionBar;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
@@ -12,7 +9,6 @@ import android.location.*;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -56,6 +52,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
     private String picPath = "";
 
+    private Uri imageFileUri = null;
+
     private String imageFilePath = "";
 
     private GeoBean geoBean;
@@ -76,10 +74,12 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         switch (which) {
             case 0:
 
-                imageFilePath = Environment.getExternalStorageDirectory().getAbsolutePath()
-                        + "/myfavoritepicture.jpg";
-                File imageFile = new File(imageFilePath);
-                Uri imageFileUri = Uri.fromFile(imageFile);
+//                imageFilePath = Environment.getExternalStorageDirectory().getAbsolutePath()
+//                        + "/myfavoritepicture.jpg";
+//                File imageFile = new File(imageFilePath);
+//                Uri imageFileUri = Uri.fromFile(imageFile);
+                imageFileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        new ContentValues());
                 Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageFileUri);
                 startActivityForResult(i, CAMERA_RESULT);
@@ -105,7 +105,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
             switch (requestCode) {
                 case CAMERA_RESULT:
-                    picPath = imageFilePath;
+                    picPath = getPicPathFromUri(imageFileUri);
                     break;
                 case PIC_RESULT:
                     Uri imageFileUri = intent.getData();
@@ -376,7 +376,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         @Override
         protected String doInBackground(Void... params) {
             try {
-                boolean result = new StatusNewMsgDao(token).setGeoBean(geoBean).sendNewMsg(content,null);
+                boolean result = new StatusNewMsgDao(token).setGeoBean(geoBean).sendNewMsg(content, null);
             } catch (WeiboException e) {
                 this.e = e;
                 cancel(true);
