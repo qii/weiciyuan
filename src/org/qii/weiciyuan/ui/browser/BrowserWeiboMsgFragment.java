@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -31,6 +32,7 @@ import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
@@ -247,8 +249,14 @@ public class BrowserWeiboMsgFragment extends Fragment {
     private void buildViewData() {
         if (msg.getUser() != null) {
             username.setText(msg.getUser().getScreen_name());
-            SimpleBitmapWorkerTask avatarTask = new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_small);
-            avatarTask.execute(msg.getUser().getProfile_image_url());
+            String url = msg.getUser().getProfile_image_url();
+            Bitmap bitmap = GlobalContext.getInstance().getAvatarCache().get(url);
+            if (bitmap != null) {
+                avatar.setImageBitmap(bitmap);
+            } else {
+                SimpleBitmapWorkerTask avatarTask = new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_small);
+                avatarTask.execute(url);
+            }
         }
         content.setText(msg.getText());
         ListViewTool.addLinks(content);
