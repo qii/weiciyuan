@@ -78,6 +78,10 @@
     <string name="at_other">At其他人</string>
     <string name="emoji">表情</string>
     <string name="topic">话题</string>
+    <string name="clear_content">清空内容</string>
+    <string name="are_you_sure">确定吗？</string>
+    <string name="ask_clear">清空内容？</string>
+    <string name="clear">清空</string>
     <string name="add_gps">添加GPS</string>
     <string name="add_pic">添加照片</string>
     <string name="comment_cant_be_empty">评论不能为空</string>

@@ -33,7 +33,7 @@ public class TextNumLimitWatcher implements TextWatcher {
         tv.setText(String.valueOf(num));
         if (num < 0) {
             tv.setTextColor(activity.getResources().getColor(R.color.red));
-        } else if (num > 0 && num < 140) {
+        } else if (num > 0 && num <= 140) {
             int[] attrs = new int[]{android.R.attr.actionMenuTextColor};
             TypedArray ta = activity.obtainStyledAttributes(attrs);
             int drawableFromTheme = ta.getColor(0, 430);

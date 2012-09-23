@@ -325,8 +325,16 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             case R.id.menu_send:
                 send();
                 break;
+            case R.id.menu_clear:
+                ClearContentDialog dialog = new ClearContentDialog();
+                dialog.show(getSupportFragmentManager(), "");
+                break;
         }
         return true;
+    }
+
+    public void clear() {
+        content.setText("");
     }
 
     private void send() {
