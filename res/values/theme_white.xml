@@ -53,6 +53,8 @@
         <item name="listview_checked_color">@color/listview_checked_color_holo_light</item>
 
 
+        <item name="backgroundSplit">@color/transparent</item>
+
     </style>
     <!-- detail style -->
     <style name="Button" parent="@android:style/Widget.Holo.Button">

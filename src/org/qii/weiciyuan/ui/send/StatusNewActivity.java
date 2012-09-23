@@ -43,7 +43,7 @@ import java.util.Locale;
  * User: qii
  * Date: 12-7-29
  */
-public class StatusNewActivity extends AbstractAppActivity implements DialogInterface.OnClickListener, IAccountInfo {
+public class StatusNewActivity extends AbstractAppActivity implements DialogInterface.OnClickListener, View.OnClickListener, IAccountInfo {
 
 
     private static final int CAMERA_RESULT = 0;
@@ -209,6 +209,10 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         actionBar.setDisplayShowCustomEnabled(true);
         content = ((EditText) findViewById(R.id.status_new_content));
         content.addTextChangedListener(new TextNumLimitWatcher(contentNumber, content, this));
+
+        findViewById(R.id.menu_add_gps).setOnClickListener(this);
+        findViewById(R.id.menu_add_pic).setOnClickListener(this);
+        findViewById(R.id.menu_send).setOnClickListener(this);
     }
 
 
@@ -311,17 +315,25 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 getLocation();
                 break;
             case R.id.menu_add_pic:
-                new PictureSelectDialog().show(getFragmentManager(), "");
+                addPic();
                 break;
 
             case R.id.menu_send:
-                String value = content.getText().toString();
-                if (canSend()) {
-                    executeTask(value);
-                }
+                send();
                 break;
         }
         return true;
+    }
+
+    private void send() {
+        String value = content.getText().toString();
+        if (canSend()) {
+            executeTask(value);
+        }
+    }
+
+    private void addPic() {
+        new PictureSelectDialog().show(getFragmentManager(), "");
     }
 
     protected void executeTask(String content) {
@@ -342,6 +354,22 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     @Override
     public AccountBean getAccount() {
         return accountBean;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.menu_add_gps:
+                getLocation();
+                break;
+            case R.id.menu_add_pic:
+                addPic();
+                break;
+
+            case R.id.menu_send:
+                send();
+                break;
+        }
     }
 
     class StatusNewTask extends AsyncTask<Void, String, String> {

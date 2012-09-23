@@ -34,7 +34,7 @@
                   android:launchMode="singleTop"
                 />
         <activity android:name=".ui.send.StatusNewActivity"
-                  android:uiOptions="splitActionBarWhenNarrow"
+
                   android:windowSoftInputMode="stateVisible|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>

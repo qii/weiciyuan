@@ -74,6 +74,10 @@
 
     <!--new activity -->
     <string name="write_weibo">写微博</string>
+    <string name="draft">草稿箱</string>
+    <string name="at_other">At其他人</string>
+    <string name="emoji">表情</string>
+    <string name="topic">话题</string>
     <string name="comment_cant_be_empty">评论不能为空</string>
     <string name="send_successfully">发送成功</string>
     <string name="send_failed">发送失败</string>

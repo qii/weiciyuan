@@ -35,4 +35,6 @@
     <attr name="link_color" format="reference"/>
     <attr name="line_drawable" format="reference"/>
     <attr name="listview_checked_color" format="reference"/>
+
+    <attr name="backgroundSplit" format="reference"/>
 </resources>
