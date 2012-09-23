@@ -78,6 +78,8 @@
     <string name="at_other">At其他人</string>
     <string name="emoji">表情</string>
     <string name="topic">话题</string>
+    <string name="add_gps">添加GPS</string>
+    <string name="add_pic">添加照片</string>
     <string name="comment_cant_be_empty">评论不能为空</string>
     <string name="send_successfully">发送成功</string>
     <string name="send_failed">发送失败</string>
