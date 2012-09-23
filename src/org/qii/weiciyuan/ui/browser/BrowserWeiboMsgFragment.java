@@ -144,14 +144,16 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
         @Override
         protected void onCancelled(MessageBean weiboMsgBean) {
-            if (this.e != null) {
-                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-                if (e.getError_code() == ErrorCode.DELETED) {
-                    setTextViewDeleted();
-                }
-            }
-            completeRefresh();
             super.onCancelled(weiboMsgBean);
+            if (getActivity() != null) {
+                if (this.e != null) {
+                    Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+                    if (e.getError_code() == ErrorCode.DELETED) {
+                        setTextViewDeleted();
+                    }
+                }
+                completeRefresh();
+            }
         }
 
         @Override

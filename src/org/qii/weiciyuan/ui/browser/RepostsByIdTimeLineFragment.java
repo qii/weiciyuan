@@ -265,7 +265,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
         @Override
         protected void onCancelled(MessageBean s) {
             super.onCancelled(s);
-            if (this.e != null) {
+            if (this.e != null && getActivity() != null) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
 
             }

@@ -247,9 +247,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         @Override
         protected void onCancelled(T messageListBean) {
             super.onCancelled(messageListBean);
-            if (this.e != null)
-                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-            cleanWork();
+            if (getActivity() != null) {
+                if (this.e != null)
+                    Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+                cleanWork();
+            }
         }
 
         private void cleanWork() {
@@ -314,10 +316,12 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         @Override
         protected void onCancelled(T messageListBean) {
             super.onCancelled(messageListBean);
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
-            if (this.e != null)
-                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-            cleanWork();
+            if (getActivity() != null) {
+                ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
+                if (this.e != null)
+                    Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+                cleanWork();
+            }
 
         }
 
