@@ -9,21 +9,17 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:fillViewport="true"
+                android:id="@+id/scrollview"
             >
-        <LinearLayout
-                android:orientation="vertical"
+
+
+        <EditText
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-            <EditText
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:hint="@string/say_something"
-                    android:id="@+id/status_new_content" android:gravity="left|top"/>
+                android:layout_height="wrap_content"
+                 android:hint="@string/say_something"
+                android:id="@+id/status_new_content" android:gravity="left|top"/>
 
 
-        </LinearLayout>
     </ScrollView>
     <ImageView android:layout_width="match_parent"
                android:layout_height="1px"
