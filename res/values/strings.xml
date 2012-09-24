@@ -201,6 +201,7 @@
     <string name="font_size">字体大小</string>
     <string name="only_timeline_font">只影响列表字体大小</string>
     <string name="advanced">高级</string>
+    <string name="download_emotions_summary">只有下载了表情你才能在时间线上看到，表情总计有几千张，不过都很小</string>
     <string name="filter">过滤器</string>
     <string name="filter_summary">只过滤首页的内容，包括了用户、原创、转发，当然不会过滤掉自己的内容</string>
     <string name="other">其它</string>

@@ -12,7 +12,10 @@ import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.Display;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
+
+import java.util.Map;
 
 /**
  * User: Jiang Qi
@@ -47,6 +50,22 @@ public final class GlobalContext extends Application {
     private DisplayMetrics displayMetrics = null;
 
     private Boolean enableFilter = null;
+
+    private Map<String, String> emotions = null;
+
+    public Map<String, String> getEmotions() {
+        if (emotions != null) {
+            return emotions;
+        } else {
+            emotions = DatabaseManager.getInstance().getEmotionsMap();
+        }
+
+        return emotions;
+    }
+
+    public void setEmotions(Map<String, String> value) {
+        this.emotions = value;
+    }
 
     public Boolean isEnableFilter() {
         if (enableFilter == null) {
@@ -231,6 +250,7 @@ public final class GlobalContext extends Application {
         super.onCreate();
         globalContext = this;
         buildCache();
+        getEmotions();
 
     }
 

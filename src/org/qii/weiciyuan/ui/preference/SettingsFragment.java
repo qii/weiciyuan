@@ -9,6 +9,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.othercomponent.AppNewMsgAlarm;
+import org.qii.weiciyuan.othercomponent.DownloadEmotionsService;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -58,6 +59,16 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 intent.putExtra("token", token);
                 intent.putExtra("user", bean);
                 startActivity(intent);
+                return true;
+            }
+        });
+
+        findPreference(SettingActivity.DOWNLOAD_EMOTIONS).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent service = new Intent(getActivity(), DownloadEmotionsService.class);
+                service.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                getActivity().startService(service);
                 return true;
             }
         });

@@ -27,6 +27,7 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String SHOW_BIG_PIC = "show_big_pic";
     public static final String AUTO_SHOW_BIG_PIC = "auto_show_big_pic";
 
+    public static final String DOWNLOAD_EMOTIONS = "download_emotions";
     public static final String FILTER = "filter";
 
 

@@ -1,11 +1,17 @@
 package org.qii.weiciyuan.support.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.widget.TextView;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyLinkify;
 
 import java.util.List;
@@ -55,6 +61,8 @@ public class ListViewTool {
 
         Pattern dd = Pattern.compile("#([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)#");
         value = MyLinkify.getJustHighLightLinks(value, dd, scheme, null, mentionFilter);
+
+        ListViewTool.addEmotions(value);
 
         return value;
     }
@@ -147,5 +155,29 @@ public class ListViewTool {
             }
         }
         return false;
+    }
+
+
+    public static void addEmotions(SpannableString value) {
+        Matcher localMatcher = Pattern.compile("\\[(\\S+?)\\]").matcher(value);
+        while (localMatcher.find()) {
+            String str2 = localMatcher.group(0);
+
+            int k = localMatcher.start();
+            int m = localMatcher.end();
+            if (m - k < 8) {
+
+                String url = GlobalContext.getInstance().getEmotions().get(str2);
+                if (!TextUtils.isEmpty(url)) {
+                    String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
+
+                    Bitmap bitmap = BitmapFactory.decodeFile(path);
+                    if (bitmap != null) {
+                        ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance(), bitmap);
+                        value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+            }
+        }
     }
 }

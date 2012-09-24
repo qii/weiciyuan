@@ -5,8 +5,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.support.database.table.*;
+import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
@@ -395,4 +397,45 @@ public class DatabaseManager {
         return getFilterList();
     }
 
+
+    public OAuthActivity.DBResult addEmotions(List<EmotionBean> word) {
+
+        ContentValues cv = new ContentValues();
+        cv.put(EmotionsTable.JSONDATA, new Gson().toJson(word));
+
+        wsd.execSQL("DROP TABLE IF EXISTS " + EmotionsTable.TABLE_NAME);
+        wsd.execSQL(DatabaseHelper.CREATE_EMOTIONS_TABLE_SQL);
+
+        wsd.insert(EmotionsTable.TABLE_NAME,
+                EmotionsTable.ID, cv);
+        return OAuthActivity.DBResult.add_successfuly;
+
+    }
+
+
+    public Map<String, String> getEmotionsMap() {
+        Gson gson = new Gson();
+        Map<String, String> map = new HashMap<String, String>();
+        String sql = "select * from " + EmotionsTable.TABLE_NAME + " order by " + EmotionsTable.ID + " limit 1 ";
+        Cursor c = rsd.rawQuery(sql, null);
+        if (c.moveToNext()) {
+            String json = c.getString(c.getColumnIndex(EmotionsTable.JSONDATA));
+            try {
+                List<EmotionBean> value = gson.fromJson(json, new TypeToken<ArrayList<EmotionBean>>() {
+                }.getType());
+
+                for (EmotionBean bean : value) {
+                    map.put(bean.getPhrase(), bean.getUrl());
+
+                }
+
+            } catch (JsonSyntaxException e) {
+                ActivityUtils.showTips("发生错误，请重刷");
+                AppLogger.e(e.getMessage());
+            }
+        }
+
+        c.close();
+        return map;
+    }
 }
