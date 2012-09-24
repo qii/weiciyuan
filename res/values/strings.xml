@@ -13,6 +13,11 @@
     <string name="select_none">反选</string>
     <string name="only_oauth_one_week">四次元的授权只能维持一周的哦</string>
 
+    <!--emotions-->
+    <string name="weibo_emotions">微博表情</string>
+    <string name="download_emotions">下载表情</string>
+    <string name="background_downloading">后台下载中</string>
+
     <!-- listview-->
     <string name="empty">空</string>
 

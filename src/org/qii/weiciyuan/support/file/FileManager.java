@@ -19,6 +19,7 @@ public class FileManager {
     private static final String PICTURE_THUMBNAIL = "picture_thumbnail";
     private static final String PICTURE_BMIDDLE = "picture_bmiddle";
     private static final String PICTURE_LARGE = "picture_large";
+    private static final String EMOTION = "emotion";
 
 
     private static boolean isExternalStorageMounted() {
@@ -57,7 +58,10 @@ public class FileManager {
             case picture_large:
                 newRelativePath = File.separator + PICTURE_LARGE + oldRelativePath;
                 break;
-
+            case emotion:
+                String name = new File(oldRelativePath).getName();
+                newRelativePath = File.separator + EMOTION + File.separator + name;
+                break;
         }
 
         String absolutePath = getFileAbsolutePathFromRelativePath(newRelativePath);

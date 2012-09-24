@@ -5,5 +5,5 @@ package org.qii.weiciyuan.support.file;
  * Date: 12-8-3
  */
 public enum FileLocationMethod {
-    avatar_small, avatar_large, picture_thumbnail, picture_bmiddle, picture_large
+    avatar_small, avatar_large, picture_thumbnail, picture_bmiddle, picture_large, emotion
 }

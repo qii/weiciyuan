@@ -93,6 +93,7 @@
         <activity android:name=".ui.search.SearchMainActivity"/>
 
         <service android:name=".othercomponent.FetchNewMsgService"/>
+        <service android:name=".othercomponent.DownloadEmotionsService"/>
         <service android:name=".othercomponent.PhotoUploadService"/>
         <activity android:name=".ui.search.SearchableActivity">
             <intent-filter>

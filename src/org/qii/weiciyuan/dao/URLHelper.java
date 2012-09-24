@@ -8,6 +8,10 @@ import org.qii.weiciyuan.support.http.URLManager;
  */
 public class URLHelper {
 
+    public static String getEmotions() {
+        return URLManager.getRealUrl("emotions");
+    }
+
 
     public static String getFriendsTimeLine() {
         return URLManager.getRealUrl("friendstimeline");
