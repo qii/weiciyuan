@@ -111,5 +111,5 @@
                android:layout_alignRight="@id/avatar"
                android:layout_alignTop="@id/repost_and_pic"
                android:layout_below="@id/avatar"
-               android:layout_marginTop="5dp"/>
+               android:layout_marginTop="8dp"/>
 </RelativeLayout>
