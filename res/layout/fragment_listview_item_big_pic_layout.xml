@@ -3,7 +3,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingRight="16dp"
                 android:id="@+id/listview_root">
 
     <ImageView
@@ -52,6 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/content"
             android:layout_toRightOf="@id/avatar"
+            android:id="@+id/repost_and_pic"
             >
         <LinearLayout android:layout_height="wrap_content"
                       android:layout_width="fill_parent"
@@ -66,10 +70,10 @@
                     />
         </LinearLayout>
         <LinearLayout
-
+                android:id="@+id/repost_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="13dp"
+                android:layout_marginLeft="0dp"
                 android:layout_marginTop="2dp"
                 android:orientation="vertical"
 
@@ -97,4 +101,12 @@
         </LinearLayout>
 
     </FrameLayout>
+    <ImageView android:id="@+id/repost_avatar"
+               android:layout_width="20dp"
+               android:layout_height="20dp"
+               android:background="?account"
+               android:layout_alignRight="@id/avatar"
+               android:layout_alignTop="@id/repost_and_pic"
+               android:layout_below="@id/avatar"
+               android:layout_marginTop="5dp"/>
 </RelativeLayout>

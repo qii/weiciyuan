@@ -41,7 +41,6 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.listview_root.setBackgroundColor(checkedBG);
 
         final MessageBean msg = bean.get(position);
-        MessageBean repost_msg = msg.getRetweeted_status();
 
         if (msg.getUser() != null) {
             holder.username.setVisibility(View.VISIBLE);
@@ -50,7 +49,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             if (!TextUtils.isEmpty(image_url) && GlobalContext.getInstance().isEnablePic()) {
                 holder.avatar.setVisibility(View.VISIBLE);
                 boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
-                commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView,isFling);
+                commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView, isFling);
             } else {
                 holder.avatar.setVisibility(View.GONE);
             }
@@ -76,9 +75,18 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
         holder.repost_content_pic.setVisibility(View.GONE);
         holder.content_pic.setVisibility(View.GONE);
 
+        MessageBean repost_msg = msg.getRetweeted_status();
+
         if (repost_msg != null && showOriStatus) {
+            holder.repost_layout.setVisibility(View.VISIBLE);
+            holder.repost_avatar.setVisibility(View.VISIBLE);
             buildRepostContent(repost_msg, holder, position);
-        } else if (!TextUtils.isEmpty(msg.getThumbnail_pic()) && GlobalContext.getInstance().isEnablePic()) {
+        } else {
+            holder.repost_layout.setVisibility(View.GONE);
+            holder.repost_avatar.setVisibility(View.GONE);
+        }
+
+        if (!TextUtils.isEmpty(msg.getThumbnail_pic()) && GlobalContext.getInstance().isEnablePic()) {
             buildPic(msg, holder.content_pic, position);
 
         }
@@ -102,6 +110,10 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
         if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic()) && GlobalContext.getInstance().isEnablePic()) {
             buildPic(repost_msg, holder.repost_content_pic, position);
         }
+        if (repost_msg.getUser() != null)
+            commander.downloadAvatar(holder.repost_avatar, repost_msg.getUser().getProfile_image_url(), position, listView, false);
+        else
+            holder.repost_avatar.setVisibility(View.GONE);
     }
 
 

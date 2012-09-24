@@ -72,6 +72,9 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
         if (repost_msg != null && showOriStatus) {
             buildRepostContent(repost_msg, holder, position);
+        } else {
+            holder.repost_layout.setVisibility(View.GONE);
+            holder.repost_avatar.setVisibility(View.GONE);
         }
 
 
@@ -82,8 +85,12 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         if (repost_msg.getUser() != null) {
             holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
             holder.repost_content.setText(repost_msg.getListViewSpannableString());
+            holder.repost_avatar.setVisibility(View.VISIBLE);
+            boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
+            commander.downloadAvatar(holder.repost_avatar, repost_msg.getUser().getProfile_image_url(), position, listView, isFling);
         } else {
             holder.repost_content.setText(repost_msg.getText());
+            holder.repost_avatar.setVisibility(View.GONE);
 
         }
         if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {

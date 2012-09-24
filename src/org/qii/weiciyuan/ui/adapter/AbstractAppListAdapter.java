@@ -123,6 +123,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.content_pic = (ImageView) convertView.findViewById(R.id.content_pic);
         holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
         holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
+        holder.repost_layout = (LinearLayout) convertView.findViewById(R.id.repost_layout);
+        holder.repost_avatar = (ImageView) convertView.findViewById(R.id.repost_avatar);
         return holder;
     }
 
@@ -171,6 +173,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         ImageView content_pic;
         ImageView repost_content_pic;
         RelativeLayout listview_root;
+        LinearLayout repost_layout;
+        ImageView repost_avatar;
     }
 
     public void removeItem(final int postion) {
