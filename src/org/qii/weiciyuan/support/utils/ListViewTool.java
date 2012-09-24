@@ -125,8 +125,12 @@ public class ListViewTool {
         String scheme = "org.qii.weiciyuan://";
         MyLinkify.addLinks(view, pattern, scheme, null, mentionFilter);
         MyLinkify.addLinks(view, MyLinkify.WEB_URLS);
+        CharSequence content = view.getText();
+        SpannableString value = SpannableString.valueOf(content);
+        ListViewTool.addEmotions(value, view.getTextSize());
+        view.setText(value);
 
-    }
+}
 
 
     public static boolean haveFilterWord(MessageBean content, List<String> filterWordList) {
@@ -173,11 +177,39 @@ public class ListViewTool {
 
                     Bitmap bitmap = BitmapFactory.decodeFile(path);
                     if (bitmap != null) {
-                        ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance(), bitmap);
+                        ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), bitmap, ImageSpan.ALIGN_BASELINE);
                         value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 }
             }
         }
     }
+
+    public static void addEmotions(SpannableString value, float height) {
+        Matcher localMatcher = Pattern.compile("\\[(\\S+?)\\]").matcher(value);
+        while (localMatcher.find()) {
+            String str2 = localMatcher.group(0);
+
+            int k = localMatcher.start();
+            int m = localMatcher.end();
+            if (m - k < 8) {
+
+                String url = GlobalContext.getInstance().getEmotions().get(str2);
+                if (!TextUtils.isEmpty(url)) {
+                    String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
+
+                    Bitmap bitmap = BitmapFactory.decodeFile(path);
+
+                    if (bitmap != null) {
+                        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) height, (int) height, true);
+                        bitmap.recycle();
+                        ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), scaledBitmap, ImageSpan.ALIGN_BASELINE);
+                        value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+            }
+        }
+    }
+
+
 }
