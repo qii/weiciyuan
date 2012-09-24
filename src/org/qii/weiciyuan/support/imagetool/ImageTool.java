@@ -125,7 +125,8 @@ public class ImageTool {
 
     public static Bitmap getMiddlePictureInTimeLine(String url, int reqWidth, int reqHeight, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
-        int useWidth = 400;
+//        int useWidth = 400;
+        int useWidth = reqWidth;
 
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_bmiddle);
 

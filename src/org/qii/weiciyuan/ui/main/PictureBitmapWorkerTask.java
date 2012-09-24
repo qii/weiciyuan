@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
 import android.util.LruCache;
+import android.view.Display;
 import android.widget.ImageView;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
@@ -66,7 +68,16 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                     return ImageTool.getThumbnailPictureWithRoundedCorner(data);
 
                 case picture_bmiddle:
-                    return ImageTool.getMiddlePictureInTimeLine(data, 640, 120, null);
+                    DisplayMetrics metrics = new DisplayMetrics();
+                    Display display = activity.getWindowManager().getDefaultDisplay();
+                    display.getMetrics(metrics);
+                    float reSize = activity.getResources().getDisplayMetrics().density;
+                    //because height is 80dp
+                    int height = (int) (reSize * 80);
+                    //5 is left layout margin 16 is right layout margin 40 is avatar width 5 is the range between avatar and username
+                    int width = (int) (metrics.widthPixels - (16 + 5 + 40 + 5) * reSize);
+
+                    return ImageTool.getMiddlePictureInTimeLine(data, width, height, null);
 
             }
         }
