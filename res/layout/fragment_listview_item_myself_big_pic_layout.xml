@@ -3,10 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:paddingRight="16dp"
+                android:padding="8dp"
                 android:id="@+id/listview_root">
     <TextView
             android:id="@+id/username"
@@ -24,7 +21,7 @@
             android:background="?account"
             android:layout_alignParentRight="true"
             android:layout_gravity="right|center_vertical"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="8dp"
             android:clickable="true"/>
 
 
@@ -35,7 +32,6 @@
             android:text="12:00"
             android:layout_alignBottom="@id/username"
             android:layout_toLeftOf="@id/avatar"
-
 
             />
 
