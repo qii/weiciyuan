@@ -35,10 +35,7 @@
                 android:drawableLeft="?statusnewactivity_camera"
                 android:id="@+id/menu_add_pic"
                 android:layout_height="match_parent"/>
-        <Button style="?android:actionButtonStyle" android:layout_width="wrap_content"
-                android:text="@string/emoticon"
-                android:id="@+id/menu_add_emotions"
-                android:layout_height="match_parent"/>
+
 
         <Space android:layout_height="match_parent" android:layout_width="0dp" android:layout_weight="1"/>
 

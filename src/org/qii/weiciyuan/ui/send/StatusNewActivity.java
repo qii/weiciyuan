@@ -48,7 +48,7 @@ import java.util.*;
  * Date: 12-7-29
  */
 public class StatusNewActivity extends AbstractAppActivity implements DialogInterface.OnClickListener,
-        View.OnClickListener, View.OnLongClickListener, IAccountInfo, ClearContentDialog.IClear,EmotionsDialog.IEmotions {
+        View.OnClickListener, View.OnLongClickListener, IAccountInfo, ClearContentDialog.IClear, EmotionsDialog.IEmotions {
 
 
     private static final int CAMERA_RESULT = 0;
@@ -171,7 +171,6 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     }
 
 
-
     public Map<String, Bitmap> getEmotionsPic() {
         return emotionsPic;
     }
@@ -260,12 +259,12 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         findViewById(R.id.menu_add_gps).setOnClickListener(this);
         findViewById(R.id.menu_add_pic).setOnClickListener(this);
         findViewById(R.id.menu_send).setOnClickListener(this);
-        findViewById(R.id.menu_add_emotions).setOnClickListener(this);
+//        findViewById(R.id.menu_add_emotions).setOnClickListener(this);
 
         findViewById(R.id.menu_add_gps).setOnLongClickListener(this);
         findViewById(R.id.menu_add_pic).setOnLongClickListener(this);
         findViewById(R.id.menu_send).setOnLongClickListener(this);
-        findViewById(R.id.menu_add_emotions).setOnLongClickListener(this);
+//        findViewById(R.id.menu_add_emotions).setOnLongClickListener(this);
     }
 
 
@@ -371,6 +370,11 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 addPic();
                 break;
 
+            case R.id.menu_emoticon:
+                EmotionsDialog dialog = new EmotionsDialog();
+                dialog.show(getSupportFragmentManager(), "");
+                break;
+
             case R.id.menu_send:
                 send();
                 break;
@@ -381,8 +385,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 content.setSelection(content.getText().toString().length() - 1);
                 break;
             case R.id.menu_clear:
-                ClearContentDialog dialog = new ClearContentDialog();
-                dialog.show(getSupportFragmentManager(), "");
+                ClearContentDialog clearContentDialog = new ClearContentDialog();
+                clearContentDialog.show(getSupportFragmentManager(), "");
                 break;
         }
         return true;
