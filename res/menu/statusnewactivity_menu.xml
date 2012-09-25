@@ -14,9 +14,7 @@
           android:title="@string/emoticon"
             />
 
-    <item android:id="@+id/menu_word_emoticon"
-          android:title="@string/word_emoticon"
-            />
+
 
     <item android:id="@+id/menu_topic"
           android:title="@string/topic"
