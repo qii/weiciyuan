@@ -63,7 +63,7 @@
             <ImageView
                     android:id="@+id/content_pic"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="120dp"
                     android:visibility="gone"
                     android:clickable="true"
                     />
@@ -92,7 +92,7 @@
                 <ImageView
                         android:id="@+id/repost_content_pic"
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"
+                        android:layout_height="120dp"
                         android:visibility="gone"
                         android:clickable="true"
                         />

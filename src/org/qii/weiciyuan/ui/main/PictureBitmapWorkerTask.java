@@ -73,7 +73,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                     display.getMetrics(metrics);
                     float reSize = activity.getResources().getDisplayMetrics().density;
                     //because height is 80dp
-                    int height = (int) (reSize * 80);
+                    int height = (int) (reSize * 120);
                     //5 is left layout margin 16 is right layout margin 40 is avatar width 5 is the range between avatar and username
                     int width = (int) (metrics.widthPixels - (16 + 5 + 40 + 5) * reSize);
 
