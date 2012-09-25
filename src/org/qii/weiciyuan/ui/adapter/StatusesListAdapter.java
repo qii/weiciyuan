@@ -110,7 +110,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
         if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic()) && GlobalContext.getInstance().isEnablePic()) {
             buildPic(repost_msg, holder.repost_content_pic, position);
         }
-        if (repost_msg.getUser() != null)
+        if (repost_msg.getUser() != null && GlobalContext.getInstance().isEnablePic())
             commander.downloadAvatar(holder.repost_avatar, repost_msg.getUser().getProfile_image_url(), position, listView, false);
         else
             holder.repost_avatar.setVisibility(View.GONE);

@@ -44,7 +44,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
         holder.username.setText(msg.getUser().getScreen_name());
         String image_url = msg.getUser().getProfile_image_url();
-        if (!TextUtils.isEmpty(image_url)) {
+        if (!TextUtils.isEmpty(image_url) && GlobalContext.getInstance().isEnablePic()) {
+            holder.avatar.setVisibility(View.VISIBLE);
             boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
             commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView, isFling);
             holder.avatar.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +57,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
                     activity.startActivity(intent);
                 }
             });
+        } else {
+            holder.avatar.setVisibility(View.GONE);
         }
         holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
         holder.content.setText(msg.getListViewSpannableString());
@@ -87,13 +90,16 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             holder.repost_content.setText(repost_msg.getListViewSpannableString());
             holder.repost_avatar.setVisibility(View.VISIBLE);
             boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
-            commander.downloadAvatar(holder.repost_avatar, repost_msg.getUser().getProfile_image_url(), position, listView, isFling);
+            if (GlobalContext.getInstance().isEnablePic())
+                commander.downloadAvatar(holder.repost_avatar, repost_msg.getUser().getProfile_image_url(), position, listView, isFling);
+            else
+                holder.repost_avatar.setVisibility(View.GONE);
         } else {
             holder.repost_content.setText(repost_msg.getText());
             holder.repost_avatar.setVisibility(View.GONE);
 
         }
-        if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic())) {
+        if (!TextUtils.isEmpty(repost_msg.getThumbnail_pic()) && GlobalContext.getInstance().isEnablePic()) {
             holder.repost_content_pic.setVisibility(View.VISIBLE);
             String picUrl;
             boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
