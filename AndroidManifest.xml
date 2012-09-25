@@ -56,10 +56,10 @@
                   android:label="@string/comment_detail"
                 />
         <activity android:name=".ui.send.RepostNewActivity"
-                  android:uiOptions="splitActionBarWhenNarrow"
+
                   android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity android:name=".ui.send.CommentNewActivity"
-                  android:uiOptions="splitActionBarWhenNarrow"
+
                   android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity android:name=".ui.preference.SettingActivity"
                   android:logo="@null"/>
@@ -89,7 +89,7 @@
         <activity android:name=".ui.userinfo.MyFavActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.send.ReplyToCommentNewActivity"
-                  android:uiOptions="splitActionBarWhenNarrow"/>
+                 />
         <activity android:name=".ui.search.SearchMainActivity"/>
 
         <service android:name=".othercomponent.FetchNewMsgService"/>

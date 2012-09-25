@@ -3,6 +3,7 @@ package org.qii.weiciyuan.ui.send;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
@@ -26,6 +27,12 @@ public class EmotionsDialog extends DialogFragment {
     Map<String, String> emotions;
     List<String> index = new ArrayList<String>();
 
+    public static interface IEmotions {
+        public void insertEmotion(String emotionStr);
+
+        public Map<String, Bitmap> getEmotionsPic();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +50,7 @@ public class EmotionsDialog extends DialogFragment {
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                ((StatusNewActivity) getActivity()).insertEmotion(index.get(position));
+                ((IEmotions) getActivity()).insertEmotion(index.get(position));
                 dismiss();
             }
         });
@@ -85,7 +92,7 @@ public class EmotionsDialog extends DialogFragment {
             }
 
 
-            imageView.setImageBitmap(((StatusNewActivity)getActivity()).getEmotionsPic().get(index.get(position)));
+            imageView.setImageBitmap(((IEmotions) getActivity()).getEmotionsPic().get(index.get(position)));
             return imageView;
         }
 

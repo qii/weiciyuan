@@ -13,6 +13,10 @@ import org.qii.weiciyuan.R;
  */
 public class ClearContentDialog extends DialogFragment {
 
+    public static interface IClear {
+        public void clear();
+    }
+
 
     public ClearContentDialog() {
 
@@ -28,7 +32,7 @@ public class ClearContentDialog extends DialogFragment {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ((StatusNewActivity) getActivity()).clear();
+                        ((IClear) getActivity()).clear();
                     }
                 })
                 .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

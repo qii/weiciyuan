@@ -47,7 +47,8 @@ import java.util.*;
  * User: qii
  * Date: 12-7-29
  */
-public class StatusNewActivity extends AbstractAppActivity implements DialogInterface.OnClickListener, View.OnClickListener, View.OnLongClickListener, IAccountInfo {
+public class StatusNewActivity extends AbstractAppActivity implements DialogInterface.OnClickListener,
+        View.OnClickListener, View.OnLongClickListener, IAccountInfo, ClearContentDialog.IClear,EmotionsDialog.IEmotions {
 
 
     private static final int CAMERA_RESULT = 0;
@@ -168,6 +169,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             getEmotionsTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
+
 
 
     public Map<String, Bitmap> getEmotionsPic() {

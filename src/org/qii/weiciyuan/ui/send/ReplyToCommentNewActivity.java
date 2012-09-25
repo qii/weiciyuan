@@ -1,40 +1,35 @@
 package org.qii.weiciyuan.ui.send;
 
-import android.content.DialogInterface;
-import android.os.AsyncTask;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.dao.send.ReplyToCommentMsgDao;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 /**
  * User: qii
  * Date: 12-8-28
  */
-public class ReplyToCommentNewActivity extends AbstractAppActivity {
+public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> {
 
     private CommentBean bean;
     private String token;
-    private EditText et;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.statusnewactivity_layout);
         getActionBar().setTitle(R.string.comments);
 
         token = getIntent().getStringExtra("token");
         bean = (CommentBean) getIntent().getSerializableExtra("msg");
         getActionBar().setTitle("@" + bean.getUser().getScreen_name());
-        et = (EditText) findViewById(R.id.status_new_content);
     }
 
     @Override
@@ -46,79 +41,55 @@ public class ReplyToCommentNewActivity extends AbstractAppActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm.isActive())
+                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+                finish();
+                break;
 
-            case R.id.menu_send:
-
-                final String content = et.getText().toString();
-
-                if (!TextUtils.isEmpty(content)) {
-                    new SimpleTask().execute();
-                } else {
-                    Toast.makeText(this, getString(R.string.comment_cant_be_empty), Toast.LENGTH_SHORT).show();
-                }
+            case R.id.menu_clear:
+                clearContentMenu();
                 break;
 
         }
         return true;
     }
 
-
-    class SimpleTask extends AsyncTask<Void, Void, CommentBean> {
-
-        SendProgressFragment progressFragment = new SendProgressFragment();
-        WeiboException e;
-
-        @Override
-        protected void onPreExecute() {
-            progressFragment.onCancel(new DialogInterface() {
-
-                @Override
-                public void cancel() {
-                    SimpleTask.this.cancel(true);
-                }
-
-                @Override
-                public void dismiss() {
-                    SimpleTask.this.cancel(true);
-                }
-            });
-
-            progressFragment.show(getSupportFragmentManager(), "");
-
-        }
-
-        @Override
-        protected CommentBean doInBackground(Void... params) {
-            ReplyToCommentMsgDao dao = new ReplyToCommentMsgDao(token, bean, ((EditText) findViewById(R.id.status_new_content)).getText().toString());
-            try {
-                return dao.reply();
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-                return null;
-            }
-        }
-
-        @Override
-        protected void onCancelled(CommentBean commentBean) {
-            super.onCancelled(commentBean);
-            if (this.e != null) {
-                Toast.makeText(ReplyToCommentNewActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
-
-            }
-        }
-
-        @Override
-        protected void onPostExecute(CommentBean s) {
-            progressFragment.dismissAllowingStateLoss();
-            if (s != null) {
-                finish();
-                Toast.makeText(ReplyToCommentNewActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(ReplyToCommentNewActivity.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
-            }
-            super.onPostExecute(s);
-
-        }
+    @Override
+    protected CommentBean sendData() throws WeiboException {
+        ReplyToCommentMsgDao dao = new ReplyToCommentMsgDao(token, bean, ((EditText) findViewById(R.id.status_new_content)).getText().toString());
+        return dao.reply();
     }
+
+    @Override
+    protected boolean canSend() {
+
+        boolean haveContent = !TextUtils.isEmpty(getEditTextView().getText().toString());
+        boolean haveToken = !TextUtils.isEmpty(token);
+        boolean contentNumBelow140 = (getEditTextView().getText().toString().length() < 140);
+
+        if (haveContent && haveToken && contentNumBelow140) {
+            return true;
+        } else {
+            if (!haveContent && !haveToken) {
+                Toast.makeText(this, getString(R.string.content_cant_be_empty_and_dont_have_account), Toast.LENGTH_SHORT).show();
+            } else if (!haveContent) {
+                getEditTextView().setError(getString(R.string.content_cant_be_empty));
+            } else if (!haveToken) {
+                Toast.makeText(this, getString(R.string.dont_have_account), Toast.LENGTH_SHORT).show();
+            }
+
+            if (!contentNumBelow140) {
+                getEditTextView().setError(getString(R.string.content_words_number_too_many));
+            }
+
+        }
+
+        return false;
+    }
+
+
+
+
 }
