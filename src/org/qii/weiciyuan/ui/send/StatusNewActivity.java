@@ -5,6 +5,8 @@ import android.content.*;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.*;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -28,7 +30,10 @@ import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.othercomponent.PhotoUploadService;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -36,8 +41,7 @@ import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * User: qii
@@ -67,6 +71,9 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
     private AccountBean accountBean;
 
+    private GetEmotionsTask getEmotionsTask;
+    private Map<String, Bitmap> emotionsPic = new HashMap<String, Bitmap>();
+
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
@@ -74,10 +81,6 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         switch (which) {
             case 0:
 
-//                imageFilePath = Environment.getExternalStorageDirectory().getAbsolutePath()
-//                        + "/myfavoritepicture.jpg";
-//                File imageFile = new File(imageFilePath);
-//                Uri imageFileUri = Uri.fromFile(imageFile);
                 imageFileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         new ContentValues());
                 Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -116,6 +119,19 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         }
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (getEmotionsTask != null)
+            getEmotionsTask.cancel(true);
+
+        Set<String> keys = emotionsPic.keySet();
+        for (String key : keys) {
+            emotionsPic.put(key, null);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,6 +162,35 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 content.setText(contentTxt + " ");
                 content.setSelection(content.getText().toString().length());
             }
+        }
+        if (getEmotionsTask == null || getEmotionsTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            getEmotionsTask = new GetEmotionsTask();
+            getEmotionsTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+
+    public Map<String, Bitmap> getEmotionsPic() {
+        return emotionsPic;
+    }
+
+
+    class GetEmotionsTask extends MyAsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Map<String, String> emotions = GlobalContext.getInstance().getEmotions();
+            List<String> index = new ArrayList<String>();
+            index.addAll(emotions.keySet());
+            for (String str : index) {
+                if (!isCancelled()) {
+                    String url = emotions.get(str);
+                    String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
+                    Bitmap bitmap = BitmapFactory.decodeFile(path);
+                    emotionsPic.put(str, bitmap);
+                }
+            }
+            return null;
         }
     }
 
@@ -213,10 +258,12 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         findViewById(R.id.menu_add_gps).setOnClickListener(this);
         findViewById(R.id.menu_add_pic).setOnClickListener(this);
         findViewById(R.id.menu_send).setOnClickListener(this);
+        findViewById(R.id.menu_add_emotions).setOnClickListener(this);
 
         findViewById(R.id.menu_add_gps).setOnLongClickListener(this);
         findViewById(R.id.menu_add_pic).setOnLongClickListener(this);
         findViewById(R.id.menu_send).setOnLongClickListener(this);
+        findViewById(R.id.menu_add_emotions).setOnLongClickListener(this);
     }
 
 
@@ -384,6 +431,11 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 addPic();
                 break;
 
+            case R.id.menu_add_emotions:
+                EmotionsDialog dialog = new EmotionsDialog();
+                dialog.show(getSupportFragmentManager(), "");
+                break;
+
             case R.id.menu_send:
                 send();
                 break;
@@ -405,6 +457,15 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 break;
         }
         return true;
+    }
+
+    public void insertEmotion(String emotionChar) {
+        String ori = content.getText().toString();
+        int index = content.getSelectionStart();
+        StringBuilder stringBuilder = new StringBuilder(ori);
+        stringBuilder.insert(index, emotionChar);
+        content.setText(stringBuilder.toString());
+        content.setSelection(index + emotionChar.length());
     }
 
     class StatusNewTask extends AsyncTask<Void, String, String> {
