@@ -78,6 +78,7 @@
         </activity>
         <activity android:name=".ui.topic.SearchTopicByNameActivity"
                   android:label="@string/search_topic"
+                  android:uiOptions="splitActionBarWhenNarrow"
                 >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>

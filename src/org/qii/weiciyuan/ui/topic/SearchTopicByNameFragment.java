@@ -2,9 +2,13 @@ package org.qii.weiciyuan.ui.topic;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ListBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -52,6 +56,35 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
         }
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.myfavlistfragment_menu, menu);
+        if (bean != null) {
+            int newSize = bean.getTotal_number();
+            String number = bean.getSize() + "/" + newSize;
+            menu.findItem(R.id.total_number).setTitle(number);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.total_number:
+                Toast.makeText(getActivity(), getString(R.string.deleted_by_sina_weibo), Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.myfavlistfragment_refresh:
+
+                refresh();
+
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
     @Override
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
@@ -62,7 +95,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
 
     @Override
     protected ListBean<MessageBean> getDoInBackgroundNewData() throws WeiboException {
-        bean.getItemList().clear();
+
         page = 1;
         SearchTopicDao dao = new SearchTopicDao(((IToken) getActivity()).getToken(), q);
         dao.setPage(String.valueOf(page));
@@ -71,6 +104,16 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
         return result;
     }
 
+    @Override
+     protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
+         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
+             clearAndReplaceValue(newValue);
+             timeLineAdapter.notifyDataSetChanged();
+             listView.setSelectionAfterHeaderView();
+             getActivity().invalidateOptionsMenu();
+         }
+
+     }
 
     @Override
     protected ListBean<MessageBean> getDoInBackgroundOldData() throws WeiboException {
@@ -86,7 +129,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
         if (newValue != null && newValue.getSize() > 0) {
             getList().getItemList().addAll(newValue.getItemList());
             page++;
-
+            getActivity().invalidateOptionsMenu();
         }
         ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
 

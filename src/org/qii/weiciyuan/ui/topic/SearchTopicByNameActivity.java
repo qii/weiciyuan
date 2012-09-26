@@ -43,8 +43,9 @@ public class SearchTopicByNameActivity extends AbstractAppActivity implements IT
                 Intent intent = new Intent(this, MainTimeLineActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                break;
+                return true;
+
         }
-        return true;
+        return false;
     }
 }

@@ -79,7 +79,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.total_number:
-                Toast.makeText(getActivity(), (bean.getTotal_number() - bean.getSize()) + getString(R.string.deleted_by_sina_weibo), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.deleted_by_sina_weibo), Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.myfavlistfragment_refresh:
