@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -23,7 +22,7 @@ public class SearchTopicByNameActivity extends AbstractAppActivity implements IT
         int index = d.lastIndexOf("/");
         String newValue = d.substring(index + 1);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(getString(R.string.search_topic) + " #" + newValue + "#");
+        getActionBar().setTitle("#" + newValue + "#");
 
         getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SearchTopicByNameFragment(newValue))
