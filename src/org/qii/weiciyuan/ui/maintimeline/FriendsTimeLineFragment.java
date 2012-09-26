@@ -148,6 +148,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void afterGetNewMsg() {
+        super.afterGetNewMsg();
+        getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
+
+    }
 
     @Override
     protected MessageListBean getDoInBackgroundNewData() throws WeiboException {

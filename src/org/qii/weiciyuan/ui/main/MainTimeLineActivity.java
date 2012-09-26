@@ -2,8 +2,7 @@ package org.qii.weiciyuan.ui.main;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -11,11 +10,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.bean.CommentListBean;
-import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.dao.unread.UnreadDao;
+import org.qii.weiciyuan.othercomponent.MentionsAndCommentsReceiver;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -33,6 +33,9 @@ import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * User: Jiang Qi
@@ -46,6 +49,11 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     private String token = "";
     private AccountBean accountBean = null;
 
+    private GetUnreadCountTask getUnreadCountTask = null;
+
+    private NewMsgBroadcastReceiver newMsgBroadcastReceiver;
+
+    private ScheduledExecutorService newMsgScheduledExecutorService = null;
 
     public String getToken() {
         return token;
@@ -92,7 +100,13 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         buildPhoneInterface();
 
+    }
 
+    private void getUnreadCount() {
+        if (getUnreadCountTask == null || getUnreadCountTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            getUnreadCountTask = new GetUnreadCountTask();
+            getUnreadCountTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
 
@@ -144,7 +158,12 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         ActionBar.Tab tab = getActionBar().getTabAt(index);
         String name = tab.getText().toString();
-        String num = "(" + number + ")";
+        String num;
+        if (number < 99) {
+            num = "(" + number + ")";
+        } else {
+            num = "(99+)";
+        }
         if (!name.endsWith(")")) {
             tab.setText(name + num);
         } else {
@@ -412,4 +431,92 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
 
     }
+
+    class GetUnreadCountTask extends MyAsyncTask<Void, Void, UnreadBean> {
+
+        @Override
+        protected UnreadBean doInBackground(Void... params) {
+            UnreadDao unreadDao = new UnreadDao(token, accountBean.getUid());
+            try {
+                return unreadDao.getCount();
+            } catch (WeiboException e) {
+                AppLogger.e(e.getError());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(UnreadBean unreadBean) {
+            super.onPostExecute(unreadBean);
+            if (unreadBean != null) {
+                int unreadStatus = unreadBean.getStatus();
+                int unreadMentionsCount = unreadBean.getMention_cmt() + unreadBean.getMention_status();
+                int unreadCommentsCount = unreadBean.getCmt();
+
+                if (unreadStatus > 0)
+                    invlidateTabText(0, unreadStatus);
+
+                if (unreadMentionsCount > 0)
+                    invlidateTabText(1, unreadMentionsCount);
+
+                if (unreadCommentsCount > 0)
+                    invlidateTabText(2, unreadCommentsCount);
+
+            }
+        }
+    }
+
+    class NewMsgBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+
+            AccountBean newMsgAccountBean = (AccountBean) intent.getSerializableExtra("account");
+            if (newMsgAccountBean.getUid().equals(MainTimeLineActivity.this.accountBean.getUid())) {
+                abortBroadcast();
+                UnreadBean unreadBean = (UnreadBean) intent.getSerializableExtra("unread");
+
+                int unreadMentionsCount = unreadBean.getMention_cmt() + unreadBean.getMention_status();
+                int unreadCommentsCount = unreadBean.getCmt();
+
+                if (unreadMentionsCount > 0)
+                    invlidateTabText(1, unreadMentionsCount);
+
+                if (unreadCommentsCount > 0)
+                    invlidateTabText(2, unreadCommentsCount);
+            }
+
+        }
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(MentionsAndCommentsReceiver.ACTION);
+        filter.setPriority(1);
+        newMsgBroadcastReceiver = new NewMsgBroadcastReceiver();
+        registerReceiver(newMsgBroadcastReceiver, filter);
+
+        newMsgScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        newMsgScheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                getUnreadCount();
+            }
+        }, 10, 50, TimeUnit.SECONDS);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(newMsgBroadcastReceiver);
+        newMsgScheduledExecutorService.shutdownNow();
+        if (getUnreadCountTask != null)
+            getUnreadCountTask.cancel(true);
+    }
+
+
 }

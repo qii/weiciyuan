@@ -58,7 +58,7 @@ public class MainCommentsTimeLineDao {
         this.access_token = access_token;
     }
 
-    public CommentListBean getGSONMsgList() throws WeiboException {
+    public CommentListBean getGSONMsgListWithoutClearUnread() throws WeiboException {
 
         String url = URLHelper.getCommentList();
 
@@ -73,7 +73,6 @@ public class MainCommentsTimeLineDao {
 
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        new ClearUnreadDao(access_token, ClearUnreadDao.CMT).clearUnread();
 
         Gson gson = new Gson();
 
@@ -100,6 +99,14 @@ public class MainCommentsTimeLineDao {
             }
 
         }
+        return value;
+    }
+
+    public CommentListBean getGSONMsgList() throws WeiboException {
+
+        CommentListBean value = getGSONMsgListWithoutClearUnread();
+        new ClearUnreadDao(access_token, ClearUnreadDao.CMT).clearUnread();
+
         return value;
     }
 }

@@ -5,6 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
@@ -41,6 +42,7 @@ public class MainFriendsTimeLineDao {
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
+        new ClearUnreadDao(access_token, ClearUnreadDao.STATUS).clearUnread();
 
         return jsonData;
     }

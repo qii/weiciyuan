@@ -40,13 +40,12 @@ public class MainMentionsTimeLineDao {
 
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_STATUS).clearUnread();
-        new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_CMT).clearUnread();
+
 
         return jsonData;
     }
 
-    public MessageListBean getGSONMsgList() throws WeiboException {
+    public MessageListBean getGSONMsgListWithoutClearUnread() throws WeiboException {
 
         String json = getMsgListJson();
         Gson gson = new Gson();
@@ -78,6 +77,16 @@ public class MainMentionsTimeLineDao {
 
         }
 
+
+        return value;
+    }
+
+    public MessageListBean getGSONMsgList() throws WeiboException {
+
+
+        MessageListBean value = getGSONMsgListWithoutClearUnread();
+        new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_STATUS).clearUnread();
+        new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_CMT).clearUnread();
 
         return value;
     }

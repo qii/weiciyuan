@@ -134,8 +134,8 @@ public class FetchNewMsgService extends Service {
                         mentionDao.setSince_id(messageListBean.getItemList().get(0).getId());
                     }
 
-                    commentResult = commentDao.getGSONMsgList();
-                    repostResult = mentionDao.getGSONMsgList();
+                    commentResult = commentDao.getGSONMsgListWithoutClearUnread();
+                    repostResult = mentionDao.getGSONMsgListWithoutClearUnread();
                 }
             } catch (WeiboException e) {
                 this.e = e;

@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class ClearUnreadDao {
 
-    public static final String STATUS = "status";
+    public static final String STATUS = "app_message";
     public static final String FOLLOWER = "follower";
     public static final String CMT = "cmt";
     public static final String DM = "dm";
