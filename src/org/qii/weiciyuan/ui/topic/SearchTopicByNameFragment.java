@@ -31,10 +31,23 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
         this.q = q;
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("q", q);
+        outState.putInt("page", page);
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        refresh();
+        if (savedInstanceState != null) {
+            q = savedInstanceState.getString("q");
+            page = savedInstanceState.getInt("page");
+        } else {
+            refresh();
+        }
     }
 
     @Override
