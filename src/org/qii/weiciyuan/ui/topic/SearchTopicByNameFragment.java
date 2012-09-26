@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ListBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.TopicResultListBean;
@@ -82,12 +84,11 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
     @Override
     protected void oldMsgOnPostExecute(ListBean<MessageBean> newValue) {
         if (newValue != null && newValue.getSize() > 0) {
-
             getList().getItemList().addAll(newValue.getItemList());
             page++;
 
         }
-
+        ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
 
     }
 }
