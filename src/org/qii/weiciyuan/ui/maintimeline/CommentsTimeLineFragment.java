@@ -111,6 +111,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
         );
 
+
     }
 
     @Override
@@ -184,6 +185,20 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
             super.onPostExecute(o);
+            /**
+             * when this account first open app,if he don't have any data in database,fetch data from server automally
+             */
+            if (bean.getSize() == 0) {
+                refresh();
+            }
+
+            /**when one user open app from android notification center while this app is using another account,
+             * activity will restart, and then mentions and comment fragment
+             * will fetch new message from server
+             **/
+            if (getActivity().getActionBar().getTabAt(2).getText().toString().contains(")")) {
+                refresh();
+            }
         }
     }
 

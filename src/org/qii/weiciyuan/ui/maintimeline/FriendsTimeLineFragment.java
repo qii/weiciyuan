@@ -96,6 +96,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
             super.onPostExecute(o);
+            /**
+             * when this account first open app,if he don't have any data in database,fetch data from server automally
+             */
+            if (bean.getSize() == 0)
+                refresh();
         }
     }
 

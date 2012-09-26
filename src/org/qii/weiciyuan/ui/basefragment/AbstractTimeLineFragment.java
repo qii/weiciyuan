@@ -165,7 +165,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         removeListViewTimeRefresh();
     }
 
-    protected void refresh() {
+    public void refresh() {
         if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
 
             newTask = new TimeLineGetNewMsgListTask();

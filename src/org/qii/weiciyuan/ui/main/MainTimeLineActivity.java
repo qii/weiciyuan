@@ -329,9 +329,15 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                     break;
                 case 1:
                     mentions = true;
+                    if (getActionBar().getTabAt(1).getText().toString().contains(")") && getMentionFragment() != null) {
+                        getMentionFragment().refresh();
+                    }
                     break;
                 case 2:
                     comments = true;
+                    if (getActionBar().getTabAt(2).getText().toString().contains(")") && getCommentFragment() != null) {
+                        getCommentFragment().refresh();
+                    }
                     break;
                 case 3:
                     my = true;
