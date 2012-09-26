@@ -114,4 +114,8 @@ public class URLHelper {
     public static String getSearchTopicByName() {
         return URLManager.getRealUrl("searchtopic");
     }
+
+    public static String getUnread() {
+        return URLManager.getRealUrl("unread");
+    }
 }

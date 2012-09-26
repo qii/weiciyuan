@@ -194,11 +194,11 @@
     <string name="show_big_pic_summary">缓存体积会猛增</string>
     <string name="auto_show_big_pic">自动切换大图、缩略图</string>
     <string name="auto_show_big_pic_summary">WIFI、3G 下自动开大图</string>
-    <string name="new_message">新消息</string>
+    <string name="new_message">未读消息</string>
     <string name="notification">通知</string>
-    <string name="disable_notification_at_night">半夜禁止推送</string>
+    <string name="disable_notification_at_night">半夜禁止通知</string>
     <string name="disable_notification_at_night_summary">凌晨1点到早上8点关闭，省电</string>
-    <string name="enable_fetch_new_msg">定时获取回复和评论</string>
+    <string name="enable_fetch_new_msg">获取未读的回复和评论</string>
     <string name="start_fetch_msg">开始后台自动获取……</string>
     <string name="frequency">间隔</string>
     <string name="theme">主题</string>

@@ -10,8 +10,10 @@ import org.qii.weiciyuan.BuildConfig;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
+import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -26,7 +28,7 @@ import java.util.List;
  */
 public class FetchNewMsgService extends Service {
 
-     //close service between 1 clock and 8 clock
+    //close service between 1 clock and 8 clock
     private static final int NIGHT_START_TIME_HOUR = 1;
     private static final int NIGHT_END_TIME_HOUR = 7;
 
@@ -101,6 +103,7 @@ public class FetchNewMsgService extends Service {
         AccountBean accountBean;
         CommentListBean commentResult;
         MessageListBean repostResult;
+        UnreadBean unreadBean;
 
         public SimpleTask(AccountBean bean) {
             accountBean = bean;
@@ -111,30 +114,35 @@ public class FetchNewMsgService extends Service {
 
             String accountId = accountBean.getUid();
             String token = accountBean.getAccess_token();
-
-            CommentListBean commentLineBean = DatabaseManager.getInstance().getCommentLineMsgList(accountId);
-            MessageListBean messageListBean = DatabaseManager.getInstance().getRepostLineMsgList(accountId);
-
-            MainCommentsTimeLineDao commentDao = new MainCommentsTimeLineDao(token);
-            if (commentLineBean.getSize() > 0) {
-                commentDao.setSince_id(commentLineBean.getItemList().get(0).getId());
-            }
-
-            MainMentionsTimeLineDao mentionDao = new MainMentionsTimeLineDao(token);
-            if (messageListBean.getSize() > 0) {
-                mentionDao.setSince_id(messageListBean.getItemList().get(0).getId());
-            }
-
-
             try {
-                commentResult = commentDao.getGSONMsgList();
-                repostResult = mentionDao.getGSONMsgList();
+                UnreadDao unreadDao = new UnreadDao(token, accountBean.getUid());
+                unreadBean = unreadDao.getCount();
+                int sum = unreadBean.getMention_cmt() + unreadBean.getMention_status() + unreadBean.getCmt();
+
+                if (sum > 0) {
+
+                    CommentListBean commentLineBean = DatabaseManager.getInstance().getCommentLineMsgList(accountId);
+                    MessageListBean messageListBean = DatabaseManager.getInstance().getRepostLineMsgList(accountId);
+
+                    MainCommentsTimeLineDao commentDao = new MainCommentsTimeLineDao(token);
+                    if (commentLineBean.getSize() > 0) {
+                        commentDao.setSince_id(commentLineBean.getItemList().get(0).getId());
+                    }
+
+                    MainMentionsTimeLineDao mentionDao = new MainMentionsTimeLineDao(token);
+                    if (messageListBean.getSize() > 0) {
+                        mentionDao.setSince_id(messageListBean.getItemList().get(0).getId());
+                    }
+
+                    commentResult = commentDao.getGSONMsgList();
+                    repostResult = mentionDao.getGSONMsgList();
+                }
             } catch (WeiboException e) {
                 this.e = e;
                 cancel(true);
                 return null;
             }
-            if (commentResult == null || repostResult == null) {
+            if (unreadBean == null) {
                 cancel(true);
             }
 
@@ -146,7 +154,8 @@ public class FetchNewMsgService extends Service {
         @Override
         protected void onPostExecute(Void sum) {
 
-            showNotification();
+            sendNewMsgBroadcast();
+
             stopSelf();
             super.onPostExecute(sum);
         }
@@ -157,12 +166,13 @@ public class FetchNewMsgService extends Service {
             super.onCancelled(stringIntegerMap);
         }
 
-        private void showNotification() {
+        private void sendNewMsgBroadcast() {
 
             Intent intent = new Intent(MentionsAndCommentsReceiver.ACTION);
             intent.putExtra("account", accountBean);
             intent.putExtra("comment", commentResult);
             intent.putExtra("repost", repostResult);
+            intent.putExtra("unread", unreadBean);
             sendOrderedBroadcast(intent, null);
 
         }

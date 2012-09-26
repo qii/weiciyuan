@@ -6,11 +6,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.util.HashSet;
@@ -31,6 +28,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
 
     private CommentListBean comment;
     private MessageListBean repost;
+    private UnreadBean unreadBean;
     private String title = "";
     private String content = "";
     private String ticker = "";
@@ -41,57 +39,55 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         accountBean = (AccountBean) intent.getSerializableExtra("account");
         comment = (CommentListBean) intent.getSerializableExtra("comment");
         repost = (MessageListBean) intent.getSerializableExtra("repost");
+        unreadBean = (UnreadBean) intent.getSerializableExtra("unread");
 
-        sum = comment.getSize() + repost.getSize();
+        sum = unreadBean.getMention_cmt() + unreadBean.getMention_status() + unreadBean.getCmt();
 
+        if (sum == 0 && accountBean != null) {
+            NotificationManager notificationManager = (NotificationManager) context
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(Long.valueOf(accountBean.getUid()).intValue());
+        } else if (sum > 0) {
+            Set<String> peopleNameSet = new HashSet<String>();
 
-        Set<String> peopleNameSet = new HashSet<String>();
+            String lastName = "";
 
-        String lastName;
-
-        if (comment.getSize() > 0) {
-            lastName = comment.getItemList().get(0).getUser().getScreen_name();
-            content = comment.getItemList().get(0).getText();
-            for (CommentBean bean : comment.getItemList()) {
-                peopleNameSet.add(bean.getUser().getScreen_name());
+            if (comment != null && comment.getSize() > 0) {
+                lastName = comment.getItemList().get(0).getUser().getScreen_name();
+                content = comment.getItemList().get(0).getText();
+                for (CommentBean bean : comment.getItemList()) {
+                    peopleNameSet.add(bean.getUser().getScreen_name());
+                }
+            } else if (repost != null && repost.getSize() > 0) {
+                lastName = repost.getItemList().get(0).getUser().getScreen_name();
+                content = repost.getItemList().get(0).getText();
+                for (MessageBean bean : repost.getItemList()) {
+                    peopleNameSet.add(bean.getUser().getScreen_name());
+                }
             }
-        } else if (repost.getSize() > 0) {
-            lastName = repost.getItemList().get(0).getUser().getScreen_name();
-            content = repost.getItemList().get(0).getText();
-            for (MessageBean bean : repost.getItemList()) {
-                peopleNameSet.add(bean.getUser().getScreen_name());
+
+
+            peopleNameSet.remove(lastName);
+
+            StringBuilder nameBuilder = new StringBuilder(lastName);
+
+            for (String name : peopleNameSet) {
+                nameBuilder.append("、").append(name);
             }
-        } else {
-            return;
+
+            title = nameBuilder.toString();
+            if (content.length() <= 20) {
+                ticker = lastName + ":" + content;
+            } else {
+                ticker = lastName + ":" + content.substring(0, 20) + "……";
+            }
+
+            showNotification();
         }
 
-
-        peopleNameSet.remove(lastName);
-
-        StringBuilder nameBuilder = new StringBuilder(lastName);
-
-        for (String name : peopleNameSet) {
-            nameBuilder.append("、").append(name);
-        }
-
-        title = nameBuilder.toString();
-        if (content.length() <= 20) {
-            ticker = lastName + ":" + content;
-        } else {
-            ticker = lastName + ":" + content.substring(0, 20) + "……";
-        }
-
-//        String avatarUrl;
-//        if (comment.getSize() > 0)
-//            avatarUrl = comment.getItemList().get(0).getUser().getAvatar_large();
-//        else
-//            avatarUrl = repost.getItemList().get(0).getUser().getAvatar_large();
-
-//        new DownloadAvatar(avatarUrl).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        showNotification(null);
     }
 
-    private void showNotification(Bitmap bitmap) {
+    private void showNotification() {
         Intent i = new Intent(context, MainTimeLineActivity.class);
         i.putExtra("account", accountBean);
         i.putExtra("comment", comment);
@@ -105,7 +101,6 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
                 .setContentTitle(title)
                 .setContentText(content)
                 .setSmallIcon(R.drawable.notification)
-//                .setLargeIcon(bitmap)
                 .setAutoCancel(true)
                 .setContentIntent(activity);
         if (sum > 1) {
@@ -116,27 +111,4 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
     }
 
 
-    class DownloadAvatar extends MyAsyncTask<Void, Bitmap, Bitmap> {
-
-        String url;
-
-        public DownloadAvatar(String url) {
-            this.url = url;
-        }
-
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-
-
-            int width = context.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width);
-            int height = context.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
-
-            return ImageTool.getNotificationAvatar(url, width, height);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            showNotification(bitmap);
-        }
-    }
 }
