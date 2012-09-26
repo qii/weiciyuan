@@ -124,13 +124,19 @@ public class ListViewTool {
         Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)");
         String scheme = "org.qii.weiciyuan://";
         MyLinkify.addLinks(view, pattern, scheme, null, mentionFilter);
+
+
+        pattern = Pattern.compile("#([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)#");
+        scheme = "org.qii.weiciyuan.topic://";
+        MyLinkify.addLinks(view, pattern, scheme, null, mentionFilter);
+
         MyLinkify.addLinks(view, MyLinkify.WEB_URLS);
         CharSequence content = view.getText();
         SpannableString value = SpannableString.valueOf(content);
         ListViewTool.addEmotions(value, view.getTextSize());
         view.setText(value);
 
-}
+    }
 
 
     public static boolean haveFilterWord(MessageBean content, List<String> filterWordList) {
@@ -201,7 +207,7 @@ public class ListViewTool {
                     Bitmap bitmap = BitmapFactory.decodeFile(path);
 
                     if (bitmap != null) {
-                        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) (height*1.5), (int) (height*1.5), true);
+                        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) (height * 1.5), (int) (height * 1.5), true);
                         bitmap.recycle();
                         ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), scaledBitmap, ImageSpan.ALIGN_BASELINE);
                         value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

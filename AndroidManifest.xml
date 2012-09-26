@@ -76,6 +76,15 @@
                 <data android:scheme="org.qii.weiciyuan"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ui.topic.SearchTopicByNameActivity"
+                  android:label="@string/search_topic"
+                >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <data android:scheme="org.qii.weiciyuan.topic"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.userinfo.MyInfoActivity"
                 />
         <activity android:name=".ui.userinfo.UserInfoStatusesActivity"
@@ -89,7 +98,7 @@
         <activity android:name=".ui.userinfo.MyFavActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.send.ReplyToCommentNewActivity"
-                 />
+                />
         <activity android:name=".ui.search.SearchMainActivity"/>
 
         <service android:name=".othercomponent.FetchNewMsgService"/>

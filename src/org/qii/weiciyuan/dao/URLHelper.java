@@ -110,4 +110,8 @@ public class URLHelper {
     public static String getDestroyStatus() {
         return URLManager.getRealUrl("destroy_status");
     }
+
+    public static String getSearchTopicByName() {
+        return URLManager.getRealUrl("searchtopic");
+    }
 }

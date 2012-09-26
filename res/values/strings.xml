@@ -183,6 +183,9 @@
     <string name="please_open_gps">请打开GPS</string>
     <string name="get_location">已经获得地址</string>
 
+    <!--topic-->
+    <string name="search_topic">搜索话题</string>
+
     <!---Setting  -->
     <string name="setting">设置</string>
     <string name="normal">常规</string>

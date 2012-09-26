@@ -5,19 +5,19 @@
     <PreferenceCategory
             android:title="@string/normal"
             >
+        <!--<CheckBoxPreference-->
+                <!--android:key="show_picture"-->
+                <!--android:title="@string/show_pic"-->
+                <!--android:defaultValue="true"/>-->
+        <!--android:dependency="show_picture"-->
         <CheckBoxPreference
-                android:key="show_picture"
-                android:title="@string/show_pic"
-                android:defaultValue="true"/>
 
-        <CheckBoxPreference
-                android:dependency="show_picture"
                 android:key="show_big_pic"
                 android:title="@string/show_big_pic"
                 android:summary="@string/show_big_pic_summary"
                 android:defaultValue="false"/>
         <CheckBoxPreference
-                android:dependency="show_picture"
+
                 android:key="auto_show_big_pic"
                 android:title="@string/auto_show_big_pic"
                 android:summary="@string/auto_show_big_pic_summary"
