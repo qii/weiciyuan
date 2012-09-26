@@ -80,15 +80,18 @@ public class ImageTool {
 
         } else if (height < reqHeight && width < useWidth) {
 
+
+
             int betweenWidth = useWidth - width;
             int betweenHeight = reqHeight - height;
 
             if (betweenWidth > betweenHeight) {
-                cutWidth = width;
-                cutHeight = (reqHeight * cutWidth) / useWidth;
-            } else {
                 cutHeight = height;
                 cutWidth = (useWidth * cutHeight) / reqHeight;
+
+            } else {
+                cutWidth = width;
+                cutHeight = (reqHeight * cutWidth) / useWidth;
             }
 
 
@@ -171,11 +174,12 @@ public class ImageTool {
             int betweenHeight = reqHeight - height;
 
             if (betweenWidth > betweenHeight) {
-                cutWidth = width;
-                cutHeight = (reqHeight * cutWidth) / useWidth;
-            } else {
                 cutHeight = height;
                 cutWidth = (useWidth * cutHeight) / reqHeight;
+
+            } else {
+                cutWidth = width;
+                cutHeight = (reqHeight * cutWidth) / useWidth;
             }
 
 
