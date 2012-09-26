@@ -225,4 +225,8 @@
     <string name="askdelete">删除?</string>
     <string name="cancel">取消</string>
     <string name="askdeletemessage">永久删除这条消息?</string>
+
+
+    <!--other-->
+    <string name="deleted_by_sina_weibo">条被新浪微博和谐了</string>
 </resources>

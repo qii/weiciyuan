@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.bean;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +7,9 @@ import java.util.List;
  * User: qii
  * Date: 12-8-18
  */
-public class FavListBean implements Serializable {
+public class FavListBean extends ListBean<MessageBean> {
     private List<FavBean> favorites = new ArrayList<FavBean>();
-    private String total_number = "";
+    private List<MessageBean> actualStore = null;
 
     public List<FavBean> getFavorites() {
         return favorites;
@@ -20,11 +19,27 @@ public class FavListBean implements Serializable {
         this.favorites = favorites;
     }
 
-    public String getTotal_number() {
-        return total_number;
+    @Override
+    public int getSize() {
+        return favorites.size();
     }
 
-    public void setTotal_number(String total_number) {
-        this.total_number = total_number;
+
+    @Override
+    public MessageBean getItem(int position) {
+        return favorites.get(position).getStatus();
     }
+
+    @Override
+    public List<MessageBean> getItemList() {
+        if (actualStore == null) {
+            actualStore = new ArrayList<MessageBean>();
+            for (FavBean b : favorites) {
+                actualStore.add(b.getStatus());
+            }
+        }
+        return actualStore;
+    }
+
+
 }

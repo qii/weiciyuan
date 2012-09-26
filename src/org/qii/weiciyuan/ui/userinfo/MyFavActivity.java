@@ -37,7 +37,7 @@ public class MyFavActivity extends AbstractAppActivity implements IUserInfo,
         getActionBar().setTitle(getString(R.string.my_fav_list));
         token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new MyFavListFragment())
                 .commit();
 
