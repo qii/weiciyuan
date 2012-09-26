@@ -118,4 +118,8 @@ public class URLHelper {
     public static String getUnread() {
         return URLManager.getRealUrl("unread");
     }
+
+    public static String getClearUnread() {
+        return URLManager.getRealUrl("clearunread");
+    }
 }

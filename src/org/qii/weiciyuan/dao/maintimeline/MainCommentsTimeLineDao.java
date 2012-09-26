@@ -5,6 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
@@ -72,7 +73,7 @@ public class MainCommentsTimeLineDao {
 
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-
+        new ClearUnreadDao(access_token, ClearUnreadDao.CMT).clearUnread();
 
         Gson gson = new Gson();
 
