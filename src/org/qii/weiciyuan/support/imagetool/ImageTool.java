@@ -44,7 +44,7 @@ public class ImageTool {
      * 2. cut bitmap
      */
     private static Bitmap getMiddlePictureInTimeLineGif(String absoluteFilePath, int reqWidth, int reqHeight) {
-        int useWidth = 400;
+        int useWidth = reqWidth;
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(absoluteFilePath, options);
@@ -81,17 +81,17 @@ public class ImageTool {
         } else if (height < reqHeight && width < useWidth) {
 
 
-
-            int betweenWidth = useWidth - width;
-            int betweenHeight = reqHeight - height;
+            float betweenWidth = ((float)useWidth - (float)width) /(float) width;
+            float betweenHeight = ((float)reqHeight - (float)height) /(float) height;
 
             if (betweenWidth > betweenHeight) {
+                cutWidth = width;
+                cutHeight = (reqHeight * cutWidth) / useWidth;
+
+            } else {
                 cutHeight = height;
                 cutWidth = (useWidth * cutHeight) / reqHeight;
 
-            } else {
-                cutWidth = width;
-                cutHeight = (reqHeight * cutWidth) / useWidth;
             }
 
 
@@ -170,16 +170,18 @@ public class ImageTool {
         } else if (height < reqHeight && width < useWidth) {
 
 
-            int betweenWidth = useWidth - width;
-            int betweenHeight = reqHeight - height;
+            float betweenWidth = ((float)useWidth - (float)width) /(float) width;
+            float betweenHeight = ((float)reqHeight - (float)height) /(float) height;
+
 
             if (betweenWidth > betweenHeight) {
+                cutWidth = width;
+                cutHeight = (reqHeight * cutWidth) / useWidth;
+
+            } else {
                 cutHeight = height;
                 cutWidth = (useWidth * cutHeight) / reqHeight;
 
-            } else {
-                cutWidth = width;
-                cutHeight = (reqHeight * cutWidth) / useWidth;
             }
 
 
