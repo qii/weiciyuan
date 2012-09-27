@@ -107,6 +107,6 @@
                android:layout_alignTop="@id/repost_and_pic"
                android:layout_marginTop="3dp"
                android:layout_below="@id/avatar"
-               android:src="?repost"
+               android:src="?timeline_repost_flag"
             />
 </RelativeLayout>

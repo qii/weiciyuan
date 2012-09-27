@@ -29,6 +29,7 @@
     <attr name="statusnewactivity_pic" format="reference"/>
     <attr name="error" format="reference"/>
     <attr name="location_map" format="reference"/>
+    <attr name="timeline_repost_flag" format="reference"/>
 
     <attr name="listview_item_background_selector" format="reference"/>
     <attr name="listview_item_refresh_animation" format="reference"/>

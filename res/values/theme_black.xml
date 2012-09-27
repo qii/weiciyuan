@@ -40,6 +40,8 @@
         <item name="statusnewactivity_pic">@drawable/picture_light</item>
         <item name="error">@drawable/error_light</item>
         <item name="location_map">@drawable/location_map_light</item>
+        <item name="timeline_repost_flag">@drawable/timeline_repost_light</item>
+
 
         <item name="listview_item_background_selector">@null</item>
         <item name="listview_item_refresh_animation">@drawable/refresh_light</item>
@@ -52,7 +54,7 @@
         <item name="backgroundSplit">@drawable/ab_bottom_transparent_dark_holo</item>
 
 
-     </style>
+    </style>
 
     <style name="Widget.Holo.ProgressBar" parent="android:Widget.Holo.ProgressBar">
         <item name="android:indeterminateDrawable">@drawable/progress_medium_holo</item>

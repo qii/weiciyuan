@@ -40,6 +40,7 @@
         <item name="statusnewactivity_pic">@drawable/picture_light</item>
         <item name="error">@drawable/error_black</item>
         <item name="location_map">@drawable/location_map_light</item>
+        <item name="timeline_repost_flag">@drawable/timeline_repost_black</item>
 
 
         <item name="listview_item_background_selector">@drawable/listview_item_background_selector</item>
