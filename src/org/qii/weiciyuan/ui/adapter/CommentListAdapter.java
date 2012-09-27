@@ -90,9 +90,9 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             holder.repost_content.setText(repost_msg.getListViewSpannableString());
             holder.repost_avatar.setVisibility(View.VISIBLE);
             boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
-            if (GlobalContext.getInstance().isEnablePic())
-                commander.downloadAvatar(holder.repost_avatar, repost_msg.getUser().getProfile_image_url(), position, listView, isFling);
-            else
+            if (GlobalContext.getInstance().isEnablePic()) {
+//                commander.downloadAvatar(holder.repost_avatar, repost_msg.getUser().getProfile_image_url(), position, listView, isFling);
+            } else
                 holder.repost_avatar.setVisibility(View.GONE);
         } else {
             holder.repost_content.setText(repost_msg.getText());
