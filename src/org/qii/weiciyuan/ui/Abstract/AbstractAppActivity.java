@@ -60,7 +60,7 @@ public class AbstractAppActivity extends FragmentActivity {
                 view.setImageBitmap(bitmap);
                 avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey, position));
             } else {
-                view.setImageDrawable(defaultAvatar);
+                view.setImageDrawable(getResources().getDrawable(R.color.transparent));
                 if (cancelPotentialAvatarDownload(urlKey, view) && !isFling) {
                     AvatarBitmapWorkerTask task = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey, position);
                     AvatarBitmapDrawable downloadedDrawable = new AvatarBitmapDrawable(task);

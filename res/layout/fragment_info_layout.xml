@@ -16,7 +16,8 @@
             <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:background="?account"
+                    android:padding="1px"
+                    android:background="@drawable/bg_border1"
                     android:id="@+id/avatar"/>
             <LinearLayout android:layout_height="wrap_content"
                           android:layout_width="0dp"
@@ -105,7 +106,6 @@
                     android:text="@string/fan_number"
                     android:gravity="center"
                     android:id="@+id/fans_number"/>
-
 
 
         </LinearLayout>
