@@ -142,10 +142,9 @@ public class TimeTool {
 
         }
 
-        return "" + calMonth / 12 + GlobalContext.getInstance().getString(R.string.month);
+        return "" + calMonth / 12 + GlobalContext.getInstance().getString(R.string.year);
 
-
-    }
+     }
 
 
     public static void dealMills(ItemBean bean) {
