@@ -3,13 +3,19 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         >
     <PreferenceCategory
-            android:title="@string/normal"
+            android:title="@string/appearance"
             >
         <!--<CheckBoxPreference-->
-                <!--android:key="show_picture"-->
-                <!--android:title="@string/show_pic"-->
-                <!--android:defaultValue="true"/>-->
+        <!--android:key="show_picture"-->
+        <!--android:title="@string/show_pic"-->
+        <!--android:defaultValue="true"/>-->
         <!--android:dependency="show_picture"-->
+        <CheckBoxPreference
+
+                android:key="show_big_avatar"
+                android:title="@string/show_big_avatar"
+                android:summary="@string/show_big_avatar_summary"
+                android:defaultValue="false"/>
         <CheckBoxPreference
 
                 android:key="show_big_pic"

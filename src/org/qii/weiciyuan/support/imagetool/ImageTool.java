@@ -81,8 +81,8 @@ public class ImageTool {
         } else if (height < reqHeight && width < useWidth) {
 
 
-            float betweenWidth = ((float)useWidth - (float)width) /(float) width;
-            float betweenHeight = ((float)reqHeight - (float)height) /(float) height;
+            float betweenWidth = ((float) useWidth - (float) width) / (float) width;
+            float betweenHeight = ((float) reqHeight - (float) height) / (float) height;
 
             if (betweenWidth > betweenHeight) {
                 cutWidth = width;
@@ -99,10 +99,26 @@ public class ImageTool {
 
         if (cutWidth > 0 && cutHeight > 0) {
             Bitmap region = Bitmap.createBitmap(bitmap, 0, 0, cutWidth, cutHeight);
-            Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
-            bitmap.recycle();
-            region.recycle();
-            return anotherValue;
+//            Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
+//            bitmap.recycle();
+//            region.recycle();
+//            return anotherValue;
+
+            Bitmap scale = null;
+            if (region.getHeight() < reqHeight && region.getWidth() < reqWidth) {
+                scale = Bitmap.createScaledBitmap(region, reqWidth, reqHeight, true);
+            }
+            if (scale == null) {
+                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
+                region.recycle();
+
+                return anotherValue;
+            } else {
+                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(scale);
+                region.recycle();
+                scale.recycle();
+                return anotherValue;
+            }
 
             //Android have bug,you cant use BitmapRegionDecoder to operate gif picture
 //            ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -170,8 +186,8 @@ public class ImageTool {
         } else if (height < reqHeight && width < useWidth) {
 
 
-            float betweenWidth = ((float)useWidth - (float)width) /(float) width;
-            float betweenHeight = ((float)reqHeight - (float)height) /(float) height;
+            float betweenWidth = ((float) useWidth - (float) width) / (float) width;
+            float betweenHeight = ((float) reqHeight - (float) height) / (float) height;
 
 
             if (betweenWidth > betweenHeight) {
@@ -200,9 +216,21 @@ public class ImageTool {
             try {
                 BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(absoluteFilePath, false);
                 Bitmap region = decoder.decodeRegion(new Rect(startX, 0, startX + cutWidth, cutHeight), null);
-                Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
-                region.recycle();
-                return anotherValue;
+                Bitmap scale = null;
+                if (region.getHeight() < reqHeight && region.getWidth() < reqWidth) {
+                    scale = Bitmap.createScaledBitmap(region, reqWidth, reqHeight, true);
+                }
+                if (scale == null) {
+                    Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
+                    region.recycle();
+
+                    return anotherValue;
+                } else {
+                    Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(scale);
+                    region.recycle();
+                    scale.recycle();
+                    return anotherValue;
+                }
             } catch (IOException ignored) {
                 //do nothing
             }
@@ -249,6 +277,46 @@ public class ImageTool {
         if (bitmap == null) {
             String path = getBitmapFromNetWork(url, absoluteFilePath, null);
             bitmap = BitmapFactory.decodeFile(absoluteFilePath);
+        }
+
+        if (bitmap != null) {
+            bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+        }
+
+        return bitmap;
+    }
+
+
+    public static Bitmap getTimeLineBigAvatarWithRoundedCorner(String url, int reqWidth, int reqHeight) {
+
+        Bitmap bitmap = null;
+
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_large);
+        absoluteFilePath = absoluteFilePath + ".jpg";
+        if (new File(absoluteFilePath).exists()) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(absoluteFilePath, options);
+
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+            options.inJustDecodeBounds = false;
+            options.inPurgeable = true;
+            options.inInputShareable = true;
+
+            bitmap = BitmapFactory.decodeFile(absoluteFilePath, options);
+        } else {
+            String path = getBitmapFromNetWork(url, absoluteFilePath, null);
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(absoluteFilePath, options);
+
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+            options.inJustDecodeBounds = false;
+            options.inPurgeable = true;
+            options.inInputShareable = true;
+
+            bitmap = BitmapFactory.decodeFile(absoluteFilePath, options);
         }
 
         if (bitmap != null) {

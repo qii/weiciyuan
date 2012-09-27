@@ -189,7 +189,10 @@
     <!---Setting  -->
     <string name="setting">设置</string>
     <string name="normal">常规</string>
+    <string name="appearance">观感</string>
     <string name="show_pic">显示头像图片</string>
+    <string name="show_big_avatar">高清头像</string>
+    <string name="show_big_avatar_summary">720P 手机推荐开高清</string>
     <string name="show_big_pic">列表显示大图</string>
     <string name="show_big_pic_summary">缓存体积会猛增</string>
     <string name="auto_show_big_pic">自动切换大图、缩略图</string>

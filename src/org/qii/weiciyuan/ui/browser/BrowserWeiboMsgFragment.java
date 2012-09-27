@@ -251,12 +251,22 @@ public class BrowserWeiboMsgFragment extends Fragment {
     private void buildViewData() {
         if (msg.getUser() != null) {
             username.setText(msg.getUser().getScreen_name());
-            String url = msg.getUser().getProfile_image_url();
+            //50px avatar or 180px avatar
+            String url;
+            FileLocationMethod method;
+            if (GlobalContext.getInstance().getEnableBigAvatar()) {
+                url = msg.getUser().getAvatar_large();
+                method = FileLocationMethod.avatar_large;
+            } else {
+                url = msg.getUser().getProfile_image_url();
+                method = FileLocationMethod.avatar_small;
+            }
             Bitmap bitmap = GlobalContext.getInstance().getAvatarCache().get(url);
             if (bitmap != null) {
                 avatar.setImageBitmap(bitmap);
             } else {
-                SimpleBitmapWorkerTask avatarTask = new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_small);
+
+                SimpleBitmapWorkerTask avatarTask = new SimpleBitmapWorkerTask(avatar, method);
                 avatarTask.execute(url);
             }
         }

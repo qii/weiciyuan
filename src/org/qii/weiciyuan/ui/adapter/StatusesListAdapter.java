@@ -48,8 +48,16 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             String image_url = msg.getUser().getProfile_image_url();
             if (!TextUtils.isEmpty(image_url) && GlobalContext.getInstance().isEnablePic()) {
                 holder.avatar.setVisibility(View.VISIBLE);
+                //when listview is flying,app dont download avatar and picture
                 boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
-                commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView, isFling);
+                //50px avatar or 180px avatar
+                String url;
+                if (GlobalContext.getInstance().getEnableBigAvatar()) {
+                    url = msg.getUser().getAvatar_large();
+                } else {
+                    url = msg.getUser().getProfile_image_url();
+                }
+                commander.downloadAvatar(holder.avatar, url, position, listView, isFling);
             } else {
                 holder.avatar.setVisibility(View.GONE);
             }

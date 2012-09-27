@@ -34,6 +34,8 @@ public final class GlobalContext extends Application {
 
     private Boolean enableBigPic = null;
 
+    private Boolean enableBigAvatar = null;
+
 
     private int theme = 0;
 
@@ -208,6 +210,24 @@ public final class GlobalContext extends Application {
 
     public void setEnableBigPic(Boolean enableBigPic) {
         this.enableBigPic = enableBigPic;
+    }
+
+
+    public Boolean getEnableBigAvatar() {
+
+        if (enableBigAvatar != null) {
+            return enableBigAvatar;
+        } else {
+            AppLogger.e("GlobalContext is empty by system");
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            enableBigAvatar = sharedPref.getBoolean(SettingActivity.SHOW_BIG_AVATAR, false);
+            return enableBigAvatar;
+        }
+
+    }
+
+    public void setEnableBigAvatar(Boolean enableBigAvatar) {
+        this.enableBigAvatar = enableBigAvatar;
     }
 
     public void setAppTheme(int theme) {

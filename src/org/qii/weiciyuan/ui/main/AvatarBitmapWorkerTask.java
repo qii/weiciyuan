@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.AvatarBitmapDrawable;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -56,7 +57,13 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... url) {
 
         if (!isCancelled()) {
-            return ImageTool.getSmallAvatarWithRoundedCorner(data);
+            if (GlobalContext.getInstance().getEnableBigAvatar()) {
+                float reSize = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
+                int width = (int) (40 * reSize);
+                int height = width;
+                return ImageTool.getTimeLineBigAvatarWithRoundedCorner(data, width, height);
+            } else
+                return ImageTool.getSmallAvatarWithRoundedCorner(data);
         }
         return null;
     }
