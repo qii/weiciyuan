@@ -43,7 +43,14 @@ public class ListViewTool {
 
 
     public static SpannableString getJustHighLightLinks(String txt) {
-
+        //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
+        //if string only contains emotion tags,add a empty char to the end
+        String hackTxt;
+        if (txt.startsWith("[") && txt.endsWith("]")) {
+            hackTxt = txt + " ";
+        } else {
+            hackTxt = txt;
+        }
         SpannableString value;
         MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
             public final String transformUrl(final Matcher match, String url) {
@@ -54,7 +61,7 @@ public class ListViewTool {
         // Match @mentions and capture just the username portion of the text.
         Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)");
         String scheme = "org.qii.weiciyuan://";
-        value = MyLinkify.getJustHighLightLinks(txt, pattern, scheme, null, mentionFilter);
+        value = MyLinkify.getJustHighLightLinks(hackTxt, pattern, scheme, null, mentionFilter);
 
         value = MyLinkify.addJUstHighLightLinks(value, MyLinkify.WEB_URLS);
 
