@@ -439,7 +439,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     protected void oldMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null && newValue.getItemList().size() > 1) {
             List<CommentBean> list = newValue.getItemList();
-            getList().getItemList().addAll(list.subList(1, list.size() - 1));
+            getList().getItemList().addAll(list.subList(1, list.size() ));
+            getList().setTotal_number(newValue.getTotal_number());
 
         }
 

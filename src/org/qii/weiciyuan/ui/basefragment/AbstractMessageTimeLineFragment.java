@@ -67,12 +67,8 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
     protected void oldMsgOnPostExecute(ListBean<MessageBean> newValue) {
         if (newValue != null && newValue.getSize() > 1) {
 
-            int index = newValue.getSize() - 1;
-
-            if (index > 1) {
-
-                getList().getItemList().addAll(newValue.getItemList().subList(1, index));
-            }
+            getList().getItemList().addAll(newValue.getItemList().subList(1, newValue.getSize()));
+            getList().setTotal_number(newValue.getTotal_number());
 
         } else {
             Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
@@ -102,12 +98,12 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
                         mActionMode = null;
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener( getListView(), (StatusesListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(getListView(), (StatusesListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     } else {
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener( getListView(), (StatusesListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(getListView(), (StatusesListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     }
                 }
