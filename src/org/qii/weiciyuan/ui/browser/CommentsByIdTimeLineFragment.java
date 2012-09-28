@@ -177,26 +177,23 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-//                pullToRefreshListView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity(),
-//                        System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
-//                        | DateUtils.FORMAT_ABBREV_ALL));
-
-                // Do work to refresh the list here.
                 refresh();
 
             }
         });
+        pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+            @Override
+            public void onLastItemVisible() {
+                listViewFooterViewClick(null);
+            }
+        });
         getListView().setScrollingCacheEnabled(false);
-//        headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
-//        getListView().addHeaderView(headerView);
+
         getListView().setHeaderDividersEnabled(false);
+
         footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         getListView().addFooterView(footerView);
-
-        if (bean == null || bean.getItemList().size() == 0) {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-        }
-
+        dismissFooterView();
 
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -388,11 +385,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
                 break;
 
-//            case R.id.commentsbyidtimelinefragment_refresh:
-//
-//                refresh();
-//
-//                break;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -435,7 +428,6 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
                 clearAndReplaceValue(newValue);
                 timeLineAdapter.notifyDataSetChanged();
                 getListView().setSelectionAfterHeaderView();
-//                headerView.findViewById(R.id.header_progress).clearAnimation();
 
             }
         }
@@ -448,10 +440,6 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         if (newValue != null && newValue.getItemList().size() > 1) {
             List<CommentBean> list = newValue.getItemList();
             getList().getItemList().addAll(list.subList(1, list.size() - 1));
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
-
-        } else {
-            (footerView.findViewById(R.id.listview_footer)).setVisibility(View.GONE);
 
         }
 

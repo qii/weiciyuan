@@ -42,7 +42,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
     protected BaseAdapter timeLineAdapter;
 
-    //    protected View headerView;
     protected View footerView;
     protected ICommander commander;
 
@@ -61,17 +60,14 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
     protected void refreshLayout(T bean) {
         if (bean != null && bean.getSize() > 0) {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
 //            empty.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
 //            listView.setVisibility(View.VISIBLE);
         } else if (bean == null || bean.getSize() == 0) {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
 //            empty.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
 //            listView.setVisibility(View.VISIBLE);
         } else if (bean.getSize() == bean.getTotal_number()) {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
 //            empty.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
 //            listView.setVisibility(View.VISIBLE);
@@ -99,31 +95,26 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
 
-
-
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 
-//                pullToRefreshListView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity(),
-//                        System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
-//                        | DateUtils.FORMAT_ABBREV_ALL));
-
-                // Do work to refresh the list here.
                 refresh();
+            }
+        });
+
+        pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+            @Override
+            public void onLastItemVisible() {
+                listViewFooterViewClick(null);
             }
         });
 
 //        getListView().setScrollingCacheEnabled(false);
 //        headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
-//        getListView().addHeaderView(headerView);
         getListView().setHeaderDividersEnabled(false);
         footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         getListView().addFooterView(footerView);
-
-        if (bean == null || bean.getSize() == 0) {
-
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-        }
+        dismissFooterView();
 
 
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -148,6 +139,32 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         });
         buildListAdapter();
         return view;
+    }
+
+    private void showFooterView() {
+        TextView tv = ((TextView) footerView.findViewById(R.id.listview_footer));
+        tv.setVisibility(View.VISIBLE);
+        tv.setText(getString(R.string.loading));
+        View view = footerView.findViewById(R.id.refresh);
+        view.setVisibility(View.VISIBLE);
+        view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
+    }
+
+
+    protected void dismissFooterView() {
+        footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
+        footerView.findViewById(R.id.refresh).clearAnimation();
+        footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+    }
+
+
+    private void showErrorFooterView() {
+        TextView tv = ((TextView) footerView.findViewById(R.id.listview_footer));
+        tv.setVisibility(View.VISIBLE);
+        tv.setText(getString(R.string.click_to_load_older_message));
+        View view = footerView.findViewById(R.id.refresh);
+        view.clearAnimation();
+        view.setVisibility(View.GONE);
     }
 
     public void clearActionMode() {
@@ -237,10 +254,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         @Override
         protected void onPreExecute() {
             showListView();
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-//            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
-//            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
-//            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
+
             getListView().setSelection(0);
         }
 
@@ -278,15 +292,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             refreshLayout(getList());
             pullToRefreshListView.onRefreshComplete();
 
-//            headerView.findViewById(R.id.header_progress).clearAnimation();
-//            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
-//            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
-//
-            if (bean.getSize() == 0) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            } else {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            }
         }
     }
 
@@ -303,10 +308,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         protected void onPreExecute() {
             showListView();
 
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
-            View view = footerView.findViewById(R.id.refresh);
-            view.setVisibility(View.VISIBLE);
-            view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
+            showFooterView();
 
         }
 
@@ -326,11 +328,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         @Override
         protected void onPostExecute(T newValue) {
             oldMsgOnPostExecute(newValue);
-            if (newValue.getSize() > 1) {
-                ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
-            } else if (newValue.getSize() == 1) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            }
+
             cleanWork();
             super.onPostExecute(newValue);
         }
@@ -339,21 +337,24 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         protected void onCancelled(T messageListBean) {
             super.onCancelled(messageListBean);
             if (getActivity() != null) {
-                ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
-                if (this.e != null)
+                if (this.e != null) {
                     Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-                cleanWork();
+                    showErrorFooterView();
+                    pullToRefreshListView.onRefreshComplete();
+                } else {
+                    dismissFooterView();
+                }
             }
 
         }
 
         private void cleanWork() {
             pullToRefreshListView.onRefreshComplete();
-            footerView.findViewById(R.id.refresh).clearAnimation();
-            footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
             timeLineAdapter.notifyDataSetChanged();
+            dismissFooterView();
         }
     }
+
 
     protected void showListView() {
 //        empty.setVisibility(View.INVISIBLE);
@@ -426,7 +427,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutorService.scheduleAtFixedRate(new refreshTimeWorker(), 1, 1, TimeUnit.SECONDS);
 
-        getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
+        pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 switch (scrollState) {

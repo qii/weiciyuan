@@ -32,7 +32,6 @@ import java.util.Set;
  */
 public abstract class AbstractUserListFragment extends Fragment {
 
-//    protected View headerView;
     protected View footerView;
     public volatile boolean isBusying = false;
     protected ICommander commander;
@@ -156,20 +155,21 @@ public abstract class AbstractUserListFragment extends Fragment {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 
-
                 refresh();
             }
         });
 //        listView.setScrollingCacheEnabled(false);
-//        headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
-//        listView.addHeaderView(headerView);
-//        listView.setHeaderDividersEnabled(false);
+        //        listView.setHeaderDividersEnabled(false);
+        pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+            @Override
+            public void onLastItemVisible() {
+                listViewFooterViewClick(null);
+            }
+        });
+
         footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         getListView().addFooterView(footerView);
-
-        if (bean.getUsers().size() == 0) {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-        }
+        dismissFooterView();
 
 
         timeLineAdapter = new UserListAdapter(AbstractUserListFragment.this, ((AbstractAppActivity) getActivity()).getCommander(), bean.getUsers(), getListView());
@@ -199,7 +199,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     }
 
     protected void listViewFooterViewClick(View view) {
-        if (!isBusying) {
+        if (oldTask == null || oldTask.getStatus() == MyAsyncTask.Status.FINISHED) {
             oldTask = new UserListGetOlderDataTask();
             oldTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -214,12 +214,10 @@ public abstract class AbstractUserListFragment extends Fragment {
 
     protected void refreshLayout(UserListBean bean) {
         if (bean.getUsers().size() > 0) {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             empty.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
 //            listView.setVisibility(View.VISIBLE);
         } else {
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
             empty.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
 //            listView.setVisibility(View.INVISIBLE);
@@ -227,18 +225,46 @@ public abstract class AbstractUserListFragment extends Fragment {
     }
 
 
+    private void showFooterView() {
+        TextView tv = ((TextView) footerView.findViewById(R.id.listview_footer));
+        tv.setVisibility(View.VISIBLE);
+        tv.setText(getString(R.string.loading));
+        View view = footerView.findViewById(R.id.refresh);
+        view.setVisibility(View.VISIBLE);
+        view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
+    }
+
+
+    protected void dismissFooterView() {
+        footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
+        footerView.findViewById(R.id.refresh).clearAnimation();
+        footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+    }
+
+
+    private void showErrorFooterView() {
+        TextView tv = ((TextView) footerView.findViewById(R.id.listview_footer));
+        tv.setVisibility(View.VISIBLE);
+        tv.setText(getString(R.string.click_to_load_older_message));
+        View view = footerView.findViewById(R.id.refresh);
+        view.clearAnimation();
+        view.setVisibility(View.GONE);
+    }
+
     public void refresh() {
-        Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
+        if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
 
+            Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
 
-        newTask = new UserListGetNewDataTask();
-        newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
-        for (String key : keys) {
-            avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
-            avatarBitmapWorkerTaskHashMap.remove(key);
+            newTask = new UserListGetNewDataTask();
+            newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+
+            Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
+            for (String key : keys) {
+                avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
+                avatarBitmapWorkerTaskHashMap.remove(key);
+            }
         }
-
 
     }
 
@@ -271,11 +297,6 @@ public abstract class AbstractUserListFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             showListView();
-            isBusying = true;
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-//            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
-//            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
-//            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
             getListView().setSelection(0);
         }
 
@@ -308,7 +329,6 @@ public abstract class AbstractUserListFragment extends Fragment {
                 clearAndReplaceValue(newValue);
                 timeLineAdapter.notifyDataSetChanged();
                 getListView().setSelectionAfterHeaderView();
-//                headerView.findViewById(R.id.header_progress).clearAnimation();
 
 
             }
@@ -320,20 +340,10 @@ public abstract class AbstractUserListFragment extends Fragment {
         }
 
         private void cleanWork() {
-//            headerView.findViewById(R.id.header_progress).clearAnimation();
-//            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
-//            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
+
             pullToRefreshListView.onRefreshComplete();
 
-            isBusying = false;
-            if (bean.getUsers().size() == 0) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            } else if (bean.getUsers().size() > 0 && bean.getUsers().size() < bean.getTotal_number()) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            } else if ((bean.getUsers().size() > 0 && bean.getUsers().size() == bean.getTotal_number())) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
 
-            }
         }
     }
 
@@ -351,13 +361,7 @@ public abstract class AbstractUserListFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             showListView();
-            isBusying = true;
-
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.loading));
-            View view = footerView.findViewById(R.id.refresh);
-            view.setVisibility(View.VISIBLE);
-            view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
-
+            showFooterView();
         }
 
         @Override
@@ -377,10 +381,13 @@ public abstract class AbstractUserListFragment extends Fragment {
         @Override
         protected void onCancelled(UserListBean newValue) {
             super.onCancelled(newValue);
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
-            if (this.e != null)
+
+            if (this.e != null) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-            cleanWork();
+                showErrorFooterView();
+            } else {
+                dismissFooterView();
+            }
 
         }
 
@@ -392,21 +399,13 @@ public abstract class AbstractUserListFragment extends Fragment {
                 bean.setNext_cursor(newValue.getNext_cursor());
             }
 
-            cleanWork();
             timeLineAdapter.notifyDataSetChanged();
             getActivity().invalidateOptionsMenu();
+            dismissFooterView();
             super.onPostExecute(newValue);
         }
 
 
-        private void cleanWork() {
-            isBusying = false;
-            ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
-            footerView.findViewById(R.id.refresh).clearAnimation();
-            footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
-            if (bean.getNext_cursor() == 0)
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-        }
     }
 
     protected abstract UserListBean getDoInBackgroundNewData() throws WeiboException;
