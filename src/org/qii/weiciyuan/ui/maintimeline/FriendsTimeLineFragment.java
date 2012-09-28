@@ -138,6 +138,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 startActivity(intent);
                 break;
             case R.id.friendstimelinefragment_refresh:
+                pullToRefreshListView.startRefreshNow();
 
                 refresh();
 

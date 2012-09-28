@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.FavListBean;
@@ -49,6 +48,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
+            pullToRefreshListView.startRefreshNow();
             refresh();
 
         }
@@ -83,6 +83,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
                 break;
 
             case R.id.myfavlistfragment_refresh:
+                pullToRefreshListView.startRefreshNow();
 
                 refresh();
 
@@ -97,7 +98,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
             clearAndReplaceValue(newValue);
             timeLineAdapter.notifyDataSetChanged();
-            listView.setSelectionAfterHeaderView();
+            getListView().setSelectionAfterHeaderView();
             getActivity().invalidateOptionsMenu();
         }
 
@@ -134,6 +135,6 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
             getActivity().invalidateOptionsMenu();
             page++;
         }
-        ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
+//        ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
     }
 }

@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ListBean;
@@ -150,11 +149,11 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         @Override
         protected void onPreExecute() {
             showListView();
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
-            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
-            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
-            listView.setSelection(0);
+//            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+//            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
+//            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
+//            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
+            getListView().setSelection(0);
         }
 
         @Override
@@ -167,14 +166,14 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         protected void onPostExecute(Object o) {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
-            headerView.findViewById(R.id.header_progress).clearAnimation();
-            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
-            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
+//            headerView.findViewById(R.id.header_progress).clearAnimation();
+//            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
+//            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
 
             if (bean.getSize() == 0) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+//                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
             } else {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+//                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             }
             super.onPostExecute(o);
         }
@@ -209,7 +208,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 break;
 
             case R.id.mentionstimelinefragment_refresh:
-
+                pullToRefreshListView.startRefreshNow();
                 refresh();
 
                 break;

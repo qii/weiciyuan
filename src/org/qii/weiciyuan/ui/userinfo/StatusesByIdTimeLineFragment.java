@@ -53,6 +53,8 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
             refreshLayout(bean);
         } else {
             userBean = ((IUserInfo) getActivity()).getUser();
+            pullToRefreshListView.startRefreshNow();
+
             refresh();
 
         }
@@ -81,10 +83,10 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         switch (item.getItemId()) {
 
             case R.id.statusesbyidtimelinefragment_status_refresh:
-
+                pullToRefreshListView.startRefreshNow();
                 refresh();
 
-                break;
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

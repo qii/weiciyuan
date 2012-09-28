@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ListBean;
@@ -52,6 +51,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
             q = savedInstanceState.getString("q");
             page = savedInstanceState.getInt("page");
         } else {
+            pullToRefreshListView.startRefreshNow();
             refresh();
         }
     }
@@ -76,7 +76,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
                 break;
 
             case R.id.myfavlistfragment_refresh:
-
+                pullToRefreshListView.startRefreshNow();
                 refresh();
 
                 break;
@@ -109,7 +109,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
          if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
              clearAndReplaceValue(newValue);
              timeLineAdapter.notifyDataSetChanged();
-             listView.setSelectionAfterHeaderView();
+             getListView().setSelectionAfterHeaderView();
              getActivity().invalidateOptionsMenu();
          }
 
@@ -131,7 +131,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
             page++;
             getActivity().invalidateOptionsMenu();
         }
-        ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
+//        ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
 
     }
 }

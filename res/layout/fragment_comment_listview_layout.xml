@@ -10,24 +10,28 @@
                  android:layout_height="0dp"
                  android:layout_weight="1"
             >
-        <ListView
+
+        <TextView android:layout_width="fill_parent"
+                          android:layout_height="fill_parent"
+                          android:visibility="gone"
+                          android:gravity="center"
+                          android:id="@+id/empty"
+                          android:text="@string/empty"/>
+
+        <org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:fastScrollEnabled="true"
+                android:fastScrollEnabled="false"
                 android:cacheColorHint="@android:color/transparent"
                 android:id="@+id/listView"
                 android:layout_gravity="center"
                 android:scrollingCache="true"
                 android:smoothScrollbar="true"
-                android:visibility="invisible"
+                android:visibility="visible"
+                android:fadingEdge="none"
+
                 />
 
-        <TextView android:layout_width="fill_parent"
-                  android:layout_height="fill_parent"
-                  android:visibility="gone"
-                  android:gravity="center"
-                  android:id="@+id/empty"
-                  android:text="@string/empty"/>
         <ProgressBar android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:layout_gravity="center"

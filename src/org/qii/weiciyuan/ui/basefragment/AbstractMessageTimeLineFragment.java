@@ -56,7 +56,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
                 }
                 clearAndReplaceValue(newValue);
                 timeLineAdapter.notifyDataSetChanged();
-                listView.setSelectionAfterHeaderView();
+                getListView().setSelectionAfterHeaderView();
 
             }
         }
@@ -91,8 +91,8 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -100,14 +100,14 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
                     if (mActionMode != null) {
                         mActionMode.finish();
                         mActionMode = null;
-                        listView.setItemChecked(position, true);
+                        getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, (StatusesListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener( getListView(), (StatusesListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     } else {
-                        listView.setItemChecked(position, true);
+                        getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(listView, (StatusesListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener( getListView(), (StatusesListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     }
                 }
@@ -120,8 +120,8 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusesListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), listView, true);
-        listView.setAdapter(timeLineAdapter);
+        timeLineAdapter = new StatusesListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), getListView(), true);
+        getListView().setAdapter(timeLineAdapter);
     }
 
 

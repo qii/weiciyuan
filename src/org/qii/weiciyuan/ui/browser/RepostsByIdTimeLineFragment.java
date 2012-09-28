@@ -15,6 +15,8 @@ import org.qii.weiciyuan.bean.RepostListBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
+import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
@@ -53,7 +55,8 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     //restore from activity destroy
     public void load() {
         if ((bean == null || bean.getSize() == 0) && newTask == null) {
-            if (listView != null) {
+            if (pullToRefreshListView != null) {
+                pullToRefreshListView.startRefreshNow();
                 refresh();
             }
 
@@ -105,22 +108,22 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
             refreshLayout(bean);
         }
 
-        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position - 1 < getList().getSize() && position - 1 >= 0) {
                     if (mActionMode != null) {
                         mActionMode.finish();
                         mActionMode = null;
-                        listView.setItemChecked(position, true);
+                        getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, (StatusesListAdapter) timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(getListView(), (StatusesListAdapter) timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
                         return true;
                     } else {
-                        listView.setItemChecked(position, true);
+                        getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(listView, (StatusesListAdapter) timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(getListView(), (StatusesListAdapter) timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
                         return true;
                     }
 
@@ -151,30 +154,42 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         quick_repost = (LinearLayout) view.findViewById(R.id.quick_repost);
-        listView = (ListView) view.findViewById(R.id.listView);
-        listView.setScrollingCacheEnabled(false);
-        headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
-        listView.addHeaderView(headerView);
-        listView.setHeaderDividersEnabled(false);
+        pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
+        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+//                pullToRefreshListView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity(),
+//                        System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
+//                        | DateUtils.FORMAT_ABBREV_ALL));
+
+                // Do work to refresh the list here.
+                refresh();
+
+            }
+        });
+        getListView().setScrollingCacheEnabled(false);
+//        headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
+//        getListView().addHeaderView(headerView);
+        getListView().setHeaderDividersEnabled(false);
         footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
-        listView.addFooterView(footerView);
+        getListView().addFooterView(footerView);
 
         if (bean.getSize() == 0) {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
         }
 
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 if (mActionMode != null) {
-                    listView.clearChoices();
+                    getListView().clearChoices();
                     mActionMode.finish();
                     mActionMode = null;
                     return;
                 }
-                listView.clearChoices();
+                getListView().clearChoices();
                 if (position - 1 < getList().getSize() && position - 1 >= 0) {
 
                     listViewItemClick(parent, view, position - 1, id);
@@ -208,8 +223,8 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     }
 
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusesListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), listView, false);
-        listView.setAdapter(timeLineAdapter);
+        timeLineAdapter = new StatusesListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), getListView(), false);
+        pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 
     private void sendRepost() {
@@ -314,11 +329,11 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
                 startActivity(intent);
                 break;
 
-            case R.id.repostsbyidtimelinefragment_repost_refresh:
-
-                refresh();
-
-                break;
+//            case R.id.repostsbyidtimelinefragment_repost_refresh:
+//
+//                refresh();
+//
+//                break;
         }
         return super.onOptionsItemSelected(item);
     }

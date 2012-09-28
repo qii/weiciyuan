@@ -11,6 +11,8 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
+import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -30,11 +32,11 @@ import java.util.Set;
  */
 public abstract class AbstractUserListFragment extends Fragment {
 
-    protected View headerView;
+//    protected View headerView;
     protected View footerView;
     public volatile boolean isBusying = false;
     protected ICommander commander;
-    protected ListView listView;
+    protected PullToRefreshListView pullToRefreshListView;
     protected TextView empty;
     protected ProgressBar progressBar;
     protected UserListAdapter timeLineAdapter;
@@ -44,6 +46,10 @@ public abstract class AbstractUserListFragment extends Fragment {
 
     private UserListGetNewDataTask newTask;
     private UserListGetOlderDataTask oldTask;
+
+    protected ListView getListView() {
+        return pullToRefreshListView.getRefreshableView();
+    }
 
     protected void clearAndReplaceValue(UserListBean value) {
 
@@ -84,12 +90,13 @@ public abstract class AbstractUserListFragment extends Fragment {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
+            pullToRefreshListView.startRefreshNow();
             refresh();
 
         }
 
-        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -97,14 +104,14 @@ public abstract class AbstractUserListFragment extends Fragment {
                     if (mActionMode != null) {
                         mActionMode.finish();
                         mActionMode = null;
-                        listView.setItemChecked(position, true);
+                        getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(listView, timeLineAdapter, AbstractUserListFragment.this, bean.getUsers().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(getListView(), timeLineAdapter, AbstractUserListFragment.this, bean.getUsers().get(position - 1)));
                         return true;
                     } else {
-                        listView.setItemChecked(position, true);
+                        getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(listView, timeLineAdapter, AbstractUserListFragment.this, bean.getUsers().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(getListView(), timeLineAdapter, AbstractUserListFragment.this, bean.getUsers().get(position - 1)));
                         return true;
                     }
                 }
@@ -142,32 +149,42 @@ public abstract class AbstractUserListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
-        listView = (ListView) view.findViewById(R.id.listView);
-        listView.setScrollingCacheEnabled(false);
-        headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
-        listView.addHeaderView(headerView);
-        listView.setHeaderDividersEnabled(false);
+        pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
+        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+
+
+            @Override
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+
+
+                refresh();
+            }
+        });
+//        listView.setScrollingCacheEnabled(false);
+//        headerView = inflater.inflate(R.layout.fragment_listview_header_layout, null);
+//        listView.addHeaderView(headerView);
+//        listView.setHeaderDividersEnabled(false);
         footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
-        listView.addFooterView(footerView);
+        getListView().addFooterView(footerView);
 
         if (bean.getUsers().size() == 0) {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
         }
 
 
-        timeLineAdapter = new UserListAdapter(AbstractUserListFragment.this, ((AbstractAppActivity) getActivity()).getCommander(), bean.getUsers(), listView);
-        listView.setAdapter(timeLineAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        timeLineAdapter = new UserListAdapter(AbstractUserListFragment.this, ((AbstractAppActivity) getActivity()).getCommander(), bean.getUsers(), getListView());
+        pullToRefreshListView.setAdapter(timeLineAdapter);
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 if (mActionMode != null) {
-                    listView.clearChoices();
+                    getListView().clearChoices();
                     mActionMode.finish();
                     mActionMode = null;
                     return;
                 }
-                listView.clearChoices();
+                getListView().clearChoices();
                 if (position - 1 < getList().getUsers().size()) {
 
                     listViewItemClick(parent, view, position - 1, id);
@@ -200,12 +217,12 @@ public abstract class AbstractUserListFragment extends Fragment {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             empty.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
-            listView.setVisibility(View.VISIBLE);
+//            listView.setVisibility(View.VISIBLE);
         } else {
             footerView.findViewById(R.id.listview_footer).setVisibility(View.INVISIBLE);
             empty.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
-            listView.setVisibility(View.INVISIBLE);
+//            listView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -238,6 +255,7 @@ public abstract class AbstractUserListFragment extends Fragment {
         switch (item.getItemId()) {
 
             case R.id.refresh:
+                pullToRefreshListView.startRefreshNow();
 
                 refresh();
 
@@ -255,10 +273,10 @@ public abstract class AbstractUserListFragment extends Fragment {
             showListView();
             isBusying = true;
             footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
-            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
-            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
-            listView.setSelection(0);
+//            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
+//            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
+//            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
+            getListView().setSelection(0);
         }
 
 
@@ -289,11 +307,12 @@ public abstract class AbstractUserListFragment extends Fragment {
 
                 clearAndReplaceValue(newValue);
                 timeLineAdapter.notifyDataSetChanged();
-                listView.setSelectionAfterHeaderView();
-                headerView.findViewById(R.id.header_progress).clearAnimation();
+                getListView().setSelectionAfterHeaderView();
+//                headerView.findViewById(R.id.header_progress).clearAnimation();
 
 
             }
+
             cleanWork();
             getActivity().invalidateOptionsMenu();
             super.onPostExecute(newValue);
@@ -301,9 +320,11 @@ public abstract class AbstractUserListFragment extends Fragment {
         }
 
         private void cleanWork() {
-            headerView.findViewById(R.id.header_progress).clearAnimation();
-            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
-            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
+//            headerView.findViewById(R.id.header_progress).clearAnimation();
+//            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
+//            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
+            pullToRefreshListView.onRefreshComplete();
+
             isBusying = false;
             if (bean.getUsers().size() == 0) {
                 footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
@@ -319,7 +340,7 @@ public abstract class AbstractUserListFragment extends Fragment {
 
     private void showListView() {
         empty.setVisibility(View.INVISIBLE);
-        listView.setVisibility(View.VISIBLE);
+//        listView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
     }
 

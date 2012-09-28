@@ -8,10 +8,10 @@
           android:showAsAction="ifRoom|withText"
             />
 
-    <item android:id="@+id/repostsbyidtimelinefragment_repost_refresh"
-          android:icon="?refresh"
-          android:title="@string/refresh"
-          android:showAsAction="ifRoom|withText"
-            />
+    <!--<item android:id="@+id/repostsbyidtimelinefragment_repost_refresh"-->
+          <!--android:icon="?refresh"-->
+          <!--android:title="@string/refresh"-->
+          <!--android:showAsAction="ifRoom|withText"-->
+            <!--/>-->
 
 </menu>

@@ -25,6 +25,7 @@ public class MyStatussTimeLineFragment extends StatusesByIdTimeLineFragment {
 
             case R.id.statusesbyidtimelinefragment_status_refresh:
 
+                pullToRefreshListView.startRefreshNow();
                 refresh();
 
                 break;

@@ -2,11 +2,11 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/commentsbyidtimelinefragment_refresh"
-          android:icon="?refresh"
-          android:title="@string/refresh"
-          android:showAsAction="ifRoom|withText"
-            />
+    <!--<item android:id="@+id/commentsbyidtimelinefragment_refresh"-->
+          <!--android:icon="?refresh"-->
+          <!--android:title="@string/refresh"-->
+          <!--android:showAsAction="ifRoom|withText"-->
+            <!--/>-->
 
     <item android:id="@+id/commentsbyidtimelinefragment_comment"
           android:icon="?comment"
@@ -14,12 +14,12 @@
           android:showAsAction="ifRoom|withText"
             />
 
-    <item android:id="@+id/commentsbyidtimelinefragment_search"
-          android:icon="?search"
-          android:title="@string/search"
-          android:actionViewClass="android.widget.SearchView"
-          android:showAsAction="collapseActionView|withText"
-            />
+    <!--<item android:id="@+id/commentsbyidtimelinefragment_search"-->
+          <!--android:icon="?search"-->
+          <!--android:title="@string/search"-->
+          <!--android:actionViewClass="android.widget.SearchView"-->
+          <!--android:showAsAction="collapseActionView|withText"-->
+            <!--/>-->
 
 
 </menu>

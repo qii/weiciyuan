@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -86,22 +85,22 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             }
         }
 
-        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position - 1 < getList().getSize() && position - 1 >= 0) {
                     if (mActionMode != null) {
                         mActionMode.finish();
                         mActionMode = null;
-                        listView.setItemChecked(position, true);
+                        getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(listView, timeLineAdapter, CommentsTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener( getListView(), timeLineAdapter, CommentsTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     } else {
-                        listView.setItemChecked(position, true);
+                        getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(listView, timeLineAdapter, CommentsTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener( getListView(), timeLineAdapter, CommentsTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     }
                 }
@@ -208,11 +207,11 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         @Override
         protected void onPreExecute() {
             showListView();
-            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
-            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
-            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
-            listView.setSelection(0);
+//            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+//            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
+//            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
+//            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
+            getListView().setSelection(0);
         }
 
         @Override
@@ -226,14 +225,14 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         protected void onPostExecute(Object o) {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
-            headerView.findViewById(R.id.header_progress).clearAnimation();
-            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
-            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
+//            headerView.findViewById(R.id.header_progress).clearAnimation();
+//            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
+//            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
 
             if (bean.getSize() == 0) {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+//                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
             } else {
-                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
+//                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
             }
             super.onPostExecute(o);
         }
@@ -253,8 +252,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new CommentListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), listView, true);
-        listView.setAdapter(timeLineAdapter);
+        timeLineAdapter = new CommentListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(),  getListView(), true);
+        pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 
 
@@ -278,7 +277,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         switch (item.getItemId()) {
 
             case R.id.mentionstimelinefragment_refresh:
-
+                pullToRefreshListView.startRefreshNow();
                 refresh();
 
                 break;
@@ -361,7 +360,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
                 clearAndReplaceValue(newValue);
                 timeLineAdapter.notifyDataSetChanged();
-                listView.setSelectionAfterHeaderView();
+                getListView().setSelectionAfterHeaderView();
             }
         }
         getActivity().getActionBar().getTabAt(2).setText(getString(R.string.comments));
