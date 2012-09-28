@@ -98,7 +98,7 @@ public class AbstractAppActivity extends FragmentActivity {
                     case picture_thumbnail:
 
                         view.setImageDrawable(transPic);
-                        view.setBackgroundDrawable(defaultPic);
+                        view.setBackgroundDrawable(transPic);
 
                         break;
                     case picture_bmiddle:
