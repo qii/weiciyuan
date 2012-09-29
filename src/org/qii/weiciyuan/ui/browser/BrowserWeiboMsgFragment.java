@@ -153,21 +153,63 @@ public class BrowserWeiboMsgFragment extends Fragment {
         @Override
         protected void onPostExecute(MessageBean newValue) {
             if (newValue != null && e == null) {
-                msg = newValue;
-                buildViewData();
-
+                if (isStatusDeleted(newValue)) {
+                    setTextViewDeleted(content);
+                    if (recontent.getVisibility() == View.VISIBLE) {
+                        setTextViewDeleted(recontent);
+                    }
+                } else if (isRepostDeleted(newValue)) {
+                    setTextViewDeleted(recontent);
+                } else {
+                    msg = newValue;
+                    buildViewData();
+                }
             }
             super.onPostExecute(newValue);
         }
     }
 
+    //sometime status is deleted
+    private boolean isStatusDeleted(MessageBean newValue) {
 
+        //status is deleted
+        if ((msg != null))
+            if ((msg.getUser() != null) && (newValue.getUser() == null)) {
+                return true;
+            }
+
+        return false;
+
+    }
+
+
+    //sometime the ori status is deleted
+    private boolean isRepostDeleted(MessageBean newValue) {
+
+        if (msg.getRetweeted_status() != null && msg.getRetweeted_status().getUser() != null) {
+
+            //ori status is deleted
+            if (newValue.getRetweeted_status() != null && newValue.getRetweeted_status().getUser() == null) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
 
     private void setTextViewDeleted() {
-        SpannableString ss = new SpannableString(content.getText().toString());
+        SpannableString ss = SpannableString.valueOf(content.getText());
         ss.setSpan(new StrikethroughSpan(), 0, ss.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         content.setText(ss);
+    }
+
+    private void setTextViewDeleted(TextView tv) {
+        SpannableString ss = SpannableString.valueOf(tv.getText());
+        ss.setSpan(new StrikethroughSpan(), 0, ss.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv.setText(ss);
     }
 
     @Override
@@ -203,8 +245,8 @@ public class BrowserWeiboMsgFragment extends Fragment {
         content_pic = (ImageView) view.findViewById(R.id.content_pic);
         repost_pic = (ImageView) view.findViewById(R.id.repost_content_pic);
 
-        content_pic_pb=(ProgressBar)view.findViewById(R.id.content_pic_pb);
-        repost_pic_pb=(ProgressBar)view.findViewById(R.id.repost_content_pic_pb);
+        content_pic_pb = (ProgressBar) view.findViewById(R.id.content_pic_pb);
+        repost_pic_pb = (ProgressBar) view.findViewById(R.id.repost_content_pic_pb);
 
         view.findViewById(R.id.first).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -283,11 +325,12 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
             } else {
                 recontent.setText(msg.getRetweeted_status().getText());
+                ListViewTool.addLinks(recontent);
 
             }
             if (!TextUtils.isEmpty(msg.getRetweeted_status().getBmiddle_pic())) {
 //                repost_pic.setVisibility(View.VISIBLE);
-                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_bmiddle,repost_pic_pb);
+                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_bmiddle, repost_pic_pb);
                 task.execute(msg.getRetweeted_status().getBmiddle_pic());
             } else if (!TextUtils.isEmpty(msg.getRetweeted_status().getThumbnail_pic())) {
                 repost_pic.setVisibility(View.VISIBLE);
@@ -301,7 +344,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
         if (!TextUtils.isEmpty(msg.getBmiddle_pic())) {
 //            content_pic.setVisibility(View.VISIBLE);
 
-            SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_bmiddle,content_pic_pb);
+            SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_bmiddle, content_pic_pb);
             task.execute(msg.getBmiddle_pic());
         } else if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
 //            content_pic.setVisibility(View.VISIBLE);

@@ -8,7 +8,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
@@ -42,10 +41,11 @@ public class RepostsTimeLineByIdDao {
         Gson gson = new Gson();
 
         RepostListBean value = null;
+
         try {
             value = gson.fromJson(jsonData, RepostListBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
+
             AppLogger.e(e.getMessage());
         }
 
@@ -63,8 +63,8 @@ public class RepostsTimeLineByIdDao {
                 }
             }
 
-        }
 
+        }
         return value;
     }
 
