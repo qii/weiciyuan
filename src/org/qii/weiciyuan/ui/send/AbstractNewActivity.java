@@ -1,11 +1,9 @@
 package org.qii.weiciyuan.ui.send;
 
-import android.app.ActionBar;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -90,14 +88,15 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
         setContentView(R.layout.repostnewactivity_layout);
 
 
-        View title = getLayoutInflater().inflate(R.layout.statusnewactivity_title_layout, null);
-        TextView contentNumber = (TextView) title.findViewById(R.id.content_number);
-        getActionBar().setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
+//        View title = getLayoutInflater().inflate(R.layout.statusnewactivity_title_layout, null);
+//        TextView contentNumber = (TextView) title.findViewById(R.id.content_number);
+//        contentNumber.setVisibility(View.GONE);
+//        getActionBar().setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
         getActionBar().setDisplayShowCustomEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         et = ((EditText) findViewById(R.id.status_new_content));
-        et.addTextChangedListener(new TextNumLimitWatcher(contentNumber, et, this));
+        et.addTextChangedListener(new TextNumLimitWatcher((TextView)findViewById(R.id.menu_send), et, this));
 
 
         findViewById(R.id.menu_topic).setOnClickListener(this);

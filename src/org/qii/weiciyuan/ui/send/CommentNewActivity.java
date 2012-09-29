@@ -95,9 +95,7 @@ public class CommentNewActivity extends AbstractNewActivity<CommentBean> {
                 }
                 invalidateOptionsMenu();
                 break;
-            case R.id.menu_clear:
-                clearContentMenu();
-                break;
+
         }
         return true;
     }

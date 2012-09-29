@@ -74,9 +74,9 @@ public class RepostNewActivity extends AbstractNewActivity<MessageBean> {
                 }
                 invalidateOptionsMenu();
                 break;
-            case R.id.menu_clear:
-                clearContentMenu();
-                break;
+//            case R.id.menu_clear:
+//                clearContentMenu();
+//                break;
         }
         return true;
     }

@@ -202,6 +202,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         View title = getLayoutInflater().inflate(R.layout.statusnewactivity_title_layout, null);
         TextView contentNumber = (TextView) title.findViewById(R.id.content_number);
+        contentNumber.setVisibility(View.GONE);
         haveGPS = (ImageView) title.findViewById(R.id.have_gps);
         haveGPS.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,7 +255,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
         actionBar.setDisplayShowCustomEnabled(true);
         content = ((EditText) findViewById(R.id.status_new_content));
-        content.addTextChangedListener(new TextNumLimitWatcher(contentNumber, content, this));
+        content.addTextChangedListener(new TextNumLimitWatcher((TextView)findViewById(R.id.menu_send), content, this));
 
         findViewById(R.id.menu_add_gps).setOnClickListener(this);
         findViewById(R.id.menu_add_pic).setOnClickListener(this);
@@ -384,10 +385,10 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 content.setText(ori + topicTag);
                 content.setSelection(content.getText().toString().length() - 1);
                 break;
-            case R.id.menu_clear:
-                ClearContentDialog clearContentDialog = new ClearContentDialog();
-                clearContentDialog.show(getSupportFragmentManager(), "");
-                break;
+//            case R.id.menu_clear:
+//                ClearContentDialog clearContentDialog = new ClearContentDialog();
+//                clearContentDialog.show(getSupportFragmentManager(), "");
+//                break;
         }
         return true;
     }

@@ -29,12 +29,13 @@ public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> 
 
         token = getIntent().getStringExtra("token");
         bean = (CommentBean) getIntent().getSerializableExtra("msg");
-        getActionBar().setTitle("@" + bean.getUser().getScreen_name());
+        getActionBar().setTitle(getString(R.string.reply_to_comment));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.commentnewactivity_menu, menu);
+        menu.findItem(R.id.menu_enable_repost).setVisible(false);
         return true;
     }
 
@@ -47,11 +48,6 @@ public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> 
                     imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
                 finish();
                 break;
-
-            case R.id.menu_clear:
-                clearContentMenu();
-                break;
-
         }
         return true;
     }
@@ -88,8 +84,6 @@ public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> 
 
         return false;
     }
-
-
 
 
 }
