@@ -66,7 +66,7 @@
     <string name="unfollow_he">取消关注</string>
     <string name="m">男</string>
     <string name="f">女</string>
-    <string name="verified_user">"(认证账户)"</string>
+    <string name="verified_user">认证账户</string>
 
     <!--maintimelineactivity_layout -->
     <string name="home">首页</string>
@@ -186,6 +186,10 @@
 
     <!--topic-->
     <string name="search_topic">搜索话题</string>
+
+    <!-- userinfo -->
+    <string name="modify_remark">修改备注</string>
+    <string name="add_to_app_filter">过滤掉 TA</string>
 
     <!---Setting  -->
     <string name="setting">设置</string>

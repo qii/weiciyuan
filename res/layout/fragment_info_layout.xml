@@ -31,6 +31,14 @@
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:id="@+id/username"/>
+                <TextView
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:visibility="gone"
+                        android:id="@+id/isVerified"/>
                 <LinearLayout android:layout_gravity="center"
                               android:layout_marginLeft="5dp"
                               android:layout_width="match_parent"

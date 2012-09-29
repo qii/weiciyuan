@@ -37,6 +37,7 @@ public class UserInfoFragment extends Fragment {
 
     private ImageView avatar;
     private TextView username;
+    private TextView isVerified;
     private TextView info;
     private TextView blog_url;
     private TextView location;
@@ -87,11 +88,16 @@ public class UserInfoFragment extends Fragment {
 
     private void setValue() {
         getActivity().getActionBar().setTitle(bean.getScreen_name());
-        username.setText(bean.getScreen_name());
+        if (TextUtils.isEmpty(bean.getRemark())) {
+            username.setText(bean.getScreen_name());
+        } else {
+            username.setText(bean.getScreen_name() + "(" + bean.getRemark() + ")");
+        }
 
-        if (bean.isVerified())
-            username.setText(username.getText().toString() + getString(R.string.verified_user));
-
+        if (bean.isVerified()) {
+            isVerified.setVisibility(View.VISIBLE);
+            isVerified.setText(getString(R.string.verified_user));
+        }
         info.setText(bean.getDescription());
 
         String avatarUrl = bean.getAvatar_large();
@@ -141,6 +147,7 @@ public class UserInfoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_info_layout, container, false);
         avatar = (ImageView) view.findViewById(R.id.avatar);
         username = (TextView) view.findViewById(R.id.username);
+        isVerified = (TextView) view.findViewById(R.id.isVerified);
         info = (TextView) view.findViewById(R.id.textView_info);
         blog_url = (TextView) view.findViewById(R.id.blog_url);
         location = (TextView) view.findViewById(R.id.location);
@@ -174,7 +181,6 @@ public class UserInfoFragment extends Fragment {
         });
         return view;
     }
-
 
 
     @Override
@@ -249,15 +255,15 @@ public class UserInfoFragment extends Fragment {
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
             if (getActivity() != null)
-            if (e != null && (getActivity() != null)) {
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                switch (e.getError_code()) {
-                    case ErrorCode.ALREADY_FOLLOWED:
-                        unfollow_it.setVisibility(View.VISIBLE);
-                        break;
-                }
+                if (e != null && (getActivity() != null)) {
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    switch (e.getError_code()) {
+                        case ErrorCode.ALREADY_FOLLOWED:
+                            unfollow_it.setVisibility(View.VISIBLE);
+                            break;
+                    }
 
-            }
+                }
         }
 
         @Override
@@ -300,7 +306,7 @@ public class UserInfoFragment extends Fragment {
         @Override
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
-         }
+        }
 
         @Override
         protected void onPostExecute(UserBean o) {
