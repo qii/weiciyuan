@@ -30,6 +30,7 @@ import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
 /**
  * User: qii
@@ -95,12 +96,12 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                         mActionMode = null;
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener( getListView(), timeLineAdapter, CommentsTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), timeLineAdapter, CommentsTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     } else {
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener( getListView(), timeLineAdapter, CommentsTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), timeLineAdapter, CommentsTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     }
                 }
@@ -207,10 +208,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         @Override
         protected void onPreExecute() {
             showListView();
-//            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-//            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
-//            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
-//            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
+
             getListView().setSelection(0);
         }
 
@@ -225,15 +223,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         protected void onPostExecute(Object o) {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
-//            headerView.findViewById(R.id.header_progress).clearAnimation();
-//            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
-//            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
 
-            if (bean.getSize() == 0) {
-//                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            } else {
-//                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            }
             super.onPostExecute(o);
         }
     }
@@ -252,7 +242,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new CommentListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(),  getListView(), true);
+        timeLineAdapter = new CommentListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), getListView(), true);
         pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 
@@ -275,7 +265,13 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
+            case R.id.friendstimelinefragment_new_weibo:
+                Intent intent = new Intent(getActivity(), StatusNewActivity.class);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("accountName", ((IAccountInfo) getActivity()).getAccount().getUsernick());
+                intent.putExtra("accountId", ((IAccountInfo) getActivity()).getAccount().getUid());
+                startActivity(intent);
+                break;
             case R.id.mentionstimelinefragment_refresh:
                 pullToRefreshListView.startRefreshNow();
                 refresh();
