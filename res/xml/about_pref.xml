@@ -32,11 +32,5 @@
                 android:data="http://www.gnu.org/licenses/gpl-3.0.html"/>
     </Preference>
 
-    <Preference
-            android:title="@string/thought"
-            android:key="thought"
-            android:summary="@string/thought_summary"
-            >
-    </Preference>
 
 </PreferenceScreen>

@@ -233,13 +233,6 @@
     <string name="author">开发者</string>
     <string name="author_summary">心之所在</string>
     <string name="thought">看法</string>
-    <string name="thought_summary">开发者的看法</string>
-    <string name="thought_content">个人开发者，比起团队开发，各种资源短缺，做到的也只能现在这个程度了，还是别抱有期待的好，因为开源，以后就算我中断开发，
-        应该也会有其他衍生版本出来。应用用的是新浪微博提供的 OAuth 2 接口，授权也是在新浪的页面上进行，我拿不到你的密码，只会拿到授权码，这个授权码也会过期，
-        当前是一周就过期，如果用户多了，可以跟新浪要求推迟过期时间，应用没有读取联系人权限，没有开机启动权限。后台服务只有在发带照片的微博、
-        定时获取未读消息的那10秒以内时间出现，执行完就会关掉。新浪微博提供的 OAuth 2 接口现在非常不完善，bug 多，缺少很多老接口，比如首页的分组，收藏信息的返回，
-       只能等新浪方面了。</string>
-
 
     <!--filter-->
     <string name="add_filter">添加过滤词</string>

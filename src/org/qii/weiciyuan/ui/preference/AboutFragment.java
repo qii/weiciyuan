@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.ui.preference;
 
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import org.qii.weiciyuan.R;
 
@@ -15,14 +14,7 @@ public class AboutFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.about_pref);
-        findPreference("thought").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                ThoughtDialog dialog=new ThoughtDialog();
-                dialog.show(getFragmentManager(),"");
-                return true;
-            }
-        });
+
     }
 
 
