@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -21,6 +22,7 @@ import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,6 +157,12 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
 
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.infofragment_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
@@ -163,6 +171,14 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
+            case R.id.menu_at:
+                intent = new Intent(this, StatusNewActivity.class);
+                intent.putExtra("token", getToken());
+                intent.putExtra("content", "@" + bean.getScreen_name());
+                intent.putExtra("accountName", GlobalContext.getInstance().getCurrentAccountName());
+                intent.putExtra("accountId", GlobalContext.getInstance().getCurrentAccountId());
+                startActivity(intent);
+                break;
         }
         return false;
     }

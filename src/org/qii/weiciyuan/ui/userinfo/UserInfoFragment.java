@@ -4,9 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.view.*;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,13 +21,11 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppLogger;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
-import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
 /**
  * User: Jiang Qi
@@ -53,9 +52,6 @@ public class UserInfoFragment extends Fragment {
     private SimpleTask task;
 
     private MyAsyncTask<Void, UserBean, UserBean> followOrUnfollowTask;
-
-
-    private MenuItem refreshItem;
 
 
     public UserInfoFragment() {
@@ -180,44 +176,13 @@ public class UserInfoFragment extends Fragment {
     }
 
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.infofragment_menu, menu);
-        refreshItem = menu.findItem(R.id.menu_refresh);
-
-    }
-
-
-    private void startRefreshMenuAnimation() {
-        ImageView iv = (ImageView) getActivity().getLayoutInflater().inflate(R.layout.refresh_action_view, null);
-        Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh);
-        iv.startAnimation(rotation);
-        if (refreshItem != null)
-            refreshItem.setActionView(iv);
-    }
-
-    private void stopRefreshMenuAnimation() {
-        if (refreshItem.getActionView() != null) {
-            refreshItem.getActionView().clearAnimation();
-            refreshItem.setActionView(null);
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
                 refresh();
-                break;
-            case R.id.menu_at:
-                Intent intent = new Intent(getActivity(), StatusNewActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
-                intent.putExtra("content", "@" + bean.getScreen_name());
-                intent.putExtra("accountName", GlobalContext.getInstance().getCurrentAccountName());
-                intent.putExtra("accountId", GlobalContext.getInstance().getCurrentAccountId());
-                startActivity(intent);
-                break;
+                return true;
         }
         return true;
     }
@@ -259,7 +224,6 @@ public class UserInfoFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            startRefreshMenuAnimation();
         }
 
         @Override
@@ -285,7 +249,6 @@ public class UserInfoFragment extends Fragment {
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
             if (getActivity() != null)
-                stopRefreshMenuAnimation();
             if (e != null && (getActivity() != null)) {
                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 switch (e.getError_code()) {
@@ -301,7 +264,6 @@ public class UserInfoFragment extends Fragment {
         protected void onPostExecute(UserBean o) {
             super.onPostExecute(o);
             bean = o;
-            stopRefreshMenuAnimation();
             setValue();
             refresh();
         }
@@ -313,7 +275,6 @@ public class UserInfoFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            startRefreshMenuAnimation();
         }
 
         @Override
@@ -339,15 +300,12 @@ public class UserInfoFragment extends Fragment {
         @Override
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
-            if (getActivity() != null)
-                stopRefreshMenuAnimation();
-        }
+         }
 
         @Override
         protected void onPostExecute(UserBean o) {
             super.onPostExecute(o);
             bean = o;
-            stopRefreshMenuAnimation();
             setValue();
         }
     }
@@ -359,7 +317,6 @@ public class UserInfoFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            startRefreshMenuAnimation();
         }
 
         @Override
@@ -401,12 +358,10 @@ public class UserInfoFragment extends Fragment {
             if (e != null && getActivity() != null) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             }
-            stopRefreshMenuAnimation();
         }
 
         @Override
         protected void onPostExecute(UserBean o) {
-            stopRefreshMenuAnimation();
             setValue();
             super.onPostExecute(o);
         }

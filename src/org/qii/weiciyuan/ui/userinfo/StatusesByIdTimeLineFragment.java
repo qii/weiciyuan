@@ -3,8 +3,6 @@ package org.qii.weiciyuan.ui.userinfo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -71,18 +69,12 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     }
 
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.statusesbyidtimelinefragment_menu, menu);
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.statusesbyidtimelinefragment_status_refresh:
+            case R.id.menu_refresh:
                 pullToRefreshListView.startRefreshNow();
                 refresh();
 
