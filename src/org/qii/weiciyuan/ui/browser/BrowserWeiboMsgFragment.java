@@ -20,10 +20,7 @@ import android.text.style.StrikethroughSpan;
 import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.ShareActionProvider;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -63,6 +60,10 @@ public class BrowserWeiboMsgFragment extends Fragment {
     private ImageView avatar;
     private ImageView content_pic;
     private ImageView repost_pic;
+
+
+    private ProgressBar content_pic_pb;
+    private ProgressBar repost_pic_pb;
 
     private UpdateMsgTask task = null;
     private GetGoogleLocationInfo geoTask = null;
@@ -215,6 +216,9 @@ public class BrowserWeiboMsgFragment extends Fragment {
         content_pic = (ImageView) view.findViewById(R.id.content_pic);
         repost_pic = (ImageView) view.findViewById(R.id.repost_content_pic);
 
+        content_pic_pb=(ProgressBar)view.findViewById(R.id.content_pic_pb);
+        repost_pic_pb=(ProgressBar)view.findViewById(R.id.repost_content_pic_pb);
+
         view.findViewById(R.id.first).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -295,12 +299,12 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
             }
             if (!TextUtils.isEmpty(msg.getRetweeted_status().getBmiddle_pic())) {
-                repost_pic.setVisibility(View.VISIBLE);
-                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_bmiddle);
+//                repost_pic.setVisibility(View.VISIBLE);
+                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_bmiddle,repost_pic_pb);
                 task.execute(msg.getRetweeted_status().getBmiddle_pic());
             } else if (!TextUtils.isEmpty(msg.getRetweeted_status().getThumbnail_pic())) {
                 repost_pic.setVisibility(View.VISIBLE);
-                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_bmiddle);
+                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_thumbnail);
                 task.execute(msg.getRetweeted_status().getThumbnail_pic());
 
             }
@@ -308,12 +312,13 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
 
         if (!TextUtils.isEmpty(msg.getBmiddle_pic())) {
-            content_pic.setVisibility(View.VISIBLE);
-            SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_bmiddle);
+//            content_pic.setVisibility(View.VISIBLE);
+
+            SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_bmiddle,content_pic_pb);
             task.execute(msg.getBmiddle_pic());
         } else if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
-            content_pic.setVisibility(View.VISIBLE);
-            SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_bmiddle);
+//            content_pic.setVisibility(View.VISIBLE);
+            SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_thumbnail);
             task.execute(msg.getThumbnail_pic());
 
         }

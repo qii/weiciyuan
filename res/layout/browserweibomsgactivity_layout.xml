@@ -77,14 +77,32 @@
                 android:layout_marginTop="8dp"
                 android:id="@+id/third"
                 >
-            <ImageView
-                    android:id="@+id/content_pic"
-                    android:layout_width="wrap_content"
+
+            <!-- hack to center progressbar when set indeterminate equal true -->
+
+            <FrameLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:clickable="true"
-                    android:layout_gravity="center"
-                    />
+                    android:minHeight="140dp"
+                    >
+                <ImageView
+                        android:id="@+id/content_pic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:clickable="true"
+                        android:layout_gravity="center_horizontal"
+                        />
+                <ProgressBar
+                        android:visibility="gone"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                         style="?android:attr/progressBarStyleHorizontal"
+                        android:id="@+id/content_pic_pb"/>
+            </FrameLayout>
             <LinearLayout
                     android:id="@+id/repost_layout"
                     android:clickable="true"
@@ -103,15 +121,33 @@
                         android:textSize="17sp"
                         android:lineSpacingMultiplier="1.2"
                         />
-                <ImageView
-                        android:layout_marginTop="8dp"
-                        android:id="@+id/repost_content_pic"
-                        android:layout_width="wrap_content"
+                <FrameLayout
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:clickable="true"
-                        android:layout_gravity="center"
-                        />
+                        android:layout_marginTop="8dp"
+                        android:minHeight="140dp"
+
+                        >
+                    <ImageView
+                            android:id="@+id/repost_content_pic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:layout_gravity="center_horizontal"
+
+                            />
+                    <ProgressBar
+                            android:visibility="gone"
+                            android:layout_gravity="center"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:indeterminate="true"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:id="@+id/repost_content_pic_pb"/>
+                </FrameLayout>
+
+
             </LinearLayout>
 
         </FrameLayout>
