@@ -1,7 +1,5 @@
 package org.qii.weiciyuan.ui.browser;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,10 +15,16 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.StrikethroughSpan;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -32,10 +36,6 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.IToken;
-import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
-import org.qii.weiciyuan.ui.send.CommentNewActivity;
-import org.qii.weiciyuan.ui.send.RepostNewActivity;
-import org.qii.weiciyuan.ui.task.FavAsyncTask;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.io.IOException;
@@ -67,11 +67,6 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
     private UpdateMsgTask task = null;
     private GetGoogleLocationInfo geoTask = null;
-    private FavAsyncTask favTask = null;
-
-    private ShareActionProvider mShareActionProvider;
-
-    private MenuItem refreshItem;
 
     public BrowserWeiboMsgFragment() {
     }
@@ -129,7 +124,6 @@ public class BrowserWeiboMsgFragment extends Fragment {
             Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh);
             iv.startAnimation(rotation);
 
-            refreshItem.setActionView(iv);
         }
 
         @Override
@@ -153,7 +147,6 @@ public class BrowserWeiboMsgFragment extends Fragment {
                         setTextViewDeleted();
                     }
                 }
-                completeRefresh();
             }
         }
 
@@ -164,17 +157,11 @@ public class BrowserWeiboMsgFragment extends Fragment {
                 buildViewData();
 
             }
-            completeRefresh();
             super.onPostExecute(newValue);
         }
     }
 
-    private void completeRefresh() {
-        if (refreshItem.getActionView() != null) {
-            refreshItem.getActionView().clearAnimation();
-            refreshItem.setActionView(null);
-        }
-    }
+
 
     private void setTextViewDeleted() {
         SpannableString ss = new SpannableString(content.getText().toString());
@@ -326,7 +313,6 @@ public class BrowserWeiboMsgFragment extends Fragment {
         getActivity().getActionBar().getTabAt(1).setText(getString(R.string.comments) + "(" + msg.getComments_count() + ")");
         getActivity().getActionBar().getTabAt(2).setText(getString(R.string.repost) + "(" + msg.getReposts_count() + ")");
 
-        buildShareActionMenu();
     }
 
     private class GetGoogleLocationInfo extends MyAsyncTask<Void, String, String> {
@@ -370,75 +356,18 @@ public class BrowserWeiboMsgFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.browserweibomsgactivity_menu, menu);
-
-        MenuItem item = menu.findItem(R.id.menu_share);
-        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
-        buildShareActionMenu();
-        refreshItem = menu.findItem(R.id.menu_refresh);
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    private void buildShareActionMenu() {
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        if (msg != null) {
-            sharingIntent.putExtra(Intent.EXTRA_TEXT, msg.getText());
-            PackageManager packageManager = getActivity().getPackageManager();
-            List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
-            boolean isIntentSafe = activities.size() > 0;
-            if (isIntentSafe && mShareActionProvider != null) {
-                mShareActionProvider.setShareIntent(sharingIntent);
-            }
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
-            case R.id.repostsbyidtimelinefragment_repost:
-                intent = new Intent(getActivity(), RepostNewActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
-                intent.putExtra("id", ((IWeiboMsgInfo) getActivity()).getMsg().getId());
-                intent.putExtra("msg", ((IWeiboMsgInfo) getActivity()).getMsg());
-                startActivity(intent);
-                break;
-            case R.id.commentsbyidtimelinefragment_comment:
 
-                intent = new Intent(getActivity(), CommentNewActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
-                intent.putExtra("id", ((IWeiboMsgInfo) getActivity()).getMsg().getId());
-                startActivity(intent);
-
-                break;
             case R.id.menu_refresh:
                 if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
                     task = new UpdateMsgTask();
                     task.execute();
                 }
                 break;
-            case R.id.menu_share:
 
-                buildShareActionMenu();
-                return true;
-            case R.id.menu_copy:
-                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", content.getText().toString()));
-                Toast.makeText(getActivity(), getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.menu_fav:
-                if (favTask == null || favTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    favTask = new FavAsyncTask(((IToken) getActivity()).getToken(), msg.getId());
-                    favTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                }
-
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
         }
         return true;
     }

@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
@@ -26,7 +29,6 @@ import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.actionmenu.CommentByIdSingleChoiceModeLinstener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.send.CommentNewActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.util.List;
@@ -363,27 +365,13 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.commentsbyidtimelinefragment_menu, menu);
-//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-//        SearchView searchView = (SearchView) menu.findItem(R.id.commentsbyidtimelinefragment_search).getActionView();
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-//        searchView.setIconifiedByDefault(true);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.commentsbyidtimelinefragment_comment:
-
-                Intent intent = new Intent(getActivity(), CommentNewActivity.class);
-                intent.putExtra("token", token);
-                intent.putExtra("id", id);
-                startActivity(intent);
-
-                break;
+            case R.id.menu_refresh:
+                pullToRefreshListView.startRefreshNow();
+                refresh();
+                return true;
 
 
         }
@@ -439,7 +427,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     protected void oldMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null && newValue.getItemList().size() > 1) {
             List<CommentBean> list = newValue.getItemList();
-            getList().getItemList().addAll(list.subList(1, list.size() ));
+            getList().getItemList().addAll(list.subList(1, list.size()));
             getList().setTotal_number(newValue.getTotal_number());
 
         }

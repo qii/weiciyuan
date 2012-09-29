@@ -2,20 +2,32 @@ package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ShareActionProvider;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.send.CommentNewActivity;
+import org.qii.weiciyuan.ui.send.RepostNewActivity;
+import org.qii.weiciyuan.ui.task.FavAsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +46,10 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
     private String retweet_sum = "";
 
     private ViewPager mViewPager = null;
+
+    private FavAsyncTask favTask = null;
+
+    private ShareActionProvider mShareActionProvider;
 
 
     @Override
@@ -172,6 +188,16 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
     };
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.browserweibomsgactivity_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.menu_share);
+        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+        buildShareActionMenu();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -179,8 +205,54 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
+            case R.id.repostsbyidtimelinefragment_repost:
+                intent = new Intent(this, RepostNewActivity.class);
+                intent.putExtra("token", getToken());
+                intent.putExtra("id", getMsg().getId());
+                intent.putExtra("msg", getMsg());
+                startActivity(intent);
+                return true;
+            case R.id.commentsbyidtimelinefragment_comment:
+
+                intent = new Intent(this, CommentNewActivity.class);
+                intent.putExtra("token", getToken());
+                intent.putExtra("id", getMsg().getId());
+                startActivity(intent);
+
+                return true;
+
+            case R.id.menu_share:
+
+                buildShareActionMenu();
+                return true;
+            case R.id.menu_copy:
+                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", getMsg().getText()));
+                Toast.makeText(this, getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_fav:
+                if (favTask == null || favTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    favTask = new FavAsyncTask(getToken(), msg.getId());
+                    favTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
+
+                return true;
         }
-        return super.onOptionsItemSelected(item);
+        return false;
+    }
+
+    private void buildShareActionMenu() {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        if (msg != null) {
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, msg.getText());
+            PackageManager packageManager = getPackageManager();
+            List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
+            boolean isIntentSafe = activities.size() > 0;
+            if (isIntentSafe && mShareActionProvider != null) {
+                mShareActionProvider.setShareIntent(sharingIntent);
+            }
+        }
     }
 
     class TimeLinePagerAdapter extends

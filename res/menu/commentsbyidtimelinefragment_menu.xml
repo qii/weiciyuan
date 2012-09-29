@@ -2,24 +2,65 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--<item android:id="@+id/commentsbyidtimelinefragment_refresh"-->
-          <!--android:icon="?refresh"-->
-          <!--android:title="@string/refresh"-->
+    <!--&lt;!&ndash;<item android:id="@+id/commentsbyidtimelinefragment_refresh"&ndash;&gt;-->
+          <!--&lt;!&ndash;android:icon="?refresh"&ndash;&gt;-->
+          <!--&lt;!&ndash;android:title="@string/refresh"&ndash;&gt;-->
+          <!--&lt;!&ndash;android:showAsAction="ifRoom|withText"&ndash;&gt;-->
+            <!--&lt;!&ndash;/>&ndash;&gt;-->
+
+    <!--<item android:id="@+id/commentsbyidtimelinefragment_comment"-->
+          <!--android:icon="?comment"-->
+          <!--android:title="@string/comments"-->
           <!--android:showAsAction="ifRoom|withText"-->
             <!--/>-->
 
-    <item android:id="@+id/commentsbyidtimelinefragment_comment"
-          android:icon="?comment"
-          android:title="@string/comments"
-          android:showAsAction="ifRoom|withText"
-            />
+    <!--&lt;!&ndash;<item android:id="@+id/commentsbyidtimelinefragment_search"&ndash;&gt;-->
+          <!--&lt;!&ndash;android:icon="?search"&ndash;&gt;-->
+          <!--&lt;!&ndash;android:title="@string/search"&ndash;&gt;-->
+          <!--&lt;!&ndash;android:actionViewClass="android.widget.SearchView"&ndash;&gt;-->
+          <!--&lt;!&ndash;android:showAsAction="collapseActionView|withText"&ndash;&gt;-->
+            <!--&lt;!&ndash;/>&ndash;&gt;-->
 
-    <!--<item android:id="@+id/commentsbyidtimelinefragment_search"-->
-          <!--android:icon="?search"-->
-          <!--android:title="@string/search"-->
-          <!--android:actionViewClass="android.widget.SearchView"-->
-          <!--android:showAsAction="collapseActionView|withText"-->
-            <!--/>-->
+
+
+    <item android:id="@+id/repostsbyidtimelinefragment_repost"
+              android:icon="?repost"
+              android:title="@string/repost"
+              android:showAsAction="always"
+                />
+
+
+        <item android:id="@+id/commentsbyidtimelinefragment_comment"
+              android:icon="?comment"
+              android:title="@string/comments"
+              android:showAsAction="always"
+                />
+
+        <item android:id="@+id/menu_refresh"
+              android:icon="?refresh"
+              android:title="@string/refresh"
+              android:showAsAction="ifRoom|withText"
+                />
+
+
+        <item android:id="@+id/menu_fav"
+              android:title="@string/favourite"
+              android:icon="?fav_un"
+              android:showAsAction="ifRoom|withText"
+                />
+
+        <item android:id="@+id/menu_share"
+              android:title="@string/share"
+              android:icon="?share"
+              android:showAsAction="ifRoom|withText"
+              android:actionProviderClass="android.widget.ShareActionProvider"
+                />
+
+
+        <item android:id="@+id/menu_copy"
+              android:title="@string/copy_to_clipboard"
+              android:icon="?share"
+                />
 
 
 </menu>

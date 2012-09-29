@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -19,11 +22,9 @@ import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IToken;
-import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
 import org.qii.weiciyuan.ui.actionmenu.RepostSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
-import org.qii.weiciyuan.ui.send.RepostNewActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 /**
@@ -309,25 +310,12 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
 
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.repostsbyidtimelinefragment_menu, menu);
-
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
-            case R.id.repostsbyidtimelinefragment_repost:
-                Intent intent = new Intent(getActivity(), RepostNewActivity.class);
-                intent.putExtra("token", token);
-                intent.putExtra("id", id);
-                intent.putExtra("msg", ((IWeiboMsgInfo) getActivity()).getMsg());
-                startActivity(intent);
-                break;
-
-
+            case R.id.menu_refresh:
+                pullToRefreshListView.startRefreshNow();
+                refresh();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
