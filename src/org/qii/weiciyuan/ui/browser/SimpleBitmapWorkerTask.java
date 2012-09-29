@@ -24,6 +24,8 @@ public class SimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, Bitmap>
 
     private ProgressBar pb;
 
+    private boolean pbFlag = false;
+
 
     public SimpleBitmapWorkerTask(ImageView view, FileLocationMethod method) {
 
@@ -79,7 +81,10 @@ public class SimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, Bitmap>
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
         if (pb != null) {
-            pb.setIndeterminate(false);
+            if (!pbFlag) {
+                pb.setIndeterminate(false);
+                pbFlag = true;
+            }
             Integer progress = values[0];
             Integer max = values[1];
             pb.setMax(max);
