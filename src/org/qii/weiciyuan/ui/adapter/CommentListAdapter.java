@@ -47,7 +47,13 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         if (!TextUtils.isEmpty(image_url) && GlobalContext.getInstance().isEnablePic()) {
             holder.avatar.setVisibility(View.VISIBLE);
             boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
-            commander.downloadAvatar(holder.avatar, msg.getUser().getProfile_image_url(), position, listView, isFling);
+            String url;
+            if (GlobalContext.getInstance().getEnableBigAvatar()) {
+                url = msg.getUser().getAvatar_large();
+            } else {
+                url = msg.getUser().getProfile_image_url();
+            }
+            commander.downloadAvatar(holder.avatar, url, position, listView, isFling);
             holder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
