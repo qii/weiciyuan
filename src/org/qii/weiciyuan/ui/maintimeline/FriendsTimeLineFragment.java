@@ -16,7 +16,6 @@ import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
@@ -169,11 +168,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         }
         MessageListBean result = dao.getGSONMsgList();
         if (result != null) {
-            if (result.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                DatabaseManager.getInstance().addHomeLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
-            } else {
-                DatabaseManager.getInstance().replaceHomeLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
-            }
+            DatabaseManager.getInstance().addHomeLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
         }
         return result;
     }

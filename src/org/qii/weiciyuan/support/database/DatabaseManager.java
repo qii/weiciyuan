@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.support.database.table.*;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
@@ -173,7 +174,13 @@ public class DatabaseManager {
         return getAccountList();
     }
 
+    //only store 50 messages
     public void addHomeLineMsg(MessageListBean list, String accountId) {
+
+        if (list == null || list.getSize() == 0) {
+            return;
+        }
+
         Gson gson = new Gson();
         List<MessageBean> msgList = list.getItemList();
 
@@ -187,9 +194,34 @@ public class DatabaseManager {
                     HomeTable.ID, cv);
         }
 
+        String searchCount = "select count(" + HomeTable.ID + ") as total" + " from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID
+                + " = " + accountId;
+        int total = 0;
+        Cursor c = rsd.rawQuery(searchCount, null);
+        if (c.moveToNext()) {
+            total = c.getInt(c.getColumnIndex("total"));
+        }
+
+        c.close();
+
+        AppLogger.e("total=" + total);
+
+        int needDeletedNumber = total-AppConfig.MAX_DATABASE_TABLE_ENTRY_NUMBER;
+
+        if (needDeletedNumber > 0) {
+            AppLogger.e("" + needDeletedNumber);
+            String sql = " delete from " + HomeTable.TABLE_NAME + " where " + HomeTable.ID + " in "
+                    + "( select " + HomeTable.ID + " from " + HomeTable.TABLE_NAME + " where "
+                    + HomeTable.ACCOUNTID
+                    + " in " + "(" + accountId + ") order by "+HomeTable.ID+" asc limit " + needDeletedNumber + " ) ";
+
+            wsd.execSQL(sql);
+        }
+
+
     }
 
-    public void replaceHomeLineMsg(MessageListBean list, String accountId) {
+    private void replaceHomeLineMsg(MessageListBean list, String accountId) {
 
         deleteAllHomes(accountId);
 
