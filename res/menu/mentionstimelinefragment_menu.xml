@@ -17,7 +17,7 @@
     <item android:id="@+id/mentionstimelinefragment_refresh"
           android:icon="?refresh"
           android:title="@string/refresh"
-          android:showAsAction="ifRoom|withText"
+          android:showAsAction="ifRoom"
             />
 
 
