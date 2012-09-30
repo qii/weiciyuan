@@ -302,11 +302,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
             CommentListBean result = dao.getGSONMsgList();
             if (result != null && selected == 0) {
-                if (result.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                    DatabaseManager.getInstance().addCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
-                } else {
-                    DatabaseManager.getInstance().replaceCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
-                }
+                DatabaseManager.getInstance().addCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
             }
             return result;
         } else {

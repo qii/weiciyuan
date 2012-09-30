@@ -17,7 +17,6 @@ import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -234,11 +233,8 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         dao.setFilter_by_type(filter_by_type);
         MessageListBean result = dao.getGSONMsgList();
         if (result != null && selected == 0) {
-            if (result.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                DatabaseManager.getInstance().addRepostLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
-            } else {
-                DatabaseManager.getInstance().replaceRepostLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
-            }
+            DatabaseManager.getInstance().addRepostLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
+
         }
         return result;
     }
