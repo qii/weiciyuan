@@ -87,7 +87,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     @Override
     protected void onCancelled(Bitmap bitmap) {
         if (bitmap != null) {
-            lruCache.put(getMemCacheKey(data, position), bitmap);
+            lruCache.put(data, bitmap);
         }
         if (taskMap != null && taskMap.get(data) != null) {
             taskMap.remove(data);
@@ -101,7 +101,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
         if (bitmap != null) {
 
-            lruCache.put(getMemCacheKey(data, position), bitmap);
+            lruCache.put(data,  bitmap);
 
             if (view != null && view.get() != null) {
                 ImageView imageView = view.get();
@@ -140,8 +140,6 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     }
 
 
-    protected String getMemCacheKey(String urlKey, int position) {
-        return urlKey + position;
-    }
+
 
 }

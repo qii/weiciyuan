@@ -75,7 +75,7 @@ public class AbstractAppActivity extends FragmentActivity {
 
         @Override
         public void downContentPic(ImageView view, String urlKey, int position, ListView listView, FileLocationMethod method, boolean isFling) {
-            Bitmap bitmap = getBitmapFromMemCache(getMemCacheKey(urlKey, position));
+            Bitmap bitmap = getBitmapFromMemCache(urlKey);
             if (bitmap != null) {
                 switch (method) {
                     case picture_thumbnail:
