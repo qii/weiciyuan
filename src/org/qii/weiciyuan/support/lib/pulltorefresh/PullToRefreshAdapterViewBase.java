@@ -205,7 +205,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 
 	public final void setOnScrollListener(OnScrollListener listener) {
 		mOnScrollListener = listener;
-	};
+	}
 
 	/**
 	 * Sets whether an indicator graphic should be displayed when the View is in
