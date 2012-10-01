@@ -30,6 +30,11 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     protected int checkedBG;
     protected int defaultBG;
 
+    private final int TYPE_NORMAL = 0;
+    private final int TYPE_MYSELF = 1;
+    private final int TYPE_NORMAL_BIG_PIC = 2;
+    private final int TYPE_MYSELF_BIG_PIC = 3;
+
     public AbstractAppListAdapter(Fragment activity, ICommander commander, List<T> bean, ListView listView, boolean showOriStatus) {
         this.bean = bean;
         this.commander = commander;
@@ -46,47 +51,67 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         checkedBG = ta.getColor(0, 430);
     }
 
+
+    @Override
+    public int getViewTypeCount() {
+        return 4;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+
+        boolean myself = bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())
+                && GlobalContext.getInstance().isEnablePic();
+
+        boolean myselfBigPic = myself && GlobalContext.getInstance().getEnableBigPic();
+
+        boolean normal = !myself;
+
+        boolean normalBigPic = normal && GlobalContext.getInstance().getEnableBigPic();
+
+        if (myselfBigPic)
+            return TYPE_MYSELF_BIG_PIC;
+        if (normalBigPic)
+            return TYPE_NORMAL_BIG_PIC;
+        if (myself)
+            return TYPE_MYSELF;
+        else
+            return TYPE_NORMAL;
+
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        //mylayout time view position have a bug when set avatar view to gone,so init normal layout
-        if (bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId()) && GlobalContext.getInstance().isEnablePic()) {
-            ViewHolder holder;
-            if (convertView == null || convertView.getTag(R.drawable.app) == null) {
-                convertView = initMylayout(parent);
-                holder = buildHolder(convertView);
-            } else {
-                boolean enableBigPic = (Boolean) convertView.getTag(R.drawable.account_black);
-                if (enableBigPic == GlobalContext.getInstance().getEnableBigPic()) {
-                    holder = (ViewHolder) convertView.getTag(R.drawable.app);
-                } else {
-                    convertView = initMylayout(parent);
-                    holder = buildHolder(convertView);
-                }
-            }
-            convertView.setTag(R.drawable.app, holder);
-            convertView.setTag(R.drawable.account_black, GlobalContext.getInstance().getEnableBigPic());
-            bindViewData(holder, position);
-            return convertView;
-        }
-
         ViewHolder holder;
-        if (convertView == null || convertView.getTag(R.drawable.ic_launcher) == null) {
-            convertView = initNormallayout(parent);
-            holder = buildHolder(convertView);
-        } else {
-            boolean enableBigPic = (Boolean) convertView.getTag(R.drawable.account_black);
-            if (enableBigPic == GlobalContext.getInstance().getEnableBigPic()) {
-                holder = (ViewHolder) convertView.getTag(R.drawable.ic_launcher);
-            } else {
-                convertView = initNormallayout(parent);
-                holder = buildHolder(convertView);
-            }
-        }
-        convertView.setTag(R.drawable.ic_launcher, holder);
-        convertView.setTag(R.drawable.account_black, GlobalContext.getInstance().getEnableBigPic());
-        bindViewData(holder, position);
 
+
+        if (convertView == null || convertView.getTag() == null) {
+
+            switch (getItemViewType(position)) {
+                case TYPE_MYSELF:
+                    convertView = initMylayout(parent);
+                    break;
+                case TYPE_MYSELF_BIG_PIC:
+                    convertView = initMylayout(parent);
+                    break;
+                case TYPE_NORMAL:
+                    convertView = initNormallayout(parent);
+                    break;
+                case TYPE_NORMAL_BIG_PIC:
+                    convertView = initNormallayout(parent);
+                    break;
+                default:
+                    convertView = initNormallayout(parent);
+                    break;
+            }
+            holder = buildHolder(convertView);
+            convertView.setTag(holder);
+
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        bindViewData(holder, position);
         return convertView;
     }
 

@@ -30,7 +30,11 @@ public class TextNumLimitWatcher implements TextWatcher {
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         int num = 140 - et.getText().toString().length();
-        tv.setText(String.valueOf(num));
+        if (num == 140) {
+            tv.setText(activity.getString(R.string.send));
+        } else {
+            tv.setText(String.valueOf(num));
+        }
         if (num < 0) {
             tv.setTextColor(activity.getResources().getColor(R.color.red));
         } else if (num > 0 && num <= 140) {
