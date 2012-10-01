@@ -17,10 +17,8 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
-import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
 /**
@@ -170,16 +168,12 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         @Override
         protected void onPreExecute() {
             showListView();
-//            footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-//            headerView.findViewById(R.id.header_progress).setVisibility(View.VISIBLE);
-//            headerView.findViewById(R.id.header_text).setVisibility(View.VISIBLE);
-//            headerView.findViewById(R.id.header_progress).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
-            getListView().setSelection(0);
+             getListView().setSelection(0);
         }
 
         @Override
         protected Object doInBackground(Object... params) {
-            clearAndReplaceValue(DatabaseManager.getInstance().getRepostLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid()));
+            clearAndReplaceValue(DatabaseManager.getInstance().getRepostLineMsgList(accountBean.getUid()));
             return null;
         }
 
@@ -187,15 +181,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         protected void onPostExecute(Object o) {
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
-//            headerView.findViewById(R.id.header_progress).clearAnimation();
-//            headerView.findViewById(R.id.header_progress).setVisibility(View.GONE);
-//            headerView.findViewById(R.id.header_text).setVisibility(View.GONE);
 
-            if (bean.getSize() == 0) {
-//                footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
-            } else {
-//                footerView.findViewById(R.id.listview_footer).setVisibility(View.VISIBLE);
-            }
             super.onPostExecute(o);
         }
     }
@@ -204,7 +190,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("msg", bean.getItemList().get(position));
-        intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
+        intent.putExtra("token",token);
         startActivity(intent);
     }
 
@@ -222,8 +208,8 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
             case R.id.friendstimelinefragment_new_weibo:
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
-                intent.putExtra("account", ((IAccountInfo) getActivity()).getAccount());
+                intent.putExtra("token", token);
+                intent.putExtra("account", accountBean);
 
                 startActivity(intent);
                 break;
@@ -247,7 +233,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     @Override
     protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
-        MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
+        MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
         if (getList().getItemList().size() > 0) {
             dao.setSince_id(getList().getItemList().get(0).getId());
         }
@@ -255,7 +241,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         dao.setFilter_by_type(filter_by_type);
         MessageListBean result = dao.getGSONMsgList();
         if (result != null && selected == 0) {
-            DatabaseManager.getInstance().addRepostLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
+            DatabaseManager.getInstance().addRepostLineMsg(result, accountBean.getUid());
 
         }
         return result;
@@ -272,7 +258,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     @Override
     protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
-        MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
+        MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
         if (getList().getItemList().size() > 0) {
             dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
         }

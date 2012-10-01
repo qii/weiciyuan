@@ -24,7 +24,6 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IRemoveItem;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
@@ -199,7 +198,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
         @Override
         protected Object doInBackground(Object... params) {
-            CommentListBean value = DatabaseManager.getInstance().getCommentLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid());
+            CommentListBean value = DatabaseManager.getInstance().getCommentLineMsgList(accountBean.getUid());
             clearAndReplaceValue(value);
             return null;
         }
@@ -238,7 +237,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
         @Override
         protected Object doInBackground(Object... params) {
-            CommentListBean value = DatabaseManager.getInstance().getCommentLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid());
+            CommentListBean value = DatabaseManager.getInstance().getCommentLineMsgList(accountBean.getUid());
             clearAndReplaceValue(value);
             return null;
         }
@@ -291,8 +290,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         switch (item.getItemId()) {
             case R.id.friendstimelinefragment_new_weibo:
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
-                intent.putExtra("account", ((IAccountInfo) getActivity()).getAccount());
+                intent.putExtra("token", token);
+                intent.putExtra("account",accountBean);
 
                 startActivity(intent);
                 break;
@@ -315,7 +314,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     @Override
     protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
         if (selected == 0 || selected == 1) {
-            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
+            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
             if (getList() != null && getList().getItemList().size() > 0) {
                 dao.setSince_id(getList().getItemList().get(0).getId());
             }
@@ -326,11 +325,11 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
             CommentListBean result = dao.getGSONMsgList();
             if (result != null && selected == 0) {
-                DatabaseManager.getInstance().addCommentLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
+                DatabaseManager.getInstance().addCommentLineMsg(result, accountBean.getUid());
             }
             return result;
         } else {
-            CommentsTimeLineByMeDao dao = new CommentsTimeLineByMeDao(((MainTimeLineActivity) getActivity()).getToken());
+            CommentsTimeLineByMeDao dao = new CommentsTimeLineByMeDao(token);
             if (getList() != null && getList().getItemList().size() > 0) {
                 dao.setSince_id(getList().getItemList().get(0).getId());
             }
@@ -343,7 +342,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     @Override
     protected CommentListBean getDoInBackgroundOldData() throws WeiboException {
         if (selected == 0 || selected == 1) {
-            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
+            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
             if (getList().getItemList().size() > 0) {
                 dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
             }
@@ -353,7 +352,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             CommentListBean result = dao.getGSONMsgList();
             return result;
         } else {
-            CommentsTimeLineByMeDao dao = new CommentsTimeLineByMeDao(((MainTimeLineActivity) getActivity()).getToken());
+            CommentsTimeLineByMeDao dao = new CommentsTimeLineByMeDao(token);
             if (getList().getItemList().size() > 0) {
                 dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
             }
