@@ -795,8 +795,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
         // By passing the attrs, we can add ListView/GridView params via XML
         mRefreshableView = createRefreshableView(context, attrs);
 
-        //to disable blue line
-        mRefreshableView.setOverScrollMode(OVER_SCROLL_NEVER);
+
         addRefreshableView(context, mRefreshableView);
 
         // We need to create now layouts now

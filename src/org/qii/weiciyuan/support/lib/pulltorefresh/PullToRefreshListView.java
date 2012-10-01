@@ -120,6 +120,9 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 //                FrameLayout.LayoutParams.WRAP_CONTENT);
 //        mFooterLoadingView.setVisibility(View.GONE);
 
+         //to disable blue line
+        lv.setOverScrollMode(OVER_SCROLL_NEVER);
+
         a.recycle();
 
         // Set it to this so it can be used in ListActivity/ListFragment
