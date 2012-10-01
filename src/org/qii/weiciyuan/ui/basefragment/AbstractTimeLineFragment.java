@@ -111,8 +111,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             }
         });
 
-//        getListView().setScrollingCacheEnabled(false);
-        getListView().setHeaderDividersEnabled(false);
+         getListView().setHeaderDividersEnabled(false);
         footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         getListView().addFooterView(footerView);
         dismissFooterView();

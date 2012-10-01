@@ -22,15 +22,13 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:fastScrollEnabled="false"
-                android:cacheColorHint="@android:color/transparent"
                 android:id="@+id/listView"
                 android:layout_gravity="center"
                 android:scrollingCache="true"
                 android:smoothScrollbar="true"
                 android:visibility="visible"
-                android:fadingEdge="none"
-
-                />
+                android:overScrollMode="never"
+                android:requiresFadingEdge="vertical"/>
 
 
         <ProgressBar android:layout_width="wrap_content"
