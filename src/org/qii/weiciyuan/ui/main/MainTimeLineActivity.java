@@ -411,7 +411,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             list.add(new FriendsTimeLineFragment(getAccount(), getUser(), getToken()));
             list.add(new MentionsTimeLineFragment(getAccount(), getUser(), getToken()));
             list.add(new CommentsTimeLineFragment(getAccount(), getUser(), getToken()));
-            list.add(new MyStatussTimeLineFragment());
+            list.add(new MyStatussTimeLineFragment(getUser(), getToken()));
         }
 
 

@@ -4,6 +4,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.userinfo.StatusesByIdTimeLineFragment;
 
 /**
@@ -11,6 +12,15 @@ import org.qii.weiciyuan.ui.userinfo.StatusesByIdTimeLineFragment;
  * Date: 12-9-22
  */
 public class MyStatussTimeLineFragment extends StatusesByIdTimeLineFragment {
+
+    public MyStatussTimeLineFragment() {
+
+    }
+
+
+    public MyStatussTimeLineFragment(UserBean userBean, String token) {
+        super(userBean, token);
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

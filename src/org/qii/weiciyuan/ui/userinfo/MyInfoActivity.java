@@ -160,7 +160,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
             super(fm);
 
             list.add(new MyInfoFragment());
-            list.add(new StatusesByIdTimeLineFragment());
+            list.add(new StatusesByIdTimeLineFragment(getUser(), getToken()));
         }
 
         @Override

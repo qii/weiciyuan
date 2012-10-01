@@ -12,8 +12,6 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
-import org.qii.weiciyuan.ui.Abstract.IToken;
-import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 
@@ -25,17 +23,26 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
 
     private UserBean userBean;
+    private String token;
 
 
     public StatusesByIdTimeLineFragment() {
 
     }
 
+    public StatusesByIdTimeLineFragment(UserBean userBean, String token) {
+        this.userBean = userBean;
+        this.token = token;
+    }
+
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
-        outState.putSerializable("userbean", userBean);
+        outState.putSerializable("bean", bean);
+        outState.putSerializable("userBean", userBean);
+        outState.putString("token", token);
     }
 
 
@@ -46,11 +53,12 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
         if (savedInstanceState != null) {
             clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
-            userBean = (UserBean) savedInstanceState.getSerializable("userbean");
+            userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+            token = savedInstanceState.getString("token");
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
-            userBean = ((IUserInfo) getActivity()).getUser();
+
             pullToRefreshListView.startRefreshNow();
 
             refresh();
@@ -63,11 +71,10 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("token", ((IToken) getActivity()).getToken());
+        intent.putExtra("token", token);
         intent.putExtra("msg", bean.getItem(position));
         startActivity(intent);
     }
-
 
 
     @Override
@@ -87,9 +94,8 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     @Override
     protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
 
-        String token = ((IToken) getActivity()).getToken();
-        String id = ((IUserInfo) getActivity()).getUser().getId();
-        String screenName = ((IUserInfo) getActivity()).getUser().getScreen_name();
+        String id = userBean.getId();
+        String screenName = userBean.getScreen_name();
 
         StatusesTimeLineDao dao = new StatusesTimeLineDao(token, id);
 
@@ -107,9 +113,8 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
     @Override
     protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
-        String token = ((IToken) getActivity()).getToken();
-        String id = ((IUserInfo) getActivity()).getUser().getId();
-        String screenName = ((IUserInfo) getActivity()).getUser().getScreen_name();
+        String id = userBean.getId();
+        String screenName = userBean.getScreen_name();
 
         StatusesTimeLineDao dao = new StatusesTimeLineDao(token, id);
         if (TextUtils.isEmpty(id)) {
