@@ -26,8 +26,8 @@ import java.util.List;
 public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
 
 
-    public StatusesListAdapter(Fragment activity, ICommander commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
-        super(activity, commander, bean, listView, showOriStatus);
+    public StatusesListAdapter(Fragment fragment, ICommander commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
+        super(fragment, commander, bean, listView, showOriStatus);
     }
 
 
@@ -49,7 +49,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             if (!TextUtils.isEmpty(image_url) && GlobalContext.getInstance().isEnablePic()) {
                 holder.avatar.setVisibility(View.VISIBLE);
                 //when listview is flying,app dont download avatar and picture
-                boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
+                boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
                 //50px avatar or 180px avatar
                 String url;
                 if (GlobalContext.getInstance().getEnableBigAvatar()) {
@@ -73,7 +73,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.content.setText(msg.getListViewSpannableString());
         }
         String time = msg.getListviewItemShowTime();
-        UpdateString updateString = new UpdateString(time, holder.time, msg, activity.getActivity());
+        UpdateString updateString = new UpdateString(time, holder.time, msg, getActivity());
         if (!holder.time.getText().toString().equals(time)) {
             holder.time.setText(updateString);
         }
@@ -87,11 +87,11 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
 
         if (repost_msg != null && showOriStatus) {
             holder.repost_layout.setVisibility(View.VISIBLE);
-            holder.repost_avatar.setVisibility(View.VISIBLE);
+            holder.repost_flag.setVisibility(View.VISIBLE);
             buildRepostContent(repost_msg, holder, position);
         } else {
             holder.repost_layout.setVisibility(View.GONE);
-            holder.repost_avatar.setVisibility(View.GONE);
+            holder.repost_flag.setVisibility(View.GONE);
         }
 
         if (!TextUtils.isEmpty(msg.getThumbnail_pic()) && GlobalContext.getInstance().isEnablePic()) {
@@ -102,10 +102,10 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
         holder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity.getActivity(), UserInfoActivity.class);
-                intent.putExtra("token", ((IToken) activity.getActivity()).getToken());
+                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("user", msg.getUser());
-                activity.startActivity(intent);
+                getActivity().startActivity(intent);
             }
         });
     }
@@ -119,9 +119,10 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             buildPic(repost_msg, holder.repost_content_pic, position);
         }
         if (repost_msg.getUser() != null && GlobalContext.getInstance().isEnablePic()) {
-//            commander.downloadAvatar(holder.repost_avatar, repost_msg.getUser().getProfile_image_url(), position, listView, false);
-        } else
-            holder.repost_avatar.setVisibility(View.GONE);
+
+        } else {
+            holder.repost_flag.setVisibility(View.GONE);
+        }
     }
 
 
@@ -130,7 +131,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
 
         String picUrl;
 
-        boolean isFling = ((AbstractTimeLineFragment) activity).isListViewFling();
+        boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
 
         if (GlobalContext.getInstance().getEnableBigPic()) {
             picUrl = msg.getBmiddle_pic();
@@ -146,7 +147,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             @Override
             public void onClick(View v) {
                 PictureDialogFragment progressFragment = new PictureDialogFragment(msg.getBmiddle_pic(), msg.getOriginal_pic());
-                progressFragment.show(activity.getActivity().getSupportFragmentManager(), "");
+                progressFragment.show(getActivity().getSupportFragmentManager(), "");
             }
         });
     }

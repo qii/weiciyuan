@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.adapter;
 
 import android.content.res.TypedArray;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAdapter {
     protected List<T> bean;
-    protected Fragment activity;
+    protected Fragment fragment;
     protected LayoutInflater inflater;
     protected ListView listView;
     protected ICommander commander;
@@ -41,7 +42,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         this.inflater = fragment.getActivity().getLayoutInflater();
         this.listView = listView;
         this.showOriStatus = showOriStatus;
-        this.activity = fragment;
+        this.fragment = fragment;
 
 
         defaultBG = fragment.getResources().getColor(R.color.transparent);
@@ -51,6 +52,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         checkedBG = ta.getColor(0, 430);
     }
 
+    protected FragmentActivity getActivity() {
+        return fragment.getActivity();
+    }
 
     @Override
     public int getViewTypeCount() {
@@ -149,7 +153,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
         holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
         holder.repost_layout = (LinearLayout) convertView.findViewById(R.id.repost_layout);
-        holder.repost_avatar = (ImageView) convertView.findViewById(R.id.repost_avatar);
+        holder.repost_flag = (ImageView) convertView.findViewById(R.id.repost_flag);
         return holder;
     }
 
@@ -199,14 +203,14 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         ImageView repost_content_pic;
         RelativeLayout listview_root;
         LinearLayout repost_layout;
-        ImageView repost_avatar;
+        ImageView repost_flag;
     }
 
     public void removeItem(final int postion) {
         if (postion >= 0 && postion < bean.size()) {
 
             Animation anim = AnimationUtils.loadAnimation(
-                    activity.getActivity(), R.anim.account_delete_slide_out_right
+                    fragment.getActivity(), R.anim.account_delete_slide_out_right
             );
 
             anim.setAnimationListener(new Animation.AnimationListener() {

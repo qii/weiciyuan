@@ -102,7 +102,7 @@
         </LinearLayout>
 
     </FrameLayout>
-    <ImageView android:id="@+id/repost_avatar"
+    <ImageView android:id="@+id/repost_flag"
                android:layout_width="20dp"
                android:layout_height="20dp"
                android:layout_alignRight="@id/avatar"
