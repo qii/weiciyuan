@@ -62,6 +62,8 @@ public class RefreshTimeWorker {
                             if (view == null)
                                 return;
                             AbstractAppListAdapter.ViewHolder holder = (AbstractAppListAdapter.ViewHolder) view.getTag();
+                            if (holder == null)
+                                return;
                             TextView time = holder.time;
                             if (time != null)
                                 time.setText(timeString);
