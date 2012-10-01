@@ -35,15 +35,23 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     private SimpleTask dbTask;
 
 
+    public FriendsTimeLineFragment(){
+
+    }
+
+    public FriendsTimeLineFragment(UserBean userBean){
+        this.userBean=userBean;
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
+        outState.putSerializable("userBean",userBean);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        userBean = ((IUserInfo) getActivity()).getUser();
         super.onCreate(savedInstanceState);
 
 
@@ -65,9 +73,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null) {
+            userBean=(UserBean)savedInstanceState.getSerializable("userBean");
             clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
 
@@ -79,6 +87,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             }
         }
         getActivity().invalidateOptionsMenu();
+        super.onActivityCreated(savedInstanceState);
+
     }
 
 
@@ -132,8 +142,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             case R.id.friendstimelinefragment_new_weibo:
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
-                intent.putExtra("accountName", ((IAccountInfo) getActivity()).getAccount().getUsernick());
-                intent.putExtra("accountId", ((IAccountInfo) getActivity()).getAccount().getUid());
+                intent.putExtra("account", ((IAccountInfo) getActivity()).getAccount());
                 startActivity(intent);
                 break;
             case R.id.friendstimelinefragment_refresh:

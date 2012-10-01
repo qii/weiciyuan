@@ -75,6 +75,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     private GetEmotionsTask getEmotionsTask;
     private Map<String, Bitmap> emotionsPic = new HashMap<String, Bitmap>();
 
+    private final String TYPE_DRAFT = "status_draft";
+
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
@@ -134,6 +136,12 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        savaDraft();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statusnewactivity_layout);
@@ -150,17 +158,17 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             }
         } else {
             token = intent.getStringExtra("token");
-            String accountName = intent.getStringExtra("accountName");
-            String accountId = intent.getStringExtra("accountId");
-            accountBean = new AccountBean();
-            accountBean.setAccess_token(token);
-            accountBean.setUsernick(accountName);
-            accountBean.setUsername(accountName);
-            accountBean.setUid(accountId);
-            getActionBar().setSubtitle(accountName);
+            accountBean = (AccountBean) intent.getSerializableExtra("account");
+
+            getActionBar().setSubtitle(accountBean.getUsernick());
             String contentTxt = intent.getStringExtra("content");
             if (!TextUtils.isEmpty(contentTxt)) {
                 content.setText(contentTxt + " ");
+                content.setSelection(content.getText().toString().length());
+            } else {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+                String draft = sharedPref.getString(TYPE_DRAFT, "");
+                content.setText(draft);
                 content.setSelection(content.getText().toString().length());
             }
         }
@@ -255,7 +263,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
         actionBar.setDisplayShowCustomEnabled(true);
         content = ((EditText) findViewById(R.id.status_new_content));
-        content.addTextChangedListener(new TextNumLimitWatcher((TextView)findViewById(R.id.menu_send), content, this));
+        content.addTextChangedListener(new TextNumLimitWatcher((TextView) findViewById(R.id.menu_send), content, this));
 
         findViewById(R.id.menu_add_gps).setOnClickListener(this);
         findViewById(R.id.menu_add_pic).setOnClickListener(this);
@@ -356,6 +364,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                savaDraft();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm.isActive())
                     imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
@@ -391,6 +400,13 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 //                break;
         }
         return true;
+    }
+
+    private void savaDraft() {
+        if (!TextUtils.isEmpty(content.getText().toString())) {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            sharedPref.edit().putString(TYPE_DRAFT, content.getText().toString()).commit();
+        }
     }
 
     public void clear() {
@@ -529,6 +545,8 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         @Override
         protected void onPostExecute(String s) {
             progressFragment.dismissAllowingStateLoss();
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(StatusNewActivity.this);
+            sharedPref.edit().remove(TYPE_DRAFT).commit();
             finish();
             Toast.makeText(StatusNewActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
             super.onPostExecute(s);

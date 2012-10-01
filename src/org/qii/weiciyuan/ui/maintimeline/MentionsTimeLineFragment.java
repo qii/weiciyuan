@@ -201,8 +201,8 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
             case R.id.friendstimelinefragment_new_weibo:
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
-                intent.putExtra("accountName", ((IAccountInfo) getActivity()).getAccount().getUsernick());
-                intent.putExtra("accountId", ((IAccountInfo) getActivity()).getAccount().getUid());
+                intent.putExtra("account", ((IAccountInfo) getActivity()).getAccount());
+
                 startActivity(intent);
                 break;
 

@@ -408,7 +408,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         public TimeLinePagerAdapter(FragmentManager fm) {
             super(fm);
-            list.add(new FriendsTimeLineFragment());
+            list.add(new FriendsTimeLineFragment(getUser()));
             list.add(new MentionsTimeLineFragment());
             list.add(new CommentsTimeLineFragment());
             list.add(new MyStatussTimeLineFragment());
