@@ -35,19 +35,19 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private final int TYPE_NORMAL_BIG_PIC = 2;
     private final int TYPE_MYSELF_BIG_PIC = 3;
 
-    public AbstractAppListAdapter(Fragment activity, ICommander commander, List<T> bean, ListView listView, boolean showOriStatus) {
+    public AbstractAppListAdapter(Fragment fragment, ICommander commander, List<T> bean, ListView listView, boolean showOriStatus) {
         this.bean = bean;
         this.commander = commander;
-        this.inflater = activity.getActivity().getLayoutInflater();
+        this.inflater = fragment.getActivity().getLayoutInflater();
         this.listView = listView;
         this.showOriStatus = showOriStatus;
-        this.activity = activity;
+        this.activity = fragment;
 
 
-        defaultBG = activity.getResources().getColor(R.color.transparent);
+        defaultBG = fragment.getResources().getColor(R.color.transparent);
 
         int[] attrs = new int[]{R.attr.listview_checked_color};
-        TypedArray ta = activity.getActivity().obtainStyledAttributes(attrs);
+        TypedArray ta = fragment.getActivity().obtainStyledAttributes(attrs);
         checkedBG = ta.getColor(0, 430);
     }
 
