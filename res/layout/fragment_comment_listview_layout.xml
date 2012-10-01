@@ -32,7 +32,7 @@
                 android:smoothScrollbar="true"
                 android:visibility="visible"
                 android:overScrollMode="never"
-                android:requiresFadingEdge="vertical"/>
+                />
 
 
         <ProgressBar android:layout_width="wrap_content"
