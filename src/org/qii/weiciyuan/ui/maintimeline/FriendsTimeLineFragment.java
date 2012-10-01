@@ -8,20 +8,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.ListBean;
-import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
-import org.qii.weiciyuan.ui.Abstract.IToken;
-import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
@@ -31,23 +24,29 @@ import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
  */
 public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
+    private AccountBean accountBean;
     private UserBean userBean;
+    private String token;
     private SimpleTask dbTask;
 
 
-    public FriendsTimeLineFragment(){
+    public FriendsTimeLineFragment() {
 
     }
 
-    public FriendsTimeLineFragment(UserBean userBean){
-        this.userBean=userBean;
+    public FriendsTimeLineFragment(AccountBean accountBean, UserBean userBean, String token) {
+        this.accountBean = accountBean;
+        this.userBean = userBean;
+        this.token = token;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putSerializable("account", accountBean);
         outState.putSerializable("bean", bean);
-        outState.putSerializable("userBean",userBean);
+        outState.putSerializable("userBean", userBean);
+        outState.putString("token",token);
     }
 
     @Override
@@ -75,7 +74,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
-            userBean=(UserBean)savedInstanceState.getSerializable("userBean");
+            userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+            accountBean = (AccountBean) savedInstanceState.getSerializable("account");
+            token = savedInstanceState.getString("token");
             clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
 
@@ -96,7 +97,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
         @Override
         protected Object doInBackground(Object... params) {
-            clearAndReplaceValue(DatabaseManager.getInstance().getHomeLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid()));
+            clearAndReplaceValue(DatabaseManager.getInstance().getHomeLineMsgList(accountBean.getUid()));
             return null;
         }
 
@@ -118,7 +119,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("msg", bean.getItemList().get(position));
-        intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
+        intent.putExtra("token", token);
         startActivity(intent);
 
 
@@ -141,8 +142,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         switch (item.getItemId()) {
             case R.id.friendstimelinefragment_new_weibo:
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
-                intent.putExtra("account", ((IAccountInfo) getActivity()).getAccount());
+                intent.putExtra("token", token);
+                intent.putExtra("account", accountBean);
                 startActivity(intent);
                 break;
             case R.id.friendstimelinefragment_refresh:
@@ -153,9 +154,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 break;
             case R.id.friendstimelinefragment_name:
                 intent = new Intent(getActivity(), MyInfoActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
-                intent.putExtra("user", ((IUserInfo) getActivity()).getUser());
-                intent.putExtra("account", ((IAccountInfo) getActivity()).getAccount());
+                intent.putExtra("token", token);
+                intent.putExtra("user", userBean);
+                intent.putExtra("account", accountBean);
                 startActivity(intent);
                 break;
         }
@@ -171,20 +172,20 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     @Override
     protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
-        MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
+        MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(token);
         if (getList().getItemList().size() > 0) {
             dao.setSince_id(getList().getItemList().get(0).getId());
         }
         MessageListBean result = dao.getGSONMsgList();
         if (result != null) {
-            DatabaseManager.getInstance().addHomeLineMsg(result, ((IAccountInfo) getActivity()).getAccount().getUid());
+            DatabaseManager.getInstance().addHomeLineMsg(result, accountBean.getUid());
         }
         return result;
     }
 
     @Override
     protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
-        MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(((MainTimeLineActivity) getActivity()).getToken());
+        MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(token);
         if (getList().getItemList().size() > 0) {
             dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
         }
