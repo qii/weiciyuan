@@ -11,7 +11,7 @@ import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
  * User: qii
  * Date: 12-10-1
  */
-public class RefreshTimeWorker  {
+public class RefreshTimeWorker {
 
     private AbstractTimeLineFragment fragment;
 
@@ -27,7 +27,7 @@ public class RefreshTimeWorker  {
         return fragment.getActivity();
     }
 
-     public void refreshTime() {
+    public void refreshTime() {
 
         if (fragment == null)
             return;
@@ -58,6 +58,9 @@ public class RefreshTimeWorker  {
                         public void run() {
 
                             View view = getCurrentShowFragment().getListView().getChildAt(finalI);
+                            //it is so strange that one time view throw null exception....
+                            if (view == null)
+                                return;
                             AbstractAppListAdapter.ViewHolder holder = (AbstractAppListAdapter.ViewHolder) view.getTag();
                             TextView time = holder.time;
                             if (time != null)
