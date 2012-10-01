@@ -1,9 +1,11 @@
 package org.qii.weiciyuan.ui.adapter;
 
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +14,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ItemBean;
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
+import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
+import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 
 import java.util.List;
 
@@ -190,6 +199,81 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             return Long.valueOf(getList().get(position).getId());
         else
             return -1;
+    }
+
+    protected void buildAvatar(ImageView view, int position, final UserBean user) {
+        String image_url = user.getProfile_image_url();
+        if (!TextUtils.isEmpty(image_url) && GlobalContext.getInstance().isEnablePic()) {
+            view.setVisibility(View.VISIBLE);
+            //when listview is flying,app dont download avatar and picture
+            boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
+            //50px avatar or 180px avatar
+            String url;
+            if (GlobalContext.getInstance().getEnableBigAvatar()) {
+                url = user.getAvatar_large();
+            } else {
+                url = user.getProfile_image_url();
+            }
+            commander.downloadAvatar(view, url, position, listView, isFling);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                    intent.putExtra("token", ((IToken) getActivity()).getToken());
+                    intent.putExtra("user", user);
+                    getActivity().startActivity(intent);
+                }
+            });
+
+        } else {
+            view.setVisibility(View.GONE);
+        }
+    }
+
+    protected void buildPic(final MessageBean msg, ImageView view, int position) {
+        view.setVisibility(View.VISIBLE);
+
+        String picUrl;
+
+        boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
+
+        if (GlobalContext.getInstance().getEnableBigPic()) {
+            picUrl = msg.getBmiddle_pic();
+            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_bmiddle, isFling);
+
+        } else {
+            picUrl = msg.getThumbnail_pic();
+            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_thumbnail, isFling);
+
+        }
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PictureDialogFragment progressFragment = new PictureDialogFragment(msg.getBmiddle_pic(), msg.getOriginal_pic());
+                progressFragment.show(getActivity().getSupportFragmentManager(), "");
+            }
+        });
+    }
+
+    protected void buildRepostContent(final MessageBean repost_msg, ViewHolder holder, int position) {
+        holder.repost_content.setVisibility(View.VISIBLE);
+
+
+        holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
+        holder.repost_content.setText(repost_msg.getListViewSpannableString());
+
+
+        if (repost_msg.getUser() != null && GlobalContext.getInstance().isEnablePic()) {
+
+        } else {
+            holder.repost_flag.setVisibility(View.GONE);
+        }
+
+        if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic()) && GlobalContext.getInstance().isEnablePic()) {
+            buildPic(repost_msg, holder.repost_content_pic, position);
+        }
     }
 
 
