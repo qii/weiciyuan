@@ -18,6 +18,10 @@
                   android:id="@+id/empty"
                   android:text="@string/empty"/>
 
+        <!-- requiresFadingEdge may have performance problem in some low price phones, but I like it.
+           use overScrollMode to disable blue boundaries at the top and the bottom of listview
+           because it is pull to refresh listview-->
+
         <org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
