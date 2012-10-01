@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.basefragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.ActionMode;
@@ -10,10 +9,10 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.ListBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.RefreshTimeWorker;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -57,6 +56,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         return pullToRefreshListView.getRefreshableView();
     }
 
+    public BaseAdapter getAdapter() {
+        return timeLineAdapter;
+    }
 
     protected void refreshLayout(T bean) {
         if (bean != null && bean.getSize() > 0) {
@@ -382,40 +384,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         return !enableRefreshTime;
     }
 
-    private class refreshTimeWorker implements Runnable {
-        @Override
-        public void run() {
-            if (!enableRefreshTime)
-                return;
-            Activity activity = getActivity();
-            if (activity == null)
-                return;
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    int start = getListView().getFirstVisiblePosition();
-                    int end = getListView().getLastVisiblePosition();
-
-
-                    int visibleItemNum = getListView().getChildCount();
-                    for (int i = 0; i < visibleItemNum; i++) {
-                        if (start + i > 0 && timeLineAdapter != null) {
-                            Object object = timeLineAdapter.getItem(start + i - 1);
-                            if (object instanceof ItemBean) {
-                                ItemBean msg = (ItemBean) object;
-                                TextView time = (TextView) getListView().getChildAt(i).findViewById(R.id.time);
-                                if (time != null)
-                                    time.setText(msg.getListviewItemShowTime());
-                            }
-                        }
-                    }
-                }
-            });
-
-
-        }
-
-    }
 
     private void removeListViewTimeRefresh() {
         scheduledExecutorService.shutdownNow();
@@ -424,7 +392,12 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     protected void addListViewTimeRefresh() {
 
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorService.scheduleAtFixedRate(new refreshTimeWorker(), 1, 1, TimeUnit.SECONDS);
+        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                new RefreshTimeWorker(AbstractTimeLineFragment.this).refreshTime();
+            }
+        }, 1, 1, TimeUnit.SECONDS);
 
         pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override

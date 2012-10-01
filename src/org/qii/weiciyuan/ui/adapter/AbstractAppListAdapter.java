@@ -277,11 +277,12 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     }
 
 
-    static class ViewHolder {
+    public static class ViewHolder {
         TextView username;
         TextView content;
         TextView repost_content;
-        TextView time;
+        //activity use this to fresh time every second
+        public TextView time;
         ImageView avatar;
         ImageView content_pic;
         ImageView repost_content_pic;
