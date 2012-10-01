@@ -35,7 +35,7 @@
     <string name="big_pic">原图</string>
     <string name="share">分享</string>
     <string name="share_to">分享到</string>
-    <string name="copy_to_clipboard">复制到剪切板</string>
+    <string name="copy_to_clipboard">复制</string>
     <string name="copy_successfully">复制完成</string>
 
     <!--system -->
