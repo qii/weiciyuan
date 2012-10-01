@@ -199,8 +199,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     public void onPause() {
         super.onPause();
         removeListViewTimeRefresh();
-        //when listview is refreshing,user open another activity,the result is animation is still playing forever,so stop it here
-        pullToRefreshListView.onRefreshComplete();
+
     }
 
     public void refresh() {
