@@ -44,7 +44,7 @@ public class OAuthDao {
         map.put("uid", uid);
         map.put("access_token", access_token);
 
-        String url = URLManager.getRealUrl("usershow");
+        String url = URLManager.getRealUrl("user_show");
 
         String result = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
