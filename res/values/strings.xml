@@ -190,6 +190,9 @@
 
     <!-- userinfo -->
     <string name="modify_remark">修改备注</string>
+    <string name="remark">备注</string>
+    <string name="new_remark">新备注</string>
+    <string name="modify">修改</string>
     <string name="add_to_app_filter">过滤掉 TA</string>
 
     <!---Setting  -->

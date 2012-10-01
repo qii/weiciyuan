@@ -11,16 +11,19 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.dao.user.RemarkDao;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
@@ -179,13 +182,68 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
                 intent.putExtra("accountId", GlobalContext.getInstance().getCurrentAccountId());
                 startActivity(intent);
                 break;
+            case R.id.menu_modify_remark:
+                UpdateRemarkDialog dialog = new UpdateRemarkDialog();
+                dialog.show(getSupportFragmentManager(), "");
+                break;
         }
         return false;
+    }
+
+    public void updateRemark(String remark) {
+
+        new UpdateRemarkTask(remark).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private AbstractTimeLineFragment getStatusFragment() {
         return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 StatusesByIdTimeLineFragment.class.getName()));
+    }
+
+
+    private UserInfoFragment getInfoFragment() {
+        return ((UserInfoFragment) getSupportFragmentManager().findFragmentByTag(
+                UserInfoFragment.class.getName()));
+    }
+
+
+    class UpdateRemarkTask extends MyAsyncTask<Void, UserBean, UserBean> {
+
+        WeiboException e;
+        String remark;
+
+        UpdateRemarkTask(String remark) {
+            this.remark = remark;
+        }
+
+
+        @Override
+        protected UserBean doInBackground(Void... params) {
+            try {
+                return new RemarkDao(getToken(), bean.getId(), remark).updateRemark();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onCancelled(UserBean userBean) {
+            super.onCancelled(userBean);
+            if (this.e != null) {
+                Toast.makeText(UserInfoActivity.this, this.e.getError(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(UserBean userBean) {
+            super.onPostExecute(userBean);
+            bean = userBean;
+            if (getInfoFragment() != null)
+                getInfoFragment().forceReloadData(userBean);
+
+        }
     }
 
     class TimeLinePagerAdapter extends
@@ -209,7 +267,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
         @Override
         protected String getTag(int position) {
             List<String> tagList = new ArrayList<String>();
-            tagList.add(BrowserWeiboMsgFragment.class.getName());
+            tagList.add(UserInfoFragment.class.getName());
             tagList.add(StatusesByIdTimeLineFragment.class.getName());
             return tagList.get(position);
         }

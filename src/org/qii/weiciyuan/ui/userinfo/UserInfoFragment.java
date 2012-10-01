@@ -85,6 +85,11 @@ public class UserInfoFragment extends Fragment {
         refresh();
     }
 
+   //sina api has bug,so must refresh to get actual data
+    public void forceReloadData(UserBean bean){
+//        this.bean=bean;
+        refresh();
+    }
 
     private void setValue() {
         getActivity().getActionBar().setTitle(bean.getScreen_name());

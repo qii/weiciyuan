@@ -52,11 +52,11 @@ public class URLHelper {
     }
 
     public static String new_Repost() {
-        return URLManager.getRealUrl("repost");
+        return URLManager.getRealUrl("repost_create");
     }
 
     public static String new_Comment() {
-        return URLManager.getRealUrl("comment");
+        return URLManager.getRealUrl("comment_create");
     }
 
     public static String remove_Comment() {
@@ -68,7 +68,7 @@ public class URLHelper {
     }
 
     public static String getUser() {
-        return URLManager.getRealUrl("usershow");
+        return URLManager.getRealUrl("user_show");
     }
 
     public static String getStatusesTimeLineById() {
@@ -108,18 +108,22 @@ public class URLHelper {
     }
 
     public static String getDestroyStatus() {
-        return URLManager.getRealUrl("destroy_status");
+        return URLManager.getRealUrl("status_destroy");
     }
 
     public static String getSearchTopicByName() {
-        return URLManager.getRealUrl("searchtopic");
+        return URLManager.getRealUrl("topic_search");
     }
 
     public static String getUnread() {
-        return URLManager.getRealUrl("unread");
+        return URLManager.getRealUrl("unread_count");
     }
 
     public static String getClearUnread() {
-        return URLManager.getRealUrl("clearunread");
+        return URLManager.getRealUrl("unread_clear");
+    }
+
+    public static String getRemarkUpdate() {
+        return URLManager.getRealUrl("remark_update");
     }
 }
