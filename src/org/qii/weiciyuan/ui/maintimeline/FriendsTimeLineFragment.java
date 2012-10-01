@@ -31,7 +31,7 @@ import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
  */
 public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
-    UserBean userBean;
+    private UserBean userBean;
     private SimpleTask dbTask;
 
 
