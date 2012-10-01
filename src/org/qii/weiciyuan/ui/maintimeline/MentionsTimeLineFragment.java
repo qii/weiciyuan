@@ -10,9 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.ListBean;
-import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -30,6 +28,10 @@ import org.qii.weiciyuan.ui.send.StatusNewActivity;
  * Date: 12-7-29
  */
 public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
+
+    private AccountBean accountBean;
+    private UserBean userBean;
+    private String token;
 
     private SimpleTask dbTask;
 
@@ -60,6 +62,17 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
             dbTask.cancel(true);
     }
 
+    public MentionsTimeLineFragment() {
+
+    }
+
+    public MentionsTimeLineFragment(AccountBean accountBean, UserBean userBean, String token) {
+        this.accountBean = accountBean;
+        this.userBean = userBean;
+        this.token = token;
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         group[0] = getString(R.string.all_people);
@@ -71,7 +84,12 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putSerializable("account", accountBean);
         outState.putSerializable("bean", bean);
+        outState.putSerializable("userBean", userBean);
+        outState.putString("token", token);
+
+
         outState.putStringArray("group", group);
         outState.putInt("selected", selected);
         outState.putString("filter_by_author", filter_by_author);
@@ -91,6 +109,10 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null) {
+            userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+            accountBean = (AccountBean) savedInstanceState.getSerializable("account");
+            token = savedInstanceState.getString("token");
+
             group = savedInstanceState.getStringArray("group");
             selected = savedInstanceState.getInt("selected");
             filter_by_author = savedInstanceState.getString("filter_by_author");

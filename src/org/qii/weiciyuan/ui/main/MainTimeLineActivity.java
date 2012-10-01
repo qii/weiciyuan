@@ -68,6 +68,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
             Intent intent = getIntent();
@@ -95,7 +96,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("id", accountBean.getUid());
         editor.commit();
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.maintimelineactivity_viewpager_layout);
 
         buildPhoneInterface();
@@ -408,9 +408,9 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         public TimeLinePagerAdapter(FragmentManager fm) {
             super(fm);
-            list.add(new FriendsTimeLineFragment(getAccount(),getUser(), getToken()));
-            list.add(new MentionsTimeLineFragment());
-            list.add(new CommentsTimeLineFragment());
+            list.add(new FriendsTimeLineFragment(getAccount(), getUser(), getToken()));
+            list.add(new MentionsTimeLineFragment(getAccount(), getUser(), getToken()));
+            list.add(new CommentsTimeLineFragment(getAccount(), getUser(), getToken()));
             list.add(new MyStatussTimeLineFragment());
         }
 

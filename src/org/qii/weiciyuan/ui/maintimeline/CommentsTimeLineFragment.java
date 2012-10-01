@@ -12,7 +12,9 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.dao.maintimeline.CommentsTimeLineByMeDao;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
@@ -38,11 +40,25 @@ import org.qii.weiciyuan.ui.send.StatusNewActivity;
  */
 public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentListBean> implements IRemoveItem {
 
+
+    private AccountBean accountBean;
+    private UserBean userBean;
+    private String token;
+
     private String[] group = new String[3];
     private int selected = 0;
     private RemoveTask removeTask;
     private SimpleTask dbTask;
 
+    public CommentsTimeLineFragment() {
+
+    }
+
+    public CommentsTimeLineFragment(AccountBean accountBean, UserBean userBean, String token) {
+        this.accountBean = accountBean;
+        this.userBean = userBean;
+        this.token = token;
+    }
 
     public void setSelected(int positoin) {
         selected = positoin;
@@ -56,7 +72,12 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        outState.putSerializable("account", accountBean);
         outState.putSerializable("bean", bean);
+        outState.putSerializable("userBean", userBean);
+        outState.putString("token", token);
+
         outState.putStringArray("group", group);
         outState.putInt("selected", selected);
     }
@@ -74,6 +95,9 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         commander = ((AbstractAppActivity) getActivity()).getCommander();
 
         if (savedInstanceState != null && (bean == null || bean.getItemList().size() == 0)) {
+            userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+            accountBean = (AccountBean) savedInstanceState.getSerializable("account");
+            token = savedInstanceState.getString("token");
             group = savedInstanceState.getStringArray("group");
             selected = savedInstanceState.getInt("selected");
             clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
