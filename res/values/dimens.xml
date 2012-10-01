@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<dimen name="none">10dp</dimen>
-
+    <dimen name="timeline_big_avatar_height">150dp</dimen>
 </resources>

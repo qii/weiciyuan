@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.Display;
 import android.widget.ImageView;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -73,7 +74,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                     display.getMetrics(metrics);
                     float reSize = activity.getResources().getDisplayMetrics().density;
                     //because height is 80dp
-                    int height = (int) (reSize * 120);
+                    int height = activity.getResources().getDimensionPixelSize(R.dimen.timeline_big_avatar_height);
                     //5 is left layout margin 16 is right layout margin 40 is avatar width 5 is the range between avatar and username
                     int width = (int) (metrics.widthPixels - (16 + 5 + 40 + 5) * reSize);
 
@@ -101,7 +102,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
         if (bitmap != null) {
 
-            lruCache.put(data,  bitmap);
+            lruCache.put(data, bitmap);
 
             if (view != null && view.get() != null) {
                 ImageView imageView = view.get();
@@ -138,8 +139,6 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         }
         return null;
     }
-
-
 
 
 }
