@@ -18,5 +18,9 @@
           android:title="@string/copy_to_clipboard"
           android:showAsAction="never"
           android:icon="?copy"
-             />
+            />
+    <item android:id="@+id/menu_remove"
+          android:icon="?accountactivity_remove"
+          android:title="@string/delete"
+          android:showAsAction="ifRoom|withText"/>
 </menu>
