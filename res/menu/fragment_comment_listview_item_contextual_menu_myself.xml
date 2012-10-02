@@ -10,12 +10,14 @@
     <item android:id="@+id/menu_share"
           android:title="@string/share"
           android:icon="?share"
+          android:showAsAction="never"
           android:actionProviderClass="android.widget.ShareActionProvider"
             />
 
     <item android:id="@+id/menu_copy"
           android:title="@string/copy_to_clipboard"
           android:icon="?copy"
+          android:showAsAction="never"
             />
 
     <item android:id="@+id/menu_remove"
