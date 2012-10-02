@@ -3,7 +3,7 @@
 
     <item android:id="@+id/menu_comment"
           android:icon="?comment"
-          android:title="@string/comments"
+          android:title="@string/reply_to_comment"
           android:showAsAction="ifRoom|withText"
             />
 
