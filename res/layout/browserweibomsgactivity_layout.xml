@@ -126,7 +126,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:minHeight="140dp"
-
+                        android:id="@+id/repost_pic_layout"
+                        android:visibility="gone"
                         >
                     <ImageView
                             android:id="@+id/repost_content_pic"

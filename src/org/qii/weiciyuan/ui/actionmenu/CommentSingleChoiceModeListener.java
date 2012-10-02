@@ -31,12 +31,12 @@ import java.util.List;
  */
 public class CommentSingleChoiceModeListener implements ActionMode.Callback {
 
-    ListView listView;
-    BaseAdapter adapter;
-    Fragment fragment;
-    ActionMode mode;
-    CommentBean bean;
-    ShareActionProvider mShareActionProvider;
+    private ListView listView;
+    private BaseAdapter adapter;
+    private Fragment fragment;
+    private ActionMode mode;
+    private CommentBean bean;
+    private ShareActionProvider mShareActionProvider;
 
     public void finish() {
         if (mode != null)
@@ -69,7 +69,10 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         MenuInflater inflater = mode.getMenuInflater();
         menu.clear();
 
-        if (bean.getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+        boolean isMyComment = bean.getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId());
+        boolean isCommentUnderMyStatus = bean.getStatus().getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId());
+
+        if (isMyComment || isCommentUnderMyStatus) {
             inflater.inflate(R.menu.fragment_comment_listview_item_contextual_menu_myself, menu);
         } else {
             inflater.inflate(R.menu.fragment_comment_listview_item_contextual_menu, menu);

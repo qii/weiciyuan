@@ -21,10 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -49,6 +46,8 @@ import java.util.Locale;
 public class BrowserWeiboMsgFragment extends Fragment {
 
     private MessageBean msg;
+
+    private FrameLayout repost_pic_layout;
 
     private TextView username;
     private TextView content;
@@ -278,6 +277,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
             }
         });
+        repost_pic_layout = (FrameLayout) view.findViewById(R.id.repost_pic_layout);
         return view;
     }
 
@@ -317,28 +317,6 @@ public class BrowserWeiboMsgFragment extends Fragment {
         if (!TextUtils.isEmpty(msg.getSource())) {
             source.setText(Html.fromHtml(msg.getSource()).toString());
         }
-        if (msg.getRetweeted_status() != null) {
-            recontent.setVisibility(View.VISIBLE);
-            if (msg.getRetweeted_status().getUser() != null) {
-                recontent.setText("@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
-                ListViewTool.addLinks(recontent);
-
-            } else {
-                recontent.setText(msg.getRetweeted_status().getText());
-                ListViewTool.addLinks(recontent);
-
-            }
-            if (!TextUtils.isEmpty(msg.getRetweeted_status().getBmiddle_pic())) {
-//                repost_pic.setVisibility(View.VISIBLE);
-                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_bmiddle, repost_pic_pb);
-                task.execute(msg.getRetweeted_status().getBmiddle_pic());
-            } else if (!TextUtils.isEmpty(msg.getRetweeted_status().getThumbnail_pic())) {
-                repost_pic.setVisibility(View.VISIBLE);
-                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_thumbnail);
-                task.execute(msg.getRetweeted_status().getThumbnail_pic());
-
-            }
-        }
 
 
         if (!TextUtils.isEmpty(msg.getBmiddle_pic())) {
@@ -352,6 +330,33 @@ public class BrowserWeiboMsgFragment extends Fragment {
             task.execute(msg.getThumbnail_pic());
 
         }
+
+
+        if (msg.getRetweeted_status() != null) {
+            recontent.setVisibility(View.VISIBLE);
+            if (msg.getRetweeted_status().getUser() != null) {
+                recontent.setText("@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
+                ListViewTool.addLinks(recontent);
+
+            } else {
+                recontent.setText(msg.getRetweeted_status().getText());
+                ListViewTool.addLinks(recontent);
+
+            }
+            if (!TextUtils.isEmpty(msg.getRetweeted_status().getBmiddle_pic())) {
+                repost_pic_layout.setVisibility(View.VISIBLE);
+                repost_pic.setVisibility(View.VISIBLE);
+                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_bmiddle, repost_pic_pb);
+                task.execute(msg.getRetweeted_status().getBmiddle_pic());
+            } else if (!TextUtils.isEmpty(msg.getRetweeted_status().getThumbnail_pic())) {
+                repost_pic_layout.setVisibility(View.VISIBLE);
+                repost_pic.setVisibility(View.VISIBLE);
+                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_thumbnail);
+                task.execute(msg.getRetweeted_status().getThumbnail_pic());
+
+            }
+        }
+
 
         getActivity().getActionBar().getTabAt(1).setText(getString(R.string.comments) + "(" + msg.getComments_count() + ")");
         getActivity().getActionBar().getTabAt(2).setText(getString(R.string.repost) + "(" + msg.getReposts_count() + ")");
