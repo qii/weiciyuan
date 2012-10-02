@@ -21,6 +21,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -112,6 +113,7 @@ public class UserInfoFragment extends Fragment {
         if (!TextUtils.isEmpty(bean.getUrl())) {
 
             blog_url.setText(bean.getUrl());
+            ListViewTool.addLinks(blog_url);
         } else {
             blog_url.setVisibility(View.GONE);
         }

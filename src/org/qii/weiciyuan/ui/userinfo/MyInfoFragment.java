@@ -16,6 +16,7 @@ import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.*;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 
@@ -80,6 +81,8 @@ public class MyInfoFragment extends Fragment {
         if (!TextUtils.isEmpty(bean.getUrl())) {
 
             blog_url.setText(bean.getUrl());
+            ListViewTool.addLinks(blog_url);
+
         } else {
             blog_url.setVisibility(View.GONE);
         }
