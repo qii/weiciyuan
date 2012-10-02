@@ -8,6 +8,7 @@
     <attr name="accountactivity_select_all" format="reference"/>
     <attr name="accountactivity_select_none" format="reference"/>
     <attr name="comment" format="reference"/>
+    <attr name="reply_to_comment" format="reference"/>
     <attr name="edit" format="reference"/>
     <attr name="fav_en" format="reference"/>
     <attr name="fav_un" format="reference"/>

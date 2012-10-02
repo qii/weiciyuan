@@ -18,6 +18,7 @@
         <item name="accountactivity_select_all">@drawable/accountactivity_select_all_light</item>
         <item name="accountactivity_select_none">@drawable/accountactivity_select_none_light</item>
         <item name="comment">@drawable/comment_light</item>
+        <item name="reply_to_comment">@drawable/reply_to_comment_light</item>
         <item name="edit">@drawable/edit_light</item>
         <item name="fav_en">@drawable/fav_en_light</item>
         <item name="fav_un">@drawable/fav_un_light</item>

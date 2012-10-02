@@ -21,7 +21,8 @@
         <item name="accountactivity_select_all">@drawable/accountactivity_select_all_black</item>
         <item name="accountactivity_select_none">@drawable/accountactivity_select_none_black</item>
         <item name="comment">@drawable/comment_black</item>
-        <item name="edit">@drawable/edit_black</item>
+        <item name="reply_to_comment">@drawable/reply_to_comment_black</item>
+         <item name="edit">@drawable/edit_black</item>
         <item name="fav_en">@drawable/fav_en_black</item>
         <item name="fav_un">@drawable/fav_un_black</item>
         <item name="friendstimelinefragment_search">@drawable/friendstimelinefragment_search_black</item>
