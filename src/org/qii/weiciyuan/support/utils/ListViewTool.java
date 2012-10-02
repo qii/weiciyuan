@@ -118,6 +118,28 @@ public class ListViewTool {
         }
     }
 
+    public static void addJustHighLightLinksOnlyReplyComment(CommentBean bean) {
+
+
+        String name = "";
+        UserBean reUser = bean.getUser();
+        if (reUser != null) {
+            name = reUser.getScreen_name();
+        }
+
+        SpannableString value;
+
+        if (!TextUtils.isEmpty(name)) {
+            value = ListViewTool.getJustHighLightLinks("@" + name + "：" + bean.getText());
+        } else {
+            value = ListViewTool.getJustHighLightLinks(bean.getText());
+        }
+
+        bean.setListViewReplySpannableString(value);
+    }
+
+
+
     public static void addLinks(TextView view) {
         MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
             public final String transformUrl(final Matcher match, String url) {
