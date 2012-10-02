@@ -1,8 +1,11 @@
 package org.qii.weiciyuan.ui.adapter;
 
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ListView;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.lib.UpdateString;
@@ -17,11 +20,21 @@ import java.util.List;
  */
 public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
+    private Drawable replyPic = null;
+    private Drawable commentPic = null;
+
 
     public CommentListAdapter(Fragment fragment, ICommander commander, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
         super(fragment, commander, bean, listView, showOriStatus);
-    }
 
+        int[] attrs = new int[]{R.attr.timeline_reply_flag};
+        TypedArray ta = fragment.getActivity().obtainStyledAttributes(attrs);
+        replyPic = ta.getDrawable(0);
+
+        attrs = new int[]{R.attr.timeline_comment_flag};
+        ta = fragment.getActivity().obtainStyledAttributes(attrs);
+        commentPic = ta.getDrawable(0);
+    }
 
     @Override
     protected void bindViewData(ViewHolder holder, int position) {
@@ -57,16 +70,29 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);
 
-        MessageBean repost_msg = comment.getStatus();
 
-        if (repost_msg != null && showOriStatus) {
-            buildRepostContent(repost_msg, holder, position);
+        CommentBean reply = comment.getReply_comment();
+
+        if (reply != null&& showOriStatus) {
+            holder.repost_layout.setVisibility(View.VISIBLE);
+            holder.repost_flag.setVisibility(View.VISIBLE);
+            holder.repost_content.setVisibility(View.VISIBLE);
+            holder.repost_flag.setImageDrawable(replyPic);
+            holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
+            holder.repost_content.setText(reply.getListViewSpannableString());
         } else {
-            holder.repost_layout.setVisibility(View.GONE);
-            holder.repost_flag.setVisibility(View.GONE);
+
+            MessageBean repost_msg = comment.getStatus();
+
+            if (repost_msg != null && showOriStatus) {
+                holder.repost_flag.setImageDrawable(commentPic);
+                buildRepostContent(repost_msg, holder, position);
+            } else {
+                holder.repost_layout.setVisibility(View.GONE);
+                holder.repost_flag.setVisibility(View.GONE);
+            }
+
         }
-
-
     }
 
 }

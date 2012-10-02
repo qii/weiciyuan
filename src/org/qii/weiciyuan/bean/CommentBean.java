@@ -17,6 +17,15 @@ public class CommentBean extends ItemBean {
     private String mid;
     private UserBean user;
     private MessageBean status;
+    private CommentBean reply_comment;
+
+    public CommentBean getReply_comment() {
+        return reply_comment;
+    }
+
+    public void setReply_comment(CommentBean reply_comment) {
+        this.reply_comment = reply_comment;
+    }
 
     private transient SpannableString listViewSpannableString;
 
@@ -25,6 +34,8 @@ public class CommentBean extends ItemBean {
             return listViewSpannableString;
         } else {
             ListViewTool.addJustHighLightLinks(this);
+            if (reply_comment != null)
+                reply_comment.getListViewSpannableString();
             return listViewSpannableString;
         }
     }
