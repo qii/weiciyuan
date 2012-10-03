@@ -9,7 +9,6 @@ import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
@@ -33,8 +32,9 @@ public class MainCommentsTimeLineDao {
         this.max_id = max_id;
     }
 
-    public void setCount(String count) {
+    public MainCommentsTimeLineDao setCount(String count) {
         this.count = count;
+        return this;
     }
 
     public void setPage(String page) {
@@ -80,10 +80,16 @@ public class MainCommentsTimeLineDao {
         try {
             value = gson.fromJson(jsonData, CommentListBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
             AppLogger.e(e.getMessage());
         }
 
+
+        return value;
+    }
+
+    public CommentListBean getGSONMsgList() throws WeiboException {
+
+        CommentListBean value = getGSONMsgListWithoutClearUnread();
         if (value != null && value.getSize() > 0) {
             List<CommentBean> msgList = value.getItemList();
             Iterator<CommentBean> iterator = msgList.iterator();
@@ -99,12 +105,6 @@ public class MainCommentsTimeLineDao {
             }
 
         }
-        return value;
-    }
-
-    public CommentListBean getGSONMsgList() throws WeiboException {
-
-        CommentListBean value = getGSONMsgListWithoutClearUnread();
         new ClearUnreadDao(access_token, ClearUnreadDao.CMT).clearUnread();
 
         return value;

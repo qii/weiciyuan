@@ -91,10 +91,19 @@ public class BrowserWeiboMsgFragment extends Fragment {
         } else {
             task = new UpdateMsgTask();
             task.execute();
+
         }
+
+     }
+
+    //android has a bug,I am tired. I use another color and disable underline for link,but when I open "dont save activity" in
+    //developer option,click the link to open another activity, then press back,this fragment is restored,
+    //but the link color is restored to android own blue color,not my custom color,the underline appears
+    //the workaround is set textview value in onresume() method
+    @Override
+    public void onResume() {
+        super.onResume();
         buildViewData();
-
-
     }
 
     @Override

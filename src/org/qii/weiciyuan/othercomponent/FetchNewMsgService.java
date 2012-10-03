@@ -117,24 +117,16 @@ public class FetchNewMsgService extends Service {
             try {
                 UnreadDao unreadDao = new UnreadDao(token, accountBean.getUid());
                 unreadBean = unreadDao.getCount();
-                int sum = unreadBean.getMention_cmt() + unreadBean.getMention_status() + unreadBean.getCmt();
 
-                if (sum > 0) {
+                int comment = unreadBean.getCmt();
+                int mention = unreadBean.getMention_cmt() + unreadBean.getMention_status();
 
-                    CommentListBean commentLineBean = DatabaseManager.getInstance().getCommentLineMsgList(accountId);
-                    MessageListBean messageListBean = DatabaseManager.getInstance().getRepostLineMsgList(accountId);
-
-                    MainCommentsTimeLineDao commentDao = new MainCommentsTimeLineDao(token);
-                    if (commentLineBean.getSize() > 0) {
-                        commentDao.setSince_id(commentLineBean.getItemList().get(0).getId());
-                    }
-
-                    MainMentionsTimeLineDao mentionDao = new MainMentionsTimeLineDao(token);
-                    if (messageListBean.getSize() > 0) {
-                        mentionDao.setSince_id(messageListBean.getItemList().get(0).getId());
-                    }
-
+                if (comment > 0) {
+                    MainCommentsTimeLineDao commentDao = new MainCommentsTimeLineDao(token).setCount(String.valueOf(comment));
                     commentResult = commentDao.getGSONMsgListWithoutClearUnread();
+
+                } else if (mention > 0) {
+                    MainMentionsTimeLineDao mentionDao = new MainMentionsTimeLineDao(token).setCount(String.valueOf(mention));
                     repostResult = mentionDao.getGSONMsgListWithoutClearUnread();
                 }
             } catch (WeiboException e) {

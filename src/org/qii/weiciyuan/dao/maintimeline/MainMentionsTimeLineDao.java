@@ -9,7 +9,6 @@ import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
@@ -54,10 +53,17 @@ public class MainMentionsTimeLineDao {
         try {
             value = gson.fromJson(json, MessageListBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
             AppLogger.e(e.getMessage());
         }
 
+
+        return value;
+    }
+
+    public MessageListBean getGSONMsgList() throws WeiboException {
+
+
+        MessageListBean value = getGSONMsgListWithoutClearUnread();
         /**
          * sometime sina weibo may delete message,so data don't have any user information
          */
@@ -76,15 +82,6 @@ public class MainMentionsTimeLineDao {
             }
 
         }
-
-
-        return value;
-    }
-
-    public MessageListBean getGSONMsgList() throws WeiboException {
-
-
-        MessageListBean value = getGSONMsgListWithoutClearUnread();
         new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_STATUS).clearUnread();
         new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_CMT).clearUnread();
 
