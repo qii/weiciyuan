@@ -5,8 +5,8 @@ import android.app.FragmentTransaction;
 import android.content.*;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
@@ -222,7 +222,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     private void buildViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
+        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
         mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
@@ -232,22 +232,22 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
 
     private AbstractTimeLineFragment getHomeFragment() {
-        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
                 FriendsTimeLineFragment.class.getName()));
     }
 
     private AbstractTimeLineFragment getMentionFragment() {
-        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
                 MentionsTimeLineFragment.class.getName()));
     }
 
     private AbstractTimeLineFragment getCommentFragment() {
-        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
                 CommentsTimeLineFragment.class.getName()));
     }
 
     private AbstractTimeLineFragment getMyFragment() {
-        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
                 MyStatussTimeLineFragment.class.getName()));
     }
 

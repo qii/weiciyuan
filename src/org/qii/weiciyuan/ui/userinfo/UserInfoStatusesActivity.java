@@ -38,7 +38,7 @@ public class UserInfoStatusesActivity extends AbstractAppActivity implements IUs
         getActionBar().setTitle(getString(R.string.message_list));
         token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
-        getSupportFragmentManager().beginTransaction()
+        getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new StatusesByIdTimeLineFragment(getUser(), getToken()))
                 .commit();
 

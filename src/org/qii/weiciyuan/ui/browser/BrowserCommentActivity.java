@@ -32,7 +32,7 @@ public class BrowserCommentActivity extends AbstractAppActivity implements IToke
         CommentBean bean = (CommentBean) intent.getSerializableExtra("comment");
         token = intent.getStringExtra("token");
 
-        getSupportFragmentManager().beginTransaction()
+        getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new BrowserCommentFragment(bean))
                 .commit();
 

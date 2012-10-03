@@ -1,11 +1,11 @@
 package org.qii.weiciyuan.ui.userinfo;
 
 import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
@@ -60,7 +60,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.my_info));
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
+        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
         mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
@@ -145,7 +145,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
     }
 
     private AbstractTimeLineFragment getStatusFragment() {
-        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
                 StatusesByIdTimeLineFragment.class.getName()));
     }
 

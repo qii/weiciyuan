@@ -382,7 +382,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
             case R.id.menu_emoticon:
                 EmotionsDialog dialog = new EmotionsDialog();
-                dialog.show(getSupportFragmentManager(), "");
+                dialog.show(getFragmentManager(), "");
                 break;
 
             case R.id.menu_send:
@@ -456,7 +456,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
             case R.id.menu_add_emotions:
                 EmotionsDialog dialog = new EmotionsDialog();
-                dialog.show(getSupportFragmentManager(), "");
+                dialog.show(getFragmentManager(), "");
                 break;
 
             case R.id.menu_send:
@@ -516,7 +516,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 }
             });
 
-            progressFragment.show(getSupportFragmentManager(), "");
+            progressFragment.show(getFragmentManager(), "");
 
         }
 

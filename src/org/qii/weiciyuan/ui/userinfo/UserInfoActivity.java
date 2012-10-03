@@ -1,12 +1,12 @@
 package org.qii.weiciyuan.ui.userinfo;
 
 import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -92,7 +92,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
         setContentView(R.layout.maintimelineactivity_viewpager_layout);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
+        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
@@ -184,7 +184,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
                 break;
             case R.id.menu_modify_remark:
                 UpdateRemarkDialog dialog = new UpdateRemarkDialog();
-                dialog.show(getSupportFragmentManager(), "");
+                dialog.show(getFragmentManager(), "");
                 break;
         }
         return false;
@@ -196,13 +196,13 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
     }
 
     private AbstractTimeLineFragment getStatusFragment() {
-        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
                 StatusesByIdTimeLineFragment.class.getName()));
     }
 
 
     private UserInfoFragment getInfoFragment() {
-        return ((UserInfoFragment) getSupportFragmentManager().findFragmentByTag(
+        return ((UserInfoFragment) getFragmentManager().findFragmentByTag(
                 UserInfoFragment.class.getName()));
     }
 

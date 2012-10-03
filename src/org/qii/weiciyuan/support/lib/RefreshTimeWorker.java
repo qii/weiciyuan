@@ -1,6 +1,6 @@
 package org.qii.weiciyuan.support.lib;
 
-import android.support.v4.app.FragmentActivity;
+import android.app.Activity;
 import android.view.View;
 import android.widget.TextView;
 import org.qii.weiciyuan.bean.ItemBean;
@@ -23,7 +23,7 @@ public class RefreshTimeWorker {
         return fragment;
     }
 
-    private FragmentActivity getActivity() {
+    private Activity getActivity() {
         return fragment.getActivity();
     }
 

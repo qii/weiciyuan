@@ -116,7 +116,7 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
         switch (v.getId()) {
             case R.id.menu_add_emotions:
                 EmotionsDialog dialog = new EmotionsDialog();
-                dialog.show(getSupportFragmentManager(), "");
+                dialog.show(getFragmentManager(), "");
                 break;
 
             case R.id.menu_send:
@@ -133,7 +133,7 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
 
     protected void clearContentMenu() {
         ClearContentDialog dialog = new ClearContentDialog();
-        dialog.show(getSupportFragmentManager(), "");
+        dialog.show(getFragmentManager(), "");
     }
 
 
@@ -157,7 +157,7 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
                 }
             });
 
-            progressFragment.show(getSupportFragmentManager(), "");
+            progressFragment.show(getFragmentManager(), "");
 
         }
 

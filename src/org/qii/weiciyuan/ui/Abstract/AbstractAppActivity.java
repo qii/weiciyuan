@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.Abstract;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.TypedArray;
@@ -9,7 +10,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * User: Jiang Qi
  * Date: 12-7-31
  */
-public class AbstractAppActivity extends FragmentActivity {
+public class AbstractAppActivity extends Activity {
 
     private int theme = 0;
 

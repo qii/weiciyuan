@@ -1,6 +1,6 @@
 package org.qii.weiciyuan.ui.adapter;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;

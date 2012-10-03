@@ -1,7 +1,7 @@
 package org.qii.weiciyuan.ui.adapter;
 
 import android.content.res.TypedArray;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -2,7 +2,7 @@ package org.qii.weiciyuan.ui.basefragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.*;
 import android.view.animation.AnimationUtils;
 import android.widget.*;

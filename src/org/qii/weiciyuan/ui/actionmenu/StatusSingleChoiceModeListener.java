@@ -1,13 +1,13 @@
 package org.qii.weiciyuan.ui.actionmenu;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.support.v4.app.Fragment;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;

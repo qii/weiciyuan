@@ -1,9 +1,9 @@
 package org.qii.weiciyuan.ui.adapter;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -61,7 +61,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         checkedBG = ta.getColor(0, 430);
     }
 
-    protected FragmentActivity getActivity() {
+    protected Activity getActivity() {
         return fragment.getActivity();
     }
 
@@ -252,7 +252,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             @Override
             public void onClick(View v) {
                 PictureDialogFragment progressFragment = new PictureDialogFragment(msg.getBmiddle_pic(), msg.getOriginal_pic());
-                progressFragment.show(getActivity().getSupportFragmentManager(), "");
+                progressFragment.show(getActivity().getFragmentManager(), "");
             }
         });
     }

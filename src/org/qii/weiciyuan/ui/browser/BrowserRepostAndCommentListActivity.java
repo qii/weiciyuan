@@ -1,14 +1,14 @@
 package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
@@ -46,7 +46,7 @@ public class BrowserRepostAndCommentListActivity extends AbstractAppActivity imp
 
     private void buildViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
+        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
@@ -114,7 +114,7 @@ public class BrowserRepostAndCommentListActivity extends AbstractAppActivity imp
     }
 
     class TimeLinePagerAdapter extends
-            FragmentPagerAdapter {
+            AppFragmentPagerAdapter {
 
         List<Fragment> list = new ArrayList<Fragment>();
 
@@ -130,6 +130,11 @@ public class BrowserRepostAndCommentListActivity extends AbstractAppActivity imp
         @Override
         public Fragment getItem(int i) {
             return list.get(i);
+        }
+
+        @Override
+        protected String getTag(int position) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
         @Override

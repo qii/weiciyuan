@@ -2,7 +2,7 @@ package org.qii.weiciyuan.ui.adapter;
 
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.View;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;

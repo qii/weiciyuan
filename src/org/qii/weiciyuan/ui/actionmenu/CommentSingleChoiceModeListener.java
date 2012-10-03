@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;

@@ -1,7 +1,7 @@
 package org.qii.weiciyuan.ui.basefragment;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,6 +88,21 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+//        if (this.isVisible()) {
+
+            if (isVisibleToUser) {
+                addListViewTimeRefresh();
+            } else {
+                removeListViewTimeRefresh();
+            }
+//        } else {
+//            removeListViewTimeRefresh();
+//        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
@@ -111,11 +126,44 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             }
         });
 
-         getListView().setHeaderDividersEnabled(false);
+        getListView().setHeaderDividersEnabled(false);
         footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
         getListView().addFooterView(footerView);
         dismissFooterView();
 
+        pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                  @Override
+                  public void onScrollStateChanged(AbsListView view, int scrollState) {
+                      switch (scrollState) {
+
+                          case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+
+                              enableRefreshTime = true;
+                              timeLineAdapter.notifyDataSetChanged();
+                              break;
+
+
+                          case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+
+                              enableRefreshTime = false;
+                              break;
+
+                          case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+
+                              enableRefreshTime = true;
+                              break;
+
+
+                      }
+                  }
+
+                  @Override
+                  public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                  }
+              }
+
+              );
 
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -232,15 +280,13 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     public void onResume() {
         super.onResume();
         timeLineAdapter.notifyDataSetChanged();
-        addListViewTimeRefresh();
-    }
+     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
 
-//        addListViewTimeRefresh();
     }
 
     public void setmActionMode(ActionMode mActionMode) {
@@ -386,7 +432,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
 
     private void removeListViewTimeRefresh() {
-        scheduledExecutorService.shutdownNow();
+        if (scheduledExecutorService != null && !scheduledExecutorService.isShutdown())
+            scheduledExecutorService.shutdownNow();
     }
 
     protected void addListViewTimeRefresh() {
@@ -399,39 +446,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             }
         }, 1, 1, TimeUnit.SECONDS);
 
-        pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                switch (scrollState) {
 
-                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-
-                        enableRefreshTime = true;
-                        timeLineAdapter.notifyDataSetChanged();
-                        break;
-
-
-                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-
-                        enableRefreshTime = false;
-                        break;
-
-                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-
-                        enableRefreshTime = true;
-                        break;
-
-
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        }
-
-        );
     }
 }
 

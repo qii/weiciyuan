@@ -13,6 +13,7 @@ import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
@@ -46,7 +47,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         outState.putSerializable("account", accountBean);
         outState.putSerializable("bean", bean);
         outState.putSerializable("userBean", userBean);
-        outState.putString("token",token);
+        outState.putString("token", token);
     }
 
     @Override

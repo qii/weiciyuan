@@ -1,6 +1,8 @@
 package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -9,8 +11,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -78,7 +78,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
 
     private void buildViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
+        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
@@ -121,12 +121,12 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
 
 
     private AbstractTimeLineFragment getRepostFragment() {
-        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
                 RepostsByIdTimeLineFragment.class.getName()));
     }
 
     private AbstractTimeLineFragment getCommentFragment() {
-        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
                 CommentsByIdTimeLineFragment.class.getName()));
     }
 

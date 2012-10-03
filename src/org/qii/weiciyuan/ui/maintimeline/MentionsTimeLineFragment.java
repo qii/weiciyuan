@@ -71,6 +71,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         group[0] = getString(R.string.all_people);
@@ -168,7 +169,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         @Override
         protected void onPreExecute() {
             showListView();
-             getListView().setSelection(0);
+            getListView().setSelection(0);
         }
 
         @Override
@@ -190,7 +191,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("msg", bean.getItemList().get(position));
-        intent.putExtra("token",token);
+        intent.putExtra("token", token);
         startActivity(intent);
     }
 

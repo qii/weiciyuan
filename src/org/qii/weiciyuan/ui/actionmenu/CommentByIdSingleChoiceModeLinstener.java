@@ -1,6 +1,6 @@
 package org.qii.weiciyuan.ui.actionmenu;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.View;

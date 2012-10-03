@@ -49,7 +49,7 @@ public class FilterActivity extends AbstractAppActivity {
             }
         });
 
-        getSupportFragmentManager().beginTransaction()
+        getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new FilterFragment())
                 .commit();
 
