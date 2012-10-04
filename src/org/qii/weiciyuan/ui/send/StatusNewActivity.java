@@ -27,7 +27,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
-import org.qii.weiciyuan.othercomponent.PhotoUploadService;
+import org.qii.weiciyuan.othercomponent.UploadPhotoService;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
@@ -429,7 +429,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         if (TextUtils.isEmpty(picPath)) {
             new StatusNewTask(content).execute();
         } else {
-            Intent intent = new Intent(StatusNewActivity.this, PhotoUploadService.class);
+            Intent intent = new Intent(StatusNewActivity.this, UploadPhotoService.class);
             intent.putExtra("token", token);
             intent.putExtra("picPath", picPath);
             intent.putExtra("content", content);

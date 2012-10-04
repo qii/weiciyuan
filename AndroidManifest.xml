@@ -119,7 +119,7 @@
         <!-- service -->
         <service android:name=".othercomponent.FetchNewMsgService"/>
         <service android:name=".othercomponent.DownloadEmotionsService"/>
-        <service android:name=".othercomponent.PhotoUploadService"/>
+        <service android:name=".othercomponent.UploadPhotoService"/>
 
 
         <!---broadcast receiver -->

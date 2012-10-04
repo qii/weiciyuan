@@ -18,7 +18,7 @@ import java.io.File;
  * User: qii
  * Date: 12-8-21
  */
-public class PhotoUploadService extends Service {
+public class UploadPhotoService extends Service {
     private String token;
     private String picPath;
     private String content;
@@ -57,7 +57,7 @@ public class PhotoUploadService extends Service {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Notification.Builder builder = new Notification.Builder(PhotoUploadService.this)
+            Notification.Builder builder = new Notification.Builder(UploadPhotoService.this)
                     .setTicker(getString(R.string.send_photo))
                     .setContentTitle(getString(R.string.background_sending))
                     .setContentText(content)
@@ -65,7 +65,7 @@ public class PhotoUploadService extends Service {
                     .setSmallIcon(R.drawable.upload_white);
             notification = builder.getNotification();
             startForeground(NOTIFICATION_ID, notification);
-            Toast.makeText(PhotoUploadService.this, getString(R.string.background_sending), Toast.LENGTH_SHORT).show();
+            Toast.makeText(UploadPhotoService.this, getString(R.string.background_sending), Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -97,7 +97,7 @@ public class PhotoUploadService extends Service {
             if (values.length > 0) {
                 long data = values[0];
 
-                Notification.Builder builder = new Notification.Builder(PhotoUploadService.this)
+                Notification.Builder builder = new Notification.Builder(UploadPhotoService.this)
                         .setTicker(getString(R.string.send_photo))
                         .setContentTitle(getString(R.string.background_sending))
                         .setContentText(content)
@@ -113,7 +113,7 @@ public class PhotoUploadService extends Service {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Toast.makeText(PhotoUploadService.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
+            Toast.makeText(UploadPhotoService.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
             stopForeground(true);
             stopSelf();
         }
@@ -121,7 +121,7 @@ public class PhotoUploadService extends Service {
         @Override
         protected void onCancelled(Void aVoid) {
             super.onCancelled(aVoid);
-            Toast.makeText(PhotoUploadService.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
+            Toast.makeText(UploadPhotoService.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
             stopForeground(true);
             stopSelf();
         }
