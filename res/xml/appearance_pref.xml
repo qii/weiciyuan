@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        >
+    <PreferenceCategory
+            android:title="@string/appearance"
+            >
+        <!--<CheckBoxPreference-->
+        <!--android:key="show_picture"-->
+        <!--android:title="@string/show_pic"-->
+        <!--android:defaultValue="true"/>-->
+        <!--android:dependency="show_picture"-->
+        <CheckBoxPreference
+
+                android:key="show_big_avatar"
+                android:title="@string/show_big_avatar"
+                android:summary="@string/show_big_avatar_summary"
+                android:defaultValue="false"/>
+        <CheckBoxPreference
+
+                android:key="show_big_pic"
+                android:title="@string/show_big_pic"
+                android:summary="@string/show_big_pic_summary"
+                android:defaultValue="false"/>
+        <CheckBoxPreference
+
+                android:key="auto_show_big_pic"
+                android:title="@string/auto_show_big_pic"
+                android:summary="@string/auto_show_big_pic_summary"
+                android:defaultValue="true"/>
+        <ListPreference
+                android:key="font_size"
+                android:title="@string/font_size"
+                android:summary="@string/only_timeline_font"
+                android:dialogTitle="@string/font_size"
+                android:entries="@array/font"
+                android:entryValues="@array/font_value"
+                android:defaultValue="15"/>
+        <ListPreference
+                android:key="theme"
+                android:title="@string/theme"
+                android:dialogTitle="@string/theme"
+                android:entries="@array/theme"
+                android:entryValues="@array/theme_value"
+                android:defaultValue="3"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

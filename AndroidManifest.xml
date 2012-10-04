@@ -66,6 +66,9 @@
         <activity android:name=".ui.preference.FilterActivity"
                   android:logo="@null"
                   android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".ui.preference.AppearanceActivity"
+                  android:logo="@null"
+                  android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.preference.AboutActivity"
                 />
         <activity android:name=".ui.browser.BrowserRepostAndCommentListActivity"

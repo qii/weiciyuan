@@ -124,18 +124,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         }
 
-        if (key.equals(SettingActivity.THEME)) {
-            String value = sharedPreferences.getString(key, "3");
-            if (value.equals("1"))
-                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black);
-            if (value.equals("2"))
-                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_White);
-            if (value.equals("3"))
-                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black_White);
-            if (value.equals("4"))
-                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Pure_Black);
-            reload();
-        }
 
         if (key.equals(SettingActivity.FONT_SIZE)) {
             String value = sharedPreferences.getString(key, "15");
