@@ -44,6 +44,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private final int TYPE_MYSELF = 1;
     private final int TYPE_NORMAL_BIG_PIC = 2;
     private final int TYPE_MYSELF_BIG_PIC = 3;
+    private final int TYPE_MIDDLE = 4;
 
     public AbstractAppListAdapter(Fragment fragment, ICommander commander, List<T> bean, ListView listView, boolean showOriStatus) {
         this.bean = bean;
@@ -67,11 +68,14 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     @Override
     public int getViewTypeCount() {
-        return 4;
+        return 5;
     }
 
     @Override
     public int getItemViewType(int position) {
+
+        if (bean.get(position) == null)
+            return TYPE_MIDDLE;
 
         boolean myself = bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())
                 && GlobalContext.getInstance().isEnablePic();
@@ -81,6 +85,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         boolean normal = !myself;
 
         boolean normalBigPic = normal && GlobalContext.getInstance().getEnableBigPic();
+
 
         if (myselfBigPic)
             return TYPE_MYSELF_BIG_PIC;
@@ -95,12 +100,15 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        ViewHolder holder = null;
 
 
         if (convertView == null || convertView.getTag() == null) {
 
             switch (getItemViewType(position)) {
+                case TYPE_MIDDLE:
+                    convertView = initMiddleLayout(parent);
+                    break;
                 case TYPE_MYSELF:
                     convertView = initMylayout(parent);
                     break;
@@ -117,14 +125,26 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                     convertView = initNormallayout(parent);
                     break;
             }
-            holder = buildHolder(convertView);
-            convertView.setTag(holder);
+            if (getItemViewType(position) != TYPE_MIDDLE) {
+                holder = buildHolder(convertView);
+                convertView.setTag(holder);
+            }
 
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        bindViewData(holder, position);
+
+        if (getItemViewType(position) != TYPE_MIDDLE) {
+            bindViewData(holder, position);
+        }
+        return convertView;
+    }
+
+    private View initMiddleLayout(ViewGroup parent) {
+        View convertView;
+        convertView = inflater.inflate(R.layout.fragment_listview_middle_layout, parent, false);
+
         return convertView;
     }
 
@@ -195,7 +215,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     @Override
     public long getItemId(int position) {
-        if (getList() != null && getList().size() > 0 && position < getList().size())
+        if (getList() != null && getList().get(position) != null && getList().size() > 0 && position < getList().size())
             return Long.valueOf(getList().get(position).getId());
         else
             return -1;

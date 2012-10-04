@@ -105,6 +105,11 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
+    protected ListBean<MessageBean> getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+        return null;
+    }
+
+    @Override
      protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
          if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
              clearAndReplaceValue(newValue);
@@ -122,6 +127,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
         TopicResultListBean result = dao.getGSONMsgList();
         return result;
     }
+
 
 
     @Override

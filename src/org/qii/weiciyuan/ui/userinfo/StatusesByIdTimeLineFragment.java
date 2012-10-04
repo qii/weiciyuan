@@ -7,6 +7,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.ListBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
@@ -45,6 +47,11 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         outState.putString("token", token);
     }
 
+
+    @Override
+    protected ListBean<MessageBean> getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+        return null;
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

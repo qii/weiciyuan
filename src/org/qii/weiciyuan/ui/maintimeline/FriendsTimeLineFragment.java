@@ -13,7 +13,6 @@ import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
@@ -118,6 +117,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     @Override
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
+        MessageBean msg = bean.getItemList().get(position);
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("msg", bean.getItemList().get(position));
         intent.putExtra("token", token);
@@ -195,6 +195,16 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         return result;
     }
 
+    @Override
+    protected ListBean<MessageBean> getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+        MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(token);
+        dao.setMax_id(beginId);
+        dao.setSince_id(endId);
+
+        MessageListBean result = dao.getGSONMsgList();
+
+        return result;
+    }
 
 }
 

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.ListBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.RepostListBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
@@ -351,6 +352,14 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
         }
         return dao.getGSONMsgList();
 
+    }
+
+    @Override
+    protected ListBean<MessageBean> getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+        RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, id);
+        dao.setMax_id(beginId);
+        dao.setSince_id(endId);
+        return dao.getGSONMsgList();
     }
 
 

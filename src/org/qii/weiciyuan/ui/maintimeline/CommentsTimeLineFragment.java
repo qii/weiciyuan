@@ -291,7 +291,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             case R.id.friendstimelinefragment_new_weibo:
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
                 intent.putExtra("token", token);
-                intent.putExtra("account",accountBean);
+                intent.putExtra("account", accountBean);
 
                 startActivity(intent);
                 break;
@@ -362,6 +362,28 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     }
 
     @Override
+    protected CommentListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+        if (selected == 0 || selected == 1) {
+            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
+            if (getList().getItemList().size() > 0) {
+                dao.setMax_id(beginId);
+                dao.setSince_id(endId);
+            }
+            if (selected == 1) {
+                dao.setFilter_by_author("1");
+            }
+            CommentListBean result = dao.getGSONMsgList();
+            return result;
+        } else {
+            CommentsTimeLineByMeDao dao = new CommentsTimeLineByMeDao(token);
+            dao.setMax_id(beginId);
+            dao.setSince_id(endId);
+            CommentListBean result = dao.getGSONMsgList();
+            return result;
+        }
+    }
+
+    @Override
     protected void newMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null) {
             if (newValue.getItemList().size() == 0) {
@@ -370,6 +392,13 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             } else {
                 Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
                 if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                    //for speed, add old data after new data
+                    newValue.getItemList().addAll(getList().getItemList());
+                } else {
+                    //null is flag means this position has some old messages which dont appear
+                    if (getList().getSize() > 0) {
+                        newValue.getItemList().add(null);
+                    }
                     newValue.getItemList().addAll(getList().getItemList());
                 }
 

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.ListBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -46,6 +47,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
     protected TimeLineGetNewMsgListTask newTask;
     protected TimeLineGetOlderMsgListTask oldTask;
+    protected TimeLineGetMiddleMsgListTask middleTask;
+
     protected ActionMode mActionMode;
 
     public T getList() {
@@ -87,16 +90,25 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         }
     }
 
+    public void loadMiddleMsg(String beginId, String endId, String endTag, int position) {
+        if (middleTask == null || middleTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+
+            middleTask = new TimeLineGetMiddleMsgListTask(beginId, endId, endTag, position);
+            middleTask.execute();
+
+        }
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 //        if (this.isVisible()) {
 
-            if (isVisibleToUser) {
-                addListViewTimeRefresh();
-            } else {
-                removeListViewTimeRefresh();
-            }
+        if (isVisibleToUser) {
+            addListViewTimeRefresh();
+        } else {
+            removeListViewTimeRefresh();
+        }
 //        } else {
 //            removeListViewTimeRefresh();
 //        }
@@ -132,38 +144,38 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         dismissFooterView();
 
         pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-                  @Override
-                  public void onScrollStateChanged(AbsListView view, int scrollState) {
-                      switch (scrollState) {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
 
-                          case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
 
-                              enableRefreshTime = true;
-                              timeLineAdapter.notifyDataSetChanged();
-                              break;
-
-
-                          case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-
-                              enableRefreshTime = false;
-                              break;
-
-                          case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-
-                              enableRefreshTime = true;
-                              break;
+                        enableRefreshTime = true;
+                        timeLineAdapter.notifyDataSetChanged();
+                        break;
 
 
-                      }
-                  }
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
 
-                  @Override
-                  public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                        enableRefreshTime = false;
+                        break;
 
-                  }
-              }
+                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
 
-              );
+                        enableRefreshTime = true;
+                        break;
+
+
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        }
+
+        );
 
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -177,8 +189,22 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
                 }
                 getListView().clearChoices();
                 if (position - 1 < getList().getSize() && position - 1 >= 0) {
+                    int index = position - 1;
+                    Object msg = bean.getItemList().get(index);
 
-                    listViewItemClick(parent, view, position - 1, id);
+                    if (msg != null) {
+                        listViewItemClick(parent, view, index, id);
+
+                    } else {
+                        String beginId = bean.getItem(index - 1).getId();
+                        String endTag = bean.getItem(index + 1).getId();
+                        String endId = bean.getItem(index + 2).getId();
+
+                        loadMiddleMsg(beginId, endId, endTag, index);
+
+                        Toast.makeText(getActivity(), getString(R.string.loading_middle_msg), Toast.LENGTH_SHORT).show();
+                    }
+
                 } else if (position - 1 >= getList().getSize()) {
 
                     listViewFooterViewClick(view);
@@ -280,7 +306,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     public void onResume() {
         super.onResume();
         timeLineAdapter.notifyDataSetChanged();
-     }
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -403,6 +429,92 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     }
 
 
+    public class TimeLineGetMiddleMsgListTask extends MyAsyncTask<Object, T, T> {
+
+        WeiboException e;
+        String beginId;
+        String endId;
+        String endTag;
+        int position;
+
+        public TimeLineGetMiddleMsgListTask(String beginId, String endId, String endTag, int position) {
+            this.beginId = beginId;
+            this.endId = endId;
+            this.endTag = endTag;
+            this.position = position;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected T doInBackground(Object... params) {
+
+            try {
+                return getDoInBackgroundMiddleData(beginId, endId);
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(T newValue) {
+            middleMsgOnPostExecute(endTag, position, newValue);
+
+            cleanWork();
+            super.onPostExecute(newValue);
+        }
+
+        @Override
+        protected void onCancelled(T messageListBean) {
+            super.onCancelled(messageListBean);
+
+
+        }
+
+        private void cleanWork() {
+            timeLineAdapter.notifyDataSetChanged();
+
+        }
+    }
+
+
+    protected void middleMsgOnPostExecute(String endTag, int position, T newValue) {
+
+        if (newValue == null)
+            return;
+
+        if (newValue.getSize() == 1) {
+            bean.getItemList().remove(position);
+            timeLineAdapter.notifyDataSetChanged();
+            return;
+        }
+
+        ItemBean lastItem = newValue.getItem(newValue.getSize() - 1);
+
+        if (!lastItem.getId().equals(endTag)) {
+            bean.getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
+            timeLineAdapter.notifyDataSetChanged();
+            return;
+        }
+
+        if (lastItem.getId().equals(endTag)) {
+            int nullIndex = position + newValue.getSize() - 1;
+            bean.getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
+            bean.getItemList().remove(nullIndex - 1);
+            bean.getItemList().remove(nullIndex - 1);
+            timeLineAdapter.notifyDataSetChanged();
+            return;
+        }
+
+
+    }
+
     protected void showListView() {
 //        empty.setVisibility(View.INVISIBLE);
 //        listView.setVisibility(View.VISIBLE);
@@ -421,6 +533,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
 
     protected abstract T getDoInBackgroundOldData() throws WeiboException;
+
+    protected abstract T getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException;
 
 
     private volatile boolean enableRefreshTime = true;

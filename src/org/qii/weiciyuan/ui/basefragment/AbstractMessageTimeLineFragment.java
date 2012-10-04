@@ -43,15 +43,22 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
         bean.setTotal_number(value.getTotal_number());
     }
 
+
     @Override
     protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
         if (newValue != null && getActivity() != null) {
             if (newValue.getSize() == 0) {
-//                Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
+
             } else if (newValue.getSize() > 0) {
 //                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getStatuses().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
                 if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
                     //for speed, add old data after new data
+                    newValue.getItemList().addAll(getList().getItemList());
+                } else {
+                    //null is flag means this position has some old messages which dont appear
+                    if (getList().getSize() > 0) {
+                        newValue.getItemList().add(null);
+                    }
                     newValue.getItemList().addAll(getList().getItemList());
                 }
                 clearAndReplaceValue(newValue);
@@ -62,6 +69,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
         }
         afterGetNewMsg();
     }
+
 
     @Override
     protected void oldMsgOnPostExecute(ListBean<MessageBean> newValue) {
@@ -76,6 +84,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
         }
 
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +101,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (position - 1 < getList().getSize() && position - 1 >= 0) {
+                if (position - 1 < getList().getSize() && position - 1 >= 0 && timeLineAdapter.getItem(position - 1) != null) {
                     if (mActionMode != null) {
                         mActionMode.finish();
                         mActionMode = null;
@@ -134,6 +143,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
     public void removeCancel() {
         clearActionMode();
     }
+
 
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
 

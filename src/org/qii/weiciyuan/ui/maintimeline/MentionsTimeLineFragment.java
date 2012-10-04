@@ -71,7 +71,6 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         group[0] = getString(R.string.all_people);
@@ -263,6 +262,19 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         if (getList().getItemList().size() > 0) {
             dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
         }
+        dao.setFilter_by_author(filter_by_author);
+        dao.setFilter_by_type(filter_by_type);
+        MessageListBean result = dao.getGSONMsgList();
+
+        return result;
+    }
+
+    @Override
+    protected ListBean<MessageBean> getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+        MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
+        dao.setMax_id(beginId);
+        dao.setSince_id(endId);
+
         dao.setFilter_by_author(filter_by_author);
         dao.setFilter_by_type(filter_by_type);
         MessageListBean result = dao.getGSONMsgList();

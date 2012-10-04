@@ -9,6 +9,7 @@ import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
@@ -101,6 +102,7 @@ public class MainMentionsTimeLineDao {
 
     public MainMentionsTimeLineDao(String access_token) {
         this.access_token = access_token;
+        this.count = String.valueOf(AppConfig.DEFAULT_MSG_NUMBERS);
     }
 
     public MainMentionsTimeLineDao setSince_id(String since_id) {

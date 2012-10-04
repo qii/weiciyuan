@@ -51,6 +51,8 @@
     <string name="old_messages">条旧消息</string>
     <string name="weibos">条微博</string>
     <string name="loading">载入中……</string>
+    <string name="click_to_load_some_older_msg">点击载入中间数据</string>
+    <string name="loading_middle_msg">载入中间数据……</string>
     <string name="click_to_load_older_message">网络有问题，点击重新载入</string>
     <string name="older_message_empty">没有更早的消息了</string>
     <string name="more">载入更多</string>

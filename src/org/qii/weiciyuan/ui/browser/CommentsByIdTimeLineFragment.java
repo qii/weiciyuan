@@ -401,6 +401,15 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     }
 
     @Override
+    protected CommentListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+        CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
+        dao.setMax_id(beginId);
+        dao.setSince_id(endId);
+        CommentListBean result = dao.getGSONMsgList();
+        return result;
+    }
+
+    @Override
     protected void newMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null) {
             bean.setTotal_number(newValue.getTotal_number());
