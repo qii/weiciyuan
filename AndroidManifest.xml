@@ -12,29 +12,30 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
 
-    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher"
-                 android:name="org.qii.weiciyuan.support.utils.GlobalContext"
-            >
+    <application android:label="@string/app_name"
+                 android:icon="@drawable/ic_launcher"
+                 android:name="org.qii.weiciyuan.support.utils.GlobalContext">
         <activity
                 android:name=".ui.login.DummyActivity"
-                android:uiOptions="splitActionBarWhenNarrow"
-                >
+                android:uiOptions="splitActionBarWhenNarrow">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-                android:name=".ui.login.AccountActivity"
-                android:uiOptions="splitActionBarWhenNarrow"
-                />
 
+        <!-- login activity -->
+        <activity android:name=".ui.login.AccountActivity"
+                  android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".ui.login.OAuthActivity"/>
+
+        <!--main activity -->
         <activity android:name=".ui.main.MainTimeLineActivity"
                   android:uiOptions="splitActionBarWhenNarrow"
-                  android:launchMode="singleTop"
-                />
-        <activity android:name=".ui.send.StatusNewActivity"
+                  android:launchMode="singleTop"/>
 
+        <!--send activity -->
+        <activity android:name=".ui.send.StatusNewActivity"
                   android:windowSoftInputMode="stateVisible|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
@@ -47,69 +48,56 @@
                 <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.login.OAuthActivity"
-                />
-        <activity android:name=".ui.browser.BrowserWeiboMsgActivity"
-                  android:label="@string/detail"
-                />
-        <activity android:name=".ui.browser.BrowserCommentActivity"
-                  android:label="@string/comment_detail"
-                />
-        <activity android:name=".ui.send.RepostNewActivity"
 
+        <activity android:name=".ui.send.RepostNewActivity"
                   android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity android:name=".ui.send.CommentNewActivity"
-
                   android:windowSoftInputMode="stateVisible|adjustResize"/>
-        <activity android:name=".ui.preference.SettingActivity"
-                  android:logo="@null"/>
-        <activity android:name=".ui.preference.FilterActivity"
-                  android:logo="@null"
+        <activity android:name=".ui.send.ReplyToCommentNewActivity"
+                  android:windowSoftInputMode="stateVisible|adjustResize"/>
+
+        <!--browser activity-->
+        <activity android:name=".ui.browser.BrowserWeiboMsgActivity"
+                  android:label="@string/detail"/>
+        <activity android:name=".ui.browser.BrowserCommentActivity"
+                  android:label="@string/comment_detail"/>
+        <activity android:name=".ui.browser.BrowserBigPicActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
-        <activity android:name=".ui.preference.AppearanceActivity"
-                  android:logo="@null"
-                  android:uiOptions="splitActionBarWhenNarrow"/>
-        <activity android:name=".ui.preference.AboutActivity"
-                />
-        <activity android:name=".ui.browser.BrowserRepostAndCommentListActivity"
-                />
-        <activity android:name=".ui.userinfo.UserInfoActivity"
-                >
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <action android:name="android.intent.action.VIEW"/>
-                <data android:scheme="org.qii.weiciyuan"/>
-            </intent-filter>
-        </activity>
+        <activity android:name=".ui.browser.BrowserRepostAndCommentListActivity"/>
+
+
+        <!--topic activity -->
         <activity android:name=".ui.topic.SearchTopicByNameActivity"
                   android:label="@string/search_topic"
-                  android:uiOptions="splitActionBarWhenNarrow"
-                >
+                  android:uiOptions="splitActionBarWhenNarrow">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <action android:name="android.intent.action.VIEW"/>
                 <data android:scheme="org.qii.weiciyuan.topic"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.userinfo.MyInfoActivity"
-                />
+
+        <!--user activity -->
+        <activity android:name=".ui.userinfo.UserInfoActivity">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <data android:scheme="org.qii.weiciyuan"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.userinfo.MyInfoActivity"/>
         <activity android:name=".ui.userinfo.UserInfoStatusesActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.userinfo.FriendListActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.userinfo.FanListActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
-        <activity android:name=".ui.browser.BrowserBigPicActivity"
-                  android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.userinfo.MyFavActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
-        <activity android:name=".ui.send.ReplyToCommentNewActivity"
-                />
-        <activity android:name=".ui.search.SearchMainActivity"/>
 
-        <service android:name=".othercomponent.FetchNewMsgService"/>
-        <service android:name=".othercomponent.DownloadEmotionsService"/>
-        <service android:name=".othercomponent.PhotoUploadService"/>
+
+        <!--search activity -->
+        <activity android:name=".ui.search.SearchMainActivity"/>
         <activity android:name=".ui.search.SearchableActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
@@ -117,14 +105,31 @@
             <meta-data android:name="android.app.searchable"
                        android:resource="@xml/searchable"/>
         </activity>
-        <receiver android:name=".othercomponent.MentionsAndCommentsReceiver"
-                >
+
+
+        <!--preference activity -->
+        <activity android:name=".ui.preference.SettingActivity"/>
+        <activity android:name=".ui.preference.FilterActivity"
+                  android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".ui.preference.AppearanceActivity"
+                  android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".ui.preference.AboutActivity"/>
+
+
+        <!-- service -->
+        <service android:name=".othercomponent.FetchNewMsgService"/>
+        <service android:name=".othercomponent.DownloadEmotionsService"/>
+        <service android:name=".othercomponent.PhotoUploadService"/>
+
+
+        <!---broadcast receiver -->
+        <receiver android:name=".othercomponent.MentionsAndCommentsReceiver">
             <intent-filter>
                 <action android:name="org.qii.weiciyuan.newmsg"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".othercomponent.ConnectionChangeReceiver" android:label="NetworkConnection"
-                >
+        <receiver android:name=".othercomponent.ConnectionChangeReceiver"
+                  android:label="NetworkConnection">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
