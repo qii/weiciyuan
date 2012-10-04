@@ -151,6 +151,11 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             boolean value = sharedPreferences.getBoolean(key, false);
             GlobalContext.getInstance().setEnableBigAvatar(value);
         }
+
+        if (key.equals(SettingActivity.SOUND)) {
+            boolean value = sharedPreferences.getBoolean(key, true);
+            GlobalContext.getInstance().setEnableSound(value);
+        }
     }
 
 

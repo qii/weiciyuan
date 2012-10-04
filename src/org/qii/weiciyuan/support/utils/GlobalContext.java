@@ -36,6 +36,8 @@ public final class GlobalContext extends Application {
 
     private Boolean enableBigAvatar = null;
 
+    private Boolean enableSound = null;
+
 
     private int theme = 0;
 
@@ -228,6 +230,24 @@ public final class GlobalContext extends Application {
 
     public void setEnableBigAvatar(Boolean enableBigAvatar) {
         this.enableBigAvatar = enableBigAvatar;
+    }
+
+
+    public Boolean getEnableSound() {
+
+        if (enableSound != null) {
+            return enableSound;
+        } else {
+            AppLogger.e("GlobalContext is empty by system");
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            enableSound = sharedPref.getBoolean(SettingActivity.SOUND, true);
+            return enableSound;
+        }
+
+    }
+
+    public void setEnableSound(Boolean enableSound) {
+        this.enableSound = enableSound;
     }
 
     public void setAppTheme(int theme) {

@@ -17,6 +17,8 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String ENABLE_PIC = "show_picture";
     public static final String THEME = "theme";
 
+    public static final String SOUND = "sound";
+
     public static final String FREQUENCY = "frequency";
     public static final String ENABLE_FETCH_MSG = "enable_fetch_msg";
     public static final String DISABLE_FETCH_AT_NIGHT = "disable_fetch_at_night";

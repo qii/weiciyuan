@@ -35,6 +35,7 @@ import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 public abstract class PullToRefreshBase<T extends View> extends LinearLayout implements IPullToRefresh<T> {
 
@@ -334,22 +335,26 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
     public void startRefresh() {
         setRefreshingInternal(true);
         mOnRefreshListener.onRefresh(this);
-        final MediaPlayer mp = MediaPlayer.create(context, R.raw.psst2);
-        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        if (GlobalContext.getInstance().getEnableSound()) {
+            final MediaPlayer mp = MediaPlayer.create(context, R.raw.psst2);
+            mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        mp.start();
-        mp.setVolume(9.f, 9.f);
+            mp.start();
+            mp.setVolume(9.f, 9.f);
+        }
     }
 
 
     public void startRefreshNow() {
         setRefreshingInternalNow(true);
         mOnRefreshListener.onRefresh(this);
-        final MediaPlayer mp = MediaPlayer.create(context, R.raw.psst2);
-        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        if (GlobalContext.getInstance().getEnableSound()) {
+            final MediaPlayer mp = MediaPlayer.create(context, R.raw.psst2);
+            mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        mp.start();
-        mp.setVolume(9.f, 9.f);
+            mp.start();
+            mp.setVolume(9.f, 9.f);
+        }
     }
 
     @Override
@@ -654,10 +659,11 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
         if (mMode.canPullUp()) {
             mFooterLayout.reset();
         }
-
-        MediaPlayer mp = MediaPlayer.create(context, R.raw.pop);
-        mp.setVolume(9.f, 9.f);
-        mp.start();
+        if (GlobalContext.getInstance().getEnableSound()) {
+            MediaPlayer mp = MediaPlayer.create(context, R.raw.pop);
+            mp.setVolume(9.f, 9.f);
+            mp.start();
+        }
 
         smoothScrollTo(0);
 //        ((ListView)mRefreshableView).setSelection(0);

@@ -43,6 +43,10 @@
                 android:entries="@array/theme"
                 android:entryValues="@array/theme_value"
                 android:defaultValue="3"/>
+        <CheckBoxPreference
+                android:key="sound"
+                android:title="@string/sound"
+                android:defaultValue="true"/>
     </PreferenceCategory>
     <PreferenceCategory
             android:title="@string/new_message"

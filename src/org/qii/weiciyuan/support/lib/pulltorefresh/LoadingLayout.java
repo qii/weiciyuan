@@ -31,6 +31,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 public class LoadingLayout extends FrameLayout {
 
@@ -115,14 +116,18 @@ public class LoadingLayout extends FrameLayout {
 
     public void releaseToRefresh() {
         mHeaderText.setText(wrapHtmlLabel(mReleaseLabel));
-        final MediaPlayer mp = MediaPlayer.create(context, R.raw.psst1);
-        mp.start();
+        if (GlobalContext.getInstance().getEnableSound()) {
+            final MediaPlayer mp = MediaPlayer.create(context, R.raw.psst1);
+            mp.start();
+        }
     }
 
     public void pullToRefresh() {
         mHeaderText.setText(wrapHtmlLabel(mPullLabel));
-        final MediaPlayer mp = MediaPlayer.create(context, R.raw.pop);
-        mp.start();
+        if (GlobalContext.getInstance().getEnableSound()) {
+            final MediaPlayer mp = MediaPlayer.create(context, R.raw.pop);
+            mp.start();
+        }
 
     }
 

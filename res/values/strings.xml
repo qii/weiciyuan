@@ -208,6 +208,7 @@
     <string name="show_big_pic_summary">缓存体积会猛增</string>
     <string name="auto_show_big_pic">自动切换大图、缩略图</string>
     <string name="auto_show_big_pic_summary">WIFI、3G 下自动开大图</string>
+    <string name="sound">音效</string>
     <string name="new_message">未读消息</string>
     <string name="notification">通知</string>
     <string name="disable_notification_at_night">半夜禁止通知</string>
