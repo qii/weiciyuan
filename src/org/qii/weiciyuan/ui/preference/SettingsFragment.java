@@ -135,6 +135,11 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             boolean value = sharedPreferences.getBoolean(key, true);
             GlobalContext.getInstance().setEnableSound(value);
         }
+
+        if (key.equals(SettingActivity.AUTO_REFRESH)) {
+            boolean value = sharedPreferences.getBoolean(key, true);
+            GlobalContext.getInstance().setEnableAutoRefresh(value);
+        }
     }
 
 

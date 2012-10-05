@@ -19,6 +19,11 @@
                 android:key="sound"
                 android:title="@string/sound"
                 android:defaultValue="true"/>
+        <CheckBoxPreference
+                android:key="auto_refresh"
+                android:title="@string/auto_refresh"
+                android:summary="@string/auto_refresh_summary"
+                android:defaultValue="true"/>
     </PreferenceCategory>
     <PreferenceCategory
             android:title="@string/new_message"

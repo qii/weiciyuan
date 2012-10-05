@@ -38,6 +38,8 @@ public final class GlobalContext extends Application {
 
     private Boolean enableSound = null;
 
+    private Boolean autoRefresh = null;
+
 
     private int theme = 0;
 
@@ -212,6 +214,24 @@ public final class GlobalContext extends Application {
 
     public void setEnableBigPic(Boolean enableBigPic) {
         this.enableBigPic = enableBigPic;
+    }
+
+
+    public Boolean getEnableAutoRefresh() {
+
+        if (autoRefresh != null) {
+            return autoRefresh;
+        } else {
+            AppLogger.e("GlobalContext is empty by system");
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            autoRefresh = sharedPref.getBoolean(SettingActivity.AUTO_REFRESH, true);
+            return autoRefresh;
+        }
+
+    }
+
+    public void setEnableAutoRefresh(Boolean autoRefresh) {
+        this.autoRefresh = autoRefresh;
     }
 
 

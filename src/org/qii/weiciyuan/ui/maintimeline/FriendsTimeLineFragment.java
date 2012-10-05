@@ -1,6 +1,9 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,10 +16,16 @@ import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * User: qii
@@ -28,6 +37,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     private UserBean userBean;
     private String token;
     private SimpleTask dbTask;
+
+    private AutoRefreshTask autoRefreshTask = null;
+    private ScheduledExecutorService scheduledRefreshExecutorService = null;
 
 
     public FriendsTimeLineFragment() {
@@ -63,9 +75,19 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        addRefresh();
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
+        removeRefresh();
+        if (autoRefreshTask != null)
+            autoRefreshTask.cancel(true);
         if (dbTask != null)
             dbTask.cancel(true);
     }
@@ -206,5 +228,100 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         return result;
     }
 
-}
 
+    private void removeRefresh() {
+        if (scheduledRefreshExecutorService != null && !scheduledRefreshExecutorService.isShutdown())
+            scheduledRefreshExecutorService.shutdownNow();
+    }
+
+    protected void addRefresh() {
+
+        scheduledRefreshExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledRefreshExecutorService
+                .scheduleAtFixedRate(new AutoTask(), AppConfig.AUTO_REFRESH_INITIALDELAY, AppConfig.AUTO_REFRESH_PERIOD, TimeUnit.SECONDS);
+
+    }
+
+    class AutoTask implements Runnable {
+
+        @Override
+        public void run() {
+            if (!GlobalContext.getInstance().getEnableAutoRefresh()) {
+                return;
+            }
+
+            ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+
+            boolean haveNetwork = (networkInfo != null) && (networkInfo.isConnected());
+
+            boolean haveWifi = haveNetwork && (networkInfo.getType() == ConnectivityManager.TYPE_WIFI);
+
+            if (!haveWifi) {
+                return;
+            }
+
+            if (autoRefreshTask == null || autoRefreshTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                autoRefreshTask = new AutoRefreshTask();
+                autoRefreshTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }
+
+    }
+
+    class AutoRefreshTask extends MyAsyncTask<Void, MessageListBean, MessageListBean> {
+
+        @Override
+        protected MessageListBean doInBackground(Void... params) {
+            try {
+                return getDoInBackgroundNewData();
+            } catch (WeiboException e) {
+                cancel(true);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(MessageListBean newValue) {
+            super.onPostExecute(newValue);
+
+            int firstPosition = getListView().getFirstVisiblePosition();
+
+            int size;
+            if (newValue != null && getActivity() != null) {
+                if (newValue.getSize() == 0) {
+
+                } else if (newValue.getSize() > 0) {
+                    size = newValue.getSize();
+
+                    if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                        //for speed, add old data after new data
+                        newValue.getItemList().addAll(getList().getItemList());
+                    } else {
+                        //null is flag means this position has some old messages which dont appear
+                        if (getList().getSize() > 0) {
+                            newValue.getItemList().add(null);
+                        }
+                        newValue.getItemList().addAll(getList().getItemList());
+                    }
+                    int index = getListView().getFirstVisiblePosition();
+                    clearAndReplaceValue(newValue);
+                    View v = getListView().getChildAt(1);
+                    int top = (v == null) ? 0 : v.getTop();
+
+                    timeLineAdapter.notifyDataSetChanged();
+                    int ss = index + size;
+
+//                    if (firstPosition == 0) {
+//
+//                    } else {
+                    getListView().setSelectionFromTop(ss + 1, top);
+//                    }
+
+                }
+            }
+        }
+    }
+
+
+}

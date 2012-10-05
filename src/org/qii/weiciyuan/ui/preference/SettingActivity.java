@@ -18,6 +18,7 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String THEME = "theme";
 
     public static final String SOUND = "sound";
+    public static final String AUTO_REFRESH = "auto_refresh";
 
     public static final String FREQUENCY = "frequency";
     public static final String ENABLE_FETCH_MSG = "enable_fetch_msg";
