@@ -104,11 +104,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         super.setUserVisibleHint(isVisibleToUser);
 //        if (this.isVisible()) {
 
-        if (isVisibleToUser) {
-            addListViewTimeRefresh();
-        } else {
-            removeListViewTimeRefresh();
-        }
+//        if (isVisibleToUser) {
+//            addListViewTimeRefresh();
+//        } else {
+//            removeListViewTimeRefresh();
+//        }
 //        } else {
 //            removeListViewTimeRefresh();
 //        }
@@ -264,9 +264,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         if (oldTask != null)
             oldTask.cancel(true);
 
-//        removeListViewTimeRefresh();
+
 
     }
+
+
 
 
     @Override
@@ -305,6 +307,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     @Override
     public void onResume() {
         super.onResume();
+        addListViewTimeRefresh();
         timeLineAdapter.notifyDataSetChanged();
     }
 
