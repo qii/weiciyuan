@@ -5,11 +5,12 @@
     <PreferenceCategory
             android:title="@string/appearance"
             >
-        <!--<CheckBoxPreference-->
-        <!--android:key="show_picture"-->
-        <!--android:title="@string/show_pic"-->
-        <!--android:defaultValue="true"/>-->
-        <!--android:dependency="show_picture"-->
+        <CheckBoxPreference
+                android:key="show_picture"
+                android:title="@string/show_pic"
+                android:summary="@string/show_pic_summary"
+                android:defaultValue="true"/>
+
         <CheckBoxPreference
 
                 android:key="show_big_avatar"

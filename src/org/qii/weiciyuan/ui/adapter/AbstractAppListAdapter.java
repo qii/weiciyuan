@@ -77,8 +77,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         if (bean.get(position) == null)
             return TYPE_MIDDLE;
 
-        boolean myself = bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())
-                && GlobalContext.getInstance().isEnablePic();
+        boolean myself = bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId());
 
         boolean myselfBigPic = myself && GlobalContext.getInstance().getEnableBigPic();
 
@@ -223,7 +222,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     protected void buildAvatar(ImageView view, int position, final UserBean user) {
         String image_url = user.getProfile_image_url();
-        if (!TextUtils.isEmpty(image_url) && GlobalContext.getInstance().isEnablePic()) {
+        if (!TextUtils.isEmpty(image_url)) {
             view.setVisibility(View.VISIBLE);
             //when listview is flying,app dont download avatar and picture
             boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
@@ -272,6 +271,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             @Override
             public void onClick(View v) {
                 PictureDialogFragment progressFragment = new PictureDialogFragment(msg.getBmiddle_pic(), msg.getOriginal_pic());
+                progressFragment.setTargetFragment(fragment, 1);
                 progressFragment.show(getActivity().getFragmentManager(), "");
             }
         });
@@ -285,13 +285,13 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.repost_content.setText(repost_msg.getListViewSpannableString());
 
 
-        if (repost_msg.getUser() != null && GlobalContext.getInstance().isEnablePic()) {
+        if (repost_msg.getUser() != null) {
 
         } else {
             holder.repost_flag.setVisibility(View.GONE);
         }
 
-        if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic()) && GlobalContext.getInstance().isEnablePic()) {
+        if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {
             buildPic(repost_msg, holder.repost_content_pic, position);
         }
     }

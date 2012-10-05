@@ -62,7 +62,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
         holder.content_pic.setVisibility(View.GONE);
 
 
-        if (!TextUtils.isEmpty(msg.getThumbnail_pic()) && GlobalContext.getInstance().isEnablePic()) {
+        if (!TextUtils.isEmpty(msg.getThumbnail_pic()) ) {
             buildPic(msg, holder.content_pic, position);
 
         }

@@ -30,7 +30,7 @@ public class ImageTool {
 
         if (bitmap != null) {
             return ImageEdit.getRoundedCornerBitmap(bitmap);
-        } else {
+        } else if (GlobalContext.getInstance().isEnablePic()) {
             String path = getBitmapFromNetWork(url, absoluteFilePath, null);
             bitmap = BitmapFactory.decodeFile(path);
             if (bitmap != null)
@@ -150,6 +150,10 @@ public class ImageTool {
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_bmiddle);
 
         File file = new File(absoluteFilePath);
+
+        if (!file.exists() && !GlobalContext.getInstance().isEnablePic()) {
+            return null;
+        }
 
         if (!file.exists()) {
             String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
@@ -274,7 +278,7 @@ public class ImageTool {
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
-        if (bitmap == null) {
+        if (bitmap == null && GlobalContext.getInstance().isEnablePic()) {
             String path = getBitmapFromNetWork(url, absoluteFilePath, null);
             bitmap = BitmapFactory.decodeFile(absoluteFilePath);
         }
@@ -304,7 +308,7 @@ public class ImageTool {
             options.inInputShareable = true;
 
             bitmap = BitmapFactory.decodeFile(absoluteFilePath, options);
-        } else {
+        } else if (GlobalContext.getInstance().isEnablePic()) {
             String path = getBitmapFromNetWork(url, absoluteFilePath, null);
 
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -335,7 +339,7 @@ public class ImageTool {
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
-        if (bitmap == null) {
+        if (bitmap == null && GlobalContext.getInstance().isEnablePic()) {
             String path = getBitmapFromNetWork(url, absoluteFilePath, null);
             bitmap = BitmapFactory.decodeFile(path);
         }
@@ -352,6 +356,9 @@ public class ImageTool {
 
         File file = new File(absoluteFilePath);
 
+        if (!file.exists() && !GlobalContext.getInstance().isEnablePic()) {
+            return null;
+        }
 
         if (!file.exists()) {
             String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);

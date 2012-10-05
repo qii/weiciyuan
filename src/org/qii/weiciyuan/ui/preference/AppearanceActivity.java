@@ -50,8 +50,7 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(SettingActivity.ENABLE_PIC)) {
             boolean value = sharedPreferences.getBoolean(key, true);
-            GlobalContext.getInstance().getAvatarCache().evictAll();
-            if (value) {
+             if (value) {
                 GlobalContext.getInstance().setEnablePic(true);
             } else {
                 GlobalContext.getInstance().setEnablePic(false);

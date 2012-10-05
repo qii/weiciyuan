@@ -21,6 +21,7 @@ import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserBigPicActivity;
 
 import java.io.File;
@@ -73,7 +74,13 @@ public class PictureDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 avatarTask.cancel(true);
                 dismissAllowingStateLoss();
+                //when app close download pic, the timeline picture is empty,so refresh it
+                if (!GlobalContext.getInstance().isEnablePic() && GlobalContext.getInstance().getEnableBigPic()) {
+                    AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) getTargetFragment();
+                    fragment.getAdapter().notifyDataSetChanged();
+                }
             }
+
         });
 
         if (savedInstanceState != null)
