@@ -224,7 +224,7 @@ public final class GlobalContext extends Application {
         } else {
             AppLogger.e("GlobalContext is empty by system");
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            autoRefresh = sharedPref.getBoolean(SettingActivity.AUTO_REFRESH, true);
+            autoRefresh = sharedPref.getBoolean(SettingActivity.AUTO_REFRESH, false);
             return autoRefresh;
         }
 

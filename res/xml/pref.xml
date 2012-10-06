@@ -23,7 +23,7 @@
                 android:key="auto_refresh"
                 android:title="@string/auto_refresh"
                 android:summary="@string/auto_refresh_summary"
-                android:defaultValue="true"/>
+                android:defaultValue="false"/>
     </PreferenceCategory>
     <PreferenceCategory
             android:title="@string/new_message"

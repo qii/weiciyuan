@@ -137,7 +137,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         }
 
         if (key.equals(SettingActivity.AUTO_REFRESH)) {
-            boolean value = sharedPreferences.getBoolean(key, true);
+            boolean value = sharedPreferences.getBoolean(key, false);
             GlobalContext.getInstance().setEnableAutoRefresh(value);
         }
     }
