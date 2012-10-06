@@ -3,11 +3,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/menu_enable_comment"
+          android:title="@string/enable_comment_when_repost"
           android:checkable="true"
           android:checked="false"
             />
 
     <item android:id="@+id/menu_enable_ori_comment"
+          android:title="@string/enable_comment_to_ori_when_repost"
           android:checkable="true"
           android:checked="false"
           android:visible="false"/>

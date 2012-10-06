@@ -22,8 +22,7 @@ public class CommentNewActivity extends AbstractNewActivity<CommentBean> {
 
     private String id;
     private String token;
-    private boolean enableCommentOri = false;
-    private String enableCommentOriString;
+    private MenuItem enableCommentOri;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,14 +35,19 @@ public class CommentNewActivity extends AbstractNewActivity<CommentBean> {
         id = getIntent().getStringExtra("id");
         getActionBar().setTitle(getString(R.string.comments));
 
-        enableCommentOriString = getString(R.string.disable_comment_to_ori_when_comment);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.commentnewactivity_menu, menu);
-        menu.findItem(R.id.menu_enable_repost).setTitle(enableCommentOriString);
+        enableCommentOri = menu.findItem(R.id.menu_enable_ori_comment);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -74,7 +78,6 @@ public class CommentNewActivity extends AbstractNewActivity<CommentBean> {
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -85,15 +88,12 @@ public class CommentNewActivity extends AbstractNewActivity<CommentBean> {
                 finish();
                 break;
 
-            case R.id.menu_enable_repost:
-                if (enableCommentOri) {
-                    enableCommentOri = false;
-                    enableCommentOriString = getString(R.string.disable_comment_to_ori_when_comment);
+            case R.id.menu_enable_ori_comment:
+                if (enableCommentOri.isChecked()) {
+                    enableCommentOri.setChecked(false);
                 } else {
-                    enableCommentOriString = getString(R.string.enable_comment_to_ori_when_comment);
-                    enableCommentOri = true;
+                    enableCommentOri.setChecked(true);
                 }
-                invalidateOptionsMenu();
                 break;
 
         }
@@ -103,7 +103,7 @@ public class CommentNewActivity extends AbstractNewActivity<CommentBean> {
     @Override
     protected CommentBean sendData() throws WeiboException {
         CommentNewMsgDao dao = new CommentNewMsgDao(token, id, ((EditText) findViewById(R.id.status_new_content)).getText().toString());
-        if (enableCommentOri) {
+        if (enableCommentOri.isChecked()) {
             dao.enableComment_ori(true);
         } else {
             dao.enableComment_ori(false);

@@ -52,7 +52,6 @@ public class RepostNewActivity extends AbstractNewActivity<MessageBean> {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.repostnewactivity_menu, menu);
         menuEnableComment = menu.findItem(R.id.menu_enable_comment);
-        menuEnableComment.setTitle(getString(R.string.enable_comment_when_repost));
         menuEnableOriComment = menu.findItem(R.id.menu_enable_ori_comment);
         return true;
     }
@@ -63,7 +62,6 @@ public class RepostNewActivity extends AbstractNewActivity<MessageBean> {
 
         if (msg.getRetweeted_status() != null) {
             menuEnableOriComment.setVisible(true);
-            menuEnableOriComment.setTitle(getString(R.string.enable_comment_to_ori_when_repost));
         }
 
         return super.onPrepareOptionsMenu(menu);

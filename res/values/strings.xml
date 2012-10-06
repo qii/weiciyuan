@@ -105,9 +105,8 @@
     <string name="content_words_number_too_many">字数太多了</string>
     <string name="enable_comment_when_repost">评论给当前微博</string>
     <string name="enable_comment_to_ori_when_repost">评论给原微博</string>
-    <string name="enable_comment_to_ori_when_comment">同时评论原文（√）</string>
-    <string name="disable_comment_to_ori_when_comment">同时评论原文（ ）</string>
-    <string name="comment_detail">评论</string>
+    <string name="enable_comment_to_ori_when_comment">同时评论原文</string>
+     <string name="comment_detail">评论</string>
 
     <!--accountactivity_layout-->
     <string name="you_cancel_login">你取消了授权</string>
