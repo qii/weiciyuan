@@ -282,6 +282,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     class AutoRefreshTask extends MyAsyncTask<Void, MessageListBean, MessageListBean> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (isListViewFling())
+                cancel(true);
+        }
+
+        @Override
         protected MessageListBean doInBackground(Void... params) {
             try {
                 return getDoInBackgroundNewData();
@@ -295,7 +302,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         protected void onPostExecute(MessageListBean newValue) {
             super.onPostExecute(newValue);
 
-            if (newValue == null || newValue.getSize() == 0 || getActivity() == null)
+            if (newValue == null || newValue.getSize() == 0 || getActivity() == null || isListViewFling())
                 return;
 
             int firstPosition = getListView().getFirstVisiblePosition();
