@@ -9,9 +9,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
+import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
@@ -19,11 +20,12 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
  * User: Jiang Qi
  * Date: 12-8-2
  */
-public class CommentNewActivity extends AbstractNewActivity<CommentBean> {
+public class CommentNewActivity extends AbstractNewActivity<ItemBean> {
 
     private String id;
     private String token;
     private MenuItem enableCommentOri;
+    private MenuItem enableRepost;
 
     private MessageBean msg;
 
@@ -46,13 +48,14 @@ public class CommentNewActivity extends AbstractNewActivity<CommentBean> {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.commentnewactivity_menu, menu);
         enableCommentOri = menu.findItem(R.id.menu_enable_ori_comment);
+        enableRepost = menu.findItem(R.id.menu_enable_repost);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (msg != null && msg.getRetweeted_status() != null) {
-           enableCommentOri.setVisible(true);
+            enableCommentOri.setVisible(true);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -102,22 +105,70 @@ public class CommentNewActivity extends AbstractNewActivity<CommentBean> {
                     enableCommentOri.setChecked(true);
                 }
                 break;
-
+            case R.id.menu_enable_repost:
+                if (enableRepost.isChecked()) {
+                    enableRepost.setChecked(false);
+                } else {
+                    enableRepost.setChecked(true);
+                }
+                break;
         }
         return true;
     }
 
     @Override
-    protected CommentBean sendData() throws WeiboException {
-        CommentNewMsgDao dao = new CommentNewMsgDao(token, id, ((EditText) findViewById(R.id.status_new_content)).getText().toString());
-        if (enableCommentOri.isChecked()) {
-            dao.enableComment_ori(true);
+    protected ItemBean sendData() throws WeiboException {
+        if (!enableRepost.isChecked()) {
+            CommentNewMsgDao dao = new CommentNewMsgDao(token, id, ((EditText) findViewById(R.id.status_new_content)).getText().toString());
+            if (enableCommentOri.isChecked()) {
+                dao.enableComment_ori(true);
+            } else {
+                dao.enableComment_ori(false);
+            }
+
+            return dao.sendNewMsg();
         } else {
-            dao.enableComment_ori(false);
+            return repost();
         }
+
+    }
+
+    /**
+     * 1. this message has repost's message
+     * 2. this message is an original message
+     *
+     * if this message has repost's message,try to include its content,
+     * if total word number above 140,discard current msg content
+     */
+
+    private ItemBean repost() throws WeiboException {
+
+        String content = ((EditText) findViewById(R.id.status_new_content)).getText().toString();
+
+        if (msg.getRetweeted_status() != null) {
+            String msgContent = "//@" + msg.getUser().getScreen_name() + ": " + msg.getText();
+            String total = content + msgContent;
+            if (total.length() < 140) {
+                content = total;
+            }
+        }
+
+        RepostNewMsgDao dao = new RepostNewMsgDao(token, id);
+
+        boolean comment = true;
+        boolean oriComment = enableCommentOri.isChecked();
+
+        if (comment && oriComment) {
+            dao.setIs_comment(RepostNewMsgDao.ENABLE_COMMENT_ALL);
+        } else if (comment) {
+            dao.setIs_comment(RepostNewMsgDao.ENABLE_COMMENT);
+        } else if (oriComment) {
+            dao.setIs_comment(RepostNewMsgDao.ENABLE_ORI_COMMENT);
+        }
+
+
+        dao.setStatus(content);
 
         return dao.sendNewMsg();
     }
-
-
 }
