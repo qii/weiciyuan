@@ -21,6 +21,9 @@ import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * User: qii
  * Date: 12-7-29
@@ -40,6 +43,8 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     private String filter_by_type = "0";
 
     private int selected = 0;
+
+    private Map<Integer, ListBean<MessageBean>> hashMap = new HashMap<Integer, ListBean<MessageBean>>();
 
     public void setFilter_by_author(String filter_by_author) {
         this.filter_by_author = filter_by_author;
@@ -92,6 +97,10 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         outState.putInt("selected", selected);
         outState.putString("filter_by_author", filter_by_author);
         outState.putString("filter_by_type", filter_by_type);
+
+        outState.putSerializable("0", hashMap.get(0));
+        outState.putSerializable("1", hashMap.get(1));
+        outState.putSerializable("2", hashMap.get(2));
     }
 
 
@@ -115,6 +124,11 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
             selected = savedInstanceState.getInt("selected");
             filter_by_author = savedInstanceState.getString("filter_by_author");
             filter_by_type = savedInstanceState.getString("filter_by_type");
+
+            hashMap.put(0, (MessageListBean) savedInstanceState.getSerializable("0"));
+            hashMap.put(1, (MessageListBean) savedInstanceState.getSerializable("1"));
+            hashMap.put(2, (MessageListBean) savedInstanceState.getSerializable("2"));
+
             clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
@@ -124,6 +138,10 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 dbTask = new SimpleTask();
                 dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
+
+            hashMap.put(0, new MessageListBean());
+            hashMap.put(1, new MessageListBean());
+            hashMap.put(2, new MessageListBean());
         }
 
 
@@ -135,12 +153,14 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         @Override
         protected Object doInBackground(Object... params) {
             clearAndReplaceValue(DatabaseManager.getInstance().getRepostLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid()));
+            clearAndReplaceValue(0, bean);
+
             return null;
         }
 
         @Override
         protected void onPostExecute(Object o) {
-            timeLineAdapter.notifyDataSetChanged();
+            getAdapter().notifyDataSetChanged();
             refreshLayout(bean);
             super.onPostExecute(o);
 
@@ -162,29 +182,6 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         }
     }
 
-
-    private class RefreshDBTask extends MyAsyncTask<Object, Object, Object> {
-
-        @Override
-        protected void onPreExecute() {
-            showListView();
-            getListView().setSelection(0);
-        }
-
-        @Override
-        protected Object doInBackground(Object... params) {
-            clearAndReplaceValue(DatabaseManager.getInstance().getRepostLineMsgList(accountBean.getUid()));
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(bean);
-
-            super.onPostExecute(o);
-        }
-    }
 
     @Override
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
@@ -254,6 +251,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(Long.valueOf(GlobalContext.getInstance().getCurrentAccountId()).intValue());
 
+        clearAndReplaceValue(selected, bean);
     }
 
     @Override
@@ -284,16 +282,24 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
 
     public void refreshAnother() {
-        getList().getItemList().clear();
-        timeLineAdapter.notifyDataSetChanged();
-        if (selected != 0) {
+        if (hashMap.get(selected).getSize() == 0) {
+            bean.getItemList().clear();
+            getAdapter().notifyDataSetChanged();
+            pullToRefreshListView.startRefreshNow();
             refresh();
         } else {
-            new RefreshDBTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            clearAndReplaceValue(hashMap.get(selected));
+            getAdapter().notifyDataSetChanged();
         }
         getActivity().invalidateOptionsMenu();
     }
 
+
+    private void clearAndReplaceValue(int position, ListBean<MessageBean> newValue) {
+        hashMap.get(position).getItemList().clear();
+        hashMap.get(position).getItemList().addAll(newValue.getItemList());
+        hashMap.get(position).setTotal_number(newValue.getTotal_number());
+    }
 
 }
 
