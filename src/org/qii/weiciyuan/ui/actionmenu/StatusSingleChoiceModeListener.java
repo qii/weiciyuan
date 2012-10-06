@@ -109,10 +109,11 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         Intent intent;
+        MessageBean msg;
         long[] ids = listView.getCheckedItemIds();
         switch (item.getItemId()) {
             case R.id.menu_repost:
-                MessageBean msg = (MessageBean) adapter.getItem(listView.getCheckedItemPositions().keyAt(listView.getCheckedItemCount() - 1) - 1);
+                msg = (MessageBean) adapter.getItem(listView.getCheckedItemPositions().keyAt(listView.getCheckedItemCount() - 1) - 1);
                 intent = new Intent(getActivity(), RepostNewActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("id", String.valueOf(ids[0]));
@@ -122,9 +123,11 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
                 mode.finish();
                 break;
             case R.id.menu_comment:
+                msg = (MessageBean) adapter.getItem(listView.getCheckedItemPositions().keyAt(listView.getCheckedItemCount() - 1) - 1);
                 intent = new Intent(getActivity(), CommentNewActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("id", String.valueOf(ids[0]));
+                intent.putExtra("msg", msg);
                 getActivity().startActivity(intent);
                 listView.clearChoices();
                 mode.finish();

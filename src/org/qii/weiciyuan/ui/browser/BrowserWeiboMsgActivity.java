@@ -217,6 +217,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
                 intent = new Intent(this, CommentNewActivity.class);
                 intent.putExtra("token", getToken());
                 intent.putExtra("id", getMsg().getId());
+                intent.putExtra("msg", getMsg());
                 startActivity(intent);
 
                 return true;

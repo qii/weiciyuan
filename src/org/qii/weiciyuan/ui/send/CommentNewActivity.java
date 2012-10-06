@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -24,6 +25,8 @@ public class CommentNewActivity extends AbstractNewActivity<CommentBean> {
     private String token;
     private MenuItem enableCommentOri;
 
+    private MessageBean msg;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +36,8 @@ public class CommentNewActivity extends AbstractNewActivity<CommentBean> {
 
         token = getIntent().getStringExtra("token");
         id = getIntent().getStringExtra("id");
+        msg = (MessageBean) getIntent().getSerializableExtra("msg");
+
         getActionBar().setTitle(getString(R.string.comments));
 
     }
@@ -46,7 +51,9 @@ public class CommentNewActivity extends AbstractNewActivity<CommentBean> {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
+        if (msg != null && msg.getRetweeted_status() != null) {
+           enableCommentOri.setVisible(true);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
