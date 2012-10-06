@@ -12,9 +12,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.bean.CommentListBean;
-import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.dao.maintimeline.CommentsTimeLineByMeDao;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
@@ -33,6 +31,9 @@ import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * User: qii
  * Date: 12-7-29
@@ -49,6 +50,9 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     private RemoveTask removeTask;
     private SimpleTask dbTask;
 
+    private Map<Integer, ListBean<CommentBean>> hashMap = new HashMap<Integer, ListBean<CommentBean>>();
+
+
     public CommentsTimeLineFragment() {
 
     }
@@ -63,7 +67,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         selected = positoin;
     }
 
-    protected void clearAndReplaceValue(CommentListBean value) {
+    protected void clearAndReplaceValue(ListBean<CommentBean> value) {
         bean.getItemList().clear();
         bean.getItemList().addAll(value.getItemList());
     }
@@ -79,6 +83,10 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
         outState.putStringArray("group", group);
         outState.putInt("selected", selected);
+
+        outState.putSerializable("0", hashMap.get(0));
+        outState.putSerializable("1", hashMap.get(1));
+        outState.putSerializable("2", hashMap.get(2));
     }
 
     @Override
@@ -99,6 +107,11 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             token = savedInstanceState.getString("token");
             group = savedInstanceState.getStringArray("group");
             selected = savedInstanceState.getInt("selected");
+
+            hashMap.put(0, (CommentListBean) savedInstanceState.getSerializable("0"));
+            hashMap.put(1, (CommentListBean) savedInstanceState.getSerializable("1"));
+            hashMap.put(2, (CommentListBean) savedInstanceState.getSerializable("2"));
+
             clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
@@ -107,6 +120,10 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 dbTask = new SimpleTask();
                 dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
+
+            hashMap.put(0, new CommentListBean());
+            hashMap.put(1, new CommentListBean());
+            hashMap.put(2, new CommentListBean());
         }
 
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -200,6 +217,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         protected Object doInBackground(Object... params) {
             CommentListBean value = DatabaseManager.getInstance().getCommentLineMsgList(accountBean.getUid());
             clearAndReplaceValue(value);
+            clearAndReplaceValue(0, bean);
             return null;
         }
 
@@ -403,6 +421,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 }
 
                 clearAndReplaceValue(newValue);
+                clearAndReplaceValue(selected, bean);
                 timeLineAdapter.notifyDataSetChanged();
                 getListView().setSelectionAfterHeaderView();
             }
@@ -423,13 +442,21 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     }
 
     public void refreshAnother() {
-        getList().getItemList().clear();
-        timeLineAdapter.notifyDataSetChanged();
-        if (selected != 0) {
+        if (hashMap.get(selected).getSize() == 0) {
+            bean.getItemList().clear();
+            getAdapter().notifyDataSetChanged();
+            pullToRefreshListView.startRefreshNow();
             refresh();
         } else {
-            new RefreshDBTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            clearAndReplaceValue(hashMap.get(selected));
+            getAdapter().notifyDataSetChanged();
         }
         getActivity().invalidateOptionsMenu();
+    }
+
+    private void clearAndReplaceValue(int position, ListBean<CommentBean> newValue) {
+        hashMap.get(position).getItemList().clear();
+        hashMap.get(position).getItemList().addAll(newValue.getItemList());
+        hashMap.get(position).setTotal_number(newValue.getTotal_number());
     }
 }
