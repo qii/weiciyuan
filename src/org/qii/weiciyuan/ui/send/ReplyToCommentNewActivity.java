@@ -36,6 +36,7 @@ public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.commentnewactivity_menu, menu);
         menu.findItem(R.id.menu_enable_ori_comment).setVisible(false);
+        menu.findItem(R.id.menu_enable_repost).setVisible(false);
         return true;
     }
 
