@@ -77,6 +77,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
 
     @Override
+    public void onPause() {
+        super.onPause();
+        removeRefresh();
+        if (autoRefreshTask != null)
+            autoRefreshTask.cancel(true);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         addRefresh();
@@ -85,9 +93,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        removeRefresh();
-        if (autoRefreshTask != null)
-            autoRefreshTask.cancel(true);
+
         if (dbTask != null)
             dbTask.cancel(true);
     }
