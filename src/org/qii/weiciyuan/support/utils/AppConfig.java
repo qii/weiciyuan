@@ -10,6 +10,6 @@ public class AppConfig {
 
 
     //friend timeline
-    public static final long AUTO_REFRESH_INITIALDELAY = 15l;
-    public static final long AUTO_REFRESH_PERIOD = 15l;
+    public static final long AUTO_REFRESH_INITIALDELAY = 9l;
+    public static final long AUTO_REFRESH_PERIOD = 7l;
 }

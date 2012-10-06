@@ -255,6 +255,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             if (!GlobalContext.getInstance().getEnableAutoRefresh()) {
                 return;
             }
+            //after load database data
+            if (dbTask == null || dbTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+                return;
+            }
 
             ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = cm.getActiveNetworkInfo();
@@ -291,41 +295,37 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         protected void onPostExecute(MessageListBean newValue) {
             super.onPostExecute(newValue);
 
+            if (newValue == null || newValue.getSize() == 0 || getActivity() == null)
+                return;
+
             int firstPosition = getListView().getFirstVisiblePosition();
 
-            int size;
-            if (newValue != null && getActivity() != null) {
-                if (newValue.getSize() == 0) {
+            int size = newValue.getSize();
 
-                } else if (newValue.getSize() > 0) {
-                    size = newValue.getSize();
-
-                    if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                        //for speed, add old data after new data
-                        newValue.getItemList().addAll(getList().getItemList());
-                    } else {
-                        //null is flag means this position has some old messages which dont appear
-                        if (getList().getSize() > 0) {
-                            newValue.getItemList().add(null);
-                        }
-                        newValue.getItemList().addAll(getList().getItemList());
-                    }
-                    int index = getListView().getFirstVisiblePosition();
-                    clearAndReplaceValue(newValue);
-                    View v = getListView().getChildAt(1);
-                    int top = (v == null) ? 0 : v.getTop();
-
-                    timeLineAdapter.notifyDataSetChanged();
-                    int ss = index + size;
-
-//                    if (firstPosition == 0) {
-//
-//                    } else {
-                    getListView().setSelectionFromTop(ss + 1, top);
-//                    }
-
+            if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                //for speed, add old data after new data
+                newValue.getItemList().addAll(getList().getItemList());
+            } else {
+                //null is flag means this position has some old messages which dont appear
+                if (getList().getSize() > 0) {
+                    newValue.getItemList().add(null);
                 }
+                newValue.getItemList().addAll(getList().getItemList());
             }
+            int index = getListView().getFirstVisiblePosition();
+            clearAndReplaceValue(newValue);
+            View v = getListView().getChildAt(1);
+            int top = (v == null) ? 0 : v.getTop();
+
+            timeLineAdapter.notifyDataSetChanged();
+            int ss = index + size;
+
+//            if (firstPosition == 0) {
+////
+//            } else {
+            getListView().setSelectionFromTop(ss + 1, top);
+//            }
+//            getListView().setLayoutTransition(null);
         }
     }
 
