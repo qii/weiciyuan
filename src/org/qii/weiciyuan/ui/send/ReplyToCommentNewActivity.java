@@ -12,6 +12,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.dao.send.ReplyToCommentMsgDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 /**
  * User: qii
@@ -26,10 +27,14 @@ public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setTitle(R.string.comments);
+        getActionBar().setSubtitle(GlobalContext.getInstance().getCurrentAccountName());
+
 
         token = getIntent().getStringExtra("token");
         bean = (CommentBean) getIntent().getSerializableExtra("msg");
         getActionBar().setTitle(getString(R.string.reply_to_comment));
+        getEditTextView().setHint("@" + bean.getUser().getScreen_name() + "：" + bean.getText());
+
     }
 
     @Override

@@ -41,6 +41,8 @@ public class CommentNewActivity extends AbstractNewActivity<ItemBean> {
         msg = (MessageBean) getIntent().getSerializableExtra("msg");
 
         getActionBar().setTitle(getString(R.string.comments));
+        getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+
 
     }
 
