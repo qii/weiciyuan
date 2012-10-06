@@ -3,13 +3,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/menu_enable_comment"
-
+          android:checkable="true"
+          android:checked="false"
             />
 
+    <item android:id="@+id/menu_enable_ori_comment"
+          android:checkable="true"
+          android:checked="false"
+          android:visible="false"/>
 
-    <!--<item android:id="@+id/menu_clear"-->
-          <!--android:title="@string/clear_content"-->
-            <!--/>-->
+
+    <item android:id="@+id/menu_clear"
+          android:title="@string/clear_content"/>
 
 
 </menu>

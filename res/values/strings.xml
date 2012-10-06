@@ -103,8 +103,8 @@
     <string name="content_cant_be_empty">内容不能为空</string>
     <string name="content_cant_be_empty_and_dont_have_account">内容不能为空，当前也没可用的发微博帐号</string>
     <string name="content_words_number_too_many">字数太多了</string>
-    <string name="enable_comment_when_repost">同时评论（√）</string>
-    <string name="disable_comment_when_repost">同时评论（ ）</string>
+    <string name="enable_comment_when_repost">评论给当前微博</string>
+    <string name="enable_comment_to_ori_when_repost">评论给原微博</string>
     <string name="enable_comment_to_ori_when_comment">同时评论原文（√）</string>
     <string name="disable_comment_to_ori_when_comment">同时评论原文（ ）</string>
     <string name="comment_detail">评论</string>

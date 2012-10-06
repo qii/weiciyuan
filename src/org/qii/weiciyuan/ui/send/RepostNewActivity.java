@@ -23,8 +23,10 @@ public class RepostNewActivity extends AbstractNewActivity<MessageBean> {
 
     private String token;
 
-    private boolean enableComment = false;
-    private String enableCommentString;
+    private MessageBean msg;
+
+    private MenuItem menuEnableComment;
+    private MenuItem menuEnableOriComment;
 
 
     @Override
@@ -33,7 +35,7 @@ public class RepostNewActivity extends AbstractNewActivity<MessageBean> {
 
         token = getIntent().getStringExtra("token");
         id = getIntent().getStringExtra("id");
-        MessageBean msg = (MessageBean) getIntent().getSerializableExtra("msg");
+        msg = (MessageBean) getIntent().getSerializableExtra("msg");
         getActionBar().setTitle(getString(R.string.repost));
         getActionBar().setSubtitle(GlobalContext.getInstance().getCurrentAccountName());
 
@@ -42,7 +44,6 @@ public class RepostNewActivity extends AbstractNewActivity<MessageBean> {
         } else {
             getEditTextView().setHint(getString(R.string.repost) + "//@" + msg.getUser().getScreen_name() + "：" + msg.getText());
         }
-        enableCommentString = getString(R.string.disable_comment_when_repost);
 
 
     }
@@ -50,9 +51,22 @@ public class RepostNewActivity extends AbstractNewActivity<MessageBean> {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.repostnewactivity_menu, menu);
-        menu.findItem(R.id.menu_enable_comment).setTitle(enableCommentString);
-
+        menuEnableComment = menu.findItem(R.id.menu_enable_comment);
+        menuEnableComment.setTitle(getString(R.string.enable_comment_when_repost));
+        menuEnableOriComment = menu.findItem(R.id.menu_enable_ori_comment);
         return true;
+    }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        if (msg.getRetweeted_status() != null) {
+            menuEnableOriComment.setVisible(true);
+            menuEnableOriComment.setTitle(getString(R.string.enable_comment_to_ori_when_repost));
+        }
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -65,18 +79,22 @@ public class RepostNewActivity extends AbstractNewActivity<MessageBean> {
                 finish();
                 break;
             case R.id.menu_enable_comment:
-                if (enableComment) {
-                    enableComment = false;
-                    enableCommentString = getString(R.string.disable_comment_when_repost);
+                if (menuEnableComment.isChecked()) {
+                    menuEnableComment.setChecked(false);
                 } else {
-                    enableCommentString = getString(R.string.enable_comment_when_repost);
-                    enableComment = true;
+                    menuEnableComment.setChecked(true);
                 }
-                invalidateOptionsMenu();
                 break;
-//            case R.id.menu_clear:
-//                clearContentMenu();
-//                break;
+            case R.id.menu_enable_ori_comment:
+                if (menuEnableOriComment != null && menuEnableOriComment.isChecked()) {
+                    menuEnableOriComment.setChecked(false);
+                } else if (menuEnableOriComment != null && !menuEnableOriComment.isChecked()) {
+                    menuEnableOriComment.setChecked(true);
+                }
+                break;
+            case R.id.menu_clear:
+                clearContentMenu();
+                break;
         }
         return true;
     }
@@ -89,9 +107,19 @@ public class RepostNewActivity extends AbstractNewActivity<MessageBean> {
         }
 
         RepostNewMsgDao dao = new RepostNewMsgDao(token, id);
-        if (enableComment) {
-            dao.setIs_comment(true);
+
+        boolean comment = menuEnableComment.isChecked();
+        boolean oriComment = (menuEnableOriComment != null && menuEnableOriComment.isChecked());
+
+        if (comment && oriComment) {
+            dao.setIs_comment(RepostNewMsgDao.ENABLE_COMMENT_ALL);
+        } else if (comment) {
+            dao.setIs_comment(RepostNewMsgDao.ENABLE_COMMENT);
+        } else if (oriComment) {
+            dao.setIs_comment(RepostNewMsgDao.ENABLE_ORI_COMMENT);
         }
+
+
         dao.setStatus(content);
 
         return dao.sendNewMsg();

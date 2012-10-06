@@ -50,21 +50,26 @@ public class RepostNewMsgDao {
 
         this.access_token = token;
         this.id = id;
+        this.is_comment=DISABLE_COMMENT;
     }
 
     public void setStatus(String status) {
         this.status = status;
     }
 
-    public void setIs_comment(boolean enable) {
-        if (enable)
-            this.is_comment = "1";
-        else
-            this.is_comment = "0";
+    public void setIs_comment(String value) {
+
+        this.is_comment = value;
+
     }
 
     private String access_token;
     private String id;
     private String status;
     private String is_comment;
+
+    public static final String DISABLE_COMMENT = "0";
+    public static final String ENABLE_COMMENT = "1";
+    public static final String ENABLE_ORI_COMMENT = "2";
+    public static final String ENABLE_COMMENT_ALL="3";
 }
