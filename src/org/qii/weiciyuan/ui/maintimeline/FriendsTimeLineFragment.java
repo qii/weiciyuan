@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -21,8 +22,8 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.send.StatusNewActivity;
-import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
+import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -40,6 +41,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     private AutoRefreshTask autoRefreshTask = null;
     private ScheduledExecutorService scheduledRefreshExecutorService = null;
+
+    private int selectedId = 0;
+    private HashMap<Integer, String> group = new HashMap<Integer, String>();
+    private HashMap<Integer, ListBean<MessageBean>> hashMap = new HashMap<Integer, ListBean<MessageBean>>();
 
 
     public FriendsTimeLineFragment() {
@@ -59,6 +64,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         outState.putSerializable("bean", bean);
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
+
+        outState.putSerializable("group", group);
+        outState.putSerializable("hashmap", hashMap);
+        outState.putInt("selectedId", selectedId);
     }
 
     @Override
@@ -105,6 +114,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             userBean = (UserBean) savedInstanceState.getSerializable("userBean");
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
             token = savedInstanceState.getString("token");
+
+            group = (HashMap) savedInstanceState.getSerializable("group");
+            hashMap = (HashMap) savedInstanceState.getSerializable("hashmap");
+            selectedId = savedInstanceState.getInt("selectedId");
+
             clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
 
@@ -114,6 +128,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 dbTask = new SimpleTask();
                 dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
+
+            group.put(0, "全部");
+            group.put(-1, "互相关注");
+
+            hashMap.put(0, new MessageListBean());
+            hashMap.put(-1, new MessageListBean());
+
         }
         getActivity().invalidateOptionsMenu();
         super.onActivityCreated(savedInstanceState);
@@ -126,6 +147,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         @Override
         protected Object doInBackground(Object... params) {
             clearAndReplaceValue(DatabaseManager.getInstance().getHomeLineMsgList(accountBean.getUid()));
+            clearAndReplaceValue(0, bean);
             return null;
         }
 
@@ -159,10 +181,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.friendstimelinefragment_menu, menu);
-        if (getResources().getBoolean(R.bool.is_phone)) {
+        if (selectedId == 0) {
             menu.findItem(R.id.friendstimelinefragment_name).setTitle(userBean.getScreen_name());
         } else {
-            menu.removeItem(R.id.friendstimelinefragment_name);
+            menu.findItem(R.id.friendstimelinefragment_name).setTitle(group.get(selectedId));
         }
     }
 
@@ -182,26 +204,37 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
                 break;
             case R.id.friendstimelinefragment_name:
-                intent = new Intent(getActivity(), MyInfoActivity.class);
-                intent.putExtra("token", token);
-                intent.putExtra("user", userBean);
-                intent.putExtra("account", accountBean);
-                startActivity(intent);
+
+//                String[] group = {"全部", "互相关注", "全部", "互相关注", "全部", "互相关注", "全部"
+//                        , "互相关注", "全部", "互相关注", "全部", "互相关注", "全部", "互相关注"};
+                FriendsGroupDialog dialog = new FriendsGroupDialog(group, selectedId);
+                dialog.setTargetFragment(this, 1);
+                dialog.show(getFragmentManager(), "");
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void setSelected(int selectedItemId) {
+        selectedId = selectedItemId;
     }
 
     @Override
     protected void afterGetNewMsg() {
         super.afterGetNewMsg();
         getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
-
+        clearAndReplaceValue(selectedId, bean);
     }
 
     @Override
     protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
-        MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(token);
+        MainFriendsTimeLineDao dao;
+        if (selectedId == -1) {
+            dao = new BilateralTimeLineDao(token);
+        } else {
+            dao = new MainFriendsTimeLineDao(token);
+        }
         if (getList().getItemList().size() > 0) {
             dao.setSince_id(getList().getItemList().get(0).getId());
         }
@@ -214,7 +247,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     @Override
     protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
-        MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(token);
+        MainFriendsTimeLineDao dao;
+        if (selectedId == -1) {
+            dao = new BilateralTimeLineDao(token);
+        } else {
+            dao = new MainFriendsTimeLineDao(token);
+        }
         if (getList().getItemList().size() > 0) {
             dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
         }
@@ -234,6 +272,23 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         return result;
     }
 
+    public void refreshAnother() {
+        if (hashMap.get(selectedId).getSize() == 0) {
+            bean.getItemList().clear();
+            getAdapter().notifyDataSetChanged();
+            pullToRefreshListView.startRefreshNow();
+         } else {
+            clearAndReplaceValue(hashMap.get(selectedId));
+            getAdapter().notifyDataSetChanged();
+        }
+        getActivity().invalidateOptionsMenu();
+    }
+
+    private void clearAndReplaceValue(int position, ListBean<MessageBean> newValue) {
+        hashMap.get(position).getItemList().clear();
+        hashMap.get(position).getItemList().addAll(newValue.getItemList());
+        hashMap.get(position).setTotal_number(newValue.getTotal_number());
+    }
 
     private void removeRefresh() {
         if (scheduledRefreshExecutorService != null && !scheduledRefreshExecutorService.isShutdown())
