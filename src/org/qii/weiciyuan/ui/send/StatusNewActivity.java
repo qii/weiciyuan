@@ -313,9 +313,11 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         getAccountInfo();
 
         Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        picPath = getPicPathFromUri(imageUri);
-        content.setText(getString(R.string.share_pic));
-        content.setSelection(content.getText().toString().length());
+        if (imageUri != null) {
+            picPath = getPicPathFromUri(imageUri);
+            content.setText(getString(R.string.share_pic));
+            content.setSelection(content.getText().toString().length());
+        }
     }
 
     private String getPicPathFromUri(Uri uri) {
