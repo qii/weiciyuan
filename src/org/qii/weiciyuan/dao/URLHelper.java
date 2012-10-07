@@ -126,4 +126,8 @@ public class URLHelper {
     public static String getRemarkUpdate() {
         return URLManager.getRealUrl("remark_update");
     }
+
+    public static String getAtUser() {
+        return URLManager.getRealUrl("atuser");
+    }
 }
