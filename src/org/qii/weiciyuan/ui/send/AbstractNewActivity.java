@@ -16,6 +16,7 @@ import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.search.AtUserActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.util.*;
@@ -38,6 +39,9 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
     private EditText et;
 
     public static final int AT_USER = 3;
+
+    protected String token;
+
 
 
     protected EditText getEditTextView() {
@@ -98,6 +102,8 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
 //        getActionBar().setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
         getActionBar().setDisplayShowCustomEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        token = getIntent().getStringExtra("token");
+
 
         et = ((EditText) findViewById(R.id.status_new_content));
         et.addTextChangedListener(new TextNumLimitWatcher((TextView) findViewById(R.id.menu_send), et, this));
@@ -131,6 +137,11 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
                 String topicTag = "##";
                 getEditTextView().setText(ori + topicTag);
                 getEditTextView().setSelection(et.getText().toString().length() - 1);
+                break;
+            case R.id.menu_at:
+                Intent intent = new Intent(AbstractNewActivity.this, AtUserActivity.class);
+                intent.putExtra("token", token);
+                startActivityForResult(intent, AT_USER);
                 break;
         }
     }

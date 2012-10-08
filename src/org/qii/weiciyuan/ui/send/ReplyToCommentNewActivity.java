@@ -25,7 +25,6 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
 public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> {
 
     private CommentBean bean;
-    private String token;
     private MenuItem enableRepost;
 
 
@@ -36,7 +35,6 @@ public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> 
         getActionBar().setSubtitle(GlobalContext.getInstance().getCurrentAccountName());
 
 
-        token = getIntent().getStringExtra("token");
         bean = (CommentBean) getIntent().getSerializableExtra("msg");
         getActionBar().setTitle(getString(R.string.reply_to_comment));
         getEditTextView().setHint("@" + bean.getUser().getScreen_name() + "：" + bean.getText());
