@@ -14,5 +14,7 @@
           android:checkable="true"
           android:checked="false"
             />
-
+    <item android:id="@+id/menu_at"
+          android:title="@string/at_other"
+            />
 </menu>

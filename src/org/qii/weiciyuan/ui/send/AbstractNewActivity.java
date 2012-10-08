@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.send;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -35,6 +36,9 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
     protected abstract boolean canSend();
 
     private EditText et;
+
+    public static final int AT_USER = 3;
+
 
     protected EditText getEditTextView() {
         return et;
@@ -96,7 +100,7 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         et = ((EditText) findViewById(R.id.status_new_content));
-        et.addTextChangedListener(new TextNumLimitWatcher((TextView)findViewById(R.id.menu_send), et, this));
+        et.addTextChangedListener(new TextNumLimitWatcher((TextView) findViewById(R.id.menu_send), et, this));
 
 
         findViewById(R.id.menu_topic).setOnClickListener(this);
@@ -134,6 +138,27 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
     protected void clearContentMenu() {
         ClearContentDialog dialog = new ClearContentDialog();
         dialog.show(getFragmentManager(), "");
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (resultCode == RESULT_OK) {
+
+            switch (requestCode) {
+
+                case AT_USER:
+                    String name = intent.getStringExtra("name");
+                    String ori = getEditTextView().getText().toString();
+                    int index = getEditTextView().getSelectionStart();
+                    StringBuilder stringBuilder = new StringBuilder(ori);
+                    stringBuilder.insert(index, name);
+                    getEditTextView().setText(stringBuilder.toString());
+                    getEditTextView().setSelection(index + name.length());
+                    break;
+            }
+
+        }
     }
 
 

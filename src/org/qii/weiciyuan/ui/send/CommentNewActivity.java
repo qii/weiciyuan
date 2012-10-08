@@ -1,28 +1,22 @@
 package org.qii.weiciyuan.ui.send;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AtUserBean;
 import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.dao.search.AtUserDao;
 import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-
-import java.util.List;
+import org.qii.weiciyuan.ui.search.AtUserActivity;
 
 /**
  * User: Jiang Qi
@@ -36,6 +30,7 @@ public class CommentNewActivity extends AbstractNewActivity<ItemBean> {
     private MenuItem enableRepost;
 
     private MessageBean msg;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +46,6 @@ public class CommentNewActivity extends AbstractNewActivity<ItemBean> {
         getActionBar().setTitle(getString(R.string.comments));
         getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
 
-        getEditTextView().addTextChangedListener(new AtTextWatcher());
     }
 
     @Override
@@ -122,6 +116,11 @@ public class CommentNewActivity extends AbstractNewActivity<ItemBean> {
                     enableRepost.setChecked(true);
                 }
                 break;
+            case R.id.menu_at:
+                Intent intent = new Intent(CommentNewActivity.this, AtUserActivity.class);
+                intent.putExtra("token", token);
+                startActivityForResult(intent, AT_USER);
+                break;
         }
         return true;
     }
@@ -182,86 +181,87 @@ public class CommentNewActivity extends AbstractNewActivity<ItemBean> {
         return dao.sendNewMsg();
     }
 
-    class AtTextWatcher implements TextWatcher {
-        boolean flag = false;
-        boolean begin = false;
-        AtUserTask atUserTask = null;
 
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(final CharSequence s, int start, int before, int count) {
-            if (TextUtils.isEmpty(s.toString())) {
-                flag = false;
-                begin = false;
-                return;
-            }
-
-            if (s.toString().endsWith(" ")) {
-                flag = false;
-                begin = false;
-                return;
-            }
-
-            if (s.toString().endsWith("@")) {
-                flag = true;
-            }
-
-            if (!s.toString().endsWith("@")) {
-                begin = true;
-            }
-
-            if (flag && begin) {
-                int index = s.toString().lastIndexOf("@");
-                String searchWords = s.subSequence(index + 1, s.toString().length()).toString();
-                if (atUserTask == null || atUserTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    atUserTask = new AtUserTask(searchWords);
-                    atUserTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                } else {
-                    atUserTask.cancel(true);
-                    atUserTask = new AtUserTask(searchWords);
-                    atUserTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                }
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    }
-
-    class AtUserTask extends MyAsyncTask<Void, List<AtUserBean>, List<AtUserBean>> {
-        WeiboException e;
-        String q;
-
-        public AtUserTask(String q) {
-            this.q = q;
-        }
-
-        @Override
-        protected List<AtUserBean> doInBackground(Void... params) {
-            AtUserDao dao = new AtUserDao(token, q);
-            try {
-                return dao.getUserInfo();
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<AtUserBean> atUserBeans) {
-            super.onPostExecute(atUserBeans);
-            if (isCancelled())
-                return;
-            if (atUserBeans.size() == 0)
-                return;
-            AppLogger.e(atUserBeans.get(0).getNickname());
-        }
-    }
+//    class AtTextWatcher implements TextWatcher {
+//        boolean flag = false;
+//        boolean begin = false;
+//        AtUserTask atUserTask = null;
+//
+//        @Override
+//        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//        }
+//
+//        @Override
+//        public void onTextChanged(final CharSequence s, int start, int before, int count) {
+//            if (TextUtils.isEmpty(s.toString())) {
+//                flag = false;
+//                begin = false;
+//                return;
+//            }
+//
+//            if (s.toString().endsWith(" ")) {
+//                flag = false;
+//                begin = false;
+//                return;
+//            }
+//
+//            if (s.toString().endsWith("@")) {
+//                flag = true;
+//            }
+//
+//            if (!s.toString().endsWith("@")) {
+//                begin = true;
+//            }
+//
+//            if (flag && begin) {
+//                int index = s.toString().lastIndexOf("@");
+//                String searchWords = s.subSequence(index + 1, s.toString().length()).toString();
+//                if (atUserTask == null || atUserTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+//                    atUserTask = new AtUserTask(searchWords);
+//                    atUserTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+//                } else {
+//                    atUserTask.cancel(true);
+//                    atUserTask = new AtUserTask(searchWords);
+//                    atUserTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+//                }
+//            }
+//        }
+//
+//        @Override
+//        public void afterTextChanged(Editable s) {
+//
+//        }
+//    }
+//
+//    class AtUserTask extends MyAsyncTask<Void, List<AtUserBean>, List<AtUserBean>> {
+//        WeiboException e;
+//        String q;
+//
+//        public AtUserTask(String q) {
+//            this.q = q;
+//        }
+//
+//        @Override
+//        protected List<AtUserBean> doInBackground(Void... params) {
+//            AtUserDao dao = new AtUserDao(token, q);
+//            try {
+//                return dao.getUserInfo();
+//            } catch (WeiboException e) {
+//                this.e = e;
+//                cancel(true);
+//                return null;
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(List<AtUserBean> atUserBeans) {
+//            super.onPostExecute(atUserBeans);
+//            if (isCancelled())
+//                return;
+//            if (atUserBeans.size() == 0)
+//                return;
+//            AppLogger.e(atUserBeans.get(0).getNickname());
+//        }
+//    }
 }

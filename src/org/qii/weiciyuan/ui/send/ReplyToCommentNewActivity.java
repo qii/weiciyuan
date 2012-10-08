@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.send;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -13,6 +14,7 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.dao.send.ReplyToCommentMsgDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.search.AtUserActivity;
 
 /**
  * User: qii
@@ -53,6 +55,11 @@ public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> 
                 if (imm.isActive())
                     imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
                 finish();
+                break;
+            case R.id.menu_at:
+                Intent intent = new Intent(ReplyToCommentNewActivity.this, AtUserActivity.class);
+                intent.putExtra("token", token);
+                startActivityForResult(intent, AT_USER);
                 break;
         }
         return true;

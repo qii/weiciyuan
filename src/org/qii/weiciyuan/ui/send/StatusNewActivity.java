@@ -37,6 +37,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.search.AtUserActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.io.File;
@@ -53,6 +54,9 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
     private static final int CAMERA_RESULT = 0;
     private static final int PIC_RESULT = 1;
+    public static final int AT_USER = 3;
+
+
     protected String token = "";
 
     private String picPath = "";
@@ -104,21 +108,38 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         if (resultCode == RESULT_OK) {
 
-            if (TextUtils.isEmpty(content.getText().toString())) {
-                content.setText(getString(R.string.share_pic));
-                content.setSelection(content.getText().toString().length());
-            }
 
             switch (requestCode) {
                 case CAMERA_RESULT:
+                    if (TextUtils.isEmpty(content.getText().toString())) {
+                        content.setText(getString(R.string.share_pic));
+                        content.setSelection(content.getText().toString().length());
+                    }
+
                     picPath = getPicPathFromUri(imageFileUri);
+                    havePic.setVisibility(View.VISIBLE);
                     break;
                 case PIC_RESULT:
+                    if (TextUtils.isEmpty(content.getText().toString())) {
+                        content.setText(getString(R.string.share_pic));
+                        content.setSelection(content.getText().toString().length());
+                    }
+
                     Uri imageFileUri = intent.getData();
                     picPath = getPicPathFromUri(imageFileUri);
+                    havePic.setVisibility(View.VISIBLE);
                     break;
+                case AT_USER:
+                    String name = intent.getStringExtra("name");
+                    String ori = content.getText().toString();
+                    int index = content.getSelectionStart();
+                    StringBuilder stringBuilder = new StringBuilder(ori);
+                    stringBuilder.insert(index, name);
+                    content.setText(stringBuilder.toString());
+                    content.setSelection(index + name.length());
+                    return;
             }
-            havePic.setVisibility(View.VISIBLE);
+
         }
     }
 
@@ -364,13 +385,14 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 savaDraft();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm.isActive())
                     imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-                Intent intent = new Intent(this, MainTimeLineActivity.class);
+                intent = new Intent(this, MainTimeLineActivity.class);
                 intent.putExtra("account", getAccount());
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -396,6 +418,11 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 content.setText(ori + topicTag);
                 content.setSelection(content.getText().toString().length() - 1);
                 break;
+            case R.id.menu_at:
+                intent = new Intent(StatusNewActivity.this, AtUserActivity.class);
+                intent.putExtra("token", token);
+                startActivityForResult(intent, AT_USER);
+                break;
 //            case R.id.menu_clear:
 //                ClearContentDialog clearContentDialog = new ClearContentDialog();
 //                clearContentDialog.show(getSupportFragmentManager(), "");
@@ -403,6 +430,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         }
         return true;
     }
+
 
     private void savaDraft() {
         if (!TextUtils.isEmpty(content.getText().toString())) {

@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.send;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.search.AtUserActivity;
 
 /**
  * User: Jiang Qi
@@ -89,6 +91,11 @@ public class RepostNewActivity extends AbstractNewActivity<MessageBean> {
                 } else if (menuEnableOriComment != null && !menuEnableOriComment.isChecked()) {
                     menuEnableOriComment.setChecked(true);
                 }
+                break;
+            case R.id.menu_at:
+                Intent intent = new Intent(RepostNewActivity.this, AtUserActivity.class);
+                intent.putExtra("token", token);
+                startActivityForResult(intent, AT_USER);
                 break;
             case R.id.menu_clear:
                 clearContentMenu();
