@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
@@ -110,7 +112,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             }
 
         }
-
+        Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
+        et.startAnimation(shake);
         return false;
     }
 
