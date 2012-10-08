@@ -11,7 +11,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.dao.send.ReplyToCommentMsgDao;
+import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
@@ -24,6 +26,8 @@ public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> 
 
     private CommentBean bean;
     private String token;
+    private MenuItem enableRepost;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +47,9 @@ public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.commentnewactivity_menu, menu);
         menu.findItem(R.id.menu_enable_ori_comment).setVisible(false);
-        menu.findItem(R.id.menu_enable_repost).setVisible(false);
+        menu.findItem(R.id.menu_enable_repost).setVisible(true);
+        enableRepost = menu.findItem(R.id.menu_enable_repost);
+
         return true;
     }
 
@@ -55,6 +61,13 @@ public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> 
                 if (imm.isActive())
                     imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
                 finish();
+                break;
+            case R.id.menu_enable_repost:
+                if (enableRepost.isChecked()) {
+                    enableRepost.setChecked(false);
+                } else {
+                    enableRepost.setChecked(true);
+                }
                 break;
             case R.id.menu_at:
                 Intent intent = new Intent(ReplyToCommentNewActivity.this, AtUserActivity.class);
@@ -68,8 +81,30 @@ public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> 
     @Override
     protected CommentBean sendData() throws WeiboException {
         ReplyToCommentMsgDao dao = new ReplyToCommentMsgDao(token, bean, ((EditText) findViewById(R.id.status_new_content)).getText().toString());
-        return dao.reply();
+        CommentBean commentBean = dao.reply();
+        if (enableRepost.isChecked()) {
+            repost();
+        }
+        return commentBean;
     }
+
+
+    private ItemBean repost() throws WeiboException {
+
+        String content = ((EditText) findViewById(R.id.status_new_content)).getText().toString();
+        String msgContent = "//@" + bean.getUser().getScreen_name() + ": " + bean.getText();
+        String total = content + msgContent;
+        if (total.length() < 140) {
+            content = total;
+        }
+
+        RepostNewMsgDao dao = new RepostNewMsgDao(token, bean.getStatus().getId());
+
+        dao.setStatus(content);
+
+        return dao.sendNewMsg();
+    }
+
 
     @Override
     protected boolean canSend() {
