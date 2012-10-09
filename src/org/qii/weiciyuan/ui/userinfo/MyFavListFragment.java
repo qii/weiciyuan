@@ -22,6 +22,7 @@ import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 /**
  * User: qii
  * Date: 12-8-18
+ * this class need to refactor
  */
 public class MyFavListFragment extends AbstractMessageTimeLineFragment {
 
@@ -44,7 +45,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         if (savedInstanceState != null && bean.getItemList().size() == 0) {
-            clearAndReplaceValue((FavListBean) savedInstanceState.getSerializable("bean"));
+            clearAndReplaceValue((ListBean<MessageBean>) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
