@@ -130,6 +130,10 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
                 CommentsByIdTimeLineFragment.class.getName()));
     }
 
+    private Fragment getBrowserWeiboMsgFragment() {
+        return getFragmentManager().findFragmentByTag(BrowserWeiboMsgFragment.class.getName());
+    }
+
     ActionBar.TabListener tabListener = new ActionBar.TabListener() {
         boolean comment = false;
         boolean repost = false;
@@ -264,9 +268,21 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
 
         public TimeLinePagerAdapter(FragmentManager fm) {
             super(fm);
-            list.add(new BrowserWeiboMsgFragment(msg));
-            list.add(new CommentsByIdTimeLineFragment(token, msg.getId()));
-            list.add(new RepostsByIdTimeLineFragment(token, msg.getId(), msg));
+            if (getBrowserWeiboMsgFragment() == null) {
+                list.add(new BrowserWeiboMsgFragment(msg));
+            } else {
+                list.add(getBrowserWeiboMsgFragment());
+            }
+            if (getCommentFragment() == null) {
+                list.add(new CommentsByIdTimeLineFragment(token, msg.getId()));
+            } else {
+                list.add(getCommentFragment());
+            }
+            if (getRepostFragment() == null) {
+                list.add(new RepostsByIdTimeLineFragment(token, msg.getId(), msg));
+            } else {
+                list.add(getRepostFragment());
+            }
         }
 
         @Override

@@ -149,6 +149,11 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
                 StatusesByIdTimeLineFragment.class.getName()));
     }
 
+    private Fragment getMyInfoFragment() {
+        return getFragmentManager().findFragmentByTag(
+                MyInfoFragment.class.getName());
+    }
+
 
     class TimeLinePagerAdapter extends
             AppFragmentPagerAdapter {
@@ -158,9 +163,16 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
 
         public TimeLinePagerAdapter(FragmentManager fm) {
             super(fm);
-
-            list.add(new MyInfoFragment());
-            list.add(new StatusesByIdTimeLineFragment(getUser(), getToken()));
+            if (getMyInfoFragment() == null) {
+                list.add(new MyInfoFragment());
+            } else {
+                list.add(getMyInfoFragment());
+            }
+            if (getStatusFragment() == null) {
+                list.add(new StatusesByIdTimeLineFragment(getUser(), getToken()));
+            } else {
+                list.add(getStatusFragment());
+            }
         }
 
         @Override

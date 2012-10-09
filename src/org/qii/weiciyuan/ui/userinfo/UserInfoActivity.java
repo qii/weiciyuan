@@ -254,9 +254,16 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
 
         public TimeLinePagerAdapter(FragmentManager fm) {
             super(fm);
-
-            list.add(new UserInfoFragment());
-            list.add(new StatusesByIdTimeLineFragment(getUser(), getToken()));
+            if (getInfoFragment() == null) {
+                list.add(new UserInfoFragment());
+            } else {
+                list.add(getInfoFragment());
+            }
+            if (getStatusFragment() == null) {
+                list.add(new StatusesByIdTimeLineFragment(getUser(), getToken()));
+            } else {
+                list.add(getStatusFragment());
+            }
         }
 
         @Override
