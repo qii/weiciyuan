@@ -178,8 +178,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
                 intent = new Intent(this, StatusNewActivity.class);
                 intent.putExtra("token", getToken());
                 intent.putExtra("content", "@" + bean.getScreen_name());
-                intent.putExtra("accountName", GlobalContext.getInstance().getCurrentAccountName());
-                intent.putExtra("accountId", GlobalContext.getInstance().getCurrentAccountId());
+                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
                 startActivity(intent);
                 break;
             case R.id.menu_modify_remark:

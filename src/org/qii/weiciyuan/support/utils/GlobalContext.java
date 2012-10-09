@@ -12,9 +12,11 @@ import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.Display;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,6 +50,8 @@ public final class GlobalContext extends Application {
     private String currentAccountId = null;
 
     private String currentAccountName = null;
+
+    private AccountBean accountBean = null;
 
     public boolean startedApp = false;
 
@@ -109,6 +113,29 @@ public final class GlobalContext extends Application {
         }
     }
 
+    public AccountBean getAccountBean() {
+        if (accountBean != null) {
+            return accountBean;
+        } else {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            String id = sharedPref.getString("id", "");
+            if (!TextUtils.isEmpty(id)) {
+                accountBean = DatabaseManager.getInstance().getAccount(id);
+                if (accountBean != null) {
+                    return accountBean;
+                }
+            } else {
+                List<AccountBean> accountList = DatabaseManager.getInstance().getAccountList();
+                if (accountList != null && accountList.size() > 0) {
+                    AccountBean account = accountList.get(0);
+                    accountBean = account;
+                    return accountBean;
+                }
+            }
+        }
+
+        return null;
+    }
 
     public String getCurrentAccountId() {
         if (!TextUtils.isEmpty(currentAccountId)) {
