@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.qii.weiciyuan"
-          android:versionCode="15"
-          android:versionName="0.46">
+          android:versionCode="16"
+          android:versionName="0.461">
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="16"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
