@@ -408,10 +408,31 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         public TimeLinePagerAdapter(FragmentManager fm) {
             super(fm);
-            list.add(new FriendsTimeLineFragment(getAccount(), getUser(), getToken()));
-            list.add(new MentionsTimeLineFragment(getAccount(), getUser(), getToken()));
-            list.add(new CommentsTimeLineFragment(getAccount(), getUser(), getToken()));
-            list.add(new MyStatussTimeLineFragment(getUser(), getToken()));
+            if (getHomeFragment() == null) {
+                list.add(new FriendsTimeLineFragment(getAccount(), getUser(), getToken()));
+            } else {
+                list.add(getHomeFragment());
+            }
+
+            if (getMentionFragment() == null) {
+                list.add(new MentionsTimeLineFragment(getAccount(), getUser(), getToken()));
+            } else {
+                list.add(getMentionFragment());
+            }
+
+            if (getCommentFragment() == null) {
+                list.add(new CommentsTimeLineFragment(getAccount(), getUser(), getToken()));
+            } else {
+                list.add(getCommentFragment());
+            }
+
+            if (getMyFragment() == null) {
+                list.add(new MyStatussTimeLineFragment(getUser(), getToken()));
+            } else {
+                list.add(getMyFragment());
+            }
+
+
         }
 
 
