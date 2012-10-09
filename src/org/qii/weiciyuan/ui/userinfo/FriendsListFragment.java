@@ -4,11 +4,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.user.FriendListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.actionmenu.FriendSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
 
 /**
@@ -18,6 +21,10 @@ import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
 public class FriendsListFragment extends AbstractUserListFragment {
 
 
+    public FriendsListFragment(){
+
+    }
+
     public FriendsListFragment(String uid) {
         super(uid);
     }
@@ -26,7 +33,30 @@ public class FriendsListFragment extends AbstractUserListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
+                if (position - 1 < getList().getUsers().size() && position - 1 >= 0) {
+                    if (mActionMode != null) {
+                        mActionMode.finish();
+                        mActionMode = null;
+                        getListView().setItemChecked(position, true);
+                        timeLineAdapter.notifyDataSetChanged();
+                        mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(getListView(), timeLineAdapter, FriendsListFragment.this, bean.getUsers().get(position - 1)));
+                        return true;
+                    } else {
+                        getListView().setItemChecked(position, true);
+                        timeLineAdapter.notifyDataSetChanged();
+                        mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(getListView(), timeLineAdapter, FriendsListFragment.this, bean.getUsers().get(position - 1)));
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        );
     }
 
     @Override

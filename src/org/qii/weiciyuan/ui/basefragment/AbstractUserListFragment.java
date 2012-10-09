@@ -1,8 +1,8 @@
 package org.qii.weiciyuan.ui.basefragment;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.*;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
@@ -17,7 +17,6 @@ import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
-import org.qii.weiciyuan.ui.actionmenu.FriendSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.UserListAdapter;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
@@ -33,7 +32,6 @@ import java.util.Set;
 public abstract class AbstractUserListFragment extends Fragment {
 
     protected View footerView;
-    public volatile boolean isBusying = false;
     protected ICommander commander;
     protected PullToRefreshListView pullToRefreshListView;
     protected TextView empty;
@@ -76,6 +74,10 @@ public abstract class AbstractUserListFragment extends Fragment {
             oldTask.cancel(true);
     }
 
+    public AbstractUserListFragment() {
+
+    }
+
     public AbstractUserListFragment(String uid) {
         this.uid = uid;
     }
@@ -84,41 +86,19 @@ public abstract class AbstractUserListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
-        if (savedInstanceState != null && bean.getUsers().size() == 0) {
+        if (savedInstanceState != null) {
+            currentUser=(UserBean)savedInstanceState.getSerializable("currentUser");
+            uid=savedInstanceState.getString("uid");
             clearAndReplaceValue((UserListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
             pullToRefreshListView.startRefreshNow();
-            refresh();
 
         }
 
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (position - 1 < getList().getUsers().size() && position - 1 >= 0) {
-                    if (mActionMode != null) {
-                        mActionMode.finish();
-                        mActionMode = null;
-                        getListView().setItemChecked(position, true);
-                        timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(getListView(), timeLineAdapter, AbstractUserListFragment.this, bean.getUsers().get(position - 1)));
-                        return true;
-                    } else {
-                        getListView().setItemChecked(position, true);
-                        timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(getListView(), timeLineAdapter, AbstractUserListFragment.this, bean.getUsers().get(position - 1)));
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
-
-        );
 
     }
 
@@ -140,6 +120,8 @@ public abstract class AbstractUserListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
+        outState.putSerializable("currentUser",currentUser);
+        outState.putString("uid",uid);
     }
 
     @Override

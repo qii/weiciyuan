@@ -13,7 +13,7 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 /**
  * User: Jiang Qi
  * Date: 12-8-16
-  */
+ */
 public class FriendListActivity extends AbstractAppActivity implements IUserInfo,
         IToken {
     private String token;
@@ -37,11 +37,15 @@ public class FriendListActivity extends AbstractAppActivity implements IUserInfo
         getActionBar().setTitle(getString(R.string.following_list));
         token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new FriendsListFragment(bean.getId()))
-                .commit();
+        if (getFragmentManager().findFragmentByTag(FriendsListFragment.class.getName()) == null) {
+            getFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new FriendsListFragment(bean.getId()), FriendsListFragment.class.getName())
+                    .commit();
+        }
+
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
