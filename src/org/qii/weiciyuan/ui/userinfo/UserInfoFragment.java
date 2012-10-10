@@ -139,10 +139,18 @@ public class UserInfoFragment extends Fragment {
         }
         setTextViewNum(fans_number, bean.getFollowers_count());
         setTextViewNum(following_number, bean.getFriends_count());
-        if (bean.isFollow_me()) {
+
+        boolean he = bean.isFollow_me();
+        boolean me = bean.isFollowing();
+
+        if (he && me) {
+            relationship.setText(getString(R.string.following_together));
+        } else if (he && !me) {
             relationship.setText(getString(R.string.he_is_following_you));
+        } else if (!he && me) {
+            relationship.setText(getString(R.string.you_is_following_he));
         } else {
-            relationship.setText(getString(R.string.he_is_not_following_you));
+            relationship.setText(getString(R.string.stranger_together));
         }
 
 
