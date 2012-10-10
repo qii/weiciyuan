@@ -98,7 +98,8 @@
 
 
         <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
-                      android:layout_height="wrap_content">
+                      android:layout_height="wrap_content"
+                android:id="@+id/blog_url_layout">
             <TextView android:layout_marginTop="5.0dip" android:text="@string/blog_url"
                       style="?android:attr/listSeparatorTextViewStyle"/>
             <TextView android:linksClickable="true" android:id="@+id/blog_url" android:paddingLeft="20.0dip"

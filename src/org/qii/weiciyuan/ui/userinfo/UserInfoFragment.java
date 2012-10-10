@@ -48,6 +48,8 @@ public class UserInfoFragment extends Fragment {
     private TextView fans_number;
 
 
+    private View blog_url_layout;
+
     private Button unfollow_it;
 
     protected ICommander commander;
@@ -116,6 +118,7 @@ public class UserInfoFragment extends Fragment {
             blog_url.setText(bean.getUrl());
             ListViewTool.addLinks(blog_url);
         } else {
+            blog_url_layout.setVisibility(View.GONE);
             blog_url.setVisibility(View.GONE);
         }
         location.setText(bean.getLocation());
@@ -163,6 +166,7 @@ public class UserInfoFragment extends Fragment {
         relationship = (TextView) view.findViewById(R.id.relationship);
         following_number = (TextView) view.findViewById(R.id.following_number);
         fans_number = (TextView) view.findViewById(R.id.fans_number);
+        blog_url_layout=view.findViewById(R.id.blog_url_layout);
 
         View fan_layout = view.findViewById(R.id.fan_layout);
         View following_layout = view.findViewById(R.id.following_layout);
