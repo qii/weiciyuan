@@ -72,6 +72,7 @@
     <string name="m">男</string>
     <string name="f">女</string>
     <string name="verified_user">认证账户</string>
+    <string name="verified_reason">认证信息</string>
 
     <!--maintimelineactivity_layout -->
     <string name="home">首页</string>

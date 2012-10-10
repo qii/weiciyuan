@@ -38,6 +38,7 @@ public class UserInfoFragment extends Fragment {
 
     private ImageView avatar;
     private TextView username;
+    private TextView verified_reason;
     private TextView isVerified;
     private TextView info;
     private TextView blog_url;
@@ -48,6 +49,7 @@ public class UserInfoFragment extends Fragment {
     private TextView fans_number;
 
 
+    private View verified_layout;
     private View intro_layout;
     private View location_layout;
     private View blog_url_layout;
@@ -108,6 +110,9 @@ public class UserInfoFragment extends Fragment {
         if (bean.isVerified()) {
             isVerified.setVisibility(View.VISIBLE);
             isVerified.setText(getString(R.string.verified_user));
+            verified_reason.setText(bean.getVerified_reason());
+        } else {
+            verified_layout.setVisibility(View.GONE);
         }
 
         if (!TextUtils.isEmpty(bean.getDescription())) {
@@ -171,6 +176,7 @@ public class UserInfoFragment extends Fragment {
         avatar = (ImageView) view.findViewById(R.id.avatar);
         username = (TextView) view.findViewById(R.id.username);
         isVerified = (TextView) view.findViewById(R.id.isVerified);
+        verified_reason = (TextView) view.findViewById(R.id.verified_info);
         info = (TextView) view.findViewById(R.id.textView_info);
         blog_url = (TextView) view.findViewById(R.id.blog_url);
         location = (TextView) view.findViewById(R.id.location);
@@ -181,6 +187,7 @@ public class UserInfoFragment extends Fragment {
         blog_url_layout = view.findViewById(R.id.blog_url_layout);
         intro_layout = view.findViewById(R.id.intro_layout);
         location_layout = view.findViewById(R.id.location_layout);
+        verified_layout = view.findViewById(R.id.verified_layout);
 
         View fan_layout = view.findViewById(R.id.fan_layout);
         View following_layout = view.findViewById(R.id.following_layout);
