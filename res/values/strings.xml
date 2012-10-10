@@ -172,8 +172,8 @@
     <string name="he_is_not_following_you">Ta没关注你</string>
     <string name="he_is_following_you">Ta关注了你</string>
     <string name="you_is_following_he">你关注了Ta</string>
-    <string name="following_together">互相关注</string>
-    <string name="stranger_together">彼此是陌生人</string>
+    <string name="following_each_other">互相关注</string>
+    <string name="stranger_each_other">彼此是陌生人</string>
 
     <!--fav-->
     <string name="favourite">收藏</string>

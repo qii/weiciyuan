@@ -144,13 +144,13 @@ public class UserInfoFragment extends Fragment {
         boolean me = bean.isFollowing();
 
         if (he && me) {
-            relationship.setText(getString(R.string.following_together));
+            relationship.setText(getString(R.string.following_each_other));
         } else if (he && !me) {
             relationship.setText(getString(R.string.he_is_following_you));
         } else if (!he && me) {
             relationship.setText(getString(R.string.you_is_following_he));
         } else {
-            relationship.setText(getString(R.string.stranger_together));
+            relationship.setText(getString(R.string.stranger_each_other));
         }
 
 
