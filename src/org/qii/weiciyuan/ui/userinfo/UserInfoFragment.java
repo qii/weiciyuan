@@ -4,23 +4,16 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
-import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
@@ -54,13 +47,10 @@ public class UserInfoFragment extends Fragment {
     private View location_layout;
     private View blog_url_layout;
 
-    private Button unfollow_it;
 
     protected ICommander commander;
 
     private SimpleTask task;
-
-    private MyAsyncTask<Void, UserBean, UserBean> followOrUnfollowTask;
 
 
     public UserInfoFragment() {
@@ -80,8 +70,7 @@ public class UserInfoFragment extends Fragment {
         if (task != null)
             task.cancel(true);
 
-        if (followOrUnfollowTask != null)
-            followOrUnfollowTask.cancel(true);
+
     }
 
     @Override
@@ -95,7 +84,7 @@ public class UserInfoFragment extends Fragment {
 
     //sina api has bug,so must refresh to get actual data
     public void forceReloadData(UserBean bean) {
-//        this.bean=bean;
+        this.bean = bean;
         refresh();
     }
 
@@ -157,14 +146,6 @@ public class UserInfoFragment extends Fragment {
         }
 
 
-        if (bean.isFollowing()) {
-            unfollow_it.setText(getString(R.string.unfollow_he));
-        } else {
-            unfollow_it.setText(getString(R.string.follow_he));
-
-        }
-        unfollow_it.setVisibility(View.VISIBLE);
-
         getActivity().getActionBar().getTabAt(1).setText(getString(R.string.weibo) + "(" + bean.getStatuses_count() + ")");
     }
 
@@ -192,11 +173,6 @@ public class UserInfoFragment extends Fragment {
         View fan_layout = view.findViewById(R.id.fan_layout);
         View following_layout = view.findViewById(R.id.following_layout);
 
-        unfollow_it = (Button) view.findViewById(R.id.unfollow);
-
-        unfollow_it.setOnClickListener(onClickListener);
-
-
         following_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,6 +194,17 @@ public class UserInfoFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (bean.isFollowing()) {
+            menu.findItem(R.id.menu_follow).setVisible(false);
+            menu.findItem(R.id.menu_unfollow).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_follow).setVisible(true);
+            menu.findItem(R.id.menu_unfollow).setVisible(false);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -235,123 +222,6 @@ public class UserInfoFragment extends Fragment {
             task.execute();
         }
     }
-
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-
-            boolean a = followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED;
-            boolean b = followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED;
-
-            if (a && b) {
-                if (bean.isFollowing()) {
-                    followOrUnfollowTask = new UnFollowTask();
-                    followOrUnfollowTask.execute();
-
-                } else {
-                    followOrUnfollowTask = new FollowTask();
-                    followOrUnfollowTask.execute();
-
-                }
-
-            }
-        }
-    };
-
-
-    private class FollowTask extends MyAsyncTask<Void, UserBean, UserBean> {
-        WeiboException e;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected UserBean doInBackground(Void... params) {
-
-            FriendshipsDao dao = new FriendshipsDao(((IToken) getActivity()).getToken());
-            if (!TextUtils.isEmpty(bean.getId())) {
-                dao.setUid(bean.getId());
-            } else {
-                dao.setScreen_name(bean.getScreen_name());
-            }
-            try {
-                return dao.followIt();
-            } catch (WeiboException e) {
-                AppLogger.e(e.getError());
-                this.e = e;
-                cancel(true);
-                return null;
-            }
-        }
-
-        @Override
-        protected void onCancelled(UserBean userBean) {
-            super.onCancelled(userBean);
-            if (getActivity() != null)
-                if (e != null && (getActivity() != null)) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    switch (e.getError_code()) {
-                        case ErrorCode.ALREADY_FOLLOWED:
-                            unfollow_it.setVisibility(View.VISIBLE);
-                            break;
-                    }
-
-                }
-        }
-
-        @Override
-        protected void onPostExecute(UserBean o) {
-            super.onPostExecute(o);
-            bean = o;
-            setValue();
-            refresh();
-        }
-    }
-
-    private class UnFollowTask extends MyAsyncTask<Void, UserBean, UserBean> {
-        WeiboException e;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected UserBean doInBackground(Void... params) {
-
-            FriendshipsDao dao = new FriendshipsDao(((IToken) getActivity()).getToken());
-            if (!TextUtils.isEmpty(bean.getId())) {
-                dao.setUid(bean.getId());
-            } else {
-                dao.setScreen_name(bean.getScreen_name());
-            }
-
-            try {
-                return dao.unFollowIt();
-            } catch (WeiboException e) {
-                AppLogger.e(e.getError());
-                this.e = e;
-                cancel(true);
-                return null;
-            }
-        }
-
-        @Override
-        protected void onCancelled(UserBean userBean) {
-            super.onCancelled(userBean);
-        }
-
-        @Override
-        protected void onPostExecute(UserBean o) {
-            super.onPostExecute(o);
-            bean = o;
-            setValue();
-        }
-    }
-
 
     private class SimpleTask extends MyAsyncTask<Object, UserBean, UserBean> {
         WeiboException e;

@@ -67,8 +67,10 @@
     <string name="fan_list">粉丝列表</string>
     <string name="topic_number">话题数</string>
     <string name="topic_list">话题列表</string>
-    <string name="follow_he">关注他</string>
+    <string name="follow_he">关注 TA</string>
     <string name="unfollow_he">取消关注</string>
+    <string name="follow_successfully">关注成功</string>
+    <string name="unfollow_successfully">已经取消关注</string>
     <string name="m">男</string>
     <string name="f">女</string>
     <string name="verified_user">认证账户</string>

@@ -6,6 +6,14 @@
           android:title="@string/at"
           android:showAsAction="ifRoom|withText"
             />
+    <item android:id="@+id/menu_follow"
+          android:title="@string/follow_he"
+          android:visible="false"
+            />
+    <item android:id="@+id/menu_unfollow"
+          android:title="@string/unfollow_he"
+          android:visible="false"
+            />
     <item android:id="@+id/menu_modify_remark"
           android:title="@string/modify_remark"
             />
