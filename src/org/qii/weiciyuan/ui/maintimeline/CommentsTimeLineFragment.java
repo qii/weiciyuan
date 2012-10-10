@@ -96,6 +96,18 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             dbTask.cancel(true);
     }
 
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisible() && isVisibleToUser) {
+            if (getActivity().getActionBar().getTabAt(2).getText().toString().contains(")")) {
+                pullToRefreshListView.startRefreshNow();
+            }
+        }
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

@@ -105,6 +105,16 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisible() && isVisibleToUser) {
+            if (getActivity().getActionBar().getTabAt(1).getText().toString().contains(")")) {
+                pullToRefreshListView.startRefreshNow();
+            }
+        }
+    }
+
+    @Override
     protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
         showNewMsgToastMessage(newValue);
         super.newMsgOnPostExecute(newValue);
@@ -180,6 +190,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 refresh();
             }
         }
+
     }
 
 
@@ -213,7 +224,6 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
             case R.id.mentionstimelinefragment_refresh:
                 pullToRefreshListView.startRefreshNow();
-                refresh();
 
                 break;
             case R.id.mentionstimelinefragment_group:
@@ -286,7 +296,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
             bean.getItemList().clear();
             getAdapter().notifyDataSetChanged();
             pullToRefreshListView.startRefreshNow();
-            refresh();
+
         } else {
             clearAndReplaceValue(hashMap.get(selected));
             getAdapter().notifyDataSetChanged();
