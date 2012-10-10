@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.*;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,9 +32,12 @@ public class MyInfoFragment extends Fragment {
     private TextView info;
     private TextView blog_url;
     private TextView location;
-    private Button following_number;
-    private Button fans_number;
-    private Button fav_number;
+    private TextView following_number;
+    private TextView fans_number;
+    private TextView fav_number;
+
+    private View blog_url_layout;
+
 
     protected ICommander commander;
 
@@ -84,6 +86,8 @@ public class MyInfoFragment extends Fragment {
             ListViewTool.addLinks(blog_url);
 
         } else {
+            blog_url_layout.setVisibility(View.GONE);
+
             blog_url.setVisibility(View.GONE);
         }
         location.setText(bean.getLocation());
@@ -105,11 +109,17 @@ public class MyInfoFragment extends Fragment {
         info = (TextView) view.findViewById(R.id.textView_info);
         blog_url = (TextView) view.findViewById(R.id.blog_url);
         location = (TextView) view.findViewById(R.id.location);
-        following_number = (Button) view.findViewById(R.id.following_number);
-        fans_number = (Button) view.findViewById(R.id.fans_number);
-        fav_number = (Button) view.findViewById(R.id.fav_number);
+        following_number = (TextView) view.findViewById(R.id.following_number);
+        fans_number = (TextView) view.findViewById(R.id.fans_number);
+        fav_number = (TextView) view.findViewById(R.id.fav_number);
 
-        following_number.setOnClickListener(new View.OnClickListener() {
+        blog_url_layout = view.findViewById(R.id.blog_url_layout);
+
+        View fan_layout = view.findViewById(R.id.fan_layout);
+        View following_layout = view.findViewById(R.id.following_layout);
+        View fav_layout=view.findViewById(R.id.fav_layout);
+
+        following_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendListActivity.class);
@@ -118,7 +128,7 @@ public class MyInfoFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        fans_number.setOnClickListener(new View.OnClickListener() {
+        fan_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FanListActivity.class);
@@ -127,7 +137,7 @@ public class MyInfoFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        fav_number.setOnClickListener(new View.OnClickListener() {
+        fav_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MyFavActivity.class);
@@ -218,15 +228,16 @@ public class MyInfoFragment extends Fragment {
 
     private void setTextViewNum(TextView tv, String num) {
 
-        String name = tv.getText().toString();
-        String value = "(" + num + ")";
-        if (!name.endsWith(")")) {
-            tv.setText(name + value);
-        } else {
-            int index = name.indexOf("(");
-            String newName = name.substring(0, index);
-            tv.setText(newName + value);
-        }
+//        String name = tv.getText().toString();
+//        String value = "(" + num + ")";
+//        if (!name.endsWith(")")) {
+//            tv.setText(name + value);
+//        } else {
+//            int index = name.indexOf("(");
+//            String newName = name.substring(0, index);
+//            tv.setText(newName + value);
+//        }
+        tv.setText(num);
 
     }
 }
