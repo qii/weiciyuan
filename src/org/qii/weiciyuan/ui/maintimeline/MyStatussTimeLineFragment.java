@@ -1,10 +1,13 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 import org.qii.weiciyuan.ui.userinfo.StatusesByIdTimeLineFragment;
 
 /**
@@ -26,6 +29,7 @@ public class MyStatussTimeLineFragment extends StatusesByIdTimeLineFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.mystatustimelinefragment_menu, menu);
+        menu.findItem(R.id.name).setTitle(getString(R.string.personal_info));
 
     }
 
@@ -36,8 +40,14 @@ public class MyStatussTimeLineFragment extends StatusesByIdTimeLineFragment {
             case R.id.statusesbyidtimelinefragment_status_refresh:
 
                 pullToRefreshListView.startRefreshNow();
-                refresh();
 
+                break;
+            case R.id.name:
+                Intent intent = new Intent(getActivity(), MyInfoActivity.class);
+                intent.putExtra("token",token);
+                intent.putExtra("user",userBean);
+                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
+                startActivity(intent);
                 break;
         }
         return true;

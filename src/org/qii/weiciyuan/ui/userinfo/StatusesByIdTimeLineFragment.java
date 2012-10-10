@@ -24,8 +24,8 @@ import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragment {
 
 
-    private UserBean userBean;
-    private String token;
+    protected UserBean userBean;
+    protected String token;
 
 
     public StatusesByIdTimeLineFragment() {
