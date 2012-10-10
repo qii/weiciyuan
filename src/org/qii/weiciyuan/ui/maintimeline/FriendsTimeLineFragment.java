@@ -277,7 +277,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             bean.getItemList().clear();
             getAdapter().notifyDataSetChanged();
             pullToRefreshListView.startRefreshNow();
-         } else {
+        } else {
             clearAndReplaceValue(hashMap.get(selectedId));
             getAdapter().notifyDataSetChanged();
         }
@@ -312,6 +312,19 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             }
             //after load database data
             if (dbTask == null || dbTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+                return;
+            }
+
+
+            if (newTask != null && newTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+                return;
+            }
+
+            if (oldTask != null && oldTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+                return;
+            }
+
+            if (middleTask != null && middleTask.getStatus() != MyAsyncTask.Status.FINISHED) {
                 return;
             }
 
