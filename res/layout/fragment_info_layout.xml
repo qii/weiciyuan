@@ -76,7 +76,8 @@
 
 
         <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
-                      android:layout_height="wrap_content">
+                      android:layout_height="wrap_content"
+                      android:id="@+id/intro_layout">
             <TextView android:layout_marginTop="5.0dip" android:text="@string/intro"
                       style="?android:attr/listSeparatorTextViewStyle"/>
             <TextView android:linksClickable="true" android:id="@+id/textView_info" android:paddingLeft="20.0dip"
@@ -87,7 +88,8 @@
 
 
         <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
-                      android:layout_height="wrap_content">
+                      android:layout_height="wrap_content"
+                      android:id="@+id/location_layout">
             <TextView android:layout_marginTop="5.0dip" android:text="@string/address"
                       style="?android:attr/listSeparatorTextViewStyle"/>
             <TextView android:linksClickable="true" android:id="@+id/location" android:paddingLeft="20.0dip"

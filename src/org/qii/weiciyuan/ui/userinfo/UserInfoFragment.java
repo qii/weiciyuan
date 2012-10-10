@@ -48,6 +48,8 @@ public class UserInfoFragment extends Fragment {
     private TextView fans_number;
 
 
+    private View intro_layout;
+    private View location_layout;
     private View blog_url_layout;
 
     private Button unfollow_it;
@@ -107,7 +109,12 @@ public class UserInfoFragment extends Fragment {
             isVerified.setVisibility(View.VISIBLE);
             isVerified.setText(getString(R.string.verified_user));
         }
-        info.setText(bean.getDescription());
+
+        if (!TextUtils.isEmpty(bean.getDescription())) {
+            info.setText(bean.getDescription());
+        } else {
+            intro_layout.setVisibility(View.GONE);
+        }
 
         String avatarUrl = bean.getAvatar_large();
         if (!TextUtils.isEmpty(avatarUrl)) {
@@ -121,7 +128,12 @@ public class UserInfoFragment extends Fragment {
             blog_url_layout.setVisibility(View.GONE);
             blog_url.setVisibility(View.GONE);
         }
-        location.setText(bean.getLocation());
+
+        if (!TextUtils.isEmpty(bean.getLocation())) {
+            location.setText(bean.getLocation());
+        } else {
+            location_layout.setVisibility(View.GONE);
+        }
         String s = bean.getGender();
         if (!TextUtils.isEmpty(s)) {
             if (s.equals("m"))
@@ -166,7 +178,9 @@ public class UserInfoFragment extends Fragment {
         relationship = (TextView) view.findViewById(R.id.relationship);
         following_number = (TextView) view.findViewById(R.id.following_number);
         fans_number = (TextView) view.findViewById(R.id.fans_number);
-        blog_url_layout=view.findViewById(R.id.blog_url_layout);
+        blog_url_layout = view.findViewById(R.id.blog_url_layout);
+        intro_layout = view.findViewById(R.id.intro_layout);
+        location_layout = view.findViewById(R.id.location_layout);
 
         View fan_layout = view.findViewById(R.id.fan_layout);
         View following_layout = view.findViewById(R.id.following_layout);
