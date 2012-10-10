@@ -60,6 +60,9 @@
     <string name="message_number">微博消息</string>
     <string name="following_number">关注数</string>
     <string name="fan_number">粉丝数</string>
+    <string name="neighbor">友邻</string>
+    <string name="address">地址</string>
+    <string name="blog_url">博客</string>
     <string name="following_list">关注列表</string>
     <string name="fan_list">粉丝列表</string>
     <string name="topic_number">话题数</string>
@@ -134,6 +137,7 @@
 
     <!--friends-->
     <string name="bilateral">互相关注</string>
+    <string name="remove_fan">移除粉丝</string>
 
     <!-- mentions -->
     <string name="select_group">选择分组</string>

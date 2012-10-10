@@ -44,8 +44,9 @@ public class UserInfoFragment extends Fragment {
     private TextView location;
     private TextView relationship;
     private TextView sex;
-    private Button following_number;
-    private Button fans_number;
+    private TextView following_number;
+    private TextView fans_number;
+
 
     private Button unfollow_it;
 
@@ -86,8 +87,8 @@ public class UserInfoFragment extends Fragment {
         refresh();
     }
 
-   //sina api has bug,so must refresh to get actual data
-    public void forceReloadData(UserBean bean){
+    //sina api has bug,so must refresh to get actual data
+    public void forceReloadData(UserBean bean) {
 //        this.bean=bean;
         refresh();
     }
@@ -160,15 +161,18 @@ public class UserInfoFragment extends Fragment {
         location = (TextView) view.findViewById(R.id.location);
         sex = (TextView) view.findViewById(R.id.sex);
         relationship = (TextView) view.findViewById(R.id.relationship);
-        following_number = (Button) view.findViewById(R.id.following_number);
-        fans_number = (Button) view.findViewById(R.id.fans_number);
+        following_number = (TextView) view.findViewById(R.id.following_number);
+        fans_number = (TextView) view.findViewById(R.id.fans_number);
+
+        View fan_layout = view.findViewById(R.id.fan_layout);
+        View following_layout = view.findViewById(R.id.following_layout);
 
         unfollow_it = (Button) view.findViewById(R.id.unfollow);
 
         unfollow_it.setOnClickListener(onClickListener);
 
 
-        following_number.setOnClickListener(new View.OnClickListener() {
+        following_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendListActivity.class);
@@ -177,7 +181,7 @@ public class UserInfoFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        fans_number.setOnClickListener(new View.OnClickListener() {
+        fan_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FanListActivity.class);
@@ -386,16 +390,17 @@ public class UserInfoFragment extends Fragment {
             return;
         }
 
-        String name = tv.getText().toString();
-
-        String value = "(" + num + ")";
-        if (!name.endsWith(")")) {
-            tv.setText(name + value);
-        } else {
-            int index = name.indexOf("(");
-            String newName = name.substring(0, index);
-            tv.setText(newName + value);
-        }
+//        String name = tv.getText().toString();
+//
+//        String value = "(" + num + ")";
+//        if (!name.endsWith(")")) {
+//            tv.setText(name + value);
+//        } else {
+//            int index = name.indexOf("(");
+//            String newName = name.substring(0, index);
+//            tv.setText(newName + value);
+//        }
+        tv.setText(num);
 
     }
 }
