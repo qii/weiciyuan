@@ -195,7 +195,6 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     private void refresh() {
         if (getTask == null || getTask.getStatus() == MyAsyncTask.Status.FINISHED) {
             getTask = new GetAccountListDBTask();
-//                getTask.execute();
             getTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
