@@ -69,7 +69,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.intro))
+                .setText(getString(R.string.info))
                 .setTabListener(tabListener));
 
         actionBar.addTab(actionBar.newTab()

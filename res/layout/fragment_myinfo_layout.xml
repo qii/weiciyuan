@@ -106,7 +106,7 @@
 
         <LinearLayout android:orientation="vertical" android:id="@+id/detailsLayout"
                       android:layout_width="fill_parent" android:layout_height="wrap_content">
-            <TextView android:layout_marginTop="5.0dip" android:text="@string/neighbor"
+            <TextView android:layout_marginTop="5.0dip" android:text="@string/sum"
                       style="?android:attr/listSeparatorTextViewStyle"/>
             <TableLayout android:layout_width="fill_parent"
                          android:layout_height="fill_parent"
