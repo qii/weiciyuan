@@ -370,6 +370,18 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         protected void onPostExecute(MessageListBean newValue) {
             super.onPostExecute(newValue);
 
+            if (newTask != null && newTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+                return;
+            }
+
+            if (oldTask != null && oldTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+                return;
+            }
+
+            if (middleTask != null && middleTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+                return;
+            }
+
             if (newValue == null || newValue.getSize() == 0 || getActivity() == null || isListViewFling())
                 return;
 
