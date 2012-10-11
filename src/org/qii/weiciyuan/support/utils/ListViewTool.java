@@ -251,17 +251,19 @@ public class ListViewTool {
 
                         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                         if (bitmap != null) {
-                            ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), bitmap, ImageSpan.ALIGN_BASELINE);
+                            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) (height * 1.5), (int) (height * 1.5), true);
+                            bitmap.recycle();
+                            ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), scaledBitmap, ImageSpan.ALIGN_BASELINE);
                             value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         }
                     } catch (IOException e) {
                         AppLogger.e(e.getMessage());
                     }
 
+                }
             }
         }
     }
-}
 
 
 }
