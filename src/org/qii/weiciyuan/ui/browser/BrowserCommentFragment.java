@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.text.Html;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.send.ReplyToCommentNewActivity;
@@ -110,8 +112,16 @@ public class BrowserCommentFragment extends Fragment {
     private void buildViewData() {
         if (msg.getUser() != null) {
             username.setText(msg.getUser().getScreen_name());
-            SimpleBitmapWorkerTask avatarTask = new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_small);
-            avatarTask.execute(msg.getUser().getProfile_image_url());
+            String url = msg.getUser().getProfile_image_url();
+            Bitmap bitmap = GlobalContext.getInstance().getAvatarCache().get(url);
+            if (bitmap != null) {
+                avatar.setImageBitmap(bitmap);
+            } else {
+
+                SimpleBitmapWorkerTask avatarTask = new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_small);
+                avatarTask.execute(url);
+            }
+
         }
         content.setText(msg.getText());
         ListViewTool.addLinks(content);
