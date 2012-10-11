@@ -163,6 +163,7 @@ public class UserInfoFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_info_layout, container, false);
         avatar = (ImageView) view.findViewById(R.id.avatar);
+
         username = (TextView) view.findViewById(R.id.username);
         isVerified = (TextView) view.findViewById(R.id.isVerified);
         verified_reason = (TextView) view.findViewById(R.id.verified_info);
@@ -173,6 +174,7 @@ public class UserInfoFragment extends Fragment {
         relationship = (TextView) view.findViewById(R.id.relationship);
         following_number = (TextView) view.findViewById(R.id.following_number);
         fans_number = (TextView) view.findViewById(R.id.fans_number);
+
         blog_url_layout = view.findViewById(R.id.blog_url_layout);
         intro_layout = view.findViewById(R.id.intro_layout);
         location_layout = view.findViewById(R.id.location_layout);

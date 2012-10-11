@@ -11,7 +11,8 @@
 
         <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" android:layout_gravity="right|center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
                 android:orientation="horizontal">
             <ImageView
                     android:layout_width="70dp"
@@ -32,20 +33,45 @@
                         android:gravity="left"
                         android:id="@+id/username"/>
                 <TextView
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:visibility="gone"
+                        android:id="@+id/isVerified"/>
+                <LinearLayout android:layout_gravity="center"
+                              android:layout_marginLeft="5dp"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:gravity="left">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:id="@+id/sex"
+                            />
 
-                                       android:layout_gravity="center"
-                                       android:layout_marginLeft="5dp"
-                                       android:layout_width="match_parent"
-                                       android:layout_height="wrap_content"
-                                       android:gravity="left"
-                                       android:id="@+id/location"/>
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
-                      android:layout_height="wrap_content">
+                      android:layout_height="wrap_content"
+                      android:id="@+id/verified_layout">
+            <TextView android:layout_marginTop="5.0dip" android:text="@string/verified_reason"
+                      style="?android:attr/listSeparatorTextViewStyle"/>
+            <TextView android:linksClickable="true" android:id="@+id/verified_info" android:paddingLeft="20.0dip"
+                      android:paddingTop="5.0dip" android:paddingRight="20.0dip" android:paddingBottom="5.0dip"
+                      android:layout_width="fill_parent" android:layout_height="wrap_content"
+                    />
+        </LinearLayout>
+
+        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/intro_layout">
             <TextView android:layout_marginTop="5.0dip" android:text="@string/intro"
                       style="?android:attr/listSeparatorTextViewStyle"/>
             <TextView android:linksClickable="true" android:id="@+id/textView_info" android:paddingLeft="20.0dip"
@@ -55,7 +81,16 @@
         </LinearLayout>
 
 
-
+        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/location_layout">
+            <TextView android:layout_marginTop="5.0dip" android:text="@string/address"
+                      style="?android:attr/listSeparatorTextViewStyle"/>
+            <TextView android:linksClickable="true" android:id="@+id/location" android:paddingLeft="20.0dip"
+                      android:paddingTop="5.0dip" android:paddingRight="20.0dip" android:paddingBottom="5.0dip"
+                      android:layout_width="fill_parent" android:layout_height="wrap_content"
+                    />
+        </LinearLayout>
 
 
         <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
@@ -109,3 +144,5 @@
 
     </LinearLayout>
 </ScrollView>
+
+

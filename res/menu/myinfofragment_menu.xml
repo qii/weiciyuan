@@ -6,7 +6,7 @@
     <item android:id="@+id/menu_refresh"
           android:icon="?refresh"
           android:title="@string/refresh"
-          android:showAsAction="ifRoom|withText"
+          android:showAsAction="never"
             />
 
 

@@ -28,16 +28,22 @@ public class MyInfoFragment extends Fragment {
     private UserBean bean;
 
     private ImageView avatar;
+
     private TextView username;
+    private TextView verified_reason;
+    private TextView isVerified;
     private TextView info;
     private TextView blog_url;
     private TextView location;
+    private TextView sex;
     private TextView following_number;
     private TextView fans_number;
     private TextView fav_number;
 
+    private View verified_layout;
+    private View intro_layout;
+    private View location_layout;
     private View blog_url_layout;
-
 
     protected ICommander commander;
 
@@ -73,24 +79,48 @@ public class MyInfoFragment extends Fragment {
 
     private void setValue() {
         username.setText(bean.getScreen_name());
-        info.setText(bean.getDescription());
+
+        if (bean.isVerified()) {
+            isVerified.setVisibility(View.VISIBLE);
+            isVerified.setText(getString(R.string.verified_user));
+            verified_reason.setText(bean.getVerified_reason());
+        } else {
+            verified_layout.setVisibility(View.GONE);
+        }
+
+        if (!TextUtils.isEmpty(bean.getDescription())) {
+            info.setText(bean.getDescription());
+        } else {
+            intro_layout.setVisibility(View.GONE);
+        }
 
         String avatarUrl = bean.getAvatar_large();
         if (!TextUtils.isEmpty(avatarUrl)) {
             new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_large).execute(avatarUrl);
         }
-
         if (!TextUtils.isEmpty(bean.getUrl())) {
 
             blog_url.setText(bean.getUrl());
             ListViewTool.addLinks(blog_url);
-
         } else {
             blog_url_layout.setVisibility(View.GONE);
-
             blog_url.setVisibility(View.GONE);
         }
-        location.setText(bean.getLocation());
+
+        if (!TextUtils.isEmpty(bean.getLocation())) {
+            location.setText(bean.getLocation());
+        } else {
+            location_layout.setVisibility(View.GONE);
+        }
+        String s = bean.getGender();
+        if (!TextUtils.isEmpty(s)) {
+            if (s.equals("m"))
+                sex.setText(getString(R.string.m));
+            else if (s.equals("f"))
+                sex.setText(getString(R.string.f));
+            else
+                sex.setVisibility(View.GONE);
+        }
 
         setTextViewNum(fans_number, bean.getFollowers_count());
         setTextViewNum(following_number, bean.getFriends_count());
@@ -105,19 +135,26 @@ public class MyInfoFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_myinfo_layout, container, false);
         avatar = (ImageView) view.findViewById(R.id.avatar);
+
         username = (TextView) view.findViewById(R.id.username);
+        isVerified = (TextView) view.findViewById(R.id.isVerified);
+        verified_reason = (TextView) view.findViewById(R.id.verified_info);
         info = (TextView) view.findViewById(R.id.textView_info);
         blog_url = (TextView) view.findViewById(R.id.blog_url);
         location = (TextView) view.findViewById(R.id.location);
+        sex = (TextView) view.findViewById(R.id.sex);
         following_number = (TextView) view.findViewById(R.id.following_number);
         fans_number = (TextView) view.findViewById(R.id.fans_number);
-        fav_number = (TextView) view.findViewById(R.id.fav_number);
+        fav_number=(TextView)view.findViewById(R.id.fav_number);
 
         blog_url_layout = view.findViewById(R.id.blog_url_layout);
+        intro_layout = view.findViewById(R.id.intro_layout);
+        location_layout = view.findViewById(R.id.location_layout);
+        verified_layout = view.findViewById(R.id.verified_layout);
 
         View fan_layout = view.findViewById(R.id.fan_layout);
         View following_layout = view.findViewById(R.id.following_layout);
-        View fav_layout=view.findViewById(R.id.fav_layout);
+        View fav_layout = view.findViewById(R.id.fav_layout);
 
         following_layout.setOnClickListener(new View.OnClickListener() {
             @Override
