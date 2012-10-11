@@ -11,11 +11,15 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.Display;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
@@ -67,15 +71,17 @@ public final class GlobalContext extends Application {
         if (emotions != null) {
             return emotions;
         } else {
-            emotions = DatabaseManager.getInstance().getEmotionsMap();
+            InputStream inputStream = getResources().openRawResource(R.raw.emotions);
+            emotions = new Gson().fromJson(new InputStreamReader(inputStream), new TypeToken<Map<String, String>>() {
+            }.getType());
         }
 
         return emotions;
     }
 
-    public void setEmotions(Map<String, String> value) {
-        this.emotions = value;
-    }
+//    public void setEmotions(Map<String, String> value) {
+//        this.emotions = value;
+//    }
 
     public Boolean isEnableFilter() {
         if (enableFilter == null) {

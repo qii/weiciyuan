@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.support.utils;
 
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.SpannableString;
@@ -14,6 +15,9 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyLinkify;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -139,7 +143,6 @@ public class ListViewTool {
     }
 
 
-
     public static void addLinks(TextView view) {
         MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
             public final String transformUrl(final Matcher match, String url) {
@@ -209,11 +212,19 @@ public class ListViewTool {
                 String url = GlobalContext.getInstance().getEmotions().get(str2);
                 if (!TextUtils.isEmpty(url)) {
                     String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
+                    String name = new File(path).getName();
+                    AssetManager assetManager = GlobalContext.getInstance().getAssets();
+                    InputStream inputStream;
+                    try {
+                        inputStream = assetManager.open(name);
 
-                    Bitmap bitmap = BitmapFactory.decodeFile(path);
-                    if (bitmap != null) {
-                        ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), bitmap, ImageSpan.ALIGN_BASELINE);
-                        value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        if (bitmap != null) {
+                            ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), bitmap, ImageSpan.ALIGN_BASELINE);
+                            value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
+                    } catch (IOException e) {
+                        AppLogger.e(e.getMessage());
                     }
                 }
             }
@@ -232,19 +243,25 @@ public class ListViewTool {
                 String url = GlobalContext.getInstance().getEmotions().get(str2);
                 if (!TextUtils.isEmpty(url)) {
                     String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
+                    String name = new File(path).getName();
+                    AssetManager assetManager = GlobalContext.getInstance().getAssets();
+                    InputStream inputStream;
+                    try {
+                        inputStream = assetManager.open(name);
 
-                    Bitmap bitmap = BitmapFactory.decodeFile(path);
-
-                    if (bitmap != null) {
-                        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) (height * 1.5), (int) (height * 1.5), true);
-                        bitmap.recycle();
-                        ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), scaledBitmap, ImageSpan.ALIGN_BASELINE);
-                        value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        if (bitmap != null) {
+                            ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), bitmap, ImageSpan.ALIGN_BASELINE);
+                            value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
+                    } catch (IOException e) {
+                        AppLogger.e(e.getMessage());
                     }
-                }
+
             }
         }
     }
+}
 
 
 }

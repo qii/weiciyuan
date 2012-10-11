@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.*;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,6 +43,7 @@ import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -216,8 +218,17 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 if (!isCancelled()) {
                     String url = emotions.get(str);
                     String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
-                    Bitmap bitmap = BitmapFactory.decodeFile(path);
-                    emotionsPic.put(str, bitmap);
+                    String name = new File(path).getName();
+                    AssetManager assetManager = GlobalContext.getInstance().getAssets();
+                    InputStream inputStream;
+                    try {
+                        inputStream = assetManager.open(name);
+
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        emotionsPic.put(str, bitmap);
+                    } catch (IOException e) {
+
+                    }
                 }
             }
             return null;

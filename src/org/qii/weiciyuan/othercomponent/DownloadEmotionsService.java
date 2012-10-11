@@ -14,7 +14,6 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +86,7 @@ public class DownloadEmotionsService extends Service {
                 size = needList.size();
 
                 DatabaseManager.getInstance().addEmotions(needList);
-                GlobalContext.getInstance().setEmotions(DatabaseManager.getInstance().getEmotionsMap());
+//                GlobalContext.getInstance().setEmotions(DatabaseManager.getInstance().getEmotionsMap());
 
                 for (EmotionBean bean : needList) {
                     String url = bean.getUrl();

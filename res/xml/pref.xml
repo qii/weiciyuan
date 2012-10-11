@@ -50,11 +50,11 @@
     </PreferenceCategory>
     <PreferenceCategory
             android:title="@string/advanced">
-        <Preference android:title="@string/download_emotions"
-                    android:summary="@string/download_emotions_summary"
-                    android:key="download_emotions"
-                >
-        </Preference>
+        <!--<Preference android:title="@string/download_emotions"-->
+                    <!--android:summary="@string/download_emotions_summary"-->
+                    <!--android:key="download_emotions"-->
+                <!-->-->
+        <!--</Preference>-->
         <Preference android:title="@string/filter"
                     android:summary="@string/filter_summary"
                     android:key="filter"

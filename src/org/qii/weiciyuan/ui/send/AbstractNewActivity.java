@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.send;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -19,6 +20,9 @@ import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -41,7 +45,6 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
     public static final int AT_USER = 3;
 
     protected String token;
-
 
 
     protected EditText getEditTextView() {
@@ -247,8 +250,17 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
                 if (!isCancelled()) {
                     String url = emotions.get(str);
                     String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
-                    Bitmap bitmap = BitmapFactory.decodeFile(path);
-                    emotionsPic.put(str, bitmap);
+                    String name = new File(path).getName();
+                    AssetManager assetManager = GlobalContext.getInstance().getAssets();
+                    InputStream inputStream;
+                    try {
+                        inputStream = assetManager.open(name);
+
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        emotionsPic.put(str, bitmap);
+                    } catch (IOException e) {
+
+                    }
                 }
             }
             return null;
