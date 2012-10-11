@@ -84,7 +84,7 @@ public class EmotionsDialog extends DialogFragment {
             ImageView imageView;
             if (convertView == null) {
                 imageView = new ImageView(mContext);
-                imageView.setLayoutParams(new GridView.LayoutParams(40, 40));
+                imageView.setLayoutParams(new GridView.LayoutParams(45, 45));
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 imageView.setPadding(4, 4, 4, 4);
             } else {
