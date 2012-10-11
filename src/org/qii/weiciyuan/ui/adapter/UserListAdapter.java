@@ -121,4 +121,11 @@ public class UserListAdapter extends BaseAdapter {
         getList().remove(item);
         notifyDataSetChanged();
     }
+
+    public void update(UserBean oldValue, UserBean newValue) {
+        int index = getList().indexOf(oldValue);
+        getList().remove(index);
+        getList().add(index, newValue);
+        notifyDataSetChanged();
+    }
 }

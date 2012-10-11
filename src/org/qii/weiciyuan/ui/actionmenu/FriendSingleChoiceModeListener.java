@@ -33,15 +33,15 @@ public class FriendSingleChoiceModeListener implements ActionMode.Callback {
     private ActionMode mode;
     private UserBean bean;
 
-    private FollowTask followTask;
+    private MyAsyncTask<Void, UserBean, UserBean> followOrUnfollowTask;
 
 
     public void finish() {
         if (mode != null)
             mode.finish();
 
-        if (followTask != null)
-            followTask.cancel(true);
+        if (followOrUnfollowTask != null)
+            followOrUnfollowTask.cancel(true);
     }
 
     public FriendSingleChoiceModeListener(ListView listView, UserListAdapter adapter, Fragment fragment, UserBean bean) {
@@ -70,7 +70,11 @@ public class FriendSingleChoiceModeListener implements ActionMode.Callback {
         MenuInflater inflater = mode.getMenuInflater();
         menu.clear();
 
+        //sina weibo has bug,everyone's following is false
         inflater.inflate(R.menu.fragment_user_listview_item_contextual_menu, menu);
+//        if(bean.isFollowing()){
+//           menu.findItem(R.id.menu_follow).setVisible(false);
+//        }
 
         mode.setTitle(bean.getScreen_name());
 
@@ -95,14 +99,21 @@ public class FriendSingleChoiceModeListener implements ActionMode.Callback {
                 mode.finish();
                 break;
             case R.id.menu_follow:
-                if (followTask == null || followTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    followTask = new FollowTask();
-                    followTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                if (followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    followOrUnfollowTask = new FollowTask();
+                    followOrUnfollowTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 listView.clearChoices();
                 mode.finish();
                 break;
-
+            case R.id.menu_unfollow:
+                if (followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    followOrUnfollowTask = new UnFollowTask();
+                    followOrUnfollowTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
+                listView.clearChoices();
+                mode.finish();
+                break;
         }
 
 
@@ -158,8 +169,51 @@ public class FriendSingleChoiceModeListener implements ActionMode.Callback {
         protected void onPostExecute(UserBean o) {
             super.onPostExecute(o);
             Toast.makeText(getActivity(), getActivity().getString(R.string.follow_successfully), Toast.LENGTH_SHORT).show();
-            bean = o;
+            adapter.update(bean, o);
         }
     }
 
+    private class UnFollowTask extends MyAsyncTask<Void, UserBean, UserBean> {
+        WeiboException e;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected UserBean doInBackground(Void... params) {
+
+            FriendshipsDao dao = new FriendshipsDao(((IToken) getActivity()).getToken());
+            if (!TextUtils.isEmpty(bean.getId())) {
+                dao.setUid(bean.getId());
+            } else {
+                dao.setScreen_name(bean.getScreen_name());
+            }
+
+            try {
+                return dao.unFollowIt();
+            } catch (WeiboException e) {
+                AppLogger.e(e.getError());
+                this.e = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onCancelled(UserBean userBean) {
+            super.onCancelled(userBean);
+            if (e != null) {
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(UserBean o) {
+            super.onPostExecute(o);
+            Toast.makeText(getActivity(), getActivity().getString(R.string.unfollow_successfully), Toast.LENGTH_SHORT).show();
+            adapter.update(bean, o);
+        }
+    }
 }
