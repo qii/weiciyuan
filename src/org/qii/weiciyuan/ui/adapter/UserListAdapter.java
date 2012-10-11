@@ -71,10 +71,9 @@ public class UserListAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.fragment_listview_item_comments_layout, parent, false);
+            convertView = inflater.inflate(R.layout.fragment_listview_item_user_layout, parent, false);
             holder.username = (TextView) convertView.findViewById(R.id.username);
             holder.content = (TextView) convertView.findViewById(R.id.content);
-            holder.time = (TextView) convertView.findViewById(R.id.time);
             holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
             holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
             convertView.setTag(holder);
@@ -104,7 +103,6 @@ public class UserListAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(image_url)) {
             commander.downloadAvatar(holder.avatar, user.getProfile_image_url(), position, listView, false);
         }
-        holder.time.setVisibility(View.GONE);
         holder.content.setText(user.getDescription());
 
     }
@@ -112,7 +110,6 @@ public class UserListAdapter extends BaseAdapter {
     private class ViewHolder {
         TextView username;
         TextView content;
-        TextView time;
         ImageView avatar;
         RelativeLayout listview_root;
     }
