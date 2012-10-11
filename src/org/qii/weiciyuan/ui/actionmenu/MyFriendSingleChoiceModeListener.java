@@ -24,27 +24,27 @@ import org.qii.weiciyuan.ui.send.StatusNewActivity;
 
 /**
  * User: qii
- * Date: 12-9-19
+ * Date: 12-10-11
  */
-public class FriendSingleChoiceModeListener implements ActionMode.Callback {
+public class MyFriendSingleChoiceModeListener implements ActionMode.Callback {
     private ListView listView;
     private UserListAdapter adapter;
     private Fragment fragment;
     private ActionMode mode;
     private UserBean bean;
 
-    private FollowTask followTask;
+    private UnFollowTask unfollowTask;
 
 
     public void finish() {
         if (mode != null)
             mode.finish();
 
-        if (followTask != null)
-            followTask.cancel(true);
+        if (unfollowTask != null)
+            unfollowTask.cancel(true);
     }
 
-    public FriendSingleChoiceModeListener(ListView listView, UserListAdapter adapter, Fragment fragment, UserBean bean) {
+    public MyFriendSingleChoiceModeListener(ListView listView, UserListAdapter adapter, Fragment fragment, UserBean bean) {
         this.listView = listView;
         this.fragment = fragment;
         this.adapter = adapter;
@@ -70,7 +70,7 @@ public class FriendSingleChoiceModeListener implements ActionMode.Callback {
         MenuInflater inflater = mode.getMenuInflater();
         menu.clear();
 
-        inflater.inflate(R.menu.fragment_user_listview_item_contextual_menu, menu);
+        inflater.inflate(R.menu.myfriendlistfragment_item_contextual_menu, menu);
 
         mode.setTitle(bean.getScreen_name());
 
@@ -94,15 +94,15 @@ public class FriendSingleChoiceModeListener implements ActionMode.Callback {
                 listView.clearChoices();
                 mode.finish();
                 break;
-            case R.id.menu_follow:
-                if (followTask == null || followTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    followTask = new FollowTask();
-                    followTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+
+            case R.id.menu_unfollow:
+                if (unfollowTask == null || unfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    unfollowTask = new UnFollowTask();
+                    unfollowTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 listView.clearChoices();
                 mode.finish();
                 break;
-
         }
 
 
@@ -119,7 +119,7 @@ public class FriendSingleChoiceModeListener implements ActionMode.Callback {
     }
 
 
-    private class FollowTask extends MyAsyncTask<Void, UserBean, UserBean> {
+    private class UnFollowTask extends MyAsyncTask<Void, UserBean, UserBean> {
         WeiboException e;
 
         @Override
@@ -136,8 +136,9 @@ public class FriendSingleChoiceModeListener implements ActionMode.Callback {
             } else {
                 dao.setScreen_name(bean.getScreen_name());
             }
+
             try {
-                return dao.followIt();
+                return dao.unFollowIt();
             } catch (WeiboException e) {
                 AppLogger.e(e.getError());
                 this.e = e;
@@ -149,17 +150,14 @@ public class FriendSingleChoiceModeListener implements ActionMode.Callback {
         @Override
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
-            if (e != null) {
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
         }
 
         @Override
         protected void onPostExecute(UserBean o) {
             super.onPostExecute(o);
-            Toast.makeText(getActivity(), getActivity().getString(R.string.follow_successfully), Toast.LENGTH_SHORT).show();
-            bean = o;
-        }
+            Toast.makeText(getActivity(), getActivity().getString(R.string.unfollow_successfully), Toast.LENGTH_SHORT).show();
+            adapter.removeItem(bean);
+         }
     }
 
 }

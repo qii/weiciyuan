@@ -10,8 +10,10 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.user.FriendListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.actionmenu.FriendSingleChoiceModeListener;
+import org.qii.weiciyuan.ui.actionmenu.MyFriendSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
 
 /**
@@ -21,7 +23,7 @@ import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
 public class FriendsListFragment extends AbstractUserListFragment {
 
 
-    public FriendsListFragment(){
+    public FriendsListFragment() {
 
     }
 
@@ -43,12 +45,20 @@ public class FriendsListFragment extends AbstractUserListFragment {
                         mActionMode = null;
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(getListView(), timeLineAdapter, FriendsListFragment.this, bean.getUsers().get(position - 1)));
+                        if (currentUser.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+                            mActionMode = getActivity().startActionMode(new MyFriendSingleChoiceModeListener(getListView(), timeLineAdapter, FriendsListFragment.this, bean.getUsers().get(position - 1)));
+                        } else {
+                            mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(getListView(), timeLineAdapter, FriendsListFragment.this, bean.getUsers().get(position - 1)));
+                        }
                         return true;
                     } else {
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(getListView(), timeLineAdapter, FriendsListFragment.this, bean.getUsers().get(position - 1)));
+                        if (currentUser.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+                            mActionMode = getActivity().startActionMode(new MyFriendSingleChoiceModeListener(getListView(), timeLineAdapter, FriendsListFragment.this, bean.getUsers().get(position - 1)));
+                        } else {
+                            mActionMode = getActivity().startActionMode(new FriendSingleChoiceModeListener(getListView(), timeLineAdapter, FriendsListFragment.this, bean.getUsers().get(position - 1)));
+                        }
                         return true;
                     }
                 }

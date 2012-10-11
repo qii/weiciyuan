@@ -117,4 +117,8 @@ public class UserListAdapter extends BaseAdapter {
         RelativeLayout listview_root;
     }
 
+    public void removeItem(UserBean item) {
+        getList().remove(item);
+        notifyDataSetChanged();
+    }
 }
