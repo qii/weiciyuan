@@ -66,6 +66,7 @@
             <TextView android:linksClickable="true" android:id="@+id/verified_info" android:paddingLeft="20.0dip"
                       android:paddingTop="5.0dip" android:paddingRight="20.0dip" android:paddingBottom="5.0dip"
                       android:layout_width="fill_parent" android:layout_height="wrap_content"
+                      android:textIsSelectable="true"
                     />
         </LinearLayout>
 
@@ -77,6 +78,7 @@
             <TextView android:linksClickable="true" android:id="@+id/textView_info" android:paddingLeft="20.0dip"
                       android:paddingTop="5.0dip" android:paddingRight="20.0dip" android:paddingBottom="5.0dip"
                       android:layout_width="fill_parent" android:layout_height="wrap_content"
+                      android:textIsSelectable="true"
                     />
         </LinearLayout>
 
