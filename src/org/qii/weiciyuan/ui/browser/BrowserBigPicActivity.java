@@ -2,9 +2,12 @@ package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.TypedArray;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.ShareActionProvider;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
@@ -25,6 +29,7 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 /**
  * User: qii
@@ -39,6 +44,8 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
     private PicSimpleBitmapWorkerTask task;
     private PicSaveTask saveTask;
     private String path;
+    private ShareActionProvider mShareActionProvider;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +81,8 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu_browserbigpicactivity, menu);
+        MenuItem item = menu.findItem(R.id.menu_share);
+        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -94,6 +103,23 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
                         Toast.makeText(BrowserBigPicActivity.this, getString(R.string.already_saved), Toast.LENGTH_SHORT).show();
                     }
                 }
+                break;
+            case R.id.menu_share:
+
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("image/jpeg");
+
+                if (!TextUtils.isEmpty(path)) {
+                    Uri uri = Uri.fromFile(new File(path));
+                    sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                    PackageManager packageManager = getPackageManager();
+                    List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
+                    boolean isIntentSafe = activities.size() > 0;
+                    if (isIntentSafe && mShareActionProvider != null) {
+                        mShareActionProvider.setShareIntent(sharingIntent);
+                    }
+                }
+
                 break;
         }
         return super.onOptionsItemSelected(item);

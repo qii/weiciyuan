@@ -5,7 +5,6 @@ import android.content.*;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.AssetManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.*;
@@ -349,16 +348,12 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             picPath = getPicPathFromUri(imageUri);
             content.setText(getString(R.string.share_pic));
             content.setSelection(content.getText().toString().length());
+            havePic.setVisibility(View.VISIBLE);
         }
     }
 
     private String getPicPathFromUri(Uri uri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = managedQuery(uri, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-
-        return cursor.getString(column_index);
+        return uri.getPath();
     }
 
     private boolean canSend() {

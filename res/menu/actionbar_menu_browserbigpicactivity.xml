@@ -3,6 +3,13 @@
     <item android:id="@+id/menu_save"
           android:icon="?attr/save"
           android:title="@string/save_system_album"
-          android:showAsAction="ifRoom|withText"
+          android:showAsAction="never"
+            />
+
+    <item android:id="@+id/menu_share"
+          android:title="@string/share"
+          android:icon="?share"
+          android:actionProviderClass="android.widget.ShareActionProvider"
+          android:showAsAction="never"
             />
 </menu>
