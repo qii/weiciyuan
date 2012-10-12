@@ -61,8 +61,7 @@
                   android:label="@string/detail"/>
         <activity android:name=".ui.browser.BrowserCommentActivity"
                   android:label="@string/comment_detail"/>
-        <activity android:name=".ui.browser.BrowserBigPicActivity"
-                  android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".ui.browser.BrowserBigPicActivity"/>
         <activity android:name=".ui.browser.BrowserRepostAndCommentListActivity"/>
 
 

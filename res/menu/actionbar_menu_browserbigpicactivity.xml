@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_save"
+          android:icon="?attr/save"
+          android:title="@string/save_system_album"
+          android:showAsAction="ifRoom|withText"
+            />
+</menu>

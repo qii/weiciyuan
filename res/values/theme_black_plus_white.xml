@@ -44,6 +44,8 @@
         <item name="timeline_repost_flag">@drawable/timeline_repost_black</item>
         <item name="timeline_comment_flag">@drawable/comment_black</item>
         <item name="timeline_reply_flag">@drawable/timeline_reply_black</item>
+        <item name="save">@drawable/save_light</item>
+
 
         <item name="listview_item_background_selector">@drawable/listview_item_background_selector</item>
         <item name="listview_item_refresh_animation">@drawable/refresh_black</item>
