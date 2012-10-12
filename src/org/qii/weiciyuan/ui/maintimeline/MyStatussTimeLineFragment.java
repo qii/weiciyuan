@@ -28,7 +28,7 @@ public class MyStatussTimeLineFragment extends StatusesByIdTimeLineFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        inflater.inflate(R.menu.mystatustimelinefragment_menu, menu);
+        inflater.inflate(R.menu.actionbar_menu_mystatustimelinefragment, menu);
         menu.findItem(R.id.name).setTitle(getString(R.string.personal_info));
 
     }
@@ -37,11 +37,7 @@ public class MyStatussTimeLineFragment extends StatusesByIdTimeLineFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.statusesbyidtimelinefragment_status_refresh:
 
-                pullToRefreshListView.startRefreshNow();
-
-                break;
             case R.id.name:
                 Intent intent = new Intent(getActivity(), MyInfoActivity.class);
                 intent.putExtra("token",token);

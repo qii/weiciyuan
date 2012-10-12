@@ -180,7 +180,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.friendstimelinefragment_menu, menu);
+        inflater.inflate(R.menu.actionbar_menu_friendstimelinefragment, menu);
         if (selectedId == 0) {
             menu.findItem(R.id.friendstimelinefragment_name).setTitle(userBean.getScreen_name());
         } else {

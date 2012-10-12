@@ -68,7 +68,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.myfavlistfragment_menu, menu);
+        inflater.inflate(R.menu.actionbar_menu_myfavlistfragment, menu);
         if (bean != null) {
             int newSize = bean.getTotal_number();
             String number = bean.getSize() + "/" + newSize;

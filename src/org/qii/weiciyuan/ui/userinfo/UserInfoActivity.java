@@ -174,7 +174,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.infofragment_menu, menu);
+        getMenuInflater().inflate(R.menu.actionbar_menu_infofragment, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

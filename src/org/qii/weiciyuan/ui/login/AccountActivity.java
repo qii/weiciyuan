@@ -68,7 +68,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.accountactivity_menu_contextual, menu);
+            inflater.inflate(R.menu.contextual_menu_accountactivity, menu);
             return true;
         }
 
@@ -167,7 +167,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.accountactivity_menu_main, menu);
+        inflater.inflate(R.menu.actionbar_menu_accountactivity, menu);
         menu.findItem(R.id.menu_add_account).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

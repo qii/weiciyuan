@@ -189,7 +189,7 @@ public class MyInfoFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.myinfofragment_menu, menu);
+        inflater.inflate(R.menu.actionbar_menu_myinfofragment, menu);
 
     }
 

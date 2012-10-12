@@ -70,7 +70,7 @@ public class MyFriendSingleChoiceModeListener implements ActionMode.Callback {
         MenuInflater inflater = mode.getMenuInflater();
         menu.clear();
 
-        inflater.inflate(R.menu.myfriendlistfragment_item_contextual_menu, menu);
+        inflater.inflate(R.menu.contextual_menu_myfriendlistfragment, menu);
 
         mode.setTitle(bean.getScreen_name());
 

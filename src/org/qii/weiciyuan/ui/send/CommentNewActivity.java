@@ -50,7 +50,7 @@ public class CommentNewActivity extends AbstractNewActivity<ItemBean> {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.commentnewactivity_menu, menu);
+        getMenuInflater().inflate(R.menu.actionbar_menu_commentnewactivity, menu);
         enableCommentOri = menu.findItem(R.id.menu_enable_ori_comment);
         enableRepost = menu.findItem(R.id.menu_enable_repost);
         return true;

@@ -193,7 +193,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.browserweibomsgactivity_menu, menu);
+        getMenuInflater().inflate(R.menu.actionbar_menu_browserweibomsgactivity, menu);
 
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();

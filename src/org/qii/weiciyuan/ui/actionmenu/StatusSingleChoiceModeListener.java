@@ -75,9 +75,9 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
         MenuInflater inflater = mode.getMenuInflater();
         menu.clear();
         if (bean.getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
-            inflater.inflate(R.menu.fragment_status_listview_item_contextual_menu_myself, menu);
+            inflater.inflate(R.menu.contextual_menu_fragment_status_listview_myself, menu);
         } else {
-            inflater.inflate(R.menu.fragment_status_listview_item_contextual_menu, menu);
+            inflater.inflate(R.menu.contextual_menu_fragment_status_listview, menu);
         }
 
         mode.setTitle(bean.getUser().getScreen_name());

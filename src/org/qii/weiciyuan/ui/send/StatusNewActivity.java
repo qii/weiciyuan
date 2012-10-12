@@ -390,7 +390,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.statusnewactivity_menu, menu);
+        getMenuInflater().inflate(R.menu.actionbar_menu_statusnewactivity, menu);
         return true;
     }
 

@@ -65,7 +65,7 @@ public class FilterFragment extends ListFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.filterfragment_menu, menu);
+        inflater.inflate(R.menu.actionbar_menu_filterfragment, menu);
     }
 
     @Override

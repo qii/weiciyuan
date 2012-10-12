@@ -71,7 +71,7 @@ public class NormalFriendShipSingleChoiceModeListener implements ActionMode.Call
         menu.clear();
 
         //sina weibo has bug,everyone's following is false
-        inflater.inflate(R.menu.fragment_user_listview_item_contextual_menu, menu);
+        inflater.inflate(R.menu.contextual_menu_fragment_user_listview, menu);
 //        if(bean.isFollowing()){
 //           menu.findItem(R.id.menu_follow).setVisible(false);
 //        }

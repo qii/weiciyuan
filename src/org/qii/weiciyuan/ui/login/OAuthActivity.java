@@ -81,7 +81,7 @@ public class OAuthActivity extends AbstractAppActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.oauthactivity_menu, menu);
+        inflater.inflate(R.menu.actionbar_menu_oauthactivity, menu);
         refreshItem = menu.findItem(R.id.menu_add_account);
         refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override

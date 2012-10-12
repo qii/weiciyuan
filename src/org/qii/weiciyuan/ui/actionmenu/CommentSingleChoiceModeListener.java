@@ -73,9 +73,9 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         boolean isCommentUnderMyStatus = bean.getStatus().getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId());
 
         if (isMyComment || isCommentUnderMyStatus) {
-            inflater.inflate(R.menu.fragment_comment_listview_item_contextual_menu_myself, menu);
+            inflater.inflate(R.menu.contextual_menu_fragment_comment_listview_myself, menu);
         } else {
-            inflater.inflate(R.menu.fragment_comment_listview_item_contextual_menu, menu);
+            inflater.inflate(R.menu.contextual_menu_fragment_comment_listview, menu);
         }
 
 

@@ -206,7 +206,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.mentionstimelinefragment_menu, menu);
+        inflater.inflate(R.menu.actionbar_menu_mentionstimelinefragment, menu);
         menu.findItem(R.id.mentionstimelinefragment_group).setTitle(group[selected]);
     }
 

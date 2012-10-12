@@ -29,7 +29,7 @@ public class SearchMainActivity extends AbstractAppActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.searchmainactivity_menu, menu);
+        getMenuInflater().inflate(R.menu.actionbar_menu_searchmainactivity, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
