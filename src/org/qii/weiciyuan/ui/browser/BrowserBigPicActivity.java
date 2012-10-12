@@ -6,12 +6,15 @@ import android.content.res.TypedArray;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
@@ -21,6 +24,7 @@ import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
  * User: qii
@@ -33,6 +37,8 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
     private ProgressBar pb;
     private FrameLayout fl;
     private PicSimpleBitmapWorkerTask task;
+    private PicSaveTask saveTask;
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +85,48 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
+            case R.id.menu_save:
+                if (task != null && task.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    if (saveTask == null) {
+                        saveTask = new PicSaveTask();
+                        saveTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                    } else if (saveTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                        Toast.makeText(BrowserBigPicActivity.this, getString(R.string.already_saved), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    class PicSaveTask extends MyAsyncTask<Void, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                MediaStore.Images.Media.insertImage(getContentResolver(), path, "", "");
+            } catch (FileNotFoundException e) {
+                AppLogger.e(e.getMessage());
+                cancel(true);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onCancelled(Void aVoid) {
+            super.onCancelled(aVoid);
+            Toast.makeText(BrowserBigPicActivity.this, getString(R.string.cant_save_pic), Toast.LENGTH_SHORT).show();
+            saveTask = null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(BrowserBigPicActivity.this, getString(R.string.save_to_album_successfully), Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     class PicSimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, String> {
@@ -132,8 +178,8 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         @Override
         protected void onPostExecute(final String bitmap) {
 
-            if (bitmap != null) {
-
+            if (!TextUtils.isEmpty(bitmap)) {
+                path = bitmap;
 
                 pb.setVisibility(View.GONE);
 //                imageView.loadUrl("file://" + bitmap);
