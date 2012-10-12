@@ -26,7 +26,7 @@ import org.qii.weiciyuan.ui.send.StatusNewActivity;
  * User: qii
  * Date: 12-9-19
  */
-public class FriendSingleChoiceModeListener implements ActionMode.Callback {
+public class NormalFriendShipSingleChoiceModeListener implements ActionMode.Callback {
     private ListView listView;
     private UserListAdapter adapter;
     private Fragment fragment;
@@ -44,7 +44,7 @@ public class FriendSingleChoiceModeListener implements ActionMode.Callback {
             followOrUnfollowTask.cancel(true);
     }
 
-    public FriendSingleChoiceModeListener(ListView listView, UserListAdapter adapter, Fragment fragment, UserBean bean) {
+    public NormalFriendShipSingleChoiceModeListener(ListView listView, UserListAdapter adapter, Fragment fragment, UserBean bean) {
         this.listView = listView;
         this.fragment = fragment;
         this.adapter = adapter;
