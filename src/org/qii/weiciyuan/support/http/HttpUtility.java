@@ -58,7 +58,7 @@ public class HttpUtility {
         connectionManager.setMaxTotal(5);
 
         httpClient = new DecompressingHttpClient(new DefaultHttpClient(connectionManager));
-        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 8000);
+        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10000);
         HttpConnectionParams.setSoTimeout(httpClient.getParams(), 8000);
 
 
