@@ -14,6 +14,10 @@
           android:title="@string/unfollow_he"
           android:visible="false"
             />
+    <item android:id="@+id/menu_remove_fan"
+          android:title="@string/remove_fan"
+          android:visible="false"
+            />
     <item android:id="@+id/menu_modify_remark"
           android:title="@string/modify_remark"
             />

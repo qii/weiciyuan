@@ -15,6 +15,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.dao.relationship.FanDao;
 import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
 import org.qii.weiciyuan.dao.user.RemarkDao;
 import org.qii.weiciyuan.support.error.ErrorCode;
@@ -209,6 +210,12 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
                     followOrUnfollowTask.execute();
                 }
                 break;
+            case R.id.menu_remove_fan:
+                if (followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    followOrUnfollowTask = new RemoveFanTask();
+                    followOrUnfollowTask.execute();
+                }
+                break;
         }
         return false;
     }
@@ -317,6 +324,49 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
         protected void onPostExecute(UserBean o) {
             super.onPostExecute(o);
             Toast.makeText(UserInfoActivity.this, getString(R.string.follow_successfully), Toast.LENGTH_SHORT).show();
+            bean = o;
+            getInfoFragment().forceReloadData(o);
+        }
+    }
+
+
+    private class RemoveFanTask extends MyAsyncTask<Void, UserBean, UserBean> {
+        WeiboException e;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected UserBean doInBackground(Void... params) {
+
+            FanDao dao = new FanDao(getToken(), bean.getId());
+
+            try {
+                return dao.removeFan();
+            } catch (WeiboException e) {
+                AppLogger.e(e.getError());
+                this.e = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onCancelled(UserBean userBean) {
+            super.onCancelled(userBean);
+            if (e != null) {
+                Toast.makeText(UserInfoActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(UserBean o) {
+            super.onPostExecute(o);
+            Toast.makeText(UserInfoActivity.this, getString(R.string.remove_fan_successfully), Toast.LENGTH_SHORT).show();
             bean = o;
             getInfoFragment().forceReloadData(o);
         }

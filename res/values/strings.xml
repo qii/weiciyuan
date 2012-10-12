@@ -71,6 +71,7 @@
     <string name="unfollow_he">取消关注</string>
     <string name="follow_successfully">关注成功</string>
     <string name="unfollow_successfully">已经取消关注</string>
+    <string name="remove_fan_successfully">Ta 已经不再关注你了</string>
     <string name="m">男</string>
     <string name="f">女</string>
     <string name="verified_user">认证账户</string>

@@ -103,6 +103,10 @@ public class URLHelper {
         return URLManager.getRealUrl("unfavit");
     }
 
+    public static String getRemoveFanUrl() {
+        return URLManager.getRealUrl("removefan");
+    }
+
     public static String getGoogleLocatonUrl() {
         return URLManager.getGoogleRealUrl("googlelocation");
     }

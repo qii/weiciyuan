@@ -214,6 +214,12 @@ public class UserInfoFragment extends Fragment {
             menu.findItem(R.id.menu_follow).setVisible(true);
             menu.findItem(R.id.menu_unfollow).setVisible(false);
         }
+
+        if (!bean.isFollowing() && bean.isFollow_me()) {
+            menu.findItem(R.id.menu_remove_fan).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_remove_fan).setVisible(false);
+        }
     }
 
     @Override
