@@ -57,13 +57,14 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... url) {
 
         if (!isCancelled()) {
+            float reSize = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
+            int width = (int) (40 * reSize);
+            int height = width;
+
             if (GlobalContext.getInstance().getEnableBigAvatar()) {
-                float reSize = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
-                int width = (int) (40 * reSize);
-                int height = width;
                 return ImageTool.getTimeLineBigAvatarWithRoundedCorner(data, width, height);
             } else
-                return ImageTool.getSmallAvatarWithRoundedCorner(data);
+                return ImageTool.getSmallAvatarWithRoundedCorner(data, width, height);
         }
         return null;
     }
