@@ -11,7 +11,7 @@
     <!--account -->
     <string name="select_all">全选</string>
     <string name="select_none">反选</string>
-    <string name="only_oauth_one_week">四次元的授权只能维持一周的哦</string>
+    <string name="only_oauth_three_months">每隔3个月得重新授权一次</string>
 
     <!--emotions-->
     <string name="weibo_emotions">微博表情</string>
