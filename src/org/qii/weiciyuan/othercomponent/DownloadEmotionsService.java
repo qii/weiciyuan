@@ -62,7 +62,7 @@ public class DownloadEmotionsService extends Service {
                     .setContentTitle(getString(R.string.weibo_emotions))
                     .setContentText(getString(R.string.background_downloading))
                     .setProgress(0, 100, false)
-                    .setSmallIcon(R.drawable.download_white);
+                    .setSmallIcon(R.drawable.download_light);
             notification = builder.getNotification();
             startForeground(NOTIFICATION_ID, notification);
         }
@@ -135,7 +135,7 @@ public class DownloadEmotionsService extends Service {
                         .setContentText(getString(R.string.background_downloading))
                         .setProgress(size, data, false)
                         .setNumber(size - data)
-                        .setSmallIcon(R.drawable.download_white);
+                        .setSmallIcon(R.drawable.download_light);
                 notification = builder.getNotification();
 
                 startForeground(NOTIFICATION_ID, notification);
