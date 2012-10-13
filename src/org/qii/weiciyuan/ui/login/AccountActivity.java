@@ -34,6 +34,8 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     private GetAccountListDBTask getTask = null;
     private RemoveAccountDBTask removeTask = null;
 
+    private final int ADD_ACCOUNT_REQUEST_CODE = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -166,29 +168,30 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.actionbar_menu_accountactivity, menu);
-        menu.findItem(R.id.menu_add_account).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                addAccount(item);
-                return true;
-            }
-        });
+        getMenuInflater().inflate(R.menu.actionbar_menu_accountactivity, menu);
         return true;
     }
 
-    public void addAccount(MenuItem menu) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_add_account:
+                addAccount();
+                break;
+        }
+        return true;
+    }
+
+    public void addAccount() {
 
         Intent intent = new Intent(this, OAuthActivity.class);
-        startActivityForResult(intent, 0);
+        startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
+        if (requestCode == ADD_ACCOUNT_REQUEST_CODE && resultCode == RESULT_OK) {
             refresh();
-
         }
     }
 
@@ -289,7 +292,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
             if (!TextUtils.isEmpty(accountList.get(i).getAvatar_url())) {
 
-                commander.downloadAvatar(imageView, accountList.get(i).getAvatar_url(), i, listView,false);
+                commander.downloadAvatar(imageView, accountList.get(i).getAvatar_url(), i, listView, false);
             }
 
             return mView;
