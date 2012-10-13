@@ -13,8 +13,7 @@
     <attr name="search" format="reference"/>
     <attr name="write_weibo" format="reference"/>
     <attr name="location_place" format="reference"/>
-    <attr name="maintimelineactivity_account_management" format="reference"/>
-    <attr name="maintimelineactivity_settings" format="reference"/>
+    <attr name="settings" format="reference"/>
     <attr name="picture" format="reference"/>
     <attr name="refresh" format="reference"/>
     <attr name="copy" format="reference"/>

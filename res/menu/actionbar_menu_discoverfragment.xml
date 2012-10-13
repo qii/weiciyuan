@@ -12,18 +12,7 @@
           android:title="@string/my_info"
           android:showAsAction="ifRoom"
             />
-    <!--<item android:id="@+id/menu_search"-->
-    <!--android:title="@string/search"-->
-    <!--android:actionViewClass="android.widget.SearchView"-->
-    <!--android:icon="?search"-->
-    <!--/>-->
 
-    <item android:id="@+id/menu_setting"
-
-          android:title="@string/setting"
-          android:icon="?maintimelineactivity_settings"
-          android:showAsAction="ifRoom"
-            />
 
 
 </menu>
