@@ -56,6 +56,8 @@ public class PictureDialogFragment extends DialogFragment {
         imageView.getSettings().setSupportZoom(true);
         imageView.getSettings().setBuiltInZoomControls(true);
         imageView.getSettings().setDisplayZoomControls(false);
+        imageView.setBackgroundColor(getResources().getColor(R.color.transparent));
+
         imageView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
         pb = (ProgressBar) view.findViewById(R.id.pb);
         fl = (FrameLayout) view.findViewById(R.id.fl);
@@ -170,7 +172,7 @@ public class PictureDialogFragment extends DialogFragment {
                 AppLogger.e(file.getName());
 
 
-                imageView.loadDataWithBaseURL("file://" + file.getParent() + "/", "<html><center><img src=\"" + file.getName() + "\"></html>", "text/html", "utf-8", "");
+                imageView.loadDataWithBaseURL("file://" + file.getParent() + "/", "<html style=\"BACKGROUND-COLOR: transparent\"><center><img src=\"" + file.getName() + "\"></BODY></html>", "text/html", "utf-8", "");
 
 
             } else {
