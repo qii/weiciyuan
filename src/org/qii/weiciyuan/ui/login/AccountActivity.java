@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AccountActivity extends AbstractAppActivity implements AdapterView.OnItemClickListener {
+public class AccountActivity extends AbstractAppActivity {
 
     private ListView listView = null;
 
@@ -34,7 +34,6 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
     private final int ADD_ACCOUNT_REQUEST_CODE = 0;
 
-    private ActionMode mActionMode = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +46,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
         listAdapter = new AccountAdapter();
         listView = (ListView) findViewById(R.id.listView);
-        listView.setOnItemClickListener(this);
+        listView.setOnItemClickListener(new AccountListItemClickListener());
         listView.setAdapter(listAdapter);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         listView.setMultiChoiceModeListener(new AccountMultiChoiceModeListener());
@@ -137,22 +136,23 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+    private class AccountListItemClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-        String token = accountList.get(i).getAccess_token();
-        SharedPreferences settings = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("token", token);
-        editor.commit();
+            String token = accountList.get(i).getAccess_token();
+            SharedPreferences settings = getPreferences(MODE_PRIVATE);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("token", token);
+            editor.commit();
 
-        Intent intent = new Intent(this, MainTimeLineActivity.class);
-        intent.putExtra("account", accountList.get(i));
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
+            Intent intent = new Intent(AccountActivity.this, MainTimeLineActivity.class);
+            intent.putExtra("account", accountList.get(i));
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
     }
-
 
     private class AccountMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 
@@ -160,7 +160,6 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.contextual_menu_accountactivity, menu);
             mode.setTitle(getString(R.string.account_management));
-            mActionMode = mode;
             return true;
         }
 
@@ -186,9 +185,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            mActionMode = null;
             listAdapter.notifyDataSetChanged();
-
         }
 
         @Override
