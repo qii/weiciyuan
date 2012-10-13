@@ -203,11 +203,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             case R.id.menu_setting:
                 startActivity(new Intent(this, SettingActivity.class));
                 return true;
-
-//            case R.id.menu_search:
-//                startActivity(new Intent(this, SearchMainActivity.class));
-//                break;
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -219,8 +214,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
-
-
     }
 
 
