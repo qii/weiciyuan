@@ -49,9 +49,9 @@ public class AbstractAppActivity extends Activity {
         return urlKey + position;
     }
 
-    protected ICommander commander = new ICommander() {
+    protected ICommander commander = new PicCommander();
 
-
+    private class PicCommander implements ICommander {
         @Override
         public void downloadAvatar(ImageView view, String urlKey, int position, ListView listView, boolean isFling) {
 
@@ -125,7 +125,9 @@ public class AbstractAppActivity extends Activity {
         }
 
 
-    };
+    }
+
+    ;
 
     private static boolean cancelPotentialDownload(String url, ImageView imageView) {
         PictureBitmapWorkerTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
@@ -134,7 +136,7 @@ public class AbstractAppActivity extends Activity {
             String bitmapUrl = bitmapDownloaderTask.getUrl();
             if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
                 bitmapDownloaderTask.cancel(true);
-            } else if(bitmapDownloaderTask.getStatus()== MyAsyncTask.Status.PENDING||bitmapDownloaderTask.getStatus()== MyAsyncTask.Status.RUNNING) {
+            } else if (bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.PENDING || bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.RUNNING) {
                 // The same URL is already being downloaded.
                 return false;
             }
