@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -198,6 +199,17 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
     private class AccountAdapter extends BaseAdapter {
 
+        int checkedBG;
+        int defaultBG;
+
+        public AccountAdapter() {
+            defaultBG = getResources().getColor(R.color.transparent);
+
+            int[] attrs = new int[]{R.attr.listview_checked_color};
+            TypedArray ta = obtainStyledAttributes(attrs);
+            checkedBG = ta.getColor(0, 430);
+        }
+
         @Override
         public int getCount() {
             return accountList.size();
@@ -224,20 +236,12 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
             LayoutInflater layoutInflater = getLayoutInflater();
 
             View mView = layoutInflater.inflate(R.layout.accountactivity_listview_item_layout, viewGroup, false);
-            if (mActionMode != null) {
-                LinearLayout linearLayout = (LinearLayout) mView;
-                CheckBox cb = new CheckBox(AccountActivity.this);
-                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        listView.setItemChecked(i, isChecked);
-                    }
-                });
+            mView.findViewById(R.id.listview_root).setBackgroundColor(defaultBG);
 
-                cb.setChecked(listView.getCheckedItemPositions().get(i));
-                linearLayout.addView(cb, 0);
-
+            if (listView.getCheckedItemPositions().get(i)) {
+                mView.findViewById(R.id.listview_root).setBackgroundColor(checkedBG);
             }
+
             TextView textView = (TextView) mView.findViewById(R.id.account_name);
             textView.setText(accountList.get(i).getUsernick());
             ImageView imageView = (ImageView) mView.findViewById(R.id.imageView_avatar);
