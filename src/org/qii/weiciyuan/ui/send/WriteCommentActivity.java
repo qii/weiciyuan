@@ -26,11 +26,10 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
 
     private String id;
     private String token;
-    private MenuItem enableCommentOri;
-    private MenuItem enableRepost;
-
     private MessageBean msg;
 
+    private MenuItem enableCommentOri;
+    private MenuItem enableRepost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -180,88 +179,4 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
 
         return dao.sendNewMsg();
     }
-
-
-//    class AtTextWatcher implements TextWatcher {
-//        boolean flag = false;
-//        boolean begin = false;
-//        AtUserTask atUserTask = null;
-//
-//        @Override
-//        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//        }
-//
-//        @Override
-//        public void onTextChanged(final CharSequence s, int start, int before, int count) {
-//            if (TextUtils.isEmpty(s.toString())) {
-//                flag = false;
-//                begin = false;
-//                return;
-//            }
-//
-//            if (s.toString().endsWith(" ")) {
-//                flag = false;
-//                begin = false;
-//                return;
-//            }
-//
-//            if (s.toString().endsWith("@")) {
-//                flag = true;
-//            }
-//
-//            if (!s.toString().endsWith("@")) {
-//                begin = true;
-//            }
-//
-//            if (flag && begin) {
-//                int index = s.toString().lastIndexOf("@");
-//                String searchWords = s.subSequence(index + 1, s.toString().length()).toString();
-//                if (atUserTask == null || atUserTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-//                    atUserTask = new AtUserTask(searchWords);
-//                    atUserTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-//                } else {
-//                    atUserTask.cancel(true);
-//                    atUserTask = new AtUserTask(searchWords);
-//                    atUserTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-//                }
-//            }
-//        }
-//
-//        @Override
-//        public void afterTextChanged(Editable s) {
-//
-//        }
-//    }
-//
-//    class AtUserTask extends MyAsyncTask<Void, List<AtUserBean>, List<AtUserBean>> {
-//        WeiboException e;
-//        String q;
-//
-//        public AtUserTask(String q) {
-//            this.q = q;
-//        }
-//
-//        @Override
-//        protected List<AtUserBean> doInBackground(Void... params) {
-//            AtUserDao dao = new AtUserDao(token, q);
-//            try {
-//                return dao.getUserInfo();
-//            } catch (WeiboException e) {
-//                this.e = e;
-//                cancel(true);
-//                return null;
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(List<AtUserBean> atUserBeans) {
-//            super.onPostExecute(atUserBeans);
-//            if (isCancelled())
-//                return;
-//            if (atUserBeans.size() == 0)
-//                return;
-//            AppLogger.e(atUserBeans.get(0).getNickname());
-//        }
-//    }
 }

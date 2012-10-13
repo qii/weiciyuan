@@ -22,9 +22,7 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
 public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
 
     private String id;
-
     private String token;
-
     private MessageBean msg;
 
     private MenuItem menuEnableComment;

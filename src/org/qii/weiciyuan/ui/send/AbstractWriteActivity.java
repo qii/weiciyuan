@@ -98,11 +98,6 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         super.onCreate(savedInstanceState);
         setContentView(R.layout.repostnewactivity_layout);
 
-
-//        View title = getLayoutInflater().inflate(R.layout.statusnewactivity_title_layout, null);
-//        TextView contentNumber = (TextView) title.findViewById(R.id.content_number);
-//        contentNumber.setVisibility(View.GONE);
-//        getActionBar().setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
         getActionBar().setDisplayShowCustomEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         token = getIntent().getStringExtra("token");
@@ -158,9 +153,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         super.onActivityResult(requestCode, resultCode, intent);
 
         if (resultCode == RESULT_OK) {
-
             switch (requestCode) {
-
                 case AT_USER:
                     String name = intent.getStringExtra("name");
                     String ori = getEditTextView().getText().toString();
@@ -176,7 +169,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
     }
 
 
-    class SimpleTask extends MyAsyncTask<Void, Void, T> {
+    private class SimpleTask extends MyAsyncTask<Void, Void, T> {
 
         SendProgressFragment progressFragment = new SendProgressFragment();
         WeiboException e;
@@ -239,7 +232,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         }
     }
 
-    class GetEmotionsTask extends MyAsyncTask<Void, Void, Void> {
+    private class GetEmotionsTask extends MyAsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -255,10 +248,9 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
                     InputStream inputStream;
                     try {
                         inputStream = assetManager.open(name);
-
                         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                         emotionsPic.put(str, bitmap);
-                    } catch (IOException e) {
+                    } catch (IOException ignored) {
 
                     }
                 }
