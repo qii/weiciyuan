@@ -19,7 +19,7 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
  * User: Jiang Qi
  * Date: 12-8-2
  */
-public class WriteRepostActivity extends AbstractNewActivity<MessageBean> {
+public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
 
     private String id;
 

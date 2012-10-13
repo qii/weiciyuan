@@ -29,7 +29,7 @@ import java.util.*;
  * User: qii
  * Date: 12-9-25
  */
-public abstract class AbstractNewActivity<T> extends AbstractAppActivity implements View.OnClickListener, ClearContentDialog.IClear
+public abstract class AbstractWriteActivity<T> extends AbstractAppActivity implements View.OnClickListener, ClearContentDialog.IClear
         , EmotionsDialog.IEmotions {
 
     private SimpleTask task;
@@ -142,7 +142,7 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
                 getEditTextView().setSelection(et.getText().toString().length() - 1);
                 break;
             case R.id.menu_at:
-                Intent intent = new Intent(AbstractNewActivity.this, AtUserActivity.class);
+                Intent intent = new Intent(AbstractWriteActivity.this, AtUserActivity.class);
                 intent.putExtra("token", token);
                 startActivityForResult(intent, AT_USER);
                 break;
@@ -216,7 +216,7 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
         protected void onCancelled(T commentBean) {
             super.onCancelled(commentBean);
             if (this.e != null) {
-                Toast.makeText(AbstractNewActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AbstractWriteActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
 
             }
 
@@ -230,9 +230,9 @@ public abstract class AbstractNewActivity<T> extends AbstractAppActivity impleme
             progressFragment.dismissAllowingStateLoss();
             if (s != null) {
                 finish();
-                Toast.makeText(AbstractNewActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AbstractWriteActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(AbstractNewActivity.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AbstractWriteActivity.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
             }
             super.onPostExecute(s);
 

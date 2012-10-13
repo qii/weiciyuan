@@ -22,7 +22,7 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
  * User: Jiang Qi
  * Date: 12-8-2
  */
-public class WriteCommentActivity extends AbstractNewActivity<ItemBean> {
+public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
 
     private String id;
     private String token;

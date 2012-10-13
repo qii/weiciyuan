@@ -22,7 +22,7 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
  * User: qii
  * Date: 12-8-28
  */
-public class WriteReplyToCommentActivity extends AbstractNewActivity<CommentBean> {
+public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBean> {
 
     private CommentBean bean;
     private MenuItem enableRepost;

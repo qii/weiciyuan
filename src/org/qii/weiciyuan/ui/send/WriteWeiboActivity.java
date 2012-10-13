@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.*;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -51,7 +50,7 @@ import java.util.*;
  * Date: 12-7-29
  */
 public class WriteWeiboActivity extends AbstractAppActivity implements DialogInterface.OnClickListener,
-        View.OnClickListener, View.OnLongClickListener, IAccountInfo, ClearContentDialog.IClear, EmotionsDialog.IEmotions {
+        IAccountInfo, ClearContentDialog.IClear, EmotionsDialog.IEmotions {
 
 
     private static final int CAMERA_RESULT = 0;
@@ -295,15 +294,15 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         content = ((EditText) findViewById(R.id.status_new_content));
         content.addTextChangedListener(new TextNumLimitWatcher((TextView) findViewById(R.id.menu_send), content, this));
 
-        findViewById(R.id.menu_add_gps).setOnClickListener(this);
-        findViewById(R.id.menu_add_pic).setOnClickListener(this);
-        findViewById(R.id.menu_send).setOnClickListener(this);
-//        findViewById(R.id.menu_add_emotions).setOnClickListener(this);
+        View.OnClickListener onClickListener = new BottomButtonClickListener();
+        findViewById(R.id.menu_add_gps).setOnClickListener(onClickListener);
+        findViewById(R.id.menu_add_pic).setOnClickListener(onClickListener);
+        findViewById(R.id.menu_send).setOnClickListener(onClickListener);
 
-        findViewById(R.id.menu_add_gps).setOnLongClickListener(this);
-        findViewById(R.id.menu_add_pic).setOnLongClickListener(this);
-        findViewById(R.id.menu_send).setOnLongClickListener(this);
-//        findViewById(R.id.menu_add_emotions).setOnLongClickListener(this);
+        View.OnLongClickListener onLongClickListener = new BottomButtonLongClickListener();
+        findViewById(R.id.menu_add_gps).setOnLongClickListener(onLongClickListener);
+        findViewById(R.id.menu_add_pic).setOnLongClickListener(onLongClickListener);
+        findViewById(R.id.menu_send).setOnLongClickListener(onLongClickListener);
     }
 
 
@@ -412,21 +411,11 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 break;
-            case R.id.menu_add_gps:
-                getLocation();
-                break;
-            case R.id.menu_add_pic:
-                addPic();
-                break;
-
             case R.id.menu_emoticon:
                 EmotionsDialog dialog = new EmotionsDialog();
                 dialog.show(getFragmentManager(), "");
                 break;
 
-            case R.id.menu_send:
-                send();
-                break;
             case R.id.menu_topic:
                 String ori = content.getText().toString();
                 String topicTag = "##";
@@ -438,10 +427,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 intent.putExtra("token", token);
                 startActivityForResult(intent, AT_USER);
                 break;
-//            case R.id.menu_clear:
-//                ClearContentDialog clearContentDialog = new ClearContentDialog();
-//                clearContentDialog.show(getSupportFragmentManager(), "");
-//                break;
+
         }
         return true;
     }
@@ -472,7 +458,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     protected void executeTask(String content) {
 
         if (TextUtils.isEmpty(picPath)) {
-            new StatusNewTask(content).execute();
+            new StatusNewTask(content).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             Intent intent = new Intent(WriteWeiboActivity.this, UploadPhotoService.class);
             intent.putExtra("token", token);
@@ -489,42 +475,47 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         return accountBean;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.menu_add_gps:
-                getLocation();
-                break;
-            case R.id.menu_add_pic:
-                addPic();
-                break;
+    private class BottomButtonClickListener implements View.OnClickListener {
 
-            case R.id.menu_add_emotions:
-                EmotionsDialog dialog = new EmotionsDialog();
-                dialog.show(getFragmentManager(), "");
-                break;
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.menu_add_gps:
+                    getLocation();
+                    break;
+                case R.id.menu_add_pic:
+                    addPic();
+                    break;
 
-            case R.id.menu_send:
-                send();
-                break;
+                case R.id.menu_add_emotions:
+                    EmotionsDialog dialog = new EmotionsDialog();
+                    dialog.show(getFragmentManager(), "");
+                    break;
+
+                case R.id.menu_send:
+                    send();
+                    break;
+            }
         }
     }
 
-    @Override
-    public boolean onLongClick(View v) {
-        switch (v.getId()) {
-            case R.id.menu_add_gps:
-                Toast.makeText(this, getString(R.string.add_gps), Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.menu_add_pic:
-                Toast.makeText(this, getString(R.string.add_pic), Toast.LENGTH_SHORT).show();
-                break;
+    private class BottomButtonLongClickListener implements View.OnLongClickListener {
 
-            case R.id.menu_send:
-                Toast.makeText(this, getString(R.string.send), Toast.LENGTH_SHORT).show();
-                break;
+        @Override
+        public boolean onLongClick(View v) {
+            switch (v.getId()) {
+                case R.id.menu_add_gps:
+                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.add_gps), Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.menu_add_pic:
+                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.add_pic), Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.menu_send:
+                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.send), Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            return true;
         }
-        return true;
     }
 
     public void insertEmotion(String emotionChar) {
@@ -536,7 +527,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         content.setSelection(index + emotionChar.length());
     }
 
-    class StatusNewTask extends AsyncTask<Void, String, String> {
+    private class StatusNewTask extends MyAsyncTask<Void, String, String> {
         String content;
         WeiboException e;
 
