@@ -38,7 +38,7 @@ import java.util.List;
 public class BrowserBigPicActivity extends AbstractAppActivity {
 
     private String url;
-    private WebView imageView;
+    private WebView webView;
     private ProgressBar pb;
     private FrameLayout fl;
     private PicSimpleBitmapWorkerTask task;
@@ -59,17 +59,17 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
 
         pb = (ProgressBar) findViewById(R.id.pb);
         fl = (FrameLayout) findViewById(R.id.fl);
-        imageView = (WebView) findViewById(R.id.iv);
-        imageView.getSettings().setSupportZoom(true);
-        imageView.getSettings().setBuiltInZoomControls(true);
-        imageView.getSettings().setDisplayZoomControls(false);
-        imageView.setBackgroundColor(getResources().getColor(R.color.transparent));
-//        imageView.getSettings().setUseWideViewPort(true);
-//        imageView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
-        imageView.getSettings().setUseWideViewPort(true);
-        imageView.getSettings().setLoadWithOverviewMode(true);
-        imageView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        imageView.setScrollbarFadingEnabled(false);
+
+        webView = (WebView) findViewById(R.id.iv);
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
+        webView.setBackgroundColor(getResources().getColor(R.color.transparent));
+
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        webView.setScrollbarFadingEnabled(false);
 
         url = getIntent().getStringExtra("url");
         if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
@@ -208,7 +208,6 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
                 path = bitmap;
 
                 pb.setVisibility(View.GONE);
-//                imageView.loadUrl("file://" + bitmap);
 
                 File file = new File(bitmap);
 
@@ -216,7 +215,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
                 AppLogger.e(file.getName());
 
 
-                imageView.loadDataWithBaseURL("file://" + file.getParent() + "/", "<html><center><img src=\"" + file.getName() + "\"></html>", "text/html", "utf-8", "");
+                webView.loadDataWithBaseURL("file://" + file.getParent() + "/", "<html style=\"BACKGROUND-COLOR: transparent\"><center><img src=\"" + file.getName() + "\"></BODY></html>", "text/html", "utf-8", "");
 
 
                 final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -232,7 +231,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
                 int[] attrs = new int[]{R.attr.error};
                 TypedArray ta = BrowserBigPicActivity.this.obtainStyledAttributes(attrs);
                 Drawable drawableFromTheme = ta.getDrawable(0);
-                //                imageView.setImageDrawable(drawableFromTheme);
+                //                webView.setImageDrawable(drawableFromTheme);
             }
 
         }
@@ -245,8 +244,8 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         super.onDestroy();
         if (task != null)
             task.cancel(true);
-        imageView.loadUrl("about:blank");
-        imageView.stopLoading();
-        imageView = null;
+        webView.loadUrl("about:blank");
+        webView.stopLoading();
+        webView = null;
     }
 }
