@@ -2,18 +2,18 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/friendstimelinefragment_new_weibo"
+    <item android:id="@+id/write_weibo"
           android:icon="?friendstimelinefragment_write"
           android:showAsAction="ifRoom"
           android:title="@string/write_weibo"
             />
 
-    <item android:id="@+id/friendstimelinefragment_name"
+    <item android:id="@+id/group_name"
           android:title="name"
           android:showAsAction="ifRoom|withText"
             />
 
-    <item android:id="@+id/friendstimelinefragment_refresh"
+    <item android:id="@+id/refresh"
           android:icon="?refresh"
           android:title="@string/refresh"
           android:showAsAction="ifRoom"

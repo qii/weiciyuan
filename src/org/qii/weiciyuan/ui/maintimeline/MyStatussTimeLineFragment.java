@@ -36,12 +36,10 @@ public class MyStatussTimeLineFragment extends StatusesByIdTimeLineFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
-
             case R.id.name:
                 Intent intent = new Intent(getActivity(), MyInfoActivity.class);
-                intent.putExtra("token",token);
-                intent.putExtra("user",userBean);
+                intent.putExtra("token", token);
+                intent.putExtra("user", userBean);
                 intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
                 startActivity(intent);
                 break;

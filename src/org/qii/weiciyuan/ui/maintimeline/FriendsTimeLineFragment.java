@@ -182,28 +182,25 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.actionbar_menu_friendstimelinefragment, menu);
         if (selectedId == 0) {
-            menu.findItem(R.id.friendstimelinefragment_name).setTitle(userBean.getScreen_name());
+            menu.findItem(R.id.group_name).setTitle(userBean.getScreen_name());
         } else {
-            menu.findItem(R.id.friendstimelinefragment_name).setTitle(group.get(selectedId));
+            menu.findItem(R.id.group_name).setTitle(group.get(selectedId));
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.friendstimelinefragment_new_weibo:
+            case R.id.write_weibo:
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("account", accountBean);
                 startActivity(intent);
                 break;
-            case R.id.friendstimelinefragment_refresh:
+            case R.id.refresh:
                 pullToRefreshListView.startRefreshNow();
-
-                refresh();
-
                 break;
-            case R.id.friendstimelinefragment_name:
+            case R.id.group_name:
 
                 if (canSwitchGroup()) {
                     FriendsGroupDialog dialog = new FriendsGroupDialog(group, selectedId);

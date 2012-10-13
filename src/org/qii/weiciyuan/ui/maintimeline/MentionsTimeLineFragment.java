@@ -207,14 +207,14 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.actionbar_menu_mentionstimelinefragment, menu);
-        menu.findItem(R.id.mentionstimelinefragment_group).setTitle(group[selected]);
+        menu.findItem(R.id.group_name).setTitle(group[selected]);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.friendstimelinefragment_new_weibo:
+            case R.id.write_weibo:
                 Intent intent = new Intent(getActivity(), StatusNewActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("account", accountBean);
@@ -222,11 +222,10 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 startActivity(intent);
                 break;
 
-            case R.id.mentionstimelinefragment_refresh:
+            case R.id.refresh:
                 pullToRefreshListView.startRefreshNow();
-
                 break;
-            case R.id.mentionstimelinefragment_group:
+            case R.id.group_name:
                 if (canSwitchGroup()) {
                     MentionsGroupDialog dialog = new MentionsGroupDialog(group, selected);
                     dialog.setTargetFragment(MentionsTimeLineFragment.this, 0);
