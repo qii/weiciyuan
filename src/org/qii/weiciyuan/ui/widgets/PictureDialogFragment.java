@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.widgets;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -9,7 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.DialogFragment;
+import android.text.TextUtils;
 import android.util.LruCache;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -19,7 +20,6 @@ import android.widget.ProgressBar;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
-import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserBigPicActivity;
@@ -164,14 +164,8 @@ public class PictureDialogFragment extends DialogFragment {
         @Override
         protected void onPostExecute(final String bitmap) {
 
-            if (bitmap != null) {
-
+            if (!TextUtils.isEmpty(bitmap)) {
                 File file = new File(bitmap);
-
-                AppLogger.e(file.getParent());
-                AppLogger.e(file.getName());
-
-
                 imageView.loadDataWithBaseURL("file://" + file.getParent() + "/", "<html style=\"BACKGROUND-COLOR: transparent\"><center><img src=\"" + file.getName() + "\"></BODY></html>", "text/html", "utf-8", "");
 
 
@@ -180,7 +174,7 @@ public class PictureDialogFragment extends DialogFragment {
                 int[] attrs = new int[]{R.attr.error};
                 TypedArray ta = getActivity().obtainStyledAttributes(attrs);
                 Drawable drawableFromTheme = ta.getDrawable(0);
-//                imageView.setImageDrawable(drawableFromTheme);
+                imageView.setBackgroundDrawable(drawableFromTheme);
             }
 
         }

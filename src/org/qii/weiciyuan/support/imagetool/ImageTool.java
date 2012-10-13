@@ -446,7 +446,7 @@ public class ImageTool {
             if (file.exists()) {
                 return absoluteFilePath;
             } else {
-                return "about:blank";
+                return "";
             }
 
 
