@@ -254,7 +254,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         }
     }
 
-    class GetAccountListDBTask extends MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
+    private class GetAccountListDBTask extends MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
 
         @Override
         protected List<AccountBean> doInBackground(Void... params) {
@@ -268,7 +268,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         }
     }
 
-    class RemoveAccountDBTask extends MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
+    private class RemoveAccountDBTask extends MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
 
         Set<String> set = new HashSet<String>();
 
