@@ -447,7 +447,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.menu_add_gps:
-                    getLocation();
+                    addLocation();
                     break;
                 case R.id.menu_add_pic:
                     addPic();
@@ -557,7 +557,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
 
-    private void getLocation() {
+    private void addLocation() {
         LocationManager locationManager = (LocationManager) WriteWeiboActivity.this
                 .getSystemService(Context.LOCATION_SERVICE);
 
