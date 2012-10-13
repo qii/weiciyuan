@@ -164,19 +164,6 @@ public class PictureDialogFragment extends DialogFragment {
 
             if (bitmap != null) {
 
-
-//                pb.setVisibility(View.INVISIBLE);
-//
-//                String HTML_FORMAT = "<html><body style=\"text-align: center; background-color: black; vertical-align: center;\"><img src = \"%s\" /></body></html>";
-//                 final String html = String.format(HTML_FORMAT, bitmap);
-
-
-//                imageView.getSettings().setUseWideViewPort(false);
-
-//                imageView.loadDataWithBaseURL("", html, "text/html", "UTF-8", "");
-
-//                imageView.loadUrl("file://" + bitmap);
-
                 File file = new File(bitmap);
 
                 AppLogger.e(file.getParent());
