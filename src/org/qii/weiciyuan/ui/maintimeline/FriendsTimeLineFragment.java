@@ -205,8 +205,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 break;
             case R.id.friendstimelinefragment_name:
 
-//                String[] group = {"全部", "互相关注", "全部", "互相关注", "全部", "互相关注", "全部"
-//                        , "互相关注", "全部", "互相关注", "全部", "互相关注", "全部", "互相关注"};
                 if (canSwitchGroup()) {
                     FriendsGroupDialog dialog = new FriendsGroupDialog(group, selectedId);
                     dialog.setTargetFragment(this, 1);
@@ -276,7 +274,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     public void switchGroup() {
 
-
         if (hashMap.get(selectedId).getSize() == 0) {
             bean.getItemList().clear();
             getAdapter().notifyDataSetChanged();
@@ -308,7 +305,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     }
 
-    class AutoTask implements Runnable {
+    private class AutoTask implements Runnable {
 
         @Override
         public void run() {
@@ -352,7 +349,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     }
 
-    class AutoRefreshTask extends MyAsyncTask<Void, MessageListBean, MessageListBean> {
+    private class AutoRefreshTask extends MyAsyncTask<Void, MessageListBean, MessageListBean> {
 
         @Override
         protected void onPreExecute() {
