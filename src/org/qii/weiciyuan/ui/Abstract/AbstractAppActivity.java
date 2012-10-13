@@ -65,7 +65,6 @@ public class AbstractAppActivity extends Activity {
                     AvatarBitmapWorkerTask task = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey, position);
                     AvatarBitmapDrawable downloadedDrawable = new AvatarBitmapDrawable(task);
                     view.setImageDrawable(downloadedDrawable);
-//                    task.execute();
                     task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     avatarBitmapWorkerTaskHashMap.put(getMemCacheKey(urlKey, position), task);
                 }
@@ -102,32 +101,24 @@ public class AbstractAppActivity extends Activity {
 
                         break;
                     case picture_bmiddle:
-
-//                        view.setBackgroundDrawable(defaultPic);
                         view.setBackgroundDrawable(transPic);
                         break;
 
                 }
                 if (cancelPotentialDownload(urlKey, view) && !isFling) {
 
-
                     PictureBitmapWorkerTask task = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, urlKey, position, AbstractAppActivity.this, method);
                     PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(task);
                     view.setImageDrawable(downloadedDrawable);
-//                    task.execute();
                     task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     pictureBitmapWorkerTaskMap.put(urlKey, task);
                 }
-
             }
-
 
         }
 
-
     }
 
-    ;
 
     private static boolean cancelPotentialDownload(String url, ImageView imageView) {
         PictureBitmapWorkerTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
