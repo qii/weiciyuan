@@ -151,7 +151,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
 
                         enableRefreshTime = true;
-                        timeLineAdapter.notifyDataSetChanged();
+                        getAdapter().notifyDataSetChanged();
                         break;
 
 
@@ -249,7 +249,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         }
         if (pullToRefreshListView != null && getListView().getCheckedItemCount() > 0) {
             getListView().clearChoices();
-            if (timeLineAdapter != null) timeLineAdapter.notifyDataSetChanged();
+            if (getAdapter() != null) getAdapter().notifyDataSetChanged();
         }
     }
 
@@ -321,7 +321,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     public void onResume() {
         super.onResume();
         addListViewTimeRefresh();
-        timeLineAdapter.notifyDataSetChanged();
+        getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -439,7 +439,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
         private void cleanWork() {
             pullToRefreshListView.onRefreshComplete();
-            timeLineAdapter.notifyDataSetChanged();
+            getAdapter().notifyDataSetChanged();
             dismissFooterView();
         }
     }
@@ -494,7 +494,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         }
 
         private void cleanWork() {
-            timeLineAdapter.notifyDataSetChanged();
+            getAdapter().notifyDataSetChanged();
 
         }
     }
@@ -507,7 +507,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
         if (newValue.getSize() == 1) {
             bean.getItemList().remove(position);
-            timeLineAdapter.notifyDataSetChanged();
+            getAdapter().notifyDataSetChanged();
             return;
         }
 
@@ -515,7 +515,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
         if (!lastItem.getId().equals(endTag)) {
             bean.getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
-            timeLineAdapter.notifyDataSetChanged();
+            getAdapter().notifyDataSetChanged();
             return;
         }
 
@@ -524,7 +524,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             bean.getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
             bean.getItemList().remove(nullIndex - 1);
             bean.getItemList().remove(nullIndex - 1);
-            timeLineAdapter.notifyDataSetChanged();
+            getAdapter().notifyDataSetChanged();
             return;
         }
 
