@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.*;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -17,16 +15,16 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class AccountActivity extends AbstractAppActivity implements AdapterView.OnItemClickListener {
-    /**
-     * Called when the activity is first created.
-     */
 
-    private ListView listView;
+    private ListView listView = null;
 
-    private AccountAdapter listAdapter;
+    private AccountAdapter listAdapter = null;
 
     private List<AccountBean> accountList = new ArrayList<AccountBean>();
 
@@ -35,11 +33,13 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
     private final int ADD_ACCOUNT_REQUEST_CODE = 0;
 
+    private ActionMode mActionMode = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        jumpToHomeActivity();
         GlobalContext.getInstance().startedApp = true;
+        jumpToHomeActivity();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.accountactivity_layout);
@@ -47,83 +47,14 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         listAdapter = new AccountAdapter();
         listView = (ListView) findViewById(R.id.listView);
         listView.setOnItemClickListener(this);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                startActionMode(mActionModeCallback);
-                return true;
-            }
-        });
         listView.setAdapter(listAdapter);
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setMultiChoiceModeListener(new AccountMultiChoiceModeListener());
 
         getTask = new GetAccountListDBTask();
         getTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
-
-        boolean checkAll = false;
-        boolean isCancel = true;
-
-
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.contextual_menu_accountactivity, menu);
-            return true;
-        }
-
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            listAdapter.addCheckbox();
-            isCancel = true;
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.menu_select_all:
-                    if (!checkAll) {
-                        listAdapter.selectAll();
-                        checkAll = true;
-
-                    } else {
-                        listAdapter.unSelectButRemainCheckBoxAll();
-                        checkAll = false;
-
-                    }
-                    return true;
-                case R.id.menu_remove_account:
-                    isCancel = false;
-                    if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                        removeTask = new RemoveAccountDBTask();
-                        removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                    } else if (removeTask.getStatus() == MyAsyncTask.Status.PENDING || removeTask.getStatus() == MyAsyncTask.Status.RUNNING) {
-                        removeTask.cancel(true);
-                        removeTask = new RemoveAccountDBTask();
-                        removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                    }
-                    mode.finish();
-                    return true;
-                default:
-                    Toast.makeText(AccountActivity.this, getString(R.string.delete), Toast.LENGTH_SHORT).show();
-                    mode.finish();
-                    return false;
-            }
-        }
-
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            ActionMode mActionMode = null;
-            if (isCancel)
-                listAdapter.removeCheckbox();
-
-
-        }
-    };
 
     @Override
     public void onBackPressed() {
@@ -209,13 +140,9 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
         String token = accountList.get(i).getAccess_token();
-
         SharedPreferences settings = getPreferences(MODE_PRIVATE);
-
         SharedPreferences.Editor editor = settings.edit();
-
         editor.putString("token", token);
-
         editor.commit();
 
         Intent intent = new Intent(this, MainTimeLineActivity.class);
@@ -223,20 +150,52 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
+    }
 
 
+    private class AccountMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.contextual_menu_accountactivity, menu);
+            mActionMode = mode;
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.menu_remove_account:
+                    if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                        removeTask = new RemoveAccountDBTask();
+                        removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                    mode.finish();
+                    return true;
+            }
+            return false;
+        }
+
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mActionMode = null;
+            listAdapter.notifyDataSetChanged();
+
+        }
+
+        @Override
+        public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+        }
     }
 
 
     private class AccountAdapter extends BaseAdapter {
-
-        boolean needCheckbox = false;
-
-        boolean allChecked = false;
-
-        Set<String> checkedItemId = new HashSet<String>();
-
-        Set<Integer> checkedItemListViewPosition = new HashSet<Integer>();
 
         @Override
         public int getCount() {
@@ -250,7 +209,12 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
         @Override
         public long getItemId(int i) {
-            return 0;
+            return Long.valueOf(accountList.get(i).getUid());
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
         }
 
         @Override
@@ -259,86 +223,30 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
             LayoutInflater layoutInflater = getLayoutInflater();
 
             View mView = layoutInflater.inflate(R.layout.accountactivity_listview_item_layout, viewGroup, false);
-            if (needCheckbox) {
+            if (mActionMode != null) {
                 LinearLayout linearLayout = (LinearLayout) mView;
-
                 CheckBox cb = new CheckBox(AccountActivity.this);
-
                 cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        AccountBean account = accountList.get(i);
-                        String uid = account.getUid();
-                        if (isChecked) {
-                            checkedItemId.add(uid);
-                            checkedItemListViewPosition.add(i);
-                        } else if (checkedItemId.contains(uid)) {
-                            checkedItemId.remove(uid);
-                            checkedItemListViewPosition.remove(i);
-                        }
-
+                        listView.setItemChecked(i, isChecked);
                     }
                 });
 
-                if (allChecked)
-                    cb.setChecked(true);
-
-                cb.setId(R.id.webView);
+                cb.setChecked(listView.getCheckedItemPositions().get(i));
                 linearLayout.addView(cb, 0);
 
             }
             TextView textView = (TextView) mView.findViewById(R.id.account_name);
-
             textView.setText(accountList.get(i).getUsernick());
-
             ImageView imageView = (ImageView) mView.findViewById(R.id.imageView_avatar);
 
             if (!TextUtils.isEmpty(accountList.get(i).getAvatar_url())) {
-
                 commander.downloadAvatar(imageView, accountList.get(i).getAvatar_url(), i, listView, false);
             }
 
             return mView;
         }
-
-
-        public void addCheckbox() {
-            needCheckbox = true;
-            notifyDataSetChanged();
-        }
-
-        public void removeCheckbox() {
-            needCheckbox = false;
-            unSelectAll();
-            notifyDataSetChanged();
-        }
-
-        public void selectAll() {
-            needCheckbox = true;
-            allChecked = true;
-            notifyDataSetChanged();
-        }
-
-        public void unSelectAll() {
-            needCheckbox = false;
-            allChecked = false;
-            notifyDataSetChanged();
-        }
-
-        public void unSelectButRemainCheckBoxAll() {
-            needCheckbox = true;
-            allChecked = false;
-            notifyDataSetChanged();
-        }
-
-        public Set<String> getCheckedItemId() {
-            return checkedItemId;
-        }
-
-        public Set<Integer> getCheckedItemListViewPosition() {
-            return checkedItemListViewPosition;
-        }
-
     }
 
     class GetAccountListDBTask extends MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
@@ -352,74 +260,31 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         protected void onPostExecute(List<AccountBean> accounts) {
             accountList = accounts;
             listAdapter.notifyDataSetChanged();
-
         }
     }
 
     class RemoveAccountDBTask extends MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
 
+        Set<String> set = new HashSet<String>();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            long[] ids = listView.getCheckedItemIds();
+            for (long id : ids) {
+                set.add(String.valueOf(id));
+            }
+        }
+
         @Override
         protected List<AccountBean> doInBackground(Void... params) {
-            return DatabaseManager.getInstance().removeAndGetNewAccountList(listAdapter.getCheckedItemId());
+            return DatabaseManager.getInstance().removeAndGetNewAccountList(set);
         }
 
         @Override
         protected void onPostExecute(List<AccountBean> accounts) {
             accountList = accounts;
-
-            Animation anim = AnimationUtils.loadAnimation(
-                    AccountActivity.this, R.anim.account_delete_slide_out_right
-            );
-
-            anim.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    listAdapter.removeCheckbox();
-                    listAdapter.notifyDataSetChanged();
-//                    refresh();
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-            Set<Integer> position = listAdapter.getCheckedItemListViewPosition();
-            int start = listView.getFirstVisiblePosition();
-            int end = listView.getLastVisiblePosition();
-
-            Iterator<Integer> iterator = position.iterator();
-            while (iterator.hasNext()) {
-                Integer i = iterator.next();
-                if (i < start || i > end) {
-                    iterator.remove();
-                }
-            }
-            Integer[] array = position.toArray(new Integer[1]);
-            int arraySize = array.length;
-            for (int i = 0; i < arraySize; i++) {
-                array[i] = array[i] - start;
-            }
-
-            if (arraySize <= listView.getChildCount()) {
-                for (int i = 0; i < arraySize; i++) {
-                    listView.getChildAt(array[i]).startAnimation(anim);
-                }
-            }
-
-            int listViewChildCount = listView.getChildCount();
-            for (int i = 0; i < listViewChildCount; i++) {
-                listView.getChildAt(i).findViewById(R.id.webView).startAnimation(anim);
-            }
-
-
+            listAdapter.notifyDataSetChanged();
         }
     }
-
-
 }
