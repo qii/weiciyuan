@@ -174,14 +174,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//
-//        getMenuInflater().inflate(R.menu.maintimelineactivity_menu, menu);
-//
-//        return super.onCreateOptionsMenu(menu);
-//    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -205,6 +197,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 intent = new Intent(this, AccountActivity.class);
                 intent.putExtra("launcher", false);
                 startActivity(intent);
+                finish();
                 return true;
 
             case R.id.menu_setting:
@@ -329,10 +322,10 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                     break;
                 case 1:
                     mentions = true;
-                     break;
+                    break;
                 case 2:
                     comments = true;
-                     break;
+                    break;
                 case 3:
                     my = true;
                     break;
