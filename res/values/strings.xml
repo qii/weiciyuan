@@ -12,6 +12,7 @@
     <string name="select_all">全选</string>
     <string name="select_none">反选</string>
     <string name="only_oauth_three_months">每隔3个月得重新授权一次</string>
+    <string name="oauthing">授权中</string>
 
     <!--emotions-->
     <string name="weibo_emotions">微博表情</string>

@@ -12,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -26,8 +25,8 @@ import org.qii.weiciyuan.dao.login.OAuthDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppLogger;
-import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,9 +37,8 @@ import java.util.Map;
  */
 public class OAuthActivity extends AbstractAppActivity {
 
-    public static String URL_OAUTH2_ACCESS_AUTHORIZE = "https://api.weibo.com/oauth2/authorize";
-    public static final String APP_KEY = "1065511513";
-    private static final String CONSUMER_SECRET = "df428e88aae8bd31f20481d149c856ed";
+    private static final String URL_OAUTH2_ACCESS_AUTHORIZE = "https://api.weibo.com/oauth2/authorize";
+    private static final String APP_KEY = "1065511513";
     private static final String DIRECT_URL = "https://api.weibo.com/oauth2/default.html";
 
     private WebView webView;
@@ -68,8 +66,6 @@ public class OAuthActivity extends AbstractAppActivity {
         CookieSyncManager.createInstance(this);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
-
-
     }
 
     @Override
@@ -80,19 +76,30 @@ public class OAuthActivity extends AbstractAppActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.actionbar_menu_oauthactivity, menu);
-        refreshItem = menu.findItem(R.id.menu_add_account);
-        refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                refresh();
-                return true;
-            }
-        });
+        getMenuInflater().inflate(R.menu.actionbar_menu_oauthactivity, menu);
+        refreshItem = menu.findItem(R.id.menu_refresh);
         refresh();
         return true;
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(this, AccountActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("launcher", false);
+                startActivity(intent);
+                return true;
+            case R.id.menu_refresh:
+                refresh();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     public void refresh() {
         webView.clearView();
@@ -114,19 +121,6 @@ public class OAuthActivity extends AbstractAppActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                Intent intent = new Intent(this, AccountActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("launcher", false);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     private String getWeiboOAuthUrl() {
 
@@ -292,7 +286,7 @@ public class OAuthActivity extends AbstractAppActivity {
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
             ProgressDialog dialog = new ProgressDialog(getActivity());
-            dialog.setMessage("授权中");
+            dialog.setMessage(getString(R.string.oauthing));
             dialog.setIndeterminate(false);
             dialog.setCancelable(true);
 
