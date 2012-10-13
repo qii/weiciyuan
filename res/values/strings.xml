@@ -121,6 +121,7 @@
     <string name="you_cancel_login">你取消了授权</string>
     <string name="login_success">授权成功</string>
     <string name="update_account_success">已有该帐号，授权信息更新成功</string>
+    <string name="account_management">帐号管理</string>
     <string name="remove_successfully">删除成功</string>
     <string name="add_account">添加</string>
 

@@ -158,6 +158,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.contextual_menu_accountactivity, menu);
+            mode.setTitle(getString(R.string.account_management));
             mActionMode = mode;
             return true;
         }
