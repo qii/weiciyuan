@@ -52,27 +52,21 @@ import java.util.*;
 public class WriteWeiboActivity extends AbstractAppActivity implements DialogInterface.OnClickListener,
         IAccountInfo, ClearContentDialog.IClear, EmotionsGridDialog.IEmotions {
 
-
     private static final int CAMERA_RESULT = 0;
     private static final int PIC_RESULT = 1;
     public static final int AT_USER = 3;
 
-
+    private AccountBean accountBean;
     protected String token = "";
 
     private String picPath = "";
-
     private Uri imageFileUri = null;
-
     private GeoBean geoBean;
+    private String location;
 
     private ImageView haveGPS = null;
     private ImageView havePic = null;
     private EditText content = null;
-
-    private String location;
-
-    private AccountBean accountBean;
 
     private GetEmotionsTask getEmotionsTask;
     private Map<String, Bitmap> emotionsPic = new HashMap<String, Bitmap>();
@@ -95,7 +89,6 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             case 1:
                 Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
                 startActivityForResult(choosePictureIntent, PIC_RESULT);
                 break;
         }
@@ -204,33 +197,6 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         return emotionsPic;
     }
 
-
-    private class GetEmotionsTask extends MyAsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            Map<String, String> emotions = GlobalContext.getInstance().getEmotions();
-            List<String> index = new ArrayList<String>();
-            index.addAll(emotions.keySet());
-            for (String str : index) {
-                if (!isCancelled()) {
-                    String url = emotions.get(str);
-                    String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
-                    String name = new File(path).getName();
-                    AssetManager assetManager = GlobalContext.getInstance().getAssets();
-                    InputStream inputStream;
-                    try {
-                        inputStream = assetManager.open(name);
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                        emotionsPic.put(str, bitmap);
-                    } catch (IOException ignored) {
-
-                    }
-                }
-            }
-            return null;
-        }
-    }
 
     private void initLayout() {
         ActionBar actionBar = getActionBar();
@@ -619,6 +585,33 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         ((LocationManager) WriteWeiboActivity.this
                 .getSystemService(Context.LOCATION_SERVICE)).removeUpdates(locationListener);
 
+    }
+
+    private class GetEmotionsTask extends MyAsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Map<String, String> emotions = GlobalContext.getInstance().getEmotions();
+            List<String> index = new ArrayList<String>();
+            index.addAll(emotions.keySet());
+            for (String str : index) {
+                if (!isCancelled()) {
+                    String url = emotions.get(str);
+                    String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
+                    String name = new File(path).getName();
+                    AssetManager assetManager = GlobalContext.getInstance().getAssets();
+                    InputStream inputStream;
+                    try {
+                        inputStream = assetManager.open(name);
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        emotionsPic.put(str, bitmap);
+                    } catch (IOException ignored) {
+
+                    }
+                }
+            }
+            return null;
+        }
     }
 
     private final LocationListener locationListener = new LocationListener() {
