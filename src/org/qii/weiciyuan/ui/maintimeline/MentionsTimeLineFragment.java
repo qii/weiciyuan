@@ -227,7 +227,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
                 break;
             case R.id.mentionstimelinefragment_group:
-                if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                if (canSwitchGroup()) {
                     MentionsGroupDialog dialog = new MentionsGroupDialog(group, selected);
                     dialog.setTargetFragment(MentionsTimeLineFragment.this, 0);
                     dialog.show(getFragmentManager(), "");
@@ -291,7 +291,9 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
 
-    public void refreshAnother() {
+    public void switchGroup() {
+
+
         if (hashMap.get(selected).getSize() == 0) {
             bean.getItemList().clear();
             getAdapter().notifyDataSetChanged();

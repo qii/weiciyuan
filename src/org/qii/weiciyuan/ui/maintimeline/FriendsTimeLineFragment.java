@@ -207,9 +207,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
 //                String[] group = {"全部", "互相关注", "全部", "互相关注", "全部", "互相关注", "全部"
 //                        , "互相关注", "全部", "互相关注", "全部", "互相关注", "全部", "互相关注"};
-                FriendsGroupDialog dialog = new FriendsGroupDialog(group, selectedId);
-                dialog.setTargetFragment(this, 1);
-                dialog.show(getFragmentManager(), "");
+                if (canSwitchGroup()) {
+                    FriendsGroupDialog dialog = new FriendsGroupDialog(group, selectedId);
+                    dialog.setTargetFragment(this, 1);
+                    dialog.show(getFragmentManager(), "");
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -272,11 +274,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         return result;
     }
 
-    public void refreshAnother() {
+    public void switchGroup() {
+
+
         if (hashMap.get(selectedId).getSize() == 0) {
             bean.getItemList().clear();
             getAdapter().notifyDataSetChanged();
             pullToRefreshListView.startRefreshNow();
+
         } else {
             clearAndReplaceValue(hashMap.get(selectedId));
             getAdapter().notifyDataSetChanged();

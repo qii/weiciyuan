@@ -264,11 +264,24 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         if (oldTask != null)
             oldTask.cancel(true);
 
-
+        if (middleTask != null)
+            middleTask.cancel(true);
 
     }
 
 
+    protected boolean canSwitchGroup() {
+        if (newTask != null && newTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+            return false;
+        }
+        if (oldTask != null && oldTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+            return false;
+        }
+        if (middleTask != null && middleTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+            return false;
+        }
+        return true;
+    }
 
 
     @Override

@@ -331,7 +331,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
                 break;
             case R.id.mentionstimelinefragment_group:
-                if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                if (canSwitchGroup()) {
                     CommentsGroupDialog dialog = new CommentsGroupDialog(group, selected);
                     dialog.setTargetFragment(CommentsTimeLineFragment.this, 0);
                     dialog.show(getFragmentManager(), "");
@@ -453,12 +453,13 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         }
     }
 
-    public void refreshAnother() {
+    public void switchGroup() {
+
         if (hashMap.get(selected).getSize() == 0) {
             bean.getItemList().clear();
             getAdapter().notifyDataSetChanged();
             pullToRefreshListView.startRefreshNow();
-            refresh();
+
         } else {
             clearAndReplaceValue(hashMap.get(selected));
             getAdapter().notifyDataSetChanged();

@@ -52,7 +52,7 @@ public class CommentsGroupDialog extends DialogFragment {
                 if (selected != which) {
                     selected = which;
                     fragment.setSelected(which);
-                    fragment.refreshAnother();
+                    fragment.switchGroup();
                 }
                 dismiss();
             }

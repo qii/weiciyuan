@@ -70,7 +70,7 @@ public class FriendsGroupDialog extends DialogFragment {
                 int selectedItemId = keyArray[which].intValue();
                 if (selected != selectedItemId) {
                     fragment.setSelected(selectedItemId);
-                    fragment.refreshAnother();
+                    fragment.switchGroup();
                 }
                 dismiss();
             }
