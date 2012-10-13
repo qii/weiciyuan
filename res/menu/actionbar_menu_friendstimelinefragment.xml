@@ -3,20 +3,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/write_weibo"
-          android:icon="?friendstimelinefragment_write"
+          android:icon="?write_weibo"
           android:showAsAction="ifRoom"
-          android:title="@string/write_weibo"
-            />
+          android:title="@string/write_weibo"/>
 
     <item android:id="@+id/group_name"
           android:title="name"
-          android:showAsAction="ifRoom|withText"
-            />
+          android:showAsAction="ifRoom|withText"/>
 
     <item android:id="@+id/refresh"
           android:icon="?refresh"
           android:title="@string/refresh"
-          android:showAsAction="ifRoom"
-            />
+          android:showAsAction="ifRoom"/>
 
 </menu>
