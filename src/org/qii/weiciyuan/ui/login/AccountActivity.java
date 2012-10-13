@@ -28,7 +28,6 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
 
     private AccountAdapter listAdapter;
 
-
     private List<AccountBean> accountList = new ArrayList<AccountBean>();
 
     private GetAccountListDBTask getTask = null;
@@ -39,7 +38,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        jumpToHomeLine();
+        jumpToHomeActivity();
         GlobalContext.getInstance().startedApp = true;
 
         super.onCreate(savedInstanceState);
@@ -135,6 +134,10 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        cancelAllTask();
+    }
+
+    private void cancelAllTask() {
         if (getTask != null)
             getTask.cancel(true);
 
@@ -143,7 +146,7 @@ public class AccountActivity extends AbstractAppActivity implements AdapterView.
     }
 
 
-    private void jumpToHomeLine() {
+    private void jumpToHomeActivity() {
         Intent intent = getIntent();
         if (intent != null) {
             boolean launcher = intent.getBooleanExtra("launcher", true);
