@@ -65,10 +65,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
     private Uri imageFileUri = null;
 
-    private String imageFilePath = "";
-
     private GeoBean geoBean;
-
 
     private ImageView haveGPS = null;
     private ImageView havePic = null;
