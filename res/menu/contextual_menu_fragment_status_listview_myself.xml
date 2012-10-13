@@ -29,7 +29,7 @@
             />
 
     <item android:id="@+id/menu_remove"
-          android:icon="?accountactivity_remove"
+          android:icon="?remove"
           android:title="@string/delete"
           android:showAsAction="ifRoom|withText"/>
 </menu>
