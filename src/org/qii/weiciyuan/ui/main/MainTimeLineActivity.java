@@ -51,7 +51,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     private GetUnreadCountTask getUnreadCountTask = null;
 
-    private NewMsgBroadcastReceiver newMsgBroadcastReceiver;
+    private NewMsgBroadcastReceiver newMsgBroadcastReceiver = null;
 
     private ScheduledExecutorService newMsgScheduledExecutorService = null;
 
@@ -380,7 +380,35 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     }
 
 
-    class TimeLinePagerAdapter extends AppFragmentPagerAdapter {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(MentionsAndCommentsReceiver.ACTION);
+        filter.setPriority(1);
+        newMsgBroadcastReceiver = new NewMsgBroadcastReceiver();
+        registerReceiver(newMsgBroadcastReceiver, filter);
+
+        newMsgScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        newMsgScheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                getUnreadCount();
+            }
+        }, 10, 50, TimeUnit.SECONDS);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(newMsgBroadcastReceiver);
+        newMsgScheduledExecutorService.shutdownNow();
+        if (getUnreadCountTask != null)
+            getUnreadCountTask.cancel(true);
+    }
+
+
+    private class TimeLinePagerAdapter extends AppFragmentPagerAdapter {
 
 
         List<Fragment> list = new ArrayList<Fragment>();
@@ -439,7 +467,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     }
 
-    class GetUnreadCountTask extends MyAsyncTask<Void, Void, UnreadBean> {
+    private class GetUnreadCountTask extends MyAsyncTask<Void, Void, UnreadBean> {
 
         @Override
         protected UnreadBean doInBackground(Void... params) {
@@ -473,7 +501,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         }
     }
 
-    class NewMsgBroadcastReceiver extends BroadcastReceiver {
+    private class NewMsgBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -496,34 +524,5 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         }
     }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        IntentFilter filter = new IntentFilter(MentionsAndCommentsReceiver.ACTION);
-        filter.setPriority(1);
-        newMsgBroadcastReceiver = new NewMsgBroadcastReceiver();
-        registerReceiver(newMsgBroadcastReceiver, filter);
-
-        newMsgScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        newMsgScheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                getUnreadCount();
-            }
-        }, 10, 50, TimeUnit.SECONDS);
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(newMsgBroadcastReceiver);
-        newMsgScheduledExecutorService.shutdownNow();
-        if (getUnreadCountTask != null)
-            getUnreadCountTask.cancel(true);
-    }
-
 
 }
