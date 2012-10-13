@@ -9,7 +9,7 @@ import android.support.v4.app.DialogFragment;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.ui.Abstract.IToken;
-import org.qii.weiciyuan.ui.send.ReplyToCommentNewActivity;
+import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
 /**
  * User: qii
@@ -47,7 +47,7 @@ public class CommentOperatorDialog extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        Intent intent = new Intent(getActivity(), ReplyToCommentNewActivity.class);
+                        Intent intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
                         intent.putExtra("msg", bean);
                         intent.putExtra("token", ((IToken) getActivity()).getToken());
                         startActivity(intent);

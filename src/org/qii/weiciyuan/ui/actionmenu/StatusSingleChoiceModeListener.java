@@ -22,8 +22,8 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.send.CommentNewActivity;
-import org.qii.weiciyuan.ui.send.RepostNewActivity;
+import org.qii.weiciyuan.ui.send.WriteCommentActivity;
+import org.qii.weiciyuan.ui.send.WriteRepostActivity;
 import org.qii.weiciyuan.ui.task.FavAsyncTask;
 
 import java.util.List;
@@ -114,7 +114,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
         switch (item.getItemId()) {
             case R.id.menu_repost:
                 msg = (MessageBean) adapter.getItem(listView.getCheckedItemPositions().keyAt(listView.getCheckedItemCount() - 1) - 1);
-                intent = new Intent(getActivity(), RepostNewActivity.class);
+                intent = new Intent(getActivity(), WriteRepostActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("id", String.valueOf(ids[0]));
                 intent.putExtra("msg", msg);
@@ -124,7 +124,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
                 break;
             case R.id.menu_comment:
                 msg = (MessageBean) adapter.getItem(listView.getCheckedItemPositions().keyAt(listView.getCheckedItemCount() - 1) - 1);
-                intent = new Intent(getActivity(), CommentNewActivity.class);
+                intent = new Intent(getActivity(), WriteCommentActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("id", String.valueOf(ids[0]));
                 intent.putExtra("msg", msg);

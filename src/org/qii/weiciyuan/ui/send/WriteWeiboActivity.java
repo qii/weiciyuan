@@ -50,7 +50,7 @@ import java.util.*;
  * User: qii
  * Date: 12-7-29
  */
-public class StatusNewActivity extends AbstractAppActivity implements DialogInterface.OnClickListener,
+public class WriteWeiboActivity extends AbstractAppActivity implements DialogInterface.OnClickListener,
         View.OnClickListener, View.OnLongClickListener, IAccountInfo, ClearContentDialog.IClear, EmotionsDialog.IEmotions {
 
 
@@ -106,8 +106,6 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         super.onActivityResult(requestCode, resultCode, intent);
 
         if (resultCode == RESULT_OK) {
-
-
             switch (requestCode) {
                 case CAMERA_RESULT:
                     if (TextUtils.isEmpty(content.getText().toString())) {
@@ -136,7 +134,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                     stringBuilder.insert(index, name);
                     content.setText(stringBuilder.toString());
                     content.setSelection(index + name.length());
-                    return;
+                    break;
             }
 
         }
@@ -177,24 +175,28 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 handleSendImage(intent);
             }
         } else {
-            token = intent.getStringExtra("token");
-            accountBean = (AccountBean) intent.getSerializableExtra("account");
-
-            getActionBar().setSubtitle(accountBean.getUsernick());
-            String contentTxt = intent.getStringExtra("content");
-            if (!TextUtils.isEmpty(contentTxt)) {
-                content.setText(contentTxt + " ");
-                content.setSelection(content.getText().toString().length());
-            } else {
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-                String draft = sharedPref.getString(TYPE_DRAFT, "");
-                content.setText(draft);
-                content.setSelection(content.getText().toString().length());
-            }
+            handleNormalOperation(intent);
         }
         if (getEmotionsTask == null || getEmotionsTask.getStatus() == MyAsyncTask.Status.FINISHED) {
             getEmotionsTask = new GetEmotionsTask();
             getEmotionsTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    private void handleNormalOperation(Intent intent) {
+        token = intent.getStringExtra("token");
+        accountBean = (AccountBean) intent.getSerializableExtra("account");
+
+        getActionBar().setSubtitle(accountBean.getUsernick());
+        String contentTxt = intent.getStringExtra("content");
+        if (!TextUtils.isEmpty(contentTxt)) {
+            content.setText(contentTxt + " ");
+            content.setSelection(content.getText().toString().length());
+        } else {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            String draft = sharedPref.getString(TYPE_DRAFT, "");
+            content.setText(draft);
+            content.setSelection(content.getText().toString().length());
         }
     }
 
@@ -204,7 +206,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     }
 
 
-    class GetEmotionsTask extends MyAsyncTask<Void, Void, Void> {
+    private class GetEmotionsTask extends MyAsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -220,10 +222,9 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                     InputStream inputStream;
                     try {
                         inputStream = assetManager.open(name);
-
                         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                         emotionsPic.put(str, bitmap);
-                    } catch (IOException e) {
+                    } catch (IOException ignored) {
 
                     }
                 }
@@ -433,7 +434,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
                 content.setSelection(content.getText().toString().length() - 1);
                 break;
             case R.id.menu_at:
-                intent = new Intent(StatusNewActivity.this, AtUserActivity.class);
+                intent = new Intent(WriteWeiboActivity.this, AtUserActivity.class);
                 intent.putExtra("token", token);
                 startActivityForResult(intent, AT_USER);
                 break;
@@ -465,7 +466,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
     }
 
     private void addPic() {
-        new PictureSelectDialog().show(getFragmentManager(), "");
+        new SelectPictureDialog().show(getFragmentManager(), "");
     }
 
     protected void executeTask(String content) {
@@ -473,7 +474,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         if (TextUtils.isEmpty(picPath)) {
             new StatusNewTask(content).execute();
         } else {
-            Intent intent = new Intent(StatusNewActivity.this, UploadPhotoService.class);
+            Intent intent = new Intent(WriteWeiboActivity.this, UploadPhotoService.class);
             intent.putExtra("token", token);
             intent.putExtra("picPath", picPath);
             intent.putExtra("content", content);
@@ -583,16 +584,16 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
             super.onCancelled(s);
             progressFragment.dismissAllowingStateLoss();
             if (e != null)
-                Toast.makeText(StatusNewActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(WriteWeiboActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
         }
 
         @Override
         protected void onPostExecute(String s) {
             progressFragment.dismissAllowingStateLoss();
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(StatusNewActivity.this);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(WriteWeiboActivity.this);
             sharedPref.edit().remove(TYPE_DRAFT).commit();
             finish();
-            Toast.makeText(StatusNewActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
+            Toast.makeText(WriteWeiboActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
             super.onPostExecute(s);
 
         }
@@ -600,14 +601,14 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
 
     private void getLocation() {
-        LocationManager locationManager = (LocationManager) StatusNewActivity.this
+        LocationManager locationManager = (LocationManager) WriteWeiboActivity.this
                 .getSystemService(Context.LOCATION_SERVICE);
 
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            Toast.makeText(StatusNewActivity.this, getString(R.string.gps_is_searching), Toast.LENGTH_SHORT).show();
+            Toast.makeText(WriteWeiboActivity.this, getString(R.string.gps_is_searching), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(StatusNewActivity.this, getString(R.string.please_open_gps), Toast.LENGTH_SHORT).show();
+            Toast.makeText(WriteWeiboActivity.this, getString(R.string.please_open_gps), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -624,7 +625,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         geoBean.setLatitude(result.getLatitude());
         geoBean.setLongitude(result.getLongitude());
         new GetGoogleLocationInfo(geoBean).execute();
-        ((LocationManager) StatusNewActivity.this
+        ((LocationManager) WriteWeiboActivity.this
                 .getSystemService(Context.LOCATION_SERVICE)).removeUpdates(locationListener);
 
     }
@@ -659,7 +660,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
         @Override
         protected String doInBackground(Void... params) {
 
-            Geocoder geocoder = new Geocoder(StatusNewActivity.this, Locale.getDefault());
+            Geocoder geocoder = new Geocoder(WriteWeiboActivity.this, Locale.getDefault());
 
             List<Address> addresses = null;
             try {
@@ -683,7 +684,7 @@ public class StatusNewActivity extends AbstractAppActivity implements DialogInte
 
         @Override
         protected void onPostExecute(String s) {
-            Toast.makeText(StatusNewActivity.this, s, Toast.LENGTH_SHORT).show();
+            Toast.makeText(WriteWeiboActivity.this, s, Toast.LENGTH_SHORT).show();
             location = s;
             super.onPostExecute(s);
         }

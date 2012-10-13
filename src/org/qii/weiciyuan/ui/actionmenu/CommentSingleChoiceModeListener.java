@@ -21,7 +21,7 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.send.ReplyToCommentNewActivity;
+import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
 import java.util.List;
 
@@ -110,7 +110,7 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         switch (item.getItemId()) {
 
             case R.id.menu_comment:
-                Intent intent = new Intent(getActivity(), ReplyToCommentNewActivity.class);
+                Intent intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("msg", bean);
                 getActivity().startActivity(intent);

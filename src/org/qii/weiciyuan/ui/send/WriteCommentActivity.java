@@ -22,7 +22,7 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
  * User: Jiang Qi
  * Date: 12-8-2
  */
-public class CommentNewActivity extends AbstractNewActivity<ItemBean> {
+public class WriteCommentActivity extends AbstractNewActivity<ItemBean> {
 
     private String id;
     private String token;
@@ -117,7 +117,7 @@ public class CommentNewActivity extends AbstractNewActivity<ItemBean> {
                 }
                 break;
             case R.id.menu_at:
-                Intent intent = new Intent(CommentNewActivity.this, AtUserActivity.class);
+                Intent intent = new Intent(WriteCommentActivity.this, AtUserActivity.class);
                 intent.putExtra("token", token);
                 startActivityForResult(intent, AT_USER);
                 break;

@@ -11,7 +11,7 @@ import org.qii.weiciyuan.R;
  * User: qii
  * Date: 12-9-6
  */
-public class PictureSelectDialog extends DialogFragment {
+public class SelectPictureDialog extends DialogFragment {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {

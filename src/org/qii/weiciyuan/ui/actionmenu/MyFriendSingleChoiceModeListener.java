@@ -20,7 +20,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.adapter.UserListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
-import org.qii.weiciyuan.ui.send.StatusNewActivity;
+import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 /**
  * User: qii
@@ -85,7 +85,7 @@ public class MyFriendSingleChoiceModeListener implements ActionMode.Callback {
 
         switch (item.getItemId()) {
             case R.id.menu_at:
-                Intent intent = new Intent(getActivity(), StatusNewActivity.class);
+                Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("content", "@" + bean.getScreen_name());
                 intent.putExtra("accountName", GlobalContext.getInstance().getCurrentAccountName());

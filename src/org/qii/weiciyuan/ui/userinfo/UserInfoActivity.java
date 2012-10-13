@@ -29,7 +29,7 @@ import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IUserInfo;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
-import org.qii.weiciyuan.ui.send.StatusNewActivity;
+import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -188,7 +188,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
                 startActivity(intent);
                 return true;
             case R.id.menu_at:
-                intent = new Intent(this, StatusNewActivity.class);
+                intent = new Intent(this, WriteWeiboActivity.class);
                 intent.putExtra("token", getToken());
                 intent.putExtra("content", "@" + bean.getScreen_name());
                 intent.putExtra("account", GlobalContext.getInstance().getAccountBean());

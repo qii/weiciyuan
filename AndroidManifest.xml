@@ -35,7 +35,7 @@
                   android:launchMode="singleTop"/>
 
         <!--send activity -->
-        <activity android:name=".ui.send.StatusNewActivity"
+        <activity android:name=".ui.send.WriteWeiboActivity"
                   android:windowSoftInputMode="stateVisible|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
@@ -49,11 +49,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.send.RepostNewActivity"
+        <activity android:name=".ui.send.WriteRepostActivity"
                   android:windowSoftInputMode="stateVisible|adjustResize"/>
-        <activity android:name=".ui.send.CommentNewActivity"
+        <activity android:name=".ui.send.WriteCommentActivity"
                   android:windowSoftInputMode="stateVisible|adjustResize"/>
-        <activity android:name=".ui.send.ReplyToCommentNewActivity"
+        <activity android:name=".ui.send.WriteReplyToCommentActivity"
                   android:windowSoftInputMode="stateVisible|adjustResize"/>
 
         <!--browser activity-->

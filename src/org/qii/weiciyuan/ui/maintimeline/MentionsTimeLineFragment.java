@@ -19,7 +19,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.send.StatusNewActivity;
+import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -215,7 +215,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         switch (item.getItemId()) {
 
             case R.id.write_weibo:
-                Intent intent = new Intent(getActivity(), StatusNewActivity.class);
+                Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("account", accountBean);
 

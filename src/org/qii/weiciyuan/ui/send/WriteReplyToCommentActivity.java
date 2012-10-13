@@ -22,7 +22,7 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
  * User: qii
  * Date: 12-8-28
  */
-public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> {
+public class WriteReplyToCommentActivity extends AbstractNewActivity<CommentBean> {
 
     private CommentBean bean;
     private MenuItem enableRepost;
@@ -68,7 +68,7 @@ public class ReplyToCommentNewActivity extends AbstractNewActivity<CommentBean> 
                 }
                 break;
             case R.id.menu_at:
-                Intent intent = new Intent(ReplyToCommentNewActivity.this, AtUserActivity.class);
+                Intent intent = new Intent(WriteReplyToCommentActivity.this, AtUserActivity.class);
                 intent.putExtra("token", token);
                 startActivityForResult(intent, AT_USER);
                 break;

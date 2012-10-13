@@ -25,8 +25,8 @@ import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
-import org.qii.weiciyuan.ui.send.CommentNewActivity;
-import org.qii.weiciyuan.ui.send.RepostNewActivity;
+import org.qii.weiciyuan.ui.send.WriteCommentActivity;
+import org.qii.weiciyuan.ui.send.WriteRepostActivity;
 import org.qii.weiciyuan.ui.task.FavAsyncTask;
 
 import java.util.ArrayList;
@@ -210,7 +210,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
                 startActivity(intent);
                 return true;
             case R.id.repostsbyidtimelinefragment_repost:
-                intent = new Intent(this, RepostNewActivity.class);
+                intent = new Intent(this, WriteRepostActivity.class);
                 intent.putExtra("token", getToken());
                 intent.putExtra("id", getMsg().getId());
                 intent.putExtra("msg", getMsg());
@@ -218,7 +218,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
                 return true;
             case R.id.commentsbyidtimelinefragment_comment:
 
-                intent = new Intent(this, CommentNewActivity.class);
+                intent = new Intent(this, WriteCommentActivity.class);
                 intent.putExtra("token", getToken());
                 intent.putExtra("id", getMsg().getId());
                 intent.putExtra("msg", getMsg());

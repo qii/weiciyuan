@@ -19,7 +19,7 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
  * User: Jiang Qi
  * Date: 12-8-2
  */
-public class RepostNewActivity extends AbstractNewActivity<MessageBean> {
+public class WriteRepostActivity extends AbstractNewActivity<MessageBean> {
 
     private String id;
 
@@ -93,7 +93,7 @@ public class RepostNewActivity extends AbstractNewActivity<MessageBean> {
                 }
                 break;
             case R.id.menu_at:
-                Intent intent = new Intent(RepostNewActivity.this, AtUserActivity.class);
+                Intent intent = new Intent(WriteRepostActivity.this, AtUserActivity.class);
                 intent.putExtra("token", token);
                 startActivityForResult(intent, AT_USER);
                 break;

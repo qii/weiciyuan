@@ -21,7 +21,7 @@ import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.send.StatusNewActivity;
+import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 import java.util.HashMap;
 import java.util.concurrent.Executors;
@@ -192,7 +192,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.write_weibo:
-                Intent intent = new Intent(getActivity(), StatusNewActivity.class);
+                Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("account", accountBean);
                 startActivity(intent);

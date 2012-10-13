@@ -22,7 +22,7 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.IToken;
-import org.qii.weiciyuan.ui.send.ReplyToCommentNewActivity;
+import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.List;
@@ -168,7 +168,7 @@ public class BrowserCommentFragment extends Fragment {
         switch (item.getItemId()) {
 
             case R.id.menu_comment:
-                intent = new Intent(getActivity(), ReplyToCommentNewActivity.class);
+                intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("msg", msg);
                 getActivity().startActivity(intent);
