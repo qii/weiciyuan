@@ -185,7 +185,7 @@ public class AccountActivity extends AbstractAppActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            listAdapter.notifyDataSetChanged();
+
         }
 
         @Override
