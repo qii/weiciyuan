@@ -30,7 +30,7 @@ import java.util.*;
  * Date: 12-9-25
  */
 public abstract class AbstractWriteActivity<T> extends AbstractAppActivity implements View.OnClickListener, ClearContentDialog.IClear
-        , EmotionsDialog.IEmotions {
+        , EmotionsGridDialog.IEmotions {
 
     private SimpleTask task;
     protected GetEmotionsTask getEmotionsTask;
@@ -123,7 +123,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.menu_add_emotions:
-                EmotionsDialog dialog = new EmotionsDialog();
+                EmotionsGridDialog dialog = new EmotionsGridDialog();
                 dialog.show(getFragmentManager(), "");
                 break;
 

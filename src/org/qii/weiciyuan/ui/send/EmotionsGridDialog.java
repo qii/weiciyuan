@@ -23,7 +23,7 @@ import java.util.Map;
  * User: qii
  * Date: 12-9-25
  */
-public class EmotionsDialog extends DialogFragment {
+public class EmotionsGridDialog extends DialogFragment {
     Map<String, String> emotions;
     List<String> index = new ArrayList<String>();
 

@@ -50,7 +50,7 @@ import java.util.*;
  * Date: 12-7-29
  */
 public class WriteWeiboActivity extends AbstractAppActivity implements DialogInterface.OnClickListener,
-        IAccountInfo, ClearContentDialog.IClear, EmotionsDialog.IEmotions {
+        IAccountInfo, ClearContentDialog.IClear, EmotionsGridDialog.IEmotions {
 
 
     private static final int CAMERA_RESULT = 0;
@@ -412,7 +412,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 startActivity(intent);
                 break;
             case R.id.menu_emoticon:
-                EmotionsDialog dialog = new EmotionsDialog();
+                EmotionsGridDialog dialog = new EmotionsGridDialog();
                 dialog.show(getFragmentManager(), "");
                 break;
 
@@ -488,7 +488,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     break;
 
                 case R.id.menu_add_emotions:
-                    EmotionsDialog dialog = new EmotionsDialog();
+                    EmotionsGridDialog dialog = new EmotionsGridDialog();
                     dialog.show(getFragmentManager(), "");
                     break;
 
