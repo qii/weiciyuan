@@ -46,6 +46,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         IAccountInfo {
 
     private ViewPager mViewPager = null;
+
     private String token = "";
     private AccountBean accountBean = null;
 
@@ -63,7 +64,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("account", accountBean);
-        outState.putString("token", token);
     }
 
     @Override
@@ -72,13 +72,13 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         if (savedInstanceState != null) {
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
-            token = savedInstanceState.getString("token");
         } else {
             Intent intent = getIntent();
             accountBean = (AccountBean) intent.getSerializableExtra("account");
-            token = accountBean.getAccess_token();
+
         }
 
+        token = accountBean.getAccess_token();
 
         GlobalContext.getInstance().setSpecialToken(token);
         GlobalContext.getInstance().setAccountBean(accountBean);
@@ -89,6 +89,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("id", accountBean.getUid());
         editor.commit();
+
         setContentView(R.layout.maintimelineactivity_viewpager_layout);
 
         buildPhoneInterface();
