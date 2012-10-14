@@ -219,21 +219,23 @@ public class ImageTool {
 
             try {
                 BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(absoluteFilePath, false);
-                Bitmap region = decoder.decodeRegion(new Rect(startX, 0, startX + cutWidth, cutHeight), null);
-                Bitmap scale = null;
-                if (region.getHeight() < reqHeight && region.getWidth() < reqWidth) {
-                    scale = Bitmap.createScaledBitmap(region, reqWidth, reqHeight, true);
-                }
-                if (scale == null) {
-                    Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
-                    region.recycle();
+                if (decoder != null) {
+                    Bitmap region = decoder.decodeRegion(new Rect(startX, 0, startX + cutWidth, cutHeight), null);
+                    Bitmap scale = null;
+                    if (region.getHeight() < reqHeight && region.getWidth() < reqWidth) {
+                        scale = Bitmap.createScaledBitmap(region, reqWidth, reqHeight, true);
+                    }
+                    if (scale == null) {
+                        Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
+                        region.recycle();
 
-                    return anotherValue;
-                } else {
-                    Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(scale);
-                    region.recycle();
-                    scale.recycle();
-                    return anotherValue;
+                        return anotherValue;
+                    } else {
+                        Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(scale);
+                        region.recycle();
+                        scale.recycle();
+                        return anotherValue;
+                    }
                 }
             } catch (IOException ignored) {
                 //do nothing
