@@ -57,9 +57,9 @@ public class HttpUtility {
         connectionManager.setMaxTotal(5);
 
 //        httpClient = new DecompressingHttpClient(new DefaultHttpClient(connectionManager));
-        httpClient =new DefaultHttpClient(connectionManager);
-        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10000);
-        HttpConnectionParams.setSoTimeout(httpClient.getParams(), 8000);
+        httpClient = new DefaultHttpClient(connectionManager);
+        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 15000);
+        HttpConnectionParams.setSoTimeout(httpClient.getParams(), 20000);
 
 
     }
@@ -81,7 +81,7 @@ public class HttpUtility {
         return "";
     }
 
-    public String executeDownloadTask(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    public boolean executeDownloadTask(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
         return doGetSaveFile(url, path, downloadListener);
     }
 
@@ -129,22 +129,17 @@ public class HttpUtility {
     /**
      * don't need error message to show
      */
-    private String doGetSaveFile(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    private boolean doGetSaveFile(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
         URIBuilder uriBuilder;
         HttpGet httpGet = new HttpGet();
         try {
             uriBuilder = new URIBuilder(url);
-
-
             httpGet.setURI(uriBuilder.build());
-
             AppLogger.d(uriBuilder.build().toString());
-
         } catch (URISyntaxException e) {
             AppLogger.d(e.getMessage());
         }
-
 
         HttpResponse response = null;
         try {
@@ -159,16 +154,16 @@ public class HttpUtility {
             AppLogger.e(ignored.getMessage());
 
         } catch (IOException ignored) {
-            AppLogger.e(ignored.getMessage());
+            AppLogger.e("1" + ignored.getMessage());
+            ignored.printStackTrace();
         }
 
 
         if (response != null) {
-
             return FileDownloaderHttpHelper.saveFile(response, path, downloadListener);
 
         } else {
-            return "";
+            return false;
         }
     }
 

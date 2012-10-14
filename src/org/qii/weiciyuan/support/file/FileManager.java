@@ -22,7 +22,7 @@ public class FileManager {
     private static final String EMOTION = "emotion";
 
 
-    private static boolean isExternalStorageMounted() {
+    public static boolean isExternalStorageMounted() {
 
         boolean canRead = Environment.getExternalStorageDirectory().canRead();
         boolean onlyRead = Environment.getExternalStorageState().equals(

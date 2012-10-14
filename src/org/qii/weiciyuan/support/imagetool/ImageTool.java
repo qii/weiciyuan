@@ -31,8 +31,8 @@ public class ImageTool {
         if (bitmap != null) {
             return ImageEdit.getRoundedCornerBitmap(bitmap);
         } else if (GlobalContext.getInstance().isEnablePic()) {
-            String path = getBitmapFromNetWork(url, absoluteFilePath, null);
-            bitmap = BitmapFactory.decodeFile(path);
+            getBitmapFromNetWork(url, absoluteFilePath, null);
+            bitmap = BitmapFactory.decodeFile(absoluteFilePath);
             if (bitmap != null)
                 return ImageEdit.getRoundedCornerBitmap(bitmap);
         }
@@ -156,7 +156,7 @@ public class ImageTool {
         }
 
         if (!file.exists()) {
-            String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
+            getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
         }
 
         if (absoluteFilePath.endsWith(".gif")) {
@@ -281,7 +281,7 @@ public class ImageTool {
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
         if (bitmap == null && GlobalContext.getInstance().isEnablePic()) {
-            String path = getBitmapFromNetWork(url, absoluteFilePath, null);
+            getBitmapFromNetWork(url, absoluteFilePath, null);
             bitmap = BitmapFactory.decodeFile(absoluteFilePath);
         }
 
@@ -311,7 +311,7 @@ public class ImageTool {
 
             bitmap = BitmapFactory.decodeFile(absoluteFilePath, options);
         } else if (GlobalContext.getInstance().isEnablePic()) {
-            String path = getBitmapFromNetWork(url, absoluteFilePath, null);
+            getBitmapFromNetWork(url, absoluteFilePath, null);
 
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
@@ -342,8 +342,8 @@ public class ImageTool {
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
         if (bitmap == null && GlobalContext.getInstance().isEnablePic()) {
-            String path = getBitmapFromNetWork(url, absoluteFilePath, null);
-            bitmap = BitmapFactory.decodeFile(path);
+            getBitmapFromNetWork(url, absoluteFilePath, null);
+            bitmap = BitmapFactory.decodeFile(absoluteFilePath);
         }
         if (bitmap != null) {
             bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
@@ -353,17 +353,21 @@ public class ImageTool {
 
     public static Bitmap getSmallAvatarWithRoundedCorner(String url, int reqWidth, int reqHeight) {
 
+        Bitmap bitmap = null;
+        if (FileManager.isExternalStorageMounted()) {
+            String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_small);
+            absoluteFilePath = absoluteFilePath + ".jpg";
+            bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_small);
+            if (bitmap == null && GlobalContext.getInstance().isEnablePic()) {
+                getBitmapFromNetWork(url, absoluteFilePath, null);
+                bitmap = BitmapFactory.decodeFile(absoluteFilePath);
+            }
 
-        absoluteFilePath = absoluteFilePath + ".jpg";
+        } else {
 
-        Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
-
-        if (bitmap == null && GlobalContext.getInstance().isEnablePic()) {
-            String path = getBitmapFromNetWork(url, absoluteFilePath, null);
-            bitmap = BitmapFactory.decodeFile(path);
         }
+
         if (bitmap != null) {
             if (bitmap.getHeight() < reqHeight || bitmap.getWidth() < reqWidth) {
                 Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, reqWidth, reqHeight, true);
@@ -371,11 +375,10 @@ public class ImageTool {
                 bitmap.recycle();
                 scaledBitmap.recycle();
                 return roundedBitmap;
-            } else {
-                return bitmap;
             }
         }
-        return null;
+
+        return bitmap;
     }
 
     public static Bitmap getMiddlePictureInBrowserMSGActivity(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
@@ -390,7 +393,7 @@ public class ImageTool {
         }
 
         if (!file.exists()) {
-            String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
+            getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
 
         }
         file = new File(absoluteFilePath);
@@ -416,9 +419,9 @@ public class ImageTool {
             return absoluteFilePath;
 
         } else {
-            String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
+            getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
 
-            file = new File(path);
+            file = new File(absoluteFilePath);
             if (file.exists()) {
                 return absoluteFilePath;
             } else {
@@ -442,9 +445,9 @@ public class ImageTool {
             return absoluteFilePath;
 
         } else {
-            String path = getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
+            getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
 
-            file = new File(path);
+            file = new File(absoluteFilePath);
             if (file.exists()) {
                 return absoluteFilePath;
             } else {
@@ -474,12 +477,19 @@ public class ImageTool {
     }
 
 
-    private static String getBitmapFromNetWork(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    private static boolean getBitmapFromNetWork(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
-        HttpUtility.getInstance().executeDownloadTask(url, path, downloadListener);
-        return path;
+        int sum = 3;
 
+        for (int i = 0; i < sum; i++) {
+            boolean result = HttpUtility.getInstance().executeDownloadTask(url, path, downloadListener);
+            if (result)
+                return true;
+        }
+
+        return false;
     }
+
 
     private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
