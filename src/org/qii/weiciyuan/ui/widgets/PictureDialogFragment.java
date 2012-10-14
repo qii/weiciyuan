@@ -35,7 +35,7 @@ public class PictureDialogFragment extends DialogFragment {
     private WebView imageView;
     private ProgressBar pb;
     private FrameLayout fl;
-    private PicSimpleBitmapWorkerTask avatarTask;
+    private PicSimpleBitmapWorkerTask picTask;
     private String bigUrl;
 
     public PictureDialogFragment() {
@@ -74,7 +74,7 @@ public class PictureDialogFragment extends DialogFragment {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                avatarTask.cancel(true);
+                picTask.cancel(true);
                 dismissAllowingStateLoss();
                 //when app close download pic, the timeline picture is empty,so refresh it
                 if (!GlobalContext.getInstance().isEnablePic() && GlobalContext.getInstance().getEnableBigPic()) {
@@ -100,8 +100,8 @@ public class PictureDialogFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        avatarTask = new PicSimpleBitmapWorkerTask();
-        avatarTask.execute(url);
+        picTask = new PicSimpleBitmapWorkerTask();
+        picTask.execute(url);
     }
 
 
@@ -188,7 +188,7 @@ public class PictureDialogFragment extends DialogFragment {
         imageView.loadUrl("about:blank");
         imageView.stopLoading();
         imageView = null;
-        if (avatarTask != null)
-            avatarTask.cancel(true);
+        if (picTask != null)
+            picTask.cancel(true);
     }
 }
