@@ -58,6 +58,7 @@ public class AbstractAppActivity extends Activity {
             Bitmap bitmap = getBitmapFromMemCache(urlKey);
             if (bitmap != null) {
                 view.setImageBitmap(bitmap);
+                cancelPotentialAvatarDownload(urlKey, view);
                 avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey, position));
             } else {
                 view.setImageDrawable(getResources().getDrawable(R.color.transparent));
@@ -81,12 +82,14 @@ public class AbstractAppActivity extends Activity {
 
                         view.setImageBitmap(bitmap);
                         view.setBackgroundColor(Color.TRANSPARENT);
+                        cancelPotentialDownload(urlKey, view);
                         pictureBitmapWorkerTaskMap.remove(urlKey);
 
                         break;
                     case picture_bmiddle:
 
                         view.setBackgroundDrawable(new BitmapDrawable(getResources(), bitmap));
+                        cancelPotentialDownload(urlKey, view);
                         pictureBitmapWorkerTaskMap.remove(urlKey);
                         break;
                 }

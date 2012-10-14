@@ -71,11 +71,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onCancelled(Bitmap bitmap) {
-        if (bitmap != null) {
 
-            lruCache.put(data, bitmap);
-
-        }
         if (taskMap != null && taskMap.get(data) != null) {
             taskMap.remove(data);
         }
@@ -89,18 +85,15 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
         if (bitmap != null) {
 
-            lruCache.put(data, bitmap);
-
             if (view != null && view.get() != null) {
                 ImageView imageView = view.get();
 
                 AvatarBitmapWorkerTask bitmapDownloaderTask = getAvatarBitmapDownloaderTask(imageView);
                 if (this == bitmapDownloaderTask) {
                     imageView.setImageBitmap(bitmap);
+                    lruCache.put(data, bitmap);
                 }
-
             }
-
 
         }
 

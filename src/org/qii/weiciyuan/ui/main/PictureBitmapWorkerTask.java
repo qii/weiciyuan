@@ -87,9 +87,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onCancelled(Bitmap bitmap) {
-        if (bitmap != null) {
-            lruCache.put(data, bitmap);
-        }
+
         if (taskMap != null && taskMap.get(data) != null) {
             taskMap.remove(data);
         }
@@ -102,11 +100,8 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
         if (bitmap != null) {
 
-            lruCache.put(data, bitmap);
-
             if (view != null && view.get() != null) {
                 ImageView imageView = view.get();
-
 
                 PictureBitmapWorkerTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
                 if (this == bitmapDownloaderTask) {
@@ -119,6 +114,8 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                             imageView.setBackgroundDrawable(new BitmapDrawable(activity.getResources(), bitmap));
                             break;
                     }
+
+                    lruCache.put(data, bitmap);
 
                 }
             }
