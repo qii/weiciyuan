@@ -274,6 +274,9 @@ public class ImageTool {
 
     public static Bitmap getBigAvatarWithRoundedCorner(String url) {
 
+        if (!FileManager.isExternalStorageMounted()) {
+            return null;
+        }
 
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_large);
         absoluteFilePath = absoluteFilePath + ".jpg";
@@ -303,6 +306,11 @@ public class ImageTool {
         absoluteFilePath = absoluteFilePath + ".jpg";
 
         boolean fileExist = new File(absoluteFilePath).exists();
+
+        if (!fileExist && !GlobalContext.getInstance().isEnablePic()) {
+            return null;
+        }
+
         if (!fileExist) {
             boolean result = getBitmapFromNetWork(url, absoluteFilePath, null);
             if (!result)
@@ -342,10 +350,17 @@ public class ImageTool {
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
-        if (bitmap == null && GlobalContext.getInstance().isEnablePic()) {
+        if (bitmap == null && !GlobalContext.getInstance().isEnablePic()) {
+            return null;
+        }
+
+        if (bitmap == null) {
             boolean result = getBitmapFromNetWork(url, absoluteFilePath, null);
-            if (result)
+            if (result) {
                 bitmap = BitmapFactory.decodeFile(absoluteFilePath);
+            } else {
+                return null;
+            }
         }
         if (bitmap != null) {
             Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
@@ -366,7 +381,11 @@ public class ImageTool {
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
-        if (bitmap == null && GlobalContext.getInstance().isEnablePic()) {
+        if (bitmap == null && !GlobalContext.getInstance().isEnablePic()) {
+            return null;
+        }
+
+        if (bitmap == null) {
             boolean result = getBitmapFromNetWork(url, absoluteFilePath, null);
             if (result)
                 bitmap = BitmapFactory.decodeFile(absoluteFilePath);
@@ -512,6 +531,8 @@ public class ImageTool {
         }
         return inSampleSize;
     }
+
+
 }
 
 
