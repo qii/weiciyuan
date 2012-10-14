@@ -153,16 +153,16 @@ public class PictureDialogFragment extends DialogFragment {
 
         @Override
         protected void onCancelled(String bitmap) {
-            if (bitmap != null) {
-
-
-            }
 
             super.onCancelled(bitmap);
         }
 
         @Override
         protected void onPostExecute(final String bitmap) {
+
+            if (getActivity() == null) {
+                return;
+            }
 
             if (!TextUtils.isEmpty(bitmap)) {
                 File file = new File(bitmap);
@@ -188,5 +188,7 @@ public class PictureDialogFragment extends DialogFragment {
         imageView.loadUrl("about:blank");
         imageView.stopLoading();
         imageView = null;
+        if (avatarTask != null)
+            avatarTask.cancel(true);
     }
 }
