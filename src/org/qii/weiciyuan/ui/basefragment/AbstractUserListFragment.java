@@ -44,8 +44,18 @@ public abstract class AbstractUserListFragment extends Fragment {
     private UserListGetNewDataTask newTask;
     private UserListGetOlderDataTask oldTask;
 
+    private volatile boolean enableRefreshTime = true;
+
+    public boolean isListViewFling() {
+        return !enableRefreshTime;
+    }
+
     protected ListView getListView() {
         return pullToRefreshListView.getRefreshableView();
+    }
+
+    protected UserListAdapter getAdapter() {
+        return timeLineAdapter;
     }
 
     protected void clearAndReplaceValue(UserListBean value) {
@@ -87,8 +97,8 @@ public abstract class AbstractUserListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         if (savedInstanceState != null) {
-            currentUser=(UserBean)savedInstanceState.getSerializable("currentUser");
-            uid=savedInstanceState.getString("uid");
+            currentUser = (UserBean) savedInstanceState.getSerializable("currentUser");
+            uid = savedInstanceState.getString("uid");
             clearAndReplaceValue((UserListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
@@ -120,8 +130,8 @@ public abstract class AbstractUserListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
-        outState.putSerializable("currentUser",currentUser);
-        outState.putString("uid",uid);
+        outState.putSerializable("currentUser", currentUser);
+        outState.putString("uid", uid);
     }
 
     @Override
@@ -156,6 +166,41 @@ public abstract class AbstractUserListFragment extends Fragment {
 
         timeLineAdapter = new UserListAdapter(AbstractUserListFragment.this, ((AbstractAppActivity) getActivity()).getCommander(), bean.getUsers(), getListView());
         pullToRefreshListView.setAdapter(timeLineAdapter);
+
+        pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+
+                        enableRefreshTime = true;
+                        getAdapter().notifyDataSetChanged();
+                        break;
+
+
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+
+                        enableRefreshTime = false;
+                        break;
+
+                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+
+                        enableRefreshTime = true;
+                        break;
+
+
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        }
+
+        );
+
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

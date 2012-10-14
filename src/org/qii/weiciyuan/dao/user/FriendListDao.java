@@ -7,7 +7,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
@@ -41,8 +40,7 @@ public class FriendListDao {
         try {
             value = gson.fromJson(jsonData, UserListBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
-            AppLogger.e(e.getMessage());
+             AppLogger.e(e.getMessage());
         }
 
         return value;

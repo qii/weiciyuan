@@ -1,7 +1,7 @@
 package org.qii.weiciyuan.ui.adapter;
 
-import android.content.res.TypedArray;
 import android.app.Fragment;
+import android.content.res.TypedArray;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,7 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
+import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
 
 import java.util.List;
 
@@ -101,7 +102,8 @@ public class UserListAdapter extends BaseAdapter {
         holder.username.setText(user.getScreen_name());
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
-            commander.downloadAvatar(holder.avatar, user.getProfile_image_url(), position, listView, false);
+            boolean isFling = ((AbstractUserListFragment) activity).isListViewFling();
+            commander.downloadAvatar(holder.avatar, user.getProfile_image_url(), position, listView, isFling);
         }
         holder.content.setText(user.getDescription());
 
