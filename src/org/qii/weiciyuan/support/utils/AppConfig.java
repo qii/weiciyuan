@@ -12,4 +12,8 @@ public class AppConfig {
     //friend timeline
     public static final long AUTO_REFRESH_INITIALDELAY = 9l;
     public static final long AUTO_REFRESH_PERIOD = 7l;
+
+
+    //if download pic failed,retry
+    public static final int RETRY_TIMES=3;
 }
