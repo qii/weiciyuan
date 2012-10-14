@@ -139,16 +139,16 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         MessageListBean repost = (MessageListBean) intent.getSerializableExtra("repost");
 
         if (repost != null && repost.getSize() > 0) {
-            invlidateTabText(1, repost.getSize());
+            buildTabText(1, repost.getSize());
             getActionBar().setSelectedNavigationItem(1);
         }
         if (comment != null && comment.getSize() > 0) {
-            invlidateTabText(2, comment.getSize());
+            buildTabText(2, comment.getSize());
             getActionBar().setSelectedNavigationItem(2);
         }
     }
 
-    private void invlidateTabText(int index, int number) {
+    private void buildTabText(int index, int number) {
 
         ActionBar.Tab tab = getActionBar().getTabAt(index);
         String name = tab.getText().toString();
@@ -483,13 +483,13 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 int unreadCommentsCount = unreadBean.getCmt();
 
                 if (unreadStatus > 0)
-                    invlidateTabText(0, unreadStatus);
+                    buildTabText(0, unreadStatus);
 
                 if (unreadMentionsCount > 0)
-                    invlidateTabText(1, unreadMentionsCount);
+                    buildTabText(1, unreadMentionsCount);
 
                 if (unreadCommentsCount > 0)
-                    invlidateTabText(2, unreadCommentsCount);
+                    buildTabText(2, unreadCommentsCount);
 
             }
         }
@@ -510,10 +510,10 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 int unreadCommentsCount = unreadBean.getCmt();
 
                 if (unreadMentionsCount > 0)
-                    invlidateTabText(1, unreadMentionsCount);
+                    buildTabText(1, unreadMentionsCount);
 
                 if (unreadCommentsCount > 0)
-                    invlidateTabText(2, unreadCommentsCount);
+                    buildTabText(2, unreadCommentsCount);
             }
 
         }
