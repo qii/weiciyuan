@@ -140,12 +140,6 @@ public class AccountActivity extends AbstractAppActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-            String token = accountList.get(i).getAccess_token();
-            SharedPreferences settings = getPreferences(MODE_PRIVATE);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString("token", token);
-            editor.commit();
-
             Intent intent = new Intent(AccountActivity.this, MainTimeLineActivity.class);
             intent.putExtra("account", accountList.get(i));
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

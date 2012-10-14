@@ -119,6 +119,10 @@ public final class GlobalContext extends Application {
         }
     }
 
+    public void setAccountBean(AccountBean accountBean) {
+        this.accountBean = accountBean;
+    }
+
     public AccountBean getAccountBean() {
         if (accountBean != null) {
             return accountBean;
