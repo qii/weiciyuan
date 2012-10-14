@@ -334,6 +334,9 @@ public class ImageTool {
 
     public static Bitmap getSmallAvatarWithRoundedCorner(String url) {
 
+        if (!FileManager.isExternalStorageMounted()) {
+            return null;
+        }
 
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_small);
 
@@ -342,13 +345,16 @@ public class ImageTool {
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
         if (bitmap == null && GlobalContext.getInstance().isEnablePic()) {
-            getBitmapFromNetWork(url, absoluteFilePath, null);
-            bitmap = BitmapFactory.decodeFile(absoluteFilePath);
+            boolean result = getBitmapFromNetWork(url, absoluteFilePath, null);
+            if (result)
+                bitmap = BitmapFactory.decodeFile(absoluteFilePath);
         }
         if (bitmap != null) {
-            bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+            Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+            bitmap.recycle();
+            return roundedBitmap;
         }
-        return bitmap;
+        return null;
     }
 
     public static Bitmap getSmallAvatarWithRoundedCorner(String url, int reqWidth, int reqHeight) {
