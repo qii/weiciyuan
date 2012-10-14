@@ -54,12 +54,12 @@ public class HttpUtility {
         HttpParams params = new BasicHttpParams();
         params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
         PoolingClientConnectionManager connectionManager = new PoolingClientConnectionManager();
-        connectionManager.setMaxTotal(5);
+        connectionManager.setMaxTotal(6);
 
 //        httpClient = new DecompressingHttpClient(new DefaultHttpClient(connectionManager));
         httpClient = new DefaultHttpClient(connectionManager);
-        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 15000);
-        HttpConnectionParams.setSoTimeout(httpClient.getParams(), 20000);
+        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 8000);
+        HttpConnectionParams.setSoTimeout(httpClient.getParams(), 8000);
 
 
     }
