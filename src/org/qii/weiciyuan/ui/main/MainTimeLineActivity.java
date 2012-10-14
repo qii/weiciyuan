@@ -70,25 +70,16 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            Intent intent = getIntent();
-            accountBean = (AccountBean) intent.getSerializableExtra("account");
-            if (accountBean != null) {
-                token = accountBean.getAccess_token();
-            } else {
-                //because app crash
-                AppLogger.e("MainTneActivity dont have account");
-                finish();
-            }
-
-        } else {
+        if (savedInstanceState != null) {
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
             token = savedInstanceState.getString("token");
-            if (accountBean == null) {
-                AppLogger.e("MainTneActivity dont have account");
-                finish();
-            }
+        } else {
+            Intent intent = getIntent();
+            accountBean = (AccountBean) intent.getSerializableExtra("account");
+            token = accountBean.getAccess_token();
         }
+
+
         GlobalContext.getInstance().setSpecialToken(token);
         GlobalContext.getInstance().setCurrentAccountId(accountBean.getUid());
         GlobalContext.getInstance().setCurrentAccountName(accountBean.getUsernick());
@@ -120,21 +111,24 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         AccountBean newAccountBean = (AccountBean) intent.getSerializableExtra("account");
-        if (newAccountBean != null && !newAccountBean.getUid().equals(accountBean.getUid())) {
-            overridePendingTransition(0, 0);
-            finish();
 
-            overridePendingTransition(0, 0);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
+        if (newAccountBean == null) {
+            return;
+        }
 
-        } else if (newAccountBean != null) {
-
+        if (newAccountBean.getUid().equals(accountBean.getUid())) {
             accountBean = newAccountBean;
             token = newAccountBean.getAccess_token();
             GlobalContext.getInstance().setSpecialToken(token);
             buildTabTitle(intent);
+        } else {
+            overridePendingTransition(0, 0);
+            finish();
+            overridePendingTransition(0, 0);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
         }
+
     }
 
 
