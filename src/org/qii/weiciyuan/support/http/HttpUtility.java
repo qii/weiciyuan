@@ -62,7 +62,6 @@ public class HttpUtility {
         HttpConnectionParams.setSoTimeout(httpClient.getParams(), 18000);
 
 
-
     }
 
     public static HttpUtility getInstance() {
@@ -146,6 +145,7 @@ public class HttpUtility {
         try {
 
             response = httpClient.execute(httpGet);
+            return FileDownloaderHttpHelper.saveFile(response, path, downloadListener);
 
         } catch (ConnectTimeoutException ignored) {
 
@@ -160,12 +160,8 @@ public class HttpUtility {
         }
 
 
-        if (response != null) {
-            return FileDownloaderHttpHelper.saveFile(response, path, downloadListener);
+        return false;
 
-        } else {
-            return false;
-        }
     }
 
     private String doGet(String url, Map<String, String> param) throws WeiboException {
