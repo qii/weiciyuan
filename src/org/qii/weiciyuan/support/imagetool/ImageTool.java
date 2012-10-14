@@ -353,19 +353,19 @@ public class ImageTool {
 
     public static Bitmap getSmallAvatarWithRoundedCorner(String url, int reqWidth, int reqHeight) {
 
-        Bitmap bitmap = null;
-        if (FileManager.isExternalStorageMounted()) {
-            String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_small);
-            absoluteFilePath = absoluteFilePath + ".jpg";
-            bitmap = BitmapFactory.decodeFile(absoluteFilePath);
+        if (!FileManager.isExternalStorageMounted()) {
+            return null;
+        }
 
-            if (bitmap == null && GlobalContext.getInstance().isEnablePic()) {
-                getBitmapFromNetWork(url, absoluteFilePath, null);
+        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_small);
+        absoluteFilePath = absoluteFilePath + ".jpg";
+
+        Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
+
+        if (bitmap == null && GlobalContext.getInstance().isEnablePic()) {
+            boolean result = getBitmapFromNetWork(url, absoluteFilePath, null);
+            if (result)
                 bitmap = BitmapFactory.decodeFile(absoluteFilePath);
-            }
-
-        } else {
-
         }
 
         if (bitmap != null) {
@@ -378,7 +378,7 @@ public class ImageTool {
             }
         }
 
-        return bitmap;
+        return null;
     }
 
     public static Bitmap getMiddlePictureInBrowserMSGActivity(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
