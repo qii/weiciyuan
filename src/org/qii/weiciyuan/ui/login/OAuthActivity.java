@@ -241,7 +241,8 @@ public class OAuthActivity extends AbstractAppActivity {
             if (progressFragment != null) {
                 progressFragment.dismissAllowingStateLoss();
             }
-            Toast.makeText(OAuthActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
+            if (e != null)
+                Toast.makeText(OAuthActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
             webView.loadUrl(getWeiboOAuthUrl());
         }
 
