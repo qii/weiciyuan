@@ -64,8 +64,10 @@ public class BrowserWeiboMsgFragment extends Fragment {
     private ProgressBar content_pic_pb;
     private ProgressBar repost_pic_pb;
 
-    private UpdateMsgTask task = null;
+    private UpdateMsgTask updateMsgTask = null;
     private GetGoogleLocationInfo geoTask = null;
+    private SimpleBitmapWorkerTask picTask = null;
+    private SimpleBitmapWorkerTask avatarTask = null;
 
     public BrowserWeiboMsgFragment() {
     }
@@ -89,12 +91,12 @@ public class BrowserWeiboMsgFragment extends Fragment {
         if (savedInstanceState != null) {
             msg = (MessageBean) savedInstanceState.getSerializable("msg");
         } else {
-            task = new UpdateMsgTask();
-            task.execute();
+            updateMsgTask = new UpdateMsgTask();
+            updateMsgTask.execute();
 
         }
 
-     }
+    }
 
     //android has a bug,I am tired. I use another color and disable underline for link,but when I open "dont save activity" in
     //developer option,click the link to open another activity, then press back,this fragment is restored,
@@ -109,12 +111,21 @@ public class BrowserWeiboMsgFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        if (task != null) {
-            task.cancel(true);
+        if (updateMsgTask != null) {
+            updateMsgTask.cancel(true);
         }
         if (geoTask != null) {
             geoTask.cancel(true);
         }
+
+        if (avatarTask != null) {
+            avatarTask.cancel(true);
+        }
+
+        if (picTask != null) {
+            picTask.cancel(true);
+        }
+
         avatar.setImageDrawable(null);
         content_pic.setImageDrawable(null);
         repost_pic.setImageDrawable(null);
@@ -307,9 +318,10 @@ public class BrowserWeiboMsgFragment extends Fragment {
             if (bitmap != null) {
                 avatar.setImageBitmap(bitmap);
             } else {
-
-                SimpleBitmapWorkerTask avatarTask = new SimpleBitmapWorkerTask(avatar, method);
-                avatarTask.execute(url);
+                if (avatarTask == null || avatarTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    avatarTask = new SimpleBitmapWorkerTask(avatar, method);
+                    avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getUser().getProfile_image_url());
+                }
             }
         }
         content.setText(msg.getText());
@@ -329,15 +341,15 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
 
         if (!TextUtils.isEmpty(msg.getBmiddle_pic())) {
-//            content_pic.setVisibility(View.VISIBLE);
-
-            SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_bmiddle, content_pic_pb);
-            task.execute(msg.getBmiddle_pic());
+            if (picTask == null || picTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                picTask = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_bmiddle, content_pic_pb);
+                picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getBmiddle_pic());
+            }
         } else if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
-//            content_pic.setVisibility(View.VISIBLE);
-            SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_thumbnail);
-            task.execute(msg.getThumbnail_pic());
-
+            if (picTask == null || picTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                picTask = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_thumbnail);
+                picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getThumbnail_pic());
+            }
         }
 
 
@@ -355,13 +367,18 @@ public class BrowserWeiboMsgFragment extends Fragment {
             if (!TextUtils.isEmpty(msg.getRetweeted_status().getBmiddle_pic())) {
                 repost_pic_layout.setVisibility(View.VISIBLE);
                 repost_pic.setVisibility(View.VISIBLE);
-                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_bmiddle, repost_pic_pb);
-                task.execute(msg.getRetweeted_status().getBmiddle_pic());
+                if (picTask == null || picTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    picTask = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_bmiddle, repost_pic_pb);
+                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getRetweeted_status().getBmiddle_pic());
+                }
             } else if (!TextUtils.isEmpty(msg.getRetweeted_status().getThumbnail_pic())) {
                 repost_pic_layout.setVisibility(View.VISIBLE);
                 repost_pic.setVisibility(View.VISIBLE);
-                SimpleBitmapWorkerTask task = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_thumbnail);
-                task.execute(msg.getRetweeted_status().getThumbnail_pic());
+                if (picTask == null || picTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    picTask = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_thumbnail);
+                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getRetweeted_status().getThumbnail_pic());
+                }
+
 
             }
         }
@@ -419,9 +436,9 @@ public class BrowserWeiboMsgFragment extends Fragment {
         switch (item.getItemId()) {
 
             case R.id.menu_refresh:
-                if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    task = new UpdateMsgTask();
-                    task.execute();
+                if (updateMsgTask == null || updateMsgTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    updateMsgTask = new UpdateMsgTask();
+                    updateMsgTask.execute();
                 }
                 break;
 
