@@ -295,38 +295,36 @@ public class ImageTool {
 
     public static Bitmap getTimeLineBigAvatarWithRoundedCorner(String url, int reqWidth, int reqHeight) {
 
-        Bitmap bitmap = null;
+        if (!FileManager.isExternalStorageMounted()) {
+            return null;
+        }
 
         String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_large);
         absoluteFilePath = absoluteFilePath + ".jpg";
-        if (new File(absoluteFilePath).exists()) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(absoluteFilePath, options);
 
-            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-            options.inJustDecodeBounds = false;
-            options.inPurgeable = true;
-            options.inInputShareable = true;
-
-            bitmap = BitmapFactory.decodeFile(absoluteFilePath, options);
-        } else if (GlobalContext.getInstance().isEnablePic()) {
-            getBitmapFromNetWork(url, absoluteFilePath, null);
-
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(absoluteFilePath, options);
-
-            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-            options.inJustDecodeBounds = false;
-            options.inPurgeable = true;
-            options.inInputShareable = true;
-
-            bitmap = BitmapFactory.decodeFile(absoluteFilePath, options);
+        boolean fileExist = new File(absoluteFilePath).exists();
+        if (!fileExist) {
+            boolean result = getBitmapFromNetWork(url, absoluteFilePath, null);
+            if (!result)
+                return null;
         }
 
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(absoluteFilePath, options);
+
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+        options.inPurgeable = true;
+        options.inInputShareable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath, options);
+
         if (bitmap != null) {
-            bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+            Bitmap roundBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+            bitmap.recycle();
+            return roundBitmap;
         }
 
         return bitmap;
