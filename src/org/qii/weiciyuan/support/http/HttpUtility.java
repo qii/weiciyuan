@@ -14,7 +14,6 @@ import ch.boye.httpclientandroidlib.client.protocol.ClientContext;
 import ch.boye.httpclientandroidlib.client.utils.URIBuilder;
 import ch.boye.httpclientandroidlib.conn.ConnectTimeoutException;
 import ch.boye.httpclientandroidlib.impl.client.BasicCookieStore;
-import ch.boye.httpclientandroidlib.impl.client.DecompressingHttpClient;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.impl.conn.PoolingClientConnectionManager;
 import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
@@ -57,7 +56,8 @@ public class HttpUtility {
         PoolingClientConnectionManager connectionManager = new PoolingClientConnectionManager();
         connectionManager.setMaxTotal(5);
 
-        httpClient = new DecompressingHttpClient(new DefaultHttpClient(connectionManager));
+//        httpClient = new DecompressingHttpClient(new DefaultHttpClient(connectionManager));
+        httpClient =new DefaultHttpClient(connectionManager);
         HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10000);
         HttpConnectionParams.setSoTimeout(httpClient.getParams(), 8000);
 
