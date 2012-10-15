@@ -120,6 +120,8 @@
                     <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"
                               android:text="@string/following_number" android:layout_weight="0.7"/>
                     <TextView android:layout_gravity="right|center" android:id="@+id/following_number"
+                              android:drawableRight="@drawable/clickable_flag"
+                              android:drawablePadding="1dp"
                               android:layout_width="fill_parent" android:layout_height="fill_parent"/>
                 </TableRow>
                 <TableRow android:paddingLeft="20.0dip" android:paddingTop="5.0dip" android:paddingRight="20.0dip"
@@ -129,6 +131,8 @@
                     <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"
                               android:text="@string/fan_number" android:layout_weight="0.7"/>
                     <TextView android:layout_gravity="right|center" android:id="@+id/fans_number"
+                              android:drawableRight="@drawable/clickable_flag"
+                              android:drawablePadding="1dp"
                               android:layout_width="fill_parent" android:layout_height="fill_parent"/>
                 </TableRow>
                 <TableRow android:paddingLeft="20.0dip" android:paddingTop="5.0dip" android:paddingRight="20.0dip"
@@ -138,6 +142,8 @@
                     <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"
                               android:text="@string/fav_number" android:layout_weight="0.7"/>
                     <TextView android:layout_gravity="right|center" android:id="@+id/fav_number"
+                              android:drawableRight="@drawable/clickable_flag"
+                              android:drawablePadding="1dp"
                               android:layout_width="fill_parent" android:layout_height="fill_parent"/>
                 </TableRow>
 

@@ -47,15 +47,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/httpclientandroidlib-1.1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://D:/android-sdk-windows/extras/android/compatibility/v4/android-support-v4.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -70,6 +61,15 @@
           <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/java" />
           <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/jellybean" />
         </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/httpclientandroidlib-1.1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
   </component>
