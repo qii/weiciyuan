@@ -53,17 +53,24 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
             String lastName = "";
 
             if (comment != null && comment.getSize() > 0) {
-                lastName = comment.getItemList().get(0).getUser().getScreen_name();
-                content = comment.getItemList().get(0).getText();
-                for (CommentBean bean : comment.getItemList()) {
-                    peopleNameSet.add(bean.getUser().getScreen_name());
+                for (CommentBean commentBean : comment.getItemList()) {
+                    UserBean userBean = commentBean.getUser();
+                    if (userBean != null) {
+                        lastName = userBean.getScreen_name();
+                        content = commentBean.getText();
+                        peopleNameSet.add(userBean.getScreen_name());
+                    }
                 }
             } else if (repost != null && repost.getSize() > 0) {
-                lastName = repost.getItemList().get(0).getUser().getScreen_name();
-                content = repost.getItemList().get(0).getText();
-                for (MessageBean bean : repost.getItemList()) {
-                    peopleNameSet.add(bean.getUser().getScreen_name());
+                for (MessageBean messageBean : repost.getItemList()) {
+                    UserBean userBean = messageBean.getUser();
+                    if (userBean != null) {
+                        lastName = userBean.getScreen_name();
+                        content = messageBean.getText();
+                        peopleNameSet.add(userBean.getScreen_name());
+                    }
                 }
+
             }
 
 
