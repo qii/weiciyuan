@@ -31,6 +31,19 @@
                     android:text="username"
                     android:layout_marginLeft="8dp"
                     android:id="@+id/username"/>
+            <TextView android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:layout_height="wrap_content"/>
+            <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="1px"
+                    android:src="@drawable/clickable_flag"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="5dp"
+                    />
+
 
         </LinearLayout>
 
@@ -101,7 +114,7 @@
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:indeterminate="true"
-                         style="?android:attr/progressBarStyleHorizontal"
+                        style="?android:attr/progressBarStyleHorizontal"
                         android:id="@+id/content_pic_pb"/>
             </FrameLayout>
             <LinearLayout
