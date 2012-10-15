@@ -1,13 +1,13 @@
 package org.qii.weiciyuan.ui.actionmenu;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.app.Fragment;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +21,7 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.browser.BrowserCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
 import java.util.List;
@@ -66,6 +67,13 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
 
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        buildMenu(mode, menu);
+        return true;
+
+
+    }
+
+    protected void buildMenu(ActionMode mode, Menu menu) {
         MenuInflater inflater = mode.getMenuInflater();
         menu.clear();
 
@@ -77,7 +85,6 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         } else {
             inflater.inflate(R.menu.contextual_menu_fragment_comment_listview, menu);
         }
-
 
         mode.setTitle(bean.getUser().getScreen_name());
 
@@ -100,17 +107,24 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
                 return false;
             }
         });
-        return true;
-
-
     }
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
+            case R.id.menu_view:
+                intent = new Intent(getActivity(), BrowserCommentActivity.class);
+                intent.putExtra("comment", bean);
+                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                getActivity().startActivity(intent);
+                listView.clearChoices();
+                mode.finish();
+
+                break;
 
             case R.id.menu_comment:
-                Intent intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
+                intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("msg", bean);
                 getActivity().startActivity(intent);

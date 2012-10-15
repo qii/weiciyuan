@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 
 /**
@@ -33,6 +34,12 @@ public class CommentByIdSingleChoiceModeLinstener extends CommentSingleChoiceMod
 
     }
 
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        buildMenu(mode, menu);
+        menu.findItem(R.id.menu_view).setVisible(true);
+        return true;
+    }
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {

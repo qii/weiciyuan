@@ -31,6 +31,7 @@ import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.actionmenu.CommentByIdSingleChoiceModeLinstener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.util.List;
@@ -360,10 +361,10 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
 
-        Intent intent = new Intent(getActivity(), BrowserCommentActivity.class);
-        intent.putExtra("comment", bean.getItem(position));
+        Intent intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
         intent.putExtra("token", token);
-        startActivity(intent);
+        intent.putExtra("msg", bean.getItem(position));
+        getActivity().startActivity(intent);
     }
 
 

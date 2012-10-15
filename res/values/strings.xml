@@ -198,6 +198,7 @@
     <string name="reply">回复</string>
     <string name="delete">删除</string>
     <string name="reply_to_comment">回复评论</string>
+    <string name="view">查看</string>
 
     <!--location -->
     <string name="gps_is_searching">正在获取坐标...</string>
