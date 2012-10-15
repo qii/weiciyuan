@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
 import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.support.lib.UpdateString;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
@@ -26,7 +25,6 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
 
     @Override
     protected void bindViewData(ViewHolder holder, int position) {
-
 
         holder.listview_root.setBackgroundColor(defaultBG);
 
@@ -51,9 +49,8 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.content.setText(msg.getListViewSpannableString());
         }
         String time = msg.getListviewItemShowTime();
-        UpdateString updateString = new UpdateString(time, holder.time, msg, getActivity());
         if (!holder.time.getText().toString().equals(time)) {
-            holder.time.setText(updateString);
+            holder.time.setText(time);
         }
         holder.time.setTag(msg.getId());
 
@@ -62,7 +59,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
         holder.content_pic.setVisibility(View.GONE);
 
 
-        if (!TextUtils.isEmpty(msg.getThumbnail_pic()) ) {
+        if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
             buildPic(msg, holder.content_pic, position);
 
         }
