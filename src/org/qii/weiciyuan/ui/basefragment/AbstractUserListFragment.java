@@ -173,9 +173,10 @@ public abstract class AbstractUserListFragment extends Fragment {
                 switch (scrollState) {
 
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-
-                        enableRefreshTime = true;
-                        getAdapter().notifyDataSetChanged();
+                        if (!enableRefreshTime) {
+                            enableRefreshTime = true;
+                            getAdapter().notifyDataSetChanged();
+                        }
                         break;
 
 

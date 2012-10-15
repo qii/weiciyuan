@@ -13,7 +13,6 @@ import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.ListBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.RefreshTimeWorker;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -23,9 +22,7 @@ import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * User: qii
@@ -149,9 +146,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
                 switch (scrollState) {
 
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        if (!enableRefreshTime) {
+                            enableRefreshTime = true;
+                            getAdapter().notifyDataSetChanged();
+                        }
 
-                        enableRefreshTime = true;
-                        getAdapter().notifyDataSetChanged();
                         break;
 
 
@@ -287,7 +286,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     @Override
     public void onPause() {
         super.onPause();
-        removeListViewTimeRefresh();
+
 
     }
 
@@ -320,7 +319,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     @Override
     public void onResume() {
         super.onResume();
-        addListViewTimeRefresh();
         getAdapter().notifyDataSetChanged();
     }
 
@@ -561,23 +559,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     }
 
 
-    private void removeListViewTimeRefresh() {
-        if (scheduledExecutorService != null && !scheduledExecutorService.isShutdown())
-            scheduledExecutorService.shutdownNow();
-    }
-
-    protected void addListViewTimeRefresh() {
-
-        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                new RefreshTimeWorker(AbstractTimeLineFragment.this).refreshTime();
-            }
-        }, 1, 1, TimeUnit.SECONDS);
-
-
-    }
 }
 
 
