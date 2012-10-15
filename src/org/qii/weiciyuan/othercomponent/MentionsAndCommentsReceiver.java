@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -89,7 +90,8 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
                 ticker = lastName + ":" + content.substring(0, 20) + "……";
             }
 
-            showNotification();
+            if (!TextUtils.isEmpty(lastName))
+                showNotification();
         }
 
     }
