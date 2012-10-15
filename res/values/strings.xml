@@ -220,7 +220,7 @@
     <string name="normal">常规</string>
     <string name="appearance">观感</string>
     <string name="show_pic">下载头像图片</string>
-    <string name="show_pic_summary">关闭的话只使用本地缓存，可以节省流量</string>
+    <string name="show_pic_summary">当关闭时只使用本地缓存，可以节省流量</string>
     <string name="show_big_avatar">高清头像</string>
     <string name="show_big_avatar_summary">大屏幕手机推荐开高清</string>
     <string name="show_big_pic">列表显示大图</string>
