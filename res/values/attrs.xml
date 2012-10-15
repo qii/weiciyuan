@@ -30,6 +30,7 @@
     <attr name="timeline_comment_flag" format="reference"/>
     <attr name="timeline_reply_flag" format="reference"/>
     <attr name="save" format="reference"/>
+    <attr name="clickable_flag" format="reference"/>
 
 
     <attr name="listview_item_background_selector" format="reference"/>

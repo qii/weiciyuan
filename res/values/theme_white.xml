@@ -34,6 +34,7 @@
         <item name="timeline_comment_flag">@drawable/comment_black</item>
         <item name="timeline_reply_flag">@drawable/timeline_reply_black</item>
         <item name="save">@drawable/save_dark</item>
+        <item name="clickable_flag">@drawable/clickable_flag_dark</item>
 
 
         <item name="listview_item_background_selector">@drawable/listview_item_background_selector</item>
