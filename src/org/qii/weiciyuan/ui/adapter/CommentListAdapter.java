@@ -1,14 +1,13 @@
 package org.qii.weiciyuan.ui.adapter;
 
+import android.app.Fragment;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.app.Fragment;
 import android.view.View;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.support.lib.UpdateString;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 
@@ -61,9 +60,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         holder.content.setText(comment.getListViewSpannableString());
 
         String time = comment.getListviewItemShowTime();
-        UpdateString updateString = new UpdateString(time, holder.time, comment, getActivity());
         if (!holder.time.getText().toString().equals(time)) {
-            holder.time.setText(updateString);
+            holder.time.setText(time);
         }
         holder.time.setTag(comment.getId());
 
@@ -73,7 +71,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
         CommentBean reply = comment.getReply_comment();
 
-        if (reply != null&& showOriStatus) {
+        if (reply != null && showOriStatus) {
             holder.repost_layout.setVisibility(View.VISIBLE);
             holder.repost_flag.setVisibility(View.VISIBLE);
             holder.repost_content.setVisibility(View.VISIBLE);
