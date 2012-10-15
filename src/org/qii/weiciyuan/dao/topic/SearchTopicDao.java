@@ -8,7 +8,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeTool;
@@ -53,11 +52,11 @@ public class SearchTopicDao {
         try {
             value = gson.fromJson(json, TopicResultListBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
+
             AppLogger.e(e.getMessage());
             return null;
         }
-        if (value != null && value.getStatuses().size() > 0) {
+        if (value != null && value.getStatuses()!=null&&value.getStatuses().size() > 0) {
             List<MessageBean> msgList = value.getStatuses();
             Iterator<MessageBean> iterator = msgList.iterator();
 
