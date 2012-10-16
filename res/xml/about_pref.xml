@@ -32,5 +32,10 @@
                 android:data="http://www.gnu.org/licenses/gpl-3.0.html"/>
     </Preference>
 
+    <Preference
+            android:key="suggest"
+            android:title="@string/suggest"
+            >
 
+    </Preference>
 </PreferenceScreen>

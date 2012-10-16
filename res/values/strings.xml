@@ -255,7 +255,8 @@
     <string name="remove_ing">删除中……</string>
     <string name="version">版本号</string>
     <string name="about">关于</string>
-    <string name="about_summary">版本号、开源协议、源代码</string>
+    <string name="suggest">反馈意见</string>
+    <string name="about_summary">版本号、反馈意见、开源协议、源代码</string>
     <string name="play_store_address">Google Play</string>
     <string name="play_store_address_summary">打分支持该应用</string>
     <string name="github">github</string>
