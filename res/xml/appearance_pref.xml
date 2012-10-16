@@ -5,11 +5,13 @@
     <PreferenceCategory
             android:title="@string/appearance"
             >
-        <CheckBoxPreference
-                android:key="show_picture"
-                android:title="@string/show_pic"
-                android:summary="@string/show_pic_summary"
-                android:defaultValue="true"/>
+        <ListPreference
+                android:key="theme"
+                android:title="@string/theme"
+                android:dialogTitle="@string/theme"
+                android:entries="@array/theme"
+                android:entryValues="@array/theme_value"
+                android:defaultValue="3"/>
 
 
         <ListPreference
@@ -34,13 +36,13 @@
                 android:entries="@array/font"
                 android:entryValues="@array/font_value"
                 android:defaultValue="15"/>
-        <ListPreference
-                android:key="theme"
-                android:title="@string/theme"
-                android:dialogTitle="@string/theme"
-                android:entries="@array/theme"
-                android:entryValues="@array/theme_value"
-                android:defaultValue="3"/>
+
+        <CheckBoxPreference
+                android:key="show_picture"
+                android:title="@string/show_pic"
+                android:summary="@string/show_pic_summary"
+                android:defaultValue="true"/>
+
 
     </PreferenceCategory>
 
