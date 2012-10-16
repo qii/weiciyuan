@@ -9,7 +9,6 @@ import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.File;
@@ -504,11 +503,11 @@ public class ImageTool {
     private static boolean getBitmapFromNetWork(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
 
-        for (int i = 0; i < AppConfig.RETRY_TIMES; i++) {
+//        for (int i = 0; i < AppConfig.RETRY_TIMES; i++) {
             boolean result = HttpUtility.getInstance().executeDownloadTask(url, path, downloadListener);
             if (result)
                 return true;
-        }
+//        }
 
         return false;
     }

@@ -4,6 +4,7 @@ import ch.boye.httpclientandroidlib.HttpEntity;
 import ch.boye.httpclientandroidlib.HttpResponse;
 import ch.boye.httpclientandroidlib.HttpStatus;
 import ch.boye.httpclientandroidlib.StatusLine;
+import ch.boye.httpclientandroidlib.client.methods.HttpGet;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
 
 import java.io.*;
@@ -20,17 +21,17 @@ public class FileDownloaderHttpHelper {
     }
 
 
-    public static boolean saveFile(HttpResponse response, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    public static boolean saveFile(HttpGet httpGet, HttpResponse response, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
         StatusLine status = response.getStatusLine();
         int statusCode = status.getStatusCode();
 
-        return statusCode == HttpStatus.SC_OK && saveFileAndGetFileAbsolutePath(response, path, downloadListener);
+        return statusCode == HttpStatus.SC_OK && saveFileAndGetFileAbsolutePath(httpGet, response, path, downloadListener);
 
     }
 
 
-    private static boolean saveFileAndGetFileAbsolutePath(HttpResponse response, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    private static boolean saveFileAndGetFileAbsolutePath(HttpGet httpGet, HttpResponse response, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
         HttpEntity httpEntity = response.getEntity();
         File file = FileManager.createNewFileInSDCard(path);
         if (file == null) {
@@ -55,10 +56,9 @@ public class FileDownloaderHttpHelper {
                 }
             }
 
-        } catch (FileNotFoundException ignored) {
-
-        } catch (IOException ignored) {
-
+            EntityUtils.consume(response.getEntity());
+        } catch (Exception ignored) {
+            httpGet.abort();
         } finally {
 
             if (in != null) {
@@ -78,11 +78,6 @@ public class FileDownloaderHttpHelper {
 
         }
 
-        try {
-            EntityUtils.consume(response.getEntity());
-        } catch (IOException ignored) {
-
-        }
 
         return file.exists() && (file.length() > 0);
 

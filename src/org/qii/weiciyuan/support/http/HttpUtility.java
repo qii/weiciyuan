@@ -6,6 +6,7 @@ import ch.boye.httpclientandroidlib.*;
 import ch.boye.httpclientandroidlib.client.ClientProtocolException;
 import ch.boye.httpclientandroidlib.client.CookieStore;
 import ch.boye.httpclientandroidlib.client.HttpClient;
+import ch.boye.httpclientandroidlib.client.HttpRequestRetryHandler;
 import ch.boye.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
 import ch.boye.httpclientandroidlib.client.methods.HttpPost;
@@ -14,6 +15,7 @@ import ch.boye.httpclientandroidlib.client.protocol.ClientContext;
 import ch.boye.httpclientandroidlib.client.utils.URIBuilder;
 import ch.boye.httpclientandroidlib.conn.ConnectTimeoutException;
 import ch.boye.httpclientandroidlib.impl.client.BasicCookieStore;
+import ch.boye.httpclientandroidlib.impl.client.DecompressingHttpClient;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.impl.conn.PoolingClientConnectionManager;
 import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
@@ -31,6 +33,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
 import org.qii.weiciyuan.support.utils.ActivityUtils;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
@@ -54,12 +57,55 @@ public class HttpUtility {
         HttpParams params = new BasicHttpParams();
         params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
         PoolingClientConnectionManager connectionManager = new PoolingClientConnectionManager();
-        connectionManager.setMaxTotal(8);
+        connectionManager.setMaxTotal(5);
 
-//        httpClient = new DecompressingHttpClient(new DefaultHttpClient(connectionManager));
-        httpClient = new DefaultHttpClient(connectionManager);
-        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 18000);
-        HttpConnectionParams.setSoTimeout(httpClient.getParams(), 18000);
+        DefaultHttpClient backend = new DefaultHttpClient(connectionManager);
+
+        HttpRequestRetryHandler myRetryHandler = new HttpRequestRetryHandler() {
+
+            public boolean retryRequest(
+                    IOException exception,
+                    int executionCount,
+                    HttpContext context) {
+                if (executionCount >= AppConfig.RETRY_TIMES) {
+                    // Do not retry if over max retry count
+                    return false;
+                }
+//                if (exception instanceof InterruptedIOException) {
+//                    // Timeout
+//                    return false;
+//                }
+//                if (exception instanceof UnknownHostException) {
+//                    // Unknown host
+//                    return false;
+//                }
+//                if (exception instanceof ConnectException) {
+//                    // Connection refused
+//                    return false;
+//                }
+//                if (exception instanceof SSLException) {
+//                    // SSL handshake exception
+//                    return false;
+//                }
+//                HttpRequest request = (HttpRequest) context.getAttribute(
+//                        ExecutionContext.HTTP_REQUEST);
+//                boolean idempotent = !(request instanceof HttpEntityEnclosingRequest);
+//                if (idempotent) {
+//                    // Retry if the request is considered idempotent
+//                    return true;
+//                }
+//                return false;
+                return true;
+            }
+
+        };
+
+        backend.setHttpRequestRetryHandler(myRetryHandler);
+
+        httpClient = new DecompressingHttpClient(backend);
+
+        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 15000);
+        HttpConnectionParams.setSoTimeout(httpClient.getParams(), 15000);
 
 
     }
@@ -120,7 +166,7 @@ public class HttpUtility {
 
         if (response != null) {
 
-            return dealWithResponse(response);
+            return handleResponse(response);
         } else {
             return "";
         }
@@ -145,20 +191,13 @@ public class HttpUtility {
         try {
 
             response = httpClient.execute(httpGet);
-            return FileDownloaderHttpHelper.saveFile(response, path, downloadListener);
+            return FileDownloaderHttpHelper.saveFile(httpGet, response, path, downloadListener);
 
-        } catch (ConnectTimeoutException ignored) {
+        } catch (Exception ignored) {
 
             AppLogger.e(ignored.getMessage());
-
-        } catch (ClientProtocolException ignored) {
-            AppLogger.e(ignored.getMessage());
-
-        } catch (IOException ignored) {
-            AppLogger.e("1" + ignored.getMessage());
-            ignored.printStackTrace();
+            httpGet.abort();
         }
-
 
         return false;
 
@@ -170,9 +209,7 @@ public class HttpUtility {
         URIBuilder uriBuilder;
         try {
             uriBuilder = new URIBuilder(url);
-
             Set<String> keys = param.keySet();
-
             for (String key : keys) {
                 String value = param.get(key);
                 if (!TextUtils.isEmpty(value))
@@ -189,16 +226,15 @@ public class HttpUtility {
 
 
         CookieStore cookieStore = new BasicCookieStore();
-
         HttpContext localContext = new BasicHttpContext();
         localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-
 
         HttpResponse response = getHttpResponse(httpGet, localContext);
 
         if (response != null) {
-            return dealWithResponse(response);
+            return handleResponse(response);
         } else {
+            httpGet.abort();
             return "";
         }
 
@@ -216,34 +252,32 @@ public class HttpUtility {
         } catch (ConnectTimeoutException e) {
 
             AppLogger.e(e.getMessage());
+            httpRequest.abort();
             throw new WeiboException(GlobalContext.getInstance().getString(R.string.timeout), e);
 
         } catch (ClientProtocolException e) {
             AppLogger.e(e.getMessage());
+            httpRequest.abort();
             throw new WeiboException(GlobalContext.getInstance().getString(R.string.timeout), e);
 
         } catch (IOException e) {
             AppLogger.e(e.getMessage());
+            httpRequest.abort();
             throw new WeiboException(GlobalContext.getInstance().getString(R.string.timeout), e);
         }
         return response;
     }
 
-    private String dealWithResponse(HttpResponse httpResponse) throws WeiboException {
-
+    private String handleResponse(HttpResponse httpResponse) throws WeiboException {
 
         StatusLine status = httpResponse.getStatusLine();
         int statusCode = status.getStatusCode();
 
-
         if (statusCode != HttpStatus.SC_OK) {
-            return dealWithError(httpResponse);
+            return handleError(httpResponse);
         }
 
-
         return readResult(httpResponse);
-
-
     }
 
 
@@ -253,7 +287,7 @@ public class HttpUtility {
 
         try {
             result = EntityUtils.toString(entity);
-
+            EntityUtils.consume(entity);
         } catch (IOException e) {
 
             AppLogger.e(e.getMessage());
@@ -266,7 +300,7 @@ public class HttpUtility {
         return result;
     }
 
-    private String dealWithError(HttpResponse httpResponse) throws WeiboException {
+    private String handleError(HttpResponse httpResponse) throws WeiboException {
 
         StatusLine status = httpResponse.getStatusLine();
         int statusCode = status.getStatusCode();
