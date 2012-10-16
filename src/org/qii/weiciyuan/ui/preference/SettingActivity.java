@@ -30,6 +30,9 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String FONT_SIZE = "font_size";
     public static final String OFFICIAL_WEIBO = "official_weibo";
 
+    public static final String SHOW_BIG_PIC = "show_big_pic";
+    public static final String SHOW_BIG_AVATAR = "show_big_avatar";
+
     public static final String FILTER = "filter";
 
 

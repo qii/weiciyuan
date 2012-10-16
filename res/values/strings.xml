@@ -228,11 +228,11 @@
     <string name="auto_show_big_pic">自动切换大图、缩略图</string>
     <string name="auto_show_big_pic_summary">WIFI、3G 下自动开大图</string>
     <string name="sound">音效</string>
-    <string name="auto_refresh">自动刷新首页</string>
+    <string name="auto_refresh">首页自动刷新</string>
     <string name="auto_refresh_summary">仅在 Wifi 网络下有效</string>
     <string name="new_message">未读消息</string>
     <string name="notification">通知</string>
-    <string name="disable_notification_at_night">半夜勿扰</string>
+    <string name="disable_notification_at_night">深夜勿扰</string>
     <string name="disable_notification_at_night_summary">凌晨1点到早上8点关闭</string>
     <string name="enable_fetch_new_msg">获取未读的回复和评论</string>
     <string name="start_fetch_msg">开始后台自动获取……</string>
@@ -246,8 +246,8 @@
     <string name="only_timeline_font">只影响列表字体大小</string>
     <string name="advanced">高级</string>
     <string name="download_emotions_summary">从官方几千张表情中下载最常用的80来张。因为列表滚动优化工作涉及了这部分数据的缓存，所以这里你需要退出应用重进才能生效</string>
-    <string name="filter">过滤器</string>
-    <string name="filter_summary">过滤掉首页中含关键词的微博</string>
+    <string name="filter">首页过滤</string>
+    <string name="filter_summary">消灭脑残</string>
     <string name="other">其它</string>
     <string name="clear_sd_cache">删除缓存</string>
     <string name="clear_avatar_and_pic">清除已下载的图片</string>
