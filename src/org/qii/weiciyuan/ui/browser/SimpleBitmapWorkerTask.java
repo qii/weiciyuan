@@ -94,18 +94,6 @@ public class SimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, Bitmap>
 
     @Override
     protected void onCancelled(Bitmap bitmap) {
-        if (bitmap != null) {
-
-            switch (method) {
-                case avatar_small:
-                    lruCache.put(data, bitmap);
-                    break;
-                case avatar_large:
-                    lruCache.put(data, bitmap);
-                    break;
-            }
-
-        }
 
         if (pb != null)
             pb.setVisibility(View.GONE);
@@ -115,6 +103,8 @@ public class SimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, Bitmap>
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
+        if (pb != null)
+            pb.setVisibility(View.GONE);
 
         if (bitmap != null) {
 
@@ -132,8 +122,6 @@ public class SimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, Bitmap>
 
         }
 
-        if (pb != null)
-            pb.setVisibility(View.GONE);
 
     }
 
