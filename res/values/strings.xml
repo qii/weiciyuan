@@ -238,6 +238,10 @@
     <string name="start_fetch_msg">开始后台自动获取……</string>
     <string name="frequency">间隔</string>
     <string name="theme">主题</string>
+    <string name="current_theme">当前主题:</string>
+    <string name="list_pic_mode">列表图片</string>
+    <string name="list_avatar_mode">列表头像</string>
+    <string name="current_mode">当前模式:</string>
     <string name="font_size">字体大小</string>
     <string name="only_timeline_font">只影响列表字体大小</string>
     <string name="advanced">高级</string>

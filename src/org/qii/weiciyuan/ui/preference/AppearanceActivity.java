@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.othercomponent.AppNewMsgAlarm;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 
@@ -50,19 +49,10 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(SettingActivity.ENABLE_PIC)) {
             boolean value = sharedPreferences.getBoolean(key, true);
-             if (value) {
+            if (value) {
                 GlobalContext.getInstance().setEnablePic(true);
             } else {
                 GlobalContext.getInstance().setEnablePic(false);
-            }
-        }
-
-        if (key.equals(SettingActivity.ENABLE_FETCH_MSG)) {
-            boolean value = sharedPreferences.getBoolean(key, false);
-            if (value) {
-                AppNewMsgAlarm.startAlarm(this, false);
-            } else {
-                AppNewMsgAlarm.stopAlarm(this, true);
             }
         }
 
@@ -78,7 +68,7 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
             if (value.equals("4"))
                 GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Pure_Black);
 
-            Intent intent =new Intent(this, AppearanceActivity.class);
+            Intent intent = new Intent(this, AppearanceActivity.class);
             //        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             finish();
 
@@ -100,22 +90,13 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
             GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
         }
 
-        if (key.equals(SettingActivity.SHOW_BIG_PIC)) {
-            boolean value = sharedPreferences.getBoolean(key, false);
-            GlobalContext.getInstance().setEnableBigPic(value);
-        }
-
-        if (key.equals(SettingActivity.SHOW_BIG_AVATAR)) {
-            boolean value = sharedPreferences.getBoolean(key, false);
-            GlobalContext.getInstance().setEnableBigAvatar(value);
-        }
-
 
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
         finish();
     }
 }

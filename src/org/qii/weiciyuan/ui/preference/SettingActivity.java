@@ -16,6 +16,8 @@ public class SettingActivity extends AbstractAppActivity {
 
     public static final String ENABLE_PIC = "show_picture";
     public static final String THEME = "theme";
+    public static final String LIST_AVATAR_MODE = "list_avatar_mode";
+    public static final String LIST_PIC_MODE = "list_pic_mode";
 
     public static final String SOUND = "sound";
     public static final String AUTO_REFRESH = "auto_refresh";
@@ -27,11 +29,7 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String CLEAR_CACHE = "clear_cache";
     public static final String FONT_SIZE = "font_size";
     public static final String OFFICIAL_WEIBO = "official_weibo";
-    public static final String SHOW_BIG_PIC = "show_big_pic";
-    public static final String AUTO_SHOW_BIG_PIC = "auto_show_big_pic";
-    public static final String SHOW_BIG_AVATAR = "show_big_avatar";
 
-    public static final String DOWNLOAD_EMOTIONS = "download_emotions";
     public static final String FILTER = "filter";
 
 

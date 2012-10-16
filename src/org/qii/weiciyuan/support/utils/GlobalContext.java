@@ -6,6 +6,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -242,8 +244,25 @@ public final class GlobalContext extends Application {
             return enableBigPic;
         } else {
             AppLogger.e("GlobalContext is empty by system");
+
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            enableBigPic = sharedPref.getBoolean(SettingActivity.SHOW_BIG_PIC, false);
+            String value = sharedPref.getString(SettingActivity.LIST_PIC_MODE, "1");
+            if (value.equals("1"))
+                enableBigPic = false;
+            if (value.equals("2"))
+                enableBigPic = true;
+            if (value.equals("3")) {
+                ConnectivityManager cm = (ConnectivityManager)
+                        getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+                if (networkInfo != null && networkInfo.isConnected()) {
+                    if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                        enableBigPic = true;
+                    } else {
+                        enableBigPic = false;
+                    }
+                }
+            }
             return enableBigPic;
         }
 
@@ -279,7 +298,23 @@ public final class GlobalContext extends Application {
         } else {
             AppLogger.e("GlobalContext is empty by system");
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            enableBigAvatar = sharedPref.getBoolean(SettingActivity.SHOW_BIG_AVATAR, false);
+            String value = sharedPref.getString(SettingActivity.LIST_AVATAR_MODE, "1");
+            if (value.equals("1"))
+                enableBigAvatar = false;
+            if (value.equals("2"))
+                enableBigAvatar = true;
+            if (value.equals("3")) {
+                ConnectivityManager cm = (ConnectivityManager)
+                        getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+                if (networkInfo != null && networkInfo.isConnected()) {
+                    if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                        enableBigAvatar = true;
+                    } else {
+                        enableBigAvatar = false;
+                    }
+                }
+            }
             return enableBigAvatar;
         }
 

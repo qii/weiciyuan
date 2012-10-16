@@ -46,33 +46,45 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
 
     }
 
-    private void decideTimeLineBigPic(Context context, NetworkInfo networkInfo) {
+    private static void decideTimeLineBigPic(Context context, NetworkInfo networkInfo) {
 
-        SharedPreferences autoShowBigPic = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean value = autoShowBigPic.getBoolean(SettingActivity.AUTO_SHOW_BIG_PIC, true);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        String avatarModeValue = sharedPref.getString(SettingActivity.LIST_AVATAR_MODE, "1");
+        String picModeValue = sharedPref.getString(SettingActivity.LIST_PIC_MODE, "1");
 
-        if (!value)
+        if (!avatarModeValue.equals("3") && !picModeValue.equals("3"))
             return;
 
         if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
             //wifi network
-            GlobalContext.getInstance().setEnableBigPic(true);
-            SharedPreferences bigPicSP = PreferenceManager.getDefaultSharedPreferences(context);
-            bigPicSP.edit().putBoolean(SettingActivity.SHOW_BIG_PIC, true).commit();
+            if (avatarModeValue.equals("3")) {
+                GlobalContext.getInstance().setEnableBigAvatar(true);
+            }
+            if (picModeValue.equals("3")) {
+                GlobalContext.getInstance().setEnableBigPic(true);
+            }
         } else if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
 
             int subType = networkInfo.getSubtype();
 
             if (subType == TelephonyManager.NETWORK_TYPE_GPRS) {
                 //gprs network
-                GlobalContext.getInstance().setEnableBigPic(false);
-                SharedPreferences bigPicSP = PreferenceManager.getDefaultSharedPreferences(context);
-                bigPicSP.edit().putBoolean(SettingActivity.SHOW_BIG_PIC, false).commit();
+                if (avatarModeValue.equals("3")) {
+                    GlobalContext.getInstance().setEnableBigAvatar(false);
+                }
+                if (picModeValue.equals("3")) {
+                    GlobalContext.getInstance().setEnableBigPic(false);
+                }
+
             } else {
                 //3G or other 2.5g network,there are too many mobile technologies
-                GlobalContext.getInstance().setEnableBigPic(true);
-                SharedPreferences bigPicSP = PreferenceManager.getDefaultSharedPreferences(context);
-                bigPicSP.edit().putBoolean(SettingActivity.SHOW_BIG_PIC, true).commit();
+                if (avatarModeValue.equals("3")) {
+                    GlobalContext.getInstance().setEnableBigAvatar(false);
+                }
+                if (picModeValue.equals("3")) {
+                    GlobalContext.getInstance().setEnableBigPic(false);
+                }
+
             }
 
         }
