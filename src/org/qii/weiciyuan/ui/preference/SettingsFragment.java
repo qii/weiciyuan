@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
@@ -21,6 +22,8 @@ import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Preference clear_cache;
+    private Preference frequency;
+
     private CalcCacheSize calcTask;
     private RemoveCache removeCache;
 
@@ -33,6 +36,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         clear_cache = findPreference(SettingActivity.CLEAR_CACHE);
+        frequency = findPreference(SettingActivity.FREQUENCY);
 
         clear_cache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -71,6 +75,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 //                return true;
 //            }
 //        });
+
+        buildSummary();
     }
 
 
@@ -111,7 +117,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if (key.equals(SettingActivity.FREQUENCY)) {
 
             AppNewMsgAlarm.startAlarm(getActivity(), false);
-
+            buildSummary();
         }
 
 
@@ -119,7 +125,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             String value = sharedPreferences.getString(key, "15");
             GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
         }
-
 
 
         if (key.equals(SettingActivity.SOUND)) {
@@ -131,6 +136,11 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             boolean value = sharedPreferences.getBoolean(key, false);
             GlobalContext.getInstance().setEnableAutoRefresh(value);
         }
+    }
+
+    private void buildSummary() {
+        String value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.FREQUENCY, "1");
+        frequency.setSummary(getActivity().getResources().getStringArray(R.array.frequency)[Integer.valueOf(value) - 1]);
     }
 
 
