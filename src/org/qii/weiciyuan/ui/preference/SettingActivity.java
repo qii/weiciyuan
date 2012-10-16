@@ -37,6 +37,8 @@ public class SettingActivity extends AbstractAppActivity {
 
     public static final String SUGGEST = "suggest";
 
+    public static final String VERSION="version";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

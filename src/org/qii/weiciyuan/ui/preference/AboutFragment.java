@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -41,18 +42,32 @@ public class AboutFragment extends PreferenceFragment {
         });
 
         findPreference(SettingActivity.OFFICIAL_WEIBO).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                   @Override
-                   public boolean onPreferenceClick(Preference preference) {
-                       UserBean bean = new UserBean();
-                       bean.setScreen_name(getString(R.string.official_weibo_link));
-                       String token = GlobalContext.getInstance().getSpecialToken();
-                       Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                       intent.putExtra("token", token);
-                       intent.putExtra("user", bean);
-                       startActivity(intent);
-                       return true;
-                   }
-               });
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                UserBean bean = new UserBean();
+                bean.setScreen_name(getString(R.string.official_weibo_link));
+                String token = GlobalContext.getInstance().getSpecialToken();
+                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                intent.putExtra("token", token);
+                intent.putExtra("user", bean);
+                startActivity(intent);
+                return true;
+            }
+        });
+
+        String version = "";
+        PackageManager packageManager = getActivity().getPackageManager();
+        PackageInfo packInfo = null;
+        try {
+            packInfo = packageManager.getPackageInfo(getActivity().getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            AppLogger.e(e.getMessage());
+        }
+        if (packInfo != null) {
+            version = packInfo.versionName;
+        }
+        if (!TextUtils.isEmpty(version))
+            findPreference(SettingActivity.VERSION).setSummary(version);
 
     }
 

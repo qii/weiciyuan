@@ -9,6 +9,7 @@
 
     <Preference
             android:title="@string/version"
+            android:key="version"
             android:summary="1.0 alpha"
             />
     <Preference

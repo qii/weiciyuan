@@ -259,8 +259,8 @@
     <string name="about_summary">版本号、反馈意见、开源协议、源代码</string>
     <string name="play_store_address">Google Play</string>
     <string name="play_store_address_summary">打分支持该应用</string>
-    <string name="github">github</string>
-    <string name="sourcecode_address">源代码托管地址</string>
+    <string name="github">Github</string>
+    <string name="sourcecode_address">Fork me on GitHub</string>
     <string name="opensource_licence">GPL v3</string>
     <string name="opensource_licence_summary">开源协议</string>
     <string name="author">开发者</string>
