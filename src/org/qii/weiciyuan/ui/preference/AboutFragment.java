@@ -11,9 +11,11 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.telephony.TelephonyManager;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
  * User: qii
@@ -37,6 +39,20 @@ public class AboutFragment extends PreferenceFragment {
                 return true;
             }
         });
+
+        findPreference(SettingActivity.OFFICIAL_WEIBO).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                   @Override
+                   public boolean onPreferenceClick(Preference preference) {
+                       UserBean bean = new UserBean();
+                       bean.setScreen_name(getString(R.string.official_weibo_link));
+                       String token = GlobalContext.getInstance().getSpecialToken();
+                       Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                       intent.putExtra("token", token);
+                       intent.putExtra("user", bean);
+                       startActivity(intent);
+                       return true;
+                   }
+               });
 
     }
 
@@ -72,7 +88,7 @@ public class AboutFragment extends PreferenceFragment {
             version = packInfo.versionName;
         }
 
-        return "@四次元 #四次元App反馈# " + android.os.Build.MANUFACTURER
+        return "@四次元App #四次元App反馈# " + android.os.Build.MANUFACTURER
                 + " " + android.os.Build.MODEL + ",Android "
                 + android.os.Build.VERSION.RELEASE + "," + network + " version:" + version;
     }

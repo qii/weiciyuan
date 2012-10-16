@@ -52,19 +52,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         calcTask = new CalcCacheSize();
         calcTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
-        findPreference(SettingActivity.OFFICIAL_WEIBO).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                UserBean bean = new UserBean();
-                bean.setScreen_name(getString(R.string.official_weibo_link));
-                String token = GlobalContext.getInstance().getSpecialToken();
-                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                intent.putExtra("token", token);
-                intent.putExtra("user", bean);
-                startActivity(intent);
-                return true;
-            }
-        });
+
 
 //        findPreference(SettingActivity.DOWNLOAD_EMOTIONS).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 //            @Override

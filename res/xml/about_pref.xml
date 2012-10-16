@@ -2,7 +2,10 @@
 <PreferenceScreen
         xmlns:android="http://schemas.android.com/apk/res/android"
         >
-
+    <Preference
+            android:key="official_weibo"
+            android:title="@string/official_weibo"
+            />
 
     <Preference
             android:title="@string/version"

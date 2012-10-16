@@ -73,10 +73,7 @@
                 android:title="@string/clear_sd_cache"
                 android:summary="@string/clear_avatar_and_pic"
                 />
-        <Preference
-                android:key="official_weibo"
-                android:title="@string/official_weibo"
-                />
+
         <Preference
                 android:title="@string/about"
                 android:summary="@string/about_summary">

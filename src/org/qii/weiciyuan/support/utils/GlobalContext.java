@@ -137,8 +137,7 @@ public final class GlobalContext extends Application {
             } else {
                 List<AccountBean> accountList = DatabaseManager.getInstance().getAccountList();
                 if (accountList != null && accountList.size() > 0) {
-                    AccountBean account = accountList.get(0);
-                    accountBean = account;
+                    accountBean = accountList.get(0);
                     return accountBean;
                 }
             }
@@ -148,40 +147,15 @@ public final class GlobalContext extends Application {
     }
 
     public String getCurrentAccountId() {
-        if (!TextUtils.isEmpty(currentAccountId)) {
-            return currentAccountId;
-        } else {
-            AppLogger.e("GlobalContext is empty by system");
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            String value = sharedPref.getString("currentAccountId", "");
-            GlobalContext.getInstance().setCurrentAccountId(value);
-            return currentAccountId;
-        }
+        return getAccountBean().getUid();
     }
 
-    public void setCurrentAccountId(String id) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPref.edit().putString("currentAccountId", id).commit();
-        this.currentAccountId = id;
-    }
 
     public String getCurrentAccountName() {
-        if (!TextUtils.isEmpty(currentAccountName)) {
-            return currentAccountName;
-        } else {
-            AppLogger.e("GlobalContext is empty by system");
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            String value = sharedPref.getString("currentAccountName", "");
-            GlobalContext.getInstance().setCurrentAccountName(value);
-            return currentAccountName;
-        }
+
+        return getAccountBean().getUsernick();
     }
 
-    public void setCurrentAccountName(String currentAccountName) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPref.edit().putString("currentAccountName", currentAccountName).commit();
-        this.currentAccountName = currentAccountName;
-    }
 
     public int getFontSize() {
         if (fontSize != 0) {
