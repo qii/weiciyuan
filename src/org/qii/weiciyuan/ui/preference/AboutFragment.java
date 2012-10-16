@@ -11,6 +11,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -51,6 +52,14 @@ public class AboutFragment extends PreferenceFragment {
                 intent.putExtra("token", token);
                 intent.putExtra("user", bean);
                 startActivity(intent);
+                return true;
+            }
+        });
+
+        findPreference(SettingActivity.AUTHOR).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Toast.makeText(getActivity(), "你们啊,Too young too simple sometimes naive", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });

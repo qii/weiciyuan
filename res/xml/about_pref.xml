@@ -14,6 +14,7 @@
             />
     <Preference
             android:title="@string/author"
+            android:key="author"
             android:summary="@string/author_summary"
             />
     <Preference

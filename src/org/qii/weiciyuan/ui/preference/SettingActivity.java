@@ -37,7 +37,8 @@ public class SettingActivity extends AbstractAppActivity {
 
     public static final String SUGGEST = "suggest";
 
-    public static final String VERSION="version";
+    public static final String VERSION = "version";
+    public static final String AUTHOR = "author";
 
 
     @Override
