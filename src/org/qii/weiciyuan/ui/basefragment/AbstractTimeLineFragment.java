@@ -2,10 +2,8 @@ package org.qii.weiciyuan.ui.basefragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.SystemClock;
+import android.view.*;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
@@ -343,6 +341,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             showListView();
 
             getListView().setSelection(0);
+            getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+
         }
 
         @Override

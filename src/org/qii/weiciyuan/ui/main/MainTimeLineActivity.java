@@ -4,11 +4,13 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.*;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
@@ -343,20 +345,30 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                                     FragmentTransaction ft) {
             switch (tab.getPosition()) {
                 case 0:
-                    if (home)
+                    if (home) {
+                        getHomeFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+
                         getHomeFragment().getListView().setSelection(0);
+
+                    }
                     break;
                 case 1:
-                    if (mentions)
+                    if (mentions) {
                         getMentionFragment().getListView().setSelection(0);
+                        getMentionFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+                    }
                     break;
                 case 2:
-                    if (comments)
+                    if (comments) {
                         getCommentFragment().getListView().setSelection(0);
+                        getCommentFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+                    }
                     break;
                 case 3:
-                    if (my)
+                    if (my) {
                         getMyFragment().getListView().setSelection(0);
+                        getMyFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+                    }
                     break;
             }
         }
