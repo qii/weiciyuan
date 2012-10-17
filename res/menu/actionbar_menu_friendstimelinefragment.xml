@@ -4,16 +4,16 @@
 
     <item android:id="@+id/write_weibo"
           android:icon="?write_weibo"
-          android:showAsAction="ifRoom"
+          android:showAsAction="always"
           android:title="@string/write_weibo"/>
 
     <item android:id="@+id/group_name"
           android:title="name"
-          android:showAsAction="ifRoom|withText"/>
+          android:showAsAction="always"/>
 
     <item android:id="@+id/refresh"
           android:icon="?refresh"
           android:title="@string/refresh"
-          android:showAsAction="ifRoom"/>
+          android:showAsAction="always"/>
 
 </menu>

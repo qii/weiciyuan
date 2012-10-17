@@ -15,5 +15,5 @@ public class AppConfig {
 
 
     //if download pic failed,retry
-    public static final int RETRY_TIMES=4;
+    public static final int RETRY_TIMES=6;
 }

@@ -85,14 +85,14 @@ public class MainFriendsTimeLineDao {
     }
 
 
-    private String access_token;
-    private String since_id;
-    private String max_id;
-    private String count;
-    private String page;
-    private String base_app;
-    private String feature;
-    private String trim_user;
+    protected String access_token;
+    protected String since_id;
+    protected String max_id;
+    protected String count;
+    protected String page;
+    protected String base_app;
+    protected String feature;
+    protected String trim_user;
 
     public MainFriendsTimeLineDao(String access_token) {
 

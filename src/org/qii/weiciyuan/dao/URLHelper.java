@@ -134,4 +134,12 @@ public class URLHelper {
     public static String getAtUser() {
         return URLManager.getRealUrl("atuser");
     }
+
+    public static String getFriendGroup() {
+        return URLManager.getRealUrl("friendsgroup");
+    }
+
+    public static String getFriendGroupTimeLine() {
+           return URLManager.getRealUrl("friendsgrouptimeline");
+       }
 }

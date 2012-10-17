@@ -6,9 +6,11 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.GroupBean;
+import org.qii.weiciyuan.bean.GroupListBean;
 
-import java.util.HashMap;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: qii
@@ -16,8 +18,8 @@ import java.util.Set;
  */
 public class FriendsGroupDialog extends DialogFragment {
 
-    private HashMap<Integer, String> group;
-    private int selected;
+    private GroupListBean group;
+    private String selected;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -31,7 +33,7 @@ public class FriendsGroupDialog extends DialogFragment {
     }
 
 
-    public FriendsGroupDialog(HashMap<Integer, String> group, int selected) {
+    public FriendsGroupDialog(GroupListBean group, String selected) {
         this.group = group;
         this.selected = selected;
     }
@@ -40,25 +42,23 @@ public class FriendsGroupDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
-            group = (HashMap<Integer, String>) savedInstanceState.getSerializable("group");
-            selected = savedInstanceState.getInt("selected");
+            group = (GroupListBean) savedInstanceState.getSerializable("group");
+            selected = savedInstanceState.getString("selected");
         }
 
-        Set<Integer> keys = group.keySet();
-        final Integer[] keyArray = keys.toArray(new Integer[keys.size()]);
+        final List<GroupBean> list = group.getLists();
 
+        List<String> name = new ArrayList<String>();
+        name.add(getString(R.string.all_people));
         int position = 0;
-
-        for (int i = 0; i < keyArray.length; i++) {
-            if (keyArray[i] == selected)
-                position = i;
+        for (GroupBean b : list) {
+            name.add(b.getName());
+            if (b.getIdstr().equals(selected)) {
+                position = list.indexOf(b)+1;
+            }
         }
 
-        String[] valueArray = new String[keyArray.length];
-        for (int i = 0; i < keyArray.length; i++) {
-            valueArray[i] = group.get(keyArray[i]);
-        }
-
+        String[] valueArray = name.toArray(new String[0]);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.select_group));
@@ -67,8 +67,16 @@ public class FriendsGroupDialog extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
 
                 FriendsTimeLineFragment fragment = (FriendsTimeLineFragment) getTargetFragment();
-                int selectedItemId = keyArray[which].intValue();
-                if (selected != selectedItemId) {
+
+                String selectedItemId = "0";
+
+                if (which == 0) {
+
+                } else {
+                    selectedItemId = list.get(which - 1).getIdstr();
+                }
+
+                if (!selected.equals(selectedItemId)) {
                     fragment.setSelected(selectedItemId);
                     fragment.switchGroup();
                 }

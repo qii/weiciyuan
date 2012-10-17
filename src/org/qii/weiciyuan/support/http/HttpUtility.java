@@ -104,8 +104,8 @@ public class HttpUtility {
 
         httpClient = new DecompressingHttpClient(backend);
 
-        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 15000);
-        HttpConnectionParams.setSoTimeout(httpClient.getParams(), 15000);
+        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 5000);
+        HttpConnectionParams.setSoTimeout(httpClient.getParams(), 8000);
 
 
     }
@@ -197,6 +197,7 @@ public class HttpUtility {
 
             AppLogger.e(ignored.getMessage());
             httpGet.abort();
+
         }
 
         return false;
