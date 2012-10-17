@@ -346,9 +346,10 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             switch (tab.getPosition()) {
                 case 0:
                     if (home) {
-                        getHomeFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
 
                         getHomeFragment().getListView().setSelection(0);
+                        getHomeFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+
 
                     }
                     break;

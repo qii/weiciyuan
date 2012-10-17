@@ -11,9 +11,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
@@ -180,10 +182,18 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
             switch (tab.getPosition()) {
 
                 case 1:
-                    if (comment) getCommentFragment().getListView().setSelection(0);
+                    if (comment) {
+                        getCommentFragment().getListView().setSelection(0);
+                        getCommentFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+
+                    }
                     break;
                 case 2:
-                    if (repost) getRepostFragment().getListView().setSelection(0);
+                    if (repost) {
+                        getRepostFragment().getListView().setSelection(0);
+                        getRepostFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+
+                    }
                     break;
                 case 3:
                     break;

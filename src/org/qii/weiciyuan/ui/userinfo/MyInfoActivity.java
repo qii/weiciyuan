@@ -6,8 +6,10 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
@@ -111,8 +113,11 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
             switch (tab.getPosition()) {
 
                 case 1:
-                    if (status)
+                    if (status){
                         getStatusFragment().getListView().setSelection(0);
+                        getStatusFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+
+                    }
                     break;
 
             }

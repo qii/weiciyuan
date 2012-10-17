@@ -3,6 +3,7 @@ package org.qii.weiciyuan.ui.basefragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.*;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
@@ -326,6 +327,8 @@ public abstract class AbstractUserListFragment extends Fragment {
         protected void onPreExecute() {
             showListView();
             getListView().setSelection(0);
+            getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+
         }
 
 
