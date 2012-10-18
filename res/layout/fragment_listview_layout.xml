@@ -48,7 +48,7 @@
                   android:layout_gravity="center"
                   android:scrollingCache="true"
                   android:smoothScrollbar="true"
-                  android:visibility="gone"
+                  android:visibility="invisible"
                   android:overScrollMode="never"
                 />
     </FrameLayout>
