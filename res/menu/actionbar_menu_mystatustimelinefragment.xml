@@ -1,25 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <item android:id="@+id/write_weibo"
+              android:icon="?write_weibo"
+              android:showAsAction="always"
+              android:title="@string/write_weibo"/>
+
+        <item android:id="@+id/name"
+              android:title="name"
+              android:showAsAction="always"
+                />
+
+        <item android:id="@+id/refresh"
+              android:icon="?refresh"
+              android:title="@string/refresh"
+              android:showAsAction="never"/>
+
+        <item android:id="@+id/menu_account"
+              android:title="@string/account"
+              android:icon="?account_management"
+              android:showAsAction="never"
+                />
 
 
-    <item android:id="@+id/menu_account"
-          android:title="@string/account"
-          android:icon="?account_management"
-          android:showAsAction="ifRoom"
-            />
+        <item android:id="@+id/menu_setting"
 
-    <item android:id="@+id/name"
-          android:title="name"
-          android:showAsAction="ifRoom|withText"
-            />
-
-    <item android:id="@+id/menu_setting"
-
-          android:title="@string/setting"
-          android:icon="?settings"
-          android:showAsAction="ifRoom"
-            />
+              android:title="@string/setting"
+              android:icon="?settings"
+              android:showAsAction="never"
+                />
 
 
-</menu>
+    </menu>
+
+

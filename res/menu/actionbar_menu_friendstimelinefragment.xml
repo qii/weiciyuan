@@ -14,6 +14,21 @@
     <item android:id="@+id/refresh"
           android:icon="?refresh"
           android:title="@string/refresh"
-          android:showAsAction="always"/>
+          android:showAsAction="never"/>
+
+    <item android:id="@+id/menu_account"
+          android:title="@string/account"
+          android:icon="?account_management"
+          android:showAsAction="never"
+            />
+
+
+    <item android:id="@+id/menu_setting"
+
+          android:title="@string/setting"
+          android:icon="?settings"
+          android:showAsAction="never"
+            />
+
 
 </menu>

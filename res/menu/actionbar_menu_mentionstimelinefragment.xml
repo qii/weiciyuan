@@ -1,17 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item android:id="@+id/write_weibo"
           android:icon="?write_weibo"
-          android:showAsAction="ifRoom"
+          android:showAsAction="always"
           android:title="@string/write_weibo"/>
 
     <item android:id="@+id/group_name"
-          android:showAsAction="ifRoom|withText"
-            />
+          android:title="name"
+          android:showAsAction="always"/>
+
     <item android:id="@+id/refresh"
           android:icon="?refresh"
           android:title="@string/refresh"
-          android:showAsAction="ifRoom"
+          android:showAsAction="never"/>
+
+    <item android:id="@+id/menu_account"
+          android:title="@string/account"
+          android:icon="?account_management"
+          android:showAsAction="never"
             />
+
+
+    <item android:id="@+id/menu_setting"
+
+          android:title="@string/setting"
+          android:icon="?settings"
+          android:showAsAction="never"
+            />
+
+
 </menu>
