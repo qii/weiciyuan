@@ -5,11 +5,10 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
@@ -25,7 +24,9 @@ import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -47,6 +48,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     private String selectedId = "0";
     private GroupListBean group = new GroupListBean();
     private HashMap<String, ListBean<MessageBean>> hashMap = new HashMap<String, ListBean<MessageBean>>();
+
+    private ListView groupListView;
+    private ArrayAdapter<String> groupAdapter;
 
 
     public FriendsTimeLineFragment() {
@@ -110,6 +114,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        groupListView = (ListView) view.findViewById(R.id.group_listView);
+        return view;
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
@@ -135,12 +146,35 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             hashMap.put("0", new MessageListBean());
 
         }
-        getActivity().invalidateOptionsMenu();
+
         super.onActivityCreated(savedInstanceState);
         new GroupTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
+        groupAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new ArrayList<String>());
+        groupListView.setAdapter(groupAdapter);
+        groupListView.setOnItemClickListener(new GroupListViewItemClickListener());
+
     }
 
+    private class GroupListViewItemClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String name = groupAdapter.getItem(position);
+            String selectedItemId = "0";
+
+            for (GroupBean b : group.getLists()) {
+                if (b.getName().equals(name)) {
+                    selectedItemId = b.getIdstr();
+                }
+            }
+            FriendsTimeLineFragment.this.name.setTitle(name);
+            setSelected(selectedItemId);
+            getActivity().invalidateOptionsMenu();
+            switchGroupListViewAndNormalListView();
+            switchGroup();
+        }
+    }
 
     private class SimpleTask extends MyAsyncTask<Object, Object, Object> {
 
@@ -182,15 +216,18 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.actionbar_menu_friendstimelinefragment, menu);
+        name = menu.findItem(R.id.group_name);
         if (selectedId.equals("0")) {
-            name = menu.findItem(R.id.group_name);
             name.setTitle(userBean.getScreen_name());
         } else {
             for (GroupBean b : group.getLists()) {
-                if (b.getIdstr().equals(selectedId))
+                if (b.getIdstr().equals(selectedId)) {
                     name.setTitle(b.getName());
+                    return;
+                }
             }
         }
+
     }
 
     @Override
@@ -207,15 +244,20 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 break;
             case R.id.group_name:
 
-//                if (canSwitchGroup()) {
-//                    FriendsGroupDialog dialog = new FriendsGroupDialog(group, selectedId);
-//                    dialog.setTargetFragment(this, 1);
-//                    dialog.show(getFragmentManager(), "");
-//                }
-
+                switchGroupListViewAndNormalListView();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void switchGroupListViewAndNormalListView() {
+        if (pullToRefreshListView.getVisibility() == View.VISIBLE) {
+            groupListView.setVisibility(View.VISIBLE);
+            pullToRefreshListView.setVisibility(View.GONE);
+        } else {
+            groupListView.setVisibility(View.GONE);
+            pullToRefreshListView.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -428,13 +470,15 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
 
     private class GroupTask extends MyAsyncTask<Void, GroupListBean, GroupListBean> {
+        WeiboException e;
 
         @Override
         protected GroupListBean doInBackground(Void... params) {
             try {
                 return new FriendGroupDao("2.00vv3LGCpftsPE93a8e2f0e915h68D").getGroup();
             } catch (WeiboException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                this.e = e;
+                cancel(true);
             }
             return null;
         }
@@ -442,8 +486,18 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         @Override
         protected void onPostExecute(GroupListBean groupListBean) {
             group = groupListBean;
+            final List<GroupBean> list = group.getLists();
+
+            List<String> name = new ArrayList<String>();
+            name.add(getString(R.string.all_people));
+            for (GroupBean b : list) {
+                name.add(b.getName());
+
+            }
+            groupAdapter.addAll(name);
             super.onPostExecute(groupListBean);
         }
     }
+
 
 }

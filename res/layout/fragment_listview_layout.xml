@@ -41,6 +41,16 @@
                      android:id="@+id/progressbar"
                      android:visibility="visible"/>
 
+        <ListView android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:fastScrollEnabled="false"
+                  android:id="@+id/group_listView"
+                  android:layout_gravity="center"
+                  android:scrollingCache="true"
+                  android:smoothScrollbar="true"
+                  android:visibility="gone"
+                  android:overScrollMode="never"
+                />
     </FrameLayout>
 
 </LinearLayout>
