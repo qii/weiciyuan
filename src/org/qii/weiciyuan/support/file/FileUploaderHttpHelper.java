@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.file;
 
 import android.text.TextUtils;
 import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.HttpStatus;
 import ch.boye.httpclientandroidlib.client.HttpClient;
 import ch.boye.httpclientandroidlib.client.methods.HttpPost;
 import ch.boye.httpclientandroidlib.entity.mime.MultipartEntity;
@@ -56,10 +57,14 @@ public class FileUploaderHttpHelper {
         } catch (IOException e) {
             AppLogger.e(e.getMessage());
         }
-         try {
+        try {
             if (response != null) {
-                String   content = EntityUtils.toString(response.getEntity());
-                return true;
+                if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                    EntityUtils.consume(response.getEntity());
+                    return true;
+                } else {
+                    EntityUtils.consume(response.getEntity());
+                }
             }
         } catch (IOException e) {
             AppLogger.e(e.getMessage());
