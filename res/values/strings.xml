@@ -219,7 +219,7 @@
     <string name="setting">设置</string>
     <string name="normal">常规</string>
     <string name="appearance">显示</string>
-    <string name="disable_download_pic">禁止下载头像、图片</string>
+    <string name="disable_download_pic">关闭下载头像、图片</string>
     <string name="disable_download_pic_summary">关闭后你不会看到新的头像、图片，已下载过的依然还会显示，大幅度降低流量消耗</string>
     <string name="show_big_avatar">高清头像</string>
     <string name="show_big_avatar_summary">大屏幕手机推荐开高清</string>
