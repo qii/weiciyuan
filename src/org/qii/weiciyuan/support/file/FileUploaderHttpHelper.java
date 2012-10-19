@@ -60,9 +60,11 @@ public class FileUploaderHttpHelper {
         try {
             if (response != null) {
                 if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                    AppLogger.e(EntityUtils.toString(response.getEntity()));
                     EntityUtils.consume(response.getEntity());
                     return true;
                 } else {
+                    AppLogger.e(EntityUtils.toString(response.getEntity()));
                     EntityUtils.consume(response.getEntity());
                 }
             }
