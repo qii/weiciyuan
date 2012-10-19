@@ -14,15 +14,19 @@ import ch.boye.httpclientandroidlib.client.methods.HttpRequestBase;
 import ch.boye.httpclientandroidlib.client.protocol.ClientContext;
 import ch.boye.httpclientandroidlib.client.utils.URIBuilder;
 import ch.boye.httpclientandroidlib.conn.ConnectTimeoutException;
+import ch.boye.httpclientandroidlib.conn.scheme.PlainSocketFactory;
+import ch.boye.httpclientandroidlib.conn.scheme.Scheme;
+import ch.boye.httpclientandroidlib.conn.scheme.SchemeRegistry;
+import ch.boye.httpclientandroidlib.conn.ssl.SSLSocketFactory;
 import ch.boye.httpclientandroidlib.impl.client.BasicCookieStore;
 import ch.boye.httpclientandroidlib.impl.client.DecompressingHttpClient;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
+import ch.boye.httpclientandroidlib.impl.client.cache.CacheConfig;
+import ch.boye.httpclientandroidlib.impl.client.cache.CachingHttpClient;
 import ch.boye.httpclientandroidlib.impl.conn.PoolingClientConnectionManager;
 import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
-import ch.boye.httpclientandroidlib.params.BasicHttpParams;
 import ch.boye.httpclientandroidlib.params.CoreProtocolPNames;
 import ch.boye.httpclientandroidlib.params.HttpConnectionParams;
-import ch.boye.httpclientandroidlib.params.HttpParams;
 import ch.boye.httpclientandroidlib.protocol.BasicHttpContext;
 import ch.boye.httpclientandroidlib.protocol.HttpContext;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
@@ -54,10 +58,15 @@ public class HttpUtility {
 
     private HttpUtility() {
 
-        HttpParams params = new BasicHttpParams();
-        params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
-        PoolingClientConnectionManager connectionManager = new PoolingClientConnectionManager();
-        connectionManager.setMaxTotal(5);
+        SchemeRegistry schemeRegistry = new SchemeRegistry();
+        schemeRegistry.register(
+                new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+        schemeRegistry.register(
+                new Scheme("https", 443, SSLSocketFactory.getSocketFactory()));
+
+
+        PoolingClientConnectionManager connectionManager = new PoolingClientConnectionManager(schemeRegistry);
+        connectionManager.setMaxTotal(9);
 
         DefaultHttpClient backend = new DefaultHttpClient(connectionManager);
 
@@ -102,10 +111,16 @@ public class HttpUtility {
 
         backend.setHttpRequestRetryHandler(myRetryHandler);
 
-        httpClient = new DecompressingHttpClient(backend);
+        CacheConfig cacheConfig = new CacheConfig();
+        cacheConfig.setMaxCacheEntries(1000);
+        cacheConfig.setMaxObjectSizeBytes(8192);
+
+        httpClient = new CachingHttpClient(new DecompressingHttpClient(backend), cacheConfig);
 
         HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 5000);
         HttpConnectionParams.setSoTimeout(httpClient.getParams(), 8000);
+
+        httpClient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 
 
     }
