@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 import org.qii.weiciyuan.ui.userinfo.StatusesByIdTimeLineFragment;
 
@@ -35,11 +36,18 @@ public class MyStatussTimeLineFragment extends StatusesByIdTimeLineFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.name:
-                Intent intent = new Intent(getActivity(), MyInfoActivity.class);
+                intent = new Intent(getActivity(), MyInfoActivity.class);
                 intent.putExtra("token", token);
                 intent.putExtra("user", userBean);
+                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
+                startActivity(intent);
+                break;
+            case R.id.write_weibo:
+                intent = new Intent(getActivity(), WriteWeiboActivity.class);
+                intent.putExtra("token", token);
                 intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
                 startActivity(intent);
                 break;
