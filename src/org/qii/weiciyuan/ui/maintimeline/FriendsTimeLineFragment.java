@@ -244,7 +244,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 break;
             case R.id.group_name:
 
-                switchGroupListViewAndNormalListView();
+//                switchGroupListViewAndNormalListView();
+                if (canSwitchGroup()) {
+                    FriendsGroupDialog dialog = new FriendsGroupDialog(group, selectedId);
+                    dialog.setTargetFragment(this, 1);
+                    dialog.show(getFragmentManager(), "");
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

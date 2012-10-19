@@ -62,7 +62,7 @@ public class FriendsGroupDialog extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.select_group));
-        builder.setSingleChoiceItems(valueArray, position, new DialogInterface.OnClickListener() {
+        builder.setItems(valueArray, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

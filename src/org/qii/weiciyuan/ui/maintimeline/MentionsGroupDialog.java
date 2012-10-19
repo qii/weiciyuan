@@ -43,7 +43,7 @@ public class MentionsGroupDialog extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.select_group));
-        builder.setSingleChoiceItems(this.group, this.selected, new DialogInterface.OnClickListener() {
+        builder.setItems(this.group, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
