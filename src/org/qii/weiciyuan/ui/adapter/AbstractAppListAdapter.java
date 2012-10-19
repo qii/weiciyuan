@@ -17,6 +17,7 @@ import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -313,7 +314,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     public void removeItem(final int postion) {
         if (postion >= 0 && postion < bean.size()) {
-
+            AppLogger.e("1");
             Animation anim = AnimationUtils.loadAnimation(
                     fragment.getActivity(), R.anim.account_delete_slide_out_right
             );
@@ -321,13 +322,15 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-                    bean.remove(postion);
+
+                    AppLogger.e("4");
                 }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-
+                    bean.remove(postion);
                     AbstractAppListAdapter.this.notifyDataSetChanged();
+                    AppLogger.e("5");
                 }
 
                 @Override
@@ -343,10 +346,13 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             if (positonInListView >= start && positonInListView <= end) {
                 int positionInCurrentScreen = postion - start;
                 listView.getChildAt(positionInCurrentScreen + 1).startAnimation(anim);
+                AppLogger.e("2");
             } else {
                 bean.remove(postion);
                 AbstractAppListAdapter.this.notifyDataSetChanged();
+                AppLogger.e("3");
             }
+
         }
     }
 }
