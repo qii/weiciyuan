@@ -62,6 +62,7 @@
                    android:clickable="true"
                    android:id="@+id/send"
                    android:src="?send"
+                   android:layout_gravity="center_vertical"
                 />
 
     </LinearLayout>
