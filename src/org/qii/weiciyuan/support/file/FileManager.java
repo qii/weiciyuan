@@ -39,6 +39,10 @@ public class FileManager {
         return result;
     }
 
+    public static String getUploadPicTempFile() {
+        return SDCARD_PATH + File.separator + "upload.jpg";
+    }
+
     public static String getFileAbsolutePathFromUrl(String url, FileLocationMethod method) {
         String oldRelativePath = getFileRelativePathFromUrl(url);
         String newRelativePath = "";

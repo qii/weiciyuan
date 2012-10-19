@@ -40,6 +40,8 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String VERSION = "version";
     public static final String AUTHOR = "author";
 
+    public static final String UPLOAD_PIC_QUALITY = "upload_pic_quality";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

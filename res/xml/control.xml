@@ -12,6 +12,13 @@
                 android:summary="@string/disable_download_pic_summary"
                 android:defaultValue="true"/>
 
+        <ListPreference
+                android:key="upload_pic_quality"
+                android:title="@string/upload_pic_quality"
+                android:dialogTitle="@string/upload_pic_quality"
+                android:entries="@array/upload_pic_quality"
+                android:entryValues="@array/upload_pic_quality_value"
+                android:defaultValue="4"/>
 
     </PreferenceCategory>
 

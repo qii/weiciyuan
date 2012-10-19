@@ -219,7 +219,7 @@
     <string name="setting">设置</string>
     <string name="normal">常规</string>
     <string name="appearance">显示</string>
-    <string name="disable_download_pic">关闭下载头像、图片</string>
+    <string name="disable_download_pic">关闭头像、图片下载</string>
     <string name="disable_download_pic_summary">关闭后你不会看到新的头像、图片，已下载过的依然还会显示，大幅度降低流量消耗</string>
     <string name="show_big_avatar">高清头像</string>
     <string name="show_big_avatar_summary">大屏幕手机推荐开高清</string>
@@ -244,6 +244,7 @@
     <string name="current_mode">当前模式:</string>
     <string name="font_size">字体大小</string>
     <string name="only_timeline_font">只影响列表字体大小</string>
+    <string name="upload_pic_quality">上传图片质量</string>
     <string name="advanced">高级</string>
     <string name="download_emotions_summary">从官方几千张表情中下载最常用的80来张。因为列表滚动优化工作涉及了这部分数据的缓存，所以这里你需要退出应用重进才能生效</string>
     <string name="filter">首页过滤</string>

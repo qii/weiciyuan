@@ -184,11 +184,6 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         if (!TextUtils.isEmpty(contentTxt)) {
             content.setText(contentTxt + " ");
             content.setSelection(content.getText().toString().length());
-        } else {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            String draft = sharedPref.getString(TYPE_DRAFT, "");
-            content.setText(draft);
-            content.setSelection(content.getText().toString().length());
         }
     }
 
@@ -406,6 +401,12 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         }
     }
 
+    private String getLastContent() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String draft = sharedPref.getString(TYPE_DRAFT, "");
+        return draft;
+    }
+
     public void clear() {
         content.setText("");
     }
@@ -429,7 +430,11 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             Intent intent = new Intent(WriteWeiboActivity.this, UploadPhotoService.class);
             intent.putExtra("token", token);
             intent.putExtra("picPath", picPath);
-            intent.putExtra("content", content);
+            if (!content.equals(getLastContent())) {
+                intent.putExtra("content", content);
+            } else {
+                intent.putExtra("content", content + " ");
+            }
             intent.putExtra("geo", geoBean);
             startService(intent);
             finish();
@@ -547,8 +552,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         @Override
         protected void onPostExecute(String s) {
             progressFragment.dismissAllowingStateLoss();
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(WriteWeiboActivity.this);
-            sharedPref.edit().remove(TYPE_DRAFT).commit();
+            savaDraft();
             finish();
             Toast.makeText(WriteWeiboActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
             super.onPostExecute(s);
