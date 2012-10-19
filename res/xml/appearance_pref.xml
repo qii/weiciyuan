@@ -37,12 +37,6 @@
                 android:entryValues="@array/font_value"
                 android:defaultValue="15"/>
 
-        <CheckBoxPreference
-                android:key="show_picture"
-                android:title="@string/show_pic"
-                android:summary="@string/show_pic_summary"
-                android:defaultValue="true"/>
-
 
     </PreferenceCategory>
 

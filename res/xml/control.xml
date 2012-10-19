@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        >
+    <PreferenceCategory
+            android:title="@string/data_control"
+            >
+
+        <CheckBoxPreference
+                android:key="disable_download"
+                android:title="@string/disable_download_pic"
+                android:summary="@string/disable_download_pic_summary"
+                android:defaultValue="true"/>
+
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

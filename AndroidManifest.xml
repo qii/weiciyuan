@@ -109,6 +109,7 @@
 
         <!--preference activity -->
         <activity android:name=".ui.preference.SettingActivity"/>
+        <activity android:name=".ui.preference.ControlActivity"/>
         <activity android:name=".ui.preference.FilterActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.preference.AppearanceActivity"

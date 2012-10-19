@@ -219,8 +219,8 @@
     <string name="setting">设置</string>
     <string name="normal">常规</string>
     <string name="appearance">显示</string>
-    <string name="show_pic">下载头像图片</string>
-    <string name="show_pic_summary">当关闭时只使用本地缓存，大幅度降低流量</string>
+    <string name="disable_download_pic">禁止下载头像、图片</string>
+    <string name="disable_download_pic_summary">关闭后你不会看到新的头像、图片，已下载过的依然还会显示，大幅度降低流量消耗</string>
     <string name="show_big_avatar">高清头像</string>
     <string name="show_big_avatar_summary">大屏幕手机推荐开高清</string>
     <string name="show_big_pic">列表显示大图</string>
@@ -248,6 +248,8 @@
     <string name="download_emotions_summary">从官方几千张表情中下载最常用的80来张。因为列表滚动优化工作涉及了这部分数据的缓存，所以这里你需要退出应用重进才能生效</string>
     <string name="filter">首页过滤</string>
     <string name="filter_summary">消灭脑残</string>
+    <string name="data_control">流量控制</string>
+    <string name="data_control_summary"></string>
     <string name="other">其它</string>
     <string name="clear_sd_cache">删除缓存</string>
     <string name="clear_avatar_and_pic">清除已下载的图片</string>

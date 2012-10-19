@@ -8,12 +8,10 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.othercomponent.AppNewMsgAlarm;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
  * User: qii
@@ -53,16 +51,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         calcTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
 
-
-//        findPreference(SettingActivity.DOWNLOAD_EMOTIONS).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-//            @Override
-//            public boolean onPreferenceClick(Preference preference) {
-//                Intent service = new Intent(getActivity(), DownloadEmotionsService.class);
-//                service.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-//                getActivity().startService(service);
-//                return true;
-//            }
-//        });
 
         buildSummary();
     }
@@ -145,10 +133,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     }
 
 
-    private void cancelAlarm() {
 
-        AppNewMsgAlarm.stopAlarm(getActivity(), true);
-    }
 
     private class CalcCacheSize extends MyAsyncTask<Void, Void, String> {
 
