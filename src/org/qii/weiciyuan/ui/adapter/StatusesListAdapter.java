@@ -55,10 +55,9 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.content.setText(msg.getListViewSpannableString());
         }
         String time = msg.getListviewItemShowTime();
+        holder.time.setTextSize(GlobalContext.getInstance().getFontSize());
         if (!holder.time.getText().toString().equals(time)) {
             holder.time.setText(time);
-            holder.time.setTextSize(GlobalContext.getInstance().getFontSize());
-
         }
         holder.time.setTag(msg.getId());
 

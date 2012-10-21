@@ -66,10 +66,9 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         holder.content.setText(comment.getListViewSpannableString());
 
         String time = comment.getListviewItemShowTime();
+        holder.time.setTextSize(GlobalContext.getInstance().getFontSize());
         if (!holder.time.getText().toString().equals(time)) {
             holder.time.setText(time);
-            holder.time.setTextSize(GlobalContext.getInstance().getFontSize());
-
         }
         holder.time.setTag(comment.getId());
 
