@@ -55,6 +55,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             } else {
                 holder.username.setText(user.getScreen_name());
             }
+            holder.username.setTextSize(GlobalContext.getInstance().getFontSize());
             buildAvatar(holder.avatar, position, user);
         } else {
             holder.username.setVisibility(View.INVISIBLE);
@@ -67,6 +68,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         String time = comment.getListviewItemShowTime();
         if (!holder.time.getText().toString().equals(time)) {
             holder.time.setText(time);
+            holder.time.setTextSize(GlobalContext.getInstance().getFontSize());
+
         }
         holder.time.setTag(comment.getId());
 

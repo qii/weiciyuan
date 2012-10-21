@@ -42,6 +42,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
                 holder.username.setText(user.getScreen_name());
             }
             buildAvatar(holder.avatar, position, user);
+            holder.username.setTextSize(GlobalContext.getInstance().getFontSize());
         } else {
             holder.username.setVisibility(View.INVISIBLE);
             holder.avatar.setVisibility(View.INVISIBLE);
@@ -56,6 +57,8 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
         String time = msg.getListviewItemShowTime();
         if (!holder.time.getText().toString().equals(time)) {
             holder.time.setText(time);
+            holder.time.setTextSize(GlobalContext.getInstance().getFontSize());
+
         }
         holder.time.setTag(msg.getId());
 
