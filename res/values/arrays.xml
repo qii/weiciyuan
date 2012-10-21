@@ -58,11 +58,13 @@
         <item>较小</item>
         <item>中等</item>
         <item>大</item>
+        <item>很大</item>
     </string-array>
     <string-array name="font_value">
         <item>12</item>
         <item>13</item>
         <item>15</item>
         <item>18</item>
+        <item>20</item>
     </string-array>
 </resources>
