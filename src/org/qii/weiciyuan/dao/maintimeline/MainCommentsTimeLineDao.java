@@ -60,9 +60,13 @@ public class MainCommentsTimeLineDao {
         this.count = String.valueOf(AppConfig.DEFAULT_MSG_NUMBERS);
     }
 
+    protected String getUrl() {
+        return URLHelper.getCommentList();
+    }
+
     public CommentListBean getGSONMsgListWithoutClearUnread() throws WeiboException {
 
-        String url = URLHelper.getCommentList();
+        String url = getUrl();
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);

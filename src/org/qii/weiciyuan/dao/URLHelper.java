@@ -31,6 +31,10 @@ public class URLHelper {
         return URLManager.getRealUrl("commentstimeline");
     }
 
+    public static String getMentionsCommentList() {
+        return URLManager.getRealUrl("comments_mentionstimeline");
+    }
+
     public static String getCommentListByMe() {
         return URLManager.getRealUrl("commentsbyme");
     }
@@ -140,6 +144,6 @@ public class URLHelper {
     }
 
     public static String getFriendGroupTimeLine() {
-           return URLManager.getRealUrl("friendsgrouptimeline");
-       }
+        return URLManager.getRealUrl("friendsgrouptimeline");
+    }
 }

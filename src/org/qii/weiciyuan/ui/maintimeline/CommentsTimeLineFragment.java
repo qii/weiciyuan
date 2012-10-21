@@ -16,6 +16,7 @@ import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.dao.maintimeline.CommentsTimeLineByMeDao;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
+import org.qii.weiciyuan.dao.maintimeline.MentionsCommentTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -87,6 +88,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         outState.putSerializable("0", hashMap.get(0));
         outState.putSerializable("1", hashMap.get(1));
         outState.putSerializable("2", hashMap.get(2));
+        outState.putSerializable("3", hashMap.get(3));
+        outState.putSerializable("4", hashMap.get(4));
     }
 
     @Override
@@ -122,6 +125,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             hashMap.put(0, (CommentListBean) savedInstanceState.getSerializable("0"));
             hashMap.put(1, (CommentListBean) savedInstanceState.getSerializable("1"));
             hashMap.put(2, (CommentListBean) savedInstanceState.getSerializable("2"));
+            hashMap.put(3, (CommentListBean) savedInstanceState.getSerializable("3"));
+            hashMap.put(4, (CommentListBean) savedInstanceState.getSerializable("4"));
 
             clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
@@ -135,6 +140,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             hashMap.put(0, new CommentListBean());
             hashMap.put(1, new CommentListBean());
             hashMap.put(2, new CommentListBean());
+            hashMap.put(3, new CommentListBean());
+            hashMap.put(4, new CommentListBean());
         }
 
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -284,9 +291,15 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bean = new CommentListBean();
+//        group[0] = getString(R.string.all_people_send_to_me);
+//        group[1] = getString(R.string.following_people_send_to_me);
+//        group[2] = getString(R.string.mentions_to_me);
+//        group[3] = getString(R.string.following_people_mentions_to_me);
+//        group[4] = getString(R.string.my_comment);
         group[0] = getString(R.string.all_people_send_to_me);
-        group[1] = getString(R.string.following_people_send_to_me);
+        group[1] = getString(R.string.mentions_to_me);
         group[2] = getString(R.string.my_comment);
+
         setHasOptionsMenu(true);
         setRetainInstance(true);
     }
@@ -340,22 +353,35 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     @Override
     protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
-        if (selected == 0 || selected == 1) {
+        if (selected == 0 ) {
             MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
             if (getList() != null && getList().getItemList().size() > 0) {
                 dao.setSince_id(getList().getItemList().get(0).getId());
             }
 
-            if (selected == 1) {
-                dao.setFilter_by_author("1");
-            }
+//            if (selected == 1) {
+//                dao.setFilter_by_author("1");
+//            }
 
             CommentListBean result = dao.getGSONMsgList();
             if (result != null && selected == 0) {
                 DatabaseManager.getInstance().addCommentLineMsg(result, accountBean.getUid());
             }
             return result;
-        } else {
+        } else if (selected == 1) {
+            MentionsCommentTimeLineDao dao = new MentionsCommentTimeLineDao(token);
+            if (getList() != null && getList().getItemList().size() > 0) {
+                dao.setSince_id(getList().getItemList().get(0).getId());
+            }
+
+//            if (selected == 3) {
+//                dao.setFilter_by_author("1");
+//            }
+
+            CommentListBean result = dao.getGSONMsgList();
+            return result;
+
+        } else if (selected == 2) {
             CommentsTimeLineByMeDao dao = new CommentsTimeLineByMeDao(token);
             if (getList() != null && getList().getItemList().size() > 0) {
                 dao.setSince_id(getList().getItemList().get(0).getId());
@@ -364,21 +390,33 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             CommentListBean result = dao.getGSONMsgList();
             return result;
         }
+
+        return null;
     }
 
     @Override
     protected CommentListBean getDoInBackgroundOldData() throws WeiboException {
-        if (selected == 0 || selected == 1) {
+        if (selected == 0 ) {
             MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
             if (getList().getItemList().size() > 0) {
                 dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
             }
-            if (selected == 1) {
-                dao.setFilter_by_author("1");
-            }
+//            if (selected == 1) {
+//                dao.setFilter_by_author("1");
+//            }
             CommentListBean result = dao.getGSONMsgList();
             return result;
-        } else {
+        } else if (selected == 1) {
+            MentionsCommentTimeLineDao dao = new MentionsCommentTimeLineDao(token);
+            if (getList().getItemList().size() > 0) {
+                dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
+            }
+//            if (selected == 3) {
+//                dao.setFilter_by_author("1");
+//            }
+            CommentListBean result = dao.getGSONMsgList();
+            return result;
+        } else if (selected == 2) {
             CommentsTimeLineByMeDao dao = new CommentsTimeLineByMeDao(token);
             if (getList().getItemList().size() > 0) {
                 dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
@@ -386,28 +424,39 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             CommentListBean result = dao.getGSONMsgList();
             return result;
         }
+        return null;
     }
 
     @Override
     protected CommentListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        if (selected == 0 || selected == 1) {
+        if (selected == 0 ) {
             MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
             if (getList().getItemList().size() > 0) {
                 dao.setMax_id(beginId);
                 dao.setSince_id(endId);
             }
-            if (selected == 1) {
-                dao.setFilter_by_author("1");
-            }
+//            if (selected == 1) {
+//                dao.setFilter_by_author("1");
+//            }
             CommentListBean result = dao.getGSONMsgList();
             return result;
-        } else {
+        } else if (selected == 1) {
+            MentionsCommentTimeLineDao dao = new MentionsCommentTimeLineDao(token);
+            dao.setMax_id(beginId);
+            dao.setSince_id(endId);
+//            if (selected == 3) {
+//                dao.setFilter_by_author("1");
+//            }
+            CommentListBean result = dao.getGSONMsgList();
+            return result;
+        } else if (selected == 2) {
             CommentsTimeLineByMeDao dao = new CommentsTimeLineByMeDao(token);
             dao.setMax_id(beginId);
             dao.setSince_id(endId);
             CommentListBean result = dao.getGSONMsgList();
             return result;
         }
+        return null;
     }
 
     @Override
@@ -445,7 +494,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     protected void oldMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null && newValue.getSize() > 1) {
 
-            getList().getItemList().addAll(newValue.getItemList().subList(1, newValue.getItemList().size() - 1));
+            getList().getItemList().addAll(newValue.getItemList().subList(1, newValue.getItemList().size()));
 
         }
     }
