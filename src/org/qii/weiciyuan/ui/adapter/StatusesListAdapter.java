@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
@@ -32,11 +33,15 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.listview_root.setBackgroundColor(checkedBG);
 
         final MessageBean msg = bean.get(position);
-
-        if (msg.getUser() != null) {
+        UserBean user = msg.getUser();
+        if (user != null) {
             holder.username.setVisibility(View.VISIBLE);
-            holder.username.setText(msg.getUser().getScreen_name());
-            buildAvatar(holder.avatar, position, msg.getUser());
+            if (!TextUtils.isEmpty(user.getRemark())) {
+                holder.username.setText(new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark()).append(")").toString());
+            } else {
+                holder.username.setText(user.getScreen_name());
+            }
+            buildAvatar(holder.avatar, position, user);
         } else {
             holder.username.setVisibility(View.INVISIBLE);
             holder.avatar.setVisibility(View.INVISIBLE);

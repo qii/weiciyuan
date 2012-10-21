@@ -3,11 +3,13 @@ package org.qii.weiciyuan.ui.adapter;
 import android.app.Fragment;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 
@@ -44,17 +46,20 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             holder.listview_root.setBackgroundColor(checkedBG);
 
         final CommentBean comment = getList().get(position);
-        holder.username.setText(comment.getUser().getScreen_name());
 
-        if (comment.getUser() != null) {
+        UserBean user = comment.getUser();
+        if (user != null) {
             holder.username.setVisibility(View.VISIBLE);
-            holder.username.setText(comment.getUser().getScreen_name());
-            buildAvatar(holder.avatar, position, comment.getUser());
+            if (!TextUtils.isEmpty(user.getRemark())) {
+                holder.username.setText(new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark()).append(")").toString());
+            } else {
+                holder.username.setText(user.getScreen_name());
+            }
+            buildAvatar(holder.avatar, position, user);
         } else {
             holder.username.setVisibility(View.INVISIBLE);
             holder.avatar.setVisibility(View.INVISIBLE);
         }
-
 
         holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
         holder.content.setText(comment.getListViewSpannableString());
