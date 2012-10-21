@@ -10,7 +10,7 @@
                 android:key="disable_download"
                 android:title="@string/disable_download_pic"
                 android:summary="@string/disable_download_pic_summary"
-                android:defaultValue="true"/>
+                android:defaultValue="false"/>
 
         <ListPreference
                 android:key="upload_pic_quality"
