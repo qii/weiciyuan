@@ -8,7 +8,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.support.database.table.*;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
@@ -520,7 +519,7 @@ public class DatabaseManager {
                 }
 
             } catch (JsonSyntaxException e) {
-                ActivityUtils.showTips("发生错误，请重刷");
+
                 AppLogger.e(e.getMessage());
             }
         }
