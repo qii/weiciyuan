@@ -49,12 +49,8 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
 
             if (msg.getRetweeted_status() != null) {
                 getEditTextView().setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
-            } else {
-                getEditTextView().setHint(getString(R.string.repost) + "//@" + msg.getUser().getScreen_name() + "：" + msg.getText());
             }
-            if (!TextUtils.isEmpty(getIntent().getStringExtra("content"))) {
-                getEditTextView().setText(getIntent().getStringExtra("content"));
-            }
+
         } else {
 
             repostDraftBean = (RepostDraftBean) getIntent().getSerializableExtra("draft");
@@ -63,6 +59,12 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
                 msg = repostDraftBean.getMessageBean();
                 id = msg.getId();
             }
+        }
+
+        if (msg.getRetweeted_status() != null) {
+            getEditTextView().setHint("//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
+        } else {
+            getEditTextView().setHint(getString(R.string.repost) + "//@" + msg.getUser().getScreen_name() + "：" + msg.getText());
         }
     }
 
