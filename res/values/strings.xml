@@ -281,6 +281,8 @@
     <string name="add_filter">添加过滤词</string>
     <string name="add">添加</string>
     <string name="input_filter_word">输入过滤词</string>
+    <string name="modify_filter_word">修改过滤词</string>
+
 
     <!-- menu-->
     <string name="askdelete">删除?</string>

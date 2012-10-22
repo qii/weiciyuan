@@ -64,7 +64,9 @@ public class FilterFragment extends ListFragment {
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                ModifyFilterDialog dialog = new ModifyFilterDialog(list.get(position));
+                dialog.setTargetFragment(FilterFragment.this,1);
+                dialog.show(getFragmentManager(), "");
             }
         });
 
