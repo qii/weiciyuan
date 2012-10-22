@@ -148,7 +148,7 @@ public class DraftFragment extends ListFragment {
 
         @Override
         public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-            mode.setTitle(String.valueOf(getListView().getCheckedItemCount()));
+            mode.setTitle(String.format(getString(R.string.have_selected), String.valueOf(getListView().getCheckedItemCount())));
             adapter.notifyDataSetChanged();
         }
     }

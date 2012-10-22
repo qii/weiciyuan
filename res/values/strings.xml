@@ -257,7 +257,7 @@
     <string name="filter">首页过滤</string>
     <string name="filter_summary">消灭脑残</string>
     <string name="data_control">流量控制</string>
-    <string name="data_control_summary"></string>
+    <string name="have_selected">已经选择了%s项</string>
     <string name="other">其它</string>
     <string name="clear_sd_cache">删除缓存</string>
     <string name="clear_avatar_and_pic">清除已下载的图片</string>
