@@ -6,6 +6,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
@@ -30,7 +32,7 @@ import java.util.*;
  * Date: 12-9-25
  */
 public abstract class AbstractWriteActivity<T> extends AbstractAppActivity implements View.OnClickListener, ClearContentDialog.IClear
-        , EmotionsGridDialog.IEmotions {
+        , EmotionsGridDialog.IEmotions, SaveDraftDialog.IDraft {
 
     private SimpleTask task;
     protected GetEmotionsTask getEmotionsTask;
@@ -149,6 +151,22 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         dialog.show(getFragmentManager(), "");
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!TextUtils.isEmpty(et.getText().toString()) && canShowSaveDraftDialog()) {
+            SaveDraftDialog dialog = new SaveDraftDialog();
+            dialog.show(getFragmentManager(), "");
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    protected abstract boolean canShowSaveDraftDialog();
+
+    public abstract void saveToDraft();
+
+    protected abstract void removeDraft();
+
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
@@ -222,10 +240,12 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         protected void onPostExecute(T s) {
             progressFragment.dismissAllowingStateLoss();
             if (s != null) {
-                finish();
+                removeDraft();
                 Toast.makeText(AbstractWriteActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
+                finish();
             } else {
                 Toast.makeText(AbstractWriteActivity.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
+
             }
             super.onPostExecute(s);
 

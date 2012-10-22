@@ -14,6 +14,8 @@ import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
+import org.qii.weiciyuan.support.database.DraftDBManager;
+import org.qii.weiciyuan.support.database.draftbean.CommentDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
@@ -27,6 +29,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
     private String id;
     private String token;
     private MessageBean msg;
+    private CommentDraftBean commentDraftBean;
 
     private MenuItem enableCommentOri;
     private MenuItem enableRepost;
@@ -39,12 +42,49 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         getActionBar().setSubtitle(GlobalContext.getInstance().getCurrentAccountName());
 
         token = getIntent().getStringExtra("token");
-        id = getIntent().getStringExtra("id");
+        if (TextUtils.isEmpty(token))
+            token = GlobalContext.getInstance().getSpecialToken();
+
         msg = (MessageBean) getIntent().getSerializableExtra("msg");
+        if (msg != null) {
+            id = msg.getId();
+            getActionBar().setTitle(getString(R.string.comments));
+            getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
 
-        getActionBar().setTitle(getString(R.string.comments));
-        getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+            if (!TextUtils.isEmpty(getIntent().getStringExtra("content"))) {
+                getEditTextView().setText(getIntent().getStringExtra("content"));
+            }
+        } else {
+            commentDraftBean = (CommentDraftBean) getIntent().getSerializableExtra("draft");
+            msg = commentDraftBean.getMessageBean();
+            id = msg.getId();
+            getEditTextView().setText(commentDraftBean.getContent());
 
+        }
+    }
+
+    @Override
+    protected boolean canShowSaveDraftDialog() {
+        if (commentDraftBean == null) {
+            return true;
+        } else if (!commentDraftBean.getContent().equals(getEditTextView().getText().toString())) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void saveToDraft() {
+        if (!TextUtils.isEmpty(getEditTextView().getText().toString())) {
+            DraftDBManager.getInstance().insertComment(getEditTextView().getText().toString(), msg, GlobalContext.getInstance().getCurrentAccountId());
+        }
+        finish();
+    }
+
+    @Override
+    protected void removeDraft() {
+        if (commentDraftBean != null)
+            DraftDBManager.getInstance().remove(commentDraftBean.getId());
     }
 
     @Override

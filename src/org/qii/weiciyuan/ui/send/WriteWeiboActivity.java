@@ -29,6 +29,8 @@ import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.othercomponent.UploadPhotoService;
 import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.DraftDBManager;
+import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -37,6 +39,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
@@ -50,7 +53,7 @@ import java.util.*;
  * Date: 12-7-29
  */
 public class WriteWeiboActivity extends AbstractAppActivity implements DialogInterface.OnClickListener,
-        IAccountInfo, ClearContentDialog.IClear, EmotionsGridDialog.IEmotions {
+        IAccountInfo, ClearContentDialog.IClear, EmotionsGridDialog.IEmotions, SaveDraftDialog.IDraft {
 
     private static final int CAMERA_RESULT = 0;
     private static final int PIC_RESULT = 1;
@@ -58,6 +61,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
     private AccountBean accountBean;
     protected String token = "";
+    private StatusDraftBean statusDraftBean;
 
     private String picPath = "";
     private Uri imageFileUri = null;
@@ -70,8 +74,6 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
     private GetEmotionsTask getEmotionsTask;
     private Map<String, Bitmap> emotionsPic = new HashMap<String, Bitmap>();
-
-    private final String TYPE_DRAFT = "status_draft";
 
 
     @Override
@@ -145,10 +147,25 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         }
     }
 
+
+    protected boolean canShowSaveDraftDialog() {
+        if (statusDraftBean == null) {
+            return true;
+        } else if (!statusDraftBean.getContent().equals(content.getText().toString())) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        savaDraft();
+
+        if (!TextUtils.isEmpty(content.getText().toString()) && canShowSaveDraftDialog()) {
+            SaveDraftDialog dialog = new SaveDraftDialog();
+            dialog.show(getFragmentManager(), "");
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -176,14 +193,18 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     private void handleNormalOperation(Intent intent) {
-        token = intent.getStringExtra("token");
         accountBean = (AccountBean) intent.getSerializableExtra("account");
-
+        token = accountBean.getAccess_token();
         getActionBar().setSubtitle(accountBean.getUsernick());
         String contentTxt = intent.getStringExtra("content");
         if (!TextUtils.isEmpty(contentTxt)) {
             content.setText(contentTxt + " ");
             content.setSelection(content.getText().toString().length());
+        }
+
+        statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("draft");
+        if (statusDraftBean != null) {
+            content.setText(statusDraftBean.getContent());
         }
     }
 
@@ -363,7 +384,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
-                savaDraft();
+                saveToDraft();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm.isActive())
                     imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
@@ -394,18 +415,29 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
 
-    private void savaDraft() {
+    public void saveToDraft() {
         if (!TextUtils.isEmpty(content.getText().toString())) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            sharedPref.edit().putString(TYPE_DRAFT, content.getText().toString()).commit();
+
+            boolean haveDraft = statusDraftBean != null;
+            boolean isDraftChanged = haveDraft && !statusDraftBean.getContent().equals(content.getText().toString());
+
+            if (isDraftChanged) {
+                DraftDBManager.getInstance().remove(statusDraftBean.getId());
+                DraftDBManager.getInstance().insertStatus(content.getText().toString(), null, null, accountBean.getUid());
+            } else {
+                DraftDBManager.getInstance().insertStatus(content.getText().toString(), null, null, accountBean.getUid());
+
+            }
+
         }
+        finish();
     }
 
-    private String getLastContent() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String draft = sharedPref.getString(TYPE_DRAFT, "");
-        return draft;
-    }
+//    private String getLastContent() {
+//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+//        String draft = sharedPref.getString(TYPE_DRAFT, "");
+//        return draft;
+//    }
 
     public void clear() {
         content.setText("");
@@ -430,11 +462,11 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             Intent intent = new Intent(WriteWeiboActivity.this, UploadPhotoService.class);
             intent.putExtra("token", token);
             intent.putExtra("picPath", picPath);
-            if (!content.equals(getLastContent())) {
-                intent.putExtra("content", content);
-            } else {
-                intent.putExtra("content", content + " ");
-            }
+//            if (!content.equals(getLastContent())) {
+            intent.putExtra("content", content);
+//            } else {
+//                intent.putExtra("content", content + " ");
+//            }
             intent.putExtra("geo", geoBean);
             startService(intent);
             finish();
@@ -552,9 +584,11 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         @Override
         protected void onPostExecute(String s) {
             progressFragment.dismissAllowingStateLoss();
-            savaDraft();
-            finish();
+            if (statusDraftBean != null)
+                DraftDBManager.getInstance().remove(statusDraftBean.getId());
+
             Toast.makeText(WriteWeiboActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
+            finish();
             super.onPostExecute(s);
 
         }

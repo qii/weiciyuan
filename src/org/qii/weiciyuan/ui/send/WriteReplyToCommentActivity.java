@@ -14,6 +14,8 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.dao.send.ReplyToCommentMsgDao;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
+import org.qii.weiciyuan.support.database.DraftDBManager;
+import org.qii.weiciyuan.support.database.draftbean.ReplyDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
@@ -25,20 +27,53 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
 public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBean> {
 
     private CommentBean bean;
+    private ReplyDraftBean replyDraftBean;
     private MenuItem enableRepost;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setTitle(R.string.comments);
+        getActionBar().setTitle(getString(R.string.reply_to_comment));
         getActionBar().setSubtitle(GlobalContext.getInstance().getCurrentAccountName());
 
+        token = getIntent().getStringExtra("token");
+        if (TextUtils.isEmpty(token))
+            token = GlobalContext.getInstance().getSpecialToken();
 
         bean = (CommentBean) getIntent().getSerializableExtra("msg");
-        getActionBar().setTitle(getString(R.string.reply_to_comment));
-        getEditTextView().setHint("@" + bean.getUser().getScreen_name() + "：" + bean.getText());
+        if (bean != null) {
+            getEditTextView().setHint("@" + bean.getUser().getScreen_name() + "：" + bean.getText());
+        } else {
+            replyDraftBean = (ReplyDraftBean) getIntent().getSerializableExtra("draft");
+            getEditTextView().setText(replyDraftBean.getContent());
+            bean = replyDraftBean.getCommentBean();
+        }
 
+    }
+
+    @Override
+    protected boolean canShowSaveDraftDialog() {
+        if (replyDraftBean == null) {
+            return true;
+        } else if (!replyDraftBean.getContent().equals(getEditTextView().getText().toString())) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void saveToDraft() {
+        if (!TextUtils.isEmpty(getEditTextView().getText().toString())) {
+            DraftDBManager.getInstance().insertReply(getEditTextView().getText().toString(), bean, GlobalContext.getInstance().getCurrentAccountId());
+        }
+        finish();
+    }
+
+    @Override
+    protected void removeDraft() {
+        if (replyDraftBean != null)
+            DraftDBManager.getInstance().remove(replyDraftBean.getId());
     }
 
     @Override

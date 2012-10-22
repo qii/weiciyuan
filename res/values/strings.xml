@@ -135,6 +135,9 @@
     <string name="say_something">说点什么吧……</string>
     <string name="left">剩余</string>
     <string name="share_pic">分享图片</string>
+    <string name="save_to_draft">保存到草稿箱</string>
+    <string name="do_you_want_to_save">要保存到草稿箱吗？</string>
+    <string name="save">保存</string>
 
     <!-- browser weibo -->
     <string name="ori_picture">原图</string>

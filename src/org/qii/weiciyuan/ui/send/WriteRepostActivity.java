@@ -11,6 +11,8 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
+import org.qii.weiciyuan.support.database.DraftDBManager;
+import org.qii.weiciyuan.support.database.draftbean.RepostDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
@@ -24,6 +26,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
     private String id;
     private String token;
     private MessageBean msg;
+    private RepostDraftBean repostDraftBean;
 
     private MenuItem menuEnableComment;
     private MenuItem menuEnableOriComment;
@@ -33,19 +36,59 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        token = getIntent().getStringExtra("token");
-        id = getIntent().getStringExtra("id");
-        msg = (MessageBean) getIntent().getSerializableExtra("msg");
         getActionBar().setTitle(getString(R.string.repost));
         getActionBar().setSubtitle(GlobalContext.getInstance().getCurrentAccountName());
 
-        if (msg.getRetweeted_status() != null) {
-            getEditTextView().setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
+        token = getIntent().getStringExtra("token");
+        if (TextUtils.isEmpty(token))
+            token = GlobalContext.getInstance().getSpecialToken();
+
+        msg = (MessageBean) getIntent().getSerializableExtra("msg");
+        if (msg != null) {
+            id = msg.getId();
+
+            if (msg.getRetweeted_status() != null) {
+                getEditTextView().setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
+            } else {
+                getEditTextView().setHint(getString(R.string.repost) + "//@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+            }
+            if (!TextUtils.isEmpty(getIntent().getStringExtra("content"))) {
+                getEditTextView().setText(getIntent().getStringExtra("content"));
+            }
         } else {
-            getEditTextView().setHint(getString(R.string.repost) + "//@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+
+            repostDraftBean = (RepostDraftBean) getIntent().getSerializableExtra("draft");
+            if (repostDraftBean != null) {
+                getEditTextView().setText(repostDraftBean.getContent());
+                msg = repostDraftBean.getMessageBean();
+                id = msg.getId();
+            }
         }
+    }
+
+    @Override
+    protected boolean canShowSaveDraftDialog() {
+        if (repostDraftBean == null) {
+            return true;
+        } else if (!repostDraftBean.getContent().equals(getEditTextView().getText().toString())) {
+            return true;
+        }
+        return false;
+    }
 
 
+    @Override
+    public void saveToDraft() {
+        if (!TextUtils.isEmpty(getEditTextView().getText().toString())) {
+            DraftDBManager.getInstance().insertRepost(getEditTextView().getText().toString(), msg, GlobalContext.getInstance().getCurrentAccountId());
+        }
+        finish();
+    }
+
+    @Override
+    protected void removeDraft() {
+        if (repostDraftBean != null)
+            DraftDBManager.getInstance().remove(repostDraftBean.getId());
     }
 
     @Override
