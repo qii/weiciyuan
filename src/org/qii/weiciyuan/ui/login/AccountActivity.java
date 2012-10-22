@@ -184,6 +184,7 @@ public class AccountActivity extends AbstractAppActivity {
 
         @Override
         public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+            listAdapter.notifyDataSetChanged();
         }
     }
 
