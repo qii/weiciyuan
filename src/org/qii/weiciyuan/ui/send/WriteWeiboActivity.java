@@ -462,6 +462,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             Intent intent = new Intent(WriteWeiboActivity.this, UploadPhotoService.class);
             intent.putExtra("token", token);
             intent.putExtra("picPath", picPath);
+            intent.putExtra("accountId", accountBean.getUid());
 //            if (!content.equals(getLastContent())) {
             intent.putExtra("content", content);
 //            } else {

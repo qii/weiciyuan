@@ -15,6 +15,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
+import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
@@ -30,6 +31,7 @@ import java.io.IOException;
  * Date: 12-8-21
  */
 public class UploadPhotoService extends Service {
+    private String accountId;
     private String token;
     private String picPath;
     private String content;
@@ -46,6 +48,7 @@ public class UploadPhotoService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         token = intent.getStringExtra("token");
+        accountId = intent.getStringExtra("accountId");
         picPath = intent.getStringExtra("picPath");
         content = intent.getStringExtra("content");
         geoBean = (GeoBean) intent.getSerializableExtra("geo");
@@ -183,6 +186,7 @@ public class UploadPhotoService extends Service {
         protected void onCancelled(Void aVoid) {
             super.onCancelled(aVoid);
             Toast.makeText(UploadPhotoService.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
+            DraftDBManager.getInstance().insertStatus(content, null, picPath, accountId);
             stopForeground(true);
             stopSelf();
         }
