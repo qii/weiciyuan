@@ -105,6 +105,7 @@
     <string name="comment_cant_be_empty">评论不能为空</string>
     <string name="send_successfully">发送成功</string>
     <string name="send_failed">发送失败</string>
+    <string name="send_failed_and_save_to_draft">发送失败，已保存到草稿箱</string>
     <string name="background_sending">后台发送中</string>
     <string name="send_photo">发送照片</string>
     <string name="dont_have_account">没用可用的发微博帐号</string>
@@ -242,6 +243,7 @@
     <string name="enable_fetch_new_msg">获取未读的回复和评论</string>
     <string name="start_fetch_msg">开始后台自动获取……</string>
     <string name="frequency">间隔</string>
+    <string name="stopped">已终止</string>
     <string name="theme">主题</string>
     <string name="current_theme">当前主题:</string>
     <string name="list_pic_mode">列表图片</string>

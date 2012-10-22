@@ -51,7 +51,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         calcTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
 
-
         buildSummary();
     }
 
@@ -83,6 +82,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         if (key.equals(SettingActivity.ENABLE_FETCH_MSG)) {
             boolean value = sharedPreferences.getBoolean(key, false);
+            buildSummary();
             if (value) {
                 AppNewMsgAlarm.startAlarm(getActivity(), false);
             } else {
@@ -115,8 +115,13 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     }
 
     private void buildSummary() {
-        String value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.FREQUENCY, "1");
-        frequency.setSummary(getActivity().getResources().getStringArray(R.array.frequency)[Integer.valueOf(value) - 1]);
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(SettingActivity.ENABLE_FETCH_MSG, false)) {
+            String value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.FREQUENCY, "1");
+            frequency.setSummary(getActivity().getResources().getStringArray(R.array.frequency)[Integer.valueOf(value) - 1]);
+        } else {
+            frequency.setSummary(getString(R.string.stopped));
+
+        }
     }
 
 
@@ -131,8 +136,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.stay, R.anim.alphaout);
     }
-
-
 
 
     private class CalcCacheSize extends MyAsyncTask<Void, Void, String> {

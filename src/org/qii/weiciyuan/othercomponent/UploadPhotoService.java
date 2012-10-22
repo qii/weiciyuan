@@ -185,7 +185,7 @@ public class UploadPhotoService extends Service {
         @Override
         protected void onCancelled(Void aVoid) {
             super.onCancelled(aVoid);
-            Toast.makeText(UploadPhotoService.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
+            Toast.makeText(UploadPhotoService.this, getString(R.string.send_failed_and_save_to_draft), Toast.LENGTH_SHORT).show();
             DraftDBManager.getInstance().insertStatus(content, null, picPath, accountId);
             stopForeground(true);
             stopSelf();
