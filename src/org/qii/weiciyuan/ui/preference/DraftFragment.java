@@ -47,6 +47,9 @@ public class DraftFragment extends ListFragment {
         super.onDetach();
         if (task != null)
             task.cancel(true);
+
+        if (removeTask != null)
+            removeTask.cancel(true);
     }
 
     @Override

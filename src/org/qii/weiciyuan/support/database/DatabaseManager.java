@@ -397,30 +397,30 @@ public class DatabaseManager {
 
 
     private void reduceCommentTable(String accountId) {
-          String searchCount = "select count(" + CommentsTable.ID + ") as total" + " from " + CommentsTable.TABLE_NAME + " where " + CommentsTable.ACCOUNTID
-                  + " = " + accountId;
-          int total = 0;
-          Cursor c = rsd.rawQuery(searchCount, null);
-          if (c.moveToNext()) {
-              total = c.getInt(c.getColumnIndex("total"));
-          }
+        String searchCount = "select count(" + CommentsTable.ID + ") as total" + " from " + CommentsTable.TABLE_NAME + " where " + CommentsTable.ACCOUNTID
+                + " = " + accountId;
+        int total = 0;
+        Cursor c = rsd.rawQuery(searchCount, null);
+        if (c.moveToNext()) {
+            total = c.getInt(c.getColumnIndex("total"));
+        }
 
-          c.close();
+        c.close();
 
-          AppLogger.e("total=" + total);
+        AppLogger.e("total=" + total);
 
-          int needDeletedNumber = total - AppConfig.MAX_DATABASE_TABLE_ENTRY_NUMBER;
+        int needDeletedNumber = total - AppConfig.MAX_DATABASE_TABLE_ENTRY_NUMBER;
 
-          if (needDeletedNumber > 0) {
-              AppLogger.e("" + needDeletedNumber);
-              String sql = " delete from " + CommentsTable.TABLE_NAME + " where " + CommentsTable.ID + " in "
-                      + "( select " + CommentsTable.ID + " from " + CommentsTable.TABLE_NAME + " where "
-                      + CommentsTable.ACCOUNTID
-                      + " in " + "(" + accountId + ") order by " + CommentsTable.ID + " asc limit " + needDeletedNumber + " ) ";
+        if (needDeletedNumber > 0) {
+            AppLogger.e("" + needDeletedNumber);
+            String sql = " delete from " + CommentsTable.TABLE_NAME + " where " + CommentsTable.ID + " in "
+                    + "( select " + CommentsTable.ID + " from " + CommentsTable.TABLE_NAME + " where "
+                    + CommentsTable.ACCOUNTID
+                    + " in " + "(" + accountId + ") order by " + CommentsTable.ID + " asc limit " + needDeletedNumber + " ) ";
 
-              wsd.execSQL(sql);
-          }
-      }
+            wsd.execSQL(sql);
+        }
+    }
 
     private void replaceCommentLineMsg(CommentListBean list, String accountId) {
 
@@ -477,11 +477,17 @@ public class DatabaseManager {
 
     }
 
-    public List<String> removeAndGetNewFilterList(String word) {
+    public void removeAndGetNewFilterList(String word) {
 
         String sql = "delete from " + FilterTable.TABLE_NAME + " where " + FilterTable.NAME + " = " + "\"" + word + "\"";
 
         wsd.execSQL(sql);
+
+    }
+
+    public List<String> removeAndGetNewFilterList(Set<String> words) {
+        for (String word : words)
+            removeAndGetNewFilterList(word);
 
         return getFilterList();
     }

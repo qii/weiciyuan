@@ -1,19 +1,21 @@
 package org.qii.weiciyuan.ui.preference;
 
 import android.app.ListFragment;
+import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: qii
@@ -21,9 +23,13 @@ import java.util.List;
  */
 public class FilterFragment extends ListFragment {
 
-    private ArrayAdapter<String> adapter;
+    private BaseAdapter adapter;
 
     private DBTask task;
+
+    private List<String> list = new ArrayList<String>();
+
+    private RemoveFilterDBTask removeTask;
 
 
     @Override
@@ -31,6 +37,9 @@ public class FilterFragment extends ListFragment {
         super.onDetach();
         if (task != null)
             task.cancel(true);
+
+        if (removeTask != null)
+            removeTask.cancel(true);
     }
 
     @Override
@@ -43,23 +52,22 @@ public class FilterFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new ArrayList<String>());
+        adapter = new DraftAdapter();
         setListAdapter(adapter);
         if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
             task = new DBTask();
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
         }
-        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        getListView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        getListView().setMultiChoiceModeListener(new FilterMultiChoiceModeListener());
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                String word = adapter.getItem(position);
-                List<String> newWordList = DatabaseManager.getInstance().removeAndGetNewFilterList(word);
-                adapter.clear();
-                adapter.addAll(newWordList);
-                return true;
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
             }
         });
+
     }
 
 
@@ -92,6 +100,72 @@ public class FilterFragment extends ListFragment {
         }
     }
 
+
+    class FilterMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.contextual_menu_draftfragment, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.menu_remove:
+                    if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                        removeTask = new RemoveFilterDBTask();
+                        removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                    mode.finish();
+                    return true;
+            }
+            return false;
+        }
+
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+
+        }
+
+        @Override
+        public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+            mode.setTitle(String.format(getString(R.string.have_selected), String.valueOf(getListView().getCheckedItemCount())));
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private class RemoveFilterDBTask extends MyAsyncTask<Void, List<String>, List<String>> {
+
+        Set<String> set = new HashSet<String>();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            long[] ids = getListView().getCheckedItemIds();
+            for (long id : ids) {
+                set.add(list.get((int) id));
+            }
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... params) {
+            return DatabaseManager.getInstance().removeAndGetNewFilterList(set);
+        }
+
+        @Override
+        protected void onPostExecute(List<String> result) {
+            list = result;
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     class DBTask extends MyAsyncTask<Void, List<String>, List<String>> {
 
         @Override
@@ -102,10 +176,57 @@ public class FilterFragment extends ListFragment {
         }
 
         @Override
-        protected void onPostExecute(List<String> set) {
-            super.onPostExecute(set);
-            adapter.clear();
-            adapter.addAll(set);
+        protected void onPostExecute(List<String> result) {
+            super.onPostExecute(result);
+            list = result;
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    class DraftAdapter extends BaseAdapter {
+
+        int checkedBG;
+        int defaultBG;
+
+        public DraftAdapter() {
+            defaultBG = getResources().getColor(R.color.transparent);
+
+            int[] attrs = new int[]{R.attr.listview_checked_color};
+            TypedArray ta = getActivity().obtainStyledAttributes(attrs);
+            checkedBG = ta.getColor(0, 430);
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return list.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            View view = getActivity().getLayoutInflater().inflate(android.R.layout.simple_list_item_1, parent, false);
+            TextView tv = (TextView) view;
+            tv.setBackgroundColor(defaultBG);
+            if (getListView().getCheckedItemPositions().get(position)) {
+                tv.setBackgroundColor(checkedBG);
+            }
+            tv.setText(list.get(position));
+            return view;
         }
     }
 }
