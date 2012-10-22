@@ -42,14 +42,13 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
             token = GlobalContext.getInstance().getSpecialToken();
 
         bean = (CommentBean) getIntent().getSerializableExtra("msg");
-        if (bean != null) {
-            getEditTextView().setHint("@" + bean.getUser().getScreen_name() + "：" + bean.getText());
-        } else {
+        if (bean == null) {
             replyDraftBean = (ReplyDraftBean) getIntent().getSerializableExtra("draft");
             getEditTextView().setText(replyDraftBean.getContent());
             bean = replyDraftBean.getCommentBean();
         }
 
+        getEditTextView().setHint("@" + bean.getUser().getScreen_name() + "：" + bean.getText());
     }
 
     @Override

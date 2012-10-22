@@ -64,7 +64,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         if (msg.getRetweeted_status() != null) {
             getEditTextView().setHint("//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
         } else {
-            getEditTextView().setHint(getString(R.string.repost) + "//@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+            getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
         }
     }
 

@@ -26,7 +26,6 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
  */
 public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
 
-    private String id;
     private String token;
     private MessageBean msg;
     private CommentDraftBean commentDraftBean;
@@ -46,21 +45,15 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
             token = GlobalContext.getInstance().getSpecialToken();
 
         msg = (MessageBean) getIntent().getSerializableExtra("msg");
-        if (msg != null) {
-            id = msg.getId();
-            getActionBar().setTitle(getString(R.string.comments));
-            getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
-
-            if (!TextUtils.isEmpty(getIntent().getStringExtra("content"))) {
-                getEditTextView().setText(getIntent().getStringExtra("content"));
-            }
-        } else {
+        if (msg == null) {
             commentDraftBean = (CommentDraftBean) getIntent().getSerializableExtra("draft");
             msg = commentDraftBean.getMessageBean();
-            id = msg.getId();
             getEditTextView().setText(commentDraftBean.getContent());
 
         }
+
+        getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+
     }
 
     @Override
@@ -167,7 +160,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
     @Override
     protected ItemBean sendData() throws WeiboException {
         if (!enableRepost.isChecked()) {
-            CommentNewMsgDao dao = new CommentNewMsgDao(token, id, ((EditText) findViewById(R.id.status_new_content)).getText().toString());
+            CommentNewMsgDao dao = new CommentNewMsgDao(token, msg.getId(), ((EditText) findViewById(R.id.status_new_content)).getText().toString());
             if (enableCommentOri.isChecked()) {
                 dao.enableComment_ori(true);
             } else {
@@ -201,7 +194,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
             }
         }
 
-        RepostNewMsgDao dao = new RepostNewMsgDao(token, id);
+        RepostNewMsgDao dao = new RepostNewMsgDao(token, msg.getId());
 
         boolean comment = true;
         boolean oriComment = enableCommentOri.isChecked();
