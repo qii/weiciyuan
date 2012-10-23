@@ -14,6 +14,6 @@ public class BilateralTimeLineDao extends MainFriendsTimeLineDao {
 
     @Override
     protected String getUrl() {
-        return URLHelper.getBilateralTimeLine();
+        return URLHelper.BILATERAL_TIMELINE;
     }
 }

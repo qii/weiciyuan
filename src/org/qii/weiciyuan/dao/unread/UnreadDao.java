@@ -19,7 +19,7 @@ import java.util.Map;
 public class UnreadDao {
 
     protected String getUrl() {
-        return URLHelper.getUnread();
+        return URLHelper.UNREAD_COUNT;
     }
 
     private String getMsgListJson() throws WeiboException {

@@ -25,7 +25,7 @@ public class ClearUnreadDao {
     public static final String MENTION_CMT = "mention_cmt";
 
     protected String getUrl() {
-        return URLHelper.getClearUnread();
+        return URLHelper.UNREAD_CLEAR;
     }
 
     private String getMsgListJson() throws WeiboException {

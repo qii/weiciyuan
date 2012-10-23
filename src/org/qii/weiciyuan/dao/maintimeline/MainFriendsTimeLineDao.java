@@ -24,7 +24,7 @@ import java.util.Map;
 public class MainFriendsTimeLineDao {
 
     protected String getUrl() {
-        return URLHelper.getFriendsTimeLine();
+        return URLHelper.FRIENDS_TIMELINE;
     }
 
     private String getMsgListJson() throws WeiboException {
@@ -56,7 +56,7 @@ public class MainFriendsTimeLineDao {
         try {
             value = gson.fromJson(json, MessageListBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
+
             AppLogger.e(e.getMessage());
             return null;
         }

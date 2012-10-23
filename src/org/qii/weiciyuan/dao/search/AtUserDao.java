@@ -21,7 +21,7 @@ import java.util.Map;
 public class AtUserDao {
 
     public List<AtUserBean> getUserInfo() throws WeiboException {
-        String url = URLHelper.getAtUser();
+        String url = URLHelper.AT_USER;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         map.put("q", q);

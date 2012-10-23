@@ -9,7 +9,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
@@ -21,7 +20,7 @@ import java.util.*;
  */
 public class FavListDao {
     private String getMsgListJson() {
-        String url = URLHelper.getFavList();
+        String url = URLHelper.MYFAV_LIST;
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
@@ -48,7 +47,7 @@ public class FavListDao {
         try {
             value = gson.fromJson(json, FavListBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
+
             AppLogger.e(e.getMessage());
         }
 

@@ -8,7 +8,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
@@ -21,13 +20,13 @@ import java.util.Map;
 public class FriendshipsDao {
 
     public UserBean followIt() throws WeiboException {
-        String url = URLHelper.getFollowitUrl();
+        String url = URLHelper.FRIENDSHIPS_CREATE;
         return executeTask(url);
 
     }
 
     public UserBean unFollowIt() throws WeiboException {
-        String url = URLHelper.getUnFollowitUrl();
+        String url = URLHelper.FRIENDSHIPS_DESTROY;
         return executeTask(url);
     }
 
@@ -50,7 +49,7 @@ public class FriendshipsDao {
             if (value != null)
                 return value;
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
+
             AppLogger.e(e.getMessage());
         }
         return null;

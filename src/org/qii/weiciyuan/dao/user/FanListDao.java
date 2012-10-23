@@ -7,7 +7,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
@@ -21,7 +20,7 @@ public class FanListDao {
 
     public UserListBean getGSONMsgList() throws WeiboException {
 
-        String url = URLHelper.getFanListById();
+        String url = URLHelper.FOLLOWERS_LIST_BYID;
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
@@ -41,7 +40,7 @@ public class FanListDao {
         try {
             value = gson.fromJson(jsonData, UserListBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
+
             AppLogger.e(e.getMessage());
         }
 

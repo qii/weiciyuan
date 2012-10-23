@@ -23,7 +23,7 @@ import java.util.Map;
 public class FriendGroupTimeLineDao extends MainFriendsTimeLineDao {
 
     protected String getUrl() {
-        return URLHelper.getFriendGroupTimeLine();
+        return URLHelper.FRIENDSGROUP_TIMELINE;
     }
 
     private String getMsgListJson() throws WeiboException {
@@ -42,8 +42,6 @@ public class FriendGroupTimeLineDao extends MainFriendsTimeLineDao {
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
-//        new ClearUnreadDao(access_token, ClearUnreadDao.STATUS).clearUnread();
-
         return jsonData;
     }
 
@@ -56,7 +54,7 @@ public class FriendGroupTimeLineDao extends MainFriendsTimeLineDao {
         try {
             value = gson.fromJson(json, MessageListBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
+
             AppLogger.e(e.getMessage());
             return null;
         }

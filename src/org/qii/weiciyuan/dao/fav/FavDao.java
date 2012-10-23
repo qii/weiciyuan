@@ -7,7 +7,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
@@ -28,13 +27,13 @@ public class FavDao {
 
     public FavBean favIt() throws WeiboException {
 
-        String url = URLHelper.getFavitUrl();
+        String url = URLHelper.FAV_CREATE;
         return executeTask(url);
     }
 
     public FavBean unFavIt() throws WeiboException {
 
-        String url = URLHelper.getUnFavitUrl();
+        String url = URLHelper.FAV_DESTROY;
         return executeTask(url);
 
     }
@@ -51,7 +50,6 @@ public class FavDao {
             if (value != null)
                 return value;
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
             AppLogger.e(e.getMessage());
         }
 

@@ -36,7 +36,7 @@ public class LocationInfoDao {
         map.put("sensor", "false");
         map.put("latlng", getLatlng());
 
-        String url = URLHelper.getGoogleLocatonUrl();
+        String url = URLHelper.GOOGLELOCATION;
 
         String jsonData = null;
         try {

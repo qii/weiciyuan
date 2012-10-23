@@ -1,149 +1,83 @@
 package org.qii.weiciyuan.dao;
 
-import org.qii.weiciyuan.support.http.URLManager;
-
 /**
  * User: qii
  * Date: 12-7-28
  */
 public class URLHelper {
+    //base url
+    private static final String URL_SINA_WEIBO = "https://api.weibo.com/2/";
 
-    public static String getEmotions() {
-        return URLManager.getRealUrl("emotions");
-    }
+    //login
+    public static final String UID = URL_SINA_WEIBO + "account/get_uid.json";
+
+    //main timeline
+    public static final String FRIENDS_TIMELINE = URL_SINA_WEIBO + "statuses/friends_timeline.json";
+    public static final String COMMENTS_MENTIONS_TIMELINE = URL_SINA_WEIBO + "comments/mentions.json";
+    public static final String STATUSES_MENTIONS_TIMELINE = URL_SINA_WEIBO + "statuses/mentions.json";
+    public static final String COMMENTS_TO_ME_TIMELINE = URL_SINA_WEIBO + "comments/to_me.json";
+    public static final String COMMENTS_BY_ME_TIMELINE = URL_SINA_WEIBO + "comments/by_me.json";
+    public static final String BILATERAL_TIMELINE = URL_SINA_WEIBO + "statuses/bilateral_timeline.json";
+
+    //group timeline
+    public static final String FRIENDSGROUP_INFO = URL_SINA_WEIBO + "friendships/groups.json";
+    public static final String FRIENDSGROUP_TIMELINE = URL_SINA_WEIBO + "friendships/groups/timeline.json";
+
+    //general timeline
+    public static final String COMMENTS_TIMELINE_BY_MSGID = URL_SINA_WEIBO + "comments/show.json";
+    public static final String REPOSTS_TIMELINE_BY_MSGID = URL_SINA_WEIBO + "statuses/repost_timeline.json";
+
+    //user profile
+    public static final String STATUSES_TIMELINE_BY_ID = URL_SINA_WEIBO + "statuses/user_timeline.json";
+    public static final String USER_SHOW = URL_SINA_WEIBO + "users/show.json";
 
 
-    public static String getFriendsTimeLine() {
-        return URLManager.getRealUrl("friendstimeline");
-    }
+    //browser
+    public static final String STATUSES_SHOW = URL_SINA_WEIBO + "statuses/show.json";
 
-    public static String getBilateralTimeLine() {
-        return URLManager.getRealUrl("bilateral");
-    }
+    //send weibo
+    public static final String STATUSES_UPDATE = URL_SINA_WEIBO + "statuses/update.json";
+    public static final String STATUSES_UPLOAD = URL_SINA_WEIBO + "statuses/upload.json";
+    public static final String STATUSES_DESTROY = URL_SINA_WEIBO + "statuses/destroy.json";
 
-    public static String getMentionsTimeLine() {
+    public static final String REPOST_CREATE = URL_SINA_WEIBO + "statuses/repost.json";
 
-        return URLManager.getRealUrl("mentionstimeline");
+    public static final String COMMENT_CREATE = URL_SINA_WEIBO + "comments/create.json";
+    public static final String COMMENT_DESTROY = URL_SINA_WEIBO + "comments/destroy.json";
+    public static final String COMMENT_REPLY = URL_SINA_WEIBO + "comments/reply.json";
 
-    }
 
-    public static String getCommentList() {
-        return URLManager.getRealUrl("commentstimeline");
-    }
+    //favourite
+    public static final String MYFAV_LIST = URL_SINA_WEIBO + "favorites.json";
 
-    public static String getMentionsCommentList() {
-        return URLManager.getRealUrl("comments_mentionstimeline");
-    }
+    public static final String FAV_CREATE = URL_SINA_WEIBO + "favorites/create.json";
+    public static final String FAV_DESTROY = URL_SINA_WEIBO + "favorites/destroy.json";
 
-    public static String getCommentListByMe() {
-        return URLManager.getRealUrl("commentsbyme");
-    }
 
-    public static String getCommentListById() {
-        return URLManager.getRealUrl("commentstimelinebymsgid");
-    }
+    //relationship
+    public static final String FRIENDS_LIST_BYID = URL_SINA_WEIBO + "friendships/friends.json";
+    public static final String FOLLOWERS_LIST_BYID = URL_SINA_WEIBO + "friendships/followers.json";
 
-    public static String getRepostListById() {
-        return URLManager.getRealUrl("repoststimelinebymsgid");
-    }
+    public static final String FRIENDSHIPS_CREATE = URL_SINA_WEIBO + "friendships/create.json";
+    public static final String FRIENDSHIPS_DESTROY = URL_SINA_WEIBO + "friendships/destroy.json";
+    public static final String FRIENDSHIPS_FOLLOWERS_DESTROY = URL_SINA_WEIBO + "friendships/followers/destroy.json";
 
-    public static String getTags() {
-        return URLManager.getRealUrl("tags");
-    }
+    //gps location info
+    public static final String GOOGLELOCATION = "http://maps.google.com/maps/api/geocode/json";
 
-    public static String getStatuses_Show() {
-        return URLManager.getRealUrl("statuses_show");
-    }
 
-    public static String new_Repost() {
-        return URLManager.getRealUrl("repost_create");
-    }
+    //search
+    public static final String AT_USER = URL_SINA_WEIBO + "search/suggestions/at_users.json";
+    public static final String TOPIC_SEARCH = URL_SINA_WEIBO + "search/topics.json";
 
-    public static String new_Comment() {
-        return URLManager.getRealUrl("comment_create");
-    }
+    //unread messages
+    public static final String UNREAD_COUNT = URL_SINA_WEIBO + "remind/unread_count.json";
+    public static final String UNREAD_CLEAR = URL_SINA_WEIBO + "remind/set_count.json";
 
-    public static String remove_Comment() {
-        return URLManager.getRealUrl("comment_destroy");
-    }
 
-    public static String reply_Comment() {
-        return URLManager.getRealUrl("comment_reply");
-    }
+    public static final String REMARK_UPDATE = URL_SINA_WEIBO + "friendships/remark/update.json";
 
-    public static String getUser() {
-        return URLManager.getRealUrl("user_show");
-    }
+    public static final String TAGS = URL_SINA_WEIBO + "tags.json";
 
-    public static String getStatusesTimeLineById() {
-        return URLManager.getRealUrl("statusestimelinebyid");
-    }
-
-    public static String getFriendListById() {
-        return URLManager.getRealUrl("friendsbyid");
-    }
-
-    public static String getFanListById() {
-        return URLManager.getRealUrl("followersbyid");
-    }
-
-    public static String getFavList() {
-        return URLManager.getRealUrl("myfav");
-    }
-
-    public static String getFollowitUrl() {
-        return URLManager.getRealUrl("followit");
-    }
-
-    public static String getUnFollowitUrl() {
-        return URLManager.getRealUrl("unfollowit");
-    }
-
-    public static String getFavitUrl() {
-        return URLManager.getRealUrl("favit");
-    }
-
-    public static String getUnFavitUrl() {
-        return URLManager.getRealUrl("unfavit");
-    }
-
-    public static String getRemoveFanUrl() {
-        return URLManager.getRealUrl("removefan");
-    }
-
-    public static String getGoogleLocatonUrl() {
-        return URLManager.getGoogleRealUrl("googlelocation");
-    }
-
-    public static String getDestroyStatus() {
-        return URLManager.getRealUrl("status_destroy");
-    }
-
-    public static String getSearchTopicByName() {
-        return URLManager.getRealUrl("topic_search");
-    }
-
-    public static String getUnread() {
-        return URLManager.getRealUrl("unread_count");
-    }
-
-    public static String getClearUnread() {
-        return URLManager.getRealUrl("unread_clear");
-    }
-
-    public static String getRemarkUpdate() {
-        return URLManager.getRealUrl("remark_update");
-    }
-
-    public static String getAtUser() {
-        return URLManager.getRealUrl("atuser");
-    }
-
-    public static String getFriendGroup() {
-        return URLManager.getRealUrl("friendsgroup");
-    }
-
-    public static String getFriendGroupTimeLine() {
-        return URLManager.getRealUrl("friendsgrouptimeline");
-    }
+    public static final String EMOTIONS = URL_SINA_WEIBO + "emotions.json";
 }

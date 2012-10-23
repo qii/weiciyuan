@@ -20,7 +20,7 @@ public class FriendListDao {
 
     public UserListBean getGSONMsgList() throws WeiboException {
 
-        String url = URLHelper.getFriendListById();
+        String url = URLHelper.FRIENDS_LIST_BYID;
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);

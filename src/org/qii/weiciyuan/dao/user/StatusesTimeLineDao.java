@@ -8,7 +8,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.TimeTool;
@@ -24,7 +23,7 @@ public class StatusesTimeLineDao {
 
     public MessageListBean getGSONMsgList() throws WeiboException {
 
-        String url = URLHelper.getStatusesTimeLineById();
+        String url = URLHelper.STATUSES_TIMELINE_BY_ID;
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
@@ -48,7 +47,7 @@ public class StatusesTimeLineDao {
         try {
             value = gson.fromJson(jsonData, MessageListBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
+
             AppLogger.e(e.getMessage());
         }
 

@@ -7,7 +7,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
@@ -21,7 +20,7 @@ import java.util.Map;
 public class RepostNewMsgDao {
 
     public MessageBean sendNewMsg() throws WeiboException {
-        String url = URLHelper.new_Repost();
+        String url = URLHelper.REPOST_CREATE;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         map.put("id", id);
@@ -37,7 +36,7 @@ public class RepostNewMsgDao {
         try {
             value = gson.fromJson(jsonData, MessageBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
+
             AppLogger.e(e.getMessage());
         }
 

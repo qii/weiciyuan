@@ -25,7 +25,7 @@ import java.util.Map;
 public class MainMentionsTimeLineDao {
 
     private String getMsgListJson() throws WeiboException {
-        String url = URLHelper.getMentionsTimeLine();
+        String url = URLHelper.STATUSES_MENTIONS_TIMELINE;
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);

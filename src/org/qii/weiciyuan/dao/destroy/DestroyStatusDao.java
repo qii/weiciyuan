@@ -7,7 +7,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
@@ -28,7 +27,7 @@ public class DestroyStatusDao {
     }
 
     public boolean destroy() throws WeiboException {
-        String url = URLHelper.getDestroyStatus();
+        String url = URLHelper.STATUSES_DESTROY;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         map.put("id", id);
@@ -40,7 +39,6 @@ public class DestroyStatusDao {
         try {
             MessageBean value = gson.fromJson(jsonData, MessageBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
             AppLogger.e(e.getMessage());
             return false;
         }

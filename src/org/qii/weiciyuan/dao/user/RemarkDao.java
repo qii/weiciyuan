@@ -19,7 +19,7 @@ import java.util.Map;
 public class RemarkDao {
 
     public UserBean updateRemark() throws WeiboException {
-        String url = URLHelper.getRemarkUpdate();
+        String url = URLHelper.REMARK_UPDATE;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         map.put("uid", uid);

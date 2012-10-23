@@ -24,7 +24,7 @@ import java.util.Map;
 public class SearchTopicDao {
 
     protected String getUrl() {
-        return URLHelper.getSearchTopicByName();
+        return URLHelper.TOPIC_SEARCH;
     }
 
     private String getMsgListJson() throws WeiboException {

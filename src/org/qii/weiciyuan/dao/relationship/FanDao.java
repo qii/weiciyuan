@@ -24,7 +24,7 @@ public class FanDao {
     }
 
     public UserBean removeFan() throws WeiboException {
-        String url = URLHelper.getRemoveFanUrl();
+        String url = URLHelper.FRIENDSHIPS_FOLLOWERS_DESTROY;
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);

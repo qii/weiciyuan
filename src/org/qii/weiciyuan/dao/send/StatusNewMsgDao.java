@@ -2,11 +2,11 @@ package org.qii.weiciyuan.dao.send;
 
 import android.text.TextUtils;
 import org.qii.weiciyuan.bean.GeoBean;
+import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.http.URLManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +44,7 @@ public class StatusNewMsgDao {
             return sendNewMsgWithPic(str, listener);
 
         }
-        String url = URLManager.getRealUrl("update");
+        String url = URLHelper.STATUSES_UPDATE;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         map.put("status", str);
@@ -59,7 +59,7 @@ public class StatusNewMsgDao {
     }
 
     private boolean sendNewMsgWithPic(String str, FileUploaderHttpHelper.ProgressListener listener) {
-        String url = URLManager.getRealUrl("update_with_pic");
+        String url =  URLHelper.STATUSES_UPLOAD;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         map.put("status", str);

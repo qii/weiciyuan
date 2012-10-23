@@ -61,7 +61,7 @@ public class MainCommentsTimeLineDao {
     }
 
     protected String getUrl() {
-        return URLHelper.getCommentList();
+        return URLHelper.COMMENTS_TO_ME_TIMELINE;
     }
 
     public CommentListBean getGSONMsgListWithoutClearUnread() throws WeiboException {

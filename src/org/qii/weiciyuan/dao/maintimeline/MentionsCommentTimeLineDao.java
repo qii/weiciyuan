@@ -13,6 +13,6 @@ public class MentionsCommentTimeLineDao extends MainCommentsTimeLineDao {
 
     @Override
     protected String getUrl() {
-        return URLHelper.getMentionsCommentList();
+        return URLHelper.COMMENTS_MENTIONS_TIMELINE;
     }
 }

@@ -24,7 +24,7 @@ public class RepostsTimeLineByIdDao {
 
     public RepostListBean getGSONMsgList() throws WeiboException {
 
-        String url = URLHelper.getRepostListById();
+        String url = URLHelper.REPOSTS_TIMELINE_BY_MSGID;
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);

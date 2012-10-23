@@ -21,7 +21,7 @@ public class FriendGroupDao {
 
     public GroupListBean getGroup() throws WeiboException {
 
-        String url = URLHelper.getFriendGroup();
+        String url = URLHelper.FRIENDSGROUP_INFO;
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);

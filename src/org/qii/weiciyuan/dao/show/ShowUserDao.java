@@ -7,7 +7,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
@@ -20,7 +19,7 @@ import java.util.Map;
 public class ShowUserDao {
 
     public UserBean getUserInfo() throws WeiboException {
-        String url = URLHelper.getUser();
+        String url = URLHelper.USER_SHOW;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         map.put("uid", uid);
@@ -35,7 +34,7 @@ public class ShowUserDao {
         try {
             value = gson.fromJson(jsonData, UserBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
+
             AppLogger.e(e.getMessage());
         }
 

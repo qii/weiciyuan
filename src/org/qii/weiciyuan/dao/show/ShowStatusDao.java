@@ -29,7 +29,7 @@ public class ShowStatusDao {
 
     public MessageBean getMsg() throws WeiboException {
 
-        String url = URLHelper.getStatuses_Show();
+        String url = URLHelper.STATUSES_SHOW;
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);

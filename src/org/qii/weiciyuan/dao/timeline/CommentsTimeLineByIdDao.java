@@ -8,7 +8,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
@@ -26,7 +25,7 @@ public class CommentsTimeLineByIdDao {
 
     public CommentListBean getGSONMsgList() throws WeiboException {
 
-        String url = URLHelper.getCommentListById();
+        String url = URLHelper.COMMENTS_TIMELINE_BY_MSGID;
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
@@ -47,7 +46,7 @@ public class CommentsTimeLineByIdDao {
         try {
             value = gson.fromJson(jsonData, CommentListBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
+
             AppLogger.e(e.getMessage());
         }
 

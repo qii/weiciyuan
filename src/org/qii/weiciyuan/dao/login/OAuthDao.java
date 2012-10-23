@@ -5,10 +5,10 @@ import com.google.gson.JsonSyntaxException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.http.URLManager;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
@@ -44,7 +44,7 @@ public class OAuthDao {
         map.put("uid", uid);
         map.put("access_token", access_token);
 
-        String url = URLManager.getRealUrl("user_show");
+        String url = URLHelper.USER_SHOW;
 
         String result = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
@@ -62,7 +62,7 @@ public class OAuthDao {
 
     private String getOAuthUserUIDJsonData() throws WeiboException {
 
-        String url = URLManager.getRealUrl("uid");
+        String url = URLHelper.UID;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
 

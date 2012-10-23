@@ -8,7 +8,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class EmotionsDao {
     }
 
     public List<EmotionBean> getEmotions() throws WeiboException {
-        String url = URLHelper.getEmotions();
+        String url = URLHelper.EMOTIONS;
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
@@ -44,7 +43,6 @@ public class EmotionsDao {
             value = gson.fromJson(jsonData, new TypeToken<ArrayList<EmotionBean>>() {
             }.getType());
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
             AppLogger.e(e.getMessage());
         }
         return value;

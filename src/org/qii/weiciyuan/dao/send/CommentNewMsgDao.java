@@ -7,7 +7,6 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
@@ -19,7 +18,7 @@ import java.util.Map;
  */
 public class CommentNewMsgDao {
     public CommentBean sendNewMsg() throws WeiboException {
-        String url = URLHelper.new_Comment();
+        String url = URLHelper.COMMENT_CREATE;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         map.put("id", id);
@@ -35,7 +34,7 @@ public class CommentNewMsgDao {
         try {
             value = gson.fromJson(jsonData, CommentBean.class);
         } catch (JsonSyntaxException e) {
-            ActivityUtils.showTips("发生错误，请重刷");
+
             AppLogger.e(e.getMessage());
         }
 

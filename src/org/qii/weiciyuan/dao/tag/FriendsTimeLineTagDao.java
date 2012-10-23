@@ -19,7 +19,7 @@ import java.util.*;
 public class FriendsTimeLineTagDao {
 
     private String getMsgListJson() throws WeiboException {
-        String url = URLHelper.getTags();
+        String url = URLHelper.TAGS;
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
