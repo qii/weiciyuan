@@ -111,10 +111,11 @@ public class SendWeiboService extends Service {
         @Override
         protected Void doInBackground(Void... params) {
             boolean result = false;
-            String uploadPicPath = compressPic();
-            size = new File(uploadPicPath).length();
+
             try {
                 if (!TextUtils.isEmpty(picPath)) {
+                    String uploadPicPath = compressPic();
+                    size = new File(uploadPicPath).length();
                     result = sendPic(uploadPicPath);
                 } else {
                     result = sendText();
