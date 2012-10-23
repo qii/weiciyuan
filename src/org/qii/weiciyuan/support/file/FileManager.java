@@ -42,7 +42,11 @@ public class FileManager {
 
 
     public static String getUploadPicTempFile() {
-        return getSdCardPath() + File.separator + "upload.jpg";
+
+        if (!isExternalStorageMounted())
+            return "";
+        else
+            return getSdCardPath() + File.separator + "upload.jpg";
     }
 
     public static String getFilePathFromUrl(String url, FileLocationMethod method) {
