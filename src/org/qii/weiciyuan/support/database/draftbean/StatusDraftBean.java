@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.support.database.draftbean;
 
+import org.qii.weiciyuan.bean.GeoBean;
+
 import java.io.Serializable;
 
 /**
@@ -9,7 +11,7 @@ import java.io.Serializable;
 public class StatusDraftBean implements Serializable {
     private String content;
     private String pic;
-    private String gps;
+    private GeoBean gps;
     private String accountId;
 
     public String getContent() {
@@ -28,11 +30,11 @@ public class StatusDraftBean implements Serializable {
         this.pic = pic;
     }
 
-    public String getGps() {
+    public GeoBean getGps() {
         return gps;
     }
 
-    public void setGps(String gps) {
+    public void setGps(GeoBean gps) {
         this.gps = gps;
     }
 

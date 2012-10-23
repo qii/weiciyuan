@@ -205,6 +205,15 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("draft");
         if (statusDraftBean != null) {
             content.setText(statusDraftBean.getContent());
+            picPath = statusDraftBean.getPic();
+            geoBean = statusDraftBean.getGps();
+
+            if (!TextUtils.isEmpty(picPath))
+                havePic.setVisibility(View.VISIBLE);
+
+            if (geoBean != null)
+                new GetGoogleLocationInfo(geoBean).execute();
+
         }
     }
 
@@ -423,9 +432,9 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
             if (isDraftChanged) {
                 DraftDBManager.getInstance().remove(statusDraftBean.getId());
-                DraftDBManager.getInstance().insertStatus(content.getText().toString(), null, null, accountBean.getUid());
+                DraftDBManager.getInstance().insertStatus(content.getText().toString(), geoBean, picPath, accountBean.getUid());
             } else {
-                DraftDBManager.getInstance().insertStatus(content.getText().toString(), null, null, accountBean.getUid());
+                DraftDBManager.getInstance().insertStatus(content.getText().toString(), geoBean, picPath, accountBean.getUid());
 
             }
 
@@ -709,6 +718,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         protected void onPostExecute(String s) {
             Toast.makeText(WriteWeiboActivity.this, s, Toast.LENGTH_SHORT).show();
             location = s;
+            haveGPS.setVisibility(View.VISIBLE);
             super.onPostExecute(s);
         }
     }

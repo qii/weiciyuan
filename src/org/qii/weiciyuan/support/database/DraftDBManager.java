@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.database.draftbean.*;
 import org.qii.weiciyuan.support.database.table.DraftTable;
@@ -48,12 +49,12 @@ public class DraftDBManager {
     }
 
 
-    public void insertStatus(String content, String gps, String pic, String accountId) {
+    public void insertStatus(String content, GeoBean gps, String pic, String accountId) {
         ContentValues cv = new ContentValues();
         cv.put(DraftTable.CONTENT, content);
         cv.put(DraftTable.ACCOUNTID, accountId);
-        if (!TextUtils.isEmpty(gps))
-            cv.put(DraftTable.GPS, gps);
+        if (gps != null)
+            cv.put(DraftTable.GPS, new Gson().toJson(gps));
         if (!TextUtils.isEmpty(pic))
             cv.put(DraftTable.PIC, pic);
         cv.put(DraftTable.TYPE, DraftTable.TYPE_WEIBO);
@@ -114,7 +115,10 @@ public class DraftDBManager {
                     bean.setId(c.getString(c.getColumnIndex(DraftTable.ID)));
                     bean.setContent(content);
                     bean.setAccountId(accountId);
-                    bean.setGps(c.getString(c.getColumnIndex(DraftTable.GPS)));
+                    String gpsJson = c.getString(c.getColumnIndex(DraftTable.GPS));
+                    if (!TextUtils.isEmpty(gpsJson)) {
+                        bean.setGps(new Gson().fromJson(gpsJson, GeoBean.class));
+                    }
                     bean.setPic(c.getString(c.getColumnIndex(DraftTable.PIC)));
                     item.setStatusDraftBean(bean);
                     result.add(item);
