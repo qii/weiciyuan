@@ -26,12 +26,10 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
-import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
-import org.qii.weiciyuan.othercomponent.UploadPhotoService;
+import org.qii.weiciyuan.othercomponent.SendWeiboService;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
-import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -41,7 +39,6 @@ import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
-import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -465,24 +462,15 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
     protected void executeTask(String content) {
 
-        if (TextUtils.isEmpty(picPath)) {
-            new StatusNewTask(content).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            Intent intent = new Intent(WriteWeiboActivity.this, UploadPhotoService.class);
-            intent.putExtra("token", token);
-            intent.putExtra("picPath", picPath);
-            intent.putExtra("accountId", accountBean.getUid());
-//            if (!content.equals(getLastContent())) {
-            intent.putExtra("content", content);
-//            } else {
-//                intent.putExtra("content", content + " ");
-//            }
-            intent.putExtra("geo", geoBean);
-            if (statusDraftBean != null)
-                intent.putExtra("draft", statusDraftBean);
-            startService(intent);
-            finish();
-        }
+        Intent intent = new Intent(WriteWeiboActivity.this, SendWeiboService.class);
+        intent.putExtra("token", token);
+        intent.putExtra("picPath", picPath);
+        intent.putExtra("accountId", accountBean.getUid());
+        intent.putExtra("content", content);
+        intent.putExtra("geo", geoBean);
+        intent.putExtra("draft", statusDraftBean);
+        startService(intent);
+        finish();
     }
 
     @Override
@@ -540,70 +528,6 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         stringBuilder.insert(index, emotionChar);
         content.setText(stringBuilder.toString());
         content.setSelection(index + emotionChar.length());
-    }
-
-    private class StatusNewTask extends MyAsyncTask<Void, String, String> {
-        String content;
-        WeiboException e;
-
-        StatusNewTask(String content) {
-            this.content = content;
-        }
-
-        SendProgressFragment progressFragment = new SendProgressFragment();
-
-        @Override
-        protected void onPreExecute() {
-            progressFragment.onCancel(new DialogInterface() {
-
-                @Override
-                public void cancel() {
-                    StatusNewTask.this.cancel(true);
-                }
-
-                @Override
-                public void dismiss() {
-                    StatusNewTask.this.cancel(true);
-                }
-            });
-
-            progressFragment.show(getFragmentManager(), "");
-
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            try {
-                boolean result = new StatusNewMsgDao(token).setGeoBean(geoBean).sendNewMsg(content, null);
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-                return null;
-
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onCancelled(String s) {
-            super.onCancelled(s);
-            progressFragment.dismissAllowingStateLoss();
-            if (e != null)
-                Toast.makeText(WriteWeiboActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            progressFragment.dismissAllowingStateLoss();
-            if (statusDraftBean != null)
-                DraftDBManager.getInstance().remove(statusDraftBean.getId());
-
-            Toast.makeText(WriteWeiboActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
-            finish();
-            super.onPostExecute(s);
-
-        }
     }
 
 

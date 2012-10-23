@@ -122,7 +122,7 @@
         <!-- service -->
         <service android:name=".othercomponent.FetchNewMsgService"/>
         <service android:name=".othercomponent.DownloadEmotionsService"/>
-        <service android:name=".othercomponent.UploadPhotoService"/>
+        <service android:name=".othercomponent.SendWeiboService"/>
 
 
         <!---broadcast receiver -->

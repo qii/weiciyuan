@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
@@ -31,7 +32,7 @@ import java.io.IOException;
  * User: qii
  * Date: 12-8-21
  */
-public class UploadPhotoService extends Service {
+public class SendWeiboService extends Service {
     private String accountId;
     private String token;
     private String picPath;
@@ -66,6 +67,7 @@ public class UploadPhotoService extends Service {
 
     }
 
+
     class UploadTask extends MyAsyncTask<Void, Long, Void> {
 
         Notification notification;
@@ -76,15 +78,34 @@ public class UploadPhotoService extends Service {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Notification.Builder builder = new Notification.Builder(UploadPhotoService.this)
-                    .setTicker(getString(R.string.send_photo))
-                    .setContentTitle(getString(R.string.background_sending))
+            Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
+                    .setTicker(getString(R.string.sending))
+                    .setContentTitle(getString(R.string.sending))
                     .setContentText(content)
-                    .setProgress(0, 100, false)
                     .setSmallIcon(R.drawable.upload_white);
+
+            if (!TextUtils.isEmpty(picPath)) {
+                builder.setProgress(0, 100, false);
+            } else {
+                builder.setProgress(0, 100, true);
+            }
+
             notification = builder.getNotification();
             startForeground(NOTIFICATION_ID, notification);
-            Toast.makeText(UploadPhotoService.this, getString(R.string.background_sending), Toast.LENGTH_SHORT).show();
+            Toast.makeText(SendWeiboService.this, getString(R.string.background_sending), Toast.LENGTH_SHORT).show();
+        }
+
+        private boolean sendPic(String uploadPicPath) throws WeiboException {
+            return new StatusNewMsgDao(token).setPic(uploadPicPath).setGeoBean(geoBean).sendNewMsg(content, new FileUploaderHttpHelper.ProgressListener() {
+                @Override
+                public void transferred(long data) {
+                    publishProgress(data);
+                }
+            });
+        }
+
+        private boolean sendText() throws WeiboException {
+            return new StatusNewMsgDao(token).setGeoBean(geoBean).sendNewMsg(content, null);
         }
 
         @Override
@@ -93,12 +114,11 @@ public class UploadPhotoService extends Service {
             String uploadPicPath = compressPic();
             size = new File(uploadPicPath).length();
             try {
-                result = new StatusNewMsgDao(token).setPic(uploadPicPath).setGeoBean(geoBean).sendNewMsg(content, new FileUploaderHttpHelper.ProgressListener() {
-                    @Override
-                    public void transferred(long data) {
-                        publishProgress(data);
-                    }
-                });
+                if (!TextUtils.isEmpty(picPath)) {
+                    result = sendPic(uploadPicPath);
+                } else {
+                    result = sendText();
+                }
             } catch (WeiboException e) {
                 this.e = e;
                 cancel(true);
@@ -166,7 +186,7 @@ public class UploadPhotoService extends Service {
             if (values.length > 0) {
                 long data = values[0];
 
-                Notification.Builder builder = new Notification.Builder(UploadPhotoService.this)
+                Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
                         .setTicker(getString(R.string.send_photo))
                         .setContentTitle(getString(R.string.background_sending))
                         .setContentText(content)
@@ -184,7 +204,7 @@ public class UploadPhotoService extends Service {
             super.onPostExecute(aVoid);
             if (statusDraftBean != null)
                 DraftDBManager.getInstance().remove(statusDraftBean.getId());
-            Toast.makeText(UploadPhotoService.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
+            Toast.makeText(SendWeiboService.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
             stopForeground(true);
             stopSelf();
         }
@@ -198,7 +218,7 @@ public class UploadPhotoService extends Service {
             } else {
                 DraftDBManager.getInstance().insertStatus(content, geoBean, picPath, accountId);
             }
-            Toast.makeText(UploadPhotoService.this, getString(R.string.send_failed_and_save_to_draft), Toast.LENGTH_SHORT).show();
+            Toast.makeText(SendWeiboService.this, getString(R.string.send_failed_and_save_to_draft), Toast.LENGTH_SHORT).show();
             stopForeground(true);
             stopSelf();
         }
