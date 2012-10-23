@@ -478,6 +478,8 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 //                intent.putExtra("content", content + " ");
 //            }
             intent.putExtra("geo", geoBean);
+            if (statusDraftBean != null)
+                intent.putExtra("draft", statusDraftBean);
             startService(intent);
             finish();
         }

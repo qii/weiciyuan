@@ -16,6 +16,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.support.database.DraftDBManager;
+import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
@@ -38,6 +39,8 @@ public class UploadPhotoService extends Service {
     private GeoBean geoBean;
     private UploadTask task;
 
+    private StatusDraftBean statusDraftBean;
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -52,6 +55,8 @@ public class UploadPhotoService extends Service {
         picPath = intent.getStringExtra("picPath");
         content = intent.getStringExtra("content");
         geoBean = (GeoBean) intent.getSerializableExtra("geo");
+
+        statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("draft");
 
         if (task == null) {
             task = new UploadTask();
@@ -177,6 +182,8 @@ public class UploadPhotoService extends Service {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if (statusDraftBean != null)
+                DraftDBManager.getInstance().remove(statusDraftBean.getId());
             Toast.makeText(UploadPhotoService.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
             stopForeground(true);
             stopSelf();
@@ -185,8 +192,13 @@ public class UploadPhotoService extends Service {
         @Override
         protected void onCancelled(Void aVoid) {
             super.onCancelled(aVoid);
+            if (statusDraftBean != null) {
+                DraftDBManager.getInstance().remove(statusDraftBean.getId());
+                DraftDBManager.getInstance().insertStatus(content, geoBean, picPath, accountId);
+            } else {
+                DraftDBManager.getInstance().insertStatus(content, geoBean, picPath, accountId);
+            }
             Toast.makeText(UploadPhotoService.this, getString(R.string.send_failed_and_save_to_draft), Toast.LENGTH_SHORT).show();
-            DraftDBManager.getInstance().insertStatus(content, null, picPath, accountId);
             stopForeground(true);
             stopSelf();
         }
