@@ -211,7 +211,7 @@ public class ListViewTool {
 
                 String url = GlobalContext.getInstance().getEmotions().get(str2);
                 if (!TextUtils.isEmpty(url)) {
-                    String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
+                    String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.emotion);
                     String name = new File(path).getName();
                     AssetManager assetManager = GlobalContext.getInstance().getAssets();
                     InputStream inputStream;
@@ -242,7 +242,7 @@ public class ListViewTool {
 
                 String url = GlobalContext.getInstance().getEmotions().get(str2);
                 if (!TextUtils.isEmpty(url)) {
-                    String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
+                    String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.emotion);
                     String name = new File(path).getName();
                     AssetManager assetManager = GlobalContext.getInstance().getAssets();
                     InputStream inputStream;

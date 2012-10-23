@@ -24,7 +24,7 @@ public class ImageTool {
     public static Bitmap getThumbnailPictureWithRoundedCorner(String url) {
 
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_thumbnail);
+        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_thumbnail);
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
@@ -147,7 +147,7 @@ public class ImageTool {
 //        int useWidth = 400;
         int useWidth = reqWidth;
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_bmiddle);
+        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_bmiddle);
 
         File file = new File(absoluteFilePath);
 
@@ -251,7 +251,7 @@ public class ImageTool {
     public static Bitmap getNotificationAvatar(String url, int reqWidth, int reqHeight) {
 
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_large);
+        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.avatar_large);
         absoluteFilePath = absoluteFilePath + ".jpg";
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
@@ -278,7 +278,7 @@ public class ImageTool {
             return null;
         }
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_large);
+        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.avatar_large);
         absoluteFilePath = absoluteFilePath + ".jpg";
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
@@ -302,7 +302,7 @@ public class ImageTool {
             return null;
         }
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_large);
+        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.avatar_large);
         absoluteFilePath = absoluteFilePath + ".jpg";
 
         boolean fileExist = new File(absoluteFilePath).exists();
@@ -344,7 +344,7 @@ public class ImageTool {
             return null;
         }
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_small);
+        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.avatar_small);
 
         absoluteFilePath = absoluteFilePath + ".jpg";
 
@@ -376,7 +376,7 @@ public class ImageTool {
             return null;
         }
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.avatar_small);
+        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.avatar_small);
         absoluteFilePath = absoluteFilePath + ".jpg";
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
@@ -407,7 +407,7 @@ public class ImageTool {
     public static Bitmap getMiddlePictureInBrowserMSGActivity(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_bmiddle);
+        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_bmiddle);
 
         File file = new File(absoluteFilePath);
 
@@ -434,7 +434,7 @@ public class ImageTool {
     public static String getLargePictureWithoutRoundedCorner(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_large);
+        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_large);
 
         File file = new File(absoluteFilePath);
 
@@ -460,7 +460,7 @@ public class ImageTool {
     public static String getMiddlePictureWithoutRoundedCorner(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
 
-        String absoluteFilePath = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.picture_bmiddle);
+        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_bmiddle);
 
         File file = new File(absoluteFilePath);
 

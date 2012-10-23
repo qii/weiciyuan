@@ -262,7 +262,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
             for (String str : index) {
                 if (!isCancelled()) {
                     String url = emotions.get(str);
-                    String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
+                    String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.emotion);
                     String name = new File(path).getName();
                     AssetManager assetManager = GlobalContext.getInstance().getAssets();
                     InputStream inputStream;

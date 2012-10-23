@@ -90,7 +90,7 @@ public class DownloadEmotionsService extends Service {
 
                 for (EmotionBean bean : needList) {
                     String url = bean.getUrl();
-                    String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
+                    String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.emotion);
 
                     HttpUtility.getInstance().executeDownloadTask(url, path, null);
                     now++;
@@ -105,7 +105,7 @@ public class DownloadEmotionsService extends Service {
 //
 //                for (EmotionBean bean : list) {
 //                    String url = bean.getUrl();
-//                    String path = FileManager.getFileAbsolutePathFromUrl(url, FileLocationMethod.emotion);
+//                    String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.emotion);
 //
 //                    HttpUtility.getInstance().executeDownloadTask(url, path, null);
 //                    now++;

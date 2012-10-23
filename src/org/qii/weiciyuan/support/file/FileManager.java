@@ -13,7 +13,6 @@ import java.io.IOException;
  */
 public class FileManager {
 
-    private static final String SDCARD_PATH = GlobalContext.getInstance().getExternalCacheDir().getAbsolutePath();
     private static final String AVATAR_SMAll = "avatar_small";
     private static final String AVATAR_LARGE = "avatar_large";
     private static final String PICTURE_THUMBNAIL = "picture_thumbnail";
@@ -21,6 +20,14 @@ public class FileManager {
     private static final String PICTURE_LARGE = "picture_large";
     private static final String EMOTION = "emotion";
 
+
+    private static String getSdCardPath() {
+        if (isExternalStorageMounted()) {
+            return GlobalContext.getInstance().getExternalCacheDir().getAbsolutePath();
+        } else {
+            return "";
+        }
+    }
 
     public static boolean isExternalStorageMounted() {
 
@@ -33,18 +40,22 @@ public class FileManager {
         return !(!canRead || onlyRead || unMounted);
     }
 
-    private static String getFileAbsolutePathFromRelativePath(String relativePath) {
-        String result = SDCARD_PATH + File.separator + relativePath;
-
-        return result;
-    }
 
     public static String getUploadPicTempFile() {
-        return SDCARD_PATH + File.separator + "upload.jpg";
+        return getSdCardPath() + File.separator + "upload.jpg";
     }
 
-    public static String getFileAbsolutePathFromUrl(String url, FileLocationMethod method) {
-        String oldRelativePath = getFileRelativePathFromUrl(url);
+    public static String getFilePathFromUrl(String url, FileLocationMethod method) {
+
+        if (!isExternalStorageMounted())
+            return "";
+
+        int index = url.indexOf("//");
+
+        String s = url.substring(index + 2);
+
+        String oldRelativePath = s.substring(s.indexOf("/"));
+
         String newRelativePath = "";
         switch (method) {
             case avatar_small:
@@ -68,23 +79,8 @@ public class FileManager {
                 break;
         }
 
-        String absolutePath = getFileAbsolutePathFromRelativePath(newRelativePath);
+        return getSdCardPath() + File.separator + newRelativePath;
 
-        //AppLogger.d(absolutePath);
-
-        return absolutePath;
-    }
-
-    private static String getFileRelativePathFromUrl(String url) {
-        //AppLogger.d(url);
-        int index = url.indexOf("//");
-
-        String s = url.substring(index + 2);
-
-        String result = s.substring(s.indexOf("/"));
-
-
-        return result;
     }
 
 
@@ -121,7 +117,7 @@ public class FileManager {
 
     public static String getCacheSize() {
         if (isExternalStorageMounted()) {
-            String path = SDCARD_PATH + File.separator;
+            String path = getSdCardPath() + File.separator;
             FileSize size = new FileSize(new File(path));
             return size.toString();
         }
@@ -131,9 +127,9 @@ public class FileManager {
     public static String getPictureCacheSize() {
         long size = 0L;
         if (isExternalStorageMounted()) {
-            String thumbnailPath = SDCARD_PATH + File.separator + PICTURE_THUMBNAIL;
-            String middlePath = SDCARD_PATH + File.separator + PICTURE_BMIDDLE;
-            String oriPath = SDCARD_PATH + File.separator + PICTURE_LARGE;
+            String thumbnailPath = getSdCardPath() + File.separator + PICTURE_THUMBNAIL;
+            String middlePath = getSdCardPath() + File.separator + PICTURE_BMIDDLE;
+            String oriPath = getSdCardPath() + File.separator + PICTURE_LARGE;
             size += new FileSize(new File(thumbnailPath)).getLongSize();
             size += new FileSize(new File(middlePath)).getLongSize();
             size += new FileSize(new File(oriPath)).getLongSize();
@@ -143,14 +139,14 @@ public class FileManager {
     }
 
     public static boolean deleteCache() {
-        String path = SDCARD_PATH + File.separator;
+        String path = getSdCardPath() + File.separator;
         return deleteDirectory(new File(path));
     }
 
     public static boolean deletePictureCache() {
-        String thumbnailPath = SDCARD_PATH + File.separator + PICTURE_THUMBNAIL;
-        String middlePath = SDCARD_PATH + File.separator + PICTURE_BMIDDLE;
-        String oriPath = SDCARD_PATH + File.separator + PICTURE_LARGE;
+        String thumbnailPath = getSdCardPath() + File.separator + PICTURE_THUMBNAIL;
+        String middlePath = getSdCardPath() + File.separator + PICTURE_BMIDDLE;
+        String oriPath = getSdCardPath() + File.separator + PICTURE_LARGE;
 
         deleteDirectory(new File(thumbnailPath));
         deleteDirectory(new File(middlePath));
