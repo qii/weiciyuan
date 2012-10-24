@@ -9,6 +9,10 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
@@ -25,6 +29,7 @@ import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
 
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -215,7 +220,7 @@ public class AbstractAppActivity extends Activity {
         initDefaultAvatar();
         initDefaultPic();
         initErrorPic();
-
+        initNFC();
     }
 
 
@@ -272,6 +277,34 @@ public class AbstractAppActivity extends Activity {
             }
             pictureBitmapWorkerTaskMap = null;
         }
+    }
+
+    private void initNFC() {
+        NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (mNfcAdapter == null) {
+            return;
+        }
+
+        mNfcAdapter.setNdefPushMessageCallback(new NfcAdapter.CreateNdefMessageCallback() {
+            @Override
+            public NdefMessage createNdefMessage(NfcEvent event) {
+                String text = (GlobalContext.getInstance().getCurrentAccountName());
+
+                NdefMessage msg = new NdefMessage(
+                        new NdefRecord[]{createMimeRecord(
+                                "application/org.qii.weiciyuan.beam", text.getBytes()), NdefRecord.createApplicationRecord(getPackageName())
+                        });
+                return msg;
+            }
+        }, this);
+
+    }
+
+    private NdefRecord createMimeRecord(String mimeType, byte[] payload) {
+        byte[] mimeBytes = mimeType.getBytes(Charset.forName("US-ASCII"));
+        NdefRecord mimeRecord = new NdefRecord(
+                NdefRecord.TNF_MIME_MEDIA, mimeBytes, new byte[0], payload);
+        return mimeRecord;
     }
 
     private void reload() {

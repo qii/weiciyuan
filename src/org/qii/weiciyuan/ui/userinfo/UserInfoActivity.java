@@ -6,7 +6,10 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
+import android.nfc.NdefMessage;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -77,12 +80,15 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
         bean = (UserBean) getIntent().getSerializableExtra("user");
         if (bean == null) {
             Uri data = getIntent().getData();
-            String d = data.toString();
-            int index = d.lastIndexOf("/");
-            String newValue = d.substring(index + 1);
-            bean = new UserBean();
-            bean.setScreen_name(newValue);
-
+            if (data != null) {
+                String d = data.toString();
+                int index = d.lastIndexOf("/");
+                String newValue = d.substring(index + 1);
+                bean = new UserBean();
+                bean.setScreen_name(newValue);
+            } else if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+                processIntent(getIntent());
+            }
         }
 
         if (bean.getScreen_name().equals(GlobalContext.getInstance().getCurrentAccountName())
@@ -123,6 +129,17 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
                 .setTabListener(tabListener));
 
 
+    }
+
+
+    private void processIntent(Intent intent) {
+        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
+                NfcAdapter.EXTRA_NDEF_MESSAGES);
+        // only one message sent during the beam
+        NdefMessage msg = (NdefMessage) rawMsgs[0];
+        Toast.makeText(this, new String(msg.getRecords()[0].getPayload()), Toast.LENGTH_SHORT).show();
+        bean = new UserBean();
+        bean.setScreen_name(new String(msg.getRecords()[0].getPayload()));
     }
 
     ActionBar.TabListener tabListener = new ActionBar.TabListener() {
