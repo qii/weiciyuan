@@ -492,18 +492,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         protected void onPostExecute(UnreadBean unreadBean) {
             super.onPostExecute(unreadBean);
             if (unreadBean != null) {
-                int unreadStatus = unreadBean.getStatus();
-                int unreadMentionsCount = unreadBean.getMention_cmt() + unreadBean.getMention_status();
-                int unreadCommentsCount = unreadBean.getCmt();
-
-                if (unreadStatus > 0)
-                    buildTabText(0, unreadStatus);
-
-                if (unreadMentionsCount > 0)
-                    buildTabText(1, unreadMentionsCount);
-
-                if (unreadCommentsCount > 0)
-                    buildTabText(2, unreadCommentsCount);
+                buildUnreadTabTxt(unreadBean);
 
             }
         }
@@ -519,18 +508,21 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             if (newMsgAccountBean.getUid().equals(MainTimeLineActivity.this.accountBean.getUid())) {
                 abortBroadcast();
                 UnreadBean unreadBean = (UnreadBean) intent.getSerializableExtra("unread");
+                buildUnreadTabTxt(unreadBean);
 
-                int unreadMentionsCount = unreadBean.getMention_cmt() + unreadBean.getMention_status();
-                int unreadCommentsCount = unreadBean.getCmt();
-
-                if (unreadMentionsCount > 0)
-                    buildTabText(1, unreadMentionsCount);
-
-                if (unreadCommentsCount > 0)
-                    buildTabText(2, unreadCommentsCount);
             }
 
         }
     }
 
+    private void buildUnreadTabTxt(UnreadBean unreadBean) {
+        int unreadMentionsCount = unreadBean.getMention_status();
+        int unreadCommentsCount = unreadBean.getMention_cmt() + unreadBean.getCmt();
+
+        if (unreadMentionsCount > 0)
+            buildTabText(1, unreadMentionsCount);
+
+        if (unreadCommentsCount > 0)
+            buildTabText(2, unreadCommentsCount);
+    }
 }

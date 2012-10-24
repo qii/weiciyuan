@@ -30,7 +30,10 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
 
     private CommentListBean comment;
     private MessageListBean repost;
+    private CommentListBean mentionCommentsResult;
     private UnreadBean unreadBean;
+
+
     private String title = "";
     private String content = "";
     private String ticker = "";
@@ -41,6 +44,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         accountBean = (AccountBean) intent.getSerializableExtra("account");
         comment = (CommentListBean) intent.getSerializableExtra("comment");
         repost = (MessageListBean) intent.getSerializableExtra("repost");
+        mentionCommentsResult = (CommentListBean) intent.getSerializableExtra("mention_comment");
         unreadBean = (UnreadBean) intent.getSerializableExtra("unread");
 
         sum = unreadBean.getMention_cmt() + unreadBean.getMention_status() + unreadBean.getCmt();
@@ -178,6 +182,12 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
 
         if (repost != null) {
             for (MessageBean m : repost.getItemList()) {
+                inboxStyle.addLine(m.getUser().getScreen_name() + ":" + m.getText());
+            }
+        }
+
+        if (mentionCommentsResult != null) {
+            for (CommentBean m : mentionCommentsResult.getItemList()) {
                 inboxStyle.addLine(m.getUser().getScreen_name() + ":" + m.getText());
             }
         }

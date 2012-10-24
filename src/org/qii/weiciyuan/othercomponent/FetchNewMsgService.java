@@ -13,6 +13,7 @@ import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
+import org.qii.weiciyuan.dao.maintimeline.MentionsCommentTimeLineDao;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -102,7 +103,8 @@ public class FetchNewMsgService extends Service {
         WeiboException e;
         AccountBean accountBean;
         CommentListBean commentResult;
-        MessageListBean repostResult;
+        MessageListBean mentionStatusesResult;
+        CommentListBean mentionCommentsResult;
         UnreadBean unreadBean;
 
         public SimpleTask(AccountBean bean) {
@@ -112,25 +114,30 @@ public class FetchNewMsgService extends Service {
         @Override
         protected Void doInBackground(Void... params) {
 
-            String accountId = accountBean.getUid();
             String token = accountBean.getAccess_token();
             try {
                 UnreadDao unreadDao = new UnreadDao(token, accountBean.getUid());
                 unreadBean = unreadDao.getCount();
 
-                int comment = unreadBean.getCmt();
-                int mention = unreadBean.getMention_cmt() + unreadBean.getMention_status();
+                int unreadCommentCount = unreadBean.getCmt();
+                int unreadMentionStatusCount = unreadBean.getMention_status();
+                int unreadMentionCommentCount = unreadBean.getMention_cmt();
 
-                if (comment > 0) {
-                    MainCommentsTimeLineDao commentDao = new MainCommentsTimeLineDao(token).setCount(String.valueOf(comment));
+                if (unreadCommentCount > 0) {
+                    MainCommentsTimeLineDao commentDao = new MainCommentsTimeLineDao(token).setCount(String.valueOf(unreadCommentCount));
                     commentResult = commentDao.getGSONMsgListWithoutClearUnread();
-
                 }
 
-                if (mention > 0) {
-                    MainMentionsTimeLineDao mentionDao = new MainMentionsTimeLineDao(token).setCount(String.valueOf(mention));
-                    repostResult = mentionDao.getGSONMsgListWithoutClearUnread();
+                if (unreadMentionStatusCount > 0) {
+                    MainMentionsTimeLineDao mentionDao = new MainMentionsTimeLineDao(token).setCount(String.valueOf(unreadMentionStatusCount));
+                    mentionStatusesResult = mentionDao.getGSONMsgListWithoutClearUnread();
                 }
+
+                if (unreadMentionCommentCount > 0) {
+                    MainCommentsTimeLineDao dao = new MentionsCommentTimeLineDao(token).setCount(String.valueOf(unreadMentionCommentCount));
+                    mentionCommentsResult = dao.getGSONMsgListWithoutClearUnread();
+                }
+
             } catch (WeiboException e) {
                 this.e = e;
                 cancel(true);
@@ -165,7 +172,8 @@ public class FetchNewMsgService extends Service {
             Intent intent = new Intent(MentionsAndCommentsReceiver.ACTION);
             intent.putExtra("account", accountBean);
             intent.putExtra("comment", commentResult);
-            intent.putExtra("repost", repostResult);
+            intent.putExtra("repost", mentionStatusesResult);
+            intent.putExtra("mention_comment", mentionCommentsResult);
             intent.putExtra("unread", unreadBean);
             sendOrderedBroadcast(intent, null);
 
