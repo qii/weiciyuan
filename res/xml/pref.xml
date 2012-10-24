@@ -53,7 +53,6 @@
 
 
         <Preference android:title="@string/filter"
-                    android:summary="@string/filter_summary"
                     android:key="filter"
                 >
             <intent
@@ -73,7 +72,7 @@
 
         <Preference
                 android:title="@string/about"
-                android:summary="@string/about_summary">
+                >
             <intent
                     android:targetPackage="org.qii.weiciyuan"
                     android:targetClass="org.qii.weiciyuan.ui.preference.AboutActivity"
