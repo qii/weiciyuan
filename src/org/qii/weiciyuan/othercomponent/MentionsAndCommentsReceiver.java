@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.text.TextUtils;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
@@ -102,22 +103,89 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         i.putExtra("comment", comment);
         i.putExtra("repost", repost);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent activity = PendingIntent.getActivity(context, Long.valueOf(accountBean.getUid()).intValue(), i, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, Long.valueOf(accountBean.getUid()).intValue(), i, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification.Builder notification = new Notification.Builder(context)
+        Notification notification;
+
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            notification = buildICSNotification(pendingIntent);
+        } else {
+            notification = buildJBNotification(pendingIntent);
+        }
+
+
+        notificationManager.notify(Long.valueOf(accountBean.getUid()).intValue(), notification);
+
+    }
+
+
+    private Notification buildICSNotification(PendingIntent pendingIntent) {
+        Notification.Builder builder = new Notification.Builder(context)
                 .setTicker(ticker)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setSmallIcon(R.drawable.notification)
                 .setAutoCancel(true)
-                .setContentIntent(activity);
+                .setContentIntent(pendingIntent);
         if (sum > 1) {
-            notification.setNumber(sum);
+            builder.setNumber(sum);
         }
-        notificationManager.notify(Long.valueOf(accountBean.getUid()).intValue(), notification.getNotification());
-
+        return builder.getNotification();
     }
 
+
+    private Notification buildJBNotification(PendingIntent pendingIntent) {
+        Notification.Builder builder = new Notification.Builder(context)
+                .setTicker(ticker)
+                .setContentText(accountBean.getUsernick())
+                .setSmallIcon(R.drawable.notification)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+
+
+        int mentionCmt = unreadBean.getMention_cmt();
+        int mentionStatus = unreadBean.getMention_status();
+        int mention = mentionStatus + mentionCmt;
+        int cmt = unreadBean.getCmt();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (mention > 0) {
+            String txt = String.format(context.getString(R.string.new_mentions), String.valueOf(mention));
+            stringBuilder.append(txt);
+        }
+
+        if (cmt > 0) {
+            if (mention > 0)
+                stringBuilder.append("、");
+            String txt = String.format(context.getString(R.string.new_comments), String.valueOf(cmt));
+            stringBuilder.append(txt);
+        }
+
+        builder.setContentTitle(stringBuilder.toString());
+
+        if (sum > 1) {
+            builder.setNumber(sum);
+        }
+
+        Notification.InboxStyle inboxStyle = new Notification.InboxStyle(builder);
+        inboxStyle.setBigContentTitle(stringBuilder.toString());
+        if (comment != null) {
+            for (CommentBean c : comment.getItemList()) {
+                inboxStyle.addLine(c.getUser().getScreen_name() + ":" + c.getText());
+            }
+        }
+
+        if (repost != null) {
+            for (MessageBean m : repost.getItemList()) {
+                inboxStyle.addLine(m.getUser().getScreen_name() + ":" + m.getText());
+            }
+        }
+
+
+        builder.setStyle(inboxStyle);
+
+        return builder.build();
+    }
 
 }

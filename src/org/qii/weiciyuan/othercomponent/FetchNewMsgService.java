@@ -125,7 +125,9 @@ public class FetchNewMsgService extends Service {
                     MainCommentsTimeLineDao commentDao = new MainCommentsTimeLineDao(token).setCount(String.valueOf(comment));
                     commentResult = commentDao.getGSONMsgListWithoutClearUnread();
 
-                } else if (mention > 0) {
+                }
+
+                if (mention > 0) {
                     MainMentionsTimeLineDao mentionDao = new MainMentionsTimeLineDao(token).setCount(String.valueOf(mention));
                     repostResult = mentionDao.getGSONMsgListWithoutClearUnread();
                 }

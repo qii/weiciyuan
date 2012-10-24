@@ -237,6 +237,8 @@
     <string name="auto_refresh">首页自动刷新</string>
     <string name="auto_refresh_summary">仅在 Wifi 网络下有效</string>
     <string name="new_message">未读消息</string>
+    <string name="new_comments">%s 条评论</string>
+    <string name="new_mentions">%s 条@我</string>
     <string name="notification">通知</string>
     <string name="disable_notification_at_night">深夜勿扰</string>
     <string name="disable_notification_at_night_summary">凌晨1点到早上8点暂停</string>
