@@ -1,14 +1,11 @@
 package org.qii.weiciyuan.ui.preference;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.othercomponent.AppNewMsgAlarm;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -20,7 +17,6 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Preference clear_cache;
-    private Preference frequency;
 
     private CalcCacheSize calcTask;
     private RemoveCache removeCache;
@@ -34,7 +30,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         clear_cache = findPreference(SettingActivity.CLEAR_CACHE);
-        frequency = findPreference(SettingActivity.FREQUENCY);
 
         clear_cache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -51,7 +46,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         calcTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
 
-        buildSummary();
     }
 
 
@@ -80,23 +74,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
 
-        if (key.equals(SettingActivity.ENABLE_FETCH_MSG)) {
-            boolean value = sharedPreferences.getBoolean(key, false);
-            buildSummary();
-            if (value) {
-                AppNewMsgAlarm.startAlarm(getActivity(), false);
-            } else {
-                AppNewMsgAlarm.stopAlarm(getActivity(), true);
-            }
-        }
-
-        if (key.equals(SettingActivity.FREQUENCY)) {
-
-            AppNewMsgAlarm.startAlarm(getActivity(), false);
-            buildSummary();
-        }
-
-
         if (key.equals(SettingActivity.FONT_SIZE)) {
             String value = sharedPreferences.getString(key, "15");
             GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
@@ -112,29 +89,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             boolean value = sharedPreferences.getBoolean(key, false);
             GlobalContext.getInstance().setEnableAutoRefresh(value);
         }
-    }
-
-    private void buildSummary() {
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(SettingActivity.ENABLE_FETCH_MSG, false)) {
-            String value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.FREQUENCY, "1");
-            frequency.setSummary(getActivity().getResources().getStringArray(R.array.frequency)[Integer.valueOf(value) - 1]);
-        } else {
-            frequency.setSummary(getString(R.string.stopped));
-
-        }
-    }
-
-
-    private void reload() {
-
-        Intent intent = getActivity().getIntent();
-        getActivity().overridePendingTransition(0, 0);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        getActivity().finish();
-
-        getActivity().overridePendingTransition(0, 0);
-        startActivity(intent);
-        getActivity().overridePendingTransition(R.anim.stay, R.anim.alphaout);
     }
 
 

@@ -115,6 +115,7 @@
         <!--preference activity -->
         <activity android:name=".ui.preference.SettingActivity"/>
         <activity android:name=".ui.preference.ControlActivity"/>
+        <activity android:name=".ui.preference.NotificationActivity"/>
         <activity android:name=".ui.preference.DraftActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.preference.FilterActivity"
