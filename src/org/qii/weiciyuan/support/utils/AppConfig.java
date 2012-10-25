@@ -15,5 +15,8 @@ public class AppConfig {
 
 
     //if download pic failed,retry
-    public static final int RETRY_TIMES=6;
+    public static final int RETRY_TIMES = 6;
+
+    //pic cache saved days
+    public static final int SAVED_DAYS = 5;
 }

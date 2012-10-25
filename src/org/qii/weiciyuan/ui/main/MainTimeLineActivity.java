@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
+import org.qii.weiciyuan.othercomponent.ClearCacheTask;
 import org.qii.weiciyuan.othercomponent.MentionsAndCommentsReceiver;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
@@ -75,10 +76,11 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         if (savedInstanceState != null) {
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
+            AppLogger.e("1");
         } else {
             Intent intent = getIntent();
             accountBean = (AccountBean) intent.getSerializableExtra("account");
-
+            AppLogger.e("2");
         }
 
         token = accountBean.getAccess_token();
@@ -94,6 +96,9 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         setContentView(R.layout.maintimelineactivity_viewpager_layout);
 
         buildPhoneInterface();
+
+
+        new Thread(new ClearCacheTask()).start();
 
     }
 
@@ -115,7 +120,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         AccountBean newAccountBean = (AccountBean) intent.getSerializableExtra("account");
-
+        AppLogger.e("0");
         if (newAccountBean == null) {
             return;
         }
@@ -125,7 +130,9 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             token = newAccountBean.getAccess_token();
             GlobalContext.getInstance().setSpecialToken(token);
             buildTabTitle(intent);
+            AppLogger.e("5");
         } else {
+            AppLogger.e("4");
             overridePendingTransition(0, 0);
             finish();
             overridePendingTransition(0, 0);

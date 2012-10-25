@@ -6,6 +6,8 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: qii
@@ -126,6 +128,21 @@ public class FileManager {
             return size.toString();
         }
         return "0MB";
+    }
+
+
+    public static List<String> getCachePath() {
+        List<String> path = new ArrayList<String>();
+        if (isExternalStorageMounted()) {
+            String thumbnailPath = getSdCardPath() + File.separator + PICTURE_THUMBNAIL;
+            String middlePath = getSdCardPath() + File.separator + PICTURE_BMIDDLE;
+            String oriPath = getSdCardPath() + File.separator + PICTURE_LARGE;
+
+            path.add(thumbnailPath);
+            path.add(middlePath);
+            path.add(oriPath);
+        }
+        return path;
     }
 
     public static String getPictureCacheSize() {
