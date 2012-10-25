@@ -132,6 +132,7 @@
                 <TableRow android:paddingLeft="20.0dip" android:paddingTop="5.0dip" android:paddingRight="20.0dip"
                           android:paddingBottom="5.0dip" android:layout_width="fill_parent"
                           android:layout_height="wrap_content"
+                          android:background="?android:selectableItemBackground"
                           android:id="@+id/following_layout">
                     <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"
                               android:text="@string/following_number" android:layout_weight="0.7"/>
@@ -143,6 +144,7 @@
                 <TableRow android:paddingLeft="20.0dip" android:paddingTop="5.0dip" android:paddingRight="20.0dip"
                           android:paddingBottom="5.0dip" android:layout_width="fill_parent"
                           android:layout_height="wrap_content"
+                          android:background="?android:selectableItemBackground"
                           android:id="@+id/fan_layout">
                     <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"
                               android:text="@string/fan_number" android:layout_weight="0.7"/>
