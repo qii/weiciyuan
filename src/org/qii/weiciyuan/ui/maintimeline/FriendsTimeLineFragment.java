@@ -179,6 +179,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     private class SimpleTask extends MyAsyncTask<Object, Object, Object> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pullToRefreshListView.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
         protected Object doInBackground(Object... params) {
             clearAndReplaceValue(DatabaseManager.getInstance().getHomeLineMsgList(accountBean.getUid()));
             clearAndReplaceValue("0", bean);
@@ -187,6 +193,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
         @Override
         protected void onPostExecute(Object o) {
+            pullToRefreshListView.setVisibility(View.VISIBLE);
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
             super.onPostExecute(o);
@@ -244,8 +251,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 break;
             case R.id.group_name:
 
-//                switchGroupListViewAndNormalListView();
-                if (canSwitchGroup()) {
+                 if (canSwitchGroup()) {
                     FriendsGroupDialog dialog = new FriendsGroupDialog(group, selectedId);
                     dialog.setTargetFragment(this, 1);
                     dialog.show(getFragmentManager(), "");

@@ -159,6 +159,11 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     private class SimpleTask extends MyAsyncTask<Object, Object, Object> {
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pullToRefreshListView.setVisibility(View.INVISIBLE);
+        }
 
         @Override
         protected Object doInBackground(Object... params) {
@@ -170,6 +175,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
         @Override
         protected void onPostExecute(Object o) {
+            pullToRefreshListView.setVisibility(View.VISIBLE);
             getAdapter().notifyDataSetChanged();
             refreshLayout(bean);
             super.onPostExecute(o);

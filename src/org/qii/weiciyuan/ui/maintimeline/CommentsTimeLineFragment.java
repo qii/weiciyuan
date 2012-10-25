@@ -232,6 +232,13 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     private class SimpleTask extends MyAsyncTask<Object, Object, Object> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pullToRefreshListView.setVisibility(View.INVISIBLE);
+        }
+
+
+        @Override
         protected Object doInBackground(Object... params) {
             CommentListBean value = DatabaseManager.getInstance().getCommentLineMsgList(accountBean.getUid());
             clearAndReplaceValue(value);
@@ -241,6 +248,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
         @Override
         protected void onPostExecute(Object o) {
+            pullToRefreshListView.setVisibility(View.VISIBLE);
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
             super.onPostExecute(o);
@@ -353,7 +361,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     @Override
     protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
-        if (selected == 0 ) {
+        if (selected == 0) {
             MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
             if (getList() != null && getList().getItemList().size() > 0) {
                 dao.setSince_id(getList().getItemList().get(0).getId());
@@ -396,7 +404,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     @Override
     protected CommentListBean getDoInBackgroundOldData() throws WeiboException {
-        if (selected == 0 ) {
+        if (selected == 0) {
             MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
             if (getList().getItemList().size() > 0) {
                 dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
@@ -429,7 +437,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     @Override
     protected CommentListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        if (selected == 0 ) {
+        if (selected == 0) {
             MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
             if (getList().getItemList().size() > 0) {
                 dao.setMax_id(beginId);
