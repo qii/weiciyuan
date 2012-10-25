@@ -123,12 +123,12 @@
                     android:clickable="true"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-
+                    android:background="?android:selectableItemBackground"
                     android:orientation="vertical"
 
                     >
                 <TextView
-
+                        android:background="?android:selectableItemBackground"
                         android:id="@+id/repost_content"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -147,10 +147,11 @@
                         >
                     <ImageView
                             android:id="@+id/repost_content_pic"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:visibility="gone"
                             android:clickable="true"
+                            android:background="?android:selectableItemBackground"
                             android:layout_gravity="center_horizontal"
 
                             />
