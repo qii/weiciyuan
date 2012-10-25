@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.SystemClock;
@@ -176,9 +177,16 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
 
                 case 1:
                     if (status) {
-                        getStatusFragment().getListView().setSelection(0);
-                        getStatusFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+                        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                            getStatusFragment().getListView().setSelection(0);
+                            getStatusFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
 
+                        } else {
+
+                            getStatusFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
+                            getStatusFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
+                            getStatusFragment().getListView().setSelection(0);
+                        }
                     }
                     break;
 

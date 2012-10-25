@@ -1,13 +1,14 @@
 package org.qii.weiciyuan.ui.main;
 
 import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.*;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -343,32 +344,61 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         public void onTabReselected(ActionBar.Tab tab,
                                     FragmentTransaction ft) {
+            //scroll to listview top and stop listview scroll status
             switch (tab.getPosition()) {
                 case 0:
                     if (home) {
+                        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                            getHomeFragment().getListView().setSelection(0);
+                            getHomeFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
 
-                        getHomeFragment().getListView().setSelection(0);
-                        getHomeFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+                        } else {
 
+                            getHomeFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
+                            getHomeFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
+                            getHomeFragment().getListView().setSelection(0);
 
+                        }
                     }
                     break;
                 case 1:
                     if (mentions) {
-                        getMentionFragment().getListView().setSelection(0);
-                        getMentionFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+                        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                            getMentionFragment().getListView().setSelection(0);
+                            getMentionFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+
+                        } else {
+                            getMentionFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
+                            getMentionFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
+                            getMentionFragment().getListView().setSelection(0);
+                        }
+
                     }
                     break;
                 case 2:
                     if (comments) {
-                        getCommentFragment().getListView().setSelection(0);
-                        getCommentFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+                        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                            getCommentFragment().getListView().setSelection(0);
+                            getCommentFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+
+                        } else {
+                            getCommentFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
+                            getCommentFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
+                            getCommentFragment().getListView().setSelection(0);
+                        }
                     }
                     break;
                 case 3:
                     if (my) {
-                        getMyFragment().getListView().setSelection(0);
-                        getMyFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+                        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                            getMyFragment().getListView().setSelection(0);
+                            getMyFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+
+                        } else {
+                            getMyFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
+                            getMyFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
+                            getMyFragment().getListView().setSelection(0);
+                        }
                     }
                     break;
             }
