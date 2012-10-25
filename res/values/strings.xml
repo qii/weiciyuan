@@ -251,7 +251,7 @@
     <string name="list_pic_mode">列表图片</string>
     <string name="list_avatar_mode">列表头像</string>
     <string name="current_mode">当前模式:</string>
-    <string name="font_size">字体大小</string>
+    <string name="font_size">列表字体大小</string>
     <string name="only_timeline_font">只影响列表字体大小</string>
     <string name="upload_pic_quality">上传图片质量</string>
     <string name="advanced">高级</string>

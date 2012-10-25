@@ -20,6 +20,7 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
     private Preference listAvatarMode = null;
     private Preference listPicMode = null;
     private Preference theme = null;
+    private Preference listFontSize = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
 
         listAvatarMode = findPreference(SettingActivity.LIST_AVATAR_MODE);
         listPicMode = findPreference(SettingActivity.LIST_PIC_MODE);
+        listFontSize = findPreference(SettingActivity.FONT_SIZE);
         theme = findPreference(SettingActivity.THEME);
 
         buildSummary();
@@ -56,6 +58,9 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
 
         value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.THEME, "3");
         theme.setSummary(getActivity().getResources().getStringArray(R.array.theme)[Integer.valueOf(value) - 1]);
+
+
+
     }
 
     @Override

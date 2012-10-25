@@ -31,7 +31,6 @@
         <ListPreference
                 android:key="font_size"
                 android:title="@string/font_size"
-                android:summary="@string/only_timeline_font"
                 android:dialogTitle="@string/font_size"
                 android:entries="@array/font"
                 android:entryValues="@array/font_value"
