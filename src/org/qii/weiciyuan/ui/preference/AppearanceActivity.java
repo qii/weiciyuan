@@ -51,7 +51,7 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
 
 
         if (key.equals(SettingActivity.THEME)) {
-            String value = sharedPreferences.getString(key, "3");
+            String value = sharedPreferences.getString(key, "2");
             if (value.equals("1"))
                 GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black);
             if (value.equals("2"))
