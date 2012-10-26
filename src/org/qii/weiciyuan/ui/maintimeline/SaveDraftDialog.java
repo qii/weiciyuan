@@ -6,7 +6,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 /**
  * User: qii
@@ -35,7 +34,7 @@ public class SaveDraftDialog extends DialogFragment {
                         ((IDraft) getActivity()).saveToDraft();
                     }
                 })
-                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.cancel_draft), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         getActivity().finish();

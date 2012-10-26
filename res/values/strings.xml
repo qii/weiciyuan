@@ -289,6 +289,7 @@
     <!-- menu-->
     <string name="askdelete">删除?</string>
     <string name="cancel">取消</string>
+    <string name="cancel_draft">不用</string>
     <string name="askdeletemessage">永久删除这条消息?</string>
 
 
