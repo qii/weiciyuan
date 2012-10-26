@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -24,6 +25,16 @@ import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
  * Date: 12-9-29
  */
 public class AboutFragment extends PreferenceFragment {
+
+    private MediaPlayer mp;
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mp != null)
+            mp.stop();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,24 +70,46 @@ public class AboutFragment extends PreferenceFragment {
         findPreference(SettingActivity.AUTHOR).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Toast.makeText(getActivity(), "你们啊,Too young too simple sometimes naive", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "《星之所在》", Toast.LENGTH_SHORT).show();
+                if (mp != null) {
+                    mp.stop();
+                }
+                mp = MediaPlayer.create(getActivity(), R.raw.star);
+                mp.start();
                 return true;
             }
-        });
+        }
+
+        );
 
         String version = "";
         PackageManager packageManager = getActivity().getPackageManager();
         PackageInfo packInfo = null;
-        try {
+        try
+
+        {
             packInfo = packageManager.getPackageInfo(getActivity().getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (
+                PackageManager.NameNotFoundException e
+                )
+
+        {
             AppLogger.e(e.getMessage());
         }
-        if (packInfo != null) {
+
+        if (packInfo != null)
+
+        {
             version = packInfo.versionName;
         }
+
         if (!TextUtils.isEmpty(version))
-            findPreference(SettingActivity.VERSION).setSummary(version);
+
+            findPreference(SettingActivity.VERSION)
+
+                    .
+
+                            setSummary(version);
 
     }
 
