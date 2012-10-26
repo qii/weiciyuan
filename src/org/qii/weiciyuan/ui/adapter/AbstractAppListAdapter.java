@@ -285,13 +285,6 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
         holder.repost_content.setText(repost_msg.getListViewSpannableString());
 
-
-        if (repost_msg.getUser() != null) {
-
-        } else {
-            holder.repost_flag.setVisibility(View.GONE);
-        }
-
         if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {
             buildPic(repost_msg, holder.repost_content_pic, position);
         }
