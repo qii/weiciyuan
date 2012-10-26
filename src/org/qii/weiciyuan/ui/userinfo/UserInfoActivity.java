@@ -24,6 +24,7 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.relationship.FanDao;
 import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
 import org.qii.weiciyuan.dao.user.RemarkDao;
+import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
@@ -244,6 +245,12 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
                 if (followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                     followOrUnfollowTask = new RemoveFanTask();
                     followOrUnfollowTask.execute();
+                }
+                break;
+            case R.id.menu_add_to_app_filter:
+                if (!TextUtils.isEmpty(bean.getScreen_name())) {
+                    DatabaseManager.getInstance().addFilterKeyword(bean.getScreen_name());
+                    Toast.makeText(this, getString(R.string.filter_successfully), Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

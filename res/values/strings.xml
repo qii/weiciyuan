@@ -220,6 +220,7 @@
     <string name="new_remark">新备注</string>
     <string name="modify">修改</string>
     <string name="add_to_app_filter">过滤掉 TA</string>
+    <string name="filter_successfully">你以后都不会再见到这家伙了</string>
 
     <!---Setting  -->
     <string name="setting">设置</string>
