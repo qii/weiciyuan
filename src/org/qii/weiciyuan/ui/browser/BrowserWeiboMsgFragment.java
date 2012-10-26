@@ -285,7 +285,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (recontent.getSelectionStart() == -1 && recontent.getSelectionEnd() == -1) {
+                if (recontent.getSelectionStart() == -1 && recontent.getSelectionEnd() == -1 && msg.getRetweeted_status().getUser() != null) {
                     //This condition will satisfy only when it is not an autolinked text
                     //onClick action
 
