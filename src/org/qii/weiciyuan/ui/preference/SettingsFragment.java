@@ -30,17 +30,17 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         clear_cache = findPreference(SettingActivity.CLEAR_CACHE);
-
-        clear_cache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-
-                RemoveCacheDialog dialog = new RemoveCacheDialog();
-                dialog.setTargetFragment(SettingsFragment.this, 0);
-                dialog.show(getFragmentManager(), "");
-                return true;
-            }
-        });
+//
+//        clear_cache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+//            @Override
+//            public boolean onPreferenceClick(Preference preference) {
+//
+//                RemoveCacheDialog dialog = new RemoveCacheDialog();
+//                dialog.setTargetFragment(SettingsFragment.this, 0);
+//                dialog.show(getFragmentManager(), "");
+//                return true;
+//            }
+//        });
 
         calcTask = new CalcCacheSize();
         calcTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);

@@ -64,14 +64,15 @@
     </PreferenceCategory>
     <PreferenceCategory
             android:title="@string/other">
-        <Preference
-                android:key="clear_cache"
-                android:title="@string/clear_sd_cache"
-                android:summary="@string/clear_avatar_and_pic"
-                />
+        <!--<Preference-->
+        <!--android:key="clear_cache"-->
+        <!--android:title="@string/clear_sd_cache"-->
+        <!--android:summary="@string/clear_avatar_and_pic"-->
+        <!--/>-->
 
         <Preference
                 android:title="@string/about"
+                android:key="clear_cache"
                 >
             <intent
                     android:targetPackage="org.qii.weiciyuan"

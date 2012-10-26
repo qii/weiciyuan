@@ -57,9 +57,9 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
             if (value.equals("2"))
                 GlobalContext.getInstance().setAppTheme(R.style.AppTheme_White);
             if (value.equals("3"))
-                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black_White);
-            if (value.equals("4"))
                 GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Pure_Black);
+            if (value.equals("4"))
+                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black_White);
 
             Intent intent = new Intent(this, AppearanceActivity.class);
             //        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
