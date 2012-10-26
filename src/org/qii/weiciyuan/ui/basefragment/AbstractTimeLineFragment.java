@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.basefragment;
 
 import android.app.Fragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.*;
@@ -339,9 +340,17 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         @Override
         protected void onPreExecute() {
             showListView();
+            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                getListView().setSelection(0);
+                getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
 
-            getListView().setSelection(0);
-            getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+            } else {
+
+                getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
+                getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
+                getListView().setSelection(0);
+
+            }
 
         }
 
