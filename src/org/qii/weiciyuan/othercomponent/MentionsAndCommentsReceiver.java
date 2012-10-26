@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.text.TextUtils;
 import org.qii.weiciyuan.R;
@@ -131,7 +132,10 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
                 .setContentText(content)
                 .setSmallIcon(R.drawable.notification)
                 .setAutoCancel(true)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setContentIntent(pendingIntent);
+
+
         if (sum > 1) {
             builder.setNumber(sum);
         }
@@ -145,6 +149,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
                 .setContentText(accountBean.getUsernick())
                 .setSmallIcon(R.drawable.notification)
                 .setAutoCancel(true)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setContentIntent(pendingIntent);
 
 
