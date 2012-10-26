@@ -346,7 +346,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 startActivity(intent);
                 break;
             case R.id.refresh:
-                pullToRefreshListView.startRefreshNow();
+                if (allowRefresh())
+                    pullToRefreshListView.startRefreshNow();
                 break;
             case R.id.group_name:
                 if (canSwitchGroup()) {

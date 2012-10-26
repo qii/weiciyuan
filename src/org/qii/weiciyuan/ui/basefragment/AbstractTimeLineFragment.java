@@ -290,8 +290,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     }
 
     public void refresh() {
-        if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-
+        if (allowRefresh()) {
 
             newTask = new TimeLineGetNewMsgListTask();
             newTask.execute();
@@ -312,6 +311,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             }
         }
 
+    }
+
+    protected boolean allowRefresh() {
+        return (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) && pullToRefreshListView.getVisibility() == View.VISIBLE;
     }
 
 
