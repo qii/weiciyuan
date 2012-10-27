@@ -96,7 +96,7 @@ public class SimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, Bitmap>
     protected void onCancelled(Bitmap bitmap) {
 
         if (pb != null)
-            pb.setVisibility(View.GONE);
+            pb.setVisibility(View.INVISIBLE);
 
         super.onCancelled(bitmap);
     }
@@ -104,7 +104,7 @@ public class SimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, Bitmap>
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         if (pb != null)
-            pb.setVisibility(View.GONE);
+            pb.setVisibility(View.INVISIBLE);
 
         if (bitmap != null) {
 
