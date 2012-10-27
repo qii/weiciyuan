@@ -9,12 +9,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
+import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IAccountInfo;
 import org.qii.weiciyuan.ui.Abstract.IToken;
@@ -38,6 +41,8 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
     private AccountBean account;
 
     private ViewPager mViewPager = null;
+
+    private GestureDetector gestureDetector;
 
 
     @Override
@@ -67,6 +72,13 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
         mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
+        gestureDetector = new GestureDetector(MyInfoActivity.this, new MyOnGestureListener());
+        mViewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
 
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -204,6 +216,19 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
         @Override
         public int getCount() {
             return list.size();
+        }
+    }
+
+    class MyOnGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+            if (velocityX > AppConfig.SWIPE_MIN_DISTANCE && mViewPager.getCurrentItem() == 0) {
+                finish();
+                return true;
+            }
+            return false;
         }
     }
 

@@ -14,15 +14,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
+import android.view.*;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.Abstract.IWeiboMsgInfo;
@@ -54,6 +53,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
 
     private ShareActionProvider mShareActionProvider;
 
+    private GestureDetector gestureDetector;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -85,7 +85,13 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
-
+        gestureDetector = new GestureDetector(BrowserWeiboMsgActivity.this, new MyOnGestureListener());
+        mViewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
     }
 
     private void buildActionBarAndViewPagerTitles() {
@@ -344,4 +350,16 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
     }
 
 
+    class MyOnGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+            if (velocityX > AppConfig.SWIPE_MIN_DISTANCE && mViewPager.getCurrentItem() == 0) {
+                finish();
+                return true;
+            }
+            return false;
+        }
+    }
 }

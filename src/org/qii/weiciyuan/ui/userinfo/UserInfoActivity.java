@@ -14,9 +14,7 @@ import android.os.Parcelable;
 import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
+import android.view.*;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -29,6 +27,7 @@ import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
@@ -54,6 +53,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
     private ViewPager mViewPager = null;
 
     private MyAsyncTask<Void, UserBean, UserBean> followOrUnfollowTask;
+
+    private GestureDetector gestureDetector;
 
 
     @Override
@@ -119,6 +120,13 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
+        gestureDetector = new GestureDetector(UserInfoActivity.this, new MyOnGestureListener());
+        mViewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
 
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -485,6 +493,19 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
         @Override
         public int getCount() {
             return list.size();
+        }
+    }
+
+    class MyOnGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+            if (velocityX > AppConfig.SWIPE_MIN_DISTANCE && mViewPager.getCurrentItem() == 0) {
+                finish();
+                return true;
+            }
+            return false;
         }
     }
 }
