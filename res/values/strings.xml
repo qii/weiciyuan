@@ -144,6 +144,7 @@
     <string name="ori_picture">原图</string>
     <string name="browser_picture">查看图片</string>
     <string name="save_system_album">保存到相册</string>
+    <string name="force_download">重新下载</string>
     <string name="already_saved">已经保存过了</string>
     <string name="cant_save_pic">发生错误，无法保存</string>
     <string name="save_to_album_successfully">保存成功</string>

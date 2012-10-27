@@ -121,6 +121,18 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
                 }
 
                 break;
+            case R.id.menu_download:
+                if (task != null) {
+                    task.cancel(true);
+                }
+
+                if (!TextUtils.isEmpty(path)) {
+                    new File(path).delete();
+                }
+                task = new PicSimpleBitmapWorkerTask();
+                task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -162,6 +174,8 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pb.setIndeterminate(true);
+            pb.setVisibility(View.VISIBLE);
+            webView.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -207,13 +221,14 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
             if (!TextUtils.isEmpty(bitmap)) {
                 path = bitmap;
 
-                pb.setVisibility(View.GONE);
+                pb.setVisibility(View.INVISIBLE);
 
                 File file = new File(bitmap);
 
                 AppLogger.e(file.getParent());
                 AppLogger.e(file.getName());
 
+                webView.setVisibility(View.VISIBLE);
 
                 webView.loadDataWithBaseURL("file://" + file.getParent() + "/", "<html style=\"BACKGROUND-COLOR: transparent\"><center><img src=\"" + file.getName() + "\"></BODY></html>", "text/html", "utf-8", "");
 
