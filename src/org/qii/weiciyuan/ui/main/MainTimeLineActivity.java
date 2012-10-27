@@ -83,6 +83,9 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             AppLogger.e("2");
         }
 
+        if (accountBean == null)
+            accountBean = GlobalContext.getInstance().getAccountBean();
+
         token = accountBean.getAccess_token();
 
         GlobalContext.getInstance().setSpecialToken(token);
