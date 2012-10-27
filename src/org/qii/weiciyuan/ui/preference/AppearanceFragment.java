@@ -57,8 +57,9 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
         listPicMode.setSummary(getActivity().getResources().getStringArray(R.array.list_pic_mode)[Integer.valueOf(value) - 1]);
 
         value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.THEME, "2");
+        if (value.equals("4"))
+            value = "3";
         theme.setSummary(getActivity().getResources().getStringArray(R.array.theme)[Integer.valueOf(value) - 1]);
-
 
 
     }

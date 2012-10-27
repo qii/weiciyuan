@@ -182,9 +182,9 @@ public final class GlobalContext extends Application {
                 GlobalContext.getInstance().setAppTheme(R.style.AppTheme_White);
 //            if (value.equals("3"))
 //                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black_White);
-//            if (value.equals("4"))
-//                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Pure_Black);
             if (value.equals("3"))
+                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Pure_Black);
+            if (value.equals("4"))
                 GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Pure_Black);
 
 
