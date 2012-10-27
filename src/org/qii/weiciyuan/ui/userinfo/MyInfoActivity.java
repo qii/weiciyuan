@@ -68,6 +68,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.my_info));
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
         mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(adapter);

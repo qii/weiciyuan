@@ -82,6 +82,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
     private void buildViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
+        mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);

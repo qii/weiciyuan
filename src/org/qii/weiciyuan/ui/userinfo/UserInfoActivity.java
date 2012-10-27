@@ -116,6 +116,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
         setContentView(R.layout.maintimelineactivity_viewpager_layout);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(adapter);
