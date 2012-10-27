@@ -238,7 +238,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
                 BitmapFactory.decodeFile(bitmap, options);
                 int width = options.outWidth;
                 int height = options.outHeight;
-                getActionBar().setTitle(getActionBar().getTitle() + "(" + String.valueOf(width) + "x" + String.valueOf(height) + ")");
+                getActionBar().setTitle(getString(R.string.browser_picture) + "(" + String.valueOf(width) + "x" + String.valueOf(height) + ")");
 
 
             } else {
