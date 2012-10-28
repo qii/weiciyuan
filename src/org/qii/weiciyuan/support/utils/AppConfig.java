@@ -18,5 +18,8 @@ public class AppConfig {
     public static final int RETRY_TIMES = 6;
 
     //pic cache saved days
-    public static final int SAVED_DAYS = 5;
+    public static final int SAVED_DAYS =5;
+
+    //swipe to close
+    public static final int SWIPE_MIN_DISTANCE = 20;
 }
