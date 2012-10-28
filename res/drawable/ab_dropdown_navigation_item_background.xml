@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@drawable/ab_dropdown_navigation_item_background_pressed" />
+    <item android:drawable="@drawable/spinner_default_holo_dark" />
+</selector>

@@ -34,7 +34,6 @@
         <item name="clickable_flag">@drawable/clickable_flag_dark</item>
 
 
-
         <item name="listview_item_background_selector">@drawable/listview_item_background_selector</item>
         <item name="listview_item_refresh_animation">@drawable/refresh_black</item>
         <item name="link_color">@color/dark_blue</item>
@@ -42,5 +41,40 @@
         <item name="listview_checked_color">@color/listview_checked_color_holo_light</item>
 
         <item name="backgroundSplit">@drawable/ab_bottom_solid_inverse_holo</item>
+
+
+        <item name="android:textColorPrimary">@color/primary_text_color</item>
+        <item name="android:textColorSecondary">@color/secondary_text_color</item>
+
+
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+        <item name="android:actionDropDownStyle">@style/ActionBarDropDownStyle</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabView</item>
+        <item name="android:actionBarWidgetTheme">@style/ActionBarTheme</item>
+        <item name="android:actionBarItemBackground">@drawable/action_bar_item_background</item>
+
     </style>
+
+    <style name="ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/ab_solid_custom_blue_inverse_holo</item>
+
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_inverse_holo</item>
+    </style>
+    <style name="ActionBarDropDownStyle" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:background">@drawable/ab_dropdown_navigation_item_background</item>
+    </style>
+    <style name="ActionBarTheme" parent="@android:style/Theme.Holo">
+        <item name="android:dropDownListViewStyle">@style/ListViewDropdownStyle</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColorHint">#ffcccccc</item>
+        <item name="android:popupMenuStyle">@android:style/Widget.Holo.Light.PopupMenu</item>
+    </style>
+    <style name="ActionBarTabView" parent="@android:style/Widget.Holo.ActionBar.TabView">
+        <item name="android:background">@drawable/action_bar_tab</item>
+    </style>
+    <style name="ListViewDropdownStyle" parent="@android:style/Widget.ListView.DropDown">
+        <item name="android:listSelector">?android:listChoiceBackgroundIndicator</item>
+    </style>
+
+
 </resources>

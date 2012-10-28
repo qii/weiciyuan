@@ -113,7 +113,7 @@ public class HttpUtility {
 
         CacheConfig cacheConfig = new CacheConfig();
         cacheConfig.setMaxCacheEntries(1000);
-        cacheConfig.setMaxObjectSizeBytes(8192);
+        cacheConfig.setMaxObjectSize(8192);
 
         httpClient = new CachingHttpClient(new DecompressingHttpClient(backend), cacheConfig);
 
