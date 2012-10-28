@@ -30,14 +30,20 @@
         <Button style="?android:actionButtonStyle" android:layout_width="wrap_content"
                 android:text="#"
                 android:id="@+id/menu_topic"
+                android:textColor="?android:actionMenuTextColor"
+                android:textAppearance="?android:attr/actionMenuTextAppearance"
                 android:layout_height="match_parent"/>
         <Button style="?android:actionButtonStyle" android:layout_width="wrap_content"
                 android:text="@string/only_at_char"
                 android:id="@+id/menu_at"
+                android:textColor="?android:actionMenuTextColor"
+                android:textAppearance="?android:attr/actionMenuTextAppearance"
                 android:layout_height="match_parent"/>
         <Button style="?android:actionButtonStyle" android:layout_width="wrap_content"
                 android:text=":-)"
                 android:id="@+id/menu_add_emotions"
+                android:textColor="?android:actionMenuTextColor"
+                android:textAppearance="?android:attr/actionMenuTextAppearance"
                 android:layout_height="match_parent"/>
 
         <Space android:layout_height="match_parent" android:layout_width="0dp" android:layout_weight="1"/>
