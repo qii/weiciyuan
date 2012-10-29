@@ -196,6 +196,7 @@
 
     <!-- account -->
     <string name="account">帐号</string>
+    <string name="return_to_account_list">返回帐号列表</string>
 
     <!-- mute -->
     <string name="mute">过滤</string>

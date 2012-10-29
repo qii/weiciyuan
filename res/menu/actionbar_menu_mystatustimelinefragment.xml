@@ -18,7 +18,7 @@
               android:showAsAction="never"/>
 
         <item android:id="@+id/menu_account"
-              android:title="@string/account"
+              android:title="@string/return_to_account_list"
               android:icon="?account_management"
               android:showAsAction="never"
                 />
