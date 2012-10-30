@@ -22,8 +22,8 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 import org.qii.weiciyuan.ui.Abstract.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.browser.BrowserBigPicActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
-import org.qii.weiciyuan.ui.widgets.PictureDialogFragment;
 
 import java.util.List;
 
@@ -271,9 +271,10 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PictureDialogFragment progressFragment = new PictureDialogFragment(msg.getBmiddle_pic(), msg.getOriginal_pic());
-                progressFragment.setTargetFragment(fragment, 1);
-                progressFragment.show(getActivity().getFragmentManager(), "");
+                Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
+                intent.putExtra("url", msg.getBmiddle_pic());
+                intent.putExtra("oriUrl", msg.getOriginal_pic());
+                getActivity().startActivity(intent);
             }
         });
     }

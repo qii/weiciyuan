@@ -148,6 +148,8 @@
     <string name="already_saved">已经保存过了</string>
     <string name="cant_save_pic">发生错误，无法保存</string>
     <string name="save_to_album_successfully">保存成功</string>
+    <string name="switch_to_middle_pic">中等图</string>
+    <string name="switch_to_ori_pic">原图</string>
 
     <!--friends-->
     <string name="bilateral">互相关注</string>

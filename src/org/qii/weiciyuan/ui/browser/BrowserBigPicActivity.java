@@ -15,10 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.FrameLayout;
-import android.widget.ProgressBar;
-import android.widget.ShareActionProvider;
-import android.widget.Toast;
+import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
@@ -38,9 +35,10 @@ import java.util.List;
 public class BrowserBigPicActivity extends AbstractAppActivity {
 
     private String url;
+    private String oriUrl;
+    private MenuItem oriMenu;
     private WebView webView;
     private ProgressBar pb;
-    private FrameLayout fl;
     private PicSimpleBitmapWorkerTask task;
     private PicSaveTask saveTask;
     private String path;
@@ -56,24 +54,25 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.browser_picture);
 
-
         pb = (ProgressBar) findViewById(R.id.pb);
-        fl = (FrameLayout) findViewById(R.id.fl);
 
         webView = (WebView) findViewById(R.id.iv);
-        webView.getSettings().setSupportZoom(true);
-        webView.getSettings().setBuiltInZoomControls(true);
-        webView.getSettings().setDisplayZoomControls(false);
-        webView.setBackgroundColor(getResources().getColor(R.color.transparent));
 
+        webView.setBackgroundColor(getResources().getColor(R.color.transparent));
+        webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setLoadWithOverviewMode(true);
-        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        webView.setScrollbarFadingEnabled(false);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
+
+        webView.setVerticalScrollBarEnabled(false);
+        webView.setHorizontalScrollBarEnabled(false);
+
 
         url = getIntent().getStringExtra("url");
+        oriUrl = getIntent().getStringExtra("oriUrl");
         if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
-            task = new PicSimpleBitmapWorkerTask();
+            task = new PicSimpleBitmapWorkerTask(url);
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -83,6 +82,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         getMenuInflater().inflate(R.menu.actionbar_menu_browserbigpicactivity, menu);
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+        oriMenu = menu.findItem(R.id.menu_switch);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -94,6 +94,16 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
+            case R.id.menu_switch:
+                if (task != null) {
+                    task.cancel(true);
+                }
+
+                task = new PicSimpleBitmapWorkerTask(oriUrl);
+                task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                oriMenu.setVisible(false);
+                getActionBar().setSubtitle(null);
+                break;
             case R.id.menu_save:
                 if (task != null && task.getStatus() == MyAsyncTask.Status.FINISHED) {
                     if (saveTask == null) {
@@ -129,7 +139,11 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
                 if (!TextUtils.isEmpty(path)) {
                     new File(path).delete();
                 }
-                task = new PicSimpleBitmapWorkerTask();
+                if (oriMenu.isVisible()) {
+                    task = new PicSimpleBitmapWorkerTask(url);
+                } else {
+                    task = new PicSimpleBitmapWorkerTask(oriUrl);
+                }
                 task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
                 break;
@@ -169,6 +183,11 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
 
     class PicSimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, String> {
 
+        String downloadUrl;
+
+        public PicSimpleBitmapWorkerTask(String downloadUrl) {
+            this.downloadUrl = downloadUrl;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -189,7 +208,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
             };
 
             if (!isCancelled()) {
-                return ImageTool.getLargePictureWithoutRoundedCorner(url, downloadListener);
+                return ImageTool.getLargePictureWithoutRoundedCorner(downloadUrl, downloadListener);
             }
 
             return null;
@@ -225,20 +244,18 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
 
                 File file = new File(bitmap);
 
-                AppLogger.e(file.getParent());
-                AppLogger.e(file.getName());
-
                 webView.setVisibility(View.VISIBLE);
 
-                webView.loadDataWithBaseURL("file://" + file.getParent() + "/", "<html style=\"BACKGROUND-COLOR: transparent\"><center><img src=\"" + file.getName() + "\"></BODY></html>", "text/html", "utf-8", "");
-
+                String str1 = "file://" + file.getAbsolutePath().replace("/mnt/sdcard/", "/sdcard/");
+                String str2 = "<html>\n<head>\n     <style>\n          html,body{background:transparent;margin:0;padding:0;}          *{-webkit-tap-highlight-color:rgba(0, 0, 0, 0);}\n     </style>\n     <script type=\"text/javascript\">\n     var imgUrl = \"" + str1 + "\";" + "     var objImage = new Image();\n" + "     var realWidth = 0;\n" + "     var realHeight = 0;\n" + "\n" + "     function onLoad() {\n" + "          objImage.onload = function() {\n" + "               realWidth = objImage.width;\n" + "               realHeight = objImage.height;\n" + "\n" + "               document.gagImg.src = imgUrl;\n" + "               onResize();\n" + "          }\n" + "          objImage.src = imgUrl;\n" + "     }\n" + "\n" + "     function onResize() {\n" + "          var scale = 1;\n" + "          var newWidth = document.gagImg.width;\n" + "          if (realWidth > newWidth) {\n" + "               scale = realWidth / newWidth;\n" + "          } else {\n" + "               scale = newWidth / realWidth;\n" + "          }\n" + "\n" + "          hiddenHeight = Math.ceil(30 * scale);\n" + "          document.getElementById('hiddenBar').style.height = hiddenHeight + \"px\";\n" + "          document.getElementById('hiddenBar').style.marginTop = -hiddenHeight + \"px\";\n" + "     }\n" + "     </script>\n" + "</head>\n" + "<body onload=\"onLoad()\" onresize=\"onResize()\" onclick=\"Android.toggleOverlayDisplay();\">\n" + "     <table style=\"width: 100%;height:100%;\">\n" + "          <tr style=\"width: 100%;\">\n" + "               <td valign=\"middle\" align=\"center\" style=\"width: 100%;\">\n" + "                    <div style=\"display:block\">\n" + "                         <img name=\"gagImg\" src=\"\" width=\"100%\" style=\"\" />\n" + "                    </div>\n" + "                    <div id=\"hiddenBar\" style=\"position:absolute; width: 100%; background: #000;\"></div>\n" + "               </td>\n" + "          </tr>\n" + "     </table>\n" + "</body>\n" + "</html>";
+                webView.loadDataWithBaseURL("file:///android_asset/", str2, "text/html", "utf-8", null);
 
                 final BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = true;
                 BitmapFactory.decodeFile(bitmap, options);
                 int width = options.outWidth;
                 int height = options.outHeight;
-                getActionBar().setTitle(getString(R.string.browser_picture) + "(" + String.valueOf(width) + "x" + String.valueOf(height) + ")");
+                getActionBar().setSubtitle(String.valueOf(width) + "x" + String.valueOf(height));
 
 
             } else {
