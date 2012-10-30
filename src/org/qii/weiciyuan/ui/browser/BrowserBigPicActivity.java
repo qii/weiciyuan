@@ -101,6 +101,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
 
                 task = new PicSimpleBitmapWorkerTask(oriUrl);
                 task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                path = "";
                 oriMenu.setVisible(false);
                 getActionBar().setSubtitle(null);
                 break;

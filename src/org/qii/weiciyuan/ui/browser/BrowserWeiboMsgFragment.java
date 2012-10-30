@@ -450,17 +450,21 @@ public class BrowserWeiboMsgFragment extends Fragment {
         @Override
         public void onClick(View v) {
             String url = "";
+            String oriUrl = "";
             switch (v.getId()) {
                 case R.id.content_pic:
-                    url = msg.getOriginal_pic();
+                    url = msg.getBmiddle_pic();
+                    oriUrl = msg.getOriginal_pic();
                     break;
                 case R.id.repost_content_pic:
-                    url = msg.getRetweeted_status().getOriginal_pic();
+                    url = msg.getRetweeted_status().getBmiddle_pic();
+                    oriUrl = msg.getRetweeted_status().getOriginal_pic();
                     break;
             }
-            if (!TextUtils.isEmpty(url)) {
+            if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(oriUrl)) {
                 Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
                 intent.putExtra("url", url);
+                intent.putExtra("oriUrl", oriUrl);
                 startActivity(intent);
             }
         }
