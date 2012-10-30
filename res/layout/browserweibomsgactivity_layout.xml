@@ -100,14 +100,7 @@
                     android:layout_height="wrap_content"
                     android:minHeight="140dp"
                     >
-                <ImageView
-                        android:id="@+id/content_pic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:clickable="true"
-                        android:layout_gravity="center_horizontal"
-                        />
+
                 <ProgressBar
                         android:visibility="gone"
                         android:gravity="center"
@@ -117,6 +110,14 @@
                         android:indeterminate="true"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:id="@+id/content_pic_pb"/>
+                <ImageView
+                        android:id="@+id/content_pic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:clickable="true"
+                        android:layout_gravity="center_horizontal"
+                        />
             </FrameLayout>
             <LinearLayout
                     android:id="@+id/repost_layout"
@@ -145,6 +146,15 @@
                         android:id="@+id/repost_pic_layout"
                         android:visibility="gone"
                         >
+
+                    <ProgressBar
+                            android:visibility="gone"
+                            android:layout_gravity="center"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:indeterminate="true"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:id="@+id/repost_content_pic_pb"/>
                     <ImageView
                             android:id="@+id/repost_content_pic"
                             android:layout_width="match_parent"
@@ -155,14 +165,6 @@
                             android:layout_gravity="center_horizontal"
 
                             />
-                    <ProgressBar
-                            android:visibility="gone"
-                            android:layout_gravity="center"
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"
-                            android:indeterminate="true"
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:id="@+id/repost_content_pic_pb"/>
                 </FrameLayout>
 
 
