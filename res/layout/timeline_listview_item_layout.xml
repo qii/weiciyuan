@@ -10,41 +10,42 @@
             android:id="@+id/avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
+
             android:padding="1px"
             android:background="@drawable/bg_border1"
             android:layout_gravity="left|center_vertical"
             android:layout_marginRight="8dp"
             android:clickable="true"/>
-    <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="12:00"
-
-            android:layout_alignParentRight="true"
-            android:layout_alignBottom="@id/username"
-            />
 
     <TextView
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="username"
-            android:layout_toLeftOf="@id/time"
+
             android:singleLine="true"
             android:ellipsize="end"
             android:layout_toRightOf="@id/avatar"
             android:textStyle="bold"/>
 
+    <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12:00"
+            android:layout_below="@id/username"
+            android:layout_toRightOf="@id/avatar"
+            />
+
 
     <TextView
+            android:layout_marginTop="3dp"
             android:id="@+id/content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="content"
             android:textSize="15sp"
-            android:layout_below="@id/username"
-            android:layout_toRightOf="@id/avatar"
+            android:layout_below="@id/avatar"
             android:layerType="software"
             />
 
@@ -53,7 +54,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/content"
-            android:layout_toRightOf="@id/avatar"
+
             android:id="@+id/repost_and_pic"
             >
         <LinearLayout android:layout_height="wrap_content"
@@ -65,20 +66,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="80dp"
                     android:visibility="gone"
-                    android:minWidth="70dp"
                     android:clickable="true"
-
                     />
         </LinearLayout>
         <LinearLayout
                 android:id="@+id/repost_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="3dp"
                 android:orientation="vertical"
-                >
 
+                >
             <TextView
                     android:includeFontPadding="false"
                     android:id="@+id/repost_content"
@@ -98,7 +97,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="80dp"
                         android:visibility="gone"
-                        android:minWidth="70dp"
                         android:clickable="true"
                         />
             </LinearLayout>
@@ -106,12 +104,13 @@
 
     </FrameLayout>
     <ImageView android:id="@+id/repost_flag"
-               android:layout_width="20dp"
-               android:layout_height="20dp"
-               android:layout_alignRight="@id/avatar"
+               android:layout_width="6dp"
+               android:layout_height="wrap_content"
+               android:layout_alignLeft="@id/avatar"
                android:layout_alignTop="@id/repost_and_pic"
+               android:layout_alignBottom="@id/repost_and_pic"
                android:layout_marginTop="3dp"
                android:layout_below="@id/avatar"
-               android:src="?timeline_repost_flag"
+               android:background="@color/lightgray"
             />
 </RelativeLayout>

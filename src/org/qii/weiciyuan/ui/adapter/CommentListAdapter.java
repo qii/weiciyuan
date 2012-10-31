@@ -78,15 +78,13 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             holder.repost_layout.setVisibility(View.VISIBLE);
             holder.repost_flag.setVisibility(View.VISIBLE);
             holder.repost_content.setVisibility(View.VISIBLE);
-            holder.repost_flag.setImageDrawable(replyPic);
-            holder.repost_content.setText(reply.getListViewReplySpannableString());
+             holder.repost_content.setText(reply.getListViewReplySpannableString());
         } else {
 
             MessageBean repost_msg = comment.getStatus();
 
             if (repost_msg != null && showOriStatus) {
-                holder.repost_flag.setImageDrawable(commentPic);
-                buildRepostContent(repost_msg, holder, position);
+                 buildRepostContent(repost_msg, holder, position);
             } else {
                 holder.repost_layout.setVisibility(View.GONE);
                 holder.repost_flag.setVisibility(View.GONE);
