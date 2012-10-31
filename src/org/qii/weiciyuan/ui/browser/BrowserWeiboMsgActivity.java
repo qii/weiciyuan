@@ -73,7 +73,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
             token = intent.getStringExtra("token");
             msg = (MessageBean) intent.getSerializableExtra("msg");
         }
-        setContentView(R.layout.maintimelineactivity_viewpager_layout);
+        setContentView(R.layout.viewpager_layout);
 
         buildViewPager();
         buildActionBarAndViewPagerTitles();

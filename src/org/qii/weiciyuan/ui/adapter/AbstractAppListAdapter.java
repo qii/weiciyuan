@@ -144,7 +144,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     private View initMiddleLayout(ViewGroup parent) {
         View convertView;
-        convertView = inflater.inflate(R.layout.fragment_listview_middle_layout, parent, false);
+        convertView = inflater.inflate(R.layout.timeline_listview_item_middle_layout, parent, false);
 
         return convertView;
     }

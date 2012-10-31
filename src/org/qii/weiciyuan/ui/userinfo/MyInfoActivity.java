@@ -64,7 +64,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
         bean = (UserBean) getIntent().getSerializableExtra("user");
         account = (AccountBean) getIntent().getSerializableExtra("account");
 
-        setContentView(R.layout.maintimelineactivity_viewpager_layout);
+        setContentView(R.layout.viewpager_layout);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.my_info));
         mViewPager = (ViewPager) findViewById(R.id.viewpager);

@@ -161,7 +161,7 @@ public class UserInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_info_layout, container, false);
+        View view = inflater.inflate(R.layout.userinfofragment_layout, container, false);
         avatar = (ImageView) view.findViewById(R.id.avatar);
 
         username = (TextView) view.findViewById(R.id.username);

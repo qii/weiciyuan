@@ -152,7 +152,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_repost_listview_layout, container, false);
+        View view = inflater.inflate(R.layout.repostsbyidtimelinefragment_layout, container, false);
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         quick_repost = (LinearLayout) view.findViewById(R.id.quick_repost);
@@ -175,7 +175,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
 
         getListView().setHeaderDividersEnabled(false);
 
-        footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
+        footerView = inflater.inflate(R.layout.listview_footer_layout, null);
         getListView().addFooterView(footerView);
         dismissFooterView();
 

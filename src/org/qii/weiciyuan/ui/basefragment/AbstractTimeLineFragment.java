@@ -113,7 +113,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_listview_layout, container, false);
+        View view = inflater.inflate(R.layout.listview_layout, container, false);
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
@@ -135,7 +135,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         });
 
         getListView().setHeaderDividersEnabled(false);
-        footerView = inflater.inflate(R.layout.fragment_listview_footer_layout, null);
+        footerView = inflater.inflate(R.layout.listview_footer_layout, null);
         getListView().addFooterView(footerView);
         dismissFooterView();
 

@@ -49,7 +49,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.fragment_listview_pic_big_layout);
+        setContentView(R.layout.browserbigpicactivity_layout);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.browser_picture);

@@ -72,7 +72,7 @@ public class UserListAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.fragment_listview_item_user_layout, parent, false);
+            convertView = inflater.inflate(R.layout.user_listview_item_layout, parent, false);
             holder.username = (TextView) convertView.findViewById(R.id.username);
             holder.content = (TextView) convertView.findViewById(R.id.content);
             holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);

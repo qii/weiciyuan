@@ -98,7 +98,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.repostnewactivity_layout);
+        setContentView(R.layout.abstractwriteactivity_layout);
 
         getActionBar().setDisplayShowCustomEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);

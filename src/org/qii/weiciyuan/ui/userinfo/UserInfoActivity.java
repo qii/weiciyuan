@@ -113,7 +113,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.personal_info));
-        setContentView(R.layout.maintimelineactivity_viewpager_layout);
+        setContentView(R.layout.viewpager_layout);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);

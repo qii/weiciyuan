@@ -96,7 +96,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         editor.putString("id", accountBean.getUid());
         editor.commit();
 
-        setContentView(R.layout.maintimelineactivity_viewpager_layout);
+        setContentView(R.layout.viewpager_layout);
 
         buildPhoneInterface();
 
