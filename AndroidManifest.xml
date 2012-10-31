@@ -62,7 +62,6 @@
         <activity android:name=".ui.browser.BrowserCommentActivity"
                   android:label="@string/comment_detail"/>
         <activity android:name=".ui.browser.BrowserBigPicActivity"/>
-        <activity android:name=".ui.browser.BrowserRepostAndCommentListActivity"/>
 
 
         <!--topic activity -->
