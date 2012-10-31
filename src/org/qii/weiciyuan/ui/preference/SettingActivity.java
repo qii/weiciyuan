@@ -26,7 +26,6 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String ENABLE_FETCH_MSG = "enable_fetch_msg";
     public static final String DISABLE_FETCH_AT_NIGHT = "disable_fetch_at_night";
 
-    public static final String CLEAR_CACHE = "clear_cache";
     public static final String FONT_SIZE = "font_size";
     public static final String OFFICIAL_WEIBO = "official_weibo";
 
@@ -38,7 +37,6 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String SUGGEST = "suggest";
 
     public static final String VERSION = "version";
-    public static final String AUTHOR = "author";
 
     public static final String UPLOAD_PIC_QUALITY = "upload_pic_quality";
 
