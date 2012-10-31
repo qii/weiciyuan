@@ -17,7 +17,7 @@ public class ControlFragment extends PreferenceFragment implements SharedPrefere
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addPreferencesFromResource(R.xml.control);
+        addPreferencesFromResource(R.xml.control_pref);
 
         PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
 
