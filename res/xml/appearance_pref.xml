@@ -11,7 +11,7 @@
                 android:dialogTitle="@string/theme"
                 android:entries="@array/theme"
                 android:entryValues="@array/theme_value"
-                android:defaultValue="2"/>
+                android:defaultValue="1"/>
 
 
         <ListPreference
