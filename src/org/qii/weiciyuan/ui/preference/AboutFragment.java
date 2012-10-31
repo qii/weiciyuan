@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -26,14 +24,6 @@ import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
  */
 public class AboutFragment extends PreferenceFragment {
 
-    private MediaPlayer mp;
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mp != null)
-            mp.stop();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +37,6 @@ public class AboutFragment extends PreferenceFragment {
                 intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
                 intent.putExtra("content", buildContent());
-
                 startActivity(intent);
                 return true;
             }
@@ -67,50 +56,28 @@ public class AboutFragment extends PreferenceFragment {
             }
         });
 
-        findPreference(SettingActivity.AUTHOR).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Toast.makeText(getActivity(), "《星之所在》", Toast.LENGTH_SHORT).show();
-                if (mp != null) {
-                    mp.stop();
-                }
-                mp = MediaPlayer.create(getActivity(), R.raw.star);
-                mp.start();
-                return true;
-            }
-        }
 
-        );
+        buildVersionInfo();
 
+    }
+
+    private void buildVersionInfo() {
         String version = "";
         PackageManager packageManager = getActivity().getPackageManager();
         PackageInfo packInfo = null;
-        try
-
-        {
+        try {
             packInfo = packageManager.getPackageInfo(getActivity().getPackageName(), 0);
-        } catch (
-                PackageManager.NameNotFoundException e
-                )
-
-        {
+        } catch (PackageManager.NameNotFoundException e) {
             AppLogger.e(e.getMessage());
         }
 
-        if (packInfo != null)
-
-        {
+        if (packInfo != null) {
             version = packInfo.versionName;
         }
 
-        if (!TextUtils.isEmpty(version))
-
-            findPreference(SettingActivity.VERSION)
-
-                    .
-
-                            setSummary(version);
-
+        if (!TextUtils.isEmpty(version)) {
+            findPreference(SettingActivity.VERSION).setSummary(version);
+        }
     }
 
     private String buildContent() {

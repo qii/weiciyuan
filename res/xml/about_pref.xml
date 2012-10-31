@@ -12,11 +12,7 @@
             android:key="version"
             android:summary="1.0 alpha"
             />
-    <Preference
-            android:title="@string/author"
-            android:key="author"
-            android:summary="@string/author_summary"
-            />
+
     <Preference
             android:title="@string/play_store_address"
             android:summary="@string/play_store_address_summary"
