@@ -12,14 +12,15 @@
     <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/imageView_avatar" android:layout_gravity="center"
+            android:id="@+id/imageView_avatar"
+            android:layout_gravity="center"
             android:background="@drawable/bg_border1"
             android:layout_marginRight="5dp"/>
     <TextView
             android:gravity="center_vertical"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:text="New Text"
-
-            android:id="@+id/account_name" android:layout_gravity="center" android:layout_weight="1"/>
+            android:id="@+id/account_name"
+            android:layout_gravity="center"
+            android:layout_weight="1"/>
 </LinearLayout>
