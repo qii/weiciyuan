@@ -30,6 +30,7 @@ public class AboutFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.about_pref);
+
         findPreference(SettingActivity.SUGGEST).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -56,12 +57,10 @@ public class AboutFragment extends PreferenceFragment {
             }
         });
 
-
-        buildVersionInfo();
-
+        findPreference(SettingActivity.VERSION).setSummary(buildVersionInfo());
     }
 
-    private void buildVersionInfo() {
+    private String buildVersionInfo() {
         String version = "";
         PackageManager packageManager = getActivity().getPackageManager();
         PackageInfo packInfo = null;
@@ -76,7 +75,9 @@ public class AboutFragment extends PreferenceFragment {
         }
 
         if (!TextUtils.isEmpty(version)) {
-            findPreference(SettingActivity.VERSION).setSummary(version);
+            return version;
+        } else {
+            return "";
         }
     }
 
@@ -100,20 +101,8 @@ public class AboutFragment extends PreferenceFragment {
             }
         }
 
-        String version = "";
-        PackageManager packageManager = getActivity().getPackageManager();
-        PackageInfo packInfo = null;
-        try {
-            packInfo = packageManager.getPackageInfo(getActivity().getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            AppLogger.e(e.getMessage());
-        }
-        if (packInfo != null) {
-            version = packInfo.versionName;
-        }
-
         return "@四次元App #四次元App反馈# " + android.os.Build.MANUFACTURER
                 + " " + android.os.Build.MODEL + ",Android "
-                + android.os.Build.VERSION.RELEASE + "," + network + " version:" + version;
+                + android.os.Build.VERSION.RELEASE + "," + network + " version:" + buildVersionInfo();
     }
 }
