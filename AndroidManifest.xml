@@ -89,8 +89,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.userinfo.MyInfoActivity"/>
-        <activity android:name=".ui.userinfo.UserInfoStatusesActivity"
-                  android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.userinfo.FriendListActivity"
                   android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.userinfo.FanListActivity"
