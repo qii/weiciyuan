@@ -152,9 +152,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private View initMylayout(ViewGroup parent) {
         View convertView;
         if (GlobalContext.getInstance().getEnableBigPic()) {
-            convertView = inflater.inflate(R.layout.fragment_listview_item_myself_big_pic_layout, parent, false);
+            convertView = inflater.inflate(R.layout.timeline_listview_item_myself_big_pic_layout, parent, false);
         } else {
-            convertView = inflater.inflate(R.layout.fragment_listview_item_myself_layout, parent, false);
+            convertView = inflater.inflate(R.layout.timeline_listview_item_myself_layout, parent, false);
         }
         return convertView;
     }
@@ -162,9 +162,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private View initNormallayout(ViewGroup parent) {
         View convertView;
         if (GlobalContext.getInstance().getEnableBigPic()) {
-            convertView = inflater.inflate(R.layout.fragment_listview_item_big_pic_layout, parent, false);
+            convertView = inflater.inflate(R.layout.timeline_listview_item_big_pic_layout, parent, false);
         } else {
-            convertView = inflater.inflate(R.layout.fragment_listview_item_layout, parent, false);
+            convertView = inflater.inflate(R.layout.timeline_listview_item_layout, parent, false);
         }
         return convertView;
     }
