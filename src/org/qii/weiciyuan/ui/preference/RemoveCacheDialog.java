@@ -29,7 +29,7 @@ public class RemoveCacheDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         SettingsFragment settingsFragment = (SettingsFragment) getTargetFragment();
-                        settingsFragment.removeCache();
+//                        settingsFragment.removeCache();
                     }
                 })
                 .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

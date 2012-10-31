@@ -2,17 +2,11 @@
 <PreferenceScreen
         xmlns:android="http://schemas.android.com/apk/res/android"
         >
-    <PreferenceCategory
-            android:title="@string/normal"
-            >
+    <PreferenceCategory android:title="@string/normal">
 
-        <Preference android:title="@string/appearance"
-
-                >
-            <intent
-                    android:targetPackage="org.qii.weiciyuan"
-                    android:targetClass="org.qii.weiciyuan.ui.preference.AppearanceActivity"
-                    />
+        <Preference android:title="@string/appearance">
+            <intent android:targetPackage="org.qii.weiciyuan"
+                    android:targetClass="org.qii.weiciyuan.ui.preference.AppearanceActivity"/>
         </Preference>
 
         <CheckBoxPreference
@@ -26,37 +20,27 @@
                 android:defaultValue="false"/>
     </PreferenceCategory>
 
-    <PreferenceCategory
-            android:title="@string/advanced">
+    <PreferenceCategory android:title="@string/advanced">
 
         <Preference android:title="@string/notification">
             <intent android:targetPackage="org.qii.weiciyuan"
-                    android:targetClass="org.qii.weiciyuan.ui.preference.NotificationActivity"
-                    />
+                    android:targetClass="org.qii.weiciyuan.ui.preference.NotificationActivity"/>
         </Preference>
         <Preference android:title="@string/draft"
-                    android:key="draft"
-                >
-            <intent
-                    android:targetPackage="org.qii.weiciyuan"
-                    android:targetClass="org.qii.weiciyuan.ui.preference.DraftActivity"
-                    />
+                    android:key="draft">
+            <intent android:targetPackage="org.qii.weiciyuan"
+                    android:targetClass="org.qii.weiciyuan.ui.preference.DraftActivity"/>
         </Preference>
         <Preference android:title="@string/data_control"
-                    android:key="data_control"
-                >
-            <intent
-                    android:targetPackage="org.qii.weiciyuan"
-                    android:targetClass="org.qii.weiciyuan.ui.preference.ControlActivity"
-                    />
+                    android:key="data_control">
+            <intent android:targetPackage="org.qii.weiciyuan"
+                    android:targetClass="org.qii.weiciyuan.ui.preference.ControlActivity"/>
         </Preference>
 
 
         <Preference android:title="@string/filter"
-                    android:key="filter"
-                >
-            <intent
-                    android:targetPackage="org.qii.weiciyuan"
+                    android:key="filter">
+            <intent android:targetPackage="org.qii.weiciyuan"
                     android:targetClass="org.qii.weiciyuan.ui.preference.FilterActivity"
                     />
         </Preference>
@@ -64,20 +48,9 @@
     </PreferenceCategory>
     <PreferenceCategory
             android:title="@string/other">
-        <!--<Preference-->
-        <!--android:key="clear_cache"-->
-        <!--android:title="@string/clear_sd_cache"-->
-        <!--android:summary="@string/clear_avatar_and_pic"-->
-        <!--/>-->
-
-        <Preference
-                android:title="@string/about"
-                android:key="clear_cache"
-                >
-            <intent
-                    android:targetPackage="org.qii.weiciyuan"
-                    android:targetClass="org.qii.weiciyuan.ui.preference.AboutActivity"
-                    />
+        <Preference android:title="@string/about">
+            <intent android:targetPackage="org.qii.weiciyuan"
+                    android:targetClass="org.qii.weiciyuan.ui.preference.AboutActivity"/>
         </Preference>
     </PreferenceCategory>
 

@@ -65,6 +65,12 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
+
+        if (key.equals(SettingActivity.FONT_SIZE)) {
+            String value = sharedPreferences.getString(key, "15");
+            GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
+        }
+
         if (key.equals(SettingActivity.LIST_AVATAR_MODE)) {
             String value = sharedPreferences.getString(key, "1");
             if (value.equals("1"))
