@@ -46,6 +46,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private final int TYPE_NORMAL_BIG_PIC = 2;
     private final int TYPE_MYSELF_BIG_PIC = 3;
     private final int TYPE_MIDDLE = 4;
+    private final int TYPE_SIMPLE = 5;
 
     public AbstractAppListAdapter(Fragment fragment, ICommander commander, List<T> bean, ListView listView, boolean showOriStatus) {
         this.bean = bean;
@@ -69,7 +70,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     @Override
     public int getViewTypeCount() {
-        return 5;
+        return 6;
     }
 
     @Override
@@ -86,7 +87,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
         boolean normalBigPic = normal && GlobalContext.getInstance().getEnableBigPic();
 
-
+        if (!showOriStatus)
+            return TYPE_SIMPLE;
         if (myselfBigPic)
             return TYPE_MYSELF_BIG_PIC;
         if (normalBigPic)
@@ -106,6 +108,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         if (convertView == null || convertView.getTag() == null) {
 
             switch (getItemViewType(position)) {
+                case TYPE_SIMPLE:
+                    convertView = initSimpleLayout(parent);
+                    break;
                 case TYPE_MIDDLE:
                     convertView = initMiddleLayout(parent);
                     break;
@@ -145,6 +150,13 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private View initMiddleLayout(ViewGroup parent) {
         View convertView;
         convertView = inflater.inflate(R.layout.timeline_listview_item_middle_layout, parent, false);
+
+        return convertView;
+    }
+
+    private View initSimpleLayout(ViewGroup parent) {
+        View convertView;
+        convertView = inflater.inflate(R.layout.timeline_listview_item_simple_layout, parent, false);
 
         return convertView;
     }
