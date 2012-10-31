@@ -19,11 +19,11 @@ public class AboutActivity extends AbstractAppActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.about));
 
-
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new AboutFragment())
-                .commit();
-
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new AboutFragment())
+                    .commit();
+        }
     }
 
 

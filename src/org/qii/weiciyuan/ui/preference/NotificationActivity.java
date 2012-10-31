@@ -18,11 +18,11 @@ public class NotificationActivity extends AbstractAppActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.notification));
 
-
+        if (savedInstanceState == null) {
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new NotificationFragment())
                 .commit();
-
+        }
     }
 
 

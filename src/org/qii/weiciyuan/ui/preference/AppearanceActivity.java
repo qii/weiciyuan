@@ -22,11 +22,12 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.appearance));
 
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new AppearanceFragment())
+                    .commit();
+        }
 
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new AppearanceFragment())
-                .commit();
-        getFragmentManager().executePendingTransactions();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
 
     }
@@ -47,7 +48,6 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
 
 
         if (key.equals(SettingActivity.THEME)) {

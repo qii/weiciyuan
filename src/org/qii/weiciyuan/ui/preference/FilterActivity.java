@@ -49,10 +49,11 @@ public class FilterActivity extends AbstractAppActivity {
             }
         });
 
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new FilterFragment())
-                .commit();
-
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new FilterFragment())
+                    .commit();
+        }
     }
 
 

@@ -18,11 +18,11 @@ public class DraftActivity extends AbstractAppActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.draft));
 
-
+        if (savedInstanceState == null) {
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new DraftFragment())
                 .commit();
-
+        }
     }
 
 

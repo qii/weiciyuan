@@ -18,11 +18,11 @@ public class ControlActivity extends AbstractAppActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.data_control));
 
-
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new ControlFragment())
-                .commit();
-
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new ControlFragment())
+                    .commit();
+        }
     }
 
 
