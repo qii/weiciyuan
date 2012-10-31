@@ -136,6 +136,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
 
         if (getItemViewType(position) != TYPE_MIDDLE) {
+            configViewFont(holder);
             bindViewData(holder, position);
         }
         return convertView;
@@ -184,6 +185,13 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.repost_layout = (LinearLayout) convertView.findViewById(R.id.repost_layout);
         holder.repost_flag = (ImageView) convertView.findViewById(R.id.repost_flag);
         return holder;
+    }
+
+    private void configViewFont(ViewHolder holder) {
+        holder.time.setTextSize(GlobalContext.getInstance().getFontSize() - 3);
+        holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
+        holder.username.setTextSize(GlobalContext.getInstance().getFontSize());
+        holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
     }
 
     protected abstract void bindViewData(ViewHolder holder, int position);
@@ -281,9 +289,6 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     protected void buildRepostContent(final MessageBean repost_msg, ViewHolder holder, int position) {
         holder.repost_content.setVisibility(View.VISIBLE);
-
-
-        holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
         holder.repost_content.setText(repost_msg.getListViewSpannableString());
 
         if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {

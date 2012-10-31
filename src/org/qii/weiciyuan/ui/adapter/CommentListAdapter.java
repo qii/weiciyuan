@@ -10,7 +10,6 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 
 import java.util.List;
@@ -55,18 +54,15 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             } else {
                 holder.username.setText(user.getScreen_name());
             }
-            holder.username.setTextSize(GlobalContext.getInstance().getFontSize());
             buildAvatar(holder.avatar, position, user);
         } else {
             holder.username.setVisibility(View.INVISIBLE);
             holder.avatar.setVisibility(View.INVISIBLE);
         }
 
-        holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
         holder.content.setText(comment.getListViewSpannableString());
 
         String time = comment.getListviewItemShowTime();
-        holder.time.setTextSize(GlobalContext.getInstance().getFontSize());
         if (!holder.time.getText().toString().equals(time)) {
             holder.time.setText(time);
         }
@@ -83,7 +79,6 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             holder.repost_flag.setVisibility(View.VISIBLE);
             holder.repost_content.setVisibility(View.VISIBLE);
             holder.repost_flag.setImageDrawable(replyPic);
-            holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
             holder.repost_content.setText(reply.getListViewReplySpannableString());
         } else {
 

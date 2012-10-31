@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.ListView;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 
@@ -42,12 +41,12 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
                 holder.username.setText(user.getScreen_name());
             }
             buildAvatar(holder.avatar, position, user);
-            holder.username.setTextSize(GlobalContext.getInstance().getFontSize());
+
         } else {
             holder.username.setVisibility(View.INVISIBLE);
             holder.avatar.setVisibility(View.INVISIBLE);
         }
-        holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
+
         if (!TextUtils.isEmpty(msg.getListViewSpannableString())) {
             holder.content.setText(msg.getListViewSpannableString());
         } else {
@@ -55,7 +54,7 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.content.setText(msg.getListViewSpannableString());
         }
         String time = msg.getListviewItemShowTime();
-        holder.time.setTextSize(GlobalContext.getInstance().getFontSize());
+
         if (!holder.time.getText().toString().equals(time)) {
             holder.time.setText(time);
         }
