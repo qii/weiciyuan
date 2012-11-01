@@ -58,7 +58,7 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
 
         value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.THEME, "2");
         int index = Integer.valueOf(value);
-        if (index > 2) {
+        if (index > 3) {
             index = 1;
         }
         theme.setSummary(getActivity().getResources().getStringArray(R.array.theme)[index - 1]);

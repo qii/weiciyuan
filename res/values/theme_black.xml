@@ -35,7 +35,7 @@
 
         <item name="listview_item_background_selector">@null</item>
         <item name="listview_item_refresh_animation">@drawable/refresh_light</item>
-        <item name="link_color">@color/mintcream</item>
+        <item name="link_color">@color/steelblue</item>
         <item name="line_drawable">@drawable/list_divider_holo_dark</item>
         <item name="listview_checked_color">@color/listview_checked_color_holo_dark</item>
 

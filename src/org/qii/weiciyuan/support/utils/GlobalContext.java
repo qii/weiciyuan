@@ -176,10 +176,19 @@ public final class GlobalContext extends Application {
             AppLogger.e("GlobalContext is empty by system");
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             String value = sharedPref.getString(SettingActivity.THEME, "1");
-            if (value.equals("2")) {
-                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Pure_Black);
-            } else {
-                GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black_White);
+            switch (Integer.valueOf(value)) {
+                case 1:
+                    GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Four);
+                    break;
+                case 2:
+                    GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black_White);
+                    break;
+                case 3:
+                    GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Pure_Black);
+                    break;
+                default:
+                    GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Four);
+                    break;
             }
 
             return theme;

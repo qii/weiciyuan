@@ -42,6 +42,10 @@
 
         <item name="backgroundSplit">@drawable/ab_bottom_solid_inverse_holo</item>
 
+    </style>
+
+    <style name="AppTheme_Four" parent="@style/AppTheme_Black_White">
+
 
         <!--<item name="android:textColorPrimary">@color/primary_text_color</item>-->
         <!--<item name="android:textColorSecondary">@color/secondary_text_color</item>-->
