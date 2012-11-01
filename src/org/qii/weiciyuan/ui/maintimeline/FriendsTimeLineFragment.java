@@ -292,7 +292,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         } else if (selectedId.equals("0")) {
             dao = new MainFriendsTimeLineDao(token);
         } else {
-            dao = new FriendGroupTimeLineDao("2.00vv3LGCpftsPE93a8e2f0e915h68D", selectedId);
+            dao = new FriendGroupTimeLineDao(token, selectedId);
         }
         if (getList().getItemList().size() > 0) {
             dao.setSince_id(getList().getItemList().get(0).getId());
@@ -312,7 +312,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         } else if (selectedId.equals("0")) {
             dao = new MainFriendsTimeLineDao(token);
         } else {
-            dao = new FriendGroupTimeLineDao("2.00vv3LGCpftsPE93a8e2f0e915h68D", selectedId);
+            dao = new FriendGroupTimeLineDao(token, selectedId);
         }
         if (getList().getItemList().size() > 0) {
             dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
@@ -487,7 +487,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         @Override
         protected GroupListBean doInBackground(Void... params) {
             try {
-                return new FriendGroupDao("2.00vv3LGCpftsPE93a8e2f0e915h68D").getGroup();
+                return new FriendGroupDao(token).getGroup();
             } catch (WeiboException e) {
                 this.e = e;
                 cancel(true);
