@@ -18,6 +18,7 @@ import android.webkit.WebView;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -209,7 +210,11 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
             };
 
             if (!isCancelled()) {
-                return ImageTool.getLargePictureWithoutRoundedCorner(downloadUrl, downloadListener);
+                if (downloadUrl.equals(url)) {
+                    return ImageTool.getLargePictureWithoutRoundedCorner(downloadUrl, downloadListener, FileLocationMethod.picture_bmiddle);
+                } else if (downloadUrl.equals(oriUrl)) {
+                    return ImageTool.getLargePictureWithoutRoundedCorner(downloadUrl, downloadListener, FileLocationMethod.picture_large);
+                }
             }
 
             return null;

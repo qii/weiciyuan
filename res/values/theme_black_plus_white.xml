@@ -43,8 +43,8 @@
         <item name="backgroundSplit">@drawable/ab_bottom_solid_inverse_holo</item>
 
 
-        <item name="android:textColorPrimary">@color/primary_text_color</item>
-        <item name="android:textColorSecondary">@color/secondary_text_color</item>
+        <!--<item name="android:textColorPrimary">@color/primary_text_color</item>-->
+        <!--<item name="android:textColorSecondary">@color/secondary_text_color</item>-->
 
 
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>

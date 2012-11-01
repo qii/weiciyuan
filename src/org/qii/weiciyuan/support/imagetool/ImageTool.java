@@ -431,10 +431,10 @@ public class ImageTool {
     }
 
 
-    public static String getLargePictureWithoutRoundedCorner(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    public static String getLargePictureWithoutRoundedCorner(String url, FileDownloaderHttpHelper.DownloadListener downloadListener,FileLocationMethod fileLocationMethod) {
 
 
-        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_large);
+        String absoluteFilePath = FileManager.getFilePathFromUrl(url, fileLocationMethod);
 
         File file = new File(absoluteFilePath);
 
