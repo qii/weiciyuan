@@ -144,6 +144,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
 
             hashMap.put("0", new MessageListBean());
+            hashMap.put("1", new MessageListBean());
 
         }
 
@@ -226,6 +227,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         name = menu.findItem(R.id.group_name);
         if (selectedId.equals("0")) {
             name.setTitle(userBean.getScreen_name());
+        }
+        if (selectedId.equals("1")) {
+            name.setTitle(getString(R.string.bilateral));
         } else {
             for (GroupBean b : group.getLists()) {
                 if (b.getIdstr().equals(selectedId)) {
@@ -287,7 +291,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
         MainFriendsTimeLineDao dao;
-        if (selectedId.equals("-1")) {
+        if (selectedId.equals("1")) {
             dao = new BilateralTimeLineDao(token);
         } else if (selectedId.equals("0")) {
             dao = new MainFriendsTimeLineDao(token);
@@ -307,7 +311,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
         MainFriendsTimeLineDao dao;
-        if (selectedId.equals("-1")) {
+        if (selectedId.equals("1")) {
             dao = new BilateralTimeLineDao(token);
         } else if (selectedId.equals("0")) {
             dao = new MainFriendsTimeLineDao(token);

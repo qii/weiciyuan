@@ -50,11 +50,12 @@ public class FriendsGroupDialog extends DialogFragment {
 
         List<String> name = new ArrayList<String>();
         name.add(getString(R.string.all_people));
+        name.add(getString(R.string.bilateral));
         int position = 0;
         for (GroupBean b : list) {
             name.add(b.getName());
             if (b.getIdstr().equals(selected)) {
-                position = list.indexOf(b)+1;
+                position = list.indexOf(b) + 1;
             }
         }
 
@@ -68,12 +69,14 @@ public class FriendsGroupDialog extends DialogFragment {
 
                 FriendsTimeLineFragment fragment = (FriendsTimeLineFragment) getTargetFragment();
 
-                String selectedItemId = "0";
+                String selectedItemId;
 
                 if (which == 0) {
-
+                    selectedItemId = "0";
+                } else if (which == 1) {
+                    selectedItemId = "1";
                 } else {
-                    selectedItemId = list.get(which - 1).getIdstr();
+                    selectedItemId = list.get(which - 2).getIdstr();
                 }
 
                 if (!selected.equals(selectedItemId)) {
