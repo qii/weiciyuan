@@ -40,5 +40,14 @@ public class ControlFragment extends PreferenceFragment implements SharedPrefere
                 GlobalContext.getInstance().setEnablePic(true);
             }
         }
+
+        if (key.equals(SettingActivity.CLOSE_COMMENT_AND_REPOST_AVATAR)) {
+            boolean value = sharedPreferences.getBoolean(key, false);
+            if (value) {
+                GlobalContext.getInstance().setEnableCommentRepostListAvatar(false);
+            } else {
+                GlobalContext.getInstance().setEnableCommentRepostListAvatar(true);
+            }
+        }
     }
 }

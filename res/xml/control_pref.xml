@@ -12,6 +12,11 @@
                 android:summary="@string/disable_download_pic_summary"
                 android:defaultValue="false"/>
 
+        <CheckBoxPreference
+                android:key="disable_comment_repost_list_avatar"
+                android:title="@string/close_comment_repost_list_avatar"
+                android:defaultValue="false"/>
+
         <ListPreference
                 android:key="upload_pic_quality"
                 android:title="@string/upload_pic_quality"

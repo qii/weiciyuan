@@ -38,6 +38,8 @@ public final class GlobalContext extends Application {
 
     private Boolean enablePic = null;
 
+    private Boolean enableCommentRepostListAvatar = null;
+
     private Boolean enableBigPic = null;
 
     private Boolean enableBigAvatar = null;
@@ -236,6 +238,19 @@ public final class GlobalContext extends Application {
         this.enableBigPic = enableBigPic;
     }
 
+    public Boolean getEnableCommentRepostListAvatar() {
+        if (enableCommentRepostListAvatar != null) {
+            return enableCommentRepostListAvatar;
+        } else {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            enableCommentRepostListAvatar = !sharedPref.getBoolean(SettingActivity.CLOSE_COMMENT_AND_REPOST_AVATAR, false);
+            return enableCommentRepostListAvatar;
+        }
+    }
+
+    public void setEnableCommentRepostListAvatar(Boolean enableCommentRepostListAvatar) {
+        this.enableCommentRepostListAvatar = enableCommentRepostListAvatar;
+    }
 
     public Boolean getEnableAutoRefresh() {
 

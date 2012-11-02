@@ -15,6 +15,7 @@ public class SettingActivity extends AbstractAppActivity {
 
 
     public static final String DISABLE_DOWNLOAD_AVATAR_PIC = "disable_download";
+    public static final String CLOSE_COMMENT_AND_REPOST_AVATAR = "disable_comment_repost_list_avatar";
     public static final String THEME = "theme";
     public static final String LIST_AVATAR_MODE = "list_avatar_mode";
     public static final String LIST_PIC_MODE = "list_pic_mode";

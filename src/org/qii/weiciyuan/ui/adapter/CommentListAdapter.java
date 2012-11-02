@@ -6,10 +6,12 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.Abstract.ICommander;
 
 import java.util.List;
@@ -54,7 +56,12 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             } else {
                 holder.username.setText(user.getScreen_name());
             }
-            buildAvatar(holder.avatar, position, user);
+            if (!showOriStatus && !GlobalContext.getInstance().getEnableCommentRepostListAvatar()) {
+                holder.avatar.setLayoutParams(new RelativeLayout.LayoutParams(0, 0));
+            } else {
+                buildAvatar(holder.avatar, position, user);
+            }
+
         } else {
             holder.username.setVisibility(View.INVISIBLE);
             holder.avatar.setVisibility(View.INVISIBLE);
@@ -78,13 +85,13 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             holder.repost_layout.setVisibility(View.VISIBLE);
             holder.repost_flag.setVisibility(View.VISIBLE);
             holder.repost_content.setVisibility(View.VISIBLE);
-             holder.repost_content.setText(reply.getListViewReplySpannableString());
+            holder.repost_content.setText(reply.getListViewReplySpannableString());
         } else {
 
             MessageBean repost_msg = comment.getStatus();
 
             if (repost_msg != null && showOriStatus) {
-                 buildRepostContent(repost_msg, holder, position);
+                buildRepostContent(repost_msg, holder, position);
             } else {
                 holder.repost_layout.setVisibility(View.GONE);
                 holder.repost_flag.setVisibility(View.GONE);
