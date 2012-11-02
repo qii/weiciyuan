@@ -49,7 +49,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     private String[] group = new String[3];
     private int selected = 0;
     private RemoveTask removeTask;
-    private SimpleTask dbTask;
+    private DBCacheTask dbTask;
 
     private Map<Integer, ListBean<CommentBean>> hashMap = new HashMap<Integer, ListBean<CommentBean>>();
 
@@ -133,7 +133,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             refreshLayout(bean);
         } else {
             if (dbTask == null || dbTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                dbTask = new SimpleTask();
+                dbTask = new DBCacheTask();
                 dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
 
@@ -229,7 +229,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         }
     }
 
-    private class SimpleTask extends MyAsyncTask<Object, Object, Object> {
+    private class DBCacheTask extends MyAsyncTask<Object, Object, Object> {
 
         @Override
         protected void onPreExecute() {
@@ -256,7 +256,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
              * when this account first open app,if he don't have any data in database,fetch data from server automally
              */
             if (bean.getSize() == 0) {
-                refresh();
+                pullToRefreshListView.startRefreshNow();
             }
 
             /**when one user open app from android notification center while this app is using another account,
@@ -264,7 +264,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
              * will fetch new message from server
              **/
             if (getActivity().getActionBar().getTabAt(2).getText().toString().contains(")")) {
-                refresh();
+                pullToRefreshListView.startRefreshNow();
             }
         }
     }

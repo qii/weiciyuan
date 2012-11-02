@@ -40,7 +40,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     private AccountBean accountBean;
     private UserBean userBean;
     private String token;
-    private SimpleTask dbTask;
+    private DBCacheTask dbTask;
 
     private AutoRefreshTask autoRefreshTask = null;
     private ScheduledExecutorService scheduledRefreshExecutorService = null;
@@ -138,7 +138,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             refreshLayout(bean);
         } else {
             if (dbTask == null || dbTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                dbTask = new SimpleTask();
+                dbTask = new DBCacheTask();
                 dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
 
@@ -177,7 +177,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         }
     }
 
-    private class SimpleTask extends MyAsyncTask<Object, Object, Object> {
+    private class DBCacheTask extends MyAsyncTask<Object, Object, Object> {
 
         @Override
         protected void onPreExecute() {
@@ -201,8 +201,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             /**
              * when this account first open app,if he don't have any data in database,fetch data from server automally
              */
-            if (bean.getSize() == 0)
-                refresh();
+            if (bean.getSize() == 0) {
+                pullToRefreshListView.startRefreshNow();
+            }
         }
     }
 

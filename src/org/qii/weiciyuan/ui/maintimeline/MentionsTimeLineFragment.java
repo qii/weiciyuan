@@ -34,7 +34,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     private UserBean userBean;
     private String token;
 
-    private SimpleTask dbTask;
+    private DBCacheTask dbTask;
 
 
     private String[] group = new String[3];
@@ -145,7 +145,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
         } else {
             if (dbTask == null || dbTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                dbTask = new SimpleTask();
+                dbTask = new DBCacheTask();
                 dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
 
@@ -157,7 +157,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     }
 
-    private class SimpleTask extends MyAsyncTask<Object, Object, Object> {
+    private class DBCacheTask extends MyAsyncTask<Object, Object, Object> {
 
         @Override
         protected void onPreExecute() {
@@ -185,7 +185,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
              */
 
             if (bean.getSize() == 0) {
-                refresh();
+                pullToRefreshListView.startRefreshNow();
             }
 
             /**when one user open app from android notification center while this app is using another account,
@@ -193,7 +193,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
              * will fetch new message from server
              **/
             if (getActivity().getActionBar().getTabAt(1).getText().toString().contains(")")) {
-                refresh();
+                pullToRefreshListView.startRefreshNow();
             }
         }
 
