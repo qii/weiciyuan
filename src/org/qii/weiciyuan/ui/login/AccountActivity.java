@@ -257,6 +257,9 @@ public class AccountActivity extends AbstractAppActivity {
         protected void onPostExecute(List<AccountBean> accounts) {
             accountList = accounts;
             listAdapter.notifyDataSetChanged();
+            if (accountList == null || accountList.size() == 0) {
+                addAccount();
+            }
         }
     }
 
