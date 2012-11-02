@@ -180,9 +180,12 @@ public class HttpUtility {
         HttpResponse response = getHttpResponse(httpPost, null);
 
         if (response != null) {
-
-            return handleResponse(response);
+            String result = handleResponse(response);
+            httpPost.releaseConnection();
+            return result;
         } else {
+            httpPost.abort();
+            httpPost.releaseConnection();
             return "";
         }
     }
@@ -213,6 +216,8 @@ public class HttpUtility {
             AppLogger.e(ignored.getMessage());
             httpGet.abort();
 
+        } finally {
+            httpGet.releaseConnection();
         }
 
         return false;
@@ -248,9 +253,12 @@ public class HttpUtility {
         HttpResponse response = getHttpResponse(httpGet, localContext);
 
         if (response != null) {
-            return handleResponse(response);
+            String result = handleResponse(response);
+            httpGet.releaseConnection();
+            return result;
         } else {
             httpGet.abort();
+            httpGet.releaseConnection();
             return "";
         }
 
