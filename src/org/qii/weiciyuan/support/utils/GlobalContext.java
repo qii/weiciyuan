@@ -183,9 +183,6 @@ public final class GlobalContext extends Application {
                     GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Four);
                     break;
                 case 2:
-                    GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Black_White);
-                    break;
-                case 3:
                     GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Pure_Black);
                     break;
                 default:
