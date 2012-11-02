@@ -23,7 +23,7 @@ public class MessageBean extends ItemBean {
 
     public String getTimeInFormat() {
         if (!TextUtils.isEmpty(created_at)) {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
             return format.format(new Date(created_at));
 
