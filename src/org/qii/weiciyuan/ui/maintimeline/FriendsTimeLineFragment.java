@@ -52,6 +52,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     private ListView groupListView;
     private ArrayAdapter<String> groupAdapter;
 
+    private GroupTask groupTask;
 
     public FriendsTimeLineFragment() {
 
@@ -111,6 +112,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
         if (dbTask != null)
             dbTask.cancel(true);
+
+        if (groupTask != null)
+            groupTask.cancel(true);
     }
 
     @Override
@@ -149,7 +153,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         }
 
         super.onActivityCreated(savedInstanceState);
-        new GroupTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+
+        groupTask = new GroupTask();
+        groupTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
         groupAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new ArrayList<String>());
         groupListView.setAdapter(groupAdapter);
