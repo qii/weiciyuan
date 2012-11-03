@@ -1,10 +1,15 @@
 package org.qii.weiciyuan.ui.preference;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.othercomponent.AppNewMsgAlarm;
 
@@ -15,7 +20,8 @@ import org.qii.weiciyuan.othercomponent.AppNewMsgAlarm;
 public class NotificationFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Preference frequency;
-
+    private Preference ringtone;
+    private Uri uri;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,8 +30,44 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         addPreferencesFromResource(R.xml.notification_pref);
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String path = sharedPref.getString(SettingActivity.ENABLE_RINGTONE, "");
+        if (!TextUtils.isEmpty(path)) {
+            uri = Uri.parse(path);
+        }
+
         frequency = findPreference(SettingActivity.FREQUENCY);
+        ringtone = findPreference(SettingActivity.ENABLE_RINGTONE);
+        ringtone.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.ringtone));
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, uri);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, uri);
+                startActivityForResult(intent, 1);
+                return true;
+            }
+        });
         buildSummary();
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            String ringTonePath = "";
+            uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            if (uri != null) {
+                ringTonePath = uri.toString();
+            }
+
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            sharedPref.edit().putString(SettingActivity.ENABLE_RINGTONE, ringTonePath).commit();
+        }
     }
 
     @Override

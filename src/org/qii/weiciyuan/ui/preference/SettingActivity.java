@@ -23,9 +23,14 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String SOUND = "sound";
     public static final String AUTO_REFRESH = "auto_refresh";
 
+    //notification
     public static final String FREQUENCY = "frequency";
     public static final String ENABLE_FETCH_MSG = "enable_fetch_msg";
     public static final String DISABLE_FETCH_AT_NIGHT = "disable_fetch_at_night";
+    public static final String ENABLE_VIBRATE = "vibrate";
+    public static final String ENABLE_LED = "led";
+    public static final String ENABLE_RINGTONE = "ringtone";
+
 
     public static final String FONT_SIZE = "font_size";
     public static final String OFFICIAL_WEIBO = "official_weibo";

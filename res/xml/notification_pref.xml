@@ -25,4 +25,23 @@
                 android:entryValues="@array/frequency_value"
                 android:defaultValue="1"/>
     </PreferenceCategory>
+    <PreferenceCategory
+            android:title="@string/notification_feedback"
+            >
+        <CheckBoxPreference
+                android:key="vibrate"
+                android:title="@string/vibrate"
+                android:defaultValue="false"/>
+
+        <CheckBoxPreference
+                android:key="led"
+                android:title="@string/led"
+                android:defaultValue="false"/>
+
+        <Preference android:title="@string/ringtone"
+                    android:key="ringtone">
+
+        </Preference>
+    </PreferenceCategory>
+
 </PreferenceScreen>

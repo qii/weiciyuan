@@ -6,11 +6,16 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -133,6 +138,16 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
+        if (allowVibrate()) {
+            long[] pattern = {0, 200, 500};
+            builder.setVibrate(pattern);
+        }
+
+        if (allowLed()) {
+            builder.setLights(Color.WHITE, 300, 1000);
+        }
+
+        configRingTone(builder);
 
         if (sum > 1) {
             builder.setNumber(sum);
@@ -149,6 +164,16 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
+        if (allowVibrate()) {
+            long[] pattern = {0, 200, 500};
+            builder.setVibrate(pattern);
+        }
+
+        if (allowLed()) {
+            builder.setLights(Color.WHITE, 300, 1000);
+        }
+
+        configRingTone(builder);
 
         int mentionCmt = unreadBean.getMention_cmt();
         int mentionStatus = unreadBean.getMention_status();
@@ -200,4 +225,27 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         return builder.build();
     }
 
+
+    private boolean allowVibrate() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getBoolean(SettingActivity.ENABLE_VIBRATE, false);
+    }
+
+    private boolean allowLed() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getBoolean(SettingActivity.ENABLE_LED, false);
+    }
+
+    private void configRingTone(Notification.Builder builder) {
+        Uri uri = null;
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        String path = sharedPref.getString(SettingActivity.ENABLE_RINGTONE, "");
+        if (!TextUtils.isEmpty(path)) {
+            uri = Uri.parse(path);
+        }
+
+        if (uri != null) {
+            builder.setSound(uri);
+        }
+    }
 }
