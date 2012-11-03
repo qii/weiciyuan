@@ -4,6 +4,10 @@ Sina Weibo Android Client, require Android 4.0.4+, ICS Holo Style
 
 Download https://play.google.com/store/apps/details?id=org.qii.weiciyuan
 
+新浪微博接入
+--------------
+OAuth2 授权，需要 APPKEY，org.qii.weiciyuan.ui.login.OAuthActivity.java 的 APP_KEY 变量
+
 黄粱一梦二十年
 
 依旧是不懂爱也不懂情
