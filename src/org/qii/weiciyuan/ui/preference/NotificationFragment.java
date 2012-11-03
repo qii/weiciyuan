@@ -112,6 +112,8 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         if (uri != null) {
             Ringtone r = RingtoneManager.getRingtone(getActivity(), uri);
             ringtone.setSummary(r.getTitle(getActivity()));
+        } else {
+            ringtone.setSummary(getString(R.string.silent));
         }
     }
 
