@@ -3,6 +3,7 @@ package org.qii.weiciyuan.ui.preference;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,12 +31,6 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         addPreferencesFromResource(R.xml.notification_pref);
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String path = sharedPref.getString(SettingActivity.ENABLE_RINGTONE, "");
-        if (!TextUtils.isEmpty(path)) {
-            uri = Uri.parse(path);
-        }
-
         frequency = findPreference(SettingActivity.FREQUENCY);
         ringtone = findPreference(SettingActivity.ENABLE_RINGTONE);
         ringtone.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -52,6 +47,12 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
                 return true;
             }
         });
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String path = sharedPref.getString(SettingActivity.ENABLE_RINGTONE, "");
+        if (!TextUtils.isEmpty(path)) {
+            uri = Uri.parse(path);
+        }
+
         buildSummary();
 
     }
@@ -67,6 +68,7 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             sharedPref.edit().putString(SettingActivity.ENABLE_RINGTONE, ringTonePath).commit();
+            buildSummary();
         }
     }
 
@@ -105,6 +107,11 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         } else {
             frequency.setSummary(getString(R.string.stopped));
 
+        }
+
+        if (uri != null) {
+            Ringtone r = RingtoneManager.getRingtone(getActivity(), uri);
+            ringtone.setSummary(r.getTitle(getActivity()));
         }
     }
 
