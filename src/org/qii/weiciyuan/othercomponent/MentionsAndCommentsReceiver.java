@@ -136,7 +136,8 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
                 .setContentText(content)
                 .setSmallIcon(R.drawable.notification)
                 .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true);
 
         configVibrateLedRingTone(builder);
 
@@ -153,8 +154,8 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
                 .setContentText(accountBean.getUsernick())
                 .setSmallIcon(R.drawable.notification)
                 .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
-
+                .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true);
 
         configVibrateLedRingTone(builder);
 
