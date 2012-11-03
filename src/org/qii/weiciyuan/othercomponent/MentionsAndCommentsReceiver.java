@@ -138,16 +138,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
-        if (allowVibrate()) {
-            long[] pattern = {0, 200, 500};
-            builder.setVibrate(pattern);
-        }
-
-        if (allowLed()) {
-            builder.setLights(Color.WHITE, 300, 1000);
-        }
-
-        configRingTone(builder);
+        configVibrateLedRingTone(builder);
 
         if (sum > 1) {
             builder.setNumber(sum);
@@ -164,16 +155,8 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
-        if (allowVibrate()) {
-            long[] pattern = {0, 200, 500};
-            builder.setVibrate(pattern);
-        }
 
-        if (allowLed()) {
-            builder.setLights(Color.WHITE, 300, 1000);
-        }
-
-        configRingTone(builder);
+        configVibrateLedRingTone(builder);
 
         int mentionCmt = unreadBean.getMention_cmt();
         int mentionStatus = unreadBean.getMention_status();
@@ -236,6 +219,19 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         return sharedPref.getBoolean(SettingActivity.ENABLE_LED, false);
     }
 
+    private void configVibrateLedRingTone(Notification.Builder builder) {
+        configRingTone(builder);
+        configLed(builder);
+        configVibrate(builder);
+    }
+
+    private void configVibrate(Notification.Builder builder) {
+        if (allowVibrate()) {
+            long[] pattern = {0, 200, 500};
+            builder.setVibrate(pattern);
+        }
+    }
+
     private void configRingTone(Notification.Builder builder) {
         Uri uri = null;
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -247,5 +243,12 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         if (uri != null) {
             builder.setSound(uri);
         }
+    }
+
+    private void configLed(Notification.Builder builder) {
+        if (allowLed()) {
+            builder.setLights(Color.WHITE, 300, 1000);
+        }
+
     }
 }
