@@ -21,5 +21,5 @@ public class AppConfig {
     public static final int SAVED_DAYS =5;
 
     //swipe to close
-    public static final int SWIPE_MIN_DISTANCE = 20;
+    public static final int SWIPE_MIN_DISTANCE = 30;
 }
