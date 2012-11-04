@@ -26,12 +26,6 @@
         <intent android:action="android.intent.action.VIEW"
                 android:data="https://github.com/qii/weiciyuan"/>
     </Preference>
-    <Preference
-            android:title="@string/opensource_licence"
-            android:summary="@string/opensource_licence_summary">
-        <intent android:action="android.intent.action.VIEW"
-                android:data="http://www.gnu.org/licenses/gpl-3.0.html"/>
-    </Preference>
 
     <Preference
             android:key="suggest"
