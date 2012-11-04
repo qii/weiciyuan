@@ -66,6 +66,28 @@ public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
         }
         holder.time.setTag(msg.getId());
 
+        if (showOriStatus) {
+            if (msg.getReposts_count() == 0 && msg.getComments_count() == 0) {
+                holder.count_layout.setVisibility(View.GONE);
+            } else {
+                holder.count_layout.setVisibility(View.VISIBLE);
+
+                if (msg.getReposts_count() > 0) {
+                    holder.repost_count.setText(String.valueOf(msg.getReposts_count()));
+                    holder.repost_count.setVisibility(View.VISIBLE);
+                } else {
+                    holder.repost_count.setVisibility(View.GONE);
+                }
+
+                if (msg.getComments_count() > 0) {
+                    holder.comment_count.setText(String.valueOf(msg.getComments_count()));
+                    holder.comment_count.setVisibility(View.VISIBLE);
+                } else {
+                    holder.comment_count.setVisibility(View.GONE);
+                }
+            }
+        }
+
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);
         holder.content_pic.setVisibility(View.GONE);

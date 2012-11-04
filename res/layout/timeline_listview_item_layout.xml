@@ -7,26 +7,50 @@
                 android:id="@+id/listview_root">
 
     <ImageView
-            android:id="@+id/avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+              android:id="@+id/avatar"
+              android:layout_width="40dp"
+              android:layout_height="40dp"
 
-            android:padding="1px"
-            android:background="@drawable/bg_border1"
-            android:layout_gravity="left|center_vertical"
-            android:layout_marginRight="8dp"
-            android:clickable="true"/>
+              android:padding="1px"
+              android:background="@drawable/bg_border1"
+              android:layout_gravity="left|center_vertical"
+              android:layout_marginRight="8dp"
+              android:clickable="true"/>
+      <LinearLayout android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
+                    android:id="@+id/count_layout">
 
-    <TextView
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="username"
+          <TextView
+                  android:id="@+id/repost_count"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="0"
+                  android:drawableLeft="?timeline_repost_flag"
+                  />
 
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:layout_toRightOf="@id/avatar"
-            android:textStyle="bold"/>
+          <TextView
+                  android:id="@+id/comment_count"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="0"
+                  android:layout_marginLeft="5dp"
+                  android:drawableLeft="?timeline_comment_flag"
+                  />
+
+      </LinearLayout>
+      <TextView
+              android:id="@+id/username"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="username"
+              android:singleLine="true"
+              android:ellipsize="end"
+              android:layout_toRightOf="@id/avatar"
+              android:layout_toLeftOf="@id/count_layout"
+              android:textStyle="bold"/>
+
 
     <TextView
             android:id="@+id/time"

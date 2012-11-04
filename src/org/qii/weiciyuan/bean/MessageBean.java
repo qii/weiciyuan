@@ -115,19 +115,19 @@ public class MessageBean extends ItemBean {
         this.mid = mid;
     }
 
-    public String getReposts_count() {
+    public int getReposts_count() {
         return reposts_count;
     }
 
-    public void setReposts_count(String reposts_count) {
+    public void setReposts_count(int reposts_count) {
         this.reposts_count = reposts_count;
     }
 
-    public String getComments_count() {
+    public int getComments_count() {
         return comments_count;
     }
 
-    public void setComments_count(String comments_count) {
+    public void setComments_count(int comments_count) {
         this.comments_count = comments_count;
     }
 
@@ -173,8 +173,8 @@ public class MessageBean extends ItemBean {
     private String in_reply_to_user_id;
     private String in_reply_to_screen_name;
     private String mid;
-    private String reposts_count = "0";
-    private String comments_count = "0";
+    private int reposts_count = 0;
+    private int comments_count =0;
     //    private Object annotations;
     private UserBean user;
     private MessageBean retweeted_status;

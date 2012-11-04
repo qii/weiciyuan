@@ -196,6 +196,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
         holder.repost_layout = (LinearLayout) convertView.findViewById(R.id.repost_layout);
         holder.repost_flag = (ImageView) convertView.findViewById(R.id.repost_flag);
+        holder.count_layout = (LinearLayout) convertView.findViewById(R.id.count_layout);
+        holder.repost_count = (TextView) convertView.findViewById(R.id.repost_count);
+        holder.comment_count = (TextView) convertView.findViewById(R.id.comment_count);
         return holder;
     }
 
@@ -204,6 +207,11 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
         holder.username.setTextSize(GlobalContext.getInstance().getFontSize());
         holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
+        if (holder.repost_count != null)
+            holder.repost_count.setTextSize(GlobalContext.getInstance().getFontSize() - 5);
+        if (holder.comment_count != null)
+            holder.comment_count.setTextSize(GlobalContext.getInstance().getFontSize() - 5);
+
     }
 
     protected abstract void bindViewData(ViewHolder holder, int position);
@@ -321,6 +329,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         RelativeLayout listview_root;
         LinearLayout repost_layout;
         ImageView repost_flag;
+        LinearLayout count_layout;
+        TextView repost_count;
+        TextView comment_count;
     }
 
     public void removeItem(final int postion) {

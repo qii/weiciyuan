@@ -28,8 +28,7 @@
         <item name="error">@drawable/error_black</item>
         <item name="location_map">@drawable/location_map_light</item>
         <item name="timeline_repost_flag">@drawable/timeline_repost_black</item>
-        <item name="timeline_comment_flag">@drawable/comment_black</item>
-        <item name="timeline_reply_flag">@drawable/timeline_reply_black</item>
+        <item name="timeline_comment_flag">@drawable/timeline_comment_black</item>
         <item name="save">@drawable/save_light</item>
         <item name="clickable_flag">@drawable/clickable_flag_dark</item>
 
