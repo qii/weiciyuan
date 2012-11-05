@@ -79,16 +79,10 @@ public final class GlobalContext extends Application {
 
 
     public GroupListBean getGroup() {
-        if (group != null) {
-            return group;
-        } else {
-            GroupListBean cache = GroupDBManager.getInstance().getGroupInfo(GlobalContext.getInstance().getCurrentAccountId());
-            if (cache != null) {
-                group = cache;
-                return group;
-            }
+        if (group == null) {
+            group = GroupDBManager.getInstance().getGroupInfo(GlobalContext.getInstance().getCurrentAccountId());
         }
-        return null;
+        return group;
     }
 
     public void setGroup(GroupListBean group) {
@@ -96,9 +90,7 @@ public final class GlobalContext extends Application {
     }
 
     public Map<String, String> getEmotions() {
-        if (emotions != null) {
-            return emotions;
-        } else {
+        if (emotions == null) {
             InputStream inputStream = getResources().openRawResource(R.raw.emotions);
             emotions = new Gson().fromJson(new InputStreamReader(inputStream), new TypeToken<Map<String, String>>() {
             }.getType());
@@ -110,10 +102,7 @@ public final class GlobalContext extends Application {
     public Boolean isEnableFilter() {
         if (enableFilter == null) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            boolean result = sharedPreferences.getBoolean(SettingActivity.FILTER, false);
-            this.enableFilter = result;
-            return result;
-
+            enableFilter = sharedPreferences.getBoolean(SettingActivity.FILTER, false);
         }
         return enableFilter;
     }
@@ -148,26 +137,20 @@ public final class GlobalContext extends Application {
     }
 
     public AccountBean getAccountBean() {
-        if (accountBean != null) {
-            return accountBean;
-        } else {
+        if (accountBean == null) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             String id = sharedPref.getString("id", "");
             if (!TextUtils.isEmpty(id)) {
                 accountBean = DatabaseManager.getInstance().getAccount(id);
-                if (accountBean != null) {
-                    return accountBean;
-                }
             } else {
                 List<AccountBean> accountList = DatabaseManager.getInstance().getAccountList();
                 if (accountList != null && accountList.size() > 0) {
                     accountBean = accountList.get(0);
-                    return accountBean;
                 }
             }
         }
 
-        return null;
+        return accountBean;
     }
 
     public String getCurrentAccountId() {
@@ -182,20 +165,17 @@ public final class GlobalContext extends Application {
 
 
     public int getFontSize() {
-        if (fontSize != 0) {
-            return fontSize;
-        } else {
+        if (fontSize == 0) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             String value = sharedPref.getString(SettingActivity.FONT_SIZE, "15");
             GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
             return fontSize;
         }
+        return fontSize;
     }
 
     public int getAppTheme() {
-        if (theme != 0) {
-            return theme;
-        } else {
+        if (theme == 0) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             String value = sharedPref.getString(SettingActivity.THEME, "1");
             switch (Integer.valueOf(value)) {
@@ -209,40 +189,31 @@ public final class GlobalContext extends Application {
                     GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Four);
                     break;
             }
-
-            return theme;
         }
+        return theme;
     }
 
     public synchronized LruCache<String, Bitmap> getAvatarCache() {
-        if (avatarCache != null) {
-            return avatarCache;
-        } else {
+        if (avatarCache == null) {
             buildCache();
-            return avatarCache;
         }
+        return avatarCache;
     }
 
     public boolean isEnablePic() {
-        if (enablePic != null) {
-            return enablePic;
-        } else {
+        if (enablePic == null) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enablePic = !sharedPref.getBoolean(SettingActivity.DISABLE_DOWNLOAD_AVATAR_PIC, false);
-            return enablePic;
         }
+        return enablePic;
     }
 
     public Boolean getEnableBigPic() {
-
-        if (enableBigPic != null) {
-            return enableBigPic;
-        } else {
+        if (enableBigPic == null) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enableBigPic = sharedPref.getBoolean(SettingActivity.SHOW_BIG_PIC, false);
-            return enableBigPic;
         }
-
+        return enableBigPic;
     }
 
     public void setEnableBigPic(Boolean enableBigPic) {
@@ -252,13 +223,11 @@ public final class GlobalContext extends Application {
     }
 
     public Boolean getEnableCommentRepostListAvatar() {
-        if (enableCommentRepostListAvatar != null) {
-            return enableCommentRepostListAvatar;
-        } else {
+        if (enableCommentRepostListAvatar == null) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enableCommentRepostListAvatar = !sharedPref.getBoolean(SettingActivity.CLOSE_COMMENT_AND_REPOST_AVATAR, false);
-            return enableCommentRepostListAvatar;
         }
+        return enableCommentRepostListAvatar;
     }
 
     public void setEnableCommentRepostListAvatar(Boolean enableCommentRepostListAvatar) {
@@ -267,31 +236,24 @@ public final class GlobalContext extends Application {
 
     public Boolean getEnableAutoRefresh() {
 
-        if (autoRefresh != null) {
-            return autoRefresh;
-        } else {
+        if (autoRefresh == null) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             autoRefresh = sharedPref.getBoolean(SettingActivity.AUTO_REFRESH, false);
-            return autoRefresh;
         }
-
+        return autoRefresh;
     }
 
     public void setEnableAutoRefresh(Boolean autoRefresh) {
         this.autoRefresh = autoRefresh;
     }
 
-
     public Boolean getEnableBigAvatar() {
 
-        if (enableBigAvatar != null) {
-            return enableBigAvatar;
-        } else {
+        if (enableBigAvatar == null) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enableBigAvatar = sharedPref.getBoolean(SettingActivity.SHOW_BIG_AVATAR, false);
-            return enableBigAvatar;
-
         }
+        return enableBigAvatar;
 
     }
 
@@ -304,14 +266,11 @@ public final class GlobalContext extends Application {
 
     public Boolean getEnableSound() {
 
-        if (enableSound != null) {
-            return enableSound;
-        } else {
+        if (enableSound == null) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enableSound = sharedPref.getBoolean(SettingActivity.SOUND, true);
-            return enableSound;
         }
-
+        return enableSound;
     }
 
     public void setEnableSound(Boolean enableSound) {
