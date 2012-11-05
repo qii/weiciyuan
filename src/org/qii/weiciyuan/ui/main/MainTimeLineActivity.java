@@ -88,7 +88,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         token = accountBean.getAccess_token();
 
-        GlobalContext.getInstance().setSpecialToken(token);
         GlobalContext.getInstance().setAccountBean(accountBean);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -131,7 +130,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         if (newAccountBean.getUid().equals(accountBean.getUid())) {
             accountBean = newAccountBean;
             token = newAccountBean.getAccess_token();
-            GlobalContext.getInstance().setSpecialToken(token);
+            GlobalContext.getInstance().setAccountBean(accountBean);
             buildTabTitle(intent);
             AppLogger.e("5");
         } else {
@@ -566,4 +565,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         if (unreadCommentsCount > 0)
             buildTabText(2, unreadCommentsCount);
     }
+
+
 }

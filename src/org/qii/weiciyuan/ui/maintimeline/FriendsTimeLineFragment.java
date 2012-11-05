@@ -7,7 +7,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
@@ -24,9 +23,7 @@ import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -46,10 +43,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     private ScheduledExecutorService scheduledRefreshExecutorService = null;
 
     private String selectedId = "0";
-    private GroupListBean group = new GroupListBean();
     private HashMap<String, ListBean<MessageBean>> hashMap = new HashMap<String, ListBean<MessageBean>>();
-
-    private ArrayAdapter<String> groupAdapter;
 
     private GroupTask groupTask;
 
@@ -71,7 +65,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
 
-        outState.putSerializable("group", group);
         outState.putSerializable("hashmap", hashMap);
         outState.putString("selectedId", selectedId);
     }
@@ -130,7 +123,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
             token = savedInstanceState.getString("token");
 
-            group = (GroupListBean) savedInstanceState.getSerializable("group");
             hashMap = (HashMap) savedInstanceState.getSerializable("hashmap");
             selectedId = savedInstanceState.getString("selectedId");
 
@@ -155,30 +147,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         groupTask = new GroupTask();
         groupTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
-        groupAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new ArrayList<String>());
-
-
     }
 
-    private class GroupListViewItemClickListener implements AdapterView.OnItemClickListener {
 
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String name = groupAdapter.getItem(position);
-            String selectedItemId = "0";
-
-            for (GroupBean b : group.getLists()) {
-                if (b.getName().equals(name)) {
-                    selectedItemId = b.getIdstr();
-                }
-            }
-            FriendsTimeLineFragment.this.name.setTitle(name);
-            setSelected(selectedItemId);
-            getActivity().invalidateOptionsMenu();
-            switchGroupListViewAndNormalListView();
-            switchGroup();
-        }
-    }
 
     private class DBCacheTask extends MyAsyncTask<Object, Object, Object> {
 
@@ -235,7 +206,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         if (selectedId.equals("1")) {
             name.setTitle(getString(R.string.bilateral));
         } else {
-            for (GroupBean b : group.getLists()) {
+            for (GroupBean b : GlobalContext.getInstance().getGroup().getLists()) {
                 if (b.getIdstr().equals(selectedId)) {
                     name.setTitle(b.getName());
                     return;
@@ -261,7 +232,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             case R.id.group_name:
 
                 if (canSwitchGroup()) {
-                    FriendsGroupDialog dialog = new FriendsGroupDialog(group, selectedId);
+                    FriendsGroupDialog dialog = new FriendsGroupDialog(GlobalContext.getInstance().getGroup(), selectedId);
                     dialog.setTargetFragment(this, 1);
                     dialog.show(getFragmentManager(), "");
                 }
@@ -501,36 +472,15 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             return null;
         }
 
-        @Override
-        protected void onCancelled(GroupListBean groupListBean) {
-            super.onCancelled(groupListBean);
-            GroupListBean cache = GroupDBManager.getInstance().getGroupInfo(GlobalContext.getInstance().getCurrentAccountId());
-            if (cache != null) {
-                buildGroupInfo(cache);
-            }
-        }
 
         @Override
         protected void onPostExecute(GroupListBean groupListBean) {
             GroupDBManager.getInstance().updateGroupInfo(groupListBean, GlobalContext.getInstance().getCurrentAccountId());
-
-            buildGroupInfo(groupListBean);
+            GlobalContext.getInstance().setGroup(groupListBean);
 
             super.onPostExecute(groupListBean);
         }
 
-        private void buildGroupInfo(GroupListBean groupListBean) {
-            group = groupListBean;
-            final List<GroupBean> list = group.getLists();
-            List<String> name = new ArrayList<String>();
-            name.add(getString(R.string.all_people));
-            for (GroupBean b : list) {
-                name.add(b.getName());
-
-            }
-            groupAdapter.addAll(name);
-        }
     }
-
 
 }

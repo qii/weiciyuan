@@ -15,7 +15,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.GroupDBManager;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 import java.io.InputStream;
@@ -29,41 +31,69 @@ import java.util.Map;
  */
 public final class GlobalContext extends Application {
 
+    //singleton
     private static GlobalContext globalContext = null;
 
-
+    //image size
     private Activity activity = null;
+    private DisplayMetrics displayMetrics = null;
 
+    //image memory cache
     private LruCache<String, Bitmap> avatarCache = null;
 
+    //current account info
+    private AccountBean accountBean = null;
+
+    //preference
     private Boolean enablePic = null;
-
     private Boolean enableCommentRepostListAvatar = null;
-
     private Boolean enableBigPic = null;
-
     private Boolean enableBigAvatar = null;
-
     private Boolean enableSound = null;
-
     private Boolean autoRefresh = null;
+    private Boolean enableFilter = null;
 
 
     private int theme = 0;
-
     private int fontSize = 0;
-
-    private AccountBean accountBean = null;
 
     public boolean startedApp = false;
 
-    private String specialToken = "";
-
-    private DisplayMetrics displayMetrics = null;
-
-    private Boolean enableFilter = null;
 
     private Map<String, String> emotions = null;
+
+    private GroupListBean group = null;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        globalContext = this;
+        buildCache();
+        getEmotions();
+
+    }
+
+    public static GlobalContext getInstance() {
+        return globalContext;
+    }
+
+
+    public GroupListBean getGroup() {
+        if (group != null) {
+            return group;
+        } else {
+            GroupListBean cache = GroupDBManager.getInstance().getGroupInfo(GlobalContext.getInstance().getCurrentAccountId());
+            if (cache != null) {
+                group = cache;
+                return group;
+            }
+        }
+        return null;
+    }
+
+    public void setGroup(GroupListBean group) {
+        this.group = group;
+    }
 
     public Map<String, String> getEmotions() {
         if (emotions != null) {
@@ -297,42 +327,16 @@ public final class GlobalContext extends Application {
         this.enablePic = enablePic;
     }
 
-    //for userinfo and topic
-
     public String getSpecialToken() {
-        if (!TextUtils.isEmpty(specialToken)) {
-            return specialToken;
-        } else {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            String token = sharedPref.getString("token", "");
-            this.specialToken = token;
-            return specialToken;
-        }
-    }
-
-    public void setSpecialToken(String specialToken) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPref.edit().putString("token", specialToken).commit();
-        this.specialToken = specialToken;
+        if (getAccountBean() != null)
+            return getAccountBean().getAccess_token();
+        else
+            return "";
     }
 
 
     public void setFontSize(int fontSize) {
         this.fontSize = fontSize;
-    }
-
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        globalContext = this;
-        buildCache();
-        getEmotions();
-
-    }
-
-    public static GlobalContext getInstance() {
-        return globalContext;
     }
 
 
@@ -350,12 +354,10 @@ public final class GlobalContext extends Application {
 
         final int cacheSize = 1024 * 1024 * memClass / 5;
 
-        AppLogger.e("lruCache size=" + memClass / 5 + "mb");
-
         avatarCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in bytes rather than number of items.
+
                 return bitmap.getByteCount();
             }
         };
