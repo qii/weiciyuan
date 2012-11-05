@@ -53,10 +53,6 @@ public final class GlobalContext extends Application {
 
     private int fontSize = 0;
 
-    private String currentAccountId = null;
-
-    private String currentAccountName = null;
-
     private AccountBean accountBean = null;
 
     public boolean startedApp = false;
@@ -80,10 +76,6 @@ public final class GlobalContext extends Application {
 
         return emotions;
     }
-
-//    public void setEmotions(Map<String, String> value) {
-//        this.emotions = value;
-//    }
 
     public Boolean isEnableFilter() {
         if (enableFilter == null) {
@@ -163,7 +155,6 @@ public final class GlobalContext extends Application {
         if (fontSize != 0) {
             return fontSize;
         } else {
-            AppLogger.e("GlobalContext is empty by system");
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             String value = sharedPref.getString(SettingActivity.FONT_SIZE, "15");
             GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
@@ -175,7 +166,6 @@ public final class GlobalContext extends Application {
         if (theme != 0) {
             return theme;
         } else {
-            AppLogger.e("GlobalContext is empty by system");
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             String value = sharedPref.getString(SettingActivity.THEME, "1");
             switch (Integer.valueOf(value)) {
@@ -198,7 +188,6 @@ public final class GlobalContext extends Application {
         if (avatarCache != null) {
             return avatarCache;
         } else {
-            AppLogger.e("GlobalContext is empty by system");
             buildCache();
             return avatarCache;
         }
@@ -208,7 +197,6 @@ public final class GlobalContext extends Application {
         if (enablePic != null) {
             return enablePic;
         } else {
-            AppLogger.e("GlobalContext is empty by system");
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enablePic = !sharedPref.getBoolean(SettingActivity.DISABLE_DOWNLOAD_AVATAR_PIC, false);
             return enablePic;
@@ -220,8 +208,6 @@ public final class GlobalContext extends Application {
         if (enableBigPic != null) {
             return enableBigPic;
         } else {
-            AppLogger.e("GlobalContext is empty by system");
-
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enableBigPic = sharedPref.getBoolean(SettingActivity.SHOW_BIG_PIC, false);
             return enableBigPic;
@@ -254,7 +240,6 @@ public final class GlobalContext extends Application {
         if (autoRefresh != null) {
             return autoRefresh;
         } else {
-            AppLogger.e("GlobalContext is empty by system");
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             autoRefresh = sharedPref.getBoolean(SettingActivity.AUTO_REFRESH, false);
             return autoRefresh;
@@ -272,7 +257,6 @@ public final class GlobalContext extends Application {
         if (enableBigAvatar != null) {
             return enableBigAvatar;
         } else {
-            AppLogger.e("GlobalContext is empty by system");
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enableBigAvatar = sharedPref.getBoolean(SettingActivity.SHOW_BIG_AVATAR, false);
             return enableBigAvatar;
@@ -293,7 +277,6 @@ public final class GlobalContext extends Application {
         if (enableSound != null) {
             return enableSound;
         } else {
-            AppLogger.e("GlobalContext is empty by system");
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enableSound = sharedPref.getBoolean(SettingActivity.SOUND, true);
             return enableSound;
@@ -320,7 +303,6 @@ public final class GlobalContext extends Application {
         if (!TextUtils.isEmpty(specialToken)) {
             return specialToken;
         } else {
-            AppLogger.e("GlobalContext is empty by system");
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             String token = sharedPref.getString("token", "");
             this.specialToken = token;
