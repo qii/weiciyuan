@@ -51,7 +51,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     private ViewPager mViewPager = null;
 
-    private String token = "";
     private AccountBean accountBean = null;
 
     private GetUnreadCountTask getUnreadCountTask = null;
@@ -61,7 +60,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     private ScheduledExecutorService newMsgScheduledExecutorService = null;
 
     public String getToken() {
-        return token;
+        return accountBean.getAccess_token();
     }
 
     @Override
@@ -73,20 +72,17 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.viewpager_layout);
 
         if (savedInstanceState != null) {
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
-            AppLogger.e("1");
         } else {
             Intent intent = getIntent();
             accountBean = (AccountBean) intent.getSerializableExtra("account");
-            AppLogger.e("2");
         }
 
         if (accountBean == null)
             accountBean = GlobalContext.getInstance().getAccountBean();
-
-        token = accountBean.getAccess_token();
 
         GlobalContext.getInstance().setAccountBean(accountBean);
 
@@ -95,7 +91,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         editor.putString("id", accountBean.getUid());
         editor.commit();
 
-        setContentView(R.layout.viewpager_layout);
 
         buildPhoneInterface();
 
@@ -122,19 +117,15 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         AccountBean newAccountBean = (AccountBean) intent.getSerializableExtra("account");
-        AppLogger.e("0");
         if (newAccountBean == null) {
             return;
         }
 
         if (newAccountBean.getUid().equals(accountBean.getUid())) {
             accountBean = newAccountBean;
-            token = newAccountBean.getAccess_token();
             GlobalContext.getInstance().setAccountBean(accountBean);
             buildTabTitle(intent);
-            AppLogger.e("5");
         } else {
-            AppLogger.e("4");
             overridePendingTransition(0, 0);
             finish();
             overridePendingTransition(0, 0);
@@ -519,7 +510,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         @Override
         protected UnreadBean doInBackground(Void... params) {
-            UnreadDao unreadDao = new UnreadDao(token, accountBean.getUid());
+            UnreadDao unreadDao = new UnreadDao(getToken(), accountBean.getUid());
             try {
                 return unreadDao.getCount();
             } catch (WeiboException e) {
