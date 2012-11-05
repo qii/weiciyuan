@@ -6,6 +6,10 @@
           android:title="@string/at"
           android:showAsAction="ifRoom|withText"
             />
+    <item android:id="@+id/menu_manage_group"
+          android:title="@string/manage_group"
+          android:visible="false"
+            />
     <item android:id="@+id/menu_follow"
           android:title="@string/follow_he"
           android:visible="false"

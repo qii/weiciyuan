@@ -218,6 +218,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
         return super.onCreateOptionsMenu(menu);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
@@ -262,6 +263,9 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
                     Toast.makeText(this, getString(R.string.filter_successfully), Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.menu_manage_group:
+                manageGroup();
+                break;
         }
         return false;
     }
@@ -280,6 +284,11 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
     private UserInfoFragment getInfoFragment() {
         return ((UserInfoFragment) getFragmentManager().findFragmentByTag(
                 UserInfoFragment.class.getName()));
+    }
+
+    private void manageGroup() {
+        ManageGroupDialog dialog = new ManageGroupDialog(GlobalContext.getInstance().getGroup(), null);
+        dialog.show(getFragmentManager(), "");
     }
 
     private class UnFollowTask extends MyAsyncTask<Void, UserBean, UserBean> {

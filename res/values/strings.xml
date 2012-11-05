@@ -69,6 +69,7 @@
     <string name="topic_number">话题数</string>
     <string name="topic_list">话题列表</string>
     <string name="follow_he">关注 TA</string>
+    <string name="manage_group">管理分组</string>
     <string name="unfollow_he">取消关注</string>
     <string name="follow_successfully">关注成功</string>
     <string name="unfollow_successfully">已经取消关注</string>
@@ -223,7 +224,7 @@
     <string name="remark">备注</string>
     <string name="new_remark">新备注</string>
     <string name="modify">修改</string>
-    <string name="add_to_app_filter">过滤掉 TA</string>
+    <string name="add_to_app_filter">过滤</string>
     <string name="filter_successfully">你以后都不会再见到这家伙了</string>
 
     <!---Setting  -->
@@ -300,6 +301,7 @@
     <!-- menu-->
     <string name="askdelete">删除?</string>
     <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
     <string name="cancel_draft">不用</string>
     <string name="askdeletemessage">永久删除这条消息?</string>
 
