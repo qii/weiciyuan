@@ -130,7 +130,8 @@ public class OAuthActivity extends AbstractAppActivity {
         parameters.put("response_type", "token");
         parameters.put("redirect_uri", DIRECT_URL);
         parameters.put("display", "mobile");
-        return URL_OAUTH2_ACCESS_AUTHORIZE + "?" + Utility.encodeUrl(parameters);
+        return URL_OAUTH2_ACCESS_AUTHORIZE + "?" + Utility.encodeUrl(parameters)
+                + "&scope=friendships_groups_read,friendships_groups_write";
     }
 
     private class WeiboWebViewClient extends WebViewClient {
