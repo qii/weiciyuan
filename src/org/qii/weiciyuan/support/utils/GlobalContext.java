@@ -51,7 +51,7 @@ public final class GlobalContext extends Application {
     private Boolean enableBigPic = null;
     private Boolean enableBigAvatar = null;
     private Boolean enableSound = null;
-    private Boolean autoRefresh = null;
+    private Boolean enableAutoRefresh = null;
     private Boolean enableFilter = null;
 
 
@@ -230,14 +230,14 @@ public final class GlobalContext extends Application {
 
     public Boolean getEnableAutoRefresh() {
 
-        if (autoRefresh == null) {
-            autoRefresh = sharedPref.getBoolean(SettingActivity.AUTO_REFRESH, false);
+        if (enableAutoRefresh == null) {
+            enableAutoRefresh = sharedPref.getBoolean(SettingActivity.AUTO_REFRESH, false);
         }
-        return autoRefresh;
+        return enableAutoRefresh;
     }
 
     public void setEnableAutoRefresh(Boolean autoRefresh) {
-        this.autoRefresh = autoRefresh;
+        this.enableAutoRefresh = autoRefresh;
     }
 
     public Boolean getEnableBigAvatar() {
