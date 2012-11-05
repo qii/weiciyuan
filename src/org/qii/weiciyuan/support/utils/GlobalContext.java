@@ -298,10 +298,10 @@ public final class GlobalContext extends Application {
     }
 
     private void buildCache() {
-        final int memClass = ((ActivityManager) getSystemService(
+        int memClass = ((ActivityManager) getSystemService(
                 Context.ACTIVITY_SERVICE)).getMemoryClass();
 
-        final int cacheSize = 1024 * 1024 * memClass / 5;
+        int cacheSize = 1024 * 1024 * memClass / 5;
 
         avatarCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
