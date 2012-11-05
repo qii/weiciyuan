@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
@@ -49,7 +48,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     private GroupListBean group = new GroupListBean();
     private HashMap<String, ListBean<MessageBean>> hashMap = new HashMap<String, ListBean<MessageBean>>();
 
-    private ListView groupListView;
     private ArrayAdapter<String> groupAdapter;
 
     private GroupTask groupTask;
@@ -120,7 +118,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        groupListView = (ListView) view.findViewById(R.id.group_listView);
         return view;
     }
 
@@ -158,8 +155,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         groupTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
         groupAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new ArrayList<String>());
-        groupListView.setAdapter(groupAdapter);
-        groupListView.setOnItemClickListener(new GroupListViewItemClickListener());
+
 
     }
 
@@ -275,10 +271,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     private void switchGroupListViewAndNormalListView() {
         if (pullToRefreshListView.getVisibility() == View.VISIBLE) {
-            groupListView.setVisibility(View.VISIBLE);
             pullToRefreshListView.setVisibility(View.GONE);
         } else {
-            groupListView.setVisibility(View.GONE);
             pullToRefreshListView.setVisibility(View.VISIBLE);
         }
     }
