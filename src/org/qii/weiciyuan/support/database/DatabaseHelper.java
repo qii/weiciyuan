@@ -16,7 +16,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -32,10 +32,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     static final String CREATE_GROUP_TABLE_SQL = "create table " + GroupTable.TABLE_NAME
             + "("
-            + GroupTable.COUNT + " text,"
-            + GroupTable.GID + " text,"
-            + GroupTable.TITLE + " text,"
-            + GroupTable.USER_ID + " text"
+            + GroupTable.ID + " integer primary key autoincrement,"
+            + GroupTable.ACCOUNTID + " text,"
+            + GroupTable.JSONDATA + " text"
             + ");";
 
     static final String CREATE_HOME_TABLE_SQL = "create table " + HomeTable.TABLE_NAME
@@ -113,16 +112,21 @@ class DatabaseHelper extends SQLiteOpenHelper {
         AppLogger.d("Upgrading database from version "
                 + oldVersion + " to " + newVersion + ",which will destroy all old data");
 
-        db.execSQL("DROP TABLE IF EXISTS " + AccountTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + EmotionsTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DraftTable.TABLE_NAME);
+        if (oldVersion < 14) {
+            db.execSQL("DROP TABLE IF EXISTS " + AccountTable.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + EmotionsTable.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + DraftTable.TABLE_NAME);
+            onCreate(db);
+        } else if (oldVersion == 14) {
+            db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
+            db.execSQL(CREATE_GROUP_TABLE_SQL);
+        }
 
-        onCreate(db);
     }
 
     public synchronized static DatabaseHelper getInstance() {

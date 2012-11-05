@@ -15,6 +15,7 @@ import org.qii.weiciyuan.dao.maintimeline.FriendGroupDao;
 import org.qii.weiciyuan.dao.maintimeline.FriendGroupTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.GroupDBManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
@@ -501,10 +502,26 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         }
 
         @Override
+        protected void onCancelled(GroupListBean groupListBean) {
+            super.onCancelled(groupListBean);
+            GroupListBean cache = GroupDBManager.getInstance().getGroupInfo(GlobalContext.getInstance().getCurrentAccountId());
+            if (cache != null) {
+                buildGroupInfo(cache);
+            }
+        }
+
+        @Override
         protected void onPostExecute(GroupListBean groupListBean) {
+            GroupDBManager.getInstance().updateGroupInfo(groupListBean, GlobalContext.getInstance().getCurrentAccountId());
+
+            buildGroupInfo(groupListBean);
+
+            super.onPostExecute(groupListBean);
+        }
+
+        private void buildGroupInfo(GroupListBean groupListBean) {
             group = groupListBean;
             final List<GroupBean> list = group.getLists();
-
             List<String> name = new ArrayList<String>();
             name.add(getString(R.string.all_people));
             for (GroupBean b : list) {
@@ -512,7 +529,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
             }
             groupAdapter.addAll(name);
-            super.onPostExecute(groupListBean);
         }
     }
 

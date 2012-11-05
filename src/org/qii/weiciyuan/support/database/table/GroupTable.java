@@ -7,15 +7,12 @@ package org.qii.weiciyuan.support.database.table;
 public class GroupTable {
     
     public static final String TABLE_NAME="group_table";
-    
-    public static final String USER_ID="user_id";
-    
-    public static final String GID="gid";
-    
-    public static final String TITLE="title";
-    
-    public static final String COUNT="count";
+
+    public static final String ID = "_id";
+
+    public static final String ACCOUNTID="accountid";
+
+    public static final String JSONDATA="json";
 
 
-    
 }
