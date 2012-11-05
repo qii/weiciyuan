@@ -33,6 +33,7 @@ public final class GlobalContext extends Application {
 
     //singleton
     private static GlobalContext globalContext = null;
+    private SharedPreferences sharedPref = null;
 
     //image size
     private Activity activity = null;
@@ -68,6 +69,7 @@ public final class GlobalContext extends Application {
     public void onCreate() {
         super.onCreate();
         globalContext = this;
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         buildCache();
         getEmotions();
 
@@ -101,8 +103,7 @@ public final class GlobalContext extends Application {
 
     public Boolean isEnableFilter() {
         if (enableFilter == null) {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            enableFilter = sharedPreferences.getBoolean(SettingActivity.FILTER, false);
+            enableFilter = sharedPref.getBoolean(SettingActivity.FILTER, false);
         }
         return enableFilter;
     }
@@ -138,7 +139,6 @@ public final class GlobalContext extends Application {
 
     public AccountBean getAccountBean() {
         if (accountBean == null) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             String id = sharedPref.getString("id", "");
             if (!TextUtils.isEmpty(id)) {
                 accountBean = DatabaseManager.getInstance().getAccount(id);
@@ -166,7 +166,6 @@ public final class GlobalContext extends Application {
 
     public int getFontSize() {
         if (fontSize == 0) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             String value = sharedPref.getString(SettingActivity.FONT_SIZE, "15");
             GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
             return fontSize;
@@ -176,7 +175,6 @@ public final class GlobalContext extends Application {
 
     public int getAppTheme() {
         if (theme == 0) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             String value = sharedPref.getString(SettingActivity.THEME, "1");
             switch (Integer.valueOf(value)) {
                 case 1:
@@ -202,7 +200,6 @@ public final class GlobalContext extends Application {
 
     public boolean isEnablePic() {
         if (enablePic == null) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enablePic = !sharedPref.getBoolean(SettingActivity.DISABLE_DOWNLOAD_AVATAR_PIC, false);
         }
         return enablePic;
@@ -210,21 +207,18 @@ public final class GlobalContext extends Application {
 
     public Boolean getEnableBigPic() {
         if (enableBigPic == null) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enableBigPic = sharedPref.getBoolean(SettingActivity.SHOW_BIG_PIC, false);
         }
         return enableBigPic;
     }
 
     public void setEnableBigPic(Boolean enableBigPic) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.edit().putBoolean(SettingActivity.SHOW_BIG_PIC, enableBigPic).commit();
         this.enableBigPic = enableBigPic;
     }
 
     public Boolean getEnableCommentRepostListAvatar() {
         if (enableCommentRepostListAvatar == null) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enableCommentRepostListAvatar = !sharedPref.getBoolean(SettingActivity.CLOSE_COMMENT_AND_REPOST_AVATAR, false);
         }
         return enableCommentRepostListAvatar;
@@ -237,7 +231,6 @@ public final class GlobalContext extends Application {
     public Boolean getEnableAutoRefresh() {
 
         if (autoRefresh == null) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             autoRefresh = sharedPref.getBoolean(SettingActivity.AUTO_REFRESH, false);
         }
         return autoRefresh;
@@ -250,7 +243,6 @@ public final class GlobalContext extends Application {
     public Boolean getEnableBigAvatar() {
 
         if (enableBigAvatar == null) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enableBigAvatar = sharedPref.getBoolean(SettingActivity.SHOW_BIG_AVATAR, false);
         }
         return enableBigAvatar;
@@ -258,7 +250,6 @@ public final class GlobalContext extends Application {
     }
 
     public void setEnableBigAvatar(Boolean enableBigAvatar) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.edit().putBoolean(SettingActivity.SHOW_BIG_AVATAR, enableBigAvatar);
         this.enableBigAvatar = enableBigAvatar;
     }
@@ -267,7 +258,6 @@ public final class GlobalContext extends Application {
     public Boolean getEnableSound() {
 
         if (enableSound == null) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
             enableSound = sharedPref.getBoolean(SettingActivity.SOUND, true);
         }
         return enableSound;
