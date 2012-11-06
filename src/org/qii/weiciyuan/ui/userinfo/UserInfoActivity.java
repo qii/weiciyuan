@@ -287,8 +287,9 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
     }
 
     private void manageGroup() {
-        ManageGroupDialog dialog = new ManageGroupDialog(GlobalContext.getInstance().getGroup(), null);
+        ManageGroupDialog dialog = new ManageGroupDialog(GlobalContext.getInstance().getGroup(), bean.getId());
         dialog.show(getFragmentManager(), "");
+
     }
 
     private class UnFollowTask extends MyAsyncTask<Void, UserBean, UserBean> {

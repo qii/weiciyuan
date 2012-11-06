@@ -74,10 +74,16 @@ public class URLHelper {
     public static final String UNREAD_COUNT = URL_SINA_WEIBO + "remind/unread_count.json";
     public static final String UNREAD_CLEAR = URL_SINA_WEIBO + "remind/set_count.json";
 
-
+    //remark
     public static final String REMARK_UPDATE = URL_SINA_WEIBO + "friendships/remark/update.json";
 
     public static final String TAGS = URL_SINA_WEIBO + "tags.json";
 
     public static final String EMOTIONS = URL_SINA_WEIBO + "emotions.json";
+
+    //group
+    public static final String GROUP_MEMBER_LIST = URL_SINA_WEIBO + "friendships/groups/listed.json";
+    public static final String GROUP_MEMBER_ADD = URL_SINA_WEIBO + "friendships/groups/members/add.json";
+    public static final String GROUP_MEMBER_DESTROY = URL_SINA_WEIBO + "friendships/groups/members/destroy.json";
+
 }
