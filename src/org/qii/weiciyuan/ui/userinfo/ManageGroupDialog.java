@@ -29,7 +29,11 @@ public class ManageGroupDialog extends DialogFragment {
     private String[] valueArray;
     private boolean[] selectedArray;
 
-    MyAsyncTask<Void, Void, List<String>> task;
+    private MyAsyncTask<Void, Void, List<String>> task;
+
+    private ArrayList<String> currentList = new ArrayList<String>();
+    private ArrayList<String> addList = new ArrayList<String>();
+    private ArrayList<String> removeList = new ArrayList<String>();
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -38,6 +42,9 @@ public class ManageGroupDialog extends DialogFragment {
         outState.putString("uid", uid);
         outState.putStringArray("valueArray", valueArray);
         outState.putBooleanArray("selectedArray", selectedArray);
+        outState.putStringArrayList("currentList", currentList);
+        outState.putStringArrayList("addList", addList);
+        outState.putStringArrayList("removeList", removeList);
     }
 
     @Override
@@ -65,6 +72,9 @@ public class ManageGroupDialog extends DialogFragment {
             uid = savedInstanceState.getString("uid");
             valueArray = savedInstanceState.getStringArray("valueArray");
             selectedArray = savedInstanceState.getBooleanArray("selectedArray");
+            currentList = savedInstanceState.getStringArrayList("currentList");
+            addList = savedInstanceState.getStringArrayList("addList");
+            removeList = savedInstanceState.getStringArrayList("removeList");
         }
 
         final List<GroupBean> list = group.getLists();
@@ -84,7 +94,8 @@ public class ManageGroupDialog extends DialogFragment {
                 .setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        UserInfoActivity activity = (UserInfoActivity) getActivity();
+                        activity.handleGroup(addList, removeList);
                     }
                 })
                 .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -104,8 +115,17 @@ public class ManageGroupDialog extends DialogFragment {
 
         @Override
         public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+            String id = group.getLists().get(which).getIdstr();
+            if (isChecked) {
+                if (!currentList.contains(id))
+                    addList.add(id);
 
+            } else {
+                if (currentList.contains(id))
+                    removeList.add(group.getLists().get(which).getIdstr());
+            }
         }
+
     }
 
     class Task extends MyAsyncTask<Void, Void, List<String>> {
@@ -130,6 +150,8 @@ public class ManageGroupDialog extends DialogFragment {
         protected void onPostExecute(List<String> strings) {
             super.onPostExecute(strings);
             if (strings != null && strings.size() > 0) {
+                currentList.clear();
+                currentList.addAll(strings);
                 int length = valueArray.length;
                 for (String id : strings) {
                     for (int i = 0; i < length; i++) {

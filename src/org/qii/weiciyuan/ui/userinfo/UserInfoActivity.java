@@ -19,6 +19,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.dao.group.ModifyGroupMemberDao;
 import org.qii.weiciyuan.dao.relationship.FanDao;
 import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
 import org.qii.weiciyuan.dao.user.RemarkDao;
@@ -53,6 +54,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
     private ViewPager mViewPager = null;
 
     private MyAsyncTask<Void, UserBean, UserBean> followOrUnfollowTask;
+
+    private ModifyGroupMemberTask modifyGroupMemberTask;
 
     private GestureDetector gestureDetector;
 
@@ -290,6 +293,51 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
         ManageGroupDialog dialog = new ManageGroupDialog(GlobalContext.getInstance().getGroup(), bean.getId());
         dialog.show(getFragmentManager(), "");
 
+    }
+
+    public void handleGroup(List<String> add, List<String> remove) {
+        if (modifyGroupMemberTask == null || modifyGroupMemberTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            modifyGroupMemberTask = new ModifyGroupMemberTask(add, remove);
+            modifyGroupMemberTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    private class ModifyGroupMemberTask extends MyAsyncTask<Void, Void, Void> {
+        List<String> add;
+        List<String> remove;
+
+        public ModifyGroupMemberTask(List<String> add, List<String> remove) {
+            this.add = add;
+            this.remove = remove;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            ModifyGroupMemberDao dao = new ModifyGroupMemberDao(token, bean.getId());
+            for (String id : add) {
+                try {
+                    dao.add(id);
+                } catch (WeiboException e) {
+                    AppLogger.e(e.getMessage());
+                    cancel(true);
+                }
+            }
+            for (String id : remove) {
+                try {
+                    dao.delete(id);
+                } catch (WeiboException e) {
+                    AppLogger.e(e.getMessage());
+                    cancel(true);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(UserInfoActivity.this, getString(R.string.modify_successfully), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private class UnFollowTask extends MyAsyncTask<Void, UserBean, UserBean> {
