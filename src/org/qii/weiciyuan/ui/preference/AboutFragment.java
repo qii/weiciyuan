@@ -57,6 +57,18 @@ public class AboutFragment extends PreferenceFragment {
             }
         });
 
+        findPreference(SettingActivity.RECOMMEND).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
+                intent.putExtra("content", getString(R.string.recommend_content));
+                startActivity(intent);
+                return true;
+            }
+        });
+
         findPreference(SettingActivity.VERSION).setSummary(buildVersionInfo());
     }
 

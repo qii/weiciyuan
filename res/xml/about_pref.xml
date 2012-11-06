@@ -33,4 +33,11 @@
             >
 
     </Preference>
+
+    <Preference
+              android:key="recommend"
+              android:title="@string/recommend"
+              >
+
+      </Preference>
 </PreferenceScreen>

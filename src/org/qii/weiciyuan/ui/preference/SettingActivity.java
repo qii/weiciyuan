@@ -43,6 +43,7 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String SUGGEST = "suggest";
 
     public static final String VERSION = "version";
+    public static final String RECOMMEND="recommend";
 
     public static final String UPLOAD_PIC_QUALITY = "upload_pic_quality";
 
