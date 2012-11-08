@@ -90,8 +90,7 @@ public class MyFanSingleChoiceModeListener implements ActionMode.Callback {
                 Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("content", "@" + bean.getScreen_name());
-                intent.putExtra("accountName", GlobalContext.getInstance().getCurrentAccountName());
-                intent.putExtra("accountId", GlobalContext.getInstance().getCurrentAccountId());
+                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
                 getActivity().startActivity(intent);
                 listView.clearChoices();
                 mode.finish();
