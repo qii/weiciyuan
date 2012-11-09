@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.utils;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -77,5 +78,10 @@ public class Utility {
         }
     }
 
-
+    public static void cancelTasks(MyAsyncTask... tasks) {
+        for (MyAsyncTask task : tasks) {
+            if (task != null)
+                task.cancel(true);
+        }
+    }
 }

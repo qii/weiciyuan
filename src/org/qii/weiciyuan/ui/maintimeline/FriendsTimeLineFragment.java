@@ -19,6 +19,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
@@ -88,8 +89,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     public void onPause() {
         super.onPause();
         removeRefresh();
-        if (autoRefreshTask != null)
-            autoRefreshTask.cancel(true);
+        Utility.cancelTasks(autoRefreshTask);
     }
 
     @Override
@@ -101,12 +101,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
-        if (dbTask != null)
-            dbTask.cancel(true);
-
-        if (groupTask != null)
-            groupTask.cancel(true);
+        Utility.cancelTasks(dbTask, groupTask);
     }
 
     @Override
@@ -148,7 +143,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         groupTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
     }
-
 
 
     private class DBCacheTask extends MyAsyncTask<Object, Object, Object> {
