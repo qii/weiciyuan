@@ -13,11 +13,11 @@ import org.qii.weiciyuan.dao.destroy.DestroyStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
-import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
 
 /**
  * User: qii
@@ -107,12 +107,12 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
                         mActionMode = null;
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(getListView(), (StatusesListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(getListView(), (StatusListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     } else {
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(getListView(), (StatusesListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(getListView(), (StatusListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
                         return true;
                     }
                 }
@@ -125,7 +125,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusesListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), getListView(), true);
+        timeLineAdapter = new StatusListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), getListView(), true);
         getListView().setAdapter(timeLineAdapter);
     }
 
@@ -182,7 +182,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             if (aBoolean) {
-                ((StatusesListAdapter) timeLineAdapter).removeItem(positon);
+                ((StatusListAdapter) timeLineAdapter).removeItem(positon);
             }
         }
     }

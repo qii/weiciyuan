@@ -21,10 +21,10 @@ import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.actionmenu.RepostSingleChoiceModeListener;
-import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
@@ -120,12 +120,12 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
                         mActionMode = null;
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(getListView(), (StatusesListAdapter) timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(getListView(), (StatusListAdapter) timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
                         return true;
                     } else {
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(getListView(), (StatusesListAdapter) timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new RepostSingleChoiceModeListener(getListView(), (StatusListAdapter) timeLineAdapter, RepostsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
                         return true;
                     }
 
@@ -223,7 +223,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     }
 
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusesListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), getListView(), false);
+        timeLineAdapter = new StatusListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), getListView(), false);
         pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 

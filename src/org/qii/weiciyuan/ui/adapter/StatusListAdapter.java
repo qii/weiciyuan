@@ -17,10 +17,10 @@ import java.util.List;
  * User: qii
  * Date: 12-8-19
  */
-public class StatusesListAdapter extends AbstractAppListAdapter<MessageBean> {
+public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
 
-    public StatusesListAdapter(Fragment fragment, ICommander commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
+    public StatusListAdapter(Fragment fragment, ICommander commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
         super(fragment, commander, bean, listView, showOriStatus);
     }
 

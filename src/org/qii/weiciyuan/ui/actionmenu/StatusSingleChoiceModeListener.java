@@ -19,8 +19,8 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.interfaces.IToken;
-import org.qii.weiciyuan.ui.adapter.StatusesListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.WriteCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteRepostActivity;
@@ -35,7 +35,7 @@ import java.util.List;
 public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
     private ListView listView;
-    private StatusesListAdapter adapter;
+    private StatusListAdapter adapter;
     private Fragment fragment;
     private ActionMode mode;
     private MessageBean bean;
@@ -49,7 +49,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
             mode.finish();
     }
 
-    public StatusSingleChoiceModeListener(ListView listView, StatusesListAdapter adapter, Fragment fragment, MessageBean bean) {
+    public StatusSingleChoiceModeListener(ListView listView, StatusListAdapter adapter, Fragment fragment, MessageBean bean) {
         this.listView = listView;
         this.fragment = fragment;
         this.adapter = adapter;
