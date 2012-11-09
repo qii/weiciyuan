@@ -14,9 +14,6 @@ import java.util.Set;
 
 public class Utility {
 
-
-    public static final String BOUNDARY = "7cd4a6d158c";
-
     public static String encodeUrl(Map<String, String> param) {
         if (param == null) {
             return "";
