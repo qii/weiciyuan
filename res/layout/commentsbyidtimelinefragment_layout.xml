@@ -64,6 +64,8 @@
                    android:id="@+id/send"
                    android:src="?send"
                    android:layout_gravity="center_vertical"
+                   android:background="?android:selectableItemBackground"
+                   android:padding="3dp"
                 />
 
     </LinearLayout>
