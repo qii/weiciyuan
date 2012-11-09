@@ -15,6 +15,7 @@
                       android:layout_height="wrap_content"
                       android:id="@+id/first"
                       android:background="?android:selectableItemBackground"
+                      android:padding="3dp"
                       android:clickable="true">
             <ImageView
                     android:layout_width="48dp"
