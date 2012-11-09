@@ -46,7 +46,7 @@ public class MainCommentsTimeLineDao {
         this.filter_by_author = filter_by_author;
     }
 
-    private String access_token;
+    protected String access_token;
     private String since_id;
     private String max_id;
     private String count;
@@ -111,8 +111,15 @@ public class MainCommentsTimeLineDao {
             }
 
         }
-        new ClearUnreadDao(access_token, ClearUnreadDao.CMT).clearUnread();
-
+        clearUnread();
         return value;
+    }
+
+    protected void clearUnread() {
+        try {
+            new ClearUnreadDao(access_token, ClearUnreadDao.CMT).clearUnread();
+        } catch (WeiboException ignored) {
+
+        }
     }
 }

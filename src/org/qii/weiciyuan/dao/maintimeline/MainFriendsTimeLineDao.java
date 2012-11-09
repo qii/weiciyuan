@@ -41,9 +41,11 @@ public class MainFriendsTimeLineDao {
         map.put("trim_user", trim_user);
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+        try {
+            new ClearUnreadDao(access_token, ClearUnreadDao.STATUS).clearUnread();
+        } catch (WeiboException ignored) {
 
-        new ClearUnreadDao(access_token, ClearUnreadDao.STATUS).clearUnread();
-
+        }
         return jsonData;
     }
 
@@ -70,7 +72,7 @@ public class MainFriendsTimeLineDao {
                 MessageBean msg = iterator.next();
                 if (msg.getUser() == null) {
                     iterator.remove();
-                } else if (GlobalContext.getInstance().isEnableFilter() && ListViewTool.haveFilterWord(msg,filterWordList)) {
+                } else if (GlobalContext.getInstance().isEnableFilter() && ListViewTool.haveFilterWord(msg, filterWordList)) {
                     iterator.remove();
                 } else {
                     msg.getListViewSpannableString();

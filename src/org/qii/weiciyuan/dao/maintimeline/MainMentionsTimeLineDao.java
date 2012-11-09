@@ -83,8 +83,11 @@ public class MainMentionsTimeLineDao {
             }
 
         }
-        new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_STATUS).clearUnread();
-        new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_CMT).clearUnread();
+        try {
+            new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_STATUS).clearUnread();
+        } catch (WeiboException ignored) {
+
+        }
 
         return value;
     }
