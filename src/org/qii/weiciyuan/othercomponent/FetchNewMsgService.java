@@ -118,7 +118,10 @@ public class FetchNewMsgService extends Service {
             try {
                 UnreadDao unreadDao = new UnreadDao(token, accountBean.getUid());
                 unreadBean = unreadDao.getCount();
-
+                if (unreadBean == null) {
+                    cancel(true);
+                    return null;
+                }
                 int unreadCommentCount = unreadBean.getCmt();
                 int unreadMentionStatusCount = unreadBean.getMention_status();
                 int unreadMentionCommentCount = unreadBean.getMention_cmt();
