@@ -36,7 +36,6 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
-import org.qii.weiciyuan.support.utils.ActivityUtils;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -305,7 +304,7 @@ public class HttpUtility {
     }
 
 
-    private String readResult(HttpResponse response) {
+    private String readResult(HttpResponse response) throws WeiboException {
         HttpEntity entity = response.getEntity();
         String result = "";
 
@@ -313,9 +312,8 @@ public class HttpUtility {
             result = EntityUtils.toString(entity);
             EntityUtils.consume(entity);
         } catch (IOException e) {
-
             AppLogger.e(e.getMessage());
-            ActivityUtils.showTips(R.string.timeout);
+            throw new WeiboException(GlobalContext.getInstance().getString(R.string.timeout), e);
         }
 
         AppLogger.d(result);
