@@ -3,7 +3,7 @@ package org.qii.weiciyuan.ui.login;
 import android.content.Intent;
 import android.os.Bundle;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.Abstract.AbstractAppActivity;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
 /**
  * User: qii

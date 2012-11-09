@@ -14,7 +14,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.TopicResultListBean;
 import org.qii.weiciyuan.dao.topic.SearchTopicDao;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.ui.Abstract.IToken;
+import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 

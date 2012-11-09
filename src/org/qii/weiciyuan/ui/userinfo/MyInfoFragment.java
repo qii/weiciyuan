@@ -16,7 +16,7 @@ import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.utils.ListViewTool;
-import org.qii.weiciyuan.ui.Abstract.*;
+import org.qii.weiciyuan.ui.interfaces.*;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 
 /**

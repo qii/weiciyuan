@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.ui.Abstract;
+package org.qii.weiciyuan.ui.interfaces;
 
 /**
  * User: qii

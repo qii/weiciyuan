@@ -12,7 +12,7 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.Abstract.ICommander;
+import org.qii.weiciyuan.ui.interfaces.ICommander;
 
 import java.util.List;
 

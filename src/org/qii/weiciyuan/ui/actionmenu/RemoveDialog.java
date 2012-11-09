@@ -6,7 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.ui.Abstract.IRemoveItem;
+import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 
 /**
  * User: qii

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.ui.Abstract.ICommander;
+import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
 
 import java.util.List;
