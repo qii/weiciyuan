@@ -143,6 +143,9 @@
         </receiver>
 
 
+        <!--black magic-->
+        <activity android:name=".ui.blackmagic.BlackMagicActivity"/>
+
     </application>
 
 </manifest>

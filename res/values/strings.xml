@@ -127,6 +127,7 @@
     <string name="account_management">帐号管理</string>
     <string name="remove_successfully">删除成功</string>
     <string name="add_account">添加</string>
+    <string name="hack_login">黑魔法</string>
 
     <!--status new!-->
     <string name="select">选择</string>

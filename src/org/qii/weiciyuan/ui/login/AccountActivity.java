@@ -13,6 +13,7 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.blackmagic.BlackMagicActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -111,6 +112,9 @@ public class AccountActivity extends AbstractAppActivity {
         switch (item.getItemId()) {
             case R.id.menu_add_account:
                 addAccount();
+                break;
+            case R.id.menu_hack_login:
+                startActivity(new Intent(this, BlackMagicActivity.class));
                 break;
         }
         return true;

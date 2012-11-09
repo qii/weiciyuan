@@ -1,0 +1,14 @@
+<resources>
+    <string-array name="tail">
+        <item>Weico Android</item>
+        <item>随享iPhone</item>
+        <item>微格iPhone客户端</item>
+        <item>Weico Pro</item>
+    </string-array>
+    <string-array name="tail_value">
+        <item>211160679,63b64d531b98c2dbff2443816f274dd3</item>
+        <item>31024382,25c3e6b5763653d1e5b280884b45c51f</item>
+        <item>2027761570,5042214816d14b2d9e8ae8255f96180d</item>
+        <item>2323547071,16ed80cc77fea11f7f7e96eca178ada3</item>
+    </string-array>
+</resources>

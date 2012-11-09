@@ -86,4 +86,17 @@ public class URLHelper {
     public static final String GROUP_MEMBER_ADD = URL_SINA_WEIBO + "friendships/groups/members/add.json";
     public static final String GROUP_MEMBER_DESTROY = URL_SINA_WEIBO + "friendships/groups/members/destroy.json";
 
+
+    /**
+     * black magic
+     */
+
+    //token
+    public static final String OAUTH2_ACCESS_TOKEN = URL_SINA_WEIBO + "oauth2/access_token";
+
+    //search
+    public static final String STATUSES_SEARCH = URL_SINA_WEIBO + "search/statuses.json";
+    public static final String USERS_SEARCH = URL_SINA_WEIBO + "search/users.json";
+
+
 }

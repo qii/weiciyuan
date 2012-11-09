@@ -5,4 +5,8 @@
           android:title="@string/add_account"
           android:showAsAction="ifRoom|withText"
             />
+    <item android:id="@+id/menu_hack_login"
+          android:title="@string/hack_login"
+          android:showAsAction="never"
+            />
 </menu>
