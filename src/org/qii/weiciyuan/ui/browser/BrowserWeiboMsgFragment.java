@@ -60,6 +60,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
     private ImageView content_pic;
     private ImageView repost_pic;
 
+    private LinearLayout repost_layout;
 
     private ProgressBar content_pic_pb;
     private ProgressBar repost_pic_pb;
@@ -280,7 +281,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
         content_pic.setOnClickListener(picOnClickListener);
         repost_pic.setOnClickListener(picOnClickListener);
 
-        //        LinearLayout repost_layout = (LinearLayout) findViewById(R.id.repost_layout);
+        repost_layout = (LinearLayout) view.findViewById(R.id.repost_layout);
         recontent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -354,6 +355,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
 
         if (msg.getRetweeted_status() != null) {
+            repost_layout.setVisibility(View.VISIBLE);
             recontent.setVisibility(View.VISIBLE);
             if (msg.getRetweeted_status().getUser() != null) {
                 recontent.setText("@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());

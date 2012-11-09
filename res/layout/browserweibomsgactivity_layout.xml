@@ -124,10 +124,11 @@
                     android:clickable="true"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="?android:selectableItemBackground"
+                    android:background="@drawable/browser_msg_repost_line"
                     android:orientation="vertical"
-
+                    android:visibility="gone"
                     >
+
                 <TextView
                         android:background="?android:selectableItemBackground"
                         android:id="@+id/repost_content"
