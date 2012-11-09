@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_refresh"
           android:icon="?refresh"
-          android:title="刷新"
+          android:title="@string/refresh"
           android:showAsAction="ifRoom|withText"
           />
 </menu>

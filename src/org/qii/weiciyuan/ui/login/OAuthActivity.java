@@ -51,7 +51,6 @@ public class OAuthActivity extends AbstractAppActivity {
         setContentView(R.layout.oauthactivity_layout);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setSubtitle(getString(R.string.only_oauth_three_months));
         webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new WeiboWebViewClient());
 
