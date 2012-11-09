@@ -63,13 +63,15 @@
                     android:hint="w"
                     android:layout_weight="1"
                     android:gravity="left"
+                    android:textIsSelectable="true"
                     android:id="@+id/time"/>
             <TextView
                     android:gravity="right"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="w"
+                    android:hint="sina"
+                    android:textIsSelectable="true"
                     android:id="@+id/source"/>
         </LinearLayout>
         <TextView
