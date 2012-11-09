@@ -14,6 +14,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
@@ -256,15 +257,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     @Override
     public void onDetach() {
         super.onDetach();
-        if (newTask != null)
-            newTask.cancel(true);
-
-        if (oldTask != null)
-            oldTask.cancel(true);
-
-        if (middleTask != null)
-            middleTask.cancel(true);
-
+        Utility.cancelTasks(newTask, oldTask, middleTask);
     }
 
 

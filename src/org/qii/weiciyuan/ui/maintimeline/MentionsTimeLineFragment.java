@@ -16,6 +16,7 @@ import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
@@ -61,8 +62,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        if (dbTask != null)
-            dbTask.cancel(true);
+        Utility.cancelTasks(dbTask);
     }
 
     public MentionsTimeLineFragment() {
