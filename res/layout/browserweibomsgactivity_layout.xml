@@ -112,11 +112,13 @@
                         android:id="@+id/content_pic_pb"/>
                 <ImageView
                         android:id="@+id/content_pic"
+                        android:padding="3dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         android:clickable="true"
                         android:layout_gravity="center_horizontal"
+                        android:background="?android:selectableItemBackground"
                         />
             </FrameLayout>
             <LinearLayout
@@ -157,8 +159,9 @@
                             style="?android:attr/progressBarStyleHorizontal"
                             android:id="@+id/repost_content_pic_pb"/>
                     <ImageView
+                            android:padding="3dp"
                             android:id="@+id/repost_content_pic"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:visibility="gone"
                             android:clickable="true"
