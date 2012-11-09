@@ -66,7 +66,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
 
-        webView.setVerticalScrollBarEnabled(false);
+//        webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
 
 
