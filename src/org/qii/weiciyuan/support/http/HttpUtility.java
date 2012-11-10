@@ -309,6 +309,7 @@ public class HttpUtility {
         String result = "";
 
         try {
+            AppLogger.d(String.valueOf(entity.getContentLength()));
             result = EntityUtils.toString(entity);
             EntityUtils.consume(entity);
         } catch (IOException e) {
