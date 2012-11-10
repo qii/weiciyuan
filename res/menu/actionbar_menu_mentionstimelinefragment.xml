@@ -12,13 +12,15 @@
           android:showAsAction="always"/>
 
 
-
     <item android:id="@+id/menu_account"
           android:title="@string/return_to_account_list"
           android:icon="?account_management"
           android:showAsAction="never"
             />
-
+    <item android:id="@+id/menu_search"
+          android:title="@string/search"
+          android:showAsAction="never"
+            />
 
     <item android:id="@+id/menu_setting"
 

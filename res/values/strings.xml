@@ -186,6 +186,8 @@
 
     <!-- serach -->
     <string name="search">搜索</string>
+    <string name="status">微博</string>
+    <string name="user">用户</string>
 
     <!-- relationship-->
     <string name="he_is_not_following_you">Ta没关注你</string>

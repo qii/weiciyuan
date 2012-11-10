@@ -7,7 +7,8 @@
           android:icon="?search"
           android:title="@string/search"
           android:actionViewClass="android.widget.SearchView"
-          android:showAsAction="collapseActionView|withText|ifRoom"
+          android:showAsAction="withText|ifRoom"
+          android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
             />
 
 

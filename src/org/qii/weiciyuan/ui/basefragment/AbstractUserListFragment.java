@@ -8,21 +8,19 @@ import android.view.*;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.adapter.UserListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
-import org.qii.weiciyuan.ui.interfaces.IToken;
-import org.qii.weiciyuan.ui.interfaces.IUserInfo;
-import org.qii.weiciyuan.ui.adapter.UserListAdapter;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,9 +36,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     protected TextView empty;
     protected ProgressBar progressBar;
     protected UserListAdapter timeLineAdapter;
-    protected UserBean currentUser;
     protected UserListBean bean = new UserListBean();
-    protected String uid;
 
     private UserListGetNewDataTask newTask;
     private UserListGetOlderDataTask oldTask;
@@ -79,37 +75,10 @@ public abstract class AbstractUserListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        if (newTask != null)
-            newTask.cancel(true);
-        if (oldTask != null)
-            oldTask.cancel(true);
+        Utility.cancelTasks(newTask, oldTask);
     }
 
     public AbstractUserListFragment() {
-
-    }
-
-    public AbstractUserListFragment(String uid) {
-        this.uid = uid;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getCommander();
-        if (savedInstanceState != null) {
-            currentUser = (UserBean) savedInstanceState.getSerializable("currentUser");
-            uid = savedInstanceState.getString("uid");
-            clearAndReplaceValue((UserListBean) savedInstanceState.getSerializable("bean"));
-            timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(bean);
-        } else {
-            pullToRefreshListView.startRefreshNow();
-
-        }
-
-        getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-
 
     }
 
@@ -117,7 +86,6 @@ public abstract class AbstractUserListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentUser = ((IUserInfo) getActivity()).getUser();
 
         setHasOptionsMenu(true);
         setRetainInstance(true);
@@ -131,8 +99,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
-        outState.putSerializable("currentUser", currentUser);
-        outState.putString("uid", uid);
+
     }
 
     @Override
@@ -151,8 +118,7 @@ public abstract class AbstractUserListFragment extends Fragment {
                 refresh();
             }
         });
-//        listView.setScrollingCacheEnabled(false);
-        //        listView.setHeaderDividersEnabled(false);
+
         pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
             @Override
             public void onLastItemVisible() {
@@ -236,7 +202,7 @@ public abstract class AbstractUserListFragment extends Fragment {
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-        intent.putExtra("token", ((IToken) getActivity()).getToken());
+        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
         intent.putExtra("user", bean.getUsers().get(position));
         startActivity(intent);
     }
@@ -247,7 +213,7 @@ public abstract class AbstractUserListFragment extends Fragment {
             progressBar.setVisibility(View.INVISIBLE);
 //            listView.setVisibility(View.VISIBLE);
         } else {
-            empty.setVisibility(View.VISIBLE);
+            empty.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
 //            listView.setVisibility(View.INVISIBLE);
         }
@@ -311,9 +277,6 @@ public abstract class AbstractUserListFragment extends Fragment {
 
             case R.id.refresh:
                 pullToRefreshListView.startRefreshNow();
-
-                refresh();
-
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -424,12 +387,8 @@ public abstract class AbstractUserListFragment extends Fragment {
 
         @Override
         protected void onPostExecute(UserListBean newValue) {
-            if (newValue != null && newValue.getUsers().size() > 0 && newValue.getPrevious_cursor() != bean.getPrevious_cursor()) {
-                List<UserBean> list = newValue.getUsers();
-                getList().getUsers().addAll(list);
-                bean.setNext_cursor(newValue.getNext_cursor());
-            }
 
+            oldUserOnPostExecute(newValue);
             timeLineAdapter.notifyDataSetChanged();
             getActivity().invalidateOptionsMenu();
             dismissFooterView();
@@ -438,6 +397,8 @@ public abstract class AbstractUserListFragment extends Fragment {
 
 
     }
+
+    protected abstract void oldUserOnPostExecute(UserListBean newValue);
 
     protected abstract UserListBean getDoInBackgroundNewData() throws WeiboException;
 

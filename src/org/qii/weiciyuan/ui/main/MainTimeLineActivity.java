@@ -33,6 +33,7 @@ import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MyStatussTimeLineFragment;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
+import org.qii.weiciyuan.ui.search.SearchMainActivity;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
 import java.util.ArrayList;
@@ -196,6 +197,10 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 intent.putExtra("launcher", false);
                 startActivity(intent);
                 finish();
+                return true;
+            case R.id.menu_search:
+                startActivity(new Intent(this, SearchMainActivity.class));
+
                 return true;
 
             case R.id.menu_setting:

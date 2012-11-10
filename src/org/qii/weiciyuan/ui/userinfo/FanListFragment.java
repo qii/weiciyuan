@@ -7,20 +7,23 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.user.FanListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.actionmenu.MyFanSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.actionmenu.NormalFriendShipSingleChoiceModeListener;
-import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
+import org.qii.weiciyuan.ui.basefragment.AbstractFriendsFanListFragment;
+import org.qii.weiciyuan.ui.interfaces.IToken;
+
+import java.util.List;
 
 /**
  * User: Jiang Qi
  * Date: 12-8-16
  */
-public class FanListFragment extends AbstractUserListFragment {
+public class FanListFragment extends AbstractFriendsFanListFragment {
 
     public FanListFragment() {
         super();
@@ -34,38 +37,7 @@ public class FanListFragment extends AbstractUserListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-                if (position - 1 < getList().getUsers().size() && position - 1 >= 0) {
-                    if (mActionMode != null) {
-                        mActionMode.finish();
-                        mActionMode = null;
-                        getListView().setItemChecked(position, true);
-                        timeLineAdapter.notifyDataSetChanged();
-                        if (currentUser.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
-                            mActionMode = getActivity().startActionMode(new MyFanSingleChoiceModeListener(getListView(), timeLineAdapter, FanListFragment.this, bean.getUsers().get(position - 1)));
-                        } else {
-                            mActionMode = getActivity().startActionMode(new NormalFriendShipSingleChoiceModeListener(getListView(), timeLineAdapter, FanListFragment.this, bean.getUsers().get(position - 1)));
-                        }
-                        return true;
-                    } else {
-                        getListView().setItemChecked(position, true);
-                        timeLineAdapter.notifyDataSetChanged();
-                        if (currentUser.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
-                            mActionMode = getActivity().startActionMode(new MyFanSingleChoiceModeListener(getListView(), timeLineAdapter, FanListFragment.this, bean.getUsers().get(position - 1)));
-                        } else {
-                            mActionMode = getActivity().startActionMode(new NormalFriendShipSingleChoiceModeListener(getListView(), timeLineAdapter, FanListFragment.this, bean.getUsers().get(position - 1)));
-                        }
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
-
-        );
+        getListView().setOnItemLongClickListener(new FanListOnItemLongClickListener());
     }
 
     @Override
@@ -107,5 +79,37 @@ public class FanListFragment extends AbstractUserListFragment {
         return result;
     }
 
+    private class FanListOnItemLongClickListener implements AdapterView.OnItemLongClickListener {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+            if (position - 1 < getList().getUsers().size() && position - 1 >= 0) {
+                if (mActionMode != null) {
+                    mActionMode.finish();
+                    mActionMode = null;
+                    getListView().setItemChecked(position, true);
+                    timeLineAdapter.notifyDataSetChanged();
+                    if (currentUser.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+                        mActionMode = getActivity().startActionMode(new MyFanSingleChoiceModeListener(getListView(), timeLineAdapter, FanListFragment.this, bean.getUsers().get(position - 1)));
+                    } else {
+                        mActionMode = getActivity().startActionMode(new NormalFriendShipSingleChoiceModeListener(getListView(), timeLineAdapter, FanListFragment.this, bean.getUsers().get(position - 1)));
+                    }
+                    return true;
+                } else {
+                    getListView().setItemChecked(position, true);
+                    timeLineAdapter.notifyDataSetChanged();
+                    if (currentUser.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+                        mActionMode = getActivity().startActionMode(new MyFanSingleChoiceModeListener(getListView(), timeLineAdapter, FanListFragment.this, bean.getUsers().get(position - 1)));
+                    } else {
+                        mActionMode = getActivity().startActionMode(new NormalFriendShipSingleChoiceModeListener(getListView(), timeLineAdapter, FanListFragment.this, bean.getUsers().get(position - 1)));
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
 }
+
 
