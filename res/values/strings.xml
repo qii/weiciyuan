@@ -250,7 +250,7 @@
     <string name="new_message">未读消息</string>
     <string name="notification_feedback">提醒方式</string>
     <string name="new_comments">%s 条评论</string>
-    <string name="new_mentions">%s 条@我</string>
+    <string name="new_mentions">%s 条@</string>
     <string name="notification">通知</string>
     <string name="vibrate">振动</string>
     <string name="led">LED 灯</string>
