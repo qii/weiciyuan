@@ -199,7 +199,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         }
         if (selectedId.equals("1")) {
             name.setTitle(getString(R.string.bilateral));
-        } else {
+        } else if (GlobalContext.getInstance().getGroup() != null) {
             for (GroupBean b : GlobalContext.getInstance().getGroup().getLists()) {
                 if (b.getIdstr().equals(selectedId)) {
                     name.setTitle(b.getName());
