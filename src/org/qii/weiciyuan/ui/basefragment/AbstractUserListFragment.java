@@ -310,7 +310,7 @@ public abstract class AbstractUserListFragment extends Fragment {
         @Override
         protected void onCancelled(UserListBean newValue) {
             super.onCancelled(newValue);
-            if (this.e != null)
+            if (this.e != null && getActivity() != null)
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             cleanWork();
         }
