@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.nfc.NdefMessage;
@@ -93,7 +92,7 @@ public class AbstractAppActivity extends Activity {
 
                         break;
                     case picture_bmiddle:
-                        view.setBackgroundDrawable(new BitmapDrawable(getResources(), bitmap));
+                        view.setImageBitmap(bitmap);
                         cancelPotentialDownload(urlKey, view);
                         pictureBitmapWorkerTaskMap.remove(urlKey);
                         break;
