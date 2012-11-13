@@ -100,12 +100,21 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     }
 
+    /**
+     * use getTag(int) and setTag(int, final Object) to sovle getItemViewType(int) bug.
+     * When you use getItemViewType(int),getTag(),setTag() together, if getItemViewType(int) change because
+     * network switch to use another layout when you are scrolling listview, bug appears,the other listviews in other tabs
+     * (Actionbar tab navigation) will mix several layout up, for example, the correct layout should be TYPE_NORMAL_BIG_PIC,
+     * but in the listview, you can see some row's layouts are TYPE_NORMAL, some are TYPE_NORMAL_BIG_PIC. if you print
+     * getItemViewType(int) value to the console,their are same type
+     */
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
 
 
-        if (convertView == null || convertView.getTag() == null) {
+        if (convertView == null || convertView.getTag(R.drawable.ic_launcher+getItemViewType(position)) == null) {
 
             switch (getItemViewType(position)) {
                 case TYPE_SIMPLE:
@@ -132,11 +141,11 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             }
             if (getItemViewType(position) != TYPE_MIDDLE) {
                 holder = buildHolder(convertView);
-                convertView.setTag(holder);
+                convertView.setTag(R.drawable.ic_launcher+getItemViewType(position),holder);
             }
 
         } else {
-            holder = (ViewHolder) convertView.getTag();
+            holder = (ViewHolder) convertView.getTag(R.drawable.ic_launcher+getItemViewType(position));
         }
 
 
