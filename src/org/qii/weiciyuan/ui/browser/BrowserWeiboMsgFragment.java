@@ -275,15 +275,18 @@ public class BrowserWeiboMsgFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (recontent.getSelectionStart() == -1 && recontent.getSelectionEnd() == -1 && msg.getRetweeted_status().getUser() != null) {
-                    //This condition will satisfy only when it is not an autolinked text
-                    //onClick action
+                //This condition will satisfy only when it is not an autolinked text
+                //onClick action
+                boolean isNotLink = recontent.getSelectionStart() == -1 && recontent.getSelectionEnd() == -1;
+                boolean isDeleted = msg.getRetweeted_status() == null || msg.getRetweeted_status().getUser() == null;
+
+                if (isNotLink && !isDeleted) {
 
                     Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
                     intent.putExtra("token", ((IToken) getActivity()).getToken());
                     intent.putExtra("msg", msg.getRetweeted_status());
                     startActivity(intent);
-                } else {
+                } else if (isNotLink && isDeleted) {
                     Toast.makeText(getActivity(), getString(R.string.cant_open_deleted_weibo), Toast.LENGTH_SHORT).show();
                 }
 
