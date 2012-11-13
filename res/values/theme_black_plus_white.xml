@@ -38,6 +38,8 @@
         <item name="link_color">@color/dark_blue</item>
         <item name="line_drawable">@drawable/list_divider_holo_light</item>
         <item name="listview_checked_color">@color/listview_checked_color_holo_light</item>
+        <item name="listview_pic_bg_border">@drawable/bg_border2_dark</item>
+
 
         <item name="backgroundSplit">@drawable/ab_bottom_solid_inverse_holo</item>
 

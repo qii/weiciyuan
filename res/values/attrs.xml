@@ -19,7 +19,7 @@
     <attr name="copy" format="reference"/>
     <attr name="repost" format="reference"/>
     <attr name="send" format="reference"/>
-     <attr name="share" format="reference"/>
+    <attr name="share" format="reference"/>
     <attr name="statusnewactivity_camera" format="reference"/>
     <attr name="statusnewactivity_gps" format="reference"/>
     <attr name="statusnewactivity_send" format="reference"/>
@@ -38,6 +38,7 @@
     <attr name="link_color" format="reference"/>
     <attr name="line_drawable" format="reference"/>
     <attr name="listview_checked_color" format="reference"/>
+    <attr name="listview_pic_bg_border" format="reference"/>
 
     <attr name="backgroundSplit" format="reference"/>
 </resources>

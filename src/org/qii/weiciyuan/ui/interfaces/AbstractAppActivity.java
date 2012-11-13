@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.nfc.NdefMessage;
@@ -45,6 +44,7 @@ public class AbstractAppActivity extends Activity {
     private Drawable defaultPic = null;
     private Drawable errorPic = null;
     private Drawable transPic = new ColorDrawable(Color.TRANSPARENT);
+    private Drawable picBgBorder = null;
 
 
     private Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = new ConcurrentHashMap<String, AvatarBitmapWorkerTask>();
@@ -93,7 +93,9 @@ public class AbstractAppActivity extends Activity {
                         break;
                     case picture_bmiddle:
 
-                        view.setBackgroundDrawable(new BitmapDrawable(getResources(), bitmap));
+                        view.setImageBitmap(bitmap);
+                        view.setBackgroundDrawable(picBgBorder);
+
                         cancelPotentialDownload(urlKey, view);
                         pictureBitmapWorkerTaskMap.remove(urlKey);
                         break;
@@ -110,6 +112,7 @@ public class AbstractAppActivity extends Activity {
                         break;
                     case picture_bmiddle:
                         view.setBackgroundDrawable(transPic);
+                        view.setImageDrawable(transPic);
                         break;
 
                 }
@@ -151,7 +154,7 @@ public class AbstractAppActivity extends Activity {
             String bitmapUrl = bitmapDownloaderTask.getUrl();
             if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
                 bitmapDownloaderTask.cancel(true);
-            } else if (bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.PENDING || bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.RUNNING){
+            } else if (bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.PENDING || bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.RUNNING) {
                 // The same URL is already being downloaded.
                 return false;
             }
@@ -219,6 +222,7 @@ public class AbstractAppActivity extends Activity {
         forceShowActionBarOverflowMenu();
         initDefaultAvatar();
         initDefaultPic();
+        initPicBgBorder();
         initErrorPic();
         initNFC();
     }
@@ -240,6 +244,12 @@ public class AbstractAppActivity extends Activity {
         int[] attrs = new int[]{R.attr.error};
         TypedArray ta = obtainStyledAttributes(attrs);
         errorPic = ta.getDrawable(0);
+    }
+
+    private void initPicBgBorder() {
+        int[] attrs = new int[]{R.attr.listview_pic_bg_border};
+        TypedArray ta = obtainStyledAttributes(attrs);
+        picBgBorder = ta.getDrawable(0);
     }
 
     private void forceShowActionBarOverflowMenu() {
