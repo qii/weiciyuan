@@ -108,7 +108,6 @@ public class AbstractAppActivity extends Activity {
 
                         break;
                     case picture_bmiddle:
-                        view.setBackgroundDrawable(transPic);
                         view.setImageDrawable(transPic);
                         break;
 

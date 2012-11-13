@@ -93,6 +93,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/timeline_big_avatar_height"
                     android:visibility="gone"
+                    android:padding="2dp"
+                    android:background="?android:selectableItemBackground"
                     android:clickable="true"
                     />
         </LinearLayout>
@@ -125,6 +127,8 @@
                         android:layout_height="@dimen/timeline_big_avatar_height"
                         android:visibility="gone"
                         android:clickable="true"
+                        android:padding="2dp"
+                        android:background="?android:selectableItemBackground"
                         />
             </LinearLayout>
         </LinearLayout>
