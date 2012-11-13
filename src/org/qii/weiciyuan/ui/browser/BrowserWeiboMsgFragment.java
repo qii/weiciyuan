@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.browser;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,7 +10,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -32,6 +32,7 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
@@ -47,7 +48,6 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
     private MessageBean msg;
 
-    private FrameLayout repost_pic_layout;
 
     private TextView username;
     private TextView content;
@@ -61,6 +61,8 @@ public class BrowserWeiboMsgFragment extends Fragment {
     private ImageView repost_pic;
 
     private LinearLayout repost_layout;
+    private FrameLayout pic_layout;
+    private FrameLayout repost_pic_layout;
 
     private ProgressBar content_pic_pb;
     private ProgressBar repost_pic_pb;
@@ -112,21 +114,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        if (updateMsgTask != null) {
-            updateMsgTask.cancel(true);
-        }
-        if (geoTask != null) {
-            geoTask.cancel(true);
-        }
-
-        if (avatarTask != null) {
-            avatarTask.cancel(true);
-        }
-
-        if (picTask != null) {
-            picTask.cancel(true);
-        }
-
+        Utility.cancelTasks(updateMsgTask, geoTask, avatarTask, picTask);
         avatar.setImageDrawable(null);
         content_pic.setImageDrawable(null);
         repost_pic.setImageDrawable(null);
@@ -282,6 +270,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
         repost_pic.setOnClickListener(picOnClickListener);
 
         repost_layout = (LinearLayout) view.findViewById(R.id.repost_layout);
+        pic_layout = (FrameLayout) view.findViewById(R.id.pic_layout);
         recontent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -351,6 +340,10 @@ public class BrowserWeiboMsgFragment extends Fragment {
                 picTask = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_thumbnail);
                 picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getThumbnail_pic());
             }
+        } else {
+            content_pic.setVisibility(View.GONE);
+            content_pic_pb.setVisibility(View.GONE);
+            pic_layout.setVisibility(View.GONE);
         }
 
 
@@ -383,6 +376,8 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
 
             }
+        } else {
+            repost_layout.setVisibility(View.GONE);
         }
 
 
@@ -397,6 +392,13 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
         public GetGoogleLocationInfo(GeoBean geoBean) {
             this.geoBean = geoBean;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            location.setVisibility(View.VISIBLE);
+            location.setText(String.valueOf(geoBean.getLat() + "," + geoBean.getLon()));
         }
 
         @Override
