@@ -283,6 +283,8 @@ public class BrowserWeiboMsgFragment extends Fragment {
                     intent.putExtra("token", ((IToken) getActivity()).getToken());
                     intent.putExtra("msg", msg.getRetweeted_status());
                     startActivity(intent);
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.cant_open_deleted_weibo), Toast.LENGTH_SHORT).show();
                 }
 
             }
