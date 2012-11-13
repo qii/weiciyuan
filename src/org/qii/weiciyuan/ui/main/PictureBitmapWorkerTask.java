@@ -2,7 +2,6 @@ package org.qii.weiciyuan.ui.main;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
@@ -107,7 +106,6 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                     switch (method) {
                         case picture_thumbnail:
                             imageView.setImageBitmap(bitmap);
-                            imageView.setBackgroundColor(Color.TRANSPARENT);
                             break;
                         case picture_bmiddle:
                             imageView.setImageBitmap(bitmap);

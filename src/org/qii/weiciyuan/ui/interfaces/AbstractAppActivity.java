@@ -86,7 +86,6 @@ public class AbstractAppActivity extends Activity {
                     case picture_thumbnail:
 
                         view.setImageBitmap(bitmap);
-                        view.setBackgroundColor(Color.TRANSPARENT);
                         cancelPotentialDownload(urlKey, view);
                         pictureBitmapWorkerTaskMap.remove(urlKey);
 
@@ -104,7 +103,7 @@ public class AbstractAppActivity extends Activity {
                     case picture_thumbnail:
 
                         view.setImageDrawable(transPic);
-                        view.setBackgroundDrawable(transPic);
+//                        view.setBackgroundDrawable(transPic);
 
                         break;
                     case picture_bmiddle:
