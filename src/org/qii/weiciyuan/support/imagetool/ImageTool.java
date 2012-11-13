@@ -226,17 +226,17 @@ public class ImageTool {
                         scale = Bitmap.createScaledBitmap(region, reqWidth, reqHeight, true);
                     }
                     if (scale == null) {
-//                        Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
-//                        region.recycle();
-//
-//                        return anotherValue;
-                        return region;
-                    } else {
-//                        Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(scale);
+                        Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
                         region.recycle();
-//                        scale.recycle();
-//                        return anotherValue;
-                        return scale;
+
+                        return anotherValue;
+//                        return region;
+                    } else {
+                        Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(scale);
+                        region.recycle();
+                        scale.recycle();
+                        return anotherValue;
+//                        return scale;
                     }
                 }
             } catch (IOException ignored) {

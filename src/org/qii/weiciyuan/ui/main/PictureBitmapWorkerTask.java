@@ -1,9 +1,9 @@
 package org.qii.weiciyuan.ui.main;
 
 import android.app.Activity;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
@@ -111,11 +111,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                             imageView.setBackgroundColor(Color.TRANSPARENT);
                             break;
                         case picture_bmiddle:
-                            imageView.setImageBitmap(bitmap);
-                            int[] attrs = new int[]{R.attr.listview_pic_bg_border};
-                            TypedArray ta = activity.obtainStyledAttributes(attrs);
-                            Drawable drawable = ta.getDrawable(0);
-                            imageView.setBackgroundDrawable(drawable);
+                            imageView.setBackgroundDrawable(new BitmapDrawable(activity.getResources(), bitmap));
                             break;
                     }
 
