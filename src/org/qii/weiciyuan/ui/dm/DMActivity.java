@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.os.Bundle;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.search.AtUserFragment;
 
 /**
  * User: qii
@@ -17,7 +16,7 @@ public class DMActivity extends AbstractAppActivity {
 
            ActionBar actionBar = getActionBar();
            actionBar.setDisplayHomeAsUpEnabled(true);
-           actionBar.setTitle(R.string.at_other);
+           actionBar.setTitle(R.string.dm);
 
            String token = getIntent().getStringExtra("token");
 

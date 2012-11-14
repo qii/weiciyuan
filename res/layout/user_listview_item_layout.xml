@@ -35,6 +35,8 @@
             android:layout_below="@id/username"
             android:layout_toRightOf="@id/avatar"
             android:layerType="software"
+            android:ellipsize="end"
+            android:singleLine="true"
             />
 
 </RelativeLayout>

@@ -76,7 +76,7 @@ public class DMUserListAdapter extends BaseAdapter {
 
     private View initSimpleLayout(ViewGroup parent) {
         View convertView;
-        convertView = inflater.inflate(R.layout.timeline_listview_item_simple_layout, parent, false);
+        convertView = inflater.inflate(R.layout.dmlist_listview_item_layout, parent, false);
 
         return convertView;
     }
@@ -106,11 +106,7 @@ public class DMUserListAdapter extends BaseAdapter {
         UserBean user = msg.getUser();
         if (user != null) {
             holder.username.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(user.getRemark())) {
-                holder.username.setText(new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark()).append(")").toString());
-            } else {
-                holder.username.setText(user.getScreen_name());
-            }
+            buildUsername(holder, user);
 
             buildAvatar(holder.avatar, position, user);
 
@@ -132,6 +128,15 @@ public class DMUserListAdapter extends BaseAdapter {
         }
         holder.time.setTag(msg.getId());
 
+    }
+
+    private void buildUsername(DMViewHolder holder, UserBean user) {
+
+        if (!TextUtils.isEmpty(user.getRemark())) {
+            holder.username.setText(new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark()).append(")").toString());
+        } else {
+            holder.username.setText(user.getScreen_name());
+        }
     }
 
 
