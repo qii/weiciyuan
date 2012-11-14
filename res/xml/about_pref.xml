@@ -40,10 +40,5 @@
             >
 
     </Preference>
-    <Preference
-            android:title="@string/donate"
-            android:summary="@string/donate_summary"
-            >
 
-    </Preference>
 </PreferenceScreen>
