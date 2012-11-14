@@ -24,7 +24,6 @@ import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.dm.DMActivity;
 import org.qii.weiciyuan.ui.dm.DMUserListFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
@@ -205,9 +204,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 startActivity(new Intent(this, SearchMainActivity.class));
 
                 return true;
-            case R.id.menu_dm:
-                startActivity(new Intent(this, DMActivity.class));
-                return true;
+
 
             case R.id.menu_setting:
                 startActivity(new Intent(this, SettingActivity.class));

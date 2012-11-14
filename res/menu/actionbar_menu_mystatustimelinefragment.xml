@@ -1,34 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <item android:id="@+id/write_weibo"
-              android:icon="?write_weibo"
-              android:showAsAction="always"
-              android:title="@string/write_weibo"/>
+    <item android:id="@+id/write_weibo"
+          android:icon="?write_weibo"
+          android:showAsAction="always"
+          android:title="@string/write_weibo"/>
 
-        <item android:id="@+id/name"
-              android:title="name"
-              android:showAsAction="always"
-                />
-
-
-
-        <item android:id="@+id/menu_account"
-              android:title="@string/return_to_account_list"
-              android:icon="?account_management"
-              android:showAsAction="never"
-                />
+    <item android:id="@+id/name"
+          android:title="name"
+          android:showAsAction="always"
+            />
 
 
-        <item android:id="@+id/menu_setting"
+    <item android:id="@+id/menu_account"
+          android:title="@string/return_to_account_list"
+          android:icon="?account_management"
+          android:showAsAction="never"
+            />
 
-              android:title="@string/setting"
-              android:icon="?settings"
-              android:showAsAction="never"
-                />
+    <item android:id="@+id/menu_search"
+          android:title="@string/search"
+          android:showAsAction="never"
+            />
+
+    <item android:id="@+id/menu_setting"
+
+          android:title="@string/setting"
+          android:icon="?settings"
+          android:showAsAction="never"
+            />
 
 
-    </menu>
+</menu>
 
 

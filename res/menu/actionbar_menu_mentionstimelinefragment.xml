@@ -21,10 +21,6 @@
           android:title="@string/search"
           android:showAsAction="never"
             />
-    <item android:id="@+id/menu_dm"
-             android:title="@string/dm"
-             android:showAsAction="never"
-               />
 
     <item android:id="@+id/menu_setting"
 
