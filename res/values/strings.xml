@@ -190,6 +190,9 @@
     <string name="status">微博</string>
     <string name="user">用户</string>
 
+    <!-- dm -->
+    <string name="dm">私信</string>
+
     <!-- relationship-->
     <string name="he_is_not_following_you">Ta没关注你</string>
     <string name="he_is_following_you">Ta关注了你</string>

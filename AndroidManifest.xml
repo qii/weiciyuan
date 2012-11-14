@@ -146,6 +146,9 @@
         <!--black magic-->
         <activity android:name=".ui.blackmagic.BlackMagicActivity"/>
 
+        <!-- dm -->
+        <activity android:name=".ui.dm.DMActivity"/>
+
     </application>
 
 </manifest>

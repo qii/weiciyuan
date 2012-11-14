@@ -8,10 +8,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMUserBean;
-import org.qii.weiciyuan.bean.DMUserListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -20,19 +22,21 @@ import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
+import java.util.List;
+
 /**
  * User: qii
  * Date: 12-11-14
  */
 public class DMUserListAdapter extends BaseAdapter {
-    private DMUserListBean bean;
+    private  List<DMUserBean> bean;
     private Fragment fragment;
     private LayoutInflater inflater;
     private ListView listView;
     private ICommander commander;
 
 
-    public DMUserListAdapter(Fragment fragment, ICommander commander, DMUserListBean bean, ListView listView) {
+    public DMUserListAdapter(Fragment fragment, ICommander commander,  List<DMUserBean> bean, ListView listView) {
         this.bean = bean;
         this.commander = commander;
         this.inflater = fragment.getActivity().getLayoutInflater();
@@ -98,7 +102,7 @@ public class DMUserListAdapter extends BaseAdapter {
 
     protected void bindViewData(DMViewHolder holder, int position) {
 
-        final DMUserBean msg = bean.getItem(position);
+        final DMUserBean msg = bean.get(position);
         UserBean user = msg.getUser();
         if (user != null) {
             holder.username.setVisibility(View.VISIBLE);
@@ -131,7 +135,7 @@ public class DMUserListAdapter extends BaseAdapter {
     }
 
 
-    protected DMUserListBean getList() {
+    protected  List<DMUserBean> getList() {
         return bean;
     }
 
@@ -143,7 +147,7 @@ public class DMUserListAdapter extends BaseAdapter {
     public int getCount() {
 
         if (getList() != null) {
-            return getList().getSize();
+            return getList().size();
         } else {
             return 0;
         }
@@ -151,15 +155,15 @@ public class DMUserListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        if (position >= 0 && getList() != null && getList().getSize() > 0 && position < getList().getSize())
-            return getList().getItem(position);
+        if (position >= 0 && getList() != null && getList().size() > 0 && position < getList().size())
+            return getList().get(position);
         return null;
     }
 
     @Override
     public long getItemId(int position) {
-        if (getList() != null && getList().getItem(position) != null && getList().getSize() > 0 && position < getList().getSize())
-            return Long.valueOf(getList().getItem(position).getId());
+        if (getList() != null && getList().get(position) != null && getList().size() > 0 && position < getList().size())
+            return Long.valueOf(getList().get(position).getId());
         else
             return -1;
     }
@@ -170,7 +174,7 @@ public class DMUserListAdapter extends BaseAdapter {
             view.setVisibility(View.VISIBLE);
             //when listview is flying,app dont download avatar and picture
             boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
-            //50px avatar or 180px avatar
+
             String url;
             if (GlobalContext.getInstance().getEnableBigAvatar()) {
                 url = user.getAvatar_large();

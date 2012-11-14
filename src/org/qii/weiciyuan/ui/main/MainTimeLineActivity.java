@@ -22,6 +22,7 @@ import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.dm.DMActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IToken;
@@ -201,6 +202,9 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             case R.id.menu_search:
                 startActivity(new Intent(this, SearchMainActivity.class));
 
+                return true;
+            case R.id.menu_dm:
+                startActivity(new Intent(this, DMActivity.class));
                 return true;
 
             case R.id.menu_setting:
