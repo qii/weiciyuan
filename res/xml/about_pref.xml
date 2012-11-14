@@ -35,9 +35,15 @@
     </Preference>
 
     <Preference
-              android:key="recommend"
-              android:title="@string/recommend"
-              >
+            android:key="recommend"
+            android:title="@string/recommend"
+            >
 
-      </Preference>
+    </Preference>
+    <Preference
+            android:title="@string/donate"
+            android:summary="@string/donate_summary"
+            >
+
+    </Preference>
 </PreferenceScreen>
