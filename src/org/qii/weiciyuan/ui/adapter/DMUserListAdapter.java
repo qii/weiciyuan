@@ -19,7 +19,6 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.List;
@@ -192,7 +191,7 @@ public class DMUserListAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                    intent.putExtra("token", ((IToken) getActivity()).getToken());
+                    intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                     intent.putExtra("user", user);
                     getActivity().startActivity(intent);
                 }
