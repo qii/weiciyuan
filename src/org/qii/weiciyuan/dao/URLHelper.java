@@ -98,5 +98,12 @@ public class URLHelper {
     public static final String STATUSES_SEARCH = URL_SINA_WEIBO + "search/statuses.json";
     public static final String USERS_SEARCH = URL_SINA_WEIBO + "search/users.json";
 
-
+    //direct message
+    public static final String DM_RECEIVED = URL_SINA_WEIBO + "direct_messages.json";
+    public static final String DM_SENT = URL_SINA_WEIBO + "direct_messages/sent.json";
+    public static final String DM_USERLIST = URL_SINA_WEIBO + "direct_messages/user_list.json";
+    public static final String DM_CONVERSATION = URL_SINA_WEIBO + "direct_messages/conversation.json";
+    public static final String DM_CREATE = URL_SINA_WEIBO + "direct_messages/new.json";
+    public static final String DM_DESTROY = URL_SINA_WEIBO + "direct_messages/destroy.json";
+    public static final String DM_BATH_DESTROY = URL_SINA_WEIBO + "direct_messages/destroy_batch";
 }

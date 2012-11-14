@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.widget.TextView;
 import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.bean.DMUserBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
@@ -140,6 +141,10 @@ public class ListViewTool {
         }
 
         bean.setListViewReplySpannableString(value);
+    }
+
+    public static void addJustHighLightLinks(DMUserBean bean) {
+        bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
     }
 
 
