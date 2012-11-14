@@ -261,6 +261,8 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             actionBar.setDisplayShowHomeEnabled(false);
         }
 
+        MainTabListener tabListener = new MainTabListener();
+
         actionBar.addTab(actionBar.newTab()
                 .setText(getString(R.string.home))
                 .setTabListener(tabListener));
@@ -292,7 +294,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         }
     };
 
-    ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+    private class MainTabListener implements ActionBar.TabListener {
         boolean home = false;
         boolean mentions = false;
         boolean comments = false;
@@ -433,7 +435,9 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                     break;
             }
         }
-    };
+    }
+
+    ;
 
     @Override
     public UserBean getUser() {
