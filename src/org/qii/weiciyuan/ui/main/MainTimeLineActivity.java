@@ -20,14 +20,16 @@ import org.qii.weiciyuan.othercomponent.MentionsAndCommentsReceiver;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.dm.DMActivity;
+import org.qii.weiciyuan.ui.dm.DMUserListFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
@@ -244,6 +246,11 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 MyStatussTimeLineFragment.class.getName()));
     }
 
+    private AbstractTimeLineFragment getDMFragment() {
+        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
+                DMUserListFragment.class.getName()));
+    }
+
     private void buildActionBarAndViewPagerTitles() {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -266,11 +273,15 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 .setText(getString(R.string.comments))
                 .setTabListener(tabListener));
 
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.me))
-                .setTabListener(tabListener));
-
-
+        if (AppConfig.BLACK_MAGIC) {
+            actionBar.addTab(actionBar.newTab()
+                    .setText(getString(R.string.dm))
+                    .setTabListener(tabListener));
+        } else {
+            actionBar.addTab(actionBar.newTab()
+                    .setText(getString(R.string.me))
+                    .setTabListener(tabListener));
+        }
     }
 
 
@@ -400,14 +411,23 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                     break;
                 case 3:
                     if (my) {
+
+                        AbstractTimeLineFragment fragment;
+
+                        if (AppConfig.BLACK_MAGIC) {
+                            fragment = getDMFragment();
+                        } else {
+                            fragment = getMyFragment();
+                        }
+
                         if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                            getMyFragment().getListView().setSelection(0);
-                            getMyFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+                            fragment.getListView().setSelection(0);
+                            fragment.getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
 
                         } else {
-                            getMyFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
-                            getMyFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
-                            getMyFragment().getListView().setSelection(0);
+                            fragment.getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
+                            fragment.getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
+                            fragment.getListView().setSelection(0);
                         }
                     }
                     break;
@@ -482,12 +502,21 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 list.add(getCommentFragment());
             }
 
-            if (getMyFragment() == null) {
-                list.add(new MyStatussTimeLineFragment(getUser(), getToken()));
-            } else {
-                list.add(getMyFragment());
-            }
 
+            if (AppConfig.BLACK_MAGIC) {
+                if (getDMFragment() == null) {
+                    list.add(new DMUserListFragment());
+                } else {
+                    list.add(getDMFragment());
+                }
+            } else {
+                if (getMyFragment() == null) {
+                    list.add(new MyStatussTimeLineFragment(getUser(), getToken()));
+                } else {
+                    list.add(getMyFragment());
+                }
+
+            }
 
         }
 
@@ -502,7 +531,11 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             tagList.add(FriendsTimeLineFragment.class.getName());
             tagList.add(MentionsTimeLineFragment.class.getName());
             tagList.add(CommentsTimeLineFragment.class.getName());
-            tagList.add(MyStatussTimeLineFragment.class.getName());
+            if (AppConfig.BLACK_MAGIC) {
+                tagList.add(DMUserListFragment.class.getName());
+            } else {
+                tagList.add(MyStatussTimeLineFragment.class.getName());
+            }
             return tagList.get(position);
         }
 

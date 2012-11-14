@@ -5,6 +5,10 @@ package org.qii.weiciyuan.support.utils;
  * Date: 12-8-1
  */
 public class AppConfig {
+
+    //use other app's appkey
+    public static final boolean BLACK_MAGIC=true;
+
     public static final int DEFAULT_MSG_NUMBERS = 50;
     public static final int MAX_DATABASE_TABLE_ENTRY_NUMBER = 50;
 
