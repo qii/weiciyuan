@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.bean.DMListBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.dm.DMConversationDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -17,10 +18,10 @@ import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
  */
 public class DMListFragment extends AbstractTimeLineFragment<DMListBean> {
 
-    private String uid;
+    private UserBean userBean;
 
-    public DMListFragment(String uid) {
-        this.uid = uid;
+    public DMListFragment(UserBean userBean) {
+        this.userBean = userBean;
     }
 
     @Override
@@ -76,7 +77,7 @@ public class DMListFragment extends AbstractTimeLineFragment<DMListBean> {
 
     @Override
     protected DMListBean getDoInBackgroundNewData() throws WeiboException {
-        return new DMConversationDao(GlobalContext.getInstance().getSpecialToken()).setUid(uid).getConversationList();
+        return new DMConversationDao(GlobalContext.getInstance().getSpecialToken()).setUid(userBean.getId()).getConversationList();
     }
 
     @Override

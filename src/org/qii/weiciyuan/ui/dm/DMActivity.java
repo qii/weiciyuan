@@ -2,7 +2,7 @@ package org.qii.weiciyuan.ui.dm;
 
 import android.app.ActionBar;
 import android.os.Bundle;
-import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
 /**
@@ -16,12 +16,13 @@ public class DMActivity extends AbstractAppActivity {
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(R.string.dm);
 
-        String uid = getIntent().getStringExtra("uid");
+        UserBean bean = (UserBean) getIntent().getSerializableExtra("user");
+
+        setTitle(bean.getScreen_name());
 
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new DMListFragment(uid))
+                .replace(android.R.id.content, new DMListFragment(bean))
                 .commit();
     }
 
