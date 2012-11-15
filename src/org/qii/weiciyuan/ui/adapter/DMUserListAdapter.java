@@ -75,7 +75,7 @@ public class DMUserListAdapter extends BaseAdapter {
 
     private View initSimpleLayout(ViewGroup parent) {
         View convertView;
-        convertView = inflater.inflate(R.layout.dmlist_listview_item_layout, parent, false);
+        convertView = inflater.inflate(R.layout.dm_user_list_listview_item_layout, parent, false);
 
         return convertView;
     }
