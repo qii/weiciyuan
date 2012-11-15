@@ -40,7 +40,10 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
 
     @Override
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-
+        String uid = bean.getItem(position).getUser().getId();
+        Intent intent = new Intent(getActivity(), DMActivity.class);
+        intent.putExtra("uid", uid);
+        startActivity(intent);
     }
 
     @Override

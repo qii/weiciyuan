@@ -11,18 +11,18 @@ import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
  */
 public class DMActivity extends AbstractAppActivity {
     @Override
-       protected void onCreate(Bundle savedInstanceState) {
-           super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-           ActionBar actionBar = getActionBar();
-           actionBar.setDisplayHomeAsUpEnabled(true);
-           actionBar.setTitle(R.string.dm);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(R.string.dm);
 
-           String token = getIntent().getStringExtra("token");
+        String uid = getIntent().getStringExtra("uid");
 
-           getFragmentManager().beginTransaction()
-                   .replace(android.R.id.content, new DMUserListFragment())
-                   .commit();
-       }
+        getFragmentManager().beginTransaction()
+                .replace(android.R.id.content, new DMListFragment(uid))
+                .commit();
+    }
 
 }

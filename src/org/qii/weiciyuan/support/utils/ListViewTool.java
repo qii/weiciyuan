@@ -8,10 +8,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.widget.TextView;
-import org.qii.weiciyuan.bean.CommentBean;
-import org.qii.weiciyuan.bean.DMUserBean;
-import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyLinkify;
@@ -144,6 +141,10 @@ public class ListViewTool {
     }
 
     public static void addJustHighLightLinks(DMUserBean bean) {
+        bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
+    }
+
+    public static void addJustHighLightLinks(DMBean bean) {
         bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
     }
 

@@ -1,12 +1,26 @@
 package org.qii.weiciyuan.bean;
 
+import android.text.SpannableString;
+import android.text.TextUtils;
+import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.TimeTool;
+
 /**
  * User: qii
  * Date: 12-11-11
  */
-public class DMBean {
+public class DMBean extends ItemBean {
+
+    private long mills;
+    private transient SpannableString listViewSpannableString;
+
     public String getId() {
         return id;
+    }
+
+    @Override
+    public UserBean getUser() {
+        return sender;
     }
 
     public void setId(String id) {
@@ -25,8 +39,35 @@ public class DMBean {
         return created_at;
     }
 
+    public long getMills() {
+        return mills;
+    }
+
+    public void setMills(long mills) {
+        this.mills = mills;
+    }
+
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
+    }
+
+    @Override
+    public SpannableString getListViewSpannableString() {
+        if (!TextUtils.isEmpty(listViewSpannableString)) {
+            return listViewSpannableString;
+        } else {
+            ListViewTool.addJustHighLightLinks(this);
+
+            return listViewSpannableString;
+        }
+    }
+
+    public String getListviewItemShowTime() {
+        return TimeTool.getListTime(this);
+    }
+
+    public void setListViewSpannableString(SpannableString listViewSpannableString) {
+        this.listViewSpannableString = listViewSpannableString;
     }
 
     public String getText() {

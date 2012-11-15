@@ -1,15 +1,15 @@
 package org.qii.weiciyuan.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * User: qii
  * Date: 12-11-11
  */
-public class DMListBean {
-    private List<DMBean> direct_messages;
+public class DMListBean extends ListBean<DMBean>{
+    private List<DMBean> direct_messages=new ArrayList<DMBean>();
 
-    private int total_number;
 
     public List<DMBean> getDirect_messages() {
         return direct_messages;
@@ -19,11 +19,19 @@ public class DMListBean {
         this.direct_messages = direct_messages;
     }
 
-    public int getTotal_number() {
-        return total_number;
+    @Override
+    public int getSize() {
+        return direct_messages.size();
     }
 
-    public void setTotal_number(int total_number) {
-        this.total_number = total_number;
+
+    @Override
+    public DMBean getItem(int position) {
+        return direct_messages.get(position);
+    }
+
+    @Override
+    public List<DMBean> getItemList() {
+        return direct_messages;
     }
 }
