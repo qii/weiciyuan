@@ -141,8 +141,10 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         final Animation anim_in = AnimationUtils.loadAnimation(activity, R.anim.timeline_pic_fade_in);
 
         anim_out.setAnimationListener(new Animation.AnimationListener() {
+            //setTag at animation start time
             @Override
             public void onAnimationStart(Animation animation) {
+                view.setTag(getUrl());
             }
 
             @Override
@@ -153,7 +155,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             public void onAnimationEnd(Animation animation) {
 
                 view.setImageBitmap(bitmap);
-                view.setTag(getUrl());
+
                 anim_in.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
@@ -171,7 +173,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                 view.startAnimation(anim_in);
             }
         });
-
-        view.startAnimation(anim_out);
+        if (view.getAnimation() == null || view.getAnimation().hasEnded())
+            view.startAnimation(anim_out);
     }
 }
