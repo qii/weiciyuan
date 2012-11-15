@@ -131,6 +131,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         anim_out.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
+                view.setTag(getUrl());
             }
 
             @Override
@@ -141,7 +142,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             public void onAnimationEnd(Animation animation) {
 
                 view.setImageBitmap(bitmap);
-                view.setTag(getUrl());
+
                 anim_in.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
