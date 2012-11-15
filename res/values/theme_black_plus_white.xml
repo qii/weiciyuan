@@ -64,7 +64,13 @@
         <item name="android:background">@drawable/ab_solid_custom_blue_inverse_holo</item>
 
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_inverse_holo</item>
+
+        <item name="android:titleTextStyle">@style/ActionBar.Title.Text</item>
+        <item name="android:subtitleTextStyle">@style/ActionBar.Subtitle.Text</item>
+
     </style>
+
+
     <style name="ActionBarDropDownStyle" parent="@android:style/Widget.Holo.Light.Spinner">
         <item name="android:background">@drawable/ab_dropdown_navigation_item_background</item>
     </style>
@@ -81,5 +87,11 @@
         <item name="android:listSelector">?android:listChoiceBackgroundIndicator</item>
     </style>
 
+    <style name="ActionBar.Title.Text" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title.Inverse">
+        <item name="android:textColor">@color/white</item>
+    </style>
 
+    <style name="ActionBar.Subtitle.Text" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle.Inverse">
+           <item name="android:textColor">@color/white</item>
+       </style>
 </resources>
