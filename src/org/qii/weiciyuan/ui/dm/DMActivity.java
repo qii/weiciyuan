@@ -22,7 +22,7 @@ public class DMActivity extends AbstractAppActivity {
         setTitle(bean.getScreen_name());
 
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new DMListFragment(bean))
+                .replace(android.R.id.content, new DMConversationListFragment(bean))
                 .commit();
     }
 

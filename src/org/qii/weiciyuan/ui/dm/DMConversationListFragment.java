@@ -16,11 +16,11 @@ import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
  * User: qii
  * Date: 12-11-15
  */
-public class DMListFragment extends AbstractTimeLineFragment<DMListBean> {
+public class DMConversationListFragment extends AbstractTimeLineFragment<DMListBean> {
 
     private UserBean userBean;
 
-    public DMListFragment(UserBean userBean) {
+    public DMConversationListFragment(UserBean userBean) {
         this.userBean = userBean;
     }
 
