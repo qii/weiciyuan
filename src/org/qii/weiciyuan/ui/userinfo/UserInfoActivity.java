@@ -430,6 +430,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
             Toast.makeText(UserInfoActivity.this, getString(R.string.follow_successfully), Toast.LENGTH_SHORT).show();
             bean = o;
             getInfoFragment().forceReloadData(o);
+            manageGroup();
         }
     }
 
