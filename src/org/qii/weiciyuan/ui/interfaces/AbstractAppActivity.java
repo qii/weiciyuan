@@ -13,6 +13,7 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -62,13 +63,16 @@ public class AbstractAppActivity extends Activity {
 
             Bitmap bitmap = getBitmapFromMemCache(urlKey);
             if (bitmap != null) {
-                view.setImageBitmap(bitmap);
+                if (!isSameUrl(urlKey, view)) {
+                    view.setImageBitmap(bitmap);
+                    view.setTag(urlKey);
+                }
                 cancelPotentialAvatarDownload(urlKey, view);
                 avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey, position));
             } else {
-                view.setImageDrawable(getResources().getDrawable(R.color.transparent));
+                view.setImageDrawable(transPic);
                 if (cancelPotentialAvatarDownload(urlKey, view) && !isFling) {
-                    AvatarBitmapWorkerTask task = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey, position);
+                    AvatarBitmapWorkerTask task = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey, position, AbstractAppActivity.this);
                     AvatarBitmapDrawable downloadedDrawable = new AvatarBitmapDrawable(task);
                     view.setImageDrawable(downloadedDrawable);
                     task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
@@ -79,19 +83,25 @@ public class AbstractAppActivity extends Activity {
         }
 
         @Override
-        public void downContentPic(ImageView view, String urlKey, int position, ListView listView, FileLocationMethod method, boolean isFling) {
-            Bitmap bitmap = getBitmapFromMemCache(urlKey);
+        public void downContentPic(final ImageView view, String urlKey, int position, ListView listView, FileLocationMethod method, boolean isFling) {
+            final Bitmap bitmap = getBitmapFromMemCache(urlKey);
             if (bitmap != null) {
                 switch (method) {
                     case picture_thumbnail:
 
-                        view.setImageBitmap(bitmap);
+                        if (!isSameUrl(urlKey, view)) {
+                            view.setImageBitmap(bitmap);
+                            view.setTag(urlKey);
+                        }
                         cancelPotentialDownload(urlKey, view);
                         pictureBitmapWorkerTaskMap.remove(urlKey);
 
                         break;
                     case picture_bmiddle:
-                        view.setImageBitmap(bitmap);
+                        if (!isSameUrl(urlKey, view)) {
+                            view.setImageBitmap(bitmap);
+                            view.setTag(urlKey);
+                        }
                         cancelPotentialDownload(urlKey, view);
                         pictureBitmapWorkerTaskMap.remove(urlKey);
                         break;
@@ -141,6 +151,15 @@ public class AbstractAppActivity extends Activity {
         return true;
     }
 
+    private static boolean isSameUrl(String url, ImageView imageView) {
+
+        String bitmapUrl = (String) imageView.getTag();
+        if ((!TextUtils.isEmpty(bitmapUrl)) && (bitmapUrl.equals(url))) {
+            return true;
+        }
+
+        return false;
+    }
 
     private static boolean cancelPotentialAvatarDownload(String url, ImageView imageView) {
         AvatarBitmapWorkerTask bitmapDownloaderTask = getAvatarBitmapDownloaderTask(imageView);

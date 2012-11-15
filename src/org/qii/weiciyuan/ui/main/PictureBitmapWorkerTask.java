@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.Display;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
@@ -105,10 +107,10 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                 if (this == bitmapDownloaderTask) {
                     switch (method) {
                         case picture_thumbnail:
-                            imageView.setImageBitmap(bitmap);
+                            playImageViewAnimation(imageView, bitmap);
                             break;
                         case picture_bmiddle:
-                            imageView.setImageBitmap(bitmap);
+                            playImageViewAnimation(imageView, bitmap);
                             break;
                     }
 
@@ -134,5 +136,42 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         return null;
     }
 
+    private void playImageViewAnimation(final ImageView view, final Bitmap bitmap) {
+        final Animation anim_out = AnimationUtils.loadAnimation(activity, R.anim.timeline_pic_fade_out);
+        final Animation anim_in = AnimationUtils.loadAnimation(activity, R.anim.timeline_pic_fade_in);
 
+        anim_out.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                view.setImageBitmap(bitmap);
+                view.setTag(getUrl());
+                anim_in.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                    }
+                });
+
+                view.startAnimation(anim_in);
+            }
+        });
+
+        view.startAnimation(anim_out);
+    }
 }
