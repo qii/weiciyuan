@@ -114,7 +114,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         ViewHolder holder = null;
 
 
-        if (convertView == null || convertView.getTag(R.drawable.ic_launcher+getItemViewType(position)) == null) {
+        if (convertView == null || convertView.getTag(R.drawable.ic_launcher + getItemViewType(position)) == null) {
 
             switch (getItemViewType(position)) {
                 case TYPE_SIMPLE:
@@ -141,11 +141,11 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             }
             if (getItemViewType(position) != TYPE_MIDDLE) {
                 holder = buildHolder(convertView);
-                convertView.setTag(R.drawable.ic_launcher+getItemViewType(position),holder);
+                convertView.setTag(R.drawable.ic_launcher + getItemViewType(position), holder);
             }
 
         } else {
-            holder = (ViewHolder) convertView.getTag(R.drawable.ic_launcher+getItemViewType(position));
+            holder = (ViewHolder) convertView.getTag(R.drawable.ic_launcher + getItemViewType(position));
         }
 
 
@@ -318,7 +318,10 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     protected void buildRepostContent(final MessageBean repost_msg, ViewHolder holder, int position) {
         holder.repost_content.setVisibility(View.VISIBLE);
-        holder.repost_content.setText(repost_msg.getListViewSpannableString());
+        if (!repost_msg.getId().equals((String) holder.repost_content.getTag())) {
+            holder.repost_content.setText(repost_msg.getListViewSpannableString());
+            holder.repost_content.setTag(repost_msg.getId());
+        }
 
         if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {
             buildPic(repost_msg, holder.repost_content_pic, position);

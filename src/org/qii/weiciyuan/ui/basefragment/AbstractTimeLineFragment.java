@@ -99,17 +99,12 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-//        if (this.isVisible()) {
-
-//        if (isVisibleToUser) {
-//            addListViewTimeRefresh();
-//        } else {
-//            removeListViewTimeRefresh();
-//        }
-//        } else {
-//            removeListViewTimeRefresh();
-//        }
+        if (this.isVisible() && isVisibleToUser) {
+            getAdapter().notifyDataSetChanged();
+        }
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,

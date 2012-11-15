@@ -71,6 +71,7 @@ public class AbstractAppActivity extends Activity {
                 avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey, position));
             } else {
                 view.setImageDrawable(transPic);
+                view.setTag("");
                 if (cancelPotentialAvatarDownload(urlKey, view) && !isFling) {
                     AvatarBitmapWorkerTask task = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey, position, AbstractAppActivity.this);
                     AvatarBitmapDrawable downloadedDrawable = new AvatarBitmapDrawable(task);
@@ -113,11 +114,12 @@ public class AbstractAppActivity extends Activity {
                     case picture_thumbnail:
 
                         view.setImageDrawable(transPic);
-//                        view.setBackgroundDrawable(transPic);
+                        view.setTag("");
 
                         break;
                     case picture_bmiddle:
                         view.setImageDrawable(transPic);
+                        view.setTag("");
                         break;
 
                 }
