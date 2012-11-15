@@ -6,7 +6,7 @@
                 android:padding="8dp"
                 android:id="@+id/listview_root">
 
-    <ImageView
+    <org.qii.weiciyuan.support.lib.PerformanceImageView
             android:id="@+id/avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
