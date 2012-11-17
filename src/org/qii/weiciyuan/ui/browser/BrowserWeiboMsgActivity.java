@@ -243,14 +243,14 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
-            case R.id.repostsbyidtimelinefragment_repost:
+            case R.id.menu_repost:
                 intent = new Intent(this, WriteRepostActivity.class);
                 intent.putExtra("token", getToken());
                 intent.putExtra("id", getMsg().getId());
                 intent.putExtra("msg", getMsg());
                 startActivity(intent);
                 return true;
-            case R.id.commentsbyidtimelinefragment_comment:
+            case R.id.menu_comment:
 
                 intent = new Intent(this, WriteCommentActivity.class);
                 intent.putExtra("token", getToken());
