@@ -70,5 +70,10 @@ public class SearchUserFragment extends AbstractUserListFragment {
         }
     }
 
+    @Override
+    protected void newUserOnPostExecute() {
+
+    }
+
 }
 

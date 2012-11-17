@@ -1,12 +1,8 @@
 package org.qii.weiciyuan.ui.userinfo;
 
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.user.FriendListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -37,24 +33,6 @@ public class FriendsListFragment extends AbstractFriendsFanListFragment {
         super.onActivityCreated(savedInstanceState);
         getListView().setOnItemLongClickListener(new FriendListOnItemLongClickListener());
 
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (!TextUtils.isEmpty(currentUser.getFriends_count())) {
-
-            int size = Integer.valueOf(currentUser.getFriends_count());
-            int newSize = bean.getTotal_number();
-            String number = "";
-            if (size >= newSize) {
-                number = bean.getUsers().size() + "/" + size;
-            } else {
-                number = bean.getUsers().size() + "/" + newSize;
-            }
-            menu.findItem(R.id.statusesbyidtimelinefragment_status_number).setTitle(number);
-
-        }
     }
 
 

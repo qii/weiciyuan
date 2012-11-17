@@ -1,13 +1,8 @@
 package org.qii.weiciyuan.ui.userinfo;
 
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.user.FanListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -16,8 +11,6 @@ import org.qii.weiciyuan.ui.actionmenu.MyFanSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.actionmenu.NormalFriendShipSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.basefragment.AbstractFriendsFanListFragment;
 import org.qii.weiciyuan.ui.interfaces.IToken;
-
-import java.util.List;
 
 /**
  * User: Jiang Qi
@@ -40,21 +33,6 @@ public class FanListFragment extends AbstractFriendsFanListFragment {
         getListView().setOnItemLongClickListener(new FanListOnItemLongClickListener());
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (!TextUtils.isEmpty(currentUser.getFollowers_count())) {
-            int size = Integer.valueOf(currentUser.getFollowers_count());
-            int newSize = bean.getTotal_number();
-            String number = "";
-            if (size >= newSize) {
-                number = bean.getUsers().size() + "/" + size;
-            } else {
-                number = bean.getUsers().size() + "/" + newSize;
-            }
-            menu.findItem(R.id.statusesbyidtimelinefragment_status_number).setTitle(number);
-        }
-    }
 
     @Override
     protected UserListBean getDoInBackgroundNewData() throws WeiboException {

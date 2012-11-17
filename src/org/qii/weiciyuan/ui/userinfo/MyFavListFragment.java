@@ -7,17 +7,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.FavListBean;
 import org.qii.weiciyuan.bean.ListBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.fav.FavListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.interfaces.IToken;
 
 /**
  * User: qii
@@ -39,6 +38,11 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
         outState.putSerializable("bean", bean);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.actionbar_menu_myfavlistfragment, menu);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -65,29 +69,20 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
     }
 
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.actionbar_menu_myfavlistfragment, menu);
+    private void buildActionBarSubtitle() {
         if (bean != null) {
             int newSize = bean.getTotal_number();
             String number = bean.getSize() + "/" + newSize;
-            menu.findItem(R.id.total_number).setTitle(number);
+            getActivity().getActionBar().setSubtitle(number);
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.total_number:
-                Toast.makeText(getActivity(), getString(R.string.deleted_by_sina_weibo), Toast.LENGTH_SHORT).show();
-                break;
 
             case R.id.myfavlistfragment_refresh:
                 pullToRefreshListView.startRefreshNow();
-
-                refresh();
-
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -105,7 +100,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
             clearAndReplaceValue(newValue);
             timeLineAdapter.notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
-            getActivity().invalidateOptionsMenu();
+            buildActionBarSubtitle();
         }
 
     }
@@ -138,9 +133,8 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
         if (newValue != null && newValue.getSize() > 0) {
             getList().getItemList().addAll(newValue.getItemList());
             bean.setTotal_number(newValue.getTotal_number());
-            getActivity().invalidateOptionsMenu();
+            buildActionBarSubtitle();
             page++;
         }
-//        ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
     }
 }

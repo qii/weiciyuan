@@ -321,14 +321,12 @@ public abstract class AbstractUserListFragment extends Fragment {
             if (newValue != null && newValue.getUsers().size() > 0) {
 
                 clearAndReplaceValue(newValue);
-                timeLineAdapter.notifyDataSetChanged();
+                getAdapter().notifyDataSetChanged();
                 getListView().setSelectionAfterHeaderView();
-
-
+                newUserOnPostExecute();
             }
 
             cleanWork();
-            getActivity().invalidateOptionsMenu();
             super.onPostExecute(newValue);
 
         }
@@ -389,8 +387,7 @@ public abstract class AbstractUserListFragment extends Fragment {
         protected void onPostExecute(UserListBean newValue) {
 
             oldUserOnPostExecute(newValue);
-            timeLineAdapter.notifyDataSetChanged();
-            getActivity().invalidateOptionsMenu();
+            getAdapter().notifyDataSetChanged();
             dismissFooterView();
             super.onPostExecute(newValue);
         }
@@ -399,6 +396,8 @@ public abstract class AbstractUserListFragment extends Fragment {
     }
 
     protected abstract void oldUserOnPostExecute(UserListBean newValue);
+
+    protected abstract void newUserOnPostExecute();
 
     protected abstract UserListBean getDoInBackgroundNewData() throws WeiboException;
 

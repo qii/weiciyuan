@@ -90,12 +90,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.userinfo.MyInfoActivity"/>
-        <activity android:name=".ui.userinfo.FriendListActivity"
-                  android:uiOptions="splitActionBarWhenNarrow"/>
-        <activity android:name=".ui.userinfo.FanListActivity"
-                  android:uiOptions="splitActionBarWhenNarrow"/>
-        <activity android:name=".ui.userinfo.MyFavActivity"
-                  android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".ui.userinfo.FriendListActivity"/>
+        <activity android:name=".ui.userinfo.FanListActivity"/>
+        <activity android:name=".ui.userinfo.MyFavActivity"/>
 
 
         <!--search activity -->
