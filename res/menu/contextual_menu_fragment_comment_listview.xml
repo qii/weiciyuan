@@ -3,14 +3,14 @@
 
     <item android:id="@+id/menu_view"
           android:title="@string/view"
-          android:showAsAction="ifRoom|withText"
+          android:showAsAction="ifRoom"
           android:visible="false"
             />
 
     <item android:id="@+id/menu_comment"
           android:icon="?reply_to_comment"
           android:title="@string/reply_to_comment"
-          android:showAsAction="ifRoom|withText"
+          android:showAsAction="ifRoom"
             />
 
     <item android:id="@+id/menu_share"
