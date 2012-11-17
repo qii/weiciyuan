@@ -96,6 +96,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override

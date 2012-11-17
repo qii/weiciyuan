@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ListBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -15,9 +14,9 @@ import org.qii.weiciyuan.bean.TopicResultListBean;
 import org.qii.weiciyuan.dao.topic.SearchTopicDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
+import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 /**
@@ -63,11 +62,6 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.actionbar_menu_searchtopicbynamefragment, menu);
-        if (bean != null) {
-            int newSize = bean.getTotal_number();
-            String number = bean.getSize() + "/" + newSize;
-            menu.findItem(R.id.menu_total_number).setTitle(number);
-        }
     }
 
     @Override
@@ -79,9 +73,6 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
                 intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
                 intent.putExtra("content", "#" + q + "#");
                 startActivity(intent);
-                break;
-            case R.id.menu_total_number:
-                Toast.makeText(getActivity(), getString(R.string.deleted_by_sina_weibo), Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.menu_refresh:
@@ -120,11 +111,17 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
     protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
             clearAndReplaceValue(newValue);
-            timeLineAdapter.notifyDataSetChanged();
+            getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
-            getActivity().invalidateOptionsMenu();
+            buildActionBatSubtitle();
         }
 
+    }
+
+    private void buildActionBatSubtitle() {
+        int newSize = bean.getTotal_number();
+        String number = bean.getSize() + "/" + newSize;
+        getActivity().getActionBar().setSubtitle(number);
     }
 
     @Override
@@ -141,7 +138,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
         if (newValue != null && newValue.getSize() > 0) {
             getList().getItemList().addAll(newValue.getItemList());
             page++;
-            getActivity().invalidateOptionsMenu();
+            buildActionBatSubtitle();
         }
     }
 }
