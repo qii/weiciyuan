@@ -4,14 +4,14 @@
 
     <item android:id="@+id/menu_write"
           android:icon="?write_weibo"
-          android:showAsAction="ifRoom|withText"
+          android:showAsAction="ifRoom"
           android:title="@string/write_weibo"/>
 
 
     <item android:id="@+id/menu_refresh"
           android:icon="?refresh"
           android:title="@string/refresh"
-          android:showAsAction="ifRoom|withText"
+          android:showAsAction="ifRoom"
             />
 
 </menu>

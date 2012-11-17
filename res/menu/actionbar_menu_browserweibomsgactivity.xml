@@ -5,14 +5,14 @@
     <item android:id="@+id/repostsbyidtimelinefragment_repost"
           android:icon="?repost"
           android:title="@string/repost"
-          android:showAsAction="always|withText"
+          android:showAsAction="always"
             />
 
 
     <item android:id="@+id/commentsbyidtimelinefragment_comment"
           android:icon="?comment"
           android:title="@string/comments"
-          android:showAsAction="always|withText"
+          android:showAsAction="always"
             />
 
     <item android:id="@+id/menu_refresh"
