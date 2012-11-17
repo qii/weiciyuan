@@ -14,9 +14,11 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.TopicResultListBean;
 import org.qii.weiciyuan.dao.topic.SearchTopicDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
+import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 /**
  * User: qii
@@ -60,25 +62,30 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.actionbar_menu_myfavlistfragment, menu);
+        inflater.inflate(R.menu.actionbar_menu_searchtopicbynamefragment, menu);
         if (bean != null) {
             int newSize = bean.getTotal_number();
             String number = bean.getSize() + "/" + newSize;
-            menu.findItem(R.id.total_number).setTitle(number);
+            menu.findItem(R.id.menu_total_number).setTitle(number);
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.total_number:
+            case R.id.menu_write:
+                Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
+                intent.putExtra("content", "#" + q + "#");
+                startActivity(intent);
+                break;
+            case R.id.menu_total_number:
                 Toast.makeText(getActivity(), getString(R.string.deleted_by_sina_weibo), Toast.LENGTH_SHORT).show();
                 break;
 
-            case R.id.myfavlistfragment_refresh:
+            case R.id.menu_refresh:
                 pullToRefreshListView.startRefreshNow();
-                refresh();
-
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -110,15 +117,15 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
-     protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
-         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
-             clearAndReplaceValue(newValue);
-             timeLineAdapter.notifyDataSetChanged();
-             getListView().setSelectionAfterHeaderView();
-             getActivity().invalidateOptionsMenu();
-         }
+    protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
+        if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
+            clearAndReplaceValue(newValue);
+            timeLineAdapter.notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
+            getActivity().invalidateOptionsMenu();
+        }
 
-     }
+    }
 
     @Override
     protected ListBean<MessageBean> getDoInBackgroundOldData() throws WeiboException {
@@ -129,7 +136,6 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
     }
 
 
-
     @Override
     protected void oldMsgOnPostExecute(ListBean<MessageBean> newValue) {
         if (newValue != null && newValue.getSize() > 0) {
@@ -137,7 +143,5 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
             page++;
             getActivity().invalidateOptionsMenu();
         }
-//        ((TextView) footerView.findViewById(R.id.listview_footer)).setText(getString(R.string.more));
-
     }
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/menu_write"
+            android:icon="?write_weibo"
+            android:showAsAction="always"
+            android:title="@string/write_weibo"/>
+
+    <item android:id="@+id/menu_total_number"
+          android:showAsAction="ifRoom|withText"
+            />
+
+    <item android:id="@+id/menu_refresh"
+          android:icon="?refresh"
+          android:title="@string/refresh"
+          android:showAsAction="ifRoom|withText"
+            />
+
+</menu>
