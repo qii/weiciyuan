@@ -81,7 +81,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.myfavlistfragment_refresh:
+            case R.id.menu_refresh:
                 pullToRefreshListView.startRefreshNow();
                 break;
         }
