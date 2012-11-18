@@ -176,6 +176,32 @@
                 </FrameLayout>
 
 
+                <LinearLayout android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:layout_gravity="right"
+                              android:visibility="gone"
+                              android:id="@+id/count_layout">
+
+                    <TextView
+                            android:id="@+id/repost_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="?android:textColorTertiary"
+                            android:drawableLeft="?timeline_repost_flag"
+                            />
+
+                    <TextView
+                            android:id="@+id/comment_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:layout_marginLeft="5dp"
+                            android:textColor="?android:textColorTertiary"
+                            android:drawableLeft="?timeline_comment_flag"
+                            />
+
+                </LinearLayout>
             </LinearLayout>
 
         </FrameLayout>

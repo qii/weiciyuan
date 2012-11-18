@@ -61,8 +61,12 @@ public class BrowserWeiboMsgFragment extends Fragment {
     private ImageView repost_pic;
 
     private LinearLayout repost_layout;
+    private LinearLayout count_layout;
     private FrameLayout pic_layout;
     private FrameLayout repost_pic_layout;
+
+    private TextView comment_count;
+    private TextView repost_count;
 
     private ProgressBar content_pic_pb;
     private ProgressBar repost_pic_pb;
@@ -231,6 +235,10 @@ public class BrowserWeiboMsgFragment extends Fragment {
         location = (TextView) view.findViewById(R.id.location);
         source = (TextView) view.findViewById(R.id.source);
 
+        comment_count = (TextView) view.findViewById(R.id.comment_count);
+        repost_count = (TextView) view.findViewById(R.id.repost_count);
+        count_layout = (LinearLayout) view.findViewById(R.id.count_layout);
+
         location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -271,6 +279,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
         repost_layout = (LinearLayout) view.findViewById(R.id.repost_layout);
         pic_layout = (FrameLayout) view.findViewById(R.id.pic_layout);
+
         recontent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -358,7 +367,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
             if (msg.getRetweeted_status().getUser() != null) {
                 recontent.setText("@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
                 ListViewTool.addLinks(recontent);
-
+                buildRepostCount();
             } else {
                 recontent.setText(msg.getRetweeted_status().getText());
                 ListViewTool.addLinks(recontent);
@@ -389,6 +398,31 @@ public class BrowserWeiboMsgFragment extends Fragment {
         getActivity().getActionBar().getTabAt(1).setText(getString(R.string.comments) + "(" + msg.getComments_count() + ")");
         getActivity().getActionBar().getTabAt(2).setText(getString(R.string.repost) + "(" + msg.getReposts_count() + ")");
 
+    }
+
+    private void buildRepostCount() {
+        MessageBean repostBean = msg.getRetweeted_status();
+
+        if (repostBean.getComments_count() == 0 && repostBean.getReposts_count() == 0) {
+            count_layout.setVisibility(View.GONE);
+            return;
+        } else {
+            count_layout.setVisibility(View.VISIBLE);
+        }
+
+        if (repostBean.getComments_count() > 0) {
+            comment_count.setVisibility(View.VISIBLE);
+            comment_count.setText(String.valueOf(repostBean.getComments_count()));
+        } else {
+            comment_count.setVisibility(View.GONE);
+        }
+
+        if (repostBean.getReposts_count() > 0) {
+            repost_count.setVisibility(View.VISIBLE);
+            repost_count.setText(String.valueOf(repostBean.getReposts_count()));
+        } else {
+            repost_count.setVisibility(View.GONE);
+        }
     }
 
     private class GetGoogleLocationInfo extends MyAsyncTask<Void, String, String> {
