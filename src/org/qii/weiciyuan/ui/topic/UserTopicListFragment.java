@@ -35,6 +35,11 @@ public class UserTopicListFragment extends ListFragment {
 
     }
 
+    public UserTopicListFragment(UserBean userBean) {
+          this.userBean = userBean;
+      }
+
+
     public UserTopicListFragment(UserBean userBean, ArrayList<String> topicList) {
         this.userBean = userBean;
         this.result = topicList;

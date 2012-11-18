@@ -11,15 +11,21 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
+import org.qii.weiciyuan.dao.topic.UserTopicListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
+import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
+
+import java.util.ArrayList;
 
 /**
  * User: Jiang Qi
@@ -40,6 +46,7 @@ public class UserInfoFragment extends Fragment {
     private TextView sex;
     private TextView following_number;
     private TextView fans_number;
+    private TextView topic_number;
 
 
     private View verified_layout;
@@ -51,10 +58,21 @@ public class UserInfoFragment extends Fragment {
     protected ICommander commander;
 
     private SimpleTask task;
+    private SimpleBitmapWorkerTask avatarTask;
+    private TopicListTask topicListTask;
 
+
+    private ArrayList<String> topicList;
 
     public UserInfoFragment() {
         super();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList("topicList", topicList);
+        outState.putSerializable("bean", bean);
     }
 
     @Override
@@ -67,8 +85,7 @@ public class UserInfoFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        if (task != null)
-            task.cancel(true);
+        Utility.cancelTasks(task, avatarTask, topicListTask);
 
 
     }
@@ -76,7 +93,12 @@ public class UserInfoFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        bean = ((IUserInfo) getActivity()).getUser();
+        if (savedInstanceState != null) {
+            topicList = savedInstanceState.getStringArrayList("topicList");
+            bean = (UserBean) savedInstanceState.getSerializable("bean");
+        } else {
+            bean = ((IUserInfo) getActivity()).getUser();
+        }
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         setValue();
         refresh();
@@ -112,7 +134,8 @@ public class UserInfoFragment extends Fragment {
 
         String avatarUrl = bean.getAvatar_large();
         if (!TextUtils.isEmpty(avatarUrl)) {
-            new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_large).execute(avatarUrl);
+            avatarTask = new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_large);
+            avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, avatarUrl);
         }
         if (!TextUtils.isEmpty(bean.getUrl())) {
 
@@ -174,6 +197,7 @@ public class UserInfoFragment extends Fragment {
         relationship = (TextView) view.findViewById(R.id.relationship);
         following_number = (TextView) view.findViewById(R.id.following_number);
         fans_number = (TextView) view.findViewById(R.id.fans_number);
+        topic_number = (TextView) view.findViewById(R.id.topic_number);
 
         blog_url_layout = view.findViewById(R.id.blog_url_layout);
         intro_layout = view.findViewById(R.id.intro_layout);
@@ -182,6 +206,7 @@ public class UserInfoFragment extends Fragment {
 
         View fan_layout = view.findViewById(R.id.fan_layout);
         View following_layout = view.findViewById(R.id.following_layout);
+        View topic_layout = view.findViewById(R.id.topic_layout);
 
         following_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,6 +224,16 @@ public class UserInfoFragment extends Fragment {
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 intent.putExtra("user", bean);
                 startActivity(intent);
+            }
+        });
+        topic_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UserTopicListActivity.class);
+                intent.putExtra("userBean", bean);
+                intent.putStringArrayListExtra("topicList", topicList);
+                startActivity(intent);
+
             }
         });
         return view;
@@ -293,26 +328,49 @@ public class UserInfoFragment extends Fragment {
         @Override
         protected void onPostExecute(UserBean o) {
             setValue();
+            topicListTask = new TopicListTask();
+            topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             super.onPostExecute(o);
         }
 
     }
+
+    private class TopicListTask extends MyAsyncTask<Void, ArrayList<String>, ArrayList<String>> {
+        WeiboException e;
+
+        @Override
+        protected ArrayList<String> doInBackground(Void... params) {
+            UserTopicListDao dao = new UserTopicListDao(GlobalContext.getInstance().getSpecialToken(), bean.getId());
+            try {
+                return dao.getGSONMsgList();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> result) {
+            super.onPostExecute(result);
+            if (isCancelled())
+                return;
+            if (result == null || result.size() == 0) {
+                return;
+            }
+            topicList = result;
+            setTextViewNum(topic_number, String.valueOf(result.size()));
+
+
+        }
+    }
+
 
     private void setTextViewNum(TextView tv, String num) {
         if (TextUtils.isEmpty(num)) {
             return;
         }
 
-//        String name = tv.getText().toString();
-//
-//        String value = "(" + num + ")";
-//        if (!name.endsWith(")")) {
-//            tv.setText(name + value);
-//        } else {
-//            int index = name.indexOf("(");
-//            String newName = name.substring(0, index);
-//            tv.setText(newName + value);
-//        }
         tv.setText(num);
 
     }

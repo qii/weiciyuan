@@ -20,15 +20,22 @@ public class UserTopicListActivity extends AbstractAppActivity {
         super.onCreate(savedInstanceState);
 
         UserBean userBean = (UserBean) getIntent().getSerializableExtra("userBean");
-        ArrayList<String> topicList=getIntent().getStringArrayListExtra("topicList");
+        ArrayList<String> topicList = getIntent().getStringArrayListExtra("topicList");
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.topic));
 
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new UserTopicListFragment(userBean,topicList))
-                .commit();
+        if (savedInstanceState == null) {
+            UserTopicListFragment fragment;
+            if (topicList != null) {
+                fragment = new UserTopicListFragment(userBean, topicList);
+            } else {
+                fragment = new UserTopicListFragment(userBean);
+            }
+            getFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, fragment)
+                    .commit();
+        }
     }
-
 
 
     @Override

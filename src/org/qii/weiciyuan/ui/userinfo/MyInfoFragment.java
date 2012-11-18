@@ -67,6 +67,13 @@ public class MyInfoFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList("topicList", topicList);
+        outState.putSerializable("bean", bean);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -77,7 +84,12 @@ public class MyInfoFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        bean = ((IUserInfo) getActivity()).getUser();
+        if (savedInstanceState != null) {
+            topicList = savedInstanceState.getStringArrayList("topicList");
+            bean = (UserBean) savedInstanceState.getSerializable("bean");
+        } else {
+            bean = ((IUserInfo) getActivity()).getUser();
+        }
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         setValue();
         refresh();
@@ -202,7 +214,7 @@ public class MyInfoFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), UserTopicListActivity.class);
                 intent.putExtra("userBean", bean);
-                intent.putStringArrayListExtra("topicList",topicList);
+                intent.putStringArrayListExtra("topicList", topicList);
                 startActivity(intent);
 
             }

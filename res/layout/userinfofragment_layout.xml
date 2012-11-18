@@ -153,6 +153,19 @@
                               android:drawablePadding="1dp"
                               android:layout_width="fill_parent" android:layout_height="fill_parent"/>
                 </TableRow>
+                <TableRow android:paddingLeft="20.0dip" android:paddingTop="5.0dip" android:paddingRight="20.0dip"
+                          android:paddingBottom="5.0dip" android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:background="?android:selectableItemBackground"
+                          android:id="@+id/topic_layout">
+                    <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"
+                              android:text="@string/topic_number" android:layout_weight="0.7"/>
+                    <TextView android:layout_gravity="right|center" android:id="@+id/topic_number"
+                              android:drawableRight="?clickable_flag"
+                              android:drawablePadding="1dp"
+                              android:text="0"
+                              android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+                </TableRow>
 
             </TableLayout>
         </LinearLayout>
