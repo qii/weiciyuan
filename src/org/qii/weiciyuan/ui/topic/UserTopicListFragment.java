@@ -86,7 +86,7 @@ public class UserTopicListFragment extends ListFragment {
                 startActivity(intent);
             }
         });
-        if (result == null) {
+        if (result == null || result.size() == 0) {
             task = new TopicListTask();
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
