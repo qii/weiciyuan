@@ -159,6 +159,7 @@
                     <TextView android:layout_gravity="right|center" android:id="@+id/topic_number"
                               android:drawableRight="?clickable_flag"
                               android:drawablePadding="1dp"
+                              android:text="0"
                               android:layout_width="fill_parent" android:layout_height="fill_parent"/>
                 </TableRow>
             </TableLayout>
