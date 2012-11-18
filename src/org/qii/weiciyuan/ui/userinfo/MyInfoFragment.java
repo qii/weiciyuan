@@ -11,15 +11,19 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
+import org.qii.weiciyuan.dao.topic.UserTopicListDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 import org.qii.weiciyuan.ui.interfaces.*;
 import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
+
+import java.util.ArrayList;
 
 /**
  * User: qii
@@ -53,6 +57,9 @@ public class MyInfoFragment extends Fragment {
 
     private MyAsyncTask<Object, UserBean, UserBean> refreshTask;
     private SimpleBitmapWorkerTask avatarTask;
+    private TopicListTask topicListTask;
+
+    private ArrayList<String> topicList;
 
 
     public MyInfoFragment() {
@@ -195,6 +202,7 @@ public class MyInfoFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), UserTopicListActivity.class);
                 intent.putExtra("userBean", bean);
+                intent.putStringArrayListExtra("topicList",topicList);
                 startActivity(intent);
 
             }
@@ -214,7 +222,7 @@ public class MyInfoFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Utility.cancelTasks(refreshTask, avatarTask);
+        Utility.cancelTasks(refreshTask, avatarTask, topicListTask);
     }
 
     @Override
@@ -275,21 +283,45 @@ public class MyInfoFragment extends Fragment {
         protected void onPostExecute(UserBean o) {
 
             setValue();
+            topicListTask = new TopicListTask();
+            topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             super.onPostExecute(o);
+        }
+    }
+
+
+    private class TopicListTask extends MyAsyncTask<Void, ArrayList<String>, ArrayList<String>> {
+        WeiboException e;
+
+        @Override
+        protected ArrayList<String> doInBackground(Void... params) {
+            UserTopicListDao dao = new UserTopicListDao(GlobalContext.getInstance().getSpecialToken(), bean.getId());
+            try {
+                return dao.getGSONMsgList();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> result) {
+            super.onPostExecute(result);
+            if (isCancelled())
+                return;
+            if (result == null || result.size() == 0) {
+                return;
+            }
+            topicList = result;
+            setTextViewNum(topic_number, String.valueOf(result.size()));
+
+
         }
     }
 
     private void setTextViewNum(TextView tv, String num) {
 
-//        String name = tv.getText().toString();
-//        String value = "(" + num + ")";
-//        if (!name.endsWith(")")) {
-//            tv.setText(name + value);
-//        } else {
-//            int index = name.indexOf("(");
-//            String newName = name.substring(0, index);
-//            tv.setText(newName + value);
-//        }
         tv.setText(num);
 
     }

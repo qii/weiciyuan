@@ -8,6 +8,8 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
+import java.util.ArrayList;
+
 /**
  * User: qii
  * Date: 12-11-18
@@ -18,11 +20,12 @@ public class UserTopicListActivity extends AbstractAppActivity {
         super.onCreate(savedInstanceState);
 
         UserBean userBean = (UserBean) getIntent().getSerializableExtra("userBean");
+        ArrayList<String> topicList=getIntent().getStringArrayListExtra("topicList");
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.topic));
 
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new UserTopicListFragment(userBean))
+                .replace(android.R.id.content, new UserTopicListFragment(userBean,topicList))
                 .commit();
     }
 

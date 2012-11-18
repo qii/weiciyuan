@@ -24,7 +24,7 @@ public class UserTopicListFragment extends ListFragment {
 
     private ArrayAdapter<String> adapter;
 
-    private List<String> result = new ArrayList<String>();
+    private ArrayList<String> result = new ArrayList<String>();
 
     private UserBean userBean;
 
@@ -35,8 +35,9 @@ public class UserTopicListFragment extends ListFragment {
 
     }
 
-    public UserTopicListFragment(UserBean userBean) {
+    public UserTopicListFragment(UserBean userBean, ArrayList<String> topicList) {
         this.userBean = userBean;
+        this.result = topicList;
     }
 
 
@@ -51,6 +52,7 @@ public class UserTopicListFragment extends ListFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("userBean", userBean);
+        outState.putStringArrayList("topicList", result);
     }
 
     @Override
@@ -65,6 +67,7 @@ public class UserTopicListFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
             userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+            result = (ArrayList<String>) savedInstanceState.getStringArrayList("topicList");
         }
         adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, result);
         setListAdapter(adapter);
@@ -83,8 +86,10 @@ public class UserTopicListFragment extends ListFragment {
                 startActivity(intent);
             }
         });
-        task = new TopicListTask();
-        task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        if (result == null) {
+            task = new TopicListTask();
+            task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
 

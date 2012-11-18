@@ -39,12 +39,12 @@ public class UserTopicListDao {
         return jsonData;
     }
 
-    public List<String> getGSONMsgList() throws WeiboException {
+    public ArrayList<String> getGSONMsgList() throws WeiboException {
 
         String json = getMsgListJson();
         Gson gson = new Gson();
 
-        List<TopicBean> value = null;
+        ArrayList<TopicBean> value = null;
         try {
             value = gson.fromJson(json, new TypeToken<List<TopicBean>>() {
             }.getType());
@@ -54,7 +54,7 @@ public class UserTopicListDao {
         }
 
         if (value != null) {
-            List<String> msgList = new ArrayList<String>();
+            ArrayList<String> msgList = new ArrayList<String>();
             for (TopicBean b : value) {
                 msgList.add(b.hotword);
             }
