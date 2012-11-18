@@ -75,6 +75,7 @@
                 <data android:scheme="org.qii.weiciyuan.topic"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ui.topic.UserTopicListActivity" />
 
         <!--user activity -->
         <activity android:name=".ui.userinfo.UserInfoActivity">

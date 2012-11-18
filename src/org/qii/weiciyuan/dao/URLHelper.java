@@ -70,6 +70,9 @@ public class URLHelper {
     public static final String AT_USER = URL_SINA_WEIBO + "search/suggestions/at_users.json";
     public static final String TOPIC_SEARCH = URL_SINA_WEIBO + "search/topics.json";
 
+    //topic
+    public static final String TOPIC_USER_LIST = URL_SINA_WEIBO + "trends.json";
+
     //unread messages
     public static final String UNREAD_COUNT = URL_SINA_WEIBO + "remind/unread_count.json";
     public static final String UNREAD_CLEAR = URL_SINA_WEIBO + "remind/set_count.json";

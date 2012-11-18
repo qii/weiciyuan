@@ -1,42 +1,32 @@
 package org.qii.weiciyuan.ui.topic;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.MenuItem;
-import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
  * User: qii
- * Date: 12-9-8
+ * Date: 12-11-18
  */
-public class SearchTopicByNameActivity extends AbstractAppActivity implements IToken {
+public class UserTopicListActivity extends AbstractAppActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String q = getIntent().getStringExtra("q");
-        if (TextUtils.isEmpty(q)) {
-            Uri data = getIntent().getData();
-            String d = data.toString();
-            int index = d.lastIndexOf("/");
-            q = d.substring(index + 1);
-        }
+
+        UserBean userBean = (UserBean) getIntent().getSerializableExtra("userBean");
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle("#" + q + "#");
+        getActionBar().setTitle(getString(R.string.topic));
 
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new SearchTopicByNameFragment(q))
+                .replace(android.R.id.content, new UserTopicListFragment(userBean))
                 .commit();
     }
 
-    @Override
-    public String getToken() {
-        return GlobalContext.getInstance().getSpecialToken();
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

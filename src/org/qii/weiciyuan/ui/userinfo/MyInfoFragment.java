@@ -19,6 +19,7 @@ import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 import org.qii.weiciyuan.ui.interfaces.*;
+import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
 
 /**
  * User: qii
@@ -37,9 +38,11 @@ public class MyInfoFragment extends Fragment {
     private TextView blog_url;
     private TextView location;
     private TextView sex;
+
     private TextView following_number;
     private TextView fans_number;
     private TextView fav_number;
+    private TextView topic_number;
 
     private View verified_layout;
     private View intro_layout;
@@ -99,7 +102,7 @@ public class MyInfoFragment extends Fragment {
         String avatarUrl = bean.getAvatar_large();
         if (!TextUtils.isEmpty(avatarUrl)) {
             avatarTask = new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_large);
-            avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, avatarUrl);
         }
         if (!TextUtils.isEmpty(bean.getUrl())) {
 
@@ -149,6 +152,7 @@ public class MyInfoFragment extends Fragment {
         following_number = (TextView) view.findViewById(R.id.following_number);
         fans_number = (TextView) view.findViewById(R.id.fans_number);
         fav_number = (TextView) view.findViewById(R.id.fav_number);
+        topic_number = (TextView) view.findViewById(R.id.topic_number);
 
         blog_url_layout = view.findViewById(R.id.blog_url_layout);
         intro_layout = view.findViewById(R.id.intro_layout);
@@ -158,6 +162,7 @@ public class MyInfoFragment extends Fragment {
         View fan_layout = view.findViewById(R.id.fan_layout);
         View following_layout = view.findViewById(R.id.following_layout);
         View fav_layout = view.findViewById(R.id.fav_layout);
+        View topic_layout = view.findViewById(R.id.topic_layout);
 
         following_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,6 +188,15 @@ public class MyInfoFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), MyFavActivity.class);
                 intent.putExtra("token", ((IToken) getActivity()).getToken());
                 startActivity(intent);
+            }
+        });
+        topic_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UserTopicListActivity.class);
+                intent.putExtra("userBean", bean);
+                startActivity(intent);
+
             }
         });
         return view;
