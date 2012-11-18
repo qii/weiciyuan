@@ -2,7 +2,6 @@ package org.qii.weiciyuan.ui.userinfo;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.*;
@@ -15,9 +14,11 @@ import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.ListViewTool;
-import org.qii.weiciyuan.ui.interfaces.*;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
+import org.qii.weiciyuan.ui.interfaces.*;
 
 /**
  * User: qii
@@ -47,7 +48,8 @@ public class MyInfoFragment extends Fragment {
 
     protected ICommander commander;
 
-    private AsyncTask<Object, UserBean, UserBean> task;
+    private MyAsyncTask<Object, UserBean, UserBean> refreshTask;
+    private SimpleBitmapWorkerTask avatarTask;
 
 
     public MyInfoFragment() {
@@ -96,7 +98,8 @@ public class MyInfoFragment extends Fragment {
 
         String avatarUrl = bean.getAvatar_large();
         if (!TextUtils.isEmpty(avatarUrl)) {
-            new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_large).execute(avatarUrl);
+            avatarTask = new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_large);
+            avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
         if (!TextUtils.isEmpty(bean.getUrl())) {
 
@@ -145,7 +148,7 @@ public class MyInfoFragment extends Fragment {
         sex = (TextView) view.findViewById(R.id.sex);
         following_number = (TextView) view.findViewById(R.id.following_number);
         fans_number = (TextView) view.findViewById(R.id.fans_number);
-        fav_number=(TextView)view.findViewById(R.id.fav_number);
+        fav_number = (TextView) view.findViewById(R.id.fav_number);
 
         blog_url_layout = view.findViewById(R.id.blog_url_layout);
         intro_layout = view.findViewById(R.id.intro_layout);
@@ -197,8 +200,7 @@ public class MyInfoFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        if (task != null)
-            task.cancel(true);
+        Utility.cancelTasks(refreshTask, avatarTask);
     }
 
     @Override
@@ -214,13 +216,13 @@ public class MyInfoFragment extends Fragment {
     }
 
     private void refresh() {
-        if (task == null || task.getStatus() == AsyncTask.Status.FINISHED) {
-            task = new SimpleTask();
-            task.execute();
+        if (refreshTask == null || refreshTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            refreshTask = new RefreshTask();
+            refreshTask.execute();
         }
     }
 
-    private class SimpleTask extends AsyncTask<Object, UserBean, UserBean> {
+    private class RefreshTask extends MyAsyncTask<Object, UserBean, UserBean> {
         WeiboException e;
 
         @Override
