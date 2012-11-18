@@ -114,8 +114,10 @@ public class HttpUtility {
         cacheConfig.setMaxCacheEntries(1000);
         cacheConfig.setMaxObjectSize(8192);
 
-        httpClient = new CachingHttpClient(new DecompressingHttpClient(backend), cacheConfig);
+        //4.2 N7 pad has bug, occur time out frequently
+        //httpClient = new CachingHttpClient(new DecompressingHttpClient(backend), cacheConfig);
 
+        httpClient = new DecompressingHttpClient(new CachingHttpClient(backend, cacheConfig));
         HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 5000);
         HttpConnectionParams.setSoTimeout(httpClient.getParams(), 8000);
 
@@ -273,7 +275,7 @@ public class HttpUtility {
                 response = httpClient.execute(httpRequest);
             }
         } catch (ConnectTimeoutException e) {
-
+            e.printStackTrace();
             AppLogger.e(e.getMessage());
             httpRequest.abort();
             throw new WeiboException(GlobalContext.getInstance().getString(R.string.timeout), e);
