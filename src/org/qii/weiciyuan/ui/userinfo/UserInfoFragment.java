@@ -18,11 +18,11 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
-import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
 
 import java.util.ArrayList;
@@ -370,8 +370,12 @@ public class UserInfoFragment extends Fragment {
         if (TextUtils.isEmpty(num)) {
             return;
         }
-
-        tv.setText(num);
+        int number = Integer.valueOf(num);
+        String value = num;
+        if (number > 10000) {
+            value = String.valueOf((number / 10000) + getString(R.string.ten_thousand));
+        }
+        tv.setText(value);
 
     }
 }

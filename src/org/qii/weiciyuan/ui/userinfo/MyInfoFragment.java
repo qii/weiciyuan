@@ -334,7 +334,15 @@ public class MyInfoFragment extends Fragment {
 
     private void setTextViewNum(TextView tv, String num) {
 
-        tv.setText(num);
+        if (TextUtils.isEmpty(num)) {
+            return;
+        }
+        int number = Integer.valueOf(num);
+        String value = num;
+        if (number > 10000) {
+            value = String.valueOf((number / 10000) + getString(R.string.ten_thousand));
+        }
+        tv.setText(value);
 
     }
 }
