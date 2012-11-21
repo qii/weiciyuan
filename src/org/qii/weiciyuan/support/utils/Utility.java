@@ -1,7 +1,11 @@
 package org.qii.weiciyuan.support.utils;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
+import android.view.MotionEvent;
+import android.widget.ListView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 
 import java.io.UnsupportedEncodingException;
@@ -82,6 +86,20 @@ public class Utility {
         for (MyAsyncTask task : tasks) {
             if (task != null)
                 task.cancel(true);
+        }
+    }
+
+    public static void stopListViewScrolling(ListView listView) {
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            listView.setSelection(0);
+            listView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
+
+        } else {
+
+            listView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
+            listView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
+            listView.setSelection(0);
+
         }
     }
 }
