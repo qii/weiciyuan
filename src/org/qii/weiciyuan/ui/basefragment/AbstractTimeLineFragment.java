@@ -184,15 +184,15 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
                 getListView().clearChoices();
                 if (position - 1 < getList().getSize() && position - 1 >= 0) {
                     int index = position - 1;
-                    Object msg = bean.getItemList().get(index);
+                    Object msg = getList().getItemList().get(index);
 
                     if (msg != null) {
                         listViewItemClick(parent, view, index, id);
 
                     } else {
-                        String beginId = bean.getItem(index - 1).getId();
-                        String endTag = bean.getItem(index + 1).getId();
-                        String endId = bean.getItem(index + 2).getId();
+                        String beginId = getList().getItem(index - 1).getId();
+                        String endTag = getList().getItem(index + 1).getId();
+                        String endId = getList().getItem(index + 2).getId();
 
                         loadMiddleMsg(beginId, endId, endTag, index);
 
@@ -504,7 +504,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             return;
 
         if (newValue.getSize() == 1) {
-            bean.getItemList().remove(position);
+            getList().getItemList().remove(position);
             getAdapter().notifyDataSetChanged();
             return;
         }
@@ -512,16 +512,16 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         ItemBean lastItem = newValue.getItem(newValue.getSize() - 1);
 
         if (!lastItem.getId().equals(endTag)) {
-            bean.getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
+            getList().getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
             getAdapter().notifyDataSetChanged();
             return;
         }
 
         if (lastItem.getId().equals(endTag)) {
             int nullIndex = position + newValue.getSize() - 1;
-            bean.getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
-            bean.getItemList().remove(nullIndex - 1);
-            bean.getItemList().remove(nullIndex - 1);
+            getList().getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
+            getList().getItemList().remove(nullIndex - 1);
+            getList().getItemList().remove(nullIndex - 1);
             getAdapter().notifyDataSetChanged();
             return;
         }
