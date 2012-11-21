@@ -31,6 +31,7 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
@@ -190,16 +191,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
 
                 case 1:
                     if (status) {
-                        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                            getStatusFragment().getListView().setSelection(0);
-                            getStatusFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
-
-                        } else {
-
-                            getStatusFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
-                            getStatusFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
-                            getStatusFragment().getListView().setSelection(0);
-                        }
+                        Utility.stopListViewScrollingAndScrollToTop(getStatusFragment().getListView());
                     }
                     break;
 

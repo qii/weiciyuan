@@ -10,9 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
 import android.view.*;
 import android.widget.ShareActionProvider;
@@ -22,10 +20,11 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IWeiboMsgInfo;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteRepostActivity;
@@ -191,32 +190,12 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
 
                 case 1:
                     if (comment) {
-                        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                            getCommentFragment().getListView().setSelection(0);
-                            getCommentFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
-
-                        } else {
-
-                            getCommentFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
-                            getCommentFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
-                            getCommentFragment().getListView().setSelection(0);
-                        }
-
+                        Utility.stopListViewScrollingAndScrollToTop(getCommentFragment().getListView());
                     }
                     break;
                 case 2:
                     if (repost) {
-                        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                            getRepostFragment().getListView().setSelection(0);
-                            getRepostFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
-
-                        } else {
-
-                            getRepostFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
-                            getRepostFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
-                            getRepostFragment().getListView().setSelection(0);
-                        }
-
+                        Utility.stopListViewScrollingAndScrollToTop(getRepostFragment().getListView());
                     }
                     break;
                 case 3:

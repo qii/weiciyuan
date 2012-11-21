@@ -5,9 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
 import android.view.GestureDetector;
 import android.view.MenuItem;
@@ -18,11 +16,12 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.util.ArrayList;
@@ -128,16 +127,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
 
                 case 1:
                     if (status) {
-                        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                            getStatusFragment().getListView().setSelection(0);
-                            getStatusFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
-
-                        } else {
-
-                            getStatusFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
-                            getStatusFragment().getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
-                            getStatusFragment().getListView().setSelection(0);
-                        }
+                        Utility.stopListViewScrollingAndScrollToTop(getStatusFragment().getListView());
                     }
                     break;
 
