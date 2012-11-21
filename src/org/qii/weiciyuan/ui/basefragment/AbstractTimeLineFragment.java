@@ -52,6 +52,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         return bean;
     }
 
+    public PullToRefreshListView getPullToRefreshListView() {
+        return pullToRefreshListView;
+    }
+
     public ListView getListView() {
         return pullToRefreshListView.getRefreshableView();
     }
@@ -103,7 +107,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             getAdapter().notifyDataSetChanged();
         }
     }
-
 
 
     @Override

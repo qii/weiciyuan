@@ -150,7 +150,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pullToRefreshListView.setVisibility(View.INVISIBLE);
+            getPullToRefreshListView().setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -162,7 +162,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
         @Override
         protected void onPostExecute(Object o) {
-            pullToRefreshListView.setVisibility(View.VISIBLE);
+            getPullToRefreshListView().setVisibility(View.VISIBLE);
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
             super.onPostExecute(o);
@@ -170,7 +170,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
              * when this account first open app,if he don't have any data in database,fetch data from server automally
              */
             if (bean.getSize() == 0) {
-                pullToRefreshListView.startRefreshNow();
+                getPullToRefreshListView().startRefreshNow();
             }
         }
     }
@@ -221,7 +221,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 break;
             case R.id.refresh:
                 if (allowRefresh())
-                    pullToRefreshListView.startRefreshNow();
+                    getPullToRefreshListView().startRefreshNow();
                 break;
             case R.id.group_name:
 
@@ -233,14 +233,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void switchGroupListViewAndNormalListView() {
-        if (pullToRefreshListView.getVisibility() == View.VISIBLE) {
-            pullToRefreshListView.setVisibility(View.GONE);
-        } else {
-            pullToRefreshListView.setVisibility(View.VISIBLE);
-        }
     }
 
 
@@ -309,7 +301,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         if (hashMap.get(selectedId) == null || hashMap.get(selectedId).getSize() == 0) {
             bean.getItemList().clear();
             getAdapter().notifyDataSetChanged();
-            pullToRefreshListView.startRefreshNow();
+            getPullToRefreshListView().startRefreshNow();
 
         } else {
             clearAndReplaceValue(hashMap.get(selectedId));
