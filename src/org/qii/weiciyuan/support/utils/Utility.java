@@ -89,17 +89,15 @@ public class Utility {
         }
     }
 
-    public static void stopListViewScrolling(ListView listView) {
+    public static void stopListViewScrollingAndScrollToTop(ListView listView) {
         if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             listView.setSelection(0);
             listView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
 
         } else {
-
             listView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
             listView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
             listView.setSelection(0);
-
         }
     }
 }
