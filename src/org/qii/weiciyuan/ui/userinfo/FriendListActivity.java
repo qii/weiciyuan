@@ -6,7 +6,6 @@ import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -14,16 +13,10 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  * User: Jiang Qi
  * Date: 12-8-16
  */
-public class FriendListActivity extends AbstractAppActivity implements IUserInfo,
-        IToken {
-    private String token;
+public class FriendListActivity extends AbstractAppActivity implements IUserInfo {
 
     private UserBean bean;
 
-    @Override
-    public String getToken() {
-        return token;
-    }
 
     @Override
     public UserBean getUser() {
@@ -35,7 +28,6 @@ public class FriendListActivity extends AbstractAppActivity implements IUserInfo
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.following_list));
-        token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
         if (getFragmentManager().findFragmentByTag(FriendsListFragment.class.getName()) == null) {
             getFragmentManager().beginTransaction()

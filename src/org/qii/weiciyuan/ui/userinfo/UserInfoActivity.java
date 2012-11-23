@@ -8,10 +8,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.*;
@@ -33,7 +31,6 @@ import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -46,8 +43,8 @@ import java.util.List;
  * User: Jiang Qi
  * Date: 12-8-14
  */
-public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
-        IToken {
+public class UserInfoActivity extends AbstractAppActivity implements IUserInfo
+         {
     private String token;
 
     private UserBean bean;
@@ -61,8 +58,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo,
     private GestureDetector gestureDetector;
 
 
-    @Override
-    public String getToken() {
+     public String getToken() {
         if (TextUtils.isEmpty(token))
             token = GlobalContext.getInstance().getSpecialToken();
         return token;

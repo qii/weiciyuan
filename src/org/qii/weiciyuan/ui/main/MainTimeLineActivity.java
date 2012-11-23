@@ -25,7 +25,6 @@ import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.dm.DMUserListFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
@@ -47,7 +46,6 @@ import java.util.concurrent.TimeUnit;
  * Date: 12-7-27
  */
 public class MainTimeLineActivity extends AbstractAppActivity implements IUserInfo,
-        IToken,
         IAccountInfo {
 
     private ViewPager mViewPager = null;

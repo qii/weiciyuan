@@ -23,7 +23,6 @@ import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IWeiboMsgInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteCommentActivity;
@@ -37,7 +36,7 @@ import java.util.List;
  * User: Jiang Qi
  * Date: 12-8-1
  */
-public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWeiboMsgInfo, IToken {
+public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWeiboMsgInfo {
 
     private MessageBean msg;
     private String token;
@@ -319,8 +318,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements IWei
     }
 
 
-    @Override
-    public String getToken() {
+     public String getToken() {
         return token;
     }
 

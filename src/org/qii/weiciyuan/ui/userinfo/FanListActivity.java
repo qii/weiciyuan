@@ -6,7 +6,6 @@ import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -14,16 +13,12 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  * User: Jiang Qi
  * Date: 12-8-16
  */
-public class FanListActivity extends AbstractAppActivity implements IUserInfo,
-        IToken {
+public class FanListActivity extends AbstractAppActivity implements IUserInfo
+         {
     private String token;
 
     private UserBean bean;
 
-    @Override
-    public String getToken() {
-        return token;
-    }
 
     @Override
     public UserBean getUser() {

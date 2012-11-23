@@ -16,11 +16,11 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -31,8 +31,7 @@ import java.util.List;
  * User: qii
  * Date: 12-8-15
  */
-public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
-        IToken, IAccountInfo {
+public class MyInfoActivity extends AbstractAppActivity implements IUserInfo, IAccountInfo {
     private String token;
 
     private UserBean bean;
@@ -43,11 +42,6 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
 
     private GestureDetector gestureDetector;
 
-
-    @Override
-    public String getToken() {
-        return token;
-    }
 
     @Override
     public UserBean getUser() {
@@ -185,7 +179,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo,
                 list.add(getMyInfoFragment());
             }
             if (getStatusFragment() == null) {
-                list.add(new StatusesByIdTimeLineFragment(getUser(), getToken()));
+                list.add(new StatusesByIdTimeLineFragment(getUser(), GlobalContext.getInstance().getSpecialToken()));
             } else {
                 list.add(getStatusFragment());
             }

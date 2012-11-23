@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
  * User: qii
  * Date: 12-9-19
  */
-public class BrowserCommentActivity extends AbstractAppActivity implements IToken {
+public class BrowserCommentActivity extends AbstractAppActivity  {
 
     private String token;
 
@@ -40,10 +39,6 @@ public class BrowserCommentActivity extends AbstractAppActivity implements IToke
 
     }
 
-    @Override
-    public String getToken() {
-        return token;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

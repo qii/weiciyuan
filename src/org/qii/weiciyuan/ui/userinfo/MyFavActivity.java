@@ -6,7 +6,6 @@ import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -14,16 +13,11 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  * User: qii
  * Date: 12-8-18
  */
-public class MyFavActivity extends AbstractAppActivity implements IUserInfo,
-        IToken {
+public class MyFavActivity extends AbstractAppActivity implements IUserInfo {
     private String token;
 
     private UserBean bean;
 
-    @Override
-    public String getToken() {
-        return token;
-    }
 
     @Override
     public UserBean getUser() {
