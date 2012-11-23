@@ -7,7 +7,7 @@ import java.util.List;
  * User: Jiang Qi
  * Date: 12-8-2
  */
-public class CommentListBean extends ListBean<CommentBean> {
+public class CommentListBean extends ListBean<CommentBean, CommentListBean> {
 
     private List<CommentBean> comments = new ArrayList<CommentBean>();
 
@@ -36,6 +36,7 @@ public class CommentListBean extends ListBean<CommentBean> {
         return comments.size();
     }
 
+    @Override
     public void addNewData(CommentListBean newValue) {
         if (newValue != null && newValue.getSize() > 0) {
             setTotal_number(newValue.getTotal_number());
@@ -45,6 +46,7 @@ public class CommentListBean extends ListBean<CommentBean> {
 
     }
 
+    @Override
     public void addOldData(CommentListBean oldValue) {
 
         if (oldValue != null && oldValue.getItemList().size() > 1) {

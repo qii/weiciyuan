@@ -7,7 +7,7 @@ import java.util.List;
  * User: qii
  * Date: 12-8-18
  */
-public class FavListBean extends ListBean<MessageBean> {
+public class FavListBean extends ListBean<MessageBean, FavListBean> {
     private List<FavBean> favorites = new ArrayList<FavBean>();
     private List<MessageBean> actualStore = null;
 
@@ -41,22 +41,24 @@ public class FavListBean extends ListBean<MessageBean> {
         return actualStore;
     }
 
+    @Override
     public void addNewData(FavListBean newValue) {
-          if (newValue != null && newValue.getSize() > 0) {
+        if (newValue != null && newValue.getSize() > 0) {
 
-              this.getItemList().clear();
-              this.getItemList().addAll(newValue.getItemList());
-              this.setTotal_number(newValue.getTotal_number());
+            this.getItemList().clear();
+            this.getItemList().addAll(newValue.getItemList());
+            this.setTotal_number(newValue.getTotal_number());
 
 
-          }
-      }
+        }
+    }
 
-      public void addOldData(FavListBean oldValue) {
-          if (oldValue != null && oldValue.getSize() > 0) {
-              getItemList().addAll(oldValue.getItemList());
-              setTotal_number(oldValue.getTotal_number());
+    @Override
+    public void addOldData(FavListBean oldValue) {
+        if (oldValue != null && oldValue.getSize() > 0) {
+            getItemList().addAll(oldValue.getItemList());
+            setTotal_number(oldValue.getTotal_number());
 
-          }
-      }
+        }
+    }
 }

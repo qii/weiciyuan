@@ -50,7 +50,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     private RemoveTask removeTask;
     private DBCacheTask dbTask;
 
-    private Map<Integer, ListBean<CommentBean>> hashMap = new HashMap<Integer, ListBean<CommentBean>>();
+    private Map<Integer, CommentListBean> hashMap = new HashMap<Integer, CommentListBean>();
 
 
     public CommentsTimeLineFragment() {
@@ -67,7 +67,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         selected = positoin;
     }
 
-    protected void clearAndReplaceValue(ListBean<CommentBean> value) {
+    protected void clearAndReplaceValue(CommentListBean value) {
         getList().getItemList().clear();
         getList().getItemList().addAll(value.getItemList());
     }
@@ -523,7 +523,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         getActivity().invalidateOptionsMenu();
     }
 
-    private void clearAndReplaceValue(int position, ListBean<CommentBean> newValue) {
+    private void clearAndReplaceValue(int position, CommentListBean newValue) {
         hashMap.get(position).getItemList().clear();
         hashMap.get(position).getItemList().addAll(newValue.getItemList());
         hashMap.get(position).setTotal_number(newValue.getTotal_number());

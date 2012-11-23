@@ -7,8 +7,8 @@ import java.util.List;
  * User: qii
  * Date: 12-11-11
  */
-public class DMListBean extends ListBean<DMBean>{
-    private List<DMBean> direct_messages=new ArrayList<DMBean>();
+public class DMListBean extends ListBean<DMBean, DMListBean> {
+    private List<DMBean> direct_messages = new ArrayList<DMBean>();
 
 
     public List<DMBean> getDirect_messages() {
@@ -33,5 +33,18 @@ public class DMListBean extends ListBean<DMBean>{
     @Override
     public List<DMBean> getItemList() {
         return direct_messages;
+    }
+
+    @Override
+    public void addNewData(DMListBean newValue) {
+        getItemList().clear();
+        getItemList().addAll(newValue.getItemList());
+        setTotal_number(newValue.getTotal_number());
+    }
+
+    @Override
+    public void addOldData(DMListBean oldValue) {
+        setTotal_number(oldValue.getTotal_number());
+        getItemList().addAll(oldValue.getItemList());
     }
 }

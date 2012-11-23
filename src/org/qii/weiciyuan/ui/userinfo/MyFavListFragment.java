@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.FavListBean;
-import org.qii.weiciyuan.bean.ListBean;
-import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.fav.FavListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -55,7 +53,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         if (savedInstanceState != null && bean.getItemList().size() == 0) {
-            clearAndReplaceValue((ListBean<MessageBean>) savedInstanceState.getSerializable("bean"));
+            clearAndReplaceValue((FavListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {

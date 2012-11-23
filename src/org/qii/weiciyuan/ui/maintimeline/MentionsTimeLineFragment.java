@@ -45,7 +45,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
 
     private int selected = 0;
 
-    private Map<Integer, ListBean<MessageBean>> hashMap = new HashMap<Integer, ListBean<MessageBean>>();
+    private Map<Integer, MessageListBean> hashMap = new HashMap<Integer, MessageListBean>();
 
     public void setFilter_by_author(String filter_by_author) {
         this.filter_by_author = filter_by_author;
@@ -338,7 +338,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
     }
 
 
-    private void clearAndReplaceValue(int position, ListBean<MessageBean> newValue) {
+    private void clearAndReplaceValue(int position, MessageListBean newValue) {
         hashMap.get(position).getItemList().clear();
         hashMap.get(position).getItemList().addAll(newValue.getItemList());
         hashMap.get(position).setTotal_number(newValue.getTotal_number());

@@ -9,7 +9,7 @@ import java.util.List;
  * User: Jiang Qi
  * Date: 12-8-7
  */
-public class RepostListBean extends ListBean<MessageBean> {
+public class RepostListBean extends ListBean<MessageBean,RepostListBean> {
 
     private List<MessageBean> reposts = new ArrayList<MessageBean>();
 
@@ -37,7 +37,7 @@ public class RepostListBean extends ListBean<MessageBean> {
         return getReposts();
     }
 
-
+    @Override
     public void addNewData(RepostListBean newValue) {
         if (newValue != null) {
             if (newValue.getSize() == 0) {
@@ -61,7 +61,7 @@ public class RepostListBean extends ListBean<MessageBean> {
             }
         }
     }
-
+    @Override
     public void addOldData(RepostListBean oldValue) {
         if (oldValue != null && oldValue.getSize() > 1) {
             getItemList().addAll(oldValue.getItemList().subList(1, oldValue.getSize()));

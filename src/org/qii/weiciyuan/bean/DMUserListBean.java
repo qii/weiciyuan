@@ -7,7 +7,7 @@ import java.util.List;
  * User: qii
  * Date: 12-11-14
  */
-public class DMUserListBean extends ListBean<DMUserBean> {
+public class DMUserListBean extends ListBean<DMUserBean, DMUserListBean> {
     private List<DMUserBean> user_list = new ArrayList<DMUserBean>();
 
     @Override
@@ -25,6 +25,15 @@ public class DMUserListBean extends ListBean<DMUserBean> {
         return user_list;
     }
 
+    @Override
+    public void addNewData(DMUserListBean newValue) {
+        getItemList().clear();
+        getItemList().addAll(newValue.getItemList());
+    }
 
+    @Override
+    public void addOldData(DMUserListBean oldValue) {
+        getItemList().addAll(oldValue.getItemList());
+    }
 }
 

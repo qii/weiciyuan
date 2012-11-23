@@ -7,7 +7,7 @@ import java.util.List;
  * User: qii
  * Date: 12-8-27
  */
-public abstract class ListBean<T extends ItemBean> implements Serializable {
+public abstract class ListBean<T extends ItemBean, K> implements Serializable {
 
     protected int total_number = 0;
     private String previous_cursor = "";
@@ -42,4 +42,8 @@ public abstract class ListBean<T extends ItemBean> implements Serializable {
     public void setNext_cursor(String next_cursor) {
         this.next_cursor = next_cursor;
     }
+
+    public abstract void addNewData(K newValue);
+
+    public abstract void addOldData(K oldValue);
 }

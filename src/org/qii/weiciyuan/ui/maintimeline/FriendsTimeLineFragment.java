@@ -45,7 +45,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private ScheduledExecutorService scheduledRefreshExecutorService = null;
 
     private String selectedId = "0";
-    private HashMap<String, ListBean<MessageBean>> hashMap = new HashMap<String, ListBean<MessageBean>>();
+    private HashMap<String, MessageListBean> hashMap = new HashMap<String, MessageListBean>();
 
     private GroupTask groupTask;
 
@@ -129,12 +129,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     public void onDetach() {
         super.onDetach();
         Utility.cancelTasks(dbTask, groupTask);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        return view;
     }
 
     @Override
@@ -337,7 +331,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         getActivity().invalidateOptionsMenu();
     }
 
-    private void clearAndReplaceValue(String position, ListBean<MessageBean> newValue) {
+    private void clearAndReplaceValue(String position, MessageListBean newValue) {
         hashMap.put(position, new MessageListBean());
         hashMap.get(position).getItemList().clear();
         hashMap.get(position).getItemList().addAll(newValue.getItemList());

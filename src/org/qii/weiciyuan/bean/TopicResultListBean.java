@@ -6,7 +6,7 @@ import java.util.List;
  * User: qii
  * Date: 12-9-26
  */
-public class TopicResultListBean extends ListBean<MessageBean> {
+public class TopicResultListBean extends ListBean<MessageBean,TopicResultListBean> {
 
 
     private List<MessageBean> statuses;
@@ -36,7 +36,7 @@ public class TopicResultListBean extends ListBean<MessageBean> {
         this.statuses = statuses;
     }
 
-
+    @Override
     public void addNewData(TopicResultListBean newValue) {
         if (newValue != null && newValue.getSize() > 0) {
 
@@ -47,7 +47,7 @@ public class TopicResultListBean extends ListBean<MessageBean> {
 
         }
     }
-
+    @Override
     public void addOldData(TopicResultListBean oldValue) {
         if (oldValue != null && oldValue.getSize() > 0) {
             getItemList().addAll(oldValue.getItemList());

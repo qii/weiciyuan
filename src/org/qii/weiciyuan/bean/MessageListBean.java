@@ -9,7 +9,7 @@ import java.util.List;
  * User: qii
  * Date: 12-7-29
  */
-public class MessageListBean extends ListBean<MessageBean> {
+public class MessageListBean extends ListBean<MessageBean, MessageListBean> {
 
     private List<MessageBean> statuses = new ArrayList<MessageBean>();
 
@@ -38,7 +38,7 @@ public class MessageListBean extends ListBean<MessageBean> {
         return getStatuses();
     }
 
-
+    @Override
     public void addNewData(MessageListBean newValue) {
         if (newValue != null) {
             if (newValue.getSize() == 0) {
@@ -63,6 +63,7 @@ public class MessageListBean extends ListBean<MessageBean> {
         }
     }
 
+    @Override
     public void addOldData(MessageListBean oldValue) {
         if (oldValue != null && oldValue.getSize() > 1) {
             getItemList().addAll(oldValue.getItemList().subList(1, oldValue.getSize()));

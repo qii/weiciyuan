@@ -21,11 +21,11 @@ import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
  * User: qii
  * Date: 12-7-29
  */
-public abstract class AbstractMessageTimeLineFragment<T extends ListBean<MessageBean>> extends AbstractTimeLineFragment<T> implements IRemoveItem {
+public abstract class AbstractMessageTimeLineFragment<T extends ListBean<MessageBean,?>> extends AbstractTimeLineFragment<T> implements IRemoveItem {
 
     private RemoveTask removeTask;
 
-    protected void showNewMsgToastMessage(ListBean<MessageBean> newValue) {
+    protected void showNewMsgToastMessage(ListBean<MessageBean,?> newValue) {
         if (newValue != null && getActivity() != null) {
             if (newValue.getSize() == 0) {
                 Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
@@ -35,7 +35,7 @@ public abstract class AbstractMessageTimeLineFragment<T extends ListBean<Message
         }
     }
 
-    protected void clearAndReplaceValue(ListBean<MessageBean> value) {
+    protected void clearAndReplaceValue(ListBean<MessageBean,?> value) {
         getList().getItemList().clear();
         getList().getItemList().addAll(value.getItemList());
         getList().setTotal_number(value.getTotal_number());
