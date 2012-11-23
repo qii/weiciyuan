@@ -52,6 +52,12 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     private Map<Integer, CommentListBean> hashMap = new HashMap<Integer, CommentListBean>();
 
+    private CommentListBean bean = new CommentListBean();
+
+    @Override
+    public CommentListBean getList() {
+        return bean;
+    }
 
     public CommentsTimeLineFragment() {
 
@@ -314,12 +320,6 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 
-    private CommentListBean bean = new CommentListBean();
-
-    @Override
-    public CommentListBean getList() {
-        return bean;
-    }
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
