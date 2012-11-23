@@ -24,7 +24,6 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.actionmenu.CommentByIdSingleChoiceModeLinstener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -32,8 +31,6 @@ import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
-
-import java.util.List;
 
 /**
  * User: qii
@@ -46,21 +43,12 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     private CommentListBean bean = new CommentListBean();
 
-     @Override
-     public CommentListBean getList() {
-         return bean;
-     }
-
-    protected void clearAndReplaceValue(CommentListBean value) {
-        bean.getItemList().clear();
-        bean.getItemList().addAll(value.getItemList());
-        bean.setTotal_number(value.getTotal_number());
+    @Override
+    public CommentListBean getList() {
+        return bean;
     }
 
     private EditText et;
-
-
-
     private String token;
     private String id;
 
@@ -127,7 +115,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         commander = ((AbstractAppActivity) getActivity()).getCommander();
 
         if (savedInstanceState != null && bean.getItemList().size() == 0) {
-            clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
+            getList().replaceAll((CommentListBean) savedInstanceState.getSerializable("bean"));
             token = savedInstanceState.getString("token");
             id = savedInstanceState.getString("id");
             timeLineAdapter.notifyDataSetChanged();
@@ -241,7 +229,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     private void sendComment() {
 
         if (canSend()) {
-            new SimpleTask().execute();
+            new QuickCommentTask().execute();
         }
     }
 
@@ -302,7 +290,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         }
     }
 
-    class SimpleTask extends AsyncTask<Void, Void, CommentBean> {
+    class QuickCommentTask extends AsyncTask<Void, Void, CommentBean> {
         WeiboException e;
         SendProgressFragment progressFragment = new SendProgressFragment();
 
@@ -312,12 +300,12 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
                 @Override
                 public void cancel() {
-                    SimpleTask.this.cancel(true);
+                    QuickCommentTask.this.cancel(true);
                 }
 
                 @Override
                 public void dismiss() {
-                    SimpleTask.this.cancel(true);
+                    QuickCommentTask.this.cancel(true);
                 }
             });
 
@@ -373,13 +361,9 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
             case R.id.menu_refresh:
-                pullToRefreshListView.startRefreshNow();
-                refresh();
+                getPullToRefreshListView().startRefreshNow();
                 return true;
-
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -417,40 +401,22 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     protected void newMsgOnPostExecute(CommentListBean newValue) {
-        if (newValue != null) {
-            bean.setTotal_number(newValue.getTotal_number());
-            if (newValue.getItemList().size() == 0) {
-//                Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
-
-            } else {
-//                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
-                if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                    newValue.getItemList().addAll(getList().getItemList());
-                }
-
-                clearAndReplaceValue(newValue);
-                getAdapter().notifyDataSetChanged();
-                getListView().setSelectionAfterHeaderView();
-
-            }
+        if (newValue != null && newValue.getSize() > 0) {
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
+            invlidateTabText();
         }
-
-        invlidateTabText();
     }
 
     @Override
     protected void oldMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null && newValue.getItemList().size() > 1) {
-            List<CommentBean> list = newValue.getItemList();
-            getList().getItemList().addAll(list.subList(1, list.size()));
-            getList().setTotal_number(newValue.getTotal_number());
-
+            getList().addOldData(newValue);
+            getAdapter().notifyDataSetChanged();
+            invlidateTabText();
         }
-
-        timeLineAdapter.notifyDataSetChanged();
-        invlidateTabText();
     }
-
 
     private void invlidateTabText() {
         Activity activity = getActivity();

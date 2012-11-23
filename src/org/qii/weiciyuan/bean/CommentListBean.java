@@ -35,4 +35,26 @@ public class CommentListBean extends ListBean<CommentBean> {
     public int getSize() {
         return comments.size();
     }
+
+    public void addNewData(CommentListBean newValue) {
+        if (newValue != null && newValue.getSize() > 0) {
+            setTotal_number(newValue.getTotal_number());
+            getItemList().clear();
+            getItemList().addAll(newValue.getItemList());
+        }
+
+    }
+
+    public void addOldData(CommentListBean oldValue) {
+
+        if (oldValue != null && oldValue.getItemList().size() > 1) {
+            List<CommentBean> list = oldValue.getItemList();
+            getItemList().addAll(list.subList(1, list.size()));
+            setTotal_number(oldValue.getTotal_number());
+        }
+    }
+
+    public void replaceAll(CommentListBean newValue) {
+        addNewData(newValue);
+    }
 }
