@@ -20,7 +20,6 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.WriteCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteRepostActivity;
@@ -115,7 +114,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
             case R.id.menu_repost:
                 msg = (MessageBean) adapter.getItem(listView.getCheckedItemPositions().keyAt(listView.getCheckedItemCount() - 1) - 1);
                 intent = new Intent(getActivity(), WriteRepostActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("id", String.valueOf(ids[0]));
                 intent.putExtra("msg", msg);
                 getActivity().startActivity(intent);
@@ -125,7 +124,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
             case R.id.menu_comment:
                 msg = (MessageBean) adapter.getItem(listView.getCheckedItemPositions().keyAt(listView.getCheckedItemCount() - 1) - 1);
                 intent = new Intent(getActivity(), WriteCommentActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("token",GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("id", String.valueOf(ids[0]));
                 intent.putExtra("msg", msg);
                 getActivity().startActivity(intent);
@@ -135,7 +134,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
                 break;
             case R.id.menu_fav:
                 if (favTask == null || favTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    favTask = new FavAsyncTask(((IToken) getActivity()).getToken(), bean.getId());
+                    favTask = new FavAsyncTask(GlobalContext.getInstance().getSpecialToken(), bean.getId());
                     favTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 listView.clearChoices();

@@ -18,7 +18,6 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.adapter.UserListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
@@ -88,7 +87,7 @@ public class MyFanSingleChoiceModeListener implements ActionMode.Callback {
         switch (item.getItemId()) {
             case R.id.menu_at:
                 Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("content", "@" + bean.getScreen_name());
                 intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
                 getActivity().startActivity(intent);
@@ -137,7 +136,7 @@ public class MyFanSingleChoiceModeListener implements ActionMode.Callback {
         @Override
         protected UserBean doInBackground(Void... params) {
 
-            FriendshipsDao dao = new FriendshipsDao(((IToken) getActivity()).getToken());
+            FriendshipsDao dao = new FriendshipsDao(GlobalContext.getInstance().getSpecialToken());
             if (!TextUtils.isEmpty(bean.getId())) {
                 dao.setUid(bean.getId());
             } else {
@@ -180,7 +179,7 @@ public class MyFanSingleChoiceModeListener implements ActionMode.Callback {
         @Override
         protected UserBean doInBackground(Void... params) {
 
-            FriendshipsDao dao = new FriendshipsDao(((IToken) getActivity()).getToken());
+            FriendshipsDao dao = new FriendshipsDao(GlobalContext.getInstance().getSpecialToken());
             if (!TextUtils.isEmpty(bean.getId())) {
                 dao.setUid(bean.getId());
             } else {
@@ -225,7 +224,7 @@ public class MyFanSingleChoiceModeListener implements ActionMode.Callback {
         @Override
         protected UserBean doInBackground(Void... params) {
 
-            FanDao dao = new FanDao(((IToken) getActivity()).getToken(), bean.getId());
+            FanDao dao = new FanDao(GlobalContext.getInstance().getSpecialToken(), bean.getId());
 
             try {
                 return dao.removeFan();

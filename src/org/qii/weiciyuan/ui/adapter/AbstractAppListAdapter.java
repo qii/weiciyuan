@@ -19,10 +19,9 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserBigPicActivity;
+import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.List;
@@ -277,7 +276,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                    intent.putExtra("token", ((IToken) getActivity()).getToken());
+                    intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                     intent.putExtra("user", user);
                     getActivity().startActivity(intent);
                 }

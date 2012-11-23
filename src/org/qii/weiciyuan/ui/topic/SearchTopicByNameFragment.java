@@ -14,7 +14,6 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 /**
@@ -111,7 +110,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("msg", bean.getItemList().get(position));
-        intent.putExtra("token", ((IToken) getActivity()).getToken());
+        intent.putExtra("token",GlobalContext.getInstance().getSpecialToken());
         startActivity(intent);
     }
 
@@ -119,7 +118,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
     protected TopicResultListBean getDoInBackgroundNewData() throws WeiboException {
 
         page = 1;
-        SearchTopicDao dao = new SearchTopicDao(((IToken) getActivity()).getToken(), q);
+        SearchTopicDao dao = new SearchTopicDao(GlobalContext.getInstance().getSpecialToken(), q);
         dao.setPage(String.valueOf(page));
         TopicResultListBean result = dao.getGSONMsgList();
 
@@ -140,7 +139,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
 
     @Override
     protected TopicResultListBean getDoInBackgroundOldData() throws WeiboException {
-        SearchTopicDao dao = new SearchTopicDao(((IToken) getActivity()).getToken(), q);
+        SearchTopicDao dao = new SearchTopicDao(GlobalContext.getInstance().getSpecialToken(), q);
         dao.setPage(String.valueOf(page + 1));
         TopicResultListBean result = dao.getGSONMsgList();
         return result;

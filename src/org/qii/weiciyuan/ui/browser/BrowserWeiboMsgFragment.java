@@ -33,7 +33,6 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.io.IOException;
@@ -141,7 +140,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
         @Override
         protected MessageBean doInBackground(Void... params) {
             try {
-                return new ShowStatusDao(((IToken) getActivity()).getToken(), msg.getId()).getMsg();
+                return new ShowStatusDao(GlobalContext.getInstance().getSpecialToken(), msg.getId()).getMsg();
             } catch (WeiboException e) {
                 this.e = e;
                 cancel(true);
@@ -268,7 +267,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("user", msg.getUser());
                 startActivity(intent);
             }
@@ -292,7 +291,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
                 if (isNotLink && !isDeleted) {
 
                     Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-                    intent.putExtra("token", ((IToken) getActivity()).getToken());
+                    intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                     intent.putExtra("msg", msg.getRetweeted_status());
                     startActivity(intent);
                 } else if (isNotLink && isDeleted) {

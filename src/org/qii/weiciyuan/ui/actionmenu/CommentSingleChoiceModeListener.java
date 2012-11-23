@@ -19,7 +19,6 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
@@ -116,7 +115,7 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
             case R.id.menu_view:
                 intent = new Intent(getActivity(), BrowserCommentActivity.class);
                 intent.putExtra("comment", bean);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("token",GlobalContext.getInstance().getSpecialToken());
                 getActivity().startActivity(intent);
                 listView.clearChoices();
                 mode.finish();
@@ -125,7 +124,7 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
 
             case R.id.menu_comment:
                 intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("token",GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("msg", bean);
                 getActivity().startActivity(intent);
                 listView.clearChoices();

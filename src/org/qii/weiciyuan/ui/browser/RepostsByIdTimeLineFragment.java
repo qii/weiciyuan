@@ -19,6 +19,7 @@ import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IToken;
@@ -333,7 +334,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("msg", bean.getItemList().get(position));
-        intent.putExtra("token", ((IToken) getActivity()).getToken());
+        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
         startActivity(intent);
     }
 

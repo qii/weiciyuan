@@ -10,7 +10,6 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.actionmenu.MyFanSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.actionmenu.NormalFriendShipSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.basefragment.AbstractFriendsFanListFragment;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 
 /**
  * User: Jiang Qi
@@ -36,7 +35,7 @@ public class FanListFragment extends AbstractFriendsFanListFragment {
 
     @Override
     protected UserListBean getDoInBackgroundNewData() throws WeiboException {
-        FanListDao dao = new FanListDao(((IToken) getActivity()).getToken(), uid);
+        FanListDao dao = new FanListDao(GlobalContext.getInstance().getSpecialToken(), uid);
 
         if (getList().getUsers().size() > 0 && bean.getPrevious_cursor() > 0) {
             dao.setCursor(String.valueOf(bean.getPrevious_cursor() - 1));
@@ -48,7 +47,7 @@ public class FanListFragment extends AbstractFriendsFanListFragment {
 
     @Override
     protected UserListBean getDoInBackgroundOldData() throws WeiboException {
-        FanListDao dao = new FanListDao(((IToken) getActivity()).getToken(), uid);
+        FanListDao dao = new FanListDao(GlobalContext.getInstance().getSpecialToken(), uid);
         if (getList().getUsers().size() > 0) {
             dao.setCursor(String.valueOf(bean.getNext_cursor()));
         }

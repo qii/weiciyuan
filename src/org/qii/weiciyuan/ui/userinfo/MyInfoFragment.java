@@ -187,7 +187,7 @@ public class MyInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendListActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("user", bean);
                 startActivity(intent);
             }
@@ -196,7 +196,7 @@ public class MyInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FanListActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("user", bean);
                 startActivity(intent);
             }
@@ -205,7 +205,7 @@ public class MyInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MyFavActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("token",GlobalContext.getInstance().getSpecialToken());
                 startActivity(intent);
             }
         });
@@ -263,7 +263,7 @@ public class MyInfoFragment extends Fragment {
         protected UserBean doInBackground(Object... params) {
             UserBean user = null;
             try {
-                ShowUserDao dao = new ShowUserDao(((IToken) getActivity()).getToken());
+                ShowUserDao dao = new ShowUserDao(GlobalContext.getInstance().getSpecialToken());
                 if (!TextUtils.isEmpty(bean.getId()))
                     dao.setUid(bean.getId());
                 else

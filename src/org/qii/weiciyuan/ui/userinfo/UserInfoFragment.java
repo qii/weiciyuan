@@ -21,7 +21,6 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.browser.SimpleBitmapWorkerTask;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
 
@@ -57,7 +56,7 @@ public class UserInfoFragment extends Fragment {
 
     protected ICommander commander;
 
-    private SimpleTask task;
+    private RefreshTask task;
     private SimpleBitmapWorkerTask avatarTask;
     private TopicListTask topicListTask;
 
@@ -212,7 +211,7 @@ public class UserInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendListActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("user", bean);
                 startActivity(intent);
             }
@@ -221,7 +220,7 @@ public class UserInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FanListActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("token",GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("user", bean);
                 startActivity(intent);
             }
@@ -271,12 +270,12 @@ public class UserInfoFragment extends Fragment {
 
     private void refresh() {
         if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
-            task = new SimpleTask();
+            task = new RefreshTask();
             task.execute();
         }
     }
 
-    private class SimpleTask extends MyAsyncTask<Object, UserBean, UserBean> {
+    private class RefreshTask extends MyAsyncTask<Object, UserBean, UserBean> {
         WeiboException e;
 
         @Override
@@ -287,7 +286,7 @@ public class UserInfoFragment extends Fragment {
         @Override
         protected UserBean doInBackground(Object... params) {
             if (!isCancelled()) {
-                ShowUserDao dao = new ShowUserDao(((IToken) getActivity()).getToken());
+                ShowUserDao dao = new ShowUserDao(GlobalContext.getInstance().getSpecialToken());
                 boolean haveId = !TextUtils.isEmpty(bean.getId());
                 boolean haveName = !TextUtils.isEmpty(bean.getScreen_name());
                 if (haveId) {

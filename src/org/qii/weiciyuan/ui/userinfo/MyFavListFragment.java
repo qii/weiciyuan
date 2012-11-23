@@ -13,10 +13,10 @@ import org.qii.weiciyuan.bean.ListBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.fav.FavListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 
 /**
  * User: qii
@@ -69,7 +69,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("token", ((IToken) getActivity()).getToken());
+        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
         intent.putExtra("msg", bean.getItem(position));
         startActivity(intent);
     }
@@ -104,7 +104,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     @Override
     protected FavListBean getDoInBackgroundNewData() throws WeiboException {
         page = 1;
-        FavListDao dao = new FavListDao(((IToken) getActivity()).getToken()).setPage(String.valueOf(page));
+        FavListDao dao = new FavListDao(GlobalContext.getInstance().getSpecialToken()).setPage(String.valueOf(page));
 
 
         FavListBean result = dao.getGSONMsgList();
@@ -115,7 +115,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     @Override
     protected FavListBean getDoInBackgroundOldData() throws WeiboException {
 
-        FavListDao dao = new FavListDao(((IToken) getActivity()).getToken()).setPage(String.valueOf(page + 1));
+        FavListDao dao = new FavListDao(GlobalContext.getInstance().getSpecialToken()).setPage(String.valueOf(page + 1));
 
         FavListBean result = dao.getGSONMsgList();
 

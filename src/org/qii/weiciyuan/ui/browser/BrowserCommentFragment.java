@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.browser;
 
+import android.app.Fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -8,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.*;
@@ -21,7 +21,6 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
@@ -99,7 +98,7 @@ public class BrowserCommentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("user", msg.getUser());
                 startActivity(intent);
             }
@@ -169,7 +168,7 @@ public class BrowserCommentFragment extends Fragment {
 
             case R.id.menu_comment:
                 intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
-                intent.putExtra("token", ((IToken) getActivity()).getToken());
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("msg", msg);
                 getActivity().startActivity(intent);
 
