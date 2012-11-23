@@ -276,7 +276,7 @@ public class MyInfoFragment extends Fragment {
             }
             if (user != null) {
                 bean = user;
-                DatabaseManager.getInstance().updateAccountMyInfo(((IAccountInfo) getActivity()).getAccount(), bean);
+                DatabaseManager.getInstance().updateAccountMyInfo(GlobalContext.getInstance().getAccountBean(), bean);
             } else {
                 cancel(true);
             }

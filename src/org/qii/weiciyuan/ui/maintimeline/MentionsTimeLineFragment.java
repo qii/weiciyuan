@@ -17,7 +17,6 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
@@ -167,7 +166,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
         @Override
         protected Object doInBackground(Object... params) {
-            clearAndReplaceValue(DatabaseManager.getInstance().getRepostLineMsgList(((IAccountInfo) getActivity()).getAccount().getUid()));
+            clearAndReplaceValue(DatabaseManager.getInstance().getRepostLineMsgList(GlobalContext.getInstance().getCurrentAccountId()));
             clearAndReplaceValue(0, bean);
 
             return null;
