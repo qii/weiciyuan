@@ -69,8 +69,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     }
 
     protected void clearAndReplaceValue(ListBean<CommentBean> value) {
-        bean.getItemList().clear();
-        bean.getItemList().addAll(value.getItemList());
+        getList().getItemList().clear();
+        getList().getItemList().addAll(value.getItemList());
     }
 
     @Override
@@ -115,7 +115,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
 
-        if (savedInstanceState != null && (bean == null || bean.getItemList().size() == 0)) {
+        if (savedInstanceState != null && (getList() == null || getList().getItemList().size() == 0)) {
             userBean = (UserBean) savedInstanceState.getSerializable("userBean");
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
             token = savedInstanceState.getString("token");
@@ -130,7 +130,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
             clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(bean);
+            refreshLayout(getList());
         } else {
             if (dbTask == null || dbTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                 dbTask = new DBCacheTask();
@@ -154,12 +154,12 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                         mActionMode = null;
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), timeLineAdapter, CommentsTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), timeLineAdapter, CommentsTimeLineFragment.this, getList().getItemList().get(position - 1)));
                         return true;
                     } else {
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), timeLineAdapter, CommentsTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), timeLineAdapter, CommentsTimeLineFragment.this, getList().getItemList().get(position - 1)));
                         return true;
                     }
                 }
@@ -176,7 +176,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     public void removeItem(int position) {
         clearActionMode();
         if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            removeTask = new RemoveTask(((IToken) getActivity()).getToken(), bean.getItemList().get(position).getId(), position);
+            removeTask = new RemoveTask(((IToken) getActivity()).getToken(), getList().getItemList().get(position).getId(), position);
             removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -242,7 +242,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         protected Object doInBackground(Object... params) {
             CommentListBean value = DatabaseManager.getInstance().getCommentLineMsgList(accountBean.getUid());
             clearAndReplaceValue(value);
-            clearAndReplaceValue(0, bean);
+            clearAndReplaceValue(0, getList());
             return null;
         }
 
@@ -250,12 +250,12 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         protected void onPostExecute(Object o) {
             pullToRefreshListView.setVisibility(View.VISIBLE);
             timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(bean);
+            refreshLayout(getList());
             super.onPostExecute(o);
             /**
              * when this account first open app,if he don't have any data in database,fetch data from server automally
              */
-            if (bean.getSize() == 0) {
+            if (getList().getSize() == 0) {
                 pullToRefreshListView.startRefreshNow();
             }
 
@@ -289,7 +289,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         @Override
         protected void onPostExecute(Object o) {
             timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(bean);
+            refreshLayout(getList());
 
             super.onPostExecute(o);
         }
@@ -298,12 +298,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bean = new CommentListBean();
-//        group[0] = getString(R.string.all_people_send_to_me);
-//        group[1] = getString(R.string.following_people_send_to_me);
-//        group[2] = getString(R.string.mentions_to_me);
-//        group[3] = getString(R.string.following_people_mentions_to_me);
-//        group[4] = getString(R.string.my_comment);
+
+
         group[0] = getString(R.string.all_people_send_to_me);
         group[1] = getString(R.string.mentions_to_me);
         group[2] = getString(R.string.my_comment);
@@ -319,10 +315,16 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 
+    private CommentListBean bean = new CommentListBean();
+
+    @Override
+    public CommentListBean getList() {
+        return bean;
+    }
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("msg", bean.getItemList().get(position).getStatus());
+        intent.putExtra("msg", getList().getItemList().get(position).getStatus());
         intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
         startActivity(intent);
     }
@@ -488,7 +490,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 }
 
                 clearAndReplaceValue(newValue);
-                clearAndReplaceValue(selected, bean);
+                clearAndReplaceValue(selected, getList());
                 timeLineAdapter.notifyDataSetChanged();
                 getListView().setSelectionAfterHeaderView();
             }
@@ -511,7 +513,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     public void switchGroup() {
 
         if (hashMap.get(selected).getSize() == 0) {
-            bean.getItemList().clear();
+            getList().getItemList().clear();
             getAdapter().notifyDataSetChanged();
             pullToRefreshListView.startRefreshNow();
 

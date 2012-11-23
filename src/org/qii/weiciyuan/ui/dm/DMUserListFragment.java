@@ -24,6 +24,13 @@ import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
  */
 public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean> {
 
+    private DMUserListBean bean = new DMUserListBean();
+
+     @Override
+     public DMUserListBean getList() {
+         return bean;
+     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

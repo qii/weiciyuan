@@ -7,8 +7,7 @@ import java.util.List;
 /**
  * User: Jiang Qi
  * Date: 12-8-16
- * Time: 下午3:08
- */
+  */
 public class UserListBean implements Serializable{
     public List<UserBean> getUsers() {
         return users;

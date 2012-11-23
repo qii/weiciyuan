@@ -25,12 +25,12 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.utils.AppConfig;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
-import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.actionmenu.CommentByIdSingleChoiceModeLinstener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
+import org.qii.weiciyuan.ui.interfaces.IToken;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.util.List;
@@ -44,6 +44,12 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     private LinearLayout quick_repost;
     private RemoveTask removeTask;
 
+    private CommentListBean bean = new CommentListBean();
+
+     @Override
+     public CommentListBean getList() {
+         return bean;
+     }
 
     protected void clearAndReplaceValue(CommentListBean value) {
         bean.getItemList().clear();
@@ -54,9 +60,6 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     private EditText et;
 
 
-    public CommentListBean getList() {
-        return bean;
-    }
 
     private String token;
     private String id;
@@ -426,7 +429,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
                 }
 
                 clearAndReplaceValue(newValue);
-                timeLineAdapter.notifyDataSetChanged();
+                getAdapter().notifyDataSetChanged();
                 getListView().setSelectionAfterHeaderView();
 
             }

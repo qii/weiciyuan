@@ -23,10 +23,16 @@ import org.qii.weiciyuan.ui.interfaces.IToken;
  * Date: 12-8-18
  * this class need to refactor
  */
-public class MyFavListFragment extends AbstractMessageTimeLineFragment {
+public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBean> {
 
     private int page = 1;
 
+    private FavListBean bean = new FavListBean();
+
+    @Override
+    public FavListBean getList() {
+        return bean;
+    }
 
     public MyFavListFragment() {
 
@@ -90,24 +96,13 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
 
 
     @Override
-    protected ListBean<MessageBean> getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+    protected FavListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
         return null;
     }
 
-    @Override
-    protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
-        if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
-            clearAndReplaceValue(newValue);
-            timeLineAdapter.notifyDataSetChanged();
-            getListView().setSelectionAfterHeaderView();
-            buildActionBarSubtitle();
-        }
-
-    }
-
 
     @Override
-    protected ListBean<MessageBean> getDoInBackgroundNewData() throws WeiboException {
+    protected FavListBean getDoInBackgroundNewData() throws WeiboException {
         page = 1;
         FavListDao dao = new FavListDao(((IToken) getActivity()).getToken()).setPage(String.valueOf(page));
 
@@ -118,7 +113,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
-    protected ListBean<MessageBean> getDoInBackgroundOldData() throws WeiboException {
+    protected FavListBean getDoInBackgroundOldData() throws WeiboException {
 
         FavListDao dao = new FavListDao(((IToken) getActivity()).getToken()).setPage(String.valueOf(page + 1));
 
@@ -128,13 +123,26 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
-    protected void oldMsgOnPostExecute(ListBean<MessageBean> newValue) {
+    protected void newMsgOnPostExecute(FavListBean newValue) {
+        if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
+            buildActionBarSubtitle();
+        }
+
+    }
+
+    @Override
+    protected void oldMsgOnPostExecute(FavListBean newValue) {
 
         if (newValue != null && newValue.getSize() > 0) {
-            getList().getItemList().addAll(newValue.getItemList());
-            bean.setTotal_number(newValue.getTotal_number());
+            getList().addOldData(newValue);
+            getAdapter().notifyDataSetChanged();
             buildActionBarSubtitle();
             page++;
         }
     }
+
+
 }

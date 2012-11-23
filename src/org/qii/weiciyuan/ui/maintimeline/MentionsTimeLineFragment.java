@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
@@ -28,7 +29,7 @@ import java.util.Map;
  * User: qii
  * Date: 12-7-29
  */
-public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
+public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<MessageListBean> {
 
     private AccountBean accountBean;
     private UserBean userBean;
@@ -62,6 +63,13 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     public void onDetach() {
         super.onDetach();
         Utility.cancelTasks(dbTask);
+    }
+
+    private MessageListBean bean = new MessageListBean();
+
+    @Override
+    public MessageListBean getList() {
+        return bean;
     }
 
     public MentionsTimeLineFragment() {
@@ -113,11 +121,29 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
         }
     }
 
-    @Override
-    protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
-        showNewMsgToastMessage(newValue);
-        super.newMsgOnPostExecute(newValue);
 
+    @Override
+    protected void newMsgOnPostExecute(MessageListBean newValue) {
+        if (getActivity() != null && newValue.getSize() > 0) {
+            showNewMsgToastMessage(newValue);
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
+
+        }
+
+        afterGetNewMsg();
+
+    }
+
+    @Override
+    protected void oldMsgOnPostExecute(MessageListBean newValue) {
+        if (newValue != null && newValue.getSize() > 1) {
+            getList().addOldData(newValue);
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     @Override
@@ -283,7 +309,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
-    protected ListBean<MessageBean> getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+    protected MessageListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
         MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
         dao.setMax_id(beginId);
         dao.setSince_id(endId);

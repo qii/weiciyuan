@@ -13,9 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.ListBean;
-import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.bean.RepostListBean;
+import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -32,7 +30,7 @@ import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
  * User: qii
  * Date: 12-8-13
  */
-public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment {
+public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment<RepostListBean> {
 
 
     private MessageBean msg;
@@ -43,6 +41,13 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
 
     private String token;
     private String id;
+
+    private RepostListBean bean = new RepostListBean();
+
+    @Override
+    public RepostListBean getList() {
+        return bean;
+    }
 
     public RepostsByIdTimeLineFragment(String token, String id, MessageBean msg) {
         this.token = token;
@@ -139,11 +144,34 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
 
     }
 
+    @Override
+    protected void newMsgOnPostExecute(RepostListBean newValue) {
+        if (getActivity() != null && newValue.getSize() > 0) {
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
+
+
+        }
+
+        afterGetNewMsg();
+    }
+
+    @Override
+    protected void oldMsgOnPostExecute(RepostListBean newValue) {
+        if (newValue != null && newValue.getSize() > 1) {
+            getList().addOldData(newValue);
+
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bean = new RepostListBean();
         setHasOptionsMenu(true);
         setRetainInstance(true);
     }
@@ -355,7 +383,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     }
 
     @Override
-    protected ListBean<MessageBean> getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+    protected RepostListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
         RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, id);
         dao.setMax_id(beginId);
         dao.setSince_id(endId);

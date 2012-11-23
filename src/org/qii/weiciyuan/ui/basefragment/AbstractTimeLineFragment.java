@@ -1,10 +1,11 @@
 package org.qii.weiciyuan.ui.basefragment;
 
 import android.app.Fragment;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.view.*;
+import android.view.ActionMode;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
@@ -22,7 +23,6 @@ import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * User: qii
@@ -30,12 +30,10 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragment {
 
-    protected T bean;
 
     protected PullToRefreshListView pullToRefreshListView;
     protected TextView empty;
     protected ProgressBar progressBar;
-
 
     protected BaseAdapter timeLineAdapter;
 
@@ -48,9 +46,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
     protected ActionMode mActionMode;
 
-    public T getList() {
-        return bean;
-    }
+    public abstract T getList();
 
     public PullToRefreshListView getPullToRefreshListView() {
         return pullToRefreshListView;
@@ -83,20 +79,16 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     protected abstract void listViewItemClick(AdapterView parent, View view, int position, long id);
 
     protected void listViewFooterViewClick(View view) {
-        if (oldTask == null || oldTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-
+        if (Utility.isTaskStopped(oldTask)) {
             oldTask = new TimeLineGetOlderMsgListTask();
-            oldTask.execute();
-
+            oldTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
     public void loadMiddleMsg(String beginId, String endId, String endTag, int position) {
-        if (middleTask == null || middleTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-
+        if (Utility.isTaskStopped(middleTask)) {
             middleTask = new TimeLineGetMiddleMsgListTask(beginId, endId, endTag, position);
-            middleTask.execute();
-
+            middleTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -273,18 +265,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     }
 
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
-
-    }
-
     public void refresh() {
         if (allowRefresh()) {
 
             newTask = new TimeLineGetNewMsgListTask();
-            newTask.execute();
+            newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
             Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = ((AbstractAppActivity) getActivity()).getPictureBitmapWorkerTaskMap();
 
@@ -305,7 +290,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     }
 
     protected boolean allowRefresh() {
-        return (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) && pullToRefreshListView.getVisibility() == View.VISIBLE;
+        return Utility.isTaskStopped(newTask) && getPullToRefreshListView().getVisibility() == View.VISIBLE;
     }
 
 
@@ -326,26 +311,17 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         this.mActionMode = mActionMode;
     }
 
+    protected abstract void newMsgOnPostExecute(T newValue);
+
+    protected abstract void oldMsgOnPostExecute(T newValue);
 
     public class TimeLineGetNewMsgListTask extends MyAsyncTask<Object, T, T> {
         WeiboException e;
 
-
         @Override
         protected void onPreExecute() {
             showListView();
-            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                getListView().setSelection(0);
-                getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
-
-            } else {
-
-                getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
-                getListView().dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
-                getListView().setSelection(0);
-
-            }
-
+            Utility.stopListViewScrollingAndScrollToTop(getListView());
         }
 
         @Override
@@ -380,14 +356,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
         private void cleanWork() {
             refreshLayout(getList());
-            pullToRefreshListView.onRefreshComplete();
+            getPullToRefreshListView().onRefreshComplete();
 
         }
     }
-
-    protected abstract void newMsgOnPostExecute(T newValue);
-
-    protected abstract void oldMsgOnPostExecute(T newValue);
 
 
     public class TimeLineGetOlderMsgListTask extends MyAsyncTask<Object, T, T> {
@@ -430,7 +402,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
                 if (this.e != null) {
                     Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
                     showErrorFooterView();
-                    pullToRefreshListView.onRefreshComplete();
+                    getPullToRefreshListView().onRefreshComplete();
                 } else {
                     dismissFooterView();
                 }
@@ -439,7 +411,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         }
 
         private void cleanWork() {
-            pullToRefreshListView.onRefreshComplete();
+            getPullToRefreshListView().onRefreshComplete();
             getAdapter().notifyDataSetChanged();
             dismissFooterView();
         }
@@ -461,10 +433,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             this.position = position;
         }
 
-        @Override
-        protected void onPreExecute() {
-
-        }
 
         @Override
         protected T doInBackground(Object... params) {
@@ -482,22 +450,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         @Override
         protected void onPostExecute(T newValue) {
             middleMsgOnPostExecute(endTag, position, newValue);
-
-            cleanWork();
+            getAdapter().notifyDataSetChanged();
             super.onPostExecute(newValue);
         }
 
-        @Override
-        protected void onCancelled(T messageListBean) {
-            super.onCancelled(messageListBean);
-
-
-        }
-
-        private void cleanWork() {
-            getAdapter().notifyDataSetChanged();
-
-        }
     }
 
 
@@ -533,8 +489,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     }
 
     protected void showListView() {
-//        empty.setVisibility(View.INVISIBLE);
-//        listView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
     }
 
@@ -548,19 +502,16 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
     protected abstract T getDoInBackgroundNewData() throws WeiboException;
 
-
     protected abstract T getDoInBackgroundOldData() throws WeiboException;
 
     protected abstract T getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException;
 
 
     private volatile boolean enableRefreshTime = true;
-    private ScheduledExecutorService scheduledExecutorService = null;
 
     public boolean isListViewFling() {
         return !enableRefreshTime;
     }
-
 
 }
 

@@ -35,4 +35,24 @@ public class TopicResultListBean extends ListBean<MessageBean> {
     public void setStatuses(List<MessageBean> statuses) {
         this.statuses = statuses;
     }
+
+
+    public void addNewData(TopicResultListBean newValue) {
+        if (newValue != null && newValue.getSize() > 0) {
+
+            this.getItemList().clear();
+            this.getItemList().addAll(newValue.getItemList());
+            this.setTotal_number(newValue.getTotal_number());
+
+
+        }
+    }
+
+    public void addOldData(TopicResultListBean oldValue) {
+        if (oldValue != null && oldValue.getSize() > 0) {
+            getItemList().addAll(oldValue.getItemList());
+            setTotal_number(oldValue.getTotal_number());
+
+        }
+    }
 }

@@ -20,22 +20,24 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
 
     private UserBean userBean;
 
+    private DMListBean bean = new DMListBean();
+
+    @Override
+    public DMListBean getList() {
+        return bean;
+    }
+
     public DMConversationListFragment(UserBean userBean) {
         this.userBean = userBean;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        bean = new DMListBean();
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
-        pullToRefreshListView.startRefreshNow();
+        getPullToRefreshListView().startRefreshNow();
     }
 
     @Override
@@ -63,7 +65,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
 
             } else if (newValue.getSize() > 0) {
                 clearAndReplaceValue(newValue);
-                timeLineAdapter.notifyDataSetChanged();
+                getAdapter().notifyDataSetChanged();
                 getListView().setSelectionAfterHeaderView();
 
             }

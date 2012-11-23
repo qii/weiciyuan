@@ -4,8 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import org.qii.weiciyuan.bean.ListBean;
-import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.SearchStatusListBean;
 import org.qii.weiciyuan.dao.search.SearchDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -17,16 +16,22 @@ import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
  * User: qii
  * Date: 12-11-10
  */
-public class SearchStatusFragment extends AbstractMessageTimeLineFragment {
+public class SearchStatusFragment extends AbstractMessageTimeLineFragment<SearchStatusListBean> {
 
     private int page = 1;
 
+    private SearchStatusListBean bean = new SearchStatusListBean();
+
+    @Override
+    public SearchStatusListBean getList() {
+        return bean;
+    }
 
     public SearchStatusFragment() {
 
     }
 
-    public void search(){
+    public void search() {
         pullToRefreshListView.startRefreshNow();
     }
 
@@ -42,7 +47,7 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getCommander();
         if (savedInstanceState != null && bean.getItemList().size() == 0) {
-            clearAndReplaceValue((ListBean<MessageBean>) savedInstanceState.getSerializable("bean"));
+            clearAndReplaceValue((SearchStatusListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
 
         }
@@ -55,55 +60,55 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment {
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("token",GlobalContext.getInstance().getSpecialToken());
+        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
         intent.putExtra("msg", bean.getItem(position));
         startActivity(intent);
     }
 
 
     @Override
-    protected ListBean<MessageBean> getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+    protected SearchStatusListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
         return null;
     }
 
+
     @Override
-    protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
+    protected SearchStatusListBean getDoInBackgroundNewData() throws WeiboException {
+        page = 1;
+        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainActivity) getActivity()).getSearchWord());
+        SearchStatusListBean result = dao.getStatusList();
+
+        return result;
+    }
+
+    @Override
+    protected SearchStatusListBean getDoInBackgroundOldData() throws WeiboException {
+
+        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainActivity) getActivity()).getSearchWord());
+        dao.setPage(String.valueOf(page + 1));
+
+        SearchStatusListBean result = dao.getStatusList();
+
+        return result;
+    }
+
+    @Override
+    protected void newMsgOnPostExecute(SearchStatusListBean newValue) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
-            clearAndReplaceValue(newValue);
-            timeLineAdapter.notifyDataSetChanged();
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
             getActivity().invalidateOptionsMenu();
         }
 
     }
 
-
     @Override
-    protected ListBean<MessageBean> getDoInBackgroundNewData() throws WeiboException {
-        page = 1;
-        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainActivity) getActivity()).getSearchWord());
-        ListBean<MessageBean> result = dao.getStatusList();
-
-        return result;
-    }
-
-    @Override
-    protected ListBean<MessageBean> getDoInBackgroundOldData() throws WeiboException {
-
-        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainActivity) getActivity()).getSearchWord());
-        dao.setPage(String.valueOf(page + 1));
-
-        ListBean<MessageBean> result = dao.getStatusList();
-
-        return result;
-    }
-
-    @Override
-    protected void oldMsgOnPostExecute(ListBean<MessageBean> newValue) {
+    protected void oldMsgOnPostExecute(SearchStatusListBean newValue) {
 
         if (newValue != null && newValue.getSize() > 0) {
-            getList().getItemList().addAll(newValue.getItemList());
-            bean.setTotal_number(newValue.getTotal_number());
+            getList().addOldData(newValue);
+            getAdapter().notifyDataSetChanged();
             getActivity().invalidateOptionsMenu();
             page++;
         }

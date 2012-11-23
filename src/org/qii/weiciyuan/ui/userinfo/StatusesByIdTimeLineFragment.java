@@ -6,11 +6,9 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.ListBean;
-import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -21,12 +19,18 @@ import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
  * User: Jiang Qi
  * Date: 12-8-16
  */
-public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragment {
+public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragment<MessageListBean> {
 
 
     protected UserBean userBean;
     protected String token;
 
+    private MessageListBean bean = new MessageListBean();
+
+    @Override
+    public MessageListBean getList() {
+        return bean;
+    }
 
     public StatusesByIdTimeLineFragment() {
 
@@ -49,7 +53,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
 
     @Override
-    protected ListBean<MessageBean> getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+    protected MessageListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
         return null;
     }
 
@@ -83,6 +87,31 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         startActivity(intent);
     }
 
+
+    @Override
+    protected void newMsgOnPostExecute(MessageListBean newValue) {
+        if (getActivity() != null && newValue.getSize() > 0) {
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
+
+
+        }
+
+        afterGetNewMsg();
+
+    }
+
+    @Override
+    protected void oldMsgOnPostExecute(MessageListBean newValue) {
+        if (newValue != null && newValue.getSize() > 1) {
+            getList().addOldData(newValue);
+
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
+
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

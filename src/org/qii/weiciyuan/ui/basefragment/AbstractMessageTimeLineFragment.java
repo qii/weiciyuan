@@ -8,22 +8,20 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ListBean;
 import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.destroy.DestroyStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 import org.qii.weiciyuan.ui.interfaces.IToken;
-import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
 
 /**
  * User: qii
  * Date: 12-7-29
  */
-public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFragment<ListBean<MessageBean>> implements IRemoveItem {
+public abstract class AbstractMessageTimeLineFragment<T extends ListBean<MessageBean>> extends AbstractTimeLineFragment<T> implements IRemoveItem {
 
     private RemoveTask removeTask;
 
@@ -38,58 +36,9 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
     }
 
     protected void clearAndReplaceValue(ListBean<MessageBean> value) {
-        bean.getItemList().clear();
-        bean.getItemList().addAll(value.getItemList());
-        bean.setTotal_number(value.getTotal_number());
-    }
-
-
-    @Override
-    protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
-        if (newValue != null && getActivity() != null) {
-            if (newValue.getSize() == 0) {
-
-            } else if (newValue.getSize() > 0) {
-//                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getStatuses().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
-                if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                    //for speed, add old data after new data
-                    newValue.getItemList().addAll(getList().getItemList());
-                } else {
-                    //null is flag means this position has some old messages which dont appear
-                    if (getList().getSize() > 0) {
-                        newValue.getItemList().add(null);
-                    }
-                    newValue.getItemList().addAll(getList().getItemList());
-                }
-                clearAndReplaceValue(newValue);
-                timeLineAdapter.notifyDataSetChanged();
-                getListView().setSelectionAfterHeaderView();
-
-            }
-        }
-        afterGetNewMsg();
-    }
-
-
-    @Override
-    protected void oldMsgOnPostExecute(ListBean<MessageBean> newValue) {
-        if (newValue != null && newValue.getSize() > 1) {
-
-            getList().getItemList().addAll(newValue.getItemList().subList(1, newValue.getSize()));
-            getList().setTotal_number(newValue.getTotal_number());
-
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
-
-        }
-
-    }
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        bean = new MessageListBean();
+        getList().getItemList().clear();
+        getList().getItemList().addAll(value.getItemList());
+        getList().setTotal_number(value.getTotal_number());
     }
 
     @Override
@@ -107,13 +56,13 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
                         mActionMode.finish();
                         mActionMode = null;
                         getListView().setItemChecked(position, true);
-                        timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(getListView(), (StatusListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        getAdapter().notifyDataSetChanged();
+                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(getListView(), (StatusListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, getList().getItemList().get(position - 1)));
                         return true;
                     } else {
                         getListView().setItemChecked(position, true);
-                        timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(getListView(), (StatusListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, bean.getItemList().get(position - 1)));
+                        getAdapter().notifyDataSetChanged();
+                        mActionMode = getActivity().startActionMode(new StatusSingleChoiceModeListener(getListView(), (StatusListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, getList().getItemList().get(position - 1)));
                         return true;
                     }
                 }
@@ -135,7 +84,7 @@ public abstract class AbstractMessageTimeLineFragment extends AbstractTimeLineFr
     public void removeItem(int position) {
         clearActionMode();
         if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            removeTask = new RemoveTask(((IToken) getActivity()).getToken(), bean.getItemList().get(position).getId(), position);
+            removeTask = new RemoveTask(((IToken) getActivity()).getToken(), getList().getItemList().get(position).getId(), position);
             removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }

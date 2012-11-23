@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
@@ -33,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  * User: qii
  * Date: 12-7-29
  */
-public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
+public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<MessageListBean> {
 
     private AccountBean accountBean;
     private UserBean userBean;
@@ -47,6 +48,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     private HashMap<String, ListBean<MessageBean>> hashMap = new HashMap<String, ListBean<MessageBean>>();
 
     private GroupTask groupTask;
+
+    private MessageListBean bean = new MessageListBean();
+
+    @Override
+    public MessageListBean getList() {
+        return bean;
+    }
 
     public FriendsTimeLineFragment() {
 
@@ -78,10 +86,29 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
-    protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
-        showNewMsgToastMessage(newValue);
-        super.newMsgOnPostExecute(newValue);
+    protected void newMsgOnPostExecute(MessageListBean newValue) {
+        if (getActivity() != null && newValue.getSize() > 0) {
+            showNewMsgToastMessage(newValue);
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
 
+
+        }
+
+        afterGetNewMsg();
+
+    }
+
+    @Override
+    protected void oldMsgOnPostExecute(MessageListBean newValue) {
+        if (newValue != null && newValue.getSize() > 1) {
+            getList().addOldData(newValue);
+
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
+
+        }
     }
 
 
@@ -286,7 +313,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
-    protected ListBean<MessageBean> getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+    protected MessageListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
         MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(token);
         dao.setMax_id(beginId);
         dao.setSince_id(endId);

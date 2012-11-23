@@ -8,8 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.ListBean;
-import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.TopicResultListBean;
 import org.qii.weiciyuan.dao.topic.SearchTopicDao;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -23,11 +21,18 @@ import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
  * User: qii
  * Date: 12-9-26
  */
-public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
+public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<TopicResultListBean> {
 
     private String q;
     //page 0 and page 1 data is same
     private int page = 1;
+
+    private TopicResultListBean bean = new TopicResultListBean();
+
+    @Override
+    public TopicResultListBean getList() {
+        return bean;
+    }
 
     public SearchTopicByNameFragment() {
 
@@ -53,7 +58,26 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
             page = savedInstanceState.getInt("page");
         } else {
             pullToRefreshListView.startRefreshNow();
-            refresh();
+
+        }
+    }
+
+    @Override
+    protected void newMsgOnPostExecute(TopicResultListBean newValue) {
+        if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
+            buildActionBatSubtitle();
+        }
+    }
+
+    @Override
+    protected void oldMsgOnPostExecute(TopicResultListBean newValue) {
+        if (newValue != null && newValue.getSize() > 0) {
+            getList().addOldData(newValue);
+            page++;
+            buildActionBatSubtitle();
         }
     }
 
@@ -92,7 +116,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
-    protected ListBean<MessageBean> getDoInBackgroundNewData() throws WeiboException {
+    protected TopicResultListBean getDoInBackgroundNewData() throws WeiboException {
 
         page = 1;
         SearchTopicDao dao = new SearchTopicDao(((IToken) getActivity()).getToken(), q);
@@ -103,20 +127,10 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
-    protected ListBean<MessageBean> getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+    protected TopicResultListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
         return null;
     }
 
-    @Override
-    protected void newMsgOnPostExecute(ListBean<MessageBean> newValue) {
-        if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
-            clearAndReplaceValue(newValue);
-            getAdapter().notifyDataSetChanged();
-            getListView().setSelectionAfterHeaderView();
-            buildActionBatSubtitle();
-        }
-
-    }
 
     private void buildActionBatSubtitle() {
         int newSize = bean.getTotal_number();
@@ -125,7 +139,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
     }
 
     @Override
-    protected ListBean<MessageBean> getDoInBackgroundOldData() throws WeiboException {
+    protected TopicResultListBean getDoInBackgroundOldData() throws WeiboException {
         SearchTopicDao dao = new SearchTopicDao(((IToken) getActivity()).getToken(), q);
         dao.setPage(String.valueOf(page + 1));
         TopicResultListBean result = dao.getGSONMsgList();
@@ -133,12 +147,4 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment {
     }
 
 
-    @Override
-    protected void oldMsgOnPostExecute(ListBean<MessageBean> newValue) {
-        if (newValue != null && newValue.getSize() > 0) {
-            getList().getItemList().addAll(newValue.getItemList());
-            page++;
-            buildActionBatSubtitle();
-        }
-    }
 }

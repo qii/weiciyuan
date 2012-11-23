@@ -89,6 +89,10 @@ public class Utility {
         }
     }
 
+    public static boolean isTaskStopped(MyAsyncTask task) {
+        return task == null || task.getStatus() == MyAsyncTask.Status.FINISHED;
+    }
+
     public static void stopListViewScrollingAndScrollToTop(ListView listView) {
         if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             listView.setSelection(0);
