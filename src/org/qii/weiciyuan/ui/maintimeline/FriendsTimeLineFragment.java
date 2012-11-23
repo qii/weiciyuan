@@ -62,7 +62,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("account", accountBean);
-        outState.putSerializable("bean", bean);
+        outState.putSerializable("bean", getList());
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
 
@@ -124,7 +124,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
             clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
 
-            refreshLayout(bean);
+            refreshLayout(getList());
         } else {
             if (dbTask == null || dbTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                 dbTask = new DBCacheTask();
@@ -156,7 +156,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         @Override
         protected Object doInBackground(Object... params) {
             clearAndReplaceValue(DatabaseManager.getInstance().getHomeLineMsgList(accountBean.getUid()));
-            clearAndReplaceValue("0", bean);
+            clearAndReplaceValue("0", getList());
             return null;
         }
 
@@ -164,12 +164,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
         protected void onPostExecute(Object o) {
             getPullToRefreshListView().setVisibility(View.VISIBLE);
             timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(bean);
+            refreshLayout(getList());
             super.onPostExecute(o);
             /**
              * when this account first open app,if he don't have any data in database,fetch data from server automally
              */
-            if (bean.getSize() == 0) {
+            if (getList().getSize() == 0) {
                 getPullToRefreshListView().startRefreshNow();
             }
         }
@@ -178,9 +178,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
 
     @Override
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-        MessageBean msg = bean.getItemList().get(position);
+        MessageBean msg = getList().getItemList().get(position);
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("msg", bean.getItemList().get(position));
+        intent.putExtra("msg", getList().getItemList().get(position));
         intent.putExtra("token", token);
         startActivity(intent);
 
@@ -244,7 +244,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     protected void afterGetNewMsg() {
         super.afterGetNewMsg();
         getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
-        clearAndReplaceValue(selectedId, bean);
+        clearAndReplaceValue(selectedId, getList());
     }
 
     @Override
@@ -299,7 +299,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment {
     public void switchGroup() {
 
         if (hashMap.get(selectedId) == null || hashMap.get(selectedId).getSize() == 0) {
-            bean.getItemList().clear();
+            getList().getItemList().clear();
             getAdapter().notifyDataSetChanged();
             getPullToRefreshListView().startRefreshNow();
 
