@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
 public class TopicResultListBean extends ListBean<MessageBean,TopicResultListBean> {
 
 
-    private List<MessageBean> statuses;
+    private List<MessageBean> statuses=new ArrayList<MessageBean>();
 
     @Override
     public int getSize() {
