@@ -321,6 +321,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
         @Override
         protected void onPreExecute() {
             showListView();
+            clearActionMode();
             Utility.stopListViewScrollingAndScrollToTop(getListView());
         }
 
@@ -371,7 +372,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             showListView();
 
             showFooterView();
-
+            clearActionMode();
         }
 
         @Override
@@ -433,6 +434,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
             this.position = position;
         }
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            clearActionMode();
+        }
 
         @Override
         protected T doInBackground(Object... params) {
