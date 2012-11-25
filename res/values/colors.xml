@@ -302,6 +302,6 @@
     <color name="dark_blue">#7874b8</color>
 
     <color name="listview_checked_color_holo_dark">#002E3E</color>
-    <color name="listview_checked_color_holo_light">#87CEEB</color>
+    <color name="listview_checked_color_holo_light">#33add6</color>
 
 </resources>  
