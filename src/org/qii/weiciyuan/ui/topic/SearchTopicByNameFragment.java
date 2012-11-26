@@ -7,11 +7,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TopicResultListBean;
 import org.qii.weiciyuan.dao.topic.SearchTopicDao;
+import org.qii.weiciyuan.dao.topic.TopicDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
@@ -28,6 +32,8 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
 
     private TopicResultListBean bean = new TopicResultListBean();
 
+    private FollowTopicTask followTopicTask;
+
     @Override
     public TopicResultListBean getList() {
         return bean;
@@ -43,10 +49,17 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
 
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        Utility.cancelTasks(followTopicTask);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("q", q);
         outState.putInt("page", page);
+        outState.putSerializable("bean", bean);
     }
 
     @Override
@@ -55,8 +68,9 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
         if (savedInstanceState != null) {
             q = savedInstanceState.getString("q");
             page = savedInstanceState.getInt("page");
+            bean = (TopicResultListBean) savedInstanceState.getSerializable("bean");
         } else {
-            pullToRefreshListView.startRefreshNow();
+            getPullToRefreshListView().startRefreshNow();
 
         }
     }
@@ -101,6 +115,14 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
             case R.id.menu_refresh:
                 pullToRefreshListView.startRefreshNow();
                 break;
+            case R.id.menu_follow_topic:
+                if (Utility.isTaskStopped(followTopicTask)) {
+                    followTopicTask = new FollowTopicTask();
+                    followTopicTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
+                break;
+            case R.id.menu_unfollow_topic:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -110,7 +132,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("msg", bean.getItemList().get(position));
-        intent.putExtra("token",GlobalContext.getInstance().getSpecialToken());
+        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
         startActivity(intent);
     }
 
@@ -145,5 +167,34 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
         return result;
     }
 
+    private class FollowTopicTask extends MyAsyncTask<Void, Boolean, Boolean> {
+        WeiboException e;
 
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                return new TopicDao(GlobalContext.getInstance().getSpecialToken()).follow(q);
+            } catch (WeiboException e) {
+                this.e = e;
+            }
+            return false;
+        }
+
+        @Override
+        protected void onCancelled(Boolean aBoolean) {
+            super.onCancelled(aBoolean);
+            if (getActivity() != null && e != null) {
+                Toast.makeText(getActivity(), getString(R.string.follow_topic_failed), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (getActivity() == null)
+                return;
+
+            Toast.makeText(getActivity(), getString(R.string.follow_topic_successfully), Toast.LENGTH_SHORT).show();
+        }
+    }
 }

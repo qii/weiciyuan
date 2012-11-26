@@ -226,6 +226,10 @@
 
     <!--topic-->
     <string name="search_topic">搜索话题</string>
+    <string name="follow_topic">关注话题</string>
+    <string name="unfollow_topic">取消关注该话题</string>
+    <string name="follow_topic_failed">关注失败</string>
+    <string name="follow_topic_successfully">关注成功</string>
 
     <!-- userinfo -->
     <string name="modify_remark">修改备注</string>
