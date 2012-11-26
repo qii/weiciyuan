@@ -104,4 +104,9 @@ public class Utility {
             listView.setSelection(0);
         }
     }
+
+    public static int dip2px(int dipValue) {
+        float reSize = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
+        return (int) (dipValue * reSize);
+    }
 }

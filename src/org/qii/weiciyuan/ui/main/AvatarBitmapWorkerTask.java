@@ -12,6 +12,7 @@ import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.AvatarBitmapDrawable;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -63,8 +64,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... url) {
 
         if (!isCancelled()) {
-            float reSize = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
-            int width = (int) (40 * reSize);
+            int width = Utility.dip2px(40);
             int height = width;
 
             if (GlobalContext.getInstance().getEnableBigAvatar()) {
