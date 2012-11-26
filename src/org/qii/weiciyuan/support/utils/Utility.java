@@ -107,6 +107,11 @@ public class Utility {
 
     public static int dip2px(int dipValue) {
         float reSize = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
-        return (int) (dipValue * reSize);
+        return (int) ((dipValue * reSize) + 0.5);
+    }
+
+    public static int px2dip(int pxValue) {
+        float reSize = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
+        return (int) ((pxValue / reSize) + 0.5);
     }
 }
