@@ -232,6 +232,7 @@
     <string name="follow_topic_successfully">关注成功</string>
     <string name="unfollow_topic_failed">取消失败</string>
     <string name="unfollow_topic_successfully">取消成功</string>
+    <string name="add_topic">添加话题</string>
 
     <!-- userinfo -->
     <string name="modify_remark">修改备注</string>
