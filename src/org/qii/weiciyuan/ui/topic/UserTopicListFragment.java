@@ -100,9 +100,13 @@ public class UserTopicListFragment extends ListFragment {
             }
         });
         if (result == null || result.size() == 0) {
-            task = new TopicListTask();
-            task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            refresh();
         }
+    }
+
+    private void refresh() {
+        task = new TopicListTask();
+        task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -195,9 +199,10 @@ public class UserTopicListFragment extends ListFragment {
             super.onPostExecute(aBoolean);
             if (getActivity() == null)
                 return;
-            if (aBoolean)
+            if (aBoolean) {
                 Toast.makeText(getActivity(), getString(R.string.follow_topic_successfully), Toast.LENGTH_SHORT).show();
-            else
+                refresh();
+            } else
                 Toast.makeText(getActivity(), getString(R.string.follow_topic_failed), Toast.LENGTH_SHORT).show();
         }
     }
