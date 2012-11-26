@@ -11,6 +11,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -70,6 +71,14 @@ public class AboutFragment extends PreferenceFragment {
         });
 
         findPreference(SettingActivity.VERSION).setSummary(buildVersionInfo());
+
+        findPreference(SettingActivity.DONATE).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Toast.makeText(getActivity(), getString(R.string.donate_summary2), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
     }
 
     private String buildVersionInfo() {
