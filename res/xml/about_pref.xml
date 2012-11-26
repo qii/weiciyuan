@@ -14,6 +14,11 @@
             />
 
     <Preference
+            android:title="@string/author"
+            android:summary="@string/author_summary"
+            />
+
+    <Preference
             android:title="@string/play_store_address"
             android:summary="@string/play_store_address_summary"
             >
@@ -37,6 +42,13 @@
     <Preference
             android:key="recommend"
             android:title="@string/recommend"
+            >
+
+    </Preference>
+
+    <Preference
+            android:title="@string/donate"
+            android:summary="@string/donate_summary"
             >
 
     </Preference>
