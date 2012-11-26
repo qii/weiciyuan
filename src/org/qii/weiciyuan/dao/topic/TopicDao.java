@@ -44,22 +44,44 @@ public class TopicDao {
 
     }
 
-    public boolean destroy(String trend_id) throws WeiboException {
-        String url = URLHelper.TOPIC_DESTROY;
+    public boolean destroy(String trend_name) throws WeiboException {
+        String url = URLHelper.TOPIC_RELATIONSHIP;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
-        map.put("trend_id", trend_id);
+        map.put("trend_name", trend_name);
 
-        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
-            return jsonObject.optBoolean("result", false);
+
+            boolean isFollowing = jsonObject.optBoolean("is_follow", false);
+            if (!isFollowing) {
+                return false;
+            }
+            String trend_id = jsonObject.optString("trend_id", "");
+
+            url = URLHelper.TOPIC_DESTROY;
+            map = new HashMap<String, String>();
+            map.put("access_token", access_token);
+            map.put("trend_id", trend_id);
+
+            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
+
+            try {
+                jsonObject = new JSONObject(jsonData);
+                return jsonObject.optBoolean("result", false);
+
+            } catch (JSONException e) {
+
+            }
+            return false;
+
 
         } catch (JSONException e) {
 
         }
         return false;
-
     }
+
 }

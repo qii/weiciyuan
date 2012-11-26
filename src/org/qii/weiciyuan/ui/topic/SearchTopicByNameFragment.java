@@ -33,6 +33,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
     private TopicResultListBean bean = new TopicResultListBean();
 
     private FollowTopicTask followTopicTask;
+    private UnFollowTopicTask unFollowTopicTask;
 
     @Override
     public TopicResultListBean getList() {
@@ -51,7 +52,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
     @Override
     public void onDetach() {
         super.onDetach();
-        Utility.cancelTasks(followTopicTask);
+        Utility.cancelTasks(followTopicTask, unFollowTopicTask);
     }
 
     @Override
@@ -122,6 +123,10 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
                 }
                 break;
             case R.id.menu_unfollow_topic:
+                if (Utility.isTaskStopped(unFollowTopicTask)) {
+                    unFollowTopicTask = new UnFollowTopicTask();
+                    unFollowTopicTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -176,6 +181,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
                 return new TopicDao(GlobalContext.getInstance().getSpecialToken()).follow(q);
             } catch (WeiboException e) {
                 this.e = e;
+                cancel(true);
             }
             return false;
         }
@@ -184,7 +190,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
         protected void onCancelled(Boolean aBoolean) {
             super.onCancelled(aBoolean);
             if (getActivity() != null && e != null) {
-                Toast.makeText(getActivity(), getString(R.string.follow_topic_failed), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -193,8 +199,45 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
             super.onPostExecute(aBoolean);
             if (getActivity() == null)
                 return;
-
-            Toast.makeText(getActivity(), getString(R.string.follow_topic_successfully), Toast.LENGTH_SHORT).show();
+            if (aBoolean)
+                Toast.makeText(getActivity(), getString(R.string.follow_topic_successfully), Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getActivity(), getString(R.string.follow_topic_failed), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private class UnFollowTopicTask extends MyAsyncTask<Void, Boolean, Boolean> {
+        WeiboException e;
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                return new TopicDao(GlobalContext.getInstance().getSpecialToken()).destroy(q);
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+            }
+            return false;
+        }
+
+        @Override
+        protected void onCancelled(Boolean aBoolean) {
+            super.onCancelled(aBoolean);
+            if (getActivity() != null && e != null) {
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (getActivity() == null)
+                return;
+            if (aBoolean)
+                Toast.makeText(getActivity(), getString(R.string.unfollow_topic_successfully), Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getActivity(), getString(R.string.unfollow_topic_failed), Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

@@ -74,6 +74,7 @@ public class URLHelper {
     public static final String TOPIC_USER_LIST = URL_SINA_WEIBO + "trends.json";
     public static final String TOPIC_FOLLOW = URL_SINA_WEIBO + "trends/follow.json";
     public static final String TOPIC_DESTROY = URL_SINA_WEIBO + "trends/destroy.json";
+    public static final String TOPIC_RELATIONSHIP = URL_SINA_WEIBO + "trends/is_follow.json";
 
     //unread messages
     public static final String UNREAD_COUNT = URL_SINA_WEIBO + "remind/unread_count.json";
