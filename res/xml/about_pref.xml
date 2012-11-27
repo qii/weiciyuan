@@ -57,7 +57,14 @@
     <Preference
             android:key="cache_path"
             android:title="@string/cache_path"
-             >
+            >
+
+    </Preference>
+
+    <Preference
+            android:key="saved_pic_path"
+            android:title="@string/saved_pic_path"
+            >
 
     </Preference>
 

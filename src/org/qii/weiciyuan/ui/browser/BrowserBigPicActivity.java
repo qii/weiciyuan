@@ -9,24 +9,25 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.*;
+import android.widget.ProgressBar;
+import android.widget.ShareActionProvider;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -77,6 +78,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,31 +155,29 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    class PicSaveTask extends MyAsyncTask<Void, Void, Void> {
+    class PicSaveTask extends MyAsyncTask<Void, Boolean, Boolean> {
 
 
         @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                MediaStore.Images.Media.insertImage(getContentResolver(), path, "", "");
-            } catch (FileNotFoundException e) {
-                AppLogger.e(e.getMessage());
-                cancel(true);
-            }
-            return null;
+        protected Boolean doInBackground(Void... params) {
+//            try {
+//                MediaStore.Images.Media.insertImage(getContentResolver(), path, "", "");
+//            } catch (FileNotFoundException e) {
+//                AppLogger.e(e.getMessage());
+//                cancel(true);
+//            }
+            return FileManager.saveToPicDir(path);
         }
 
+
         @Override
-        protected void onCancelled(Void aVoid) {
-            super.onCancelled(aVoid);
-            Toast.makeText(BrowserBigPicActivity.this, getString(R.string.cant_save_pic), Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(Boolean value) {
+            super.onPostExecute(value);
             saveTask = null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Toast.makeText(BrowserBigPicActivity.this, getString(R.string.save_to_album_successfully), Toast.LENGTH_SHORT).show();
+            if (value)
+                Toast.makeText(BrowserBigPicActivity.this, getString(R.string.save_to_album_successfully), Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(BrowserBigPicActivity.this, getString(R.string.cant_save_pic), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -278,8 +278,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (task != null)
-            task.cancel(true);
+        Utility.cancelTasks(task, saveTask);
         webView.loadUrl("about:blank");
         webView.stopLoading();
         webView = null;

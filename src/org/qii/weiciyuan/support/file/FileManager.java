@@ -4,8 +4,7 @@ import android.os.Environment;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +29,16 @@ public class FileManager {
         } else {
             return "";
         }
+    }
+
+    public File getAlbumStorageDir(String albumName) {
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), albumName);
+        if (!file.mkdirs()) {
+            AppLogger.e("Directory not created");
+        }
+        return file;
     }
 
     public static boolean isExternalStorageMounted() {
@@ -95,7 +104,9 @@ public class FileManager {
             return "";
 
         String path = getSdCardPath() + File.separator + TXT2PIC;
-
+        File file = new File(path);
+        if (file.exists())
+            file.mkdirs();
         return path;
     }
 
@@ -201,5 +212,45 @@ public class FileManager {
             }
         }
         return (path.delete());
+    }
+
+    public static boolean saveToPicDir(String path) {
+        if (!isExternalStorageMounted())
+            return false;
+
+        File file = new File(path);
+        String name = file.getName();
+        String newPath = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + name;
+        try {
+            FileManager.createNewFileInSDCard(newPath);
+            copyFile(file, new File(newPath));
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+
+    }
+
+    private static void copyFile(File sourceFile, File targetFile) throws IOException {
+        BufferedInputStream inBuff = null;
+        BufferedOutputStream outBuff = null;
+        try {
+            inBuff = new BufferedInputStream(new FileInputStream(sourceFile));
+
+            outBuff = new BufferedOutputStream(new FileOutputStream(targetFile));
+
+            byte[] b = new byte[1024 * 5];
+            int len;
+            while ((len = inBuff.read(b)) != -1) {
+                outBuff.write(b, 0, len);
+            }
+            outBuff.flush();
+        } finally {
+            if (inBuff != null)
+                inBuff.close();
+            if (outBuff != null)
+                outBuff.close();
+        }
     }
 }

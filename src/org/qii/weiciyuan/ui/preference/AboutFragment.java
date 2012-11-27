@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.telephony.TelephonyManager;
@@ -81,6 +82,10 @@ public class AboutFragment extends PreferenceFragment {
         });
 
         findPreference(SettingActivity.CACHE_PATH).setSummary(GlobalContext.getInstance().getExternalCacheDir().getAbsolutePath());
+        findPreference(SettingActivity.SAVED_PIC_PATH).setSummary(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES).getAbsolutePath());
+
+
     }
 
     private String buildVersionInfo() {

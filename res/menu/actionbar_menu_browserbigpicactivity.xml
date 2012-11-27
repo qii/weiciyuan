@@ -7,7 +7,7 @@
 
     <item android:id="@+id/menu_save"
           android:icon="?attr/save"
-          android:title="@string/save_system_album"
+          android:title="@string/save_pic_album"
           android:showAsAction="never"
             />
 

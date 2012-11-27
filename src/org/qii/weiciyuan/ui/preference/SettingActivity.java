@@ -46,6 +46,7 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String RECOMMEND="recommend";
     public static final String DONATE="donate";
     public static final String CACHE_PATH="cache_path";
+    public static final String SAVED_PIC_PATH="saved_pic_path";
 
     public static final String UPLOAD_PIC_QUALITY = "upload_pic_quality";
 

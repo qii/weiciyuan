@@ -149,7 +149,7 @@
     <!-- browser weibo -->
     <string name="ori_picture">原图</string>
     <string name="browser_picture">查看图片</string>
-    <string name="save_system_album">保存到相册</string>
+    <string name="save_pic_album">保存到图片文件夹</string>
     <string name="force_download">重新下载</string>
     <string name="already_saved">已经保存过了</string>
     <string name="cant_save_pic">发生错误，无法保存</string>
@@ -315,6 +315,7 @@
     <string name="author_summary">心之所在</string>
     <string name="thought">看法</string>
     <string name="cache_path">缓存文件路径</string>
+    <string name="saved_pic_path">图片保存路径</string>
 
     <!--filter-->
     <string name="add_filter">添加过滤词</string>
