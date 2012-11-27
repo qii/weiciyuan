@@ -447,6 +447,13 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     private void convertStringToBitmap() {
+
+        boolean haveContent = !TextUtils.isEmpty(content.getText().toString());
+
+        if (!haveContent) {
+            content.setError(getString(R.string.content_cant_be_empty));
+            return;
+        }
         if (Utility.isTaskStopped(string2PicTask)) {
             string2PicTask = new String2PicTask();
             string2PicTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
