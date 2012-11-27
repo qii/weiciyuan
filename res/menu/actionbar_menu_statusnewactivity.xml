@@ -3,7 +3,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-
     <item android:id="@+id/menu_at"
           android:title="@string/at_other"
             />
@@ -13,11 +12,13 @@
             />
 
 
-
     <item android:id="@+id/menu_topic"
           android:title="@string/topic"
             />
 
+    <item android:id="@+id/menu_txt_to_pic"
+          android:title="@string/txt_to_pic"
+            />
 
 
 </menu>

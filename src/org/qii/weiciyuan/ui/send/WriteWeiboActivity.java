@@ -32,6 +32,7 @@ import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.imagetool.ImageEdit;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -68,6 +69,8 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private ImageView haveGPS = null;
     private ImageView havePic = null;
     private EditText content = null;
+
+    private MenuItem txt2PicMenuItem;
 
     private GetEmotionsTask getEmotionsTask;
     private Map<String, Bitmap> emotionsPic = new HashMap<String, Bitmap>();
@@ -281,6 +284,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         actionBar.setDisplayShowCustomEnabled(true);
         content = ((EditText) findViewById(R.id.status_new_content));
         content.addTextChangedListener(new TextNumLimitWatcher((TextView) findViewById(R.id.menu_send), content, this));
+        content.setDrawingCacheEnabled(true);
 
         View.OnClickListener onClickListener = new BottomButtonClickListener();
         findViewById(R.id.menu_add_gps).setOnClickListener(onClickListener);
@@ -338,6 +342,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         }
     }
 
+
     private String getPicPathFromUri(Uri uri) {
         String value = uri.getPath();
 
@@ -382,6 +387,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu_statusnewactivity, menu);
+        txt2PicMenuItem = menu.findItem(R.id.menu_txt_to_pic);
         return true;
     }
 
@@ -415,6 +421,9 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 intent.putExtra("token", token);
                 startActivityForResult(intent, AT_USER);
                 break;
+            case R.id.menu_txt_to_pic:
+                convertStringToBitmap(content);
+                break;
 
         }
         return true;
@@ -439,11 +448,16 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         finish();
     }
 
-//    private String getLastContent() {
-//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-//        String draft = sharedPref.getString(TYPE_DRAFT, "");
-//        return draft;
-//    }
+    private void convertStringToBitmap(EditText et) {
+        String result = ImageEdit.convertStringToBitmap(this, et);
+        if (!TextUtils.isEmpty(result)) {
+            havePic.setVisibility(View.VISIBLE);
+            picPath = ImageEdit.convertStringToBitmap(this, et);
+            Toast.makeText(this, getString(R.string.convert_successfully), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getString(R.string.convert_failed), Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public void clear() {
         content.setText("");
@@ -460,18 +474,18 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         new SelectPictureDialog().show(getFragmentManager(), "");
     }
 
-    protected void executeTask(String content) {
-
+    protected void executeTask(String contentString) {
         Intent intent = new Intent(WriteWeiboActivity.this, SendWeiboService.class);
         intent.putExtra("token", token);
         intent.putExtra("picPath", picPath);
         intent.putExtra("accountId", accountBean.getUid());
-        intent.putExtra("content", content);
+        intent.putExtra("content", contentString);
         intent.putExtra("geo", geoBean);
         intent.putExtra("draft", statusDraftBean);
         startService(intent);
         finish();
     }
+
 
     @Override
     public AccountBean getAccount() {

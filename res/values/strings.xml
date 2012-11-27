@@ -98,6 +98,7 @@
     <string name="emoticon">表情</string>
     <string name="word_emoticon">颜文字</string>
     <string name="topic">话题</string>
+    <string name="txt_to_pic">文字转图片</string>
     <string name="clear_content">清空内容</string>
     <string name="are_you_sure">确定吗？</string>
     <string name="ask_clear">清空内容？</string>
@@ -142,6 +143,8 @@
     <string name="save_to_draft">保存到草稿箱</string>
     <string name="do_you_want_to_save">要保存到草稿箱吗？</string>
     <string name="save">保存</string>
+    <string name="convert_successfully">转换成功，你可以精简文字了</string>
+    <string name="convert_failed">转换失败</string>
 
     <!-- browser weibo -->
     <string name="ori_picture">原图</string>
