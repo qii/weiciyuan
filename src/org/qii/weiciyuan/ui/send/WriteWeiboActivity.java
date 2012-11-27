@@ -35,6 +35,7 @@ import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imagetool.ImageEdit;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -70,8 +71,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private ImageView havePic = null;
     private EditText content = null;
 
-    private MenuItem txt2PicMenuItem;
-
+    private String2PicTask string2PicTask;
     private GetEmotionsTask getEmotionsTask;
     private Map<String, Bitmap> emotionsPic = new HashMap<String, Bitmap>();
 
@@ -138,9 +138,8 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (getEmotionsTask != null)
-            getEmotionsTask.cancel(true);
 
+        Utility.cancelTasks(string2PicTask, getEmotionsTask);
         Set<String> keys = emotionsPic.keySet();
         for (String key : keys) {
             emotionsPic.put(key, null);
@@ -387,7 +386,6 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu_statusnewactivity, menu);
-        txt2PicMenuItem = menu.findItem(R.id.menu_txt_to_pic);
         return true;
     }
 
@@ -422,7 +420,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 startActivityForResult(intent, AT_USER);
                 break;
             case R.id.menu_txt_to_pic:
-                convertStringToBitmap(content);
+                convertStringToBitmap();
                 break;
 
         }
@@ -448,14 +446,10 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         finish();
     }
 
-    private void convertStringToBitmap(EditText et) {
-        String result = ImageEdit.convertStringToBitmap(this, et);
-        if (!TextUtils.isEmpty(result)) {
-            havePic.setVisibility(View.VISIBLE);
-            picPath = ImageEdit.convertStringToBitmap(this, et);
-            Toast.makeText(this, getString(R.string.convert_successfully), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, getString(R.string.convert_failed), Toast.LENGTH_SHORT).show();
+    private void convertStringToBitmap() {
+        if (Utility.isTaskStopped(string2PicTask)) {
+            string2PicTask = new String2PicTask();
+            string2PicTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -660,6 +654,27 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             location = s;
             haveGPS.setVisibility(View.VISIBLE);
             super.onPostExecute(s);
+        }
+    }
+
+    private class String2PicTask extends MyAsyncTask<Void, String, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            return ImageEdit.convertStringToBitmap(WriteWeiboActivity.this, content);
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (!TextUtils.isEmpty(s)) {
+                havePic.setVisibility(View.VISIBLE);
+                picPath = s;
+                Toast.makeText(WriteWeiboActivity.this, getString(R.string.convert_successfully), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(WriteWeiboActivity.this, getString(R.string.convert_failed), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
