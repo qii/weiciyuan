@@ -4,8 +4,8 @@ import android.content.Context;
 import android.graphics.*;
 import android.view.View;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.utils.AppLogger;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,8 +51,9 @@ public class ImageEdit {
         canvas.drawBitmap(bitmap, rect, rect, paint);
 
         try {
-            String path = GlobalContext.getInstance().getExternalCacheDir().getAbsolutePath() + File.separator + "wo.png";
+            String path = FileManager.getTxt2picPath() + File.separator + "tmp.png";
             AppLogger.e(path);
+            FileManager.createNewFileInSDCard(path);
             FileOutputStream out = new FileOutputStream(path);
             output.compress(Bitmap.CompressFormat.PNG, 90, out);
 //            bitmap.recycle();

@@ -21,6 +21,7 @@ public class FileManager {
     private static final String PICTURE_BMIDDLE = "picture_bmiddle";
     private static final String PICTURE_LARGE = "picture_large";
     private static final String EMOTION = "emotion";
+    private static final String TXT2PIC = "txt2pic";
 
 
     private static String getSdCardPath() {
@@ -87,6 +88,15 @@ public class FileManager {
 
         return getSdCardPath() + File.separator + newRelativePath;
 
+    }
+
+    public static String getTxt2picPath() {
+        if (!isExternalStorageMounted())
+            return "";
+
+        String path = getSdCardPath() + File.separator + TXT2PIC;
+
+        return path;
     }
 
 
