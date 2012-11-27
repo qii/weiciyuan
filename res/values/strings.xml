@@ -314,6 +314,7 @@
     <string name="author">开发者</string>
     <string name="author_summary">心之所在</string>
     <string name="thought">看法</string>
+    <string name="cache_path">缓存文件路径</string>
 
     <!--filter-->
     <string name="add_filter">添加过滤词</string>

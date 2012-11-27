@@ -79,6 +79,8 @@ public class AboutFragment extends PreferenceFragment {
                 return true;
             }
         });
+
+        findPreference(SettingActivity.CACHE_PATH).setSummary(GlobalContext.getInstance().getExternalCacheDir().getAbsolutePath());
     }
 
     private String buildVersionInfo() {

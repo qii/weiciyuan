@@ -54,4 +54,11 @@
 
     </Preference>
 
+    <Preference
+            android:key="cache_path"
+            android:title="@string/cache_path"
+             >
+
+    </Preference>
+
 </PreferenceScreen>
