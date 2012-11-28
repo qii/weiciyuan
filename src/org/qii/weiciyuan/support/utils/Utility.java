@@ -114,4 +114,22 @@ public class Utility {
         float reSize = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
         return (int) ((pxValue / reSize) + 0.5);
     }
+
+    public static int length(String paramString) {
+        int i = 0;
+        for (int j = 0; j < paramString.length(); j++) {
+            if (paramString.substring(j, j + 1).matches("[Α-￥]"))
+                i += 2;
+            else
+                i++;
+        }
+
+        if (i % 2 > 0) {
+            i = 1 + i / 2;
+        } else {
+            i = i / 2;
+        }
+
+        return i;
+    }
 }

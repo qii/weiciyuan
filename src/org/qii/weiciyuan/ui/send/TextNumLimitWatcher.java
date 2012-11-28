@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
@@ -29,15 +30,19 @@ public class TextNumLimitWatcher implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        int num = 140 - et.getText().toString().length();
-        if (num == 140) {
+
+        int sum = Utility.length(et.getText().toString());
+
+        int left = 140 - sum;
+
+        if (left == 140) {
             tv.setText(activity.getString(R.string.send));
         } else {
-            tv.setText(String.valueOf(num));
+            tv.setText(String.valueOf(left));
         }
-        if (num < 0) {
+        if (left < 0) {
             tv.setTextColor(activity.getResources().getColor(R.color.red));
-        } else if (num > 0 && num <= 140) {
+        } else if (left >= 0 && left <= 140) {
             int[] attrs = new int[]{android.R.attr.actionMenuTextColor};
             TypedArray ta = activity.obtainStyledAttributes(attrs);
             int drawableFromTheme = ta.getColor(0, 430);

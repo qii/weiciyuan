@@ -360,7 +360,11 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
         boolean haveContent = !TextUtils.isEmpty(content.getText().toString());
         boolean haveToken = !TextUtils.isEmpty(token);
-        boolean contentNumBelow140 = (content.getText().toString().length() < 140);
+
+        int sum = Utility.length(content.getText().toString());
+        int num = 140 - sum;
+
+        boolean contentNumBelow140 = (num >= 0);
 
         if (haveContent && haveToken && contentNumBelow140) {
             return true;
