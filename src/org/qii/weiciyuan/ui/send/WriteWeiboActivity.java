@@ -426,6 +426,9 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             case R.id.menu_txt_to_pic:
                 convertStringToBitmap();
                 break;
+            case R.id.menu_clear:
+                clearContentMenu();
+                break;
 
         }
         return true;
@@ -462,6 +465,11 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             string2PicTask = new String2PicTask();
             string2PicTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
+    }
+
+    protected void clearContentMenu() {
+        ClearContentDialog dialog = new ClearContentDialog();
+        dialog.show(getFragmentManager(), "");
     }
 
     public void clear() {
