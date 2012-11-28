@@ -108,7 +108,7 @@
 
                 >
             <TextView
-                    android:includeFontPadding="false"
+                    android:includeFontPadding="true"
                     android:id="@+id/repost_content"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
