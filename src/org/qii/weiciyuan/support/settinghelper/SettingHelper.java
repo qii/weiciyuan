@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
  * User: qii
  * Date: 12-11-28
  */
-public class SettingHelper {
+class SettingHelper {
     private static SharedPreferences.Editor editor = null;
     private static SharedPreferences sharedPreferences = null;
 
