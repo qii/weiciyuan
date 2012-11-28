@@ -38,5 +38,8 @@
           android:icon="?share"
             />
 
+    <item android:id="@+id/menu_delete"
+          android:visible="false"
+          android:title="@string/delete"/>
 
 </menu>

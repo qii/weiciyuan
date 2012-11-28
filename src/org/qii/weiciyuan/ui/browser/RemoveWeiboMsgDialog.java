@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.ui.actionmenu;
+package org.qii.weiciyuan.ui.browser;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,35 +10,38 @@ import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 
 /**
  * User: qii
- * Date: 12-9-11
+ * Date: 12-11-28
  */
-public class RemoveDialog extends DialogFragment {
+public class RemoveWeiboMsgDialog extends DialogFragment {
+
+    public static interface IRemove {
+        public void removeMsg(String id);
+    }
 
 
-    private int positon;
+    private String id;
 
-    public RemoveDialog() {
+    public RemoveWeiboMsgDialog() {
 
     }
 
-    public RemoveDialog(int positon) {
+    public RemoveWeiboMsgDialog(String id) {
 
-        this.positon = positon;
+        this.id = id;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putInt("positon", positon);
+        outState.putString("id", id);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-
-            positon = savedInstanceState.getInt("position");
+            id = savedInstanceState.getString("id");
         }
     }
 
@@ -51,8 +54,8 @@ public class RemoveDialog extends DialogFragment {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        IRemoveItem iRemoveItem = (IRemoveItem) getTargetFragment();
-                        iRemoveItem.removeItem(positon);
+                        IRemove IRemove = (IRemove) getActivity();
+                        IRemove.removeMsg(id);
                     }
                 })
                 .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

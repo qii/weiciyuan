@@ -17,9 +17,12 @@ import android.widget.ShareActionProvider;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.dao.destroy.DestroyStatusDao;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -35,7 +38,7 @@ import java.util.List;
  * User: Jiang Qi
  * Date: 12-8-1
  */
-public class BrowserWeiboMsgActivity extends AbstractAppActivity {
+public class BrowserWeiboMsgActivity extends AbstractAppActivity implements RemoveWeiboMsgDialog.IRemove {
 
     private MessageBean msg;
     private String token;
@@ -51,6 +54,8 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
     private ShareActionProvider mShareActionProvider;
 
     private GestureDetector gestureDetector;
+
+    private RemoveTask removeTask;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -74,6 +79,12 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
 
         buildViewPager();
         buildActionBarAndViewPagerTitles();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Utility.cancelTasks(removeTask);
     }
 
     private void buildViewPager() {
@@ -206,6 +217,10 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu_browserweibomsgactivity, menu);
 
+        if (msg.getUser() != null && msg.getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+            menu.findItem(R.id.menu_delete).setVisible(true);
+        }
+
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
         buildShareActionMenu();
@@ -253,6 +268,10 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
                 }
 
                 return true;
+            case R.id.menu_delete:
+                RemoveWeiboMsgDialog dialog = new RemoveWeiboMsgDialog(msg.getId());
+                dialog.show(getFragmentManager(), "");
+                return true;
         }
         return false;
     }
@@ -268,6 +287,14 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
             if (isIntentSafe && mShareActionProvider != null) {
                 mShareActionProvider.setShareIntent(sharingIntent);
             }
+        }
+    }
+
+    @Override
+    public void removeMsg(String id) {
+        if (Utility.isTaskStopped(removeTask)) {
+            removeTask = new RemoveTask(id);
+            removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -336,6 +363,44 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity {
                 return true;
             }
             return false;
+        }
+    }
+
+    class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
+
+        String id;
+        WeiboException e;
+
+        public RemoveTask(String id) {
+            this.id = id;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            DestroyStatusDao dao = new DestroyStatusDao(token, id);
+            try {
+                return dao.destroy();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return false;
+            }
+        }
+
+        @Override
+        protected void onCancelled(Boolean aBoolean) {
+            super.onCancelled(aBoolean);
+            if (this.e != null) {
+                Toast.makeText(BrowserWeiboMsgActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (aBoolean) {
+                finish();
+            }
         }
     }
 }
