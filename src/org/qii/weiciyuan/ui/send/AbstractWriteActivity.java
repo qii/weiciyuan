@@ -133,10 +133,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
                 send();
                 break;
             case R.id.menu_topic:
-                String ori = getEditTextView().getText().toString();
-                String topicTag = "##";
-                getEditTextView().setText(ori + topicTag);
-                getEditTextView().setSelection(et.getText().toString().length() - 1);
+                insertTopic();
                 break;
             case R.id.menu_at:
                 Intent intent = new Intent(AbstractWriteActivity.this, AtUserActivity.class);
@@ -144,6 +141,13 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
                 startActivityForResult(intent, AT_USER);
                 break;
         }
+    }
+
+    protected void insertTopic() {
+        String ori = getEditTextView().getText().toString();
+        String topicTag = "##";
+        getEditTextView().setText(ori + topicTag);
+        getEditTextView().setSelection(et.getText().toString().length() - 1);
     }
 
     protected void clearContentMenu() {

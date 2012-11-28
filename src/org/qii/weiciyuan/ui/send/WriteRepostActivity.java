@@ -78,6 +78,17 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         return false;
     }
 
+    @Override
+    protected void insertTopic() {
+        String ori = getEditTextView().getText().toString();
+        int index = getEditTextView().getSelectionStart();
+        StringBuilder stringBuilder = new StringBuilder(ori);
+        stringBuilder.insert(index, "##");
+        getEditTextView().setText(stringBuilder.toString());
+        getEditTextView().setSelection(index + "##".length() - 1);
+
+    }
+
 
     @Override
     public void saveToDraft() {
