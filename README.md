@@ -4,9 +4,9 @@ Sina Weibo Android Client, require Android 4.0.4+, ICS Holo Style，GPL v3 Licen
 
 Download https://play.google.com/store/apps/details?id=org.qii.weiciyuan
 
-新浪微博接入
+文档
 --------------
-OAuth2 授权，需要 APPKEY，org.qii.weiciyuan.ui.login.OAuthActivity.java 的 APP_KEY 变量
+https://github.com/qii/weiciyuan/wiki
 
 黄粱一梦二十年
 --------------
