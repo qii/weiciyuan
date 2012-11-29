@@ -18,6 +18,7 @@ import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.ReplyDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
 
 /**
@@ -143,7 +144,10 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
 
         boolean haveContent = !TextUtils.isEmpty(getEditTextView().getText().toString());
         boolean haveToken = !TextUtils.isEmpty(token);
-        boolean contentNumBelow140 = (getEditTextView().getText().toString().length() < 140);
+        int sum = Utility.length(getEditTextView().getText().toString());
+        int num = 140 - sum;
+
+        boolean contentNumBelow140 = (num >= 0);
 
         if (haveContent && haveToken && contentNumBelow140) {
             return true;
