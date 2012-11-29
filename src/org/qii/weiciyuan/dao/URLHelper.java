@@ -14,7 +14,6 @@ public class URLHelper {
     public static final String APP_KEY = "1065511513";
     public static final String APP_SECRET = "df428e88aae8bd31f20481d149c856ed";
     public static final String DIRECT_URL = "https://api.weibo.com/oauth2/default.html";
-    public static final String OAUTH2_ACCESS_TOKEN = URL_SINA_WEIBO + "oauth2/access_token";
 
 
     //main timeline
@@ -103,6 +102,8 @@ public class URLHelper {
      * black magic
      */
 
+    //oauth2 and refresh token
+    public static final String OAUTH2_ACCESS_TOKEN = URL_SINA_WEIBO + "oauth2/access_token";
 
     //search
     public static final String STATUSES_SEARCH = URL_SINA_WEIBO + "search/statuses.json";
