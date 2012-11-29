@@ -26,6 +26,7 @@ public class FollowTopicDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final EditText et = new EditText(getActivity());
+        et.setHint(getString(R.string.add_topic_hint));
         builder.setView(et)
                 .setTitle(getString(R.string.add_topic))
                 .setPositiveButton(getString(R.string.add), new DialogInterface.OnClickListener() {
