@@ -110,6 +110,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         getMenuInflater().inflate(R.menu.actionbar_menu_repostnewactivity, menu);
         menuEnableComment = menu.findItem(R.id.menu_enable_comment);
         menuEnableOriComment = menu.findItem(R.id.menu_enable_ori_comment);
+        menu.findItem(R.id.menu_short).setVisible(true);
         return true;
     }
 
@@ -120,7 +121,6 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         if (msg.getRetweeted_status() != null) {
             menuEnableOriComment.setVisible(true);
         }
-
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -155,8 +155,23 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
             case R.id.menu_clear:
                 clearContentMenu();
                 break;
+            case R.id.menu_short:
+                shortContent();
+                break;
         }
         return true;
+    }
+
+    private void shortContent() {
+        String content = getEditTextView().getText().toString();
+        int index = getEditTextView().getSelectionStart();
+        int last = content.lastIndexOf("//@");
+        if (last >= 0) {
+            String result = content.substring(0, last);
+            getEditTextView().setText(result);
+            if (index <= result.length())
+                getEditTextView().setSelection(index);
+        }
     }
 
     @Override
