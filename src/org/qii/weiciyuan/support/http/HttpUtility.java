@@ -19,10 +19,8 @@ import ch.boye.httpclientandroidlib.conn.scheme.Scheme;
 import ch.boye.httpclientandroidlib.conn.scheme.SchemeRegistry;
 import ch.boye.httpclientandroidlib.conn.ssl.SSLSocketFactory;
 import ch.boye.httpclientandroidlib.impl.client.BasicCookieStore;
-import ch.boye.httpclientandroidlib.impl.client.DecompressingHttpClient;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.impl.client.cache.CacheConfig;
-import ch.boye.httpclientandroidlib.impl.client.cache.CachingHttpClient;
 import ch.boye.httpclientandroidlib.impl.conn.PoolingClientConnectionManager;
 import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
 import ch.boye.httpclientandroidlib.params.CoreProtocolPNames;
@@ -117,7 +115,8 @@ public class HttpUtility {
         //4.2 N7 pad has bug, occur time out frequently
         //httpClient = new CachingHttpClient(new DecompressingHttpClient(backend), cacheConfig);
 
-        httpClient = new DecompressingHttpClient(new CachingHttpClient(backend, cacheConfig));
+//        httpClient = new DecompressingHttpClient(new CachingHttpClient(backend, cacheConfig));
+        httpClient=backend;
         HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 5000);
         HttpConnectionParams.setSoTimeout(httpClient.getParams(), 8000);
 
