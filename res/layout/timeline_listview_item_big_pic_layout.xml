@@ -27,6 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
+                android:layerType="software"
                 android:textColor="?android:textColorTertiary"
                 android:drawableLeft="?timeline_repost_flag"
                 />
@@ -36,6 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
+                android:layerType="software"
                 android:layout_marginLeft="5dp"
                 android:textColor="?android:textColorTertiary"
                 android:drawableLeft="?timeline_comment_flag"
@@ -51,6 +53,7 @@
             android:ellipsize="end"
             android:layout_toRightOf="@id/avatar"
             android:layout_toLeftOf="@id/count_layout"
+            android:layerType="software"
             android:textStyle="bold"/>
 
 
@@ -62,6 +65,7 @@
             android:textColor="?android:textColorTertiary"
             android:layout_below="@id/username"
             android:layout_toRightOf="@id/avatar"
+            android:layerType="software"
             />
 
 
