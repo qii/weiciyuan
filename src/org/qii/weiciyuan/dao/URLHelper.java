@@ -10,6 +10,12 @@ public class URLHelper {
 
     //login
     public static final String UID = URL_SINA_WEIBO + "account/get_uid.json";
+    public static final String URL_OAUTH2_ACCESS_AUTHORIZE = "https://api.weibo.com/oauth2/authorize";
+    public static final String APP_KEY = "1065511513";
+    public static final String APP_SECRET = "df428e88aae8bd31f20481d149c856ed";
+    public static final String DIRECT_URL = "https://api.weibo.com/oauth2/default.html";
+    public static final String OAUTH2_ACCESS_TOKEN = URL_SINA_WEIBO + "oauth2/access_token";
+
 
     //main timeline
     public static final String FRIENDS_TIMELINE = URL_SINA_WEIBO + "statuses/friends_timeline.json";
@@ -97,8 +103,6 @@ public class URLHelper {
      * black magic
      */
 
-    //token
-    public static final String OAUTH2_ACCESS_TOKEN = URL_SINA_WEIBO + "oauth2/access_token";
 
     //search
     public static final String STATUSES_SEARCH = URL_SINA_WEIBO + "search/statuses.json";

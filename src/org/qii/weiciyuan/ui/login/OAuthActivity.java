@@ -21,6 +21,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.dao.login.OAuthDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -36,10 +37,6 @@ import java.util.Map;
  * Date: 12-7-28
  */
 public class OAuthActivity extends AbstractAppActivity {
-
-    private static final String URL_OAUTH2_ACCESS_AUTHORIZE = "https://api.weibo.com/oauth2/authorize";
-    private static final String APP_KEY = "1065511513";
-    private static final String DIRECT_URL = "https://api.weibo.com/oauth2/default.html";
 
     private WebView webView;
     private MenuItem refreshItem;
@@ -125,11 +122,11 @@ public class OAuthActivity extends AbstractAppActivity {
 
 
         Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("client_id", APP_KEY);
+        parameters.put("client_id", URLHelper.APP_KEY);
         parameters.put("response_type", "token");
-        parameters.put("redirect_uri", DIRECT_URL);
+        parameters.put("redirect_uri", URLHelper.DIRECT_URL);
         parameters.put("display", "mobile");
-        return URL_OAUTH2_ACCESS_AUTHORIZE + "?" + Utility.encodeUrl(parameters)
+        return URLHelper.URL_OAUTH2_ACCESS_AUTHORIZE + "?" + Utility.encodeUrl(parameters)
                 + "&scope=friendships_groups_read,friendships_groups_write";
     }
 
@@ -145,7 +142,7 @@ public class OAuthActivity extends AbstractAppActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
-            if (url.startsWith(DIRECT_URL)) {
+            if (url.startsWith(URLHelper.DIRECT_URL)) {
 
                 handleRedirectUrl(view, url);
                 view.stopLoading();
