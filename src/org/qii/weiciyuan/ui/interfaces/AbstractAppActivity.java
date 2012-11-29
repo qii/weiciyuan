@@ -24,6 +24,7 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.AvatarBitmapDrawable;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.PictureBitmapDrawable;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
@@ -209,7 +210,7 @@ public class AbstractAppActivity extends Activity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
-        if (theme == GlobalContext.getInstance().getAppTheme()) {
+        if (theme == SettingUtility.getAppTheme()) {
 
         } else {
             reload();
@@ -226,7 +227,7 @@ public class AbstractAppActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            theme = GlobalContext.getInstance().getAppTheme();
+            theme = SettingUtility.getAppTheme();
         } else {
             theme = savedInstanceState.getInt("theme");
         }

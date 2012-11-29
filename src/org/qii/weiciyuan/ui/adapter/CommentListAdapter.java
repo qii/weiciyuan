@@ -11,7 +11,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             } else {
                 holder.username.setText(user.getScreen_name());
             }
-            if (!showOriStatus && !GlobalContext.getInstance().getEnableCommentRepostListAvatar()) {
+            if (!showOriStatus && !SettingUtility.getEnableCommentRepostListAvatar()) {
                 holder.avatar.setLayoutParams(new RelativeLayout.LayoutParams(0, 0));
             } else {
                 buildAvatar(holder.avatar, position, user);

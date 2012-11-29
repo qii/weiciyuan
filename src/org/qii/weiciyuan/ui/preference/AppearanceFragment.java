@@ -9,7 +9,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 /**
  * User: qii
@@ -70,26 +70,21 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
 
-        if (key.equals(SettingActivity.FONT_SIZE)) {
-            String value = sharedPreferences.getString(key, "15");
-            GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
-        }
-
         if (key.equals(SettingActivity.LIST_AVATAR_MODE)) {
             String value = sharedPreferences.getString(key, "1");
             if (value.equals("1"))
-                GlobalContext.getInstance().setEnableBigAvatar(false);
+                SettingUtility.setEnableBigAvatar(false);
             if (value.equals("2"))
-                GlobalContext.getInstance().setEnableBigAvatar(true);
+                SettingUtility.setEnableBigAvatar(true);
             if (value.equals("3")) {
                 ConnectivityManager cm = (ConnectivityManager)
                         getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = cm.getActiveNetworkInfo();
                 if (networkInfo != null && networkInfo.isConnected()) {
                     if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-                        GlobalContext.getInstance().setEnableBigAvatar(true);
+                        SettingUtility.setEnableBigAvatar(true);
                     } else {
-                        GlobalContext.getInstance().setEnableBigAvatar(false);
+                        SettingUtility.setEnableBigAvatar(false);
                     }
                 }
             }
@@ -99,18 +94,18 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
         if (key.equals(SettingActivity.LIST_PIC_MODE)) {
             String value = sharedPreferences.getString(key, "1");
             if (value.equals("1"))
-                GlobalContext.getInstance().setEnableBigPic(false);
+                SettingUtility.setEnableBigPic(false);
             if (value.equals("2"))
-                GlobalContext.getInstance().setEnableBigPic(true);
+                SettingUtility.setEnableBigPic(true);
             if (value.equals("3")) {
                 ConnectivityManager cm = (ConnectivityManager)
                         getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = cm.getActiveNetworkInfo();
                 if (networkInfo != null && networkInfo.isConnected()) {
                     if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-                        GlobalContext.getInstance().setEnableBigPic(true);
+                        SettingUtility.setEnableBigPic(true);
                     } else {
-                        GlobalContext.getInstance().setEnableBigPic(false);
+                        SettingUtility.setEnableBigPic(false);
                     }
                 }
             }

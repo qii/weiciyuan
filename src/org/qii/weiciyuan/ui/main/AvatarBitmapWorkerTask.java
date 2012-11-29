@@ -11,7 +11,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.AvatarBitmapDrawable;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 
 import java.lang.ref.WeakReference;
@@ -67,7 +67,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             int width = Utility.dip2px(40);
             int height = width;
 
-            if (GlobalContext.getInstance().getEnableBigAvatar()) {
+            if (SettingUtility.getEnableBigAvatar()) {
                 return ImageTool.getTimeLineBigAvatarWithRoundedCorner(data, width, height);
             } else
                 return ImageTool.getSmallAvatarWithRoundedCorner(data, width, height);

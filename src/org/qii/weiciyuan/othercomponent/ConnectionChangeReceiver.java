@@ -10,7 +10,7 @@ import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 import org.qii.weiciyuan.BuildConfig;
-import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 /**
@@ -58,10 +58,10 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
         if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
             //wifi network
             if (avatarModeValue.equals("3")) {
-                GlobalContext.getInstance().setEnableBigAvatar(true);
+                SettingUtility.setEnableBigAvatar(true);
             }
             if (picModeValue.equals("3")) {
-                GlobalContext.getInstance().setEnableBigPic(true);
+                SettingUtility.setEnableBigPic(true);
             }
         } else if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
 
@@ -70,19 +70,19 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
             if (subType == TelephonyManager.NETWORK_TYPE_GPRS) {
                 //gprs network
                 if (avatarModeValue.equals("3")) {
-                    GlobalContext.getInstance().setEnableBigAvatar(false);
+                    SettingUtility.setEnableBigAvatar(false);
                 }
                 if (picModeValue.equals("3")) {
-                    GlobalContext.getInstance().setEnableBigPic(false);
+                    SettingUtility.setEnableBigPic(false);
                 }
 
             } else {
                 //3G or other 2.5g network,there are too many mobile technologies
                 if (avatarModeValue.equals("3")) {
-                    GlobalContext.getInstance().setEnableBigAvatar(false);
+                    SettingUtility.setEnableBigAvatar(false);
                 }
                 if (picModeValue.equals("3")) {
-                    GlobalContext.getInstance().setEnableBigPic(false);
+                    SettingUtility.setEnableBigPic(false);
                 }
 
             }

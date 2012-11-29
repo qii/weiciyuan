@@ -35,7 +35,7 @@ import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 public abstract class PullToRefreshBase<T extends View> extends LinearLayout implements IPullToRefresh<T> {
 
@@ -335,7 +335,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
     public void startRefresh() {
         setRefreshingInternal(true);
         mOnRefreshListener.onRefresh(this);
-        if (GlobalContext.getInstance().getEnableSound()) {
+        if (SettingUtility.getEnableSound()) {
             final MediaPlayer mp = MediaPlayer.create(context, R.raw.psst2);
             mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -348,7 +348,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
     public void startRefreshNow() {
         setRefreshingInternalNow(true);
         mOnRefreshListener.onRefresh(this);
-        if (GlobalContext.getInstance().getEnableSound()) {
+        if (SettingUtility.getEnableSound()) {
             final MediaPlayer mp = MediaPlayer.create(context, R.raw.psst2);
             mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -659,7 +659,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
         if (mMode.canPullUp()) {
             mFooterLayout.reset();
         }
-        if (GlobalContext.getInstance().getEnableSound()) {
+        if (SettingUtility.getEnableSound()) {
             MediaPlayer mp = MediaPlayer.create(context, R.raw.pop);
             mp.setVolume(9.f, 9.f);
             mp.start();

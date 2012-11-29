@@ -18,7 +18,6 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.database.GroupDBManager;
-import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,19 +43,6 @@ public final class GlobalContext extends Application {
 
     //current account info
     private AccountBean accountBean = null;
-
-    //preference
-    private Boolean enablePic = null;
-    private Boolean enableCommentRepostListAvatar = null;
-    private Boolean enableBigPic = null;
-    private Boolean enableBigAvatar = null;
-    private Boolean enableSound = null;
-    private Boolean enableAutoRefresh = null;
-    private Boolean enableFilter = null;
-
-
-    private int theme = 0;
-    private int fontSize = 0;
 
     public boolean startedApp = false;
 
@@ -101,16 +87,6 @@ public final class GlobalContext extends Application {
         return emotions;
     }
 
-    public Boolean isEnableFilter() {
-        if (enableFilter == null) {
-            enableFilter = sharedPref.getBoolean(SettingActivity.FILTER, false);
-        }
-        return enableFilter;
-    }
-
-    public void setEnableFilter(boolean enableFilter) {
-        this.enableFilter = enableFilter;
-    }
 
     public DisplayMetrics getDisplayMetrics() {
         if (displayMetrics != null) {
@@ -164,116 +140,11 @@ public final class GlobalContext extends Application {
     }
 
 
-    public int getFontSize() {
-        if (fontSize == 0) {
-            String value = sharedPref.getString(SettingActivity.FONT_SIZE, "15");
-            GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
-            return fontSize;
-        }
-        return fontSize;
-    }
-
-    public int getAppTheme() {
-        if (theme == 0) {
-            String value = sharedPref.getString(SettingActivity.THEME, "1");
-            switch (Integer.valueOf(value)) {
-                case 1:
-                    GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Four);
-                    break;
-                case 2:
-                    GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Pure_Black);
-                    break;
-                default:
-                    GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Four);
-                    break;
-            }
-        }
-        return theme;
-    }
-
     public synchronized LruCache<String, Bitmap> getAvatarCache() {
         if (avatarCache == null) {
             buildCache();
         }
         return avatarCache;
-    }
-
-    public boolean isEnablePic() {
-        if (enablePic == null) {
-            enablePic = !sharedPref.getBoolean(SettingActivity.DISABLE_DOWNLOAD_AVATAR_PIC, false);
-        }
-        return enablePic;
-    }
-
-    public Boolean getEnableBigPic() {
-        if (enableBigPic == null) {
-            enableBigPic = sharedPref.getBoolean(SettingActivity.SHOW_BIG_PIC, false);
-        }
-        return enableBigPic;
-    }
-
-    public void setEnableBigPic(Boolean enableBigPic) {
-        sharedPref.edit().putBoolean(SettingActivity.SHOW_BIG_PIC, enableBigPic).commit();
-        this.enableBigPic = enableBigPic;
-    }
-
-    public Boolean getEnableCommentRepostListAvatar() {
-        if (enableCommentRepostListAvatar == null) {
-            enableCommentRepostListAvatar = !sharedPref.getBoolean(SettingActivity.CLOSE_COMMENT_AND_REPOST_AVATAR, false);
-        }
-        return enableCommentRepostListAvatar;
-    }
-
-    public void setEnableCommentRepostListAvatar(Boolean enableCommentRepostListAvatar) {
-        this.enableCommentRepostListAvatar = enableCommentRepostListAvatar;
-    }
-
-    public Boolean getEnableAutoRefresh() {
-
-        if (enableAutoRefresh == null) {
-            enableAutoRefresh = sharedPref.getBoolean(SettingActivity.AUTO_REFRESH, false);
-        }
-        return enableAutoRefresh;
-    }
-
-    public void setEnableAutoRefresh(Boolean autoRefresh) {
-        this.enableAutoRefresh = autoRefresh;
-    }
-
-    public Boolean getEnableBigAvatar() {
-
-        if (enableBigAvatar == null) {
-            enableBigAvatar = sharedPref.getBoolean(SettingActivity.SHOW_BIG_AVATAR, false);
-        }
-        return enableBigAvatar;
-
-    }
-
-    public void setEnableBigAvatar(Boolean enableBigAvatar) {
-        sharedPref.edit().putBoolean(SettingActivity.SHOW_BIG_AVATAR, enableBigAvatar);
-        this.enableBigAvatar = enableBigAvatar;
-    }
-
-
-    public Boolean getEnableSound() {
-
-        if (enableSound == null) {
-            enableSound = sharedPref.getBoolean(SettingActivity.SOUND, true);
-        }
-        return enableSound;
-    }
-
-    public void setEnableSound(Boolean enableSound) {
-        this.enableSound = enableSound;
-    }
-
-    public void setAppTheme(int theme) {
-        this.theme = theme;
-    }
-
-
-    public void setEnablePic(boolean enablePic) {
-        this.enablePic = enablePic;
     }
 
     public String getSpecialToken() {
@@ -282,12 +153,6 @@ public final class GlobalContext extends Application {
         else
             return "";
     }
-
-
-    public void setFontSize(int fontSize) {
-        this.fontSize = fontSize;
-    }
-
 
     public Activity getActivity() {
         return activity;

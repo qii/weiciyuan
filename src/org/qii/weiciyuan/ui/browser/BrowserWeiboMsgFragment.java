@@ -30,6 +30,7 @@ import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -310,7 +311,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
             //50px avatar or 180px avatar
             String url;
             FileLocationMethod method;
-            if (GlobalContext.getInstance().getEnableBigAvatar()) {
+            if (SettingUtility.getEnableBigAvatar()) {
                 url = msg.getUser().getAvatar_large();
                 method = FileLocationMethod.avatar_large;
             } else {

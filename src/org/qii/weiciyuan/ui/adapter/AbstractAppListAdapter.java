@@ -17,6 +17,7 @@ import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -80,11 +81,11 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
         boolean myself = bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId());
 
-        boolean myselfBigPic = myself && GlobalContext.getInstance().getEnableBigPic();
+        boolean myselfBigPic = myself && SettingUtility.getEnableBigPic();
 
         boolean normal = !myself;
 
-        boolean normalBigPic = normal && GlobalContext.getInstance().getEnableBigPic();
+        boolean normalBigPic = normal && SettingUtility.getEnableBigPic();
 
         if (!showOriStatus)
             return TYPE_SIMPLE;
@@ -171,7 +172,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     private View initMylayout(ViewGroup parent) {
         View convertView;
-        if (GlobalContext.getInstance().getEnableBigPic()) {
+        if (SettingUtility.getEnableBigPic()) {
             convertView = inflater.inflate(R.layout.timeline_listview_item_big_pic_layout, parent, false);
         } else {
             convertView = inflater.inflate(R.layout.timeline_listview_item_layout, parent, false);
@@ -181,7 +182,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     private View initNormallayout(ViewGroup parent) {
         View convertView;
-        if (GlobalContext.getInstance().getEnableBigPic()) {
+        if (SettingUtility.getEnableBigPic()) {
             convertView = inflater.inflate(R.layout.timeline_listview_item_big_pic_layout, parent, false);
         } else {
             convertView = inflater.inflate(R.layout.timeline_listview_item_layout, parent, false);
@@ -211,14 +212,14 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     }
 
     private void configViewFont(ViewHolder holder) {
-        holder.time.setTextSize(GlobalContext.getInstance().getFontSize() - 3);
-        holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
-        holder.username.setTextSize(GlobalContext.getInstance().getFontSize());
-        holder.repost_content.setTextSize(GlobalContext.getInstance().getFontSize());
+        holder.time.setTextSize(SettingUtility.getFontSize() - 3);
+        holder.content.setTextSize(SettingUtility.getFontSize());
+        holder.username.setTextSize(SettingUtility.getFontSize());
+        holder.repost_content.setTextSize(SettingUtility.getFontSize());
         if (holder.repost_count != null)
-            holder.repost_count.setTextSize(GlobalContext.getInstance().getFontSize() - 5);
+            holder.repost_count.setTextSize(SettingUtility.getFontSize() - 5);
         if (holder.comment_count != null)
-            holder.comment_count.setTextSize(GlobalContext.getInstance().getFontSize() - 5);
+            holder.comment_count.setTextSize(SettingUtility.getFontSize() - 5);
 
     }
 
@@ -265,7 +266,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
             //50px avatar or 180px avatar
             String url;
-            if (GlobalContext.getInstance().getEnableBigAvatar()) {
+            if (SettingUtility.getEnableBigAvatar()) {
                 url = user.getAvatar_large();
             } else {
                 url = user.getProfile_image_url();
@@ -294,7 +295,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
         boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
 
-        if (GlobalContext.getInstance().getEnableBigPic()) {
+        if (SettingUtility.getEnableBigPic()) {
             picUrl = msg.getBmiddle_pic();
             commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_bmiddle, isFling);
 

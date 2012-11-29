@@ -17,6 +17,7 @@ import org.qii.weiciyuan.othercomponent.MentionsAndCommentsReceiver;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -247,7 +248,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     private void buildActionBarAndViewPagerTitles() {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        if (GlobalContext.getInstance().getAppTheme() == R.style.AppTheme_Four && getResources().getBoolean(R.bool.is_phone))
+        if (SettingUtility.getAppTheme() == R.style.AppTheme_Four && getResources().getBoolean(R.bool.is_phone))
             actionBar.setStackedBackgroundDrawable(getResources().getDrawable(R.drawable.ab_solid_custom_blue_inverse_holo));
         if (getResources().getBoolean(R.bool.is_phone)) {
             actionBar.setDisplayShowTitleEnabled(false);

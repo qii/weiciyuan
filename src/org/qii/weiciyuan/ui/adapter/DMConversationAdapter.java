@@ -15,6 +15,7 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -93,9 +94,9 @@ public class DMConversationAdapter extends BaseAdapter {
     }
 
     private void configViewFont(DMViewHolder holder) {
-        holder.time.setTextSize(GlobalContext.getInstance().getFontSize() - 3);
-        holder.content.setTextSize(GlobalContext.getInstance().getFontSize());
-        holder.username.setTextSize(GlobalContext.getInstance().getFontSize());
+        holder.time.setTextSize(SettingUtility.getFontSize() - 3);
+        holder.content.setTextSize(SettingUtility.getFontSize());
+        holder.username.setTextSize(SettingUtility.getFontSize());
 
     }
 
@@ -180,7 +181,7 @@ public class DMConversationAdapter extends BaseAdapter {
             boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
 
             String url;
-            if (GlobalContext.getInstance().getEnableBigAvatar()) {
+            if (SettingUtility.getEnableBigAvatar()) {
                 url = user.getAvatar_large();
             } else {
                 url = user.getProfile_image_url();

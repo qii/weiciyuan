@@ -18,6 +18,7 @@ import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.database.GroupDBManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -355,7 +356,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         @Override
         public void run() {
-            if (!GlobalContext.getInstance().getEnableAutoRefresh()) {
+            if (!SettingUtility.getEnableAutoRefresh()) {
                 return;
             }
             //after load database data

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
 /**
@@ -51,18 +50,6 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
 
 
         if (key.equals(SettingActivity.THEME)) {
-            String value = sharedPreferences.getString(key, "1");
-            switch (Integer.valueOf(value)) {
-                case 1:
-                    GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Four);
-                    break;
-                case 2:
-                    GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Pure_Black);
-                    break;
-                default:
-                    GlobalContext.getInstance().setAppTheme(R.style.AppTheme_Four);
-                    break;
-            }
 
             Intent intent = new Intent(this, AppearanceActivity.class);
             //        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -81,10 +68,6 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
 //            overridePendingTransition(R.anim.stay, R.anim.alphaout);
         }
 
-        if (key.equals(SettingActivity.FONT_SIZE)) {
-            String value = sharedPreferences.getString(key, "15");
-            GlobalContext.getInstance().setFontSize(Integer.valueOf(value));
-        }
 
 
     }

@@ -7,7 +7,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 
@@ -42,7 +42,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             } else {
                 holder.username.setText(user.getScreen_name());
             }
-            if (!showOriStatus && !GlobalContext.getInstance().getEnableCommentRepostListAvatar()) {
+            if (!showOriStatus && !SettingUtility.getEnableCommentRepostListAvatar()) {
                 holder.avatar.setLayoutParams(new RelativeLayout.LayoutParams(0, 0));
             } else {
                 buildAvatar(holder.avatar, position, user);

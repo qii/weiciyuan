@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 
 /**
  * User: qii
@@ -33,21 +32,11 @@ public class ControlFragment extends PreferenceFragment implements SharedPrefere
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(SettingActivity.DISABLE_DOWNLOAD_AVATAR_PIC)) {
-            boolean value = sharedPreferences.getBoolean(key, false);
-            if (value) {
-                GlobalContext.getInstance().setEnablePic(false);
-            } else {
-                GlobalContext.getInstance().setEnablePic(true);
-            }
+
         }
 
         if (key.equals(SettingActivity.CLOSE_COMMENT_AND_REPOST_AVATAR)) {
-            boolean value = sharedPreferences.getBoolean(key, false);
-            if (value) {
-                GlobalContext.getInstance().setEnableCommentRepostListAvatar(false);
-            } else {
-                GlobalContext.getInstance().setEnableCommentRepostListAvatar(true);
-            }
+
         }
     }
 }

@@ -9,6 +9,7 @@ import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpUtility;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.File;
@@ -30,7 +31,7 @@ public class ImageTool {
 
         if (bitmap != null) {
             return ImageEdit.getRoundedCornerBitmap(bitmap);
-        } else if (GlobalContext.getInstance().isEnablePic()) {
+        } else if (SettingUtility.isEnablePic()) {
             getBitmapFromNetWork(url, absoluteFilePath, null);
             bitmap = BitmapFactory.decodeFile(absoluteFilePath);
             if (bitmap != null)
@@ -151,7 +152,7 @@ public class ImageTool {
 
         File file = new File(absoluteFilePath);
 
-        if (!file.exists() && !GlobalContext.getInstance().isEnablePic()) {
+        if (!file.exists() && !SettingUtility.isEnablePic()) {
             return null;
         }
 
@@ -285,7 +286,7 @@ public class ImageTool {
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
-        if (bitmap == null && GlobalContext.getInstance().isEnablePic()) {
+        if (bitmap == null && SettingUtility.isEnablePic()) {
             getBitmapFromNetWork(url, absoluteFilePath, null);
             bitmap = BitmapFactory.decodeFile(absoluteFilePath);
         }
@@ -309,7 +310,7 @@ public class ImageTool {
 
         boolean fileExist = new File(absoluteFilePath).exists();
 
-        if (!fileExist && !GlobalContext.getInstance().isEnablePic()) {
+        if (!fileExist && !SettingUtility.isEnablePic()) {
             return null;
         }
 
@@ -352,7 +353,7 @@ public class ImageTool {
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
-        if (bitmap == null && !GlobalContext.getInstance().isEnablePic()) {
+        if (bitmap == null && !SettingUtility.isEnablePic()) {
             return null;
         }
 
@@ -383,7 +384,7 @@ public class ImageTool {
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
 
-        if (bitmap == null && !GlobalContext.getInstance().isEnablePic()) {
+        if (bitmap == null && !SettingUtility.isEnablePic()) {
             return null;
         }
 
@@ -413,7 +414,7 @@ public class ImageTool {
 
         File file = new File(absoluteFilePath);
 
-        if (!file.exists() && !GlobalContext.getInstance().isEnablePic()) {
+        if (!file.exists() && !SettingUtility.isEnablePic()) {
             return null;
         }
 

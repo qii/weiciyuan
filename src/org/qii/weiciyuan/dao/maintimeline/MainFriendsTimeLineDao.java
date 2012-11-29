@@ -10,6 +10,7 @@ import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.*;
 
 import java.util.HashMap;
@@ -72,7 +73,7 @@ public class MainFriendsTimeLineDao {
                 MessageBean msg = iterator.next();
                 if (msg.getUser() == null) {
                     iterator.remove();
-                } else if (GlobalContext.getInstance().isEnableFilter() && ListViewTool.haveFilterWord(msg, filterWordList)) {
+                } else if (SettingUtility.isEnableFilter() && ListViewTool.haveFilterWord(msg, filterWordList)) {
                     iterator.remove();
                 } else {
                     msg.getListViewSpannableString();
