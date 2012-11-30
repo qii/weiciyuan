@@ -338,7 +338,7 @@ public class HttpUtility {
             int errCode = 0;
             try {
                 JSONObject json = new JSONObject(result);
-                err = json.getString("error");
+                err = json.getString("error_description");
                 errCode = json.getInt("error_code");
                 WeiboException exception = new WeiboException();
                 exception.setError_code(errCode);

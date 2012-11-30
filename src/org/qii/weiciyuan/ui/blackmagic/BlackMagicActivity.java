@@ -15,6 +15,7 @@ import org.qii.weiciyuan.dao.login.OAuthDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 
@@ -30,6 +31,8 @@ public class BlackMagicActivity extends AbstractAppActivity {
 
     private String appkey;
     private String appSecret;
+
+    private LoginTask loginTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,12 @@ public class BlackMagicActivity extends AbstractAppActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Utility.cancelTasks(loginTask);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu_blackmagicactivity, menu);
         return super.onCreateOptionsMenu(menu);
@@ -83,7 +92,10 @@ public class BlackMagicActivity extends AbstractAppActivity {
                 startActivity(intent);
                 return true;
             case R.id.menu_login:
-                new Task().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                if (Utility.isTaskStopped(loginTask)) {
+                    loginTask = new LoginTask();
+                    loginTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -91,7 +103,22 @@ public class BlackMagicActivity extends AbstractAppActivity {
     }
 
 
-    class Task extends MyAsyncTask<Void, Void, String> {
+    private class LoginTask extends MyAsyncTask<Void, Void, String> {
+        WeiboException e;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (username.getText().toString().length() == 0) {
+                username.setError("用户名不能为空");
+                cancel(true);
+            }
+
+            if (password.getText().toString().length() == 0) {
+                password.setError("密码不能为空");
+                cancel(true);
+            }
+        }
 
         @Override
         protected String doInBackground(Void... params) {
@@ -108,15 +135,23 @@ public class BlackMagicActivity extends AbstractAppActivity {
                 DatabaseManager.getInstance().addOrUpdateAccount(account);
                 return token;
             } catch (WeiboException e) {
-
+                this.e = e;
+                cancel(true);
             }
             return "";
         }
 
         @Override
+        protected void onCancelled(String s) {
+            super.onCancelled(s);
+            if (e != null)
+                Toast.makeText(BlackMagicActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Toast.makeText(BlackMagicActivity.this, s, Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 }
