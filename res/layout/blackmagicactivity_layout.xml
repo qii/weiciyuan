@@ -13,7 +13,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="尾巴"/>
+                android:text="尾　巴"/>
         <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:text="用户名"/>
         <EditText
-                android:layout_width="150dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/username"/>
     </LinearLayout>
@@ -39,9 +39,9 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="密码"/>
+                android:text="密　码"/>
         <EditText
-                android:layout_width="150dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/password"/>
     </LinearLayout>
