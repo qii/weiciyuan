@@ -3,6 +3,7 @@ package org.qii.weiciyuan.ui.blackmagic;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
@@ -25,7 +26,6 @@ public class BlackMagicActivity extends AbstractAppActivity {
 
     private EditText username;
     private EditText password;
-    private Button button;
     private Spinner spinner;
 
     private String appkey;
@@ -38,10 +38,10 @@ public class BlackMagicActivity extends AbstractAppActivity {
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(getString(R.string.hack_login));
 
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
-        button = (Button) findViewById(R.id.button);
         spinner = (Spinner) findViewById(R.id.spinner);
 
         SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.tail,
@@ -64,13 +64,13 @@ public class BlackMagicActivity extends AbstractAppActivity {
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new Task().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
-            }
-        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.actionbar_menu_blackmagicactivity, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -81,6 +81,9 @@ public class BlackMagicActivity extends AbstractAppActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("launcher", false);
                 startActivity(intent);
+                return true;
+            case R.id.menu_login:
+                new Task().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

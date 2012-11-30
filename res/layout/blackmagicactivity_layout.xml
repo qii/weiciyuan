@@ -4,7 +4,7 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:gravity="center"
+              android:gravity="top"
               android:padding="8dp">
     <LinearLayout android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
@@ -46,10 +46,6 @@
                 android:id="@+id/password"/>
     </LinearLayout>
 
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="登录"
-            android:id="@+id/button"/>
+
 
 </LinearLayout>
