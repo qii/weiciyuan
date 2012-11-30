@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="is_phone">true</bool>
+    <bool name="blackmagic">false</bool>
 </resources>

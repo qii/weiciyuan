@@ -18,7 +18,6 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -269,7 +268,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 .setText(getString(R.string.comments))
                 .setTabListener(tabListener));
 
-        if (AppConfig.BLACK_MAGIC) {
+        if (getResources().getBoolean(R.bool.blackmagic)) {
             actionBar.addTab(actionBar.newTab()
                     .setText(getString(R.string.dm))
                     .setTabListener(tabListener));
@@ -383,7 +382,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
                         AbstractTimeLineFragment fragment;
 
-                        if (AppConfig.BLACK_MAGIC) {
+                        if (getResources().getBoolean(R.bool.blackmagic)) {
                             fragment = getDMFragment();
                         } else {
                             fragment = getMyFragment();
@@ -465,7 +464,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             }
 
 
-            if (AppConfig.BLACK_MAGIC) {
+            if (getResources().getBoolean(R.bool.blackmagic)) {
                 if (getDMFragment() == null) {
                     list.add(new DMUserListFragment());
                 } else {
@@ -493,7 +492,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             tagList.add(FriendsTimeLineFragment.class.getName());
             tagList.add(MentionsTimeLineFragment.class.getName());
             tagList.add(CommentsTimeLineFragment.class.getName());
-            if (AppConfig.BLACK_MAGIC) {
+            if (getResources().getBoolean(R.bool.blackmagic)) {
                 tagList.add(DMUserListFragment.class.getName());
             } else {
                 tagList.add(MyStatussTimeLineFragment.class.getName());
