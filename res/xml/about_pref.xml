@@ -19,6 +19,13 @@
             />
 
     <Preference
+            android:key="donate"
+            android:title="@string/donate"
+            android:summary="@string/donate_summary"
+            >
+
+    </Preference>
+    <Preference
             android:title="@string/play_store_address"
             android:summary="@string/play_store_address_summary"
             >
@@ -46,13 +53,6 @@
 
     </Preference>
 
-    <Preference
-            android:key="donate"
-            android:title="@string/donate"
-            android:summary="@string/donate_summary"
-            >
-
-    </Preference>
 
     <Preference
             android:key="cache_path"
