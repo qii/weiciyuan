@@ -406,6 +406,9 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
             invlidateTabText();
+        } else if (newValue != null && newValue.getSize() == 0) {
+            getList().clear();
+            invlidateTabText();
         }
     }
 

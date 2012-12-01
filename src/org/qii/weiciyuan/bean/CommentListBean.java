@@ -59,4 +59,9 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> {
     public void replaceAll(CommentListBean newValue) {
         addNewData(newValue);
     }
+
+    public void clear() {
+        setTotal_number(0);
+        getItemList().clear();
+    }
 }
