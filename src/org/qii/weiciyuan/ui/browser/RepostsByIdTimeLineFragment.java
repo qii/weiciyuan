@@ -365,9 +365,9 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     protected RepostListBean getDoInBackgroundNewData() throws WeiboException {
         RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, id);
 
-        if (getList().getSize() > 0) {
-            dao.setSince_id(getList().getItemList().get(0).getId());
-        }
+//        if (getList().getSize() > 0) {
+//            dao.setSince_id(getList().getItemList().get(0).getId());
+//        }
 
         return dao.getGSONMsgList();
     }

@@ -1,7 +1,5 @@
 package org.qii.weiciyuan.bean;
 
-import org.qii.weiciyuan.support.utils.AppConfig;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +7,7 @@ import java.util.List;
  * User: Jiang Qi
  * Date: 12-8-7
  */
-public class RepostListBean extends ListBean<MessageBean,RepostListBean> {
+public class RepostListBean extends ListBean<MessageBean, RepostListBean> {
 
     private List<MessageBean> reposts = new ArrayList<MessageBean>();
 
@@ -39,28 +37,13 @@ public class RepostListBean extends ListBean<MessageBean,RepostListBean> {
 
     @Override
     public void addNewData(RepostListBean newValue) {
-        if (newValue != null) {
-            if (newValue.getSize() == 0) {
-
-            } else if (newValue.getSize() > 0) {
-                if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
-                    //for speed, add old data after new data
-                    newValue.getItemList().addAll(getItemList());
-                } else {
-                    //null is flag means this position has some old messages which dont appear
-                    if (getSize() > 0) {
-                        newValue.getItemList().add(null);
-                    }
-                    newValue.getItemList().addAll(this.getItemList());
-                }
-                this.getItemList().clear();
-                this.getItemList().addAll(newValue.getItemList());
-                this.setTotal_number(newValue.getTotal_number());
-
-
-            }
+        if (newValue != null && newValue.getSize() > 0) {
+            setTotal_number(newValue.getTotal_number());
+            getItemList().clear();
+            getItemList().addAll(newValue.getItemList());
         }
     }
+
     @Override
     public void addOldData(RepostListBean oldValue) {
         if (oldValue != null && oldValue.getSize() > 1) {

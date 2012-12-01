@@ -373,9 +373,9 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
         CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
 
-        if (getList().getItemList().size() > 0) {
-            dao.setSince_id(getList().getItemList().get(0).getId());
-        }
+//        if (getList().getItemList().size() > 0) {
+//            dao.setSince_id(getList().getItemList().get(0).getId());
+//        }
         CommentListBean result = dao.getGSONMsgList();
         return result;
     }
