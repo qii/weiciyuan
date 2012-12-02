@@ -57,9 +57,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(bean);
         } else {
-            pullToRefreshListView.startRefreshNow();
-            refresh();
-
+            getPullToRefreshListView().startRefreshNow();
         }
 
     }
@@ -86,7 +84,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         switch (item.getItemId()) {
 
             case R.id.menu_refresh:
-                pullToRefreshListView.startRefreshNow();
+                getPullToRefreshListView().startRefreshNow();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -103,10 +101,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     protected FavListBean getDoInBackgroundNewData() throws WeiboException {
         page = 1;
         FavListDao dao = new FavListDao(GlobalContext.getInstance().getSpecialToken()).setPage(String.valueOf(page));
-
-
         FavListBean result = dao.getGSONMsgList();
-
         return result;
     }
 
@@ -114,9 +109,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     protected FavListBean getDoInBackgroundOldData() throws WeiboException {
 
         FavListDao dao = new FavListDao(GlobalContext.getInstance().getSpecialToken()).setPage(String.valueOf(page + 1));
-
         FavListBean result = dao.getGSONMsgList();
-
         return result;
     }
 

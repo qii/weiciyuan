@@ -49,7 +49,8 @@ public class FavListBean extends ListBean<MessageBean, FavListBean> {
             this.getItemList().addAll(newValue.getItemList());
             this.setTotal_number(newValue.getTotal_number());
 
-
+            this.favorites.clear();
+            this.favorites.addAll(newValue.getFavorites());
         }
     }
 
@@ -58,7 +59,7 @@ public class FavListBean extends ListBean<MessageBean, FavListBean> {
         if (oldValue != null && oldValue.getSize() > 0) {
             getItemList().addAll(oldValue.getItemList());
             setTotal_number(oldValue.getTotal_number());
-
+            this.favorites.addAll(oldValue.getFavorites());
         }
     }
 }
