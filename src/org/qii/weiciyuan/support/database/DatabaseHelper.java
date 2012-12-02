@@ -16,7 +16,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 16;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -86,6 +86,30 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + DraftTable.TYPE + " integer"
             + ");";
 
+    private static final String CREATE_HOME_INDEX_SQL = "CREATE INDEX idx_"
+            + HomeTable.TABLE_NAME
+            + " ON "
+            + HomeTable.TABLE_NAME
+            + " ( "
+            + HomeTable.ACCOUNTID
+            + " ) ";
+
+    private static final String CREATE_REPOST_INDEX_SQL = "CREATE INDEX idx_"
+            + RepostsTable.TABLE_NAME
+            + " ON "
+            + RepostsTable.TABLE_NAME
+            + "("
+            + RepostsTable.ACCOUNTID
+            + ")";
+
+    private static final String CREATE_COMMENT_INDEX_SQL = "CREATE INDEX idx_"
+            + CommentsTable.TABLE_NAME
+            + " ON "
+            + CommentsTable.TABLE_NAME
+            + "("
+            + CommentsTable.ACCOUNTID
+            + ")";
+
 
     DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -104,6 +128,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_EMOTIONS_TABLE_SQL);
         db.execSQL(CREATE_DRAFTS_TABLE_SQL);
 
+        db.execSQL(CREATE_HOME_INDEX_SQL);
+        db.execSQL(CREATE_REPOST_INDEX_SQL);
+        db.execSQL(CREATE_COMMENT_INDEX_SQL);
     }
 
     @Override
@@ -125,6 +152,12 @@ class DatabaseHelper extends SQLiteOpenHelper {
         } else if (oldVersion == 14) {
             db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
             db.execSQL(CREATE_GROUP_TABLE_SQL);
+        }
+
+        if (oldVersion < 16) {
+            db.execSQL(CREATE_HOME_INDEX_SQL);
+            db.execSQL(CREATE_REPOST_INDEX_SQL);
+            db.execSQL(CREATE_COMMENT_INDEX_SQL);
         }
 
     }
