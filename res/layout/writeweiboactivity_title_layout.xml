@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center_vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_vertical">
+
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="?location_map"
-            android:layout_marginRight="8dp"
-            android:id="@+id/have_gps"
-            android:visibility="gone"
-            android:clickable="true"
-            />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="?location_map"
+        android:layout_marginRight="8dp"
+        android:id="@+id/have_gps"
+        android:visibility="gone"
+        android:clickable="true" />
+
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="?statusnewactivity_pic"
-            android:layout_marginRight="8dp"
-            android:id="@+id/have_pic"
-            android:visibility="gone"
-            android:clickable="true"
-            />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="?statusnewactivity_pic"
+        android:layout_marginRight="8dp"
+        android:id="@+id/have_pic"
+        android:visibility="gone"
+        android:clickable="true" />
 
     <TextView
 
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="140"
-            android:textColor="?android:actionMenuTextColor"
-            android:textSize="21sp"
-            android:layout_marginRight="8dp"
-            android:id="@+id/content_number" android:layout_weight="1"/>
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="140"
+        android:textColor="?android:actionMenuTextColor"
+        android:textSize="21sp"
+        android:layout_marginRight="8dp"
+        android:id="@+id/content_number"
+        android:layout_weight="1" />
 
 </LinearLayout>

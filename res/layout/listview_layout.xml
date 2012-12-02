@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-        >
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <FrameLayout android:layout_width="fill_parent"
-                 android:layout_height="0dp"
-                 android:layout_weight="1"
-            >
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <TextView android:layout_width="fill_parent"
-                  android:layout_height="fill_parent"
-                  android:visibility="gone"
-                  android:gravity="center"
-                  android:id="@+id/empty"
-                  android:text="@string/empty"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone"
+            android:gravity="center"
+            android:id="@+id/empty"
+            android:text="@string/empty" />
 
         <!-- requiresFadingEdge may have performance problem in some low price phones, but I like it.
            use overScrollMode to disable blue boundaries at the top and the bottom of listview
            because it is pull to refresh listview-->
 
         <org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:fastScrollEnabled="false"
-                android:id="@+id/listView"
-                android:layout_gravity="center"
-                android:scrollingCache="true"
-                android:smoothScrollbar="true"
-                android:visibility="visible"
-                android:overScrollMode="never"
-                />
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fastScrollEnabled="false"
+            android:id="@+id/listView"
+            android:layout_gravity="center"
+            android:scrollingCache="true"
+            android:smoothScrollbar="true"
+            android:visibility="visible"
+            android:overScrollMode="never" />
 
 
-        <ProgressBar android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center"
-                     android:id="@+id/progressbar"
-                     android:visibility="visible"/>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/progressbar"
+            android:visibility="visible" />
 
 
     </FrameLayout>

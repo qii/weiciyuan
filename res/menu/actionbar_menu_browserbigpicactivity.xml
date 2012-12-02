@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_switch"
-          android:title="@string/switch_to_ori_pic"
-          android:showAsAction="always"
-            />
+    <item
+        android:id="@+id/menu_switch"
+        android:title="@string/switch_to_ori_pic"
+        android:showAsAction="always" />
 
-    <item android:id="@+id/menu_save"
-          android:icon="?attr/save"
-          android:title="@string/save_pic_album"
-          android:showAsAction="never"
-            />
+    <item
+        android:id="@+id/menu_save"
+        android:icon="?attr/save"
+        android:title="@string/save_pic_album"
+        android:showAsAction="never" />
 
-    <item android:id="@+id/menu_share"
-          android:title="@string/share"
-          android:icon="?share"
-          android:actionProviderClass="android.widget.ShareActionProvider"
-          android:showAsAction="never"
-            />
-    <item android:id="@+id/menu_download"
-          android:title="@string/force_download"
-          android:showAsAction="never"
-            />
+    <item
+        android:id="@+id/menu_share"
+        android:title="@string/share"
+        android:icon="?share"
+        android:actionProviderClass="android.widget.ShareActionProvider"
+        android:showAsAction="never" />
+    <item
+        android:id="@+id/menu_download"
+        android:title="@string/force_download"
+        android:showAsAction="never" />
 </menu>

@@ -1,7 +1,6 @@
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_gravity="center"
-           android:src="?refresh"
-           style="?android:actionButtonStyle"
-        />
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:src="?refresh"
+    style="?android:actionButtonStyle" />

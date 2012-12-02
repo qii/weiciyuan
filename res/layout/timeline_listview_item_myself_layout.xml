@@ -1,120 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:id="@+id/listview_root">
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:id="@+id/listview_root">
 
 
     <ImageView
-            android:id="@+id/avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:padding="1px"
-            android:background="@drawable/bg_border1"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginLeft="8dp"
-            android:clickable="true"/>
+        android:id="@+id/avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="1px"
+        android:background="@drawable/bg_border1"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginLeft="8dp"
+        android:clickable="true" />
 
 
     <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="12:00"
-            android:layout_alignBottom="@id/username"
-            android:layout_toLeftOf="@id/avatar"
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12:00"
+        android:layout_alignBottom="@id/username"
+        android:layout_toLeftOf="@id/avatar"
 
-            />
-    <TextView
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="username"
-            android:layout_alignParentLeft="true"
-            android:textStyle="bold"
-            android:layout_toLeftOf="@id/time"
-            android:singleLine="true"
-            android:ellipsize="end"
-            />
+        />
 
     <TextView
-            android:id="@+id/content"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="content"
-            android:textSize="15sp"
-            android:layout_below="@id/username"
-            android:layout_marginRight="48dp"
-            android:layerType="software"
-            />
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="username"
+        android:layout_alignParentLeft="true"
+        android:textStyle="bold"
+        android:layout_toLeftOf="@id/time"
+        android:singleLine="true"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="content"
+        android:textSize="15sp"
+        android:layout_below="@id/username"
+        android:layout_marginRight="48dp"
+        android:layerType="software" />
 
     <FrameLayout
 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/content"
+        android:layout_marginRight="45dp"
+        android:layout_marginLeft="0dp"
+        android:id="@+id/repost_and_pic">
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/content_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:visibility="gone"
+                android:clickable="true"
+                android:minWidth="70dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/repost_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/content"
-            android:layout_marginRight="45dp"
             android:layout_marginLeft="0dp"
-            android:id="@+id/repost_and_pic"
+            android:layout_marginTop="3dp"
+            android:orientation="vertical"
+
             >
-        <LinearLayout android:layout_height="wrap_content"
-                      android:layout_width="fill_parent"
-                      android:gravity="center"
-                >
-            <ImageView
-                    android:id="@+id/content_pic"
+
+            <TextView
+                android:includeFontPadding="false"
+                android:id="@+id/repost_content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="content"
+                android:textSize="15sp"
+                android:visibility="gone"
+                android:layerType="software" />
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="5dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/repost_content_pic"
                     android:layout_width="wrap_content"
                     android:layout_height="80dp"
                     android:visibility="gone"
                     android:clickable="true"
-                    android:minWidth="70dp"
-                    />
-        </LinearLayout>
-        <LinearLayout
-                android:id="@+id/repost_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="3dp"
-                android:orientation="vertical"
-
-                >
-            <TextView
-                    android:includeFontPadding="false"
-                    android:id="@+id/repost_content"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="content"
-                    android:textSize="15sp"
-                    android:visibility="gone"
-                    android:layerType="software"
-                    />
-            <LinearLayout android:layout_height="wrap_content"
-                          android:layout_width="fill_parent"
-                          android:layout_marginTop="5dp"
-                          android:gravity="center">
-                <ImageView
-                        android:id="@+id/repost_content_pic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="80dp"
-                        android:visibility="gone"
-                        android:clickable="true"
-                        android:minWidth="70dp"
-                        />
+                    android:minWidth="70dp" />
             </LinearLayout>
         </LinearLayout>
 
     </FrameLayout>
-    <ImageView android:id="@+id/repost_flag"
-               android:layout_width="20dp"
-               android:layout_height="20dp"
-               android:layout_below="@id/avatar"
-               android:layout_alignLeft="@id/avatar"
-               android:layout_alignTop="@id/repost_and_pic"
-               android:layout_marginTop="3dp"
-               android:src="?timeline_repost_flag"
-            />
+
+    <ImageView
+        android:id="@+id/repost_flag"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/avatar"
+        android:layout_alignLeft="@id/avatar"
+        android:layout_alignTop="@id/repost_and_pic"
+        android:layout_marginTop="3dp"
+        android:src="?timeline_repost_flag" />
 </RelativeLayout>

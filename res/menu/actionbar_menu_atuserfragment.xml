@@ -3,12 +3,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <item android:id="@+id/search"
-          android:icon="?search"
-          android:title="@string/search"
-          android:actionViewClass="android.widget.SearchView"
-          android:showAsAction="withText|ifRoom"
-            />
+    <item
+        android:id="@+id/search"
+        android:icon="?search"
+        android:title="@string/search"
+        android:actionViewClass="android.widget.SearchView"
+        android:showAsAction="withText|ifRoom" />
 
 
 </menu>

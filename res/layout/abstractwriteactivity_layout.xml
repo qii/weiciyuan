@@ -1,59 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical"
-        >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:fillViewport="true"
-                android:id="@+id/scrollview"
-            >
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:id="@+id/scrollview">
 
 
         <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/say_something"
-                android:id="@+id/status_new_content" android:gravity="left|top"/>
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/say_something"
+            android:id="@+id/status_new_content"
+            android:gravity="left|top" />
 
 
     </ScrollView>
 
     <LinearLayout
-            android:background="?backgroundSplit"
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="?android:actionBarSize">
-        <Button style="?android:actionButtonStyle" android:layout_width="wrap_content"
-                android:text="#"
-                android:id="@+id/menu_topic"
-                android:textColor="?android:actionMenuTextColor"
-                android:textAppearance="?android:attr/actionMenuTextAppearance"
-                android:layout_height="match_parent"/>
-        <Button style="?android:actionButtonStyle" android:layout_width="wrap_content"
-                android:text="@string/only_at_char"
-                android:id="@+id/menu_at"
-                android:textColor="?android:actionMenuTextColor"
-                android:textAppearance="?android:attr/actionMenuTextAppearance"
-                android:layout_height="match_parent"/>
-        <Button style="?android:actionButtonStyle" android:layout_width="wrap_content"
-                android:text=":-)"
-                android:id="@+id/menu_add_emotions"
-                android:textColor="?android:actionMenuTextColor"
-                android:textAppearance="?android:attr/actionMenuTextAppearance"
-                android:layout_height="match_parent"/>
+        android:background="?backgroundSplit"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="?android:actionBarSize">
 
-        <Space android:layout_height="match_parent" android:layout_width="0dp" android:layout_weight="1"/>
+        <Button
+            style="?android:actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:text="#"
+            android:id="@+id/menu_topic"
+            android:textColor="?android:actionMenuTextColor"
+            android:textAppearance="?android:attr/actionMenuTextAppearance"
+            android:layout_height="match_parent" />
 
-        <Button style="?android:actionButtonStyle" android:layout_width="wrap_content"
-                android:drawableRight="?statusnewactivity_send"
-                android:text="@string/send"
-                android:id="@+id/menu_send"
-                android:textColor="?android:actionMenuTextColor"
-                android:textAppearance="?android:attr/actionMenuTextAppearance"
-                android:layout_height="match_parent"/>
+        <Button
+            style="?android:actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:text="@string/only_at_char"
+            android:id="@+id/menu_at"
+            android:textColor="?android:actionMenuTextColor"
+            android:textAppearance="?android:attr/actionMenuTextAppearance"
+            android:layout_height="match_parent" />
+
+        <Button
+            style="?android:actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:text=":-)"
+            android:id="@+id/menu_add_emotions"
+            android:textColor="?android:actionMenuTextColor"
+            android:textAppearance="?android:attr/actionMenuTextAppearance"
+            android:layout_height="match_parent" />
+
+        <Space
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            style="?android:actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:drawableRight="?statusnewactivity_send"
+            android:text="@string/send"
+            android:id="@+id/menu_send"
+            android:textColor="?android:actionMenuTextColor"
+            android:textAppearance="?android:attr/actionMenuTextAppearance"
+            android:layout_height="match_parent" />
     </LinearLayout>
 </LinearLayout>

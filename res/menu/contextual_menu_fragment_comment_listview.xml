@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/menu_view"
-          android:title="@string/view"
-          android:showAsAction="ifRoom"
-          android:visible="false"
-            />
+    <item
+        android:id="@+id/menu_view"
+        android:title="@string/view"
+        android:showAsAction="ifRoom"
+        android:visible="false" />
 
-    <item android:id="@+id/menu_comment"
-          android:icon="?reply_to_comment"
-          android:title="@string/reply_to_comment"
-          android:showAsAction="ifRoom"
-            />
+    <item
+        android:id="@+id/menu_comment"
+        android:icon="?reply_to_comment"
+        android:title="@string/reply_to_comment"
+        android:showAsAction="ifRoom" />
 
-    <item android:id="@+id/menu_share"
-          android:title="@string/share"
-          android:icon="?share"
-          android:showAsAction="never"
-          android:actionProviderClass="android.widget.ShareActionProvider"
-            />
+    <item
+        android:id="@+id/menu_share"
+        android:title="@string/share"
+        android:icon="?share"
+        android:showAsAction="never"
+        android:actionProviderClass="android.widget.ShareActionProvider" />
 
-    <item android:id="@+id/menu_copy"
-          android:title="@string/copy_to_clipboard"
-          android:showAsAction="never"
-          android:icon="?copy"
-            />
+    <item
+        android:id="@+id/menu_copy"
+        android:title="@string/copy_to_clipboard"
+        android:showAsAction="never"
+        android:icon="?copy" />
 
 </menu>

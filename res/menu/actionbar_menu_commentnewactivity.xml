@@ -2,17 +2,17 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/menu_enable_ori_comment"
-          android:visible="false"
-          android:title="@string/enable_comment_to_ori_when_comment"
-          android:checkable="true"
-          android:checked="false"
-            />
-    <item android:id="@+id/menu_enable_repost"
-          android:visible="true"
-          android:title="@string/enable_repost"
-          android:checkable="true"
-          android:checked="false"
-            />
+    <item
+        android:id="@+id/menu_enable_ori_comment"
+        android:visible="false"
+        android:title="@string/enable_comment_to_ori_when_comment"
+        android:checkable="true"
+        android:checked="false" />
+    <item
+        android:id="@+id/menu_enable_repost"
+        android:visible="true"
+        android:title="@string/enable_repost"
+        android:checkable="true"
+        android:checked="false" />
 
 </menu>

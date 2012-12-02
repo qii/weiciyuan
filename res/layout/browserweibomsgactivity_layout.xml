@@ -1,217 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-        >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
 
     <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="9dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/first"
+            android:background="?android:selectableItemBackground"
+            android:padding="3dp"
+            android:clickable="true">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="1px"
+                android:background="@drawable/bg_border1"
+                android:id="@+id/avatar"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginRight="5dp" />
+
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="username"
+                android:layout_marginLeft="8dp"
+                android:id="@+id/username" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="1px"
+                android:src="?clickable_flag"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="5dp" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/first"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            android:id="@+id/second">
+
+            <TextView
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="w"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:textIsSelectable="true"
+                android:id="@+id/time" />
+
+            <TextView
+                android:gravity="right"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="sina"
+                android:textIsSelectable="true"
+                android:id="@+id/source" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginTop="8dp"
+            android:id="@+id/content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="9dp"
-            >
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:id="@+id/first"
-                      android:background="?android:selectableItemBackground"
-                      android:padding="3dp"
-                      android:clickable="true">
-            <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:padding="1px"
-                    android:background="@drawable/bg_border1"
-                    android:id="@+id/avatar" android:layout_gravity="left|center_vertical"
-                    android:layout_marginRight="5dp"
-                    />
-
-            <TextView
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="username"
-                    android:layout_marginLeft="8dp"
-                    android:id="@+id/username"/>
-            <TextView android:layout_width="0dp"
-                      android:layout_weight="1"
-                      android:layout_height="wrap_content"/>
-            <ImageView
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="1px"
-                    android:src="?clickable_flag"
-                    android:layout_gravity="right|center_vertical"
-                    android:layout_marginRight="5dp"
-                    />
-
-
-        </LinearLayout>
-
-
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_below="@id/first"
-                      android:layout_marginTop="5dp"
-                      android:orientation="horizontal"
-                      android:id="@+id/second">
-            <TextView
-
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:hint="w"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:textIsSelectable="true"
-                    android:id="@+id/time"/>
-            <TextView
-                    android:gravity="right"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="sina"
-                    android:textIsSelectable="true"
-                    android:id="@+id/source"/>
-        </LinearLayout>
-        <TextView
-                android:layout_marginTop="8dp"
-                android:id="@+id/content"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="content"
-                android:textSize="17sp"
-                android:lineSpacingMultiplier="1.2"
-                android:layout_below="@id/second"
-                android:textIsSelectable="true"
-                />
+            android:text="content"
+            android:textSize="17sp"
+            android:lineSpacingMultiplier="1.2"
+            android:layout_below="@id/second"
+            android:textIsSelectable="true" />
 
         <FrameLayout
 
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/content"
-                android:layout_toRightOf="@id/avatar"
-                android:layout_marginTop="8dp"
-                android:id="@+id/third"
-                >
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/content"
+            android:layout_toRightOf="@id/avatar"
+            android:layout_marginTop="8dp"
+            android:id="@+id/third">
 
             <!-- hack to center progressbar when set indeterminate equal true -->
 
             <FrameLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="140dp"
-                    android:id="@+id/pic_layout"
-                    >
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="140dp"
+                android:id="@+id/pic_layout">
 
                 <ProgressBar
+                    android:visibility="gone"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/content_pic_pb" />
+
+                <ImageView
+                    android:id="@+id/content_pic"
+                    android:padding="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:clickable="true"
+                    android:layout_gravity="center_horizontal"
+                    android:background="?android:selectableItemBackground" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/repost_layout"
+                android:clickable="true"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/browser_msg_repost_line"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:background="?android:selectableItemBackground"
+                    android:id="@+id/repost_content"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="content"
+                    android:visibility="gone"
+                    android:textSize="17sp"
+                    android:lineSpacingMultiplier="1.2" />
+
+                <FrameLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:minHeight="140dp"
+                    android:id="@+id/repost_pic_layout"
+                    android:visibility="gone">
+
+                    <ProgressBar
                         android:visibility="gone"
-                        android:gravity="center"
                         android:layout_gravity="center"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:indeterminate="true"
                         style="?android:attr/progressBarStyleHorizontal"
-                        android:id="@+id/content_pic_pb"/>
-                <ImageView
-                        android:id="@+id/content_pic"
+                        android:id="@+id/repost_content_pic_pb" />
+
+                    <ImageView
                         android:padding="3dp"
+                        android:id="@+id/repost_content_pic"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         android:clickable="true"
+                        android:background="?android:selectableItemBackground"
                         android:layout_gravity="center_horizontal"
-                        android:background="?android:selectableItemBackground"
+
                         />
-            </FrameLayout>
-            <LinearLayout
-                    android:id="@+id/repost_layout"
-                    android:clickable="true"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/browser_msg_repost_line"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    >
-
-                <TextView
-                        android:background="?android:selectableItemBackground"
-                        android:id="@+id/repost_content"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="content"
-                        android:visibility="gone"
-                        android:textSize="17sp"
-                        android:lineSpacingMultiplier="1.2"
-                        />
-                <FrameLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:minHeight="140dp"
-                        android:id="@+id/repost_pic_layout"
-                        android:visibility="gone"
-                        >
-
-                    <ProgressBar
-                            android:visibility="gone"
-                            android:layout_gravity="center"
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"
-                            android:indeterminate="true"
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:id="@+id/repost_content_pic_pb"/>
-                    <ImageView
-                            android:padding="3dp"
-                            android:id="@+id/repost_content_pic"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            android:clickable="true"
-                            android:background="?android:selectableItemBackground"
-                            android:layout_gravity="center_horizontal"
-
-                            />
                 </FrameLayout>
 
 
-                <LinearLayout android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:layout_gravity="right"
-                              android:visibility="gone"
-                              android:id="@+id/count_layout">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:visibility="gone"
+                    android:id="@+id/count_layout">
 
                     <TextView
-                            android:id="@+id/repost_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="?android:textColorTertiary"
-                            android:drawableLeft="?timeline_repost_flag"
-                            />
+                        android:id="@+id/repost_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="?android:textColorTertiary"
+                        android:drawableLeft="?timeline_repost_flag" />
 
                     <TextView
-                            android:id="@+id/comment_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:layout_marginLeft="5dp"
-                            android:textColor="?android:textColorTertiary"
-                            android:drawableLeft="?timeline_comment_flag"
-                            />
+                        android:id="@+id/comment_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="?android:textColorTertiary"
+                        android:drawableLeft="?timeline_comment_flag" />
 
                 </LinearLayout>
             </LinearLayout>
 
         </FrameLayout>
-        <TextView android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_below="@id/third"
-                  android:id="@+id/location"
-                  android:visibility="gone"
-                  android:onClick="true"
-                  android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/third"
+            android:id="@+id/location"
+            android:visibility="gone"
+            android:onClick="true"
+            android:layout_marginTop="8dp" />
 
     </RelativeLayout>
 

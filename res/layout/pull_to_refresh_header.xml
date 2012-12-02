@@ -1,65 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="fill_parent"
-             android:layout_height="wrap_content"
-             android:orientation="horizontal"
-             android:gravity="center"
-             android:paddingLeft="@dimen/header_footer_left_right_padding"
-             android:paddingRight="@dimen/header_footer_left_right_padding"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:paddingLeft="@dimen/header_footer_left_right_padding"
+    android:paddingRight="@dimen/header_footer_left_right_padding"
 
-        >
+    >
     <!--android:paddingTop="@dimen/header_footer_top_bottom_padding"-->
     <!--android:paddingBottom="@dimen/header_footer_top_bottom_padding"-->
 
 
     <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="60dp"
-            android:id="@+id/imagelayout"
-            android:visibility="visible"
-            android:gravity="center">
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:id="@+id/imagelayout"
+        android:visibility="visible"
+        android:gravity="center">
+
         <ImageView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:background="?listview_item_refresh_animation"
-                android:id="@+id/pull_to_refresh_image"
-                android:visibility="visible"
-                />
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="?listview_item_refresh_animation"
+            android:id="@+id/pull_to_refresh_image"
+            android:visibility="visible" />
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="45dp"
-                android:text="@string/refreshing"
-                android:visibility="visible"
-                android:gravity="center"/>
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:text="@string/refreshing"
+            android:visibility="visible"
+            android:gravity="center" />
     </LinearLayout>
 
 
     <LinearLayout
-            android:layout_gravity="center"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:id="@+id/header_text"
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/pull_to_refresh_text"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:gravity="center"
-            android:id="@+id/header_text"
-            android:visibility="visible"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="15sp" />
 
         <TextView
-                android:id="@+id/pull_to_refresh_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textSize="15sp"
-                />
-
-        <TextView
-                android:id="@+id/pull_to_refresh_sub_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textSize="11sp"
-                android:visibility="gone"/>
+            android:id="@+id/pull_to_refresh_sub_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="11sp"
+            android:visibility="gone" />
     </LinearLayout>
 
 </FrameLayout>

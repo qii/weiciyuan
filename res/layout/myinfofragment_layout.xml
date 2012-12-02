@@ -1,56 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_height="fill_parent"
-            android:layout_width="fill_parent">
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent">
+
     <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
 
         <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
-                android:orientation="horizontal">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:orientation="horizontal">
+
             <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:padding="1px"
-                    android:background="@drawable/bg_border1"
-                    android:id="@+id/avatar"/>
-            <LinearLayout android:layout_height="wrap_content"
-                          android:layout_width="0dp"
-                          android:layout_weight="1"
-                          android:orientation="vertical"
-                          android:gravity="center_vertical">
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:padding="1px"
+                android:background="@drawable/bg_border1"
+                android:id="@+id/avatar" />
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+
                 <TextView
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="5dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:id="@+id/username"/>
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:id="@+id/username" />
+
                 <TextView
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="5dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:visibility="gone"
-                        android:id="@+id/isVerified"/>
-                <LinearLayout android:layout_gravity="center"
-                              android:layout_marginLeft="5dp"
-                              android:layout_width="match_parent"
-                              android:layout_height="wrap_content"
-                              android:gravity="left">
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:visibility="gone"
+                    android:id="@+id/isVerified" />
+
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left">
+
                     <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="left"
-                            android:id="@+id/sex"
-                            />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:id="@+id/sex" />
 
                 </LinearLayout>
 
@@ -58,109 +66,212 @@
 
         </LinearLayout>
 
-        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:id="@+id/verified_layout">
-            <TextView android:layout_marginTop="5.0dip" android:text="@string/verified_reason"
-                      style="?android:attr/listSeparatorTextViewStyle"/>
-            <TextView android:linksClickable="true" android:id="@+id/verified_info" android:paddingLeft="20.0dip"
-                      android:paddingTop="5.0dip" android:paddingRight="20.0dip" android:paddingBottom="5.0dip"
-                      android:layout_width="fill_parent" android:layout_height="wrap_content"
-                      android:textIsSelectable="true"
-                    />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/verified_layout">
+
+            <TextView
+                android:layout_marginTop="5.0dip"
+                android:text="@string/verified_reason"
+                style="?android:attr/listSeparatorTextViewStyle" />
+
+            <TextView
+                android:linksClickable="true"
+                android:id="@+id/verified_info"
+                android:paddingLeft="20.0dip"
+                android:paddingTop="5.0dip"
+                android:paddingRight="20.0dip"
+                android:paddingBottom="5.0dip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true" />
         </LinearLayout>
 
-        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:id="@+id/intro_layout">
-            <TextView android:layout_marginTop="5.0dip" android:text="@string/intro"
-                      style="?android:attr/listSeparatorTextViewStyle"/>
-            <TextView android:linksClickable="true" android:id="@+id/textView_info" android:paddingLeft="20.0dip"
-                      android:paddingTop="5.0dip" android:paddingRight="20.0dip" android:paddingBottom="5.0dip"
-                      android:layout_width="fill_parent" android:layout_height="wrap_content"
-                      android:textIsSelectable="true"
-                    />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/intro_layout">
+
+            <TextView
+                android:layout_marginTop="5.0dip"
+                android:text="@string/intro"
+                style="?android:attr/listSeparatorTextViewStyle" />
+
+            <TextView
+                android:linksClickable="true"
+                android:id="@+id/textView_info"
+                android:paddingLeft="20.0dip"
+                android:paddingTop="5.0dip"
+                android:paddingRight="20.0dip"
+                android:paddingBottom="5.0dip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true" />
         </LinearLayout>
 
 
-        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:id="@+id/location_layout">
-            <TextView android:layout_marginTop="5.0dip" android:text="@string/address"
-                      style="?android:attr/listSeparatorTextViewStyle"/>
-            <TextView android:linksClickable="true" android:id="@+id/location" android:paddingLeft="20.0dip"
-                      android:paddingTop="5.0dip" android:paddingRight="20.0dip" android:paddingBottom="5.0dip"
-                      android:layout_width="fill_parent" android:layout_height="wrap_content"
-                    />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/location_layout">
+
+            <TextView
+                android:layout_marginTop="5.0dip"
+                android:text="@string/address"
+                style="?android:attr/listSeparatorTextViewStyle" />
+
+            <TextView
+                android:linksClickable="true"
+                android:id="@+id/location"
+                android:paddingLeft="20.0dip"
+                android:paddingTop="5.0dip"
+                android:paddingRight="20.0dip"
+                android:paddingBottom="5.0dip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
 
-        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent"
-                      android:layout_height="wrap_content"
-                      android:id="@+id/blog_url_layout">
-            <TextView android:layout_marginTop="5.0dip" android:text="@string/blog_url"
-                      style="?android:attr/listSeparatorTextViewStyle"/>
-            <TextView android:linksClickable="true" android:id="@+id/blog_url" android:paddingLeft="20.0dip"
-                      android:paddingTop="5.0dip" android:paddingRight="20.0dip" android:paddingBottom="5.0dip"
-                      android:layout_width="fill_parent" android:layout_height="wrap_content"
-                    />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/blog_url_layout">
+
+            <TextView
+                android:layout_marginTop="5.0dip"
+                android:text="@string/blog_url"
+                style="?android:attr/listSeparatorTextViewStyle" />
+
+            <TextView
+                android:linksClickable="true"
+                android:id="@+id/blog_url"
+                android:paddingLeft="20.0dip"
+                android:paddingTop="5.0dip"
+                android:paddingRight="20.0dip"
+                android:paddingBottom="5.0dip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <LinearLayout android:orientation="vertical" android:id="@+id/detailsLayout"
-                      android:layout_width="fill_parent" android:layout_height="wrap_content">
-            <TextView android:layout_marginTop="5.0dip" android:text="@string/sum"
-                      style="?android:attr/listSeparatorTextViewStyle"/>
-            <TableLayout android:layout_width="fill_parent"
-                         android:layout_height="fill_parent"
-                    >
-                <TableRow android:paddingLeft="20.0dip" android:paddingTop="5.0dip" android:paddingRight="20.0dip"
-                          android:paddingBottom="5.0dip" android:layout_width="fill_parent"
-                          android:layout_height="wrap_content"
-                          android:background="?android:selectableItemBackground"
-                          android:id="@+id/following_layout">
-                    <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"
-                              android:text="@string/following_number" android:layout_weight="0.7"/>
-                    <TextView android:layout_gravity="right|center" android:id="@+id/following_number"
-                              android:drawableRight="?clickable_flag"
-                              android:drawablePadding="1dp"
-                              android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/detailsLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_marginTop="5.0dip"
+                android:text="@string/sum"
+                style="?android:attr/listSeparatorTextViewStyle" />
+
+            <TableLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TableRow
+                    android:paddingLeft="20.0dip"
+                    android:paddingTop="5.0dip"
+                    android:paddingRight="20.0dip"
+                    android:paddingBottom="5.0dip"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackground"
+                    android:id="@+id/following_layout">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:text="@string/following_number"
+                        android:layout_weight="0.7" />
+
+                    <TextView
+                        android:layout_gravity="right|center"
+                        android:id="@+id/following_number"
+                        android:drawableRight="?clickable_flag"
+                        android:drawablePadding="1dp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent" />
                 </TableRow>
-                <TableRow android:paddingLeft="20.0dip" android:paddingTop="5.0dip" android:paddingRight="20.0dip"
-                          android:paddingBottom="5.0dip" android:layout_width="fill_parent"
-                          android:layout_height="wrap_content"
-                          android:background="?android:selectableItemBackground"
-                          android:id="@+id/fan_layout">
-                    <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"
-                              android:text="@string/fan_number" android:layout_weight="0.7"/>
-                    <TextView android:layout_gravity="right|center" android:id="@+id/fans_number"
-                              android:drawableRight="?clickable_flag"
-                              android:drawablePadding="1dp"
-                              android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+
+                <TableRow
+                    android:paddingLeft="20.0dip"
+                    android:paddingTop="5.0dip"
+                    android:paddingRight="20.0dip"
+                    android:paddingBottom="5.0dip"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackground"
+                    android:id="@+id/fan_layout">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:text="@string/fan_number"
+                        android:layout_weight="0.7" />
+
+                    <TextView
+                        android:layout_gravity="right|center"
+                        android:id="@+id/fans_number"
+                        android:drawableRight="?clickable_flag"
+                        android:drawablePadding="1dp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent" />
                 </TableRow>
-                <TableRow android:paddingLeft="20.0dip" android:paddingTop="5.0dip" android:paddingRight="20.0dip"
-                          android:paddingBottom="5.0dip" android:layout_width="fill_parent"
-                          android:layout_height="wrap_content"
-                          android:background="?android:selectableItemBackground"
-                          android:id="@+id/fav_layout">
-                    <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"
-                              android:text="@string/fav_number" android:layout_weight="0.7"/>
-                    <TextView android:layout_gravity="right|center" android:id="@+id/fav_number"
-                              android:drawableRight="?clickable_flag"
-                              android:drawablePadding="1dp"
-                              android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+
+                <TableRow
+                    android:paddingLeft="20.0dip"
+                    android:paddingTop="5.0dip"
+                    android:paddingRight="20.0dip"
+                    android:paddingBottom="5.0dip"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackground"
+                    android:id="@+id/fav_layout">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:text="@string/fav_number"
+                        android:layout_weight="0.7" />
+
+                    <TextView
+                        android:layout_gravity="right|center"
+                        android:id="@+id/fav_number"
+                        android:drawableRight="?clickable_flag"
+                        android:drawablePadding="1dp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent" />
                 </TableRow>
-                <TableRow android:paddingLeft="20.0dip" android:paddingTop="5.0dip" android:paddingRight="20.0dip"
-                          android:paddingBottom="5.0dip" android:layout_width="fill_parent"
-                          android:layout_height="wrap_content"
-                          android:background="?android:selectableItemBackground"
-                          android:id="@+id/topic_layout">
-                    <TextView android:layout_width="fill_parent" android:layout_height="fill_parent"
-                              android:text="@string/topic_number" android:layout_weight="0.7"/>
-                    <TextView android:layout_gravity="right|center" android:id="@+id/topic_number"
-                              android:drawableRight="?clickable_flag"
-                              android:drawablePadding="1dp"
-                              android:text="0"
-                              android:layout_width="fill_parent" android:layout_height="fill_parent"/>
+
+                <TableRow
+                    android:paddingLeft="20.0dip"
+                    android:paddingTop="5.0dip"
+                    android:paddingRight="20.0dip"
+                    android:paddingBottom="5.0dip"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackground"
+                    android:id="@+id/topic_layout">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:text="@string/topic_number"
+                        android:layout_weight="0.7" />
+
+                    <TextView
+                        android:layout_gravity="right|center"
+                        android:id="@+id/topic_number"
+                        android:drawableRight="?clickable_flag"
+                        android:drawablePadding="1dp"
+                        android:text="0"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent" />
                 </TableRow>
             </TableLayout>
         </LinearLayout>

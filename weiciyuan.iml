@@ -23,6 +23,7 @@
         <option name="PROGUARD_CFG_PATH" value="/proguard-project.txt" />
         <resOverlayFolders />
         <includeSystemProguardFile>false</includeSystemProguardFile>
+        <includeAssetsFromLibraries>true</includeAssetsFromLibraries>
         <additionalNativeLibs />
       </configuration>
     </facet>
