@@ -55,8 +55,8 @@ public class SettingUtility {
     }
 
     public static boolean getEnableFetchMSG() {
-          return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_FETCH_MSG, false);
-      }
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_FETCH_MSG, false);
+    }
 
 
     public static boolean getEnableAutoRefresh() {
@@ -72,16 +72,16 @@ public class SettingUtility {
         return SettingHelper.getSharedPreferences(getContext(), SettingActivity.SOUND, true);
     }
 
-    public static void setEnableBigPic(boolean enableBigPic) {
-        SettingHelper.setEditor(getContext(), SettingActivity.SHOW_BIG_PIC, enableBigPic);
+    public static void setEnableBigPic(boolean value) {
+        SettingHelper.setEditor(getContext(), SettingActivity.SHOW_BIG_PIC, value);
     }
 
 
-    public static void setEnableBigAvatar(boolean enableBigAvatar) {
-        SettingHelper.setEditor(getContext(), SettingActivity.SHOW_BIG_AVATAR, enableBigAvatar);
+    public static void setEnableBigAvatar(boolean value) {
+        SettingHelper.setEditor(getContext(), SettingActivity.SHOW_BIG_AVATAR, value);
     }
 
-    public static void setEnableFilter(boolean isChecked) {
-        SettingHelper.setEditor(getContext(), SettingActivity.FILTER, isChecked);
+    public static void setEnableFilter(boolean value) {
+        SettingHelper.setEditor(getContext(), SettingActivity.FILTER, value);
     }
 }
