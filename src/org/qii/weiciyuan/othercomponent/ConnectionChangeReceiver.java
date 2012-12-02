@@ -39,9 +39,6 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
         String avatarModeValue = sharedPref.getString(SettingActivity.LIST_AVATAR_MODE, "1");
         String picModeValue = sharedPref.getString(SettingActivity.LIST_PIC_MODE, "1");
 
-        if (!avatarModeValue.equals("3") && !picModeValue.equals("3"))
-            return;
-
         if (avatarModeValue.equals("3")) {
             SettingUtility.setEnableBigAvatar(Utility.isWifi(context));
         }
