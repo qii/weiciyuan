@@ -54,6 +54,10 @@ public class SettingUtility {
         return !SettingHelper.getSharedPreferences(getContext(), SettingActivity.CLOSE_COMMENT_AND_REPOST_AVATAR, false);
     }
 
+    public static boolean getEnableFetchMSG() {
+          return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_FETCH_MSG, false);
+      }
+
 
     public static boolean getEnableAutoRefresh() {
         return SettingHelper.getSharedPreferences(getContext(), SettingActivity.AUTO_REFRESH, false);

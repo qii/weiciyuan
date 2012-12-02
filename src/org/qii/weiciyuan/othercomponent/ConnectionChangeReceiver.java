@@ -4,13 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.telephony.TelephonyManager;
-import android.widget.Toast;
-import org.qii.weiciyuan.BuildConfig;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 /**
@@ -20,25 +16,16 @@ import org.qii.weiciyuan.ui.preference.SettingActivity;
 public class ConnectionChangeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        ConnectivityManager cm = (ConnectivityManager)
-                context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 
-        if (BuildConfig.DEBUG) {
-            Toast.makeText(context, "connection changed", Toast.LENGTH_SHORT).show();
-        }
+        if (Utility.isConnected(context)) {
 
-        if (networkInfo != null && networkInfo.isConnected()) {
-
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-            boolean value = sharedPref.getBoolean(SettingActivity.ENABLE_FETCH_MSG, false);
-            if (value) {
+            if (SettingUtility.getEnableFetchMSG()) {
                 AppNewMsgAlarm.startAlarm(context, true);
             } else {
                 AppNewMsgAlarm.stopAlarm(context, false);
             }
 
-            decideTimeLineBigPic(context, networkInfo);
+            decideTimeLineBigPic(context);
 
         } else {
             AppNewMsgAlarm.stopAlarm(context, false);
@@ -46,7 +33,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
 
     }
 
-    private static void decideTimeLineBigPic(Context context, NetworkInfo networkInfo) {
+    private static void decideTimeLineBigPic(Context context) {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         String avatarModeValue = sharedPref.getString(SettingActivity.LIST_AVATAR_MODE, "1");
@@ -55,38 +42,11 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
         if (!avatarModeValue.equals("3") && !picModeValue.equals("3"))
             return;
 
-        if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-            //wifi network
-            if (avatarModeValue.equals("3")) {
-                SettingUtility.setEnableBigAvatar(true);
-            }
-            if (picModeValue.equals("3")) {
-                SettingUtility.setEnableBigPic(true);
-            }
-        } else if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
-
-            int subType = networkInfo.getSubtype();
-
-            if (subType == TelephonyManager.NETWORK_TYPE_GPRS) {
-                //gprs network
-                if (avatarModeValue.equals("3")) {
-                    SettingUtility.setEnableBigAvatar(false);
-                }
-                if (picModeValue.equals("3")) {
-                    SettingUtility.setEnableBigPic(false);
-                }
-
-            } else {
-                //3G or other 2.5g network,there are too many mobile technologies
-                if (avatarModeValue.equals("3")) {
-                    SettingUtility.setEnableBigAvatar(false);
-                }
-                if (picModeValue.equals("3")) {
-                    SettingUtility.setEnableBigPic(false);
-                }
-
-            }
-
+        if (avatarModeValue.equals("3")) {
+            SettingUtility.setEnableBigAvatar(Utility.isWifi(context));
+        }
+        if (picModeValue.equals("3")) {
+            SettingUtility.setEnableBigPic(Utility.isWifi(context));
         }
     }
 }
