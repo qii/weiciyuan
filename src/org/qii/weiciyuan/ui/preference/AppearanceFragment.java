@@ -1,15 +1,13 @@
 package org.qii.weiciyuan.ui.preference;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
@@ -77,37 +75,21 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
             if (value.equals("2"))
                 SettingUtility.setEnableBigAvatar(true);
             if (value.equals("3")) {
-                ConnectivityManager cm = (ConnectivityManager)
-                        getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-                if (networkInfo != null && networkInfo.isConnected()) {
-                    if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-                        SettingUtility.setEnableBigAvatar(true);
-                    } else {
-                        SettingUtility.setEnableBigAvatar(false);
-                    }
-                }
+                SettingUtility.setEnableBigAvatar(Utility.isWifi(getActivity()));
             }
             buildSummary();
         }
 
-        if (key.equals(SettingActivity.LIST_PIC_MODE)) {
+        if (key.equals(SettingActivity.LIST_PIC_MODE))
+
+        {
             String value = sharedPreferences.getString(key, "1");
             if (value.equals("1"))
                 SettingUtility.setEnableBigPic(false);
             if (value.equals("2"))
                 SettingUtility.setEnableBigPic(true);
             if (value.equals("3")) {
-                ConnectivityManager cm = (ConnectivityManager)
-                        getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-                if (networkInfo != null && networkInfo.isConnected()) {
-                    if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-                        SettingUtility.setEnableBigPic(true);
-                    } else {
-                        SettingUtility.setEnableBigPic(false);
-                    }
-                }
+                SettingUtility.setEnableBigPic(Utility.isWifi(getActivity()));
             }
             buildSummary();
         }
