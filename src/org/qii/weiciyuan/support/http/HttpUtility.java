@@ -116,7 +116,7 @@ public class HttpUtility {
         //httpClient = new CachingHttpClient(new DecompressingHttpClient(backend), cacheConfig);
 
 //        httpClient = new DecompressingHttpClient(new CachingHttpClient(backend, cacheConfig));
-        httpClient=backend;
+        httpClient = backend;
         HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 5000);
         HttpConnectionParams.setSoTimeout(httpClient.getParams(), 8000);
 
@@ -338,7 +338,9 @@ public class HttpUtility {
             int errCode = 0;
             try {
                 JSONObject json = new JSONObject(result);
-                err = json.getString("error_description");
+                err = json.optString("error_description","");
+                if (TextUtils.isEmpty(err))
+                    err = json.getString("error");
                 errCode = json.getInt("error_code");
                 WeiboException exception = new WeiboException();
                 exception.setError_code(errCode);
