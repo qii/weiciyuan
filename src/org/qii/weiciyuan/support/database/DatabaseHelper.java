@@ -61,6 +61,14 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + RepostsTable.JSONDATA + " text"
             + ");";
 
+    static final String CREATE_DMS_TABLE_SQL = "create table " + DMTable.TABLE_NAME
+            + "("
+            + DMTable.ID + " integer primary key autoincrement,"
+            + DMTable.ACCOUNTID + " text,"
+            + DMTable.MBLOGID + " text,"
+            + DMTable.JSONDATA + " text"
+            + ");";
+
     static final String CREATE_FILTER_TABLE_SQL = "create table " + FilterTable.TABLE_NAME
             + "("
             + FilterTable.ID + " integer primary key autoincrement,"
@@ -109,6 +117,14 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + CommentsTable.ACCOUNTID
             + ")";
 
+    private static final String CREATE_DM_INDEX_SQL = "CREATE INDEX idx_"
+            + DMTable.TABLE_NAME
+            + " ON "
+            + DMTable.TABLE_NAME
+            + "("
+            + DMTable.ACCOUNTID
+            + ")";
+
 
     DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -123,6 +139,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_HOME_TABLE_SQL);
         db.execSQL(CREATE_COMMENTS_TABLE_SQL);
         db.execSQL(CREATE_REPOSTS_TABLE_SQL);
+        db.execSQL(CREATE_DMS_TABLE_SQL);
         db.execSQL(CREATE_FILTER_TABLE_SQL);
         db.execSQL(CREATE_EMOTIONS_TABLE_SQL);
         db.execSQL(CREATE_DRAFTS_TABLE_SQL);
@@ -130,15 +147,21 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_HOME_INDEX_SQL);
         db.execSQL(CREATE_REPOST_INDEX_SQL);
         db.execSQL(CREATE_COMMENT_INDEX_SQL);
+        db.execSQL(CREATE_DM_INDEX_SQL);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
             case 15:
+
+                db.execSQL(CREATE_DMS_TABLE_SQL);
+
                 db.execSQL(CREATE_HOME_INDEX_SQL);
                 db.execSQL(CREATE_REPOST_INDEX_SQL);
                 db.execSQL(CREATE_COMMENT_INDEX_SQL);
+                db.execSQL(CREATE_DM_INDEX_SQL);
+
                 break;
             default:
                 db.execSQL("DROP TABLE IF EXISTS " + AccountTable.TABLE_NAME);
