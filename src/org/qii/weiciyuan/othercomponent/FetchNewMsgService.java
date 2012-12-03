@@ -2,11 +2,7 @@ package org.qii.weiciyuan.othercomponent;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
-import android.widget.Toast;
-import org.qii.weiciyuan.BuildConfig;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
@@ -18,7 +14,7 @@ import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.ui.preference.SettingActivity;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 import java.util.Calendar;
 import java.util.List;
@@ -41,29 +37,18 @@ public class FetchNewMsgService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean value = sharedPref.getBoolean(SettingActivity.DISABLE_FETCH_AT_NIGHT, true);
-        if (value) {
-
-            Calendar cal = Calendar.getInstance();
-            int hour = cal.get(Calendar.HOUR_OF_DAY);
-            if (hour >= NIGHT_START_TIME_HOUR && hour <= NIGHT_END_TIME_HOUR) {
-
-                if (BuildConfig.DEBUG)
-                    Toast.makeText(getApplicationContext(), "between 1 and 8 clock,stop service", Toast.LENGTH_SHORT).show();
-
-                stopSelf();
-                return super.onStartCommand(intent, flags, startId);
-            } else {
-
-                startFetchNewMsg();
-            }
-
+        if (SettingUtility.disableFetchAtNight() && isNowNight()) {
+            stopSelf();
         } else {
-
             startFetchNewMsg();
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private boolean isNowNight() {
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        return hour >= NIGHT_START_TIME_HOUR && hour <= NIGHT_END_TIME_HOUR;
     }
 
     private void startFetchNewMsg() {

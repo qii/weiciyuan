@@ -74,6 +74,11 @@ public class SettingUtility {
                 && Utility.isSystemRinger(getContext());
     }
 
+    public static boolean disableFetchAtNight() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.DISABLE_FETCH_AT_NIGHT, true)
+                && Utility.isSystemRinger(getContext());
+    }
+
     public static void setEnableBigPic(boolean value) {
         SettingHelper.setEditor(getContext(), SettingActivity.SHOW_BIG_PIC, value);
     }
