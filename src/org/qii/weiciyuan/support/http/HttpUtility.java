@@ -14,6 +14,7 @@ import ch.boye.httpclientandroidlib.client.methods.HttpRequestBase;
 import ch.boye.httpclientandroidlib.client.protocol.ClientContext;
 import ch.boye.httpclientandroidlib.client.utils.URIBuilder;
 import ch.boye.httpclientandroidlib.conn.ConnectTimeoutException;
+import ch.boye.httpclientandroidlib.conn.params.ConnRoutePNames;
 import ch.boye.httpclientandroidlib.conn.scheme.PlainSocketFactory;
 import ch.boye.httpclientandroidlib.conn.scheme.Scheme;
 import ch.boye.httpclientandroidlib.conn.scheme.SchemeRegistry;
@@ -126,7 +127,10 @@ public class HttpUtility {
     }
 
     public static HttpUtility getInstance() {
-
+        HttpHost host = getProxySetting();
+        if (host != null) {
+            httpUtility.httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, host);
+        }
         return httpUtility;
     }
 
@@ -338,7 +342,7 @@ public class HttpUtility {
             int errCode = 0;
             try {
                 JSONObject json = new JSONObject(result);
-                err = json.optString("error_description","");
+                err = json.optString("error_description", "");
                 if (TextUtils.isEmpty(err))
                     err = json.getString("error");
                 errCode = json.getInt("error_code");
@@ -357,5 +361,14 @@ public class HttpUtility {
     }
 
 
+    private static HttpHost getProxySetting() {
+        String proxyHost = System.getProperty("http.proxyHost");
+        String proxyPort = System.getProperty("http.proxyPort");
+        if (!TextUtils.isEmpty(proxyHost) && !TextUtils.isEmpty(proxyPort)) {
+            return new HttpHost(proxyHost, Integer.valueOf(proxyPort));
+        } else {
+            return null;
+        }
+    }
 }
 
