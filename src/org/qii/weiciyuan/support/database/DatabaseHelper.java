@@ -162,7 +162,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public synchronized static DatabaseHelper getInstance() {
+    public  static DatabaseHelper getInstance() {
         if (singleton == null) {
             singleton = new DatabaseHelper(GlobalContext.getInstance());
         }

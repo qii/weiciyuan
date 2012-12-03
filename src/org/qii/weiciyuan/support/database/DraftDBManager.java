@@ -33,7 +33,7 @@ public class DraftDBManager {
 
     }
 
-    public synchronized static DraftDBManager getInstance() {
+    public static DraftDBManager getInstance() {
 
         if (singleton == null) {
             DatabaseHelper databaseHelper = DatabaseHelper.getInstance();

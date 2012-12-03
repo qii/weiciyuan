@@ -22,7 +22,7 @@ public class GroupDBManager {
 
     }
 
-    public synchronized static GroupDBManager getInstance() {
+    public static GroupDBManager getInstance() {
 
         if (singleton == null) {
             DatabaseHelper databaseHelper = DatabaseHelper.getInstance();

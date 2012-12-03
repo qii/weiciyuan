@@ -32,7 +32,7 @@ public class DatabaseManager {
 
     }
 
-    public synchronized static DatabaseManager getInstance() {
+    public  static DatabaseManager getInstance() {
 
         if (singleton == null) {
             DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
