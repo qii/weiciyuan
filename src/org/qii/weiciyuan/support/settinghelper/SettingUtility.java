@@ -3,6 +3,7 @@ package org.qii.weiciyuan.support.settinghelper;
 import android.content.Context;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 /**
@@ -69,7 +70,8 @@ public class SettingUtility {
     }
 
     public static boolean getEnableSound() {
-        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.SOUND, true);
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.SOUND, true)
+                && Utility.isSystemRinger(getContext());
     }
 
     public static void setEnableBigPic(boolean value) {

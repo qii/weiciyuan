@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.support.utils;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -168,5 +169,9 @@ public class Utility {
         return false;
     }
 
+    public static boolean isSystemRinger(Context context) {
+        AudioManager manager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        return manager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL;
+    }
 
 }
