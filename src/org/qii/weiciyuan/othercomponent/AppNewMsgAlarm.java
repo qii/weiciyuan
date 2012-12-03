@@ -5,12 +5,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 /**
  * User: qii
@@ -22,8 +20,7 @@ public class AppNewMsgAlarm {
 
     public static void startAlarm(Context context, boolean silent) {
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        String value = sharedPref.getString(SettingActivity.FREQUENCY, "1");
+        String value = SettingUtility.getFrequency();
 
         long time = AlarmManager.INTERVAL_DAY;
 

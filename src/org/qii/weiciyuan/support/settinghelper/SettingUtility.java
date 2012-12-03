@@ -79,6 +79,10 @@ public class SettingUtility {
                 && Utility.isSystemRinger(getContext());
     }
 
+    public static String getFrequency() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.FREQUENCY, "1");
+    }
+
     public static void setEnableBigPic(boolean value) {
         SettingHelper.setEditor(getContext(), SettingActivity.SHOW_BIG_PIC, value);
     }
