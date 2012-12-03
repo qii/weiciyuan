@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import org.qii.weiciyuan.support.database.table.*;
-import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 /**
@@ -135,34 +134,28 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-        AppLogger.d("Upgrading database from version "
-                + oldVersion + " to " + newVersion + ",which will destroy all old data");
-
-        if (oldVersion < 14) {
-            db.execSQL("DROP TABLE IF EXISTS " + AccountTable.TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + EmotionsTable.TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + DraftTable.TABLE_NAME);
-            onCreate(db);
-        } else if (oldVersion == 14) {
-            db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
-            db.execSQL(CREATE_GROUP_TABLE_SQL);
+        switch (oldVersion) {
+            case 15:
+                db.execSQL(CREATE_HOME_INDEX_SQL);
+                db.execSQL(CREATE_REPOST_INDEX_SQL);
+                db.execSQL(CREATE_COMMENT_INDEX_SQL);
+                break;
+            default:
+                db.execSQL("DROP TABLE IF EXISTS " + AccountTable.TABLE_NAME);
+                db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
+                db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
+                db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
+                db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
+                db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
+                db.execSQL("DROP TABLE IF EXISTS " + EmotionsTable.TABLE_NAME);
+                db.execSQL("DROP TABLE IF EXISTS " + DraftTable.TABLE_NAME);
+                onCreate(db);
         }
 
-        if (oldVersion < 16) {
-            db.execSQL(CREATE_HOME_INDEX_SQL);
-            db.execSQL(CREATE_REPOST_INDEX_SQL);
-            db.execSQL(CREATE_COMMENT_INDEX_SQL);
-        }
 
     }
 
-    public  static DatabaseHelper getInstance() {
+    public static DatabaseHelper getInstance() {
         if (singleton == null) {
             singleton = new DatabaseHelper(GlobalContext.getInstance());
         }
