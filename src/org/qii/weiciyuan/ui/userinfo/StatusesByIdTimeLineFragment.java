@@ -8,12 +8,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
 /**
  * User: Jiang Qi
@@ -66,14 +67,10 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
             clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
             userBean = (UserBean) savedInstanceState.getSerializable("userBean");
             token = savedInstanceState.getString("token");
-            timeLineAdapter.notifyDataSetChanged();
+            getAdapter().notifyDataSetChanged();
             refreshLayout(bean);
         } else {
-
-            pullToRefreshListView.startRefreshNow();
-
-            refresh();
-
+            getPullToRefreshListView().startRefreshNow();
         }
 
         super.onActivityCreated(savedInstanceState);
