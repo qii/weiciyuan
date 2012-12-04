@@ -69,6 +69,14 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + DMTable.JSONDATA + " text"
             + ");";
 
+    static final String CREATE_MYSTATUSES_TABLE_SQL = "create table " + MyStatusTable.TABLE_NAME
+            + "("
+            + MyStatusTable.ID + " integer primary key autoincrement,"
+            + MyStatusTable.ACCOUNTID + " text,"
+            + MyStatusTable.MBLOGID + " text,"
+            + MyStatusTable.JSONDATA + " text"
+            + ");";
+
     static final String CREATE_FILTER_TABLE_SQL = "create table " + FilterTable.TABLE_NAME
             + "("
             + FilterTable.ID + " integer primary key autoincrement,"
@@ -125,6 +133,14 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + DMTable.ACCOUNTID
             + ")";
 
+    private static final String CREATE_MYSTATUSES_INDEX_SQL = "CREATE INDEX idx_"
+            + MyStatusTable.TABLE_NAME
+            + " ON "
+            + MyStatusTable.TABLE_NAME
+            + "("
+            + MyStatusTable.ACCOUNTID
+            + ")";
+
 
     DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -133,46 +149,17 @@ class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-
         db.execSQL(CREATE_ACCOUNT_TABLE_SQL);
-        db.execSQL(CREATE_GROUP_TABLE_SQL);
-        db.execSQL(CREATE_HOME_TABLE_SQL);
-        db.execSQL(CREATE_COMMENTS_TABLE_SQL);
-        db.execSQL(CREATE_REPOSTS_TABLE_SQL);
-        db.execSQL(CREATE_DMS_TABLE_SQL);
-        db.execSQL(CREATE_FILTER_TABLE_SQL);
-        db.execSQL(CREATE_EMOTIONS_TABLE_SQL);
-        db.execSQL(CREATE_DRAFTS_TABLE_SQL);
 
-        db.execSQL(CREATE_HOME_INDEX_SQL);
-        db.execSQL(CREATE_REPOST_INDEX_SQL);
-        db.execSQL(CREATE_COMMENT_INDEX_SQL);
-        db.execSQL(CREATE_DM_INDEX_SQL);
+        createOtherTable(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
-            case 15:
-
-                db.execSQL(CREATE_DMS_TABLE_SQL);
-
-                db.execSQL(CREATE_HOME_INDEX_SQL);
-                db.execSQL(CREATE_REPOST_INDEX_SQL);
-                db.execSQL(CREATE_COMMENT_INDEX_SQL);
-                db.execSQL(CREATE_DM_INDEX_SQL);
-
-                break;
             default:
-                db.execSQL("DROP TABLE IF EXISTS " + AccountTable.TABLE_NAME);
-                db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
-                db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
-                db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
-                db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
-                db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
-                db.execSQL("DROP TABLE IF EXISTS " + EmotionsTable.TABLE_NAME);
-                db.execSQL("DROP TABLE IF EXISTS " + DraftTable.TABLE_NAME);
-                onCreate(db);
+                deleteAllTableExceptAccount(db);
+                createOtherTable(db);
         }
 
 
@@ -183,5 +170,38 @@ class DatabaseHelper extends SQLiteOpenHelper {
             singleton = new DatabaseHelper(GlobalContext.getInstance());
         }
         return singleton;
+    }
+
+    private void createOtherTable(SQLiteDatabase db) {
+
+        db.execSQL(CREATE_GROUP_TABLE_SQL);
+        db.execSQL(CREATE_HOME_TABLE_SQL);
+        db.execSQL(CREATE_COMMENTS_TABLE_SQL);
+        db.execSQL(CREATE_REPOSTS_TABLE_SQL);
+        db.execSQL(CREATE_DMS_TABLE_SQL);
+        db.execSQL(CREATE_MYSTATUSES_TABLE_SQL);
+        db.execSQL(CREATE_FILTER_TABLE_SQL);
+        db.execSQL(CREATE_EMOTIONS_TABLE_SQL);
+        db.execSQL(CREATE_DRAFTS_TABLE_SQL);
+
+        db.execSQL(CREATE_HOME_INDEX_SQL);
+        db.execSQL(CREATE_REPOST_INDEX_SQL);
+        db.execSQL(CREATE_COMMENT_INDEX_SQL);
+        db.execSQL(CREATE_DM_INDEX_SQL);
+        db.execSQL(CREATE_MYSTATUSES_INDEX_SQL);
+    }
+
+    private void deleteAllTableExceptAccount(SQLiteDatabase db) {
+
+        db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EmotionsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DraftTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DMTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MyStatusTable.TABLE_NAME);
+
     }
 }
