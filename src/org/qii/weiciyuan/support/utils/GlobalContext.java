@@ -17,7 +17,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
-import org.qii.weiciyuan.support.database.GroupDBManager;
+import org.qii.weiciyuan.support.database.GroupDBTask;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -68,7 +68,7 @@ public final class GlobalContext extends Application {
 
     public GroupListBean getGroup() {
         if (group == null) {
-            group = GroupDBManager.getInstance().getGroupInfo(GlobalContext.getInstance().getCurrentAccountId());
+            group = GroupDBTask.get(GlobalContext.getInstance().getCurrentAccountId());
         }
         return group;
     }

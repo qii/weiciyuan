@@ -13,35 +13,28 @@ import org.qii.weiciyuan.support.database.table.HomeTable;
  * User: qii
  * Date: 12-11-5
  */
-public class GroupDBManager {
-    private static GroupDBManager singleton = null;
-    private SQLiteDatabase wsd = null;
-    private SQLiteDatabase rsd = null;
+public class GroupDBTask {
 
-    private GroupDBManager() {
+    private GroupDBTask() {
 
     }
 
-    public static GroupDBManager getInstance() {
+    private static SQLiteDatabase getWsd() {
 
-        if (singleton == null) {
-            DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
-            SQLiteDatabase wsd = databaseHelper.getWritableDatabase();
-            SQLiteDatabase rsd = databaseHelper.getReadableDatabase();
-
-            singleton = new GroupDBManager();
-            singleton.wsd = wsd;
-            singleton.rsd = rsd;
-        }
-
-        return singleton;
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+        return databaseHelper.getWritableDatabase();
     }
 
-    public GroupListBean getGroupInfo(String accountId) {
+    private static SQLiteDatabase getRsd() {
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+        return databaseHelper.getReadableDatabase();
+    }
+
+    public static GroupListBean get(String accountId) {
 
         String sql = "select * from " + GroupTable.TABLE_NAME + " where " + GroupTable.ACCOUNTID + "  = "
                 + accountId;
-        Cursor c = rsd.rawQuery(sql, null);
+        Cursor c = getRsd().rawQuery(sql, null);
         if (c.moveToNext()) {
 
             String json = c.getString(c.getColumnIndex(GroupTable.JSONDATA));
@@ -54,7 +47,7 @@ public class GroupDBManager {
         return null;
     }
 
-    public void updateGroupInfo(GroupListBean bean, String accountId) {
+    public static void update(GroupListBean bean, String accountId) {
 
         if (bean == null || bean.getLists().size() == 0) {
             return;
@@ -65,14 +58,14 @@ public class GroupDBManager {
         ContentValues cv = new ContentValues();
         cv.put(GroupTable.ACCOUNTID, accountId);
         cv.put(GroupTable.JSONDATA, new Gson().toJson(bean));
-        wsd.insert(GroupTable.TABLE_NAME,
+        getWsd().insert(GroupTable.TABLE_NAME,
                 HomeTable.ID, cv);
 
     }
 
-    private void clearGroup(String accountId) {
+    private static void clearGroup(String accountId) {
         String sql = "delete from " + GroupTable.TABLE_NAME + " where "
                 + GroupTable.ACCOUNTID + " = " + "\"" + accountId + "\"";
-        wsd.execSQL(sql);
+        getWsd().execSQL(sql);
     }
 }
