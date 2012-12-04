@@ -54,11 +54,11 @@ public class MyStatusDBTask {
                     MyStatusTable.ID, cv);
         }
 
-        reduceHomeTable(accountId);
+        reduceTableSize(accountId);
 
     }
 
-    private static void reduceHomeTable(String accountId) {
+    private static void reduceTableSize(String accountId) {
         String searchCount = "select count(" + MyStatusTable.ID + ") as total" + " from " + MyStatusTable.TABLE_NAME + " where " + MyStatusTable.ACCOUNTID
                 + " = " + accountId;
         int total = 0;
