@@ -168,6 +168,7 @@ public class DatabaseManager {
             deleteAllHomes(id);
             deleteAllReposts(id);
             deleteAllComments(id);
+            MyStatusDBTask.clear(id);
         }
 
         return getAccountList();
