@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -37,31 +38,6 @@ public class JBBigTextNotification {
         this.unreadBean = unreadBean;
     }
 
-    private String getTicker() {
-        int mentionCmt = unreadBean.getMention_cmt();
-        int mentionStatus = unreadBean.getMention_status();
-        int mention = mentionStatus + mentionCmt;
-        int cmt = unreadBean.getCmt();
-
-        StringBuilder stringBuilder = new StringBuilder();
-        if (mention > 0) {
-            String txt = String.format(context.getString(R.string.new_mentions), String.valueOf(mention));
-            stringBuilder.append(txt);
-        }
-
-        if (cmt > 0) {
-            if (mention > 0)
-                stringBuilder.append("、");
-            String txt = String.format(context.getString(R.string.new_comments), String.valueOf(cmt));
-            stringBuilder.append(txt);
-        }
-        return stringBuilder.toString();
-    }
-
-    private int getCount() {
-        return unreadBean.getMention_cmt() + unreadBean.getMention_status() + unreadBean.getCmt();
-
-    }
 
     private PendingIntent getPendingIntent() {
         Intent i = new Intent(context, MainTimeLineActivity.class);
@@ -75,17 +51,17 @@ public class JBBigTextNotification {
 
     public Notification get() {
         Notification.Builder builder = new Notification.Builder(context)
-                .setTicker(getTicker())
+                .setTicker(NotificationUtility.getTicker(unreadBean))
                 .setContentText(accountBean.getUsernick())
                 .setSmallIcon(R.drawable.notification)
                 .setAutoCancel(true)
                 .setContentIntent(getPendingIntent())
                 .setOnlyAlertOnce(true);
 
-        builder.setContentTitle(getTicker());
+        builder.setContentTitle(NotificationUtility.getTicker(unreadBean));
 
-        if (getCount() > 1) {
-            builder.setNumber(getCount());
+        if (NotificationUtility.getCount(unreadBean) > 1) {
+            builder.setNumber(NotificationUtility.getCount(unreadBean));
         }
 
         Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(builder);

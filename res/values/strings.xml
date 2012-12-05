@@ -268,6 +268,10 @@
     <string name="auto_refresh">首页自动刷新</string>
     <string name="auto_refresh_summary">仅在 Wifi 网络下有效</string>
     <string name="new_message">未读消息</string>
+    <string name="new_message_type">类型</string>
+    <string name="mention_to_me">\@我的微博</string>
+    <string name="comment_to_me">收到的评论</string>
+    <string name="mention_comment_to_me">\@我的评论</string>
     <string name="notification_feedback">提醒方式</string>
     <string name="new_comments">%s 条评论</string>
     <string name="new_mentions">%s 条@</string>

@@ -19,7 +19,7 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String THEME = "theme";
     public static final String LIST_AVATAR_MODE = "list_avatar_mode";
     public static final String LIST_PIC_MODE = "list_pic_mode";
-    public static final String LIST_FAST_SCROLL ="list_fast_scroll";
+    public static final String LIST_FAST_SCROLL = "list_fast_scroll";
 
     public static final String SOUND = "sound";
     public static final String AUTO_REFRESH = "auto_refresh";
@@ -32,6 +32,9 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String ENABLE_LED = "led";
     public static final String ENABLE_RINGTONE = "ringtone";
     public static final String JBNOTIFICATION_STYLE = "jbnotification";
+    public static final String ENABLE_MENTION_TO_ME = "mention_to_me";
+    public static final String ENABLE_COMMENT_TO_ME = "comment_to_me";
+    public static final String ENABLE_MENTION_COMMENT_TO_ME = "mention_comment_to_me";
 
 
     public static final String FONT_SIZE = "font_size";

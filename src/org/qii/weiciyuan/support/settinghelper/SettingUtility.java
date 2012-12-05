@@ -131,4 +131,22 @@ public class SettingUtility {
         return SettingHelper.getSharedPreferences(getContext(), SettingActivity.LIST_FAST_SCROLL, false);
 
     }
+
+
+    public static boolean allowMentionToMe() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_MENTION_TO_ME, true);
+
+    }
+
+
+    public static boolean allowCommentToMe() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_COMMENT_TO_ME, true);
+
+    }
+
+
+    public static boolean allowMentionCommentToMe() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_MENTION_COMMENT_TO_ME, true);
+
+    }
 }

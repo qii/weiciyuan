@@ -44,9 +44,13 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
 
         if (sum == 0 && accountBean != null) {
             clearNotification(accountBean);
-        } else if (sum > 0) {
+        } else if (allowShowNotification()) {
             showNotification();
         }
+    }
+
+    private boolean allowShowNotification() {
+        return sum > 0 && (comment != null || repost != null || mentionCommentsResult != null);
     }
 
     private void clearNotification(AccountBean accountBean) {

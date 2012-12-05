@@ -26,6 +26,22 @@
             android:defaultValue="1"/>
     </PreferenceCategory>
     <PreferenceCategory
+        android:title="@string/new_message_type"
+        >
+        <CheckBoxPreference
+            android:key="mention_to_me"
+            android:title="@string/mention_to_me"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="comment_to_me"
+            android:title="@string/comment_to_me"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="mention_comment_to_me"
+            android:title="@string/mention_comment_to_me"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="@string/notification_feedback"
         >
         <CheckBoxPreference

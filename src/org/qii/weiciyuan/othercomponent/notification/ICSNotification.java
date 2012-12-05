@@ -9,6 +9,7 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -73,9 +74,24 @@ public class ICSNotification {
     }
 
     private int getCount() {
-        return unreadBean.getMention_cmt() + unreadBean.getMention_status() + unreadBean.getCmt();
+        int count = 0;
+
+        if (SettingUtility.allowMentionToMe()) {
+            count += unreadBean.getMention_status();
+        }
+
+        if (SettingUtility.allowMentionToMe()) {
+            count += unreadBean.getCmt();
+        }
+
+        if (SettingUtility.allowMentionCommentToMe()) {
+            count += unreadBean.getMention_cmt();
+        }
+
+        return count;
 
     }
+
 
     public Notification get() {
 

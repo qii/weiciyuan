@@ -112,17 +112,17 @@ public class FetchNewMsgService extends Service {
                 int unreadMentionStatusCount = unreadBean.getMention_status();
                 int unreadMentionCommentCount = unreadBean.getMention_cmt();
 
-                if (unreadCommentCount > 0) {
+                if (unreadCommentCount > 0 && SettingUtility.allowCommentToMe()) {
                     MainCommentsTimeLineDao commentDao = new MainCommentsTimeLineDao(token).setCount(String.valueOf(unreadCommentCount));
                     commentResult = commentDao.getGSONMsgListWithoutClearUnread();
                 }
 
-                if (unreadMentionStatusCount > 0) {
+                if (unreadMentionStatusCount > 0 && SettingUtility.allowMentionToMe()) {
                     MainMentionsTimeLineDao mentionDao = new MainMentionsTimeLineDao(token).setCount(String.valueOf(unreadMentionStatusCount));
                     mentionStatusesResult = mentionDao.getGSONMsgListWithoutClearUnread();
                 }
 
-                if (unreadMentionCommentCount > 0) {
+                if (unreadMentionCommentCount > 0 && SettingUtility.allowMentionCommentToMe()) {
                     MainCommentsTimeLineDao dao = new MentionsCommentTimeLineDao(token).setCount(String.valueOf(unreadMentionCommentCount));
                     mentionCommentsResult = dao.getGSONMsgListWithoutClearUnread();
                 }
