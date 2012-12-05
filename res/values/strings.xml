@@ -284,7 +284,7 @@
     <string name="silent">静音</string>
     <string name="disable_notification_at_night">深夜勿扰</string>
     <string name="disable_notification_at_night_summary">凌晨1点到早上8点暂停</string>
-    <string name="enable_fetch_new_msg">获取未读的@和评论</string>
+    <string name="enable_fetch_new_msg">获取未读的消息</string>
     <string name="start_fetch_msg">开始后台自动获取……</string>
     <string name="frequency">间隔</string>
     <string name="stopped">已终止</string>
