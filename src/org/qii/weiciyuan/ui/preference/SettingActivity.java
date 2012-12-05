@@ -30,6 +30,7 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String ENABLE_VIBRATE = "vibrate";
     public static final String ENABLE_LED = "led";
     public static final String ENABLE_RINGTONE = "ringtone";
+    public static final String JBNOTIFICATION_STYLE = "jbnotification";
 
 
     public static final String FONT_SIZE = "font_size";
@@ -43,10 +44,10 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String SUGGEST = "suggest";
 
     public static final String VERSION = "version";
-    public static final String RECOMMEND="recommend";
-    public static final String DONATE="donate";
-    public static final String CACHE_PATH="cache_path";
-    public static final String SAVED_PIC_PATH="saved_pic_path";
+    public static final String RECOMMEND = "recommend";
+    public static final String DONATE = "donate";
+    public static final String CACHE_PATH = "cache_path";
+    public static final String SAVED_PIC_PATH = "saved_pic_path";
 
     public static final String UPLOAD_PIC_QUALITY = "upload_pic_quality";
 

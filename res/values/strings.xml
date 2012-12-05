@@ -270,6 +270,8 @@
     <string name="new_comments">%s 条评论</string>
     <string name="new_mentions">%s 条@</string>
     <string name="notification">通知</string>
+    <string name="notification_style_version">Jelly Bean 通知栏</string>
+    <string name="notification_style">通知栏扩展样式</string>
     <string name="vibrate">振动</string>
     <string name="led">LED 灯</string>
     <string name="ringtone">铃声</string>

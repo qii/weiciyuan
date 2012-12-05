@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.othercomponent.AppNewMsgAlarm;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 /**
  * User: qii
@@ -22,6 +23,8 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
 
     private Preference frequency;
     private Preference ringtone;
+    private Preference notification_style;
+
     private Uri uri;
 
     @Override
@@ -32,6 +35,7 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         frequency = findPreference(SettingActivity.FREQUENCY);
+        notification_style = findPreference(SettingActivity.JBNOTIFICATION_STYLE);
         ringtone = findPreference(SettingActivity.ENABLE_RINGTONE);
         ringtone.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -97,7 +101,10 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
             buildSummary();
         }
 
+        if (key.equals(SettingActivity.JBNOTIFICATION_STYLE)) {
 
+            buildSummary();
+        }
     }
 
     private void buildSummary() {
@@ -115,6 +122,8 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         } else {
             ringtone.setSummary(getString(R.string.silent));
         }
+
+        notification_style.setSummary(getActivity().getResources().getStringArray(R.array.notification_style)[SettingUtility.getNotificationStyle() - 1]);
     }
 
 }

@@ -1,47 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
     <PreferenceCategory
-            android:title="@string/new_message"
-            >
+        android:title="@string/new_message"
+        >
         <CheckBoxPreference
-                android:key="enable_fetch_msg"
-                android:title="@string/notification"
-                android:summary="@string/enable_fetch_new_msg"
-                android:defaultValue="false"/>
+            android:key="enable_fetch_msg"
+            android:title="@string/notification"
+            android:summary="@string/enable_fetch_new_msg"
+            android:defaultValue="false"/>
         <CheckBoxPreference
-                android:dependency="enable_fetch_msg"
-                android:key="disable_fetch_at_night"
-                android:title="@string/disable_notification_at_night"
-                android:summary="@string/disable_notification_at_night_summary"
-                android:defaultValue="true"/>
+            android:dependency="enable_fetch_msg"
+            android:key="disable_fetch_at_night"
+            android:title="@string/disable_notification_at_night"
+            android:summary="@string/disable_notification_at_night_summary"
+            android:defaultValue="true"/>
         <ListPreference
-                android:dependency="enable_fetch_msg"
-                android:key="frequency"
-                android:title="@string/frequency"
-                android:dialogTitle="@string/frequency"
-                android:entries="@array/frequency"
-                android:entryValues="@array/frequency_value"
-                android:defaultValue="1"/>
+            android:dependency="enable_fetch_msg"
+            android:key="frequency"
+            android:title="@string/frequency"
+            android:dialogTitle="@string/frequency"
+            android:entries="@array/frequency"
+            android:entryValues="@array/frequency_value"
+            android:defaultValue="1"/>
     </PreferenceCategory>
     <PreferenceCategory
-            android:title="@string/notification_feedback"
-            >
+        android:title="@string/notification_feedback"
+        >
         <CheckBoxPreference
-                android:key="vibrate"
-                android:title="@string/vibrate"
-                android:defaultValue="false"/>
+            android:key="vibrate"
+            android:title="@string/vibrate"
+            android:defaultValue="false"/>
 
         <CheckBoxPreference
-                android:key="led"
-                android:title="@string/led"
-                android:defaultValue="false"/>
+            android:key="led"
+            android:title="@string/led"
+            android:defaultValue="false"/>
 
-        <Preference android:title="@string/ringtone"
-                    android:key="ringtone">
+        <Preference
+            android:title="@string/ringtone"
+            android:key="ringtone">
 
         </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/notification_style_version"
+        >
+        <ListPreference
+            android:key="jbnotification"
+            android:title="@string/notification_style"
+            android:dialogTitle="@string/notification_style"
+            android:entries="@array/notification_style"
+            android:entryValues="@array/notification_style_value"
+            android:defaultValue="1"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

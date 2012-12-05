@@ -13,7 +13,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
-import org.qii.weiciyuan.othercomponent.MentionsAndCommentsReceiver;
+import org.qii.weiciyuan.othercomponent.notification.UnreadMsgReceiver;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -412,7 +412,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     @Override
     protected void onResume() {
         super.onResume();
-        IntentFilter filter = new IntentFilter(MentionsAndCommentsReceiver.ACTION);
+        IntentFilter filter = new IntentFilter(UnreadMsgReceiver.ACTION);
         filter.setPriority(1);
         newMsgBroadcastReceiver = new NewMsgBroadcastReceiver();
         registerReceiver(newMsgBroadcastReceiver, filter);

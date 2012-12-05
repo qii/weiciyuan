@@ -42,6 +42,22 @@ public class SettingUtility {
         }
     }
 
+    public static int getNotificationStyle() {
+        String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.JBNOTIFICATION_STYLE, "1");
+
+        switch (Integer.valueOf(value)) {
+            case 1:
+                return 1;
+
+            case 2:
+                return 2;
+
+            default:
+                return 1;
+
+        }
+    }
+
 
     public static boolean isEnablePic() {
         return !SettingHelper.getSharedPreferences(getContext(), SettingActivity.DISABLE_DOWNLOAD_AVATAR_PIC, false);
@@ -106,7 +122,7 @@ public class SettingUtility {
 
     }
 
-    public static String getRingtone(){
+    public static String getRingtone() {
         return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_RINGTONE, "");
 
     }

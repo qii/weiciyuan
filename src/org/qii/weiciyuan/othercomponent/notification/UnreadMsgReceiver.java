@@ -10,6 +10,7 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 /**
  * User: Jiang Qi
@@ -64,7 +65,17 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
         if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             notification = new ICSNotification(context, accountBean, comment, repost, mentionCommentsResult, unreadBean).get();
         } else {
-            notification = new JBBigTextNotification(context, accountBean, comment, repost, mentionCommentsResult, unreadBean).get();
+            switch (SettingUtility.getNotificationStyle()) {
+                case 1:
+                    notification = new JBInboxNotification(context, accountBean, comment, repost, mentionCommentsResult, unreadBean).get();
+                    break;
+                case 2:
+                    notification = new JBBigTextNotification(context, accountBean, comment, repost, mentionCommentsResult, unreadBean).get();
+                    break;
+                default:
+                    notification = new JBInboxNotification(context, accountBean, comment, repost, mentionCommentsResult, unreadBean).get();
+
+            }
         }
 
         notificationManager.notify(Long.valueOf(accountBean.getUid()).intValue(), notification);
