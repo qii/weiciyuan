@@ -95,4 +95,19 @@ public class SettingUtility {
     public static void setEnableFilter(boolean value) {
         SettingHelper.setEditor(getContext(), SettingActivity.FILTER, value);
     }
+
+    public static boolean allowVibrate() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_VIBRATE, false);
+
+    }
+
+    public static boolean allowLed() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_LED, false);
+
+    }
+
+    public static String getRingtone(){
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_RINGTONE, "");
+
+    }
 }

@@ -6,16 +6,14 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
-import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -120,7 +118,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
         if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             notification = buildICSNotification(pendingIntent);
         } else {
-            notification = buildJBNotification(pendingIntent);
+            notification = buildJBBigTextNotification(pendingIntent);
         }
 
 
@@ -210,15 +208,75 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
     }
 
 
-    private boolean allowVibrate() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getBoolean(SettingActivity.ENABLE_VIBRATE, false);
+    private Notification buildJBBigTextNotification(PendingIntent pendingIntent) {
+        Notification.Builder builder = new Notification.Builder(context)
+                .setTicker(ticker)
+                .setContentText(accountBean.getUsernick())
+                .setSmallIcon(R.drawable.notification)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true);
+
+        configVibrateLedRingTone(builder);
+
+        int mentionCmt = unreadBean.getMention_cmt();
+        int mentionStatus = unreadBean.getMention_status();
+        int mention = mentionStatus + mentionCmt;
+        int cmt = unreadBean.getCmt();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (mention > 0) {
+            String txt = String.format(context.getString(R.string.new_mentions), String.valueOf(mention));
+            stringBuilder.append(txt);
+        }
+
+        if (cmt > 0) {
+            if (mention > 0)
+                stringBuilder.append("、");
+            String txt = String.format(context.getString(R.string.new_comments), String.valueOf(cmt));
+            stringBuilder.append(txt);
+        }
+
+        builder.setContentTitle(stringBuilder.toString());
+
+        if (sum > 1) {
+            builder.setNumber(sum);
+        }
+
+        Notification.BigTextStyle inboxStyle = new Notification.BigTextStyle(builder);
+        inboxStyle.setBigContentTitle(stringBuilder.toString());
+//        if (comment != null) {
+//            for (CommentBean c : comment.getItemList()) {
+//                inboxStyle..addLine(c.getUser().getScreen_name() + ":" + c.getText());
+//            }
+//        }
+
+        if (repost != null) {
+            for (MessageBean m : repost.getItemList()) {
+                inboxStyle.setBigContentTitle(m.getUser().getScreen_name() + "：");
+                inboxStyle.bigText(m.getText());
+            }
+        }
+
+        if (mentionCommentsResult != null) {
+            for (CommentBean m : mentionCommentsResult.getItemList()) {
+//                inboxStyle.addLine(m.getUser().getScreen_name() + ":" + m.getText());
+            }
+        }
+
+
+        inboxStyle.setSummaryText(accountBean.getUsernick());
+
+        builder.setStyle(inboxStyle);
+
+
+        builder.addAction(R.drawable.comment_light, "上一個", null);
+        builder.addAction(R.drawable.account_light, "下一個", null);
+
+
+        return builder.build();
     }
 
-    private boolean allowLed() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getBoolean(SettingActivity.ENABLE_LED, false);
-    }
 
     private void configVibrateLedRingTone(Notification.Builder builder) {
         configRingTone(builder);
@@ -227,7 +285,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
     }
 
     private void configVibrate(Notification.Builder builder) {
-        if (allowVibrate()) {
+        if (SettingUtility.allowVibrate()) {
             long[] pattern = {0, 200, 500};
             builder.setVibrate(pattern);
         }
@@ -235,10 +293,9 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
 
     private void configRingTone(Notification.Builder builder) {
         Uri uri = null;
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        String path = sharedPref.getString(SettingActivity.ENABLE_RINGTONE, "");
-        if (!TextUtils.isEmpty(path)) {
-            uri = Uri.parse(path);
+
+        if (!TextUtils.isEmpty(SettingUtility.getRingtone())) {
+            uri = Uri.parse(SettingUtility.getRingtone());
         }
 
         if (uri != null) {
@@ -247,7 +304,7 @@ public class MentionsAndCommentsReceiver extends BroadcastReceiver {
     }
 
     private void configLed(Notification.Builder builder) {
-        if (allowLed()) {
+        if (SettingUtility.allowLed()) {
             builder.setLights(Color.WHITE, 300, 1000);
         }
 
