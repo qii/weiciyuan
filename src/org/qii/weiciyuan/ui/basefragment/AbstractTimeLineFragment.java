@@ -15,6 +15,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
@@ -297,6 +298,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     @Override
     public void onResume() {
         super.onResume();
+        getListView().setFastScrollEnabled(SettingUtility.allowFastScroll());
         getAdapter().notifyDataSetChanged();
     }
 

@@ -13,6 +13,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.UserListAdapter;
@@ -70,6 +71,12 @@ public abstract class AbstractUserListFragment extends Fragment {
 
     public void setmActionMode(ActionMode mActionMode) {
         this.mActionMode = mActionMode;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getListView().setFastScrollEnabled(SettingUtility.allowFastScroll());
     }
 
     @Override

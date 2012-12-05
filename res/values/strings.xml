@@ -263,6 +263,7 @@
     <string name="auto_show_big_pic">自动切换大图、缩略图</string>
     <string name="auto_show_big_pic_summary">WIFI、3G 下自动开大图</string>
     <string name="sound">音效</string>
+    <string name="fast_scroll">列表快速滚动</string>
     <string name="auto_refresh">首页自动刷新</string>
     <string name="auto_refresh_summary">仅在 Wifi 网络下有效</string>
     <string name="new_message">未读消息</string>
