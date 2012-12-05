@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.preference;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,10 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.othercomponent.AppNewMsgAlarm;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -30,6 +35,20 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        View title = getActivity().getLayoutInflater().inflate(R.layout.filteractivity_title_layout, null);
+        Switch switchBtn = (Switch) title.findViewById(R.id.switchBtn);
+        getActivity().getActionBar().setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
+        getActivity().getActionBar().setDisplayShowCustomEnabled(true);
+
+        switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SettingUtility.setEnableFetchMSG(isChecked);
+            }
+        });
+
+        switchBtn.setChecked(SettingUtility.getEnableFetchMSG());
 
         addPreferencesFromResource(R.xml.notification_pref);
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
@@ -108,7 +127,7 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
     }
 
     private void buildSummary() {
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(SettingActivity.ENABLE_FETCH_MSG, false)) {
+        if (SettingUtility.getEnableFetchMSG()) {
             String value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.FREQUENCY, "1");
             frequency.setSummary(getActivity().getResources().getStringArray(R.array.frequency)[Integer.valueOf(value) - 1]);
         } else {

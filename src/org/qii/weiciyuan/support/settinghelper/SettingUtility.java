@@ -112,6 +112,10 @@ public class SettingUtility {
         SettingHelper.setEditor(getContext(), SettingActivity.FILTER, value);
     }
 
+    public static void setEnableFetchMSG(boolean value) {
+        SettingHelper.setEditor(getContext(), SettingActivity.ENABLE_FETCH_MSG, value);
+    }
+
     public static boolean allowVibrate() {
         return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_VIBRATE, false);
 
