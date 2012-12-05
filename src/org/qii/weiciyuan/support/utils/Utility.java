@@ -1,9 +1,12 @@
 package org.qii.weiciyuan.support.utils;
 
+import android.app.Notification;
 import android.content.Context;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -11,6 +14,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.widget.ListView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -172,6 +176,39 @@ public class Utility {
     public static boolean isSystemRinger(Context context) {
         AudioManager manager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         return manager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL;
+    }
+
+
+    public static void configVibrateLedRingTone(Notification.Builder builder) {
+        configRingTone(builder);
+        configLed(builder);
+        configVibrate(builder);
+    }
+
+    private static void configVibrate(Notification.Builder builder) {
+        if (SettingUtility.allowVibrate()) {
+            long[] pattern = {0, 200, 500};
+            builder.setVibrate(pattern);
+        }
+    }
+
+    private static void configRingTone(Notification.Builder builder) {
+        Uri uri = null;
+
+        if (!TextUtils.isEmpty(SettingUtility.getRingtone())) {
+            uri = Uri.parse(SettingUtility.getRingtone());
+        }
+
+        if (uri != null && isSystemRinger(GlobalContext.getInstance())) {
+            builder.setSound(uri);
+        }
+    }
+
+    private static void configLed(Notification.Builder builder) {
+        if (SettingUtility.allowLed()) {
+            builder.setLights(Color.WHITE, 300, 1000);
+        }
+
     }
 
 }

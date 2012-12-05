@@ -128,7 +128,7 @@
 
 
         <!---broadcast receiver -->
-        <receiver android:name=".othercomponent.MentionsAndCommentsReceiver">
+        <receiver android:name=".othercomponent.notification.UnreadMsgReceiver">
             <intent-filter>
                 <action android:name="org.qii.weiciyuan.newmsg"/>
             </intent-filter>
