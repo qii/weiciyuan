@@ -253,6 +253,7 @@
     <string name="setting">设置</string>
     <string name="normal">常规</string>
     <string name="appearance">显示</string>
+    <string name="listview">列表</string>
     <string name="disable_download_pic">禁止下载图片</string>
     <string name="disable_download_pic_summary">改进的无图模式</string>
     <string name="close_comment_repost_list_avatar">关闭评论/转发列表的头像</string>
@@ -263,7 +264,7 @@
     <string name="auto_show_big_pic">自动切换大图、缩略图</string>
     <string name="auto_show_big_pic_summary">WIFI、3G 下自动开大图</string>
     <string name="sound">音效</string>
-    <string name="fast_scroll">列表快速滚动</string>
+    <string name="fast_scroll">快速滚动</string>
     <string name="auto_refresh">首页自动刷新</string>
     <string name="auto_refresh_summary">仅在 Wifi 网络下有效</string>
     <string name="new_message">未读消息</string>
@@ -285,10 +286,10 @@
     <string name="stopped">已终止</string>
     <string name="theme">主题</string>
     <string name="current_theme">当前主题:</string>
-    <string name="list_pic_mode">列表图片</string>
-    <string name="list_avatar_mode">列表头像</string>
+    <string name="list_pic_mode">图片</string>
+    <string name="list_avatar_mode">头像</string>
     <string name="current_mode">当前模式:</string>
-    <string name="font_size">列表字体大小</string>
+    <string name="font_size">字体大小</string>
     <string name="only_timeline_font">只影响列表字体大小</string>
     <string name="upload_pic_quality">上传图片质量</string>
     <string name="advanced">高级</string>

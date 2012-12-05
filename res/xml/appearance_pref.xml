@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
     <PreferenceCategory
-        android:title="@string/appearance"
+        android:title="@string/theme"
         >
         <ListPreference
             android:key="theme"
@@ -12,7 +12,11 @@
             android:entries="@array/theme"
             android:entryValues="@array/theme_value"
             android:defaultValue="1"/>
+    </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/listview"
+        >
 
         <ListPreference
             android:key="list_avatar_mode"
