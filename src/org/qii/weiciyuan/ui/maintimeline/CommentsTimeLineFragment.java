@@ -12,7 +12,9 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.dao.maintimeline.CommentsTimeLineByMeDao;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
@@ -22,13 +24,12 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.actionmenu.CommentFloatingMenu;
 import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 import java.util.HashMap;
@@ -322,10 +323,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("msg", getList().getItemList().get(position).getStatus());
-        intent.putExtra("token", ((MainTimeLineActivity) getActivity()).getToken());
-        startActivity(intent);
+        CommentFloatingMenu menu = new CommentFloatingMenu(getList().getItem(position));
+        menu.show(getFragmentManager(), "");
     }
 
 

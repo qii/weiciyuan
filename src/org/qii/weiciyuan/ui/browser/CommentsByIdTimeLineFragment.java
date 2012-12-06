@@ -3,7 +3,6 @@ package org.qii.weiciyuan.ui.browser;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -25,6 +24,7 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.actionmenu.CommentByIdFloatingMenu;
 import org.qii.weiciyuan.ui.actionmenu.CommentByIdSingleChoiceModeLinstener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -351,10 +351,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
 
-        Intent intent = new Intent(getActivity(), BrowserCommentActivity.class);
-        intent.putExtra("comment", bean.getItem(position));
-        intent.putExtra("token", token);
-        getActivity().startActivity(intent);
+        CommentByIdFloatingMenu menu = new CommentByIdFloatingMenu(getList().getItem(position));
+        menu.show(getFragmentManager(), "");
     }
 
 
