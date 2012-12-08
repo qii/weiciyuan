@@ -13,16 +13,18 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  */
 public class SettingActivity extends AbstractAppActivity {
 
+    public static final String SOUND = "sound";
+    public static final String AUTO_REFRESH = "auto_refresh";
 
-    public static final String DISABLE_DOWNLOAD_AVATAR_PIC = "disable_download";
-    public static final String CLOSE_COMMENT_AND_REPOST_AVATAR = "disable_comment_repost_list_avatar";
+    //appearance
     public static final String THEME = "theme";
     public static final String LIST_AVATAR_MODE = "list_avatar_mode";
     public static final String LIST_PIC_MODE = "list_pic_mode";
     public static final String LIST_FAST_SCROLL = "list_fast_scroll";
+    public static final String FONT_SIZE = "font_size";
+    public static final String SHOW_BIG_PIC = "show_big_pic";
+    public static final String SHOW_BIG_AVATAR = "show_big_avatar";
 
-    public static final String SOUND = "sound";
-    public static final String AUTO_REFRESH = "auto_refresh";
 
     //notification
     public static final String FREQUENCY = "frequency";
@@ -37,26 +39,25 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String ENABLE_MENTION_COMMENT_TO_ME = "mention_comment_to_me";
 
 
-    public static final String FONT_SIZE = "font_size";
-    public static final String OFFICIAL_WEIBO = "official_weibo";
-
-    public static final String SHOW_BIG_PIC = "show_big_pic";
-    public static final String SHOW_BIG_AVATAR = "show_big_avatar";
-
+    //filter
     public static final String FILTER = "filter";
 
-    public static final String SUGGEST = "suggest";
 
+    //traffic control
+    public static final String UPLOAD_PIC_QUALITY = "upload_pic_quality";
+    public static final String COMMENT_REPOST_AVATAR = "comment_repost_list_avatar";
+    public static final String SHOW_COMMENT_REPOST_AVATAR = "show_comment_repost_list_avatar";
+    public static final String DISABLE_DOWNLOAD_AVATAR_PIC = "disable_download";
+
+
+    //about
+    public static final String OFFICIAL_WEIBO = "official_weibo";
+    public static final String SUGGEST = "suggest";
     public static final String VERSION = "version";
     public static final String RECOMMEND = "recommend";
     public static final String DONATE = "donate";
     public static final String CACHE_PATH = "cache_path";
     public static final String SAVED_PIC_PATH = "saved_pic_path";
-
-    //control
-    public static final String UPLOAD_PIC_QUALITY = "upload_pic_quality";
-    public static final String COMMENT_REPOST_AVATAR = "comment_repost_list_avatar";
-    public static final String SHOW_COMMENT_REPOST_AVATAR = "show_comment_repost_list_avatar";
 
 
     @Override
