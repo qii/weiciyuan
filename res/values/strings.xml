@@ -282,7 +282,7 @@
     <string name="notification_style_version">Jelly Bean 通知栏</string>
     <string name="notification_style">通知栏扩展样式</string>
     <string name="vibrate">振动</string>
-    <string name="led">LED 灯</string>
+    <string name="led">呼吸灯</string>
     <string name="ringtone">铃声</string>
     <string name="silent">静音</string>
     <string name="disable_notification_at_night">深夜勿扰</string>
@@ -300,9 +300,7 @@
     <string name="only_timeline_font">只影响列表字体大小</string>
     <string name="upload_pic_quality">上传图片质量</string>
     <string name="advanced">高级</string>
-    <string name="download_emotions_summary">从官方几千张表情中下载最常用的80来张。因为列表滚动优化工作涉及了这部分数据的缓存，所以这里你需要退出应用重进才能生效</string>
     <string name="filter">首页过滤</string>
-    <string name="filter_summary">消灭脑残</string>
     <string name="data_control">流量控制</string>
     <string name="have_selected">已经选择了%s项</string>
     <string name="other">其它</string>
@@ -346,6 +344,5 @@
     <string name="askdeletemessage">永久删除这条消息?</string>
 
 
-    <!--other-->
-    <string name="deleted_by_sina_weibo">如果发现有数量对不上，那就是被新浪微博小秘书和谐了……</string>
+
 </resources>
