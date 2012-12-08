@@ -235,29 +235,32 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         }
     }
 
-    private class DBCacheTask extends MyAsyncTask<Object, Object, Object> {
+    private class DBCacheTask extends MyAsyncTask<Void, CommentListBean, CommentListBean> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pullToRefreshListView.setVisibility(View.INVISIBLE);
+            getPullToRefreshListView().setVisibility(View.INVISIBLE);
         }
 
 
         @Override
-        protected Object doInBackground(Object... params) {
-            CommentListBean value = DatabaseManager.getInstance().getCommentLineMsgList(accountBean.getUid());
-            clearAndReplaceValue(value);
-            clearAndReplaceValue(0, getList());
-            return null;
+        protected CommentListBean doInBackground(Void... params) {
+            return DatabaseManager.getInstance().getCommentLineMsgList(accountBean.getUid());
         }
 
         @Override
-        protected void onPostExecute(Object o) {
-            pullToRefreshListView.setVisibility(View.VISIBLE);
-            timeLineAdapter.notifyDataSetChanged();
+        protected void onPostExecute(CommentListBean result) {
+            super.onPostExecute(result);
+
+            if (result != null) {
+                clearAndReplaceValue(result);
+                clearAndReplaceValue(0, result);
+            }
+
+            getPullToRefreshListView().setVisibility(View.VISIBLE);
+            getAdapter().notifyDataSetChanged();
             refreshLayout(getList());
-            super.onPostExecute(o);
             /**
              * when this account first open app,if he don't have any data in database,fetch data from server automally
              */

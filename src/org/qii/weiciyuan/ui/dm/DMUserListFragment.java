@@ -102,7 +102,7 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         getListView().setAdapter(timeLineAdapter);
     }
 
-    private class DBCacheTask extends MyAsyncTask<Object, Object, Object> {
+    private class DBCacheTask extends MyAsyncTask<Void, DMUserListBean, DMUserListBean> {
 
         @Override
         protected void onPreExecute() {
@@ -111,17 +111,18 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         }
 
         @Override
-        protected Object doInBackground(Object... params) {
-            getList().addNewData(DMDBTask.get(GlobalContext.getInstance().getCurrentAccountId()));
-            return null;
+        protected DMUserListBean doInBackground(Void... params) {
+            return DMDBTask.get(GlobalContext.getInstance().getCurrentAccountId());
         }
 
         @Override
-        protected void onPostExecute(Object o) {
+        protected void onPostExecute(DMUserListBean result) {
+            super.onPostExecute(result);
+            if (result != null)
+                getList().addNewData(result);
             getPullToRefreshListView().setVisibility(View.VISIBLE);
             getAdapter().notifyDataSetChanged();
             refreshLayout(getList());
-            super.onPostExecute(o);
 
             if (getList().getSize() == 0) {
                 getPullToRefreshListView().startRefreshNow();

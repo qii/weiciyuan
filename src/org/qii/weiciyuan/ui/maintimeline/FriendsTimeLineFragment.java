@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
@@ -167,7 +170,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
 
-    private class DBCacheTask extends MyAsyncTask<Object, Object, Object> {
+    private class DBCacheTask extends MyAsyncTask<Void, MessageListBean, MessageListBean> {
 
         @Override
         protected void onPreExecute() {
@@ -176,18 +179,22 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
 
         @Override
-        protected Object doInBackground(Object... params) {
-            clearAndReplaceValue(DatabaseManager.getInstance().getHomeLineMsgList(accountBean.getUid()));
-            clearAndReplaceValue("0", getList());
-            return null;
+        protected MessageListBean doInBackground(Void... params) {
+            return DatabaseManager.getInstance().getHomeLineMsgList(accountBean.getUid());
         }
 
         @Override
-        protected void onPostExecute(Object o) {
+        protected void onPostExecute(MessageListBean result) {
+            super.onPostExecute(result);
+
+            if (result != null) {
+                clearAndReplaceValue(result);
+                clearAndReplaceValue("0", result);
+            }
+
             getPullToRefreshListView().setVisibility(View.VISIBLE);
-            timeLineAdapter.notifyDataSetChanged();
+            getAdapter().notifyDataSetChanged();
             refreshLayout(getList());
-            super.onPostExecute(o);
             /**
              * when this account first open app,if he don't have any data in database,fetch data from server automally
              */

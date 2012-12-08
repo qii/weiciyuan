@@ -11,7 +11,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -116,7 +118,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisible() && isVisibleToUser) {
             if (getActivity().getActionBar().getTabAt(1).getText().toString().contains(")")) {
-                pullToRefreshListView.startRefreshNow();
+                getPullToRefreshListView().startRefreshNow();
             }
         }
     }
@@ -182,28 +184,31 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
 
     }
 
-    private class DBCacheTask extends MyAsyncTask<Object, Object, Object> {
+    private class DBCacheTask extends MyAsyncTask<Void, MessageListBean, MessageListBean> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pullToRefreshListView.setVisibility(View.INVISIBLE);
+            getPullToRefreshListView().setVisibility(View.INVISIBLE);
         }
 
         @Override
-        protected Object doInBackground(Object... params) {
-            clearAndReplaceValue(DatabaseManager.getInstance().getRepostLineMsgList(GlobalContext.getInstance().getCurrentAccountId()));
-            clearAndReplaceValue(0, bean);
-
-            return null;
+        protected MessageListBean doInBackground(Void... params) {
+            return DatabaseManager.getInstance().getRepostLineMsgList(GlobalContext.getInstance().getCurrentAccountId());
         }
 
         @Override
-        protected void onPostExecute(Object o) {
-            pullToRefreshListView.setVisibility(View.VISIBLE);
+        protected void onPostExecute(MessageListBean result) {
+            super.onPostExecute(result);
+
+            if (result != null) {
+                clearAndReplaceValue(result);
+                clearAndReplaceValue(0, result);
+            }
+
+            getPullToRefreshListView().setVisibility(View.VISIBLE);
             getAdapter().notifyDataSetChanged();
             refreshLayout(bean);
-            super.onPostExecute(o);
 
             /**
              * when this account first open app,if he don't have any data in database,fetch data from server automally
