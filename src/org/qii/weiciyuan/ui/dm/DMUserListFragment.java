@@ -36,6 +36,11 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         return bean;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("bean", bean);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -44,7 +49,8 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         setRetainInstance(true);
 
         if (savedInstanceState != null) {
-
+            bean.addNewData((DMUserListBean) savedInstanceState.getSerializable("bean"));
+            getAdapter().notifyDataSetChanged();
         } else {
             if (dbTask == null || dbTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                 dbTask = new DBCacheTask();
@@ -98,33 +104,30 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
 
     private class DBCacheTask extends MyAsyncTask<Object, Object, Object> {
 
-           @Override
-           protected void onPreExecute() {
-               super.onPreExecute();
-               getPullToRefreshListView().setVisibility(View.INVISIBLE);
-           }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            getPullToRefreshListView().setVisibility(View.INVISIBLE);
+        }
 
-           @Override
-           protected Object doInBackground(Object... params) {
-               getList().addNewData(DMDBTask.get(GlobalContext.getInstance().getCurrentAccountId()));
+        @Override
+        protected Object doInBackground(Object... params) {
+            getList().addNewData(DMDBTask.get(GlobalContext.getInstance().getCurrentAccountId()));
+            return null;
+        }
 
-               return null;
-           }
+        @Override
+        protected void onPostExecute(Object o) {
+            getPullToRefreshListView().setVisibility(View.VISIBLE);
+            getAdapter().notifyDataSetChanged();
+            refreshLayout(getList());
+            super.onPostExecute(o);
 
-           @Override
-           protected void onPostExecute(Object o) {
-               getPullToRefreshListView().setVisibility(View.VISIBLE);
-               timeLineAdapter.notifyDataSetChanged();
-               refreshLayout(getList());
-               super.onPostExecute(o);
-               /**
-                * when this account first open app,if he don't have any data in database,fetch data from server automally
-                */
-               if (getList().getSize() == 0) {
-                   getPullToRefreshListView().startRefreshNow();
-               }
-           }
-       }
+            if (getList().getSize() == 0) {
+                getPullToRefreshListView().startRefreshNow();
+            }
+        }
+    }
 
     @Override
     protected void newMsgOnPostExecute(DMUserListBean newValue) {
