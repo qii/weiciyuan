@@ -290,7 +290,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         }
     }
 
-    class QuickCommentTask extends AsyncTask<Void, Void, CommentBean> {
+    private class QuickCommentTask extends AsyncTask<Void, Void, CommentBean> {
         WeiboException e;
         SendProgressFragment progressFragment = new SendProgressFragment();
 
@@ -328,6 +328,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         @Override
         protected void onCancelled(CommentBean commentBean) {
             super.onCancelled(commentBean);
+            progressFragment.dismissAllowingStateLoss();
             if (this.e != null) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
 
