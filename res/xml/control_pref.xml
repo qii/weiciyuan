@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
     <PreferenceCategory
-            android:title="@string/data_control"
-            >
+        android:title="@string/data_control"
+        >
 
         <CheckBoxPreference
-                android:key="disable_download"
-                android:title="@string/disable_download_pic"
-                android:summary="@string/disable_download_pic_summary"
-                android:defaultValue="false"/>
+            android:key="disable_download"
+            android:title="@string/disable_download_pic"
+            android:summary="@string/disable_download_pic_summary"
+            android:defaultValue="false"/>
 
-        <CheckBoxPreference
-                android:key="disable_comment_repost_list_avatar"
-                android:title="@string/close_comment_repost_list_avatar"
-                android:defaultValue="false"/>
 
         <ListPreference
-                android:key="upload_pic_quality"
-                android:title="@string/upload_pic_quality"
-                android:dialogTitle="@string/upload_pic_quality"
-                android:entries="@array/upload_pic_quality"
-                android:entryValues="@array/upload_pic_quality_value"
-                android:defaultValue="4"/>
+            android:key="comment_repost_list_avatar"
+            android:title="@string/comment_repost_list_avatar"
+            android:dialogTitle="@string/comment_repost_list_avatar"
+            android:entries="@array/comment_repost_list_avatar_mode"
+            android:entryValues="@array/comment_repost_list_avatar_value"
+            android:defaultValue="1"/>
+
+
+        <ListPreference
+            android:key="upload_pic_quality"
+            android:title="@string/upload_pic_quality"
+            android:dialogTitle="@string/upload_pic_quality"
+            android:entries="@array/upload_pic_quality"
+            android:entryValues="@array/upload_pic_quality_value"
+            android:defaultValue="4"/>
 
     </PreferenceCategory>
 

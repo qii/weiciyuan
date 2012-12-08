@@ -259,6 +259,7 @@
     <string name="disable_download_pic">禁止下载图片</string>
     <string name="disable_download_pic_summary">改进的无图模式</string>
     <string name="close_comment_repost_list_avatar">关闭评论/转发列表的头像</string>
+    <string name="comment_repost_list_avatar">评论/转发列表的头像</string>
     <string name="show_big_avatar">高清头像</string>
     <string name="show_big_avatar_summary">大屏幕手机推荐开高清</string>
     <string name="show_big_pic">列表显示大图</string>

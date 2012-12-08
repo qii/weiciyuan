@@ -26,7 +26,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
             }
 
             decideTimeLineBigPic(context);
-
+            decideCommentRepostAvatar(context);
         } else {
             AppNewMsgAlarm.stopAlarm(context, false);
         }
@@ -44,6 +44,15 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
         }
         if (picModeValue.equals("3")) {
             SettingUtility.setEnableBigPic(Utility.isWifi(context));
+        }
+    }
+
+    private static void decideCommentRepostAvatar(Context context) {
+
+        switch (SettingUtility.getCommentRepostAvatar()) {
+            case 1:
+                SettingUtility.setEnableCommentRepostAvatar(Utility.isConnected(context));
+                break;
         }
     }
 }

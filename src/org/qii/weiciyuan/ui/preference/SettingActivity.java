@@ -53,7 +53,10 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String CACHE_PATH = "cache_path";
     public static final String SAVED_PIC_PATH = "saved_pic_path";
 
+    //control
     public static final String UPLOAD_PIC_QUALITY = "upload_pic_quality";
+    public static final String COMMENT_REPOST_AVATAR = "comment_repost_list_avatar";
+    public static final String SHOW_COMMENT_REPOST_AVATAR = "show_comment_repost_list_avatar";
 
 
     @Override

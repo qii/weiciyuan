@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
@@ -35,7 +37,15 @@ public class ControlFragment extends PreferenceFragment implements SharedPrefere
 
         }
 
-        if (key.equals(SettingActivity.CLOSE_COMMENT_AND_REPOST_AVATAR)) {
+        if (key.equals(SettingActivity.COMMENT_REPOST_AVATAR)) {
+            switch (SettingUtility.getCommentRepostAvatar()) {
+                case 1:
+                    SettingUtility.setEnableCommentRepostAvatar(Utility.isConnected(getActivity()));
+                    break;
+                case 2:
+                    SettingUtility.setEnableCommentRepostAvatar(false);
+                    break;
+            }
 
         }
     }

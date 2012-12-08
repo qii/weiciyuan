@@ -42,6 +42,22 @@ public class SettingUtility {
         }
     }
 
+    public static int getCommentRepostAvatar() {
+        String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.COMMENT_REPOST_AVATAR, "1");
+        return Integer.valueOf(value);
+    }
+
+
+    public static void setEnableCommentRepostAvatar(boolean value) {
+        SettingHelper.setEditor(getContext(), SettingActivity.SHOW_COMMENT_REPOST_AVATAR, value);
+    }
+
+
+    public static boolean getEnableCommentRepostListAvatar() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.SHOW_COMMENT_REPOST_AVATAR, true);
+    }
+
+
     public static int getNotificationStyle() {
         String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.JBNOTIFICATION_STYLE, "1");
 
@@ -65,10 +81,6 @@ public class SettingUtility {
 
     public static boolean getEnableBigPic() {
         return SettingHelper.getSharedPreferences(getContext(), SettingActivity.SHOW_BIG_PIC, false);
-    }
-
-    public static boolean getEnableCommentRepostListAvatar() {
-        return !SettingHelper.getSharedPreferences(getContext(), SettingActivity.CLOSE_COMMENT_AND_REPOST_AVATAR, false);
     }
 
     public static boolean getEnableFetchMSG() {
