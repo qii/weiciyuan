@@ -180,7 +180,7 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 
         // Hide the ListView Header/Footer
         listViewLoadingLayout.setVisibility(View.GONE);
-
+        resetSavedLastVisibleIndex();
         super.resetHeader();
     }
 
