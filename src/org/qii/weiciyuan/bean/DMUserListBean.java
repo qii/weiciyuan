@@ -29,11 +29,18 @@ public class DMUserListBean extends ListBean<DMUserBean, DMUserListBean> {
     public void addNewData(DMUserListBean newValue) {
         getItemList().clear();
         getItemList().addAll(newValue.getItemList());
+        this.setTotal_number(newValue.getTotal_number());
+        this.setNext_cursor(newValue.getNext_cursor());
+        this.setPrevious_cursor(newValue.getPrevious_cursor());
     }
 
     @Override
     public void addOldData(DMUserListBean oldValue) {
         getItemList().addAll(oldValue.getItemList());
+        this.setTotal_number(oldValue.getTotal_number());
+        this.setNext_cursor(oldValue.getNext_cursor());
+        this.setPrevious_cursor(oldValue.getPrevious_cursor());
+
     }
 }
 

@@ -36,24 +36,23 @@ public class FanListFragment extends AbstractFriendsFanListFragment {
     @Override
     protected UserListBean getDoInBackgroundNewData() throws WeiboException {
         FanListDao dao = new FanListDao(GlobalContext.getInstance().getSpecialToken(), uid);
-
-        if (getList().getUsers().size() > 0 && bean.getPrevious_cursor() > 0) {
-            dao.setCursor(String.valueOf(bean.getPrevious_cursor() - 1));
-        }
-
-        UserListBean result = dao.getGSONMsgList();
-        return result;
+        dao.setCursor(String.valueOf(0));
+        return dao.getGSONMsgList();
     }
 
     @Override
     protected UserListBean getDoInBackgroundOldData() throws WeiboException {
+
+        if (getList().getUsers().size() > 0 && Integer.valueOf(getList().getNext_cursor()) == 0) {
+            return null;
+        }
+
         FanListDao dao = new FanListDao(GlobalContext.getInstance().getSpecialToken(), uid);
         if (getList().getUsers().size() > 0) {
             dao.setCursor(String.valueOf(bean.getNext_cursor()));
         }
 
-        UserListBean result = dao.getGSONMsgList();
-        return result;
+        return dao.getGSONMsgList();
     }
 
     private class FanListOnItemLongClickListener implements AdapterView.OnItemLongClickListener {

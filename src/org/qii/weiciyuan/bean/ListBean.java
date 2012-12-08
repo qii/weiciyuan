@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class ListBean<T extends ItemBean, K> implements Serializable {
 
     protected int total_number = 0;
-    private String previous_cursor = "";
+    private String previous_cursor = "0";
     private String next_cursor = "0";
 
     public abstract int getSize();
