@@ -12,8 +12,17 @@ import org.qii.weiciyuan.ui.preference.SettingActivity;
  */
 public class SettingUtility {
 
+    private static final String FIRSTSTART = "firststart";
+
     private static Context getContext() {
         return GlobalContext.getInstance();
+    }
+
+    public static boolean firstStart() {
+        boolean value = SettingHelper.getSharedPreferences(getContext(), FIRSTSTART, true);
+        if (value)
+            SettingHelper.setEditor(getContext(), FIRSTSTART, false);
+        return value;
     }
 
     public static boolean isEnableFilter() {

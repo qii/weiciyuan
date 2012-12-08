@@ -14,6 +14,12 @@
     <string name="only_oauth_three_months">每隔3个月得重新授权一次</string>
     <string name="oauthing">授权中</string>
 
+
+    <!--tip dialog-->
+    <string name="tip_dialog_title">提示</string>
+    <string name="tip_dialog_content">1. 搜索、私信、个人资料编辑都没接口做\n2. 受新浪微博政策限制，帐号隔3个月就会过期，需要重新登录\n3.觉得不爽就老老实实用官方或者Weico
+    </string>
+
     <!--emotions-->
     <string name="weibo_emotions">微博表情</string>
     <string name="download_emotions">下载表情</string>
@@ -342,7 +348,6 @@
     <string name="confirm">确定</string>
     <string name="cancel_draft">不用</string>
     <string name="askdeletemessage">永久删除这条消息?</string>
-
 
 
 </resources>

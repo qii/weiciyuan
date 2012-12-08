@@ -12,6 +12,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.blackmagic.BlackMagicActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -54,6 +55,9 @@ public class AccountActivity extends AbstractAppActivity {
 
         getTask = new GetAccountListDBTask();
         getTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+
+        if (SettingUtility.firstStart())
+            showIntroDialog();
     }
 
 
@@ -75,6 +79,11 @@ public class AccountActivity extends AbstractAppActivity {
 
         if (removeTask != null)
             removeTask.cancel(true);
+    }
+
+    private void showIntroDialog() {
+        TipDialog dialog = new TipDialog();
+        dialog.show(getFragmentManager(), "");
     }
 
 
