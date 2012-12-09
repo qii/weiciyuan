@@ -17,7 +17,7 @@
 
     <!--tip dialog-->
     <string name="tip_dialog_title">提示</string>
-    <string name="tip_dialog_content">1. 搜索、私信、个人资料编辑都没接口做\n2. 受新浪微博政策限制，帐号隔3个月就会过期，需要重新登录\n3.觉得不爽就老老实实用官方或者Weico
+    <string name="tip_dialog_content">1. 搜索、私信、个人资料编辑都没接口做\n2. 受新浪微博政策限制，帐号隔3个月就会过期，需要重新登录\n3.登录是在新浪网站上进行的，登录不了不关我的事\n4.觉得不爽就老老实实用官方或者Weico
     </string>
 
     <!--emotions-->
