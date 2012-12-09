@@ -7,6 +7,7 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
@@ -20,12 +21,20 @@ public class DMConversationDao {
     private String access_token;
     private String uid;
 
+    private String page;
+    private int count = AppConfig.DEFAULT_DM_CONVERSATION_NUMBER;
+
     public DMConversationDao(String token) {
         this.access_token = token;
     }
 
-    public DMConversationDao setUid(String uid){
-        this.uid=uid;
+    public DMConversationDao setUid(String uid) {
+        this.uid = uid;
+        return this;
+    }
+
+    public DMConversationDao setPage(int page) {
+        this.page = String.valueOf(page);
         return this;
     }
 
@@ -33,7 +42,9 @@ public class DMConversationDao {
         String url = URLHelper.DM_CONVERSATION;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
-        map.put("uid",uid);
+        map.put("uid", uid);
+        map.put("page", page);
+        map.put("count", String.valueOf(count));
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
         DMListBean value = null;

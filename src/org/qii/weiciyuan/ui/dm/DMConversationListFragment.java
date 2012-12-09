@@ -20,6 +20,8 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
 
     private UserBean userBean;
 
+    private int page = 1;
+
     private DMListBean bean = new DMListBean();
 
     @Override
@@ -52,39 +54,41 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         getListView().setAdapter(timeLineAdapter);
     }
 
-    protected void clearAndReplaceValue(DMListBean value) {
-        bean.getItemList().clear();
-        bean.getItemList().addAll(value.getItemList());
-        bean.setTotal_number(value.getTotal_number());
-    }
 
     @Override
     protected void newMsgOnPostExecute(DMListBean newValue) {
-        if (newValue != null && getActivity() != null) {
-            if (newValue.getSize() == 0) {
-
-            } else if (newValue.getSize() > 0) {
-                clearAndReplaceValue(newValue);
-                getAdapter().notifyDataSetChanged();
-                getListView().setSelectionAfterHeaderView();
-
-            }
+        if (newValue != null && newValue.getSize() > 0 && getActivity() != null) {
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
         }
+
     }
 
     @Override
     protected void oldMsgOnPostExecute(DMListBean newValue) {
-
+        if (newValue != null && newValue.getSize() > 0) {
+            getList().addOldData(newValue);
+            getAdapter().notifyDataSetChanged();
+            page++;
+        }
     }
 
     @Override
     protected DMListBean getDoInBackgroundNewData() throws WeiboException {
-        return new DMConversationDao(GlobalContext.getInstance().getSpecialToken()).setUid(userBean.getId()).getConversationList();
+        page = 1;
+        return new DMConversationDao(GlobalContext.getInstance().getSpecialToken())
+                .setUid(userBean.getId())
+                .setPage(page).getConversationList();
     }
 
     @Override
     protected DMListBean getDoInBackgroundOldData() throws WeiboException {
-        return null;
+        DMConversationDao dao = new DMConversationDao(GlobalContext.getInstance().getSpecialToken())
+                .setUid(userBean.getId())
+                .setPage(page + 1);
+        DMListBean result = dao.getConversationList();
+        return result;
     }
 
     @Override

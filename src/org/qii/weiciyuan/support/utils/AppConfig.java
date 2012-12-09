@@ -11,8 +11,9 @@ public class AppConfig {
 
 
     //DM
-    public static final int DEFAULT_DM_USERLIST_NUMBERS = 20;
+    public static final int DEFAULT_DM_USERLIST_NUMBER = 20;
     public static final int MAX_DATABASE_DM_TABLE_ENTRY_NUMBER = 20;
+    public static final int DEFAULT_DM_CONVERSATION_NUMBER=50;
 
 
     //friend timeline

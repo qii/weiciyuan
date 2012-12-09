@@ -22,7 +22,7 @@ public class DMDao {
 
     private String access_token;
     private String cursor = "0";
-    private int count = AppConfig.DEFAULT_DM_USERLIST_NUMBERS;
+    private int count = AppConfig.DEFAULT_DM_USERLIST_NUMBER;
 
     public DMDao(String token) {
         this.access_token = token;
