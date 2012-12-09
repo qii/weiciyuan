@@ -14,6 +14,7 @@ import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -24,6 +25,7 @@ import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -186,6 +188,18 @@ public class UserInfoFragment extends Fragment {
         View view = inflater.inflate(R.layout.userinfofragment_layout, container, false);
         avatar = (ImageView) view.findViewById(R.id.avatar);
 
+        avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String path = FileManager.getFilePathFromUrl(bean.getAvatar_large(), FileLocationMethod.avatar_large);
+                path = path + ".jpg";
+                if (new File(path).exists()) {
+                    UserAvatarDialog dialog = new UserAvatarDialog(path);
+                    dialog.show(getFragmentManager(), "");
+                }
+            }
+        });
+
         username = (TextView) view.findViewById(R.id.username);
         isVerified = (TextView) view.findViewById(R.id.isVerified);
         verified_reason = (TextView) view.findViewById(R.id.verified_info);
@@ -220,7 +234,7 @@ public class UserInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FanListActivity.class);
-                intent.putExtra("token",GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("user", bean);
                 startActivity(intent);
             }
