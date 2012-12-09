@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.dm;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -14,8 +13,10 @@ public class DMActivity extends AbstractAppActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(false);
+        getActionBar().setDisplayShowTitleEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         UserBean bean = (UserBean) getIntent().getSerializableExtra("user");
 
