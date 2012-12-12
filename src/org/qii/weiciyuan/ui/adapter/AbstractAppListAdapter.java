@@ -76,7 +76,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                     return;
 
                 holder.avatar.setImageBitmap(null);
-
+                holder.content_pic.setImageBitmap(null);
+                holder.repost_content_pic.setImageBitmap(null);
 
             }
         });
