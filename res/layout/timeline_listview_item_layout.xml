@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:id="@+id/listview_root">
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:id="@+id/listview_root">
 
     <org.qii.weiciyuan.support.lib.PerformanceImageView
         android:id="@+id/avatar"
@@ -15,7 +15,7 @@
         android:background="@drawable/bg_border1"
         android:layout_gravity="left|center_vertical"
         android:layout_marginRight="8dp"
-        android:clickable="true" />
+        android:clickable="true"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:layerType="software"
-            android:drawableLeft="?timeline_repost_flag" />
+            android:drawableLeft="?timeline_repost_flag"/>
 
         <TextView
             android:id="@+id/comment_count"
@@ -39,7 +39,7 @@
             android:text="0"
             android:layerType="software"
             android:layout_marginLeft="5dp"
-            android:drawableLeft="?timeline_comment_flag" />
+            android:drawableLeft="?timeline_comment_flag"/>
 
     </LinearLayout>
 
@@ -53,7 +53,7 @@
         android:layerType="software"
         android:layout_toRightOf="@id/avatar"
         android:layout_toLeftOf="@id/count_layout"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
 
     <TextView
@@ -63,7 +63,7 @@
         android:text="12:00"
         android:layerType="software"
         android:layout_below="@id/username"
-        android:layout_toRightOf="@id/avatar" />
+        android:layout_toRightOf="@id/avatar"/>
 
 
     <TextView
@@ -74,7 +74,7 @@
         android:text="content"
         android:textSize="15sp"
         android:layout_below="@id/avatar"
-        android:layerType="software" />
+        android:layerType="software"/>
 
     <FrameLayout
 
@@ -91,12 +91,13 @@
 
             <ImageView
                 android:id="@+id/content_pic"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:visibility="gone"
                 android:clickable="true"
                 android:padding="2dp"
-                android:background="?android:selectableItemBackground" />
+                android:scaleType="fitCenter"
+                android:background="?android:selectableItemBackground"/>
         </LinearLayout>
 
         <LinearLayout
@@ -117,7 +118,7 @@
                 android:text="content"
                 android:textSize="15sp"
                 android:visibility="gone"
-                android:layerType="software" />
+                android:layerType="software"/>
 
             <LinearLayout
                 android:layout_height="wrap_content"
@@ -127,12 +128,13 @@
 
                 <ImageView
                     android:id="@+id/repost_content_pic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:visibility="gone"
                     android:clickable="true"
                     android:padding="2dp"
-                    android:background="?android:selectableItemBackground" />
+                    android:scaleType="fitCenter"
+                    android:background="?android:selectableItemBackground"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -147,5 +149,5 @@
         android:layout_alignBottom="@id/repost_and_pic"
         android:layout_marginTop="3dp"
         android:layout_below="@id/avatar"
-        android:background="@color/lightgray" />
+        android:background="@color/lightgray"/>
 </RelativeLayout>
