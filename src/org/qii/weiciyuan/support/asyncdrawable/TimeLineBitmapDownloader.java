@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 
@@ -134,7 +133,6 @@ public class TimeLineBitmapDownloader implements ICommander {
             String bitmapUrl = bitmapDownloaderTask.getUrl();
             if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
                 bitmapDownloaderTask.cancel(true);
-                AppLogger.e("nx");
             } else if (bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.PENDING || bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.RUNNING) {
                 // The same URL is already being downloaded.
                 return false;
