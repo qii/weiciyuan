@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="listview_index_tag">四次元</string>
+    <string name="listview_tag">"@四次元App</string>
+</resources>

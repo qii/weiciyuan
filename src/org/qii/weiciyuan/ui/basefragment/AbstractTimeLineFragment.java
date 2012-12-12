@@ -19,11 +19,6 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
-import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
-import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * User: qii
@@ -271,21 +266,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
             newTask = new TimeLineGetNewMsgListTask();
             newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
-            Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = ((AbstractAppActivity) getActivity()).getPictureBitmapWorkerTaskMap();
+            ((AbstractAppActivity) getActivity()).getCommander().totalStopLoadPicture();
 
-
-            Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
-            for (String key : keys) {
-                avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
-                avatarBitmapWorkerTaskHashMap.remove(key);
-            }
-
-            Set<String> pKeys = pictureBitmapWorkerTaskMap.keySet();
-            for (String pkey : pKeys) {
-                pictureBitmapWorkerTaskMap.get(pkey).cancel(true);
-                pictureBitmapWorkerTaskMap.remove(pkey);
-            }
         }
 
     }

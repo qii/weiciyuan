@@ -18,11 +18,7 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.UserListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
-import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * User: qii
@@ -255,16 +251,11 @@ public abstract class AbstractUserListFragment extends Fragment {
     public void refresh() {
         if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
 
-            Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = ((AbstractAppActivity) getActivity()).getAvatarBitmapWorkerTaskHashMap();
+            ((AbstractAppActivity) getActivity()).getCommander().totalStopLoadPicture();
 
             newTask = new UserListGetNewDataTask();
             newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
-            Set<String> keys = avatarBitmapWorkerTaskHashMap.keySet();
-            for (String key : keys) {
-                avatarBitmapWorkerTaskHashMap.get(key).cancel(true);
-                avatarBitmapWorkerTaskHashMap.remove(key);
-            }
         }
 
     }

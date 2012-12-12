@@ -1,8 +1,7 @@
-package org.qii.weiciyuan.support.lib;
+package org.qii.weiciyuan.support.asyncdrawable;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
 
 import java.lang.ref.WeakReference;
 

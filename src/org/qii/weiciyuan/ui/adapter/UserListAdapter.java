@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
+import org.qii.weiciyuan.ui.interfaces.ICommander;
 
 import java.util.List;
 
@@ -40,6 +40,16 @@ public class UserListAdapter extends BaseAdapter {
         int[] attrs = new int[]{R.attr.listview_checked_color};
         TypedArray ta = activity.getActivity().obtainStyledAttributes(attrs);
         checkedBG = ta.getColor(0, 430);
+
+        listView.setRecyclerListener(new AbsListView.RecyclerListener() {
+            @Override
+            public void onMovedToScrapHeap(View view) {
+                ViewHolder holder = (ViewHolder) view.getTag();
+                if (holder == null)
+                    return;
+                holder.avatar.setImageBitmap(null);
+            }
+        });
     }
 
     private List<UserBean> getList() {

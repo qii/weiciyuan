@@ -3,36 +3,21 @@ package org.qii.weiciyuan.ui.interfaces;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.ViewConfiguration;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.lib.AvatarBitmapDrawable;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.PictureBitmapDrawable;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.main.AvatarBitmapWorkerTask;
-import org.qii.weiciyuan.ui.main.PictureBitmapWorkerTask;
 
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * User: Jiang Qi
@@ -42,164 +27,7 @@ public class AbstractAppActivity extends Activity {
 
     private int theme = 0;
 
-    private Drawable defaultAvatar = null;
-    private Drawable defaultPic = null;
-    private Drawable errorPic = null;
-    private Drawable transPic = new ColorDrawable(Color.TRANSPARENT);
-    private Drawable picBgBorder = null;
-
-
-    private Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = new ConcurrentHashMap<String, AvatarBitmapWorkerTask>();
-    private Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = new ConcurrentHashMap<String, PictureBitmapWorkerTask>();
-
-    protected String getMemCacheKey(String urlKey, int position) {
-        return urlKey + position;
-    }
-
-    protected ICommander commander = new PicCommander();
-
-    private class PicCommander implements ICommander {
-        @Override
-        public void downloadAvatar(ImageView view, String urlKey, int position, ListView listView, boolean isFling) {
-
-            Bitmap bitmap = getBitmapFromMemCache(urlKey);
-            if (bitmap != null) {
-                if (!isSameUrl(urlKey, view)) {
-                    view.setImageBitmap(bitmap);
-                    view.setTag(urlKey);
-                }
-                cancelPotentialAvatarDownload(urlKey, view);
-                avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey, position));
-            } else {
-                view.setImageDrawable(transPic);
-                view.setTag("");
-                if (cancelPotentialAvatarDownload(urlKey, view) && !isFling) {
-                    AvatarBitmapWorkerTask task = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey, position, AbstractAppActivity.this);
-                    AvatarBitmapDrawable downloadedDrawable = new AvatarBitmapDrawable(task);
-                    view.setImageDrawable(downloadedDrawable);
-                    task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                    avatarBitmapWorkerTaskHashMap.put(getMemCacheKey(urlKey, position), task);
-                }
-            }
-
-        }
-
-        @Override
-        public void downContentPic(final ImageView view, String urlKey, int position, ListView listView, FileLocationMethod method, boolean isFling) {
-            final Bitmap bitmap = getBitmapFromMemCache(urlKey);
-            if (bitmap != null) {
-                switch (method) {
-                    case picture_thumbnail:
-
-                        if (!isSameUrl(urlKey, view)) {
-                            view.setImageBitmap(bitmap);
-                            view.setTag(urlKey);
-                        }
-                        cancelPotentialDownload(urlKey, view);
-                        pictureBitmapWorkerTaskMap.remove(urlKey);
-
-                        break;
-                    case picture_bmiddle:
-                        if (!isSameUrl(urlKey, view)) {
-                            view.setImageBitmap(bitmap);
-                            view.setTag(urlKey);
-                        }
-                        cancelPotentialDownload(urlKey, view);
-                        pictureBitmapWorkerTaskMap.remove(urlKey);
-                        break;
-                }
-
-            } else {
-
-                switch (method) {
-                    case picture_thumbnail:
-
-                        view.setImageDrawable(transPic);
-                        view.setTag("");
-
-                        break;
-                    case picture_bmiddle:
-                        view.setImageDrawable(transPic);
-                        view.setTag("");
-                        break;
-
-                }
-                if (cancelPotentialDownload(urlKey, view) && !isFling) {
-
-                    PictureBitmapWorkerTask task = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, urlKey, position, AbstractAppActivity.this, method);
-                    PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(task);
-                    view.setImageDrawable(downloadedDrawable);
-                    task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                    pictureBitmapWorkerTaskMap.put(urlKey, task);
-                }
-            }
-
-        }
-
-    }
-
-
-    private static boolean cancelPotentialDownload(String url, ImageView imageView) {
-        PictureBitmapWorkerTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
-
-        if (bitmapDownloaderTask != null) {
-            String bitmapUrl = bitmapDownloaderTask.getUrl();
-            if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
-                bitmapDownloaderTask.cancel(true);
-            } else if (bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.PENDING || bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.RUNNING) {
-                // The same URL is already being downloaded.
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static boolean isSameUrl(String url, ImageView imageView) {
-
-        String bitmapUrl = (String) imageView.getTag();
-        if ((!TextUtils.isEmpty(bitmapUrl)) && (bitmapUrl.equals(url))) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private static boolean cancelPotentialAvatarDownload(String url, ImageView imageView) {
-        AvatarBitmapWorkerTask bitmapDownloaderTask = getAvatarBitmapDownloaderTask(imageView);
-
-        if (bitmapDownloaderTask != null) {
-            String bitmapUrl = bitmapDownloaderTask.getUrl();
-            if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
-                bitmapDownloaderTask.cancel(true);
-            } else if (bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.PENDING || bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.RUNNING) {
-                // The same URL is already being downloaded.
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static AvatarBitmapWorkerTask getAvatarBitmapDownloaderTask(ImageView imageView) {
-        if (imageView != null) {
-            Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AvatarBitmapDrawable) {
-                AvatarBitmapDrawable downloadedDrawable = (AvatarBitmapDrawable) drawable;
-                return downloadedDrawable.getBitmapDownloaderTask();
-            }
-        }
-        return null;
-    }
-
-    private static PictureBitmapWorkerTask getBitmapDownloaderTask(ImageView imageView) {
-        if (imageView != null) {
-            Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof PictureBitmapDrawable) {
-                PictureBitmapDrawable downloadedDrawable = (PictureBitmapDrawable) drawable;
-                return downloadedDrawable.getBitmapDownloaderTask();
-            }
-        }
-        return null;
-    }
+    protected ICommander commander = null;
 
 
     @Override
@@ -237,37 +65,10 @@ public class AbstractAppActivity extends Activity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         forceShowActionBarOverflowMenu();
-        initDefaultAvatar();
-        initDefaultPic();
-        initPicBgBorder();
-        initErrorPic();
         initNFC();
+        commander = new TimeLineBitmapDownloader(this);
     }
 
-
-    private void initDefaultAvatar() {
-        int[] attrs = new int[]{R.attr.account};
-        TypedArray ta = obtainStyledAttributes(attrs);
-        defaultAvatar = ta.getDrawable(0);
-    }
-
-    private void initDefaultPic() {
-        int[] attrs = new int[]{R.attr.picture};
-        TypedArray ta = obtainStyledAttributes(attrs);
-        defaultPic = ta.getDrawable(0);
-    }
-
-    private void initErrorPic() {
-        int[] attrs = new int[]{R.attr.error};
-        TypedArray ta = obtainStyledAttributes(attrs);
-        errorPic = ta.getDrawable(0);
-    }
-
-    private void initPicBgBorder() {
-        int[] attrs = new int[]{R.attr.listview_pic_bg_border};
-        TypedArray ta = obtainStyledAttributes(attrs);
-        picBgBorder = ta.getDrawable(0);
-    }
 
     private void forceShowActionBarOverflowMenu() {
         try {
@@ -285,26 +86,9 @@ public class AbstractAppActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        totalStopLoadPicture();
-
-        defaultAvatar = null;
-        defaultPic = null;
+        commander.totalStopLoadPicture();
     }
 
-    protected void totalStopLoadPicture() {
-        if (avatarBitmapWorkerTaskHashMap != null) {
-            for (String task : avatarBitmapWorkerTaskHashMap.keySet()) {
-                avatarBitmapWorkerTaskHashMap.get(task).cancel(true);
-            }
-            avatarBitmapWorkerTaskHashMap = null;
-        }
-        if (pictureBitmapWorkerTaskMap != null) {
-            for (String task : pictureBitmapWorkerTaskMap.keySet()) {
-                pictureBitmapWorkerTaskMap.get(task).cancel(true);
-            }
-            pictureBitmapWorkerTaskMap = null;
-        }
-    }
 
     private void initNFC() {
         NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -343,18 +127,6 @@ public class AbstractAppActivity extends Activity {
 
         overridePendingTransition(0, 0);
         startActivity(intent);
-    }
-
-    protected Bitmap getBitmapFromMemCache(String key) {
-        return GlobalContext.getInstance().getAvatarCache().get(key);
-    }
-
-    public Map<String, PictureBitmapWorkerTask> getPictureBitmapWorkerTaskMap() {
-        return pictureBitmapWorkerTaskMap;
-    }
-
-    public Map<String, AvatarBitmapWorkerTask> getAvatarBitmapWorkerTaskHashMap() {
-        return avatarBitmapWorkerTaskHashMap;
     }
 
     public ICommander getCommander() {

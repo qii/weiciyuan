@@ -62,6 +62,24 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         int[] attrs = new int[]{R.attr.listview_checked_color};
         TypedArray ta = fragment.getActivity().obtainStyledAttributes(attrs);
         checkedBG = ta.getColor(0, 430);
+
+        listView.setRecyclerListener(new AbsListView.RecyclerListener() {
+            @Override
+            public void onMovedToScrapHeap(View view) {
+                Integer index = (Integer) view.getTag(R.string.listview_index_tag);
+                if (index == null)
+                    return;
+
+                ViewHolder holder = (ViewHolder) view.getTag(index);
+
+                if (holder == null)
+                    return;
+
+                holder.avatar.setImageBitmap(null);
+
+
+            }
+        });
     }
 
     protected Activity getActivity() {
@@ -142,6 +160,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             if (getItemViewType(position) != TYPE_MIDDLE) {
                 holder = buildHolder(convertView);
                 convertView.setTag(R.drawable.ic_launcher + getItemViewType(position), holder);
+                convertView.setTag(R.string.listview_index_tag, R.drawable.ic_launcher + getItemViewType(position));
             }
 
         } else {
