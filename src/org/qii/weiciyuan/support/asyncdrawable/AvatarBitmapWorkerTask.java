@@ -11,9 +11,12 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,39 +27,29 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
 
     private LruCache<String, Bitmap> lruCache;
-    private String data = "";
-    private final WeakReference<ImageView> view;
+    private String url = "";
+    private final List<WeakReference<ImageView>> viewList = new ArrayList<WeakReference<ImageView>>();
     private Map<String, AvatarBitmapWorkerTask> taskMap;
-    private int position;
 
     private Activity activity;
 
     public String getUrl() {
-        return data;
+        return url;
     }
 
 
-    public AvatarBitmapWorkerTask(LruCache<String, Bitmap> lruCache,
-                                  Map<String, AvatarBitmapWorkerTask> taskMap,
-                                  ImageView view, String url, int position, Activity activity) {
+    public AvatarBitmapWorkerTask(Map<String, AvatarBitmapWorkerTask> taskMap,
+                                  ImageView view, String url, Activity activity) {
 
-        this.lruCache = lruCache;
+        this.lruCache = GlobalContext.getInstance().getAvatarCache();
         this.taskMap = taskMap;
-        this.view = new WeakReference<ImageView>(view);
-        this.data = url;
-        this.position = position;
+        viewList.add(new WeakReference<ImageView>(view));
+        this.url = url;
         this.activity = activity;
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        if (view != null) {
-            ImageView imageView = view.get();
-            if (imageView != null) {
-                imageView.setTag(data);
-            }
-        }
+    public void addView(ImageView view) {
+        viewList.add(new WeakReference<ImageView>(view));
     }
 
     @Override
@@ -67,9 +60,9 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             int height = width;
 
             if (SettingUtility.getEnableBigAvatar()) {
-                return ImageTool.getTimeLineBigAvatarWithRoundedCorner(data, width, height);
+                return ImageTool.getTimeLineBigAvatarWithRoundedCorner(this.url, width, height);
             } else
-                return ImageTool.getSmallAvatarWithRoundedCorner(data, width, height);
+                return ImageTool.getSmallAvatarWithRoundedCorner(this.url, width, height);
         }
         return null;
     }
@@ -77,8 +70,8 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     @Override
     protected void onCancelled(Bitmap bitmap) {
 
-        if (taskMap != null && taskMap.get(data) != null) {
-            taskMap.remove(data);
+        if (taskMap != null && taskMap.get(url) != null) {
+            taskMap.remove(url);
         }
 
 
@@ -88,36 +81,32 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         if (bitmap != null) {
-            if (view != null && view.get() != null) {
-                ImageView imageView = view.get();
-                if (canDisplay()) {
-                    playImageViewAnimation(imageView, bitmap);
-                    lruCache.put(data, bitmap);
+            for (WeakReference<ImageView> view : viewList) {
+                if (view != null && view.get() != null) {
+                    if (canDisplay(view)) {
+                        playImageViewAnimation(view, bitmap);
+                        lruCache.put(url, bitmap);
+                    }
                 }
+
             }
 
-        }
-
-        if (taskMap != null && taskMap.get(getMemCacheKey(data, position)) != null) {
-            taskMap.remove(getMemCacheKey(data, position));
+            if (taskMap != null && taskMap.get(url) != null) {
+                taskMap.remove(url);
+            }
         }
     }
 
-    private boolean canDisplay() {
+    private boolean canDisplay(WeakReference<ImageView> view) {
         if (view != null && view.get() != null) {
             ImageView imageView = view.get();
             AvatarBitmapWorkerTask bitmapDownloaderTask = getAvatarBitmapDownloaderTask(imageView);
-            if (this == bitmapDownloaderTask && imageView.getTag().equals(getUrl())) {
+            if (this == bitmapDownloaderTask) {
                 return true;
             }
         }
         return false;
     }
-
-    protected String getMemCacheKey(String urlKey, int position) {
-        return urlKey + position;
-    }
-
 
     private static AvatarBitmapWorkerTask getAvatarBitmapDownloaderTask(ImageView imageView) {
         if (imageView != null) {
@@ -130,14 +119,14 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         return null;
     }
 
-    private void playImageViewAnimation(final ImageView view, final Bitmap bitmap) {
+    private void playImageViewAnimation(final WeakReference<ImageView> view, final Bitmap bitmap) {
         final Animation anim_out = AnimationUtils.loadAnimation(activity, R.anim.timeline_pic_fade_out);
         final Animation anim_in = AnimationUtils.loadAnimation(activity, R.anim.timeline_pic_fade_in);
 
         anim_out.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                view.setTag(getUrl());
+
             }
 
             @Override
@@ -161,13 +150,15 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                     }
                 });
 
-                if (canDisplay()) {
-                    view.setImageBitmap(bitmap);
-                    view.startAnimation(anim_in);
+                if (canDisplay(view)) {
+                    view.get().setImageBitmap(bitmap);
+                    view.get().startAnimation(anim_in);
                 }
             }
         });
 
-        view.startAnimation(anim_out);
+        view.get().startAnimation(anim_out);
     }
+
+
 }

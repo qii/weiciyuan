@@ -25,9 +25,9 @@ public class TimeLineBitmapDownloader implements ICommander {
 
     private Activity activity;
 
-    private Map<String, AvatarBitmapWorkerTask> avatarBitmapWorkerTaskHashMap = new ConcurrentHashMap<String, AvatarBitmapWorkerTask>();
+    private Map<String, AvatarBitmapWorkerTask> avatarTasks = new ConcurrentHashMap<String, AvatarBitmapWorkerTask>();
 
-    private Map<String, PictureBitmapWorkerTask> pictureBitmapWorkerTaskMap = new ConcurrentHashMap<String, PictureBitmapWorkerTask>();
+    private Map<String, PictureBitmapWorkerTask> picTasks = new ConcurrentHashMap<String, PictureBitmapWorkerTask>();
 
 
     public TimeLineBitmapDownloader(Activity activity) {
@@ -45,18 +45,30 @@ public class TimeLineBitmapDownloader implements ICommander {
         if (bitmap != null) {
             view.setImageBitmap(bitmap);
             cancelPotentialAvatarDownload(urlKey, view);
-            avatarBitmapWorkerTaskHashMap.remove(getMemCacheKey(urlKey, position));
+            avatarTasks.remove(urlKey);
         } else {
 
-            if (cancelPotentialAvatarDownload(urlKey, view) && !isFling) {
-                AvatarBitmapWorkerTask task = new AvatarBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), avatarBitmapWorkerTaskHashMap, view, urlKey, position, activity);
+            if (isFling) {
+                view.setImageDrawable(transPic);
+                return;
+            }
+
+            AvatarBitmapWorkerTask task = avatarTasks.get(urlKey);
+
+            if (task != null) {
+                task.addView(view);
+                view.setImageDrawable(new AvatarBitmapDrawable(task));
+                return;
+            }
+
+
+            if (cancelPotentialAvatarDownload(urlKey, view)) {
+                task = new AvatarBitmapWorkerTask(avatarTasks, view, urlKey, activity);
                 AvatarBitmapDrawable downloadedDrawable = new AvatarBitmapDrawable(task);
                 view.setImageDrawable(downloadedDrawable);
-                view.setTag(urlKey);
                 task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                avatarBitmapWorkerTaskHashMap.put(getMemCacheKey(urlKey, position), task);
-            } else if (isFling) {
-                view.setImageDrawable(transPic);
+                avatarTasks.put(urlKey, task);
+                return;
             }
         }
 
@@ -72,39 +84,56 @@ public class TimeLineBitmapDownloader implements ICommander {
                 case picture_thumbnail:
                     view.setImageBitmap(bitmap);
                     cancelPotentialDownload(urlKey, view);
-                    pictureBitmapWorkerTaskMap.remove(urlKey);
+                    picTasks.remove(urlKey);
                     break;
                 case picture_bmiddle:
                     view.setImageBitmap(bitmap);
                     cancelPotentialDownload(urlKey, view);
-                    pictureBitmapWorkerTaskMap.remove(urlKey);
+                    picTasks.remove(urlKey);
                     break;
             }
 
         } else {
-            if (cancelPotentialDownload(urlKey, view) && !isFling) {
-                PictureBitmapWorkerTask task = new PictureBitmapWorkerTask(GlobalContext.getInstance().getAvatarCache(), pictureBitmapWorkerTaskMap, view, urlKey, activity, method);
+
+            if (isFling) {
+                view.setImageDrawable(transPic);
+                return;
+            }
+
+
+            PictureBitmapWorkerTask task = picTasks.get(urlKey);
+
+            if (task != null) {
+                task.addView(view);
+                view.setImageDrawable(new PictureBitmapDrawable(task));
+                return;
+            }
+
+
+            if (cancelPotentialDownload(urlKey, view)) {
+                task = new PictureBitmapWorkerTask(picTasks, view, urlKey, activity, method);
                 PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(task);
                 view.setImageDrawable(downloadedDrawable);
                 task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                pictureBitmapWorkerTaskMap.put(urlKey, task);
-            } else if (isFling) {
-                view.setImageDrawable(transPic);
+                picTasks.put(urlKey, task);
+                return;
             }
+
+
         }
 
     }
 
     @Override
     public void totalStopLoadPicture() {
-        if (avatarBitmapWorkerTaskHashMap != null) {
-            for (String task : avatarBitmapWorkerTaskHashMap.keySet()) {
-                avatarBitmapWorkerTaskHashMap.get(task).cancel(true);
+        if (avatarTasks != null) {
+            for (String task : avatarTasks.keySet()) {
+                avatarTasks.get(task).cancel(true);
             }
         }
-        if (pictureBitmapWorkerTaskMap != null) {
-            for (String task : pictureBitmapWorkerTaskMap.keySet()) {
-                pictureBitmapWorkerTaskMap.get(task).cancel(true);
+        if (picTasks != null) {
+            for (String task : picTasks.keySet()) {
+                picTasks.get(task).cancel(true);
             }
         }
     }
