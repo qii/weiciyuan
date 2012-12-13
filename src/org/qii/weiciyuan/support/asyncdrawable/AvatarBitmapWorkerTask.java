@@ -74,7 +74,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             taskMap.remove(url);
         }
 
-
+        clean();
         super.onCancelled(bitmap);
     }
 
@@ -95,6 +95,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                 taskMap.remove(url);
             }
         }
+        clean();
     }
 
     private boolean canDisplay(WeakReference<ImageView> view) {
@@ -160,5 +161,10 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         view.get().startAnimation(anim_out);
     }
 
-
+    private void clean() {
+        viewList.clear();
+        activity = null;
+        taskMap = null;
+        lruCache = null;
+    }
 }

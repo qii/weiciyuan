@@ -94,6 +94,8 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             taskMap.remove(data);
         }
 
+        clean();
+
         super.onCancelled(bitmap);
     }
 
@@ -124,6 +126,8 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         if (taskMap.get(data) != null) {
             taskMap.remove(data);
         }
+
+        clean();
     }
 
     private boolean canDisplay(WeakReference<ImageView> view) {
@@ -188,5 +192,12 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         });
         if (view.get().getAnimation() == null || view.get().getAnimation().hasEnded())
             view.get().startAnimation(anim_out);
+    }
+
+    private void clean() {
+        viewList.clear();
+        activity = null;
+        taskMap = null;
+        lruCache = null;
     }
 }
