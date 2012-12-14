@@ -111,10 +111,7 @@ public class ImageTool {
 
         if (cutWidth > 0 && cutHeight > 0) {
             Bitmap region = Bitmap.createBitmap(bitmap, 0, 0, cutWidth, cutHeight);
-//            Bitmap anotherValue = ImageEdit.getRoundedCornerBitmap(region);
-//            bitmap.recycle();
-//            region.recycle();
-//            return anotherValue;
+
 
             Bitmap scale = null;
             if (region.getHeight() < reqHeight && region.getWidth() < reqWidth) {
@@ -261,29 +258,7 @@ public class ImageTool {
 
     }
 
-    public static Bitmap getNotificationAvatar(String url, int reqWidth, int reqHeight) {
 
-
-        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.avatar_large);
-        absoluteFilePath = absoluteFilePath + ".jpg";
-
-        Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
-
-        if (bitmap == null) {
-            getBitmapFromNetWork(url, absoluteFilePath, null);
-            bitmap = BitmapFactory.decodeFile(absoluteFilePath);
-        }
-
-        if (bitmap != null) {
-            bitmap = Bitmap.createScaledBitmap(bitmap, reqWidth, reqHeight, true);
-        }
-
-        if (bitmap != null) {
-            bitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
-        }
-
-        return bitmap;
-    }
 
     public static Bitmap getBigAvatarWithRoundedCorner(String url) {
 
@@ -481,32 +456,6 @@ public class ImageTool {
     }
 
 
-    public static String getMiddlePictureWithoutRoundedCorner(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
-
-
-        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_bmiddle);
-
-        File file = new File(absoluteFilePath);
-
-        if (file.exists()) {
-            return absoluteFilePath;
-
-        } else {
-            getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
-
-            file = new File(absoluteFilePath);
-            if (file.exists()) {
-                return absoluteFilePath;
-            } else {
-                return "";
-            }
-
-
-        }
-
-    }
-
-
     private static Bitmap decodeBitmapFromSDCard(String path,
                                                  int reqWidth, int reqHeight) {
 
@@ -525,15 +474,7 @@ public class ImageTool {
 
 
     private static boolean getBitmapFromNetWork(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
-
-
-//        for (int i = 0; i < AppConfig.RETRY_TIMES; i++) {
-        boolean result = HttpUtility.getInstance().executeDownloadTask(url, path, downloadListener);
-        if (result)
-            return true;
-//        }
-
-        return false;
+        return HttpUtility.getInstance().executeDownloadTask(url, path, downloadListener);
     }
 
 
