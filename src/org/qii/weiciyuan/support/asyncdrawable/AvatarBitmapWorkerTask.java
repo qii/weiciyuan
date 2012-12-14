@@ -28,7 +28,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     private LruCache<String, Bitmap> lruCache;
     private String url = "";
-    private final Set<WeakReference<ImageView>> viewList = new HashSet<WeakReference<ImageView>>();
+    private final List<WeakReference<ImageView>> viewList = new ArrayList<WeakReference<ImageView>>();
     private Map<String, AvatarBitmapWorkerTask> taskMap;
 
     private Activity activity;
