@@ -24,7 +24,6 @@ public class ImageTool {
 
     public static Bitmap getThumbnailPictureWithRoundedCorner(String url) {
 
-
         String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_thumbnail);
 
         Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
@@ -259,7 +258,6 @@ public class ImageTool {
     }
 
 
-
     public static Bitmap getBigAvatarWithRoundedCorner(String url) {
 
         if (!FileManager.isExternalStorageMounted()) {
@@ -283,51 +281,6 @@ public class ImageTool {
         return bitmap;
     }
 
-
-    public static Bitmap getTimeLineBigAvatarWithRoundedCorner(String url, int reqWidth, int reqHeight) {
-
-        if (!FileManager.isExternalStorageMounted()) {
-            return null;
-        }
-
-        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.avatar_large);
-        absoluteFilePath = absoluteFilePath + ".jpg";
-
-        boolean fileExist = new File(absoluteFilePath).exists();
-
-        if (!fileExist && !SettingUtility.isEnablePic()) {
-            return null;
-        }
-
-        if (!fileExist) {
-            boolean result = getBitmapFromNetWork(url, absoluteFilePath, null);
-            if (!result)
-                return null;
-        }
-
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(absoluteFilePath, options);
-
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-        options.inJustDecodeBounds = false;
-        options.inPurgeable = true;
-        options.inInputShareable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath, options);
-
-        if (bitmap != null) {
-            Bitmap roundBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
-            if (roundBitmap != bitmap) {
-                bitmap.recycle();
-                bitmap = roundBitmap;
-            }
-            return bitmap;
-        }
-
-        return bitmap;
-    }
 
     public static Bitmap getSmallAvatarWithRoundedCorner(String url) {
 
@@ -361,26 +314,38 @@ public class ImageTool {
         return null;
     }
 
-    public static Bitmap getSmallAvatarWithRoundedCorner(String url, int reqWidth, int reqHeight) {
+
+    public static Bitmap getRoundedCornerPic(String url, int reqWidth, int reqHeight, FileLocationMethod method) {
 
         if (!FileManager.isExternalStorageMounted()) {
             return null;
         }
 
-        String absoluteFilePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.avatar_small);
+        String absoluteFilePath = FileManager.getFilePathFromUrl(url, method);
         absoluteFilePath = absoluteFilePath + ".jpg";
 
-        Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath);
+        boolean fileExist = new File(absoluteFilePath).exists();
 
-        if (bitmap == null && !SettingUtility.isEnablePic()) {
+        if (!fileExist && !SettingUtility.isEnablePic()) {
             return null;
         }
 
-        if (bitmap == null) {
+        if (!fileExist) {
             boolean result = getBitmapFromNetWork(url, absoluteFilePath, null);
-            if (result)
-                bitmap = BitmapFactory.decodeFile(absoluteFilePath);
+            if (!result)
+                return null;
         }
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(absoluteFilePath, options);
+
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+        options.inPurgeable = true;
+        options.inInputShareable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(absoluteFilePath, options);
 
         if (bitmap != null) {
             if (bitmap.getHeight() < reqHeight || bitmap.getWidth() < reqWidth) {
@@ -402,6 +367,7 @@ public class ImageTool {
 
         return bitmap;
     }
+
 
     public static Bitmap getMiddlePictureInBrowserMSGActivity(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 

@@ -8,6 +8,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -60,9 +61,9 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             int height = width;
 
             if (SettingUtility.getEnableBigAvatar()) {
-                return ImageTool.getTimeLineBigAvatarWithRoundedCorner(this.url, width, height);
+                return ImageTool.getRoundedCornerPic(this.url, width, height,FileLocationMethod.avatar_large);
             } else
-                return ImageTool.getSmallAvatarWithRoundedCorner(this.url, width, height);
+                return ImageTool.getRoundedCornerPic(this.url, width, height, FileLocationMethod.avatar_small);
         }
         return null;
     }
