@@ -103,15 +103,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             if (view != null && view.get() != null) {
                 if (canDisplay(view)) {
                     if (bitmap != null) {
-                        switch (method) {
-                            case picture_thumbnail:
-                                playImageViewAnimation(view, bitmap);
-                                break;
-                            case picture_bmiddle:
-                                playImageViewAnimation(view, bitmap);
-                                break;
-                        }
-
+                        playImageViewAnimation(view, bitmap);
                         lruCache.put(data, bitmap);
                     } else {
                         view.get().setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
