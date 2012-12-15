@@ -388,7 +388,7 @@ public class ImageTool {
         if (file.exists()) {
             DisplayMetrics displayMetrics = GlobalContext.getInstance().getDisplayMetrics();
 
-            Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, displayMetrics.widthPixels, displayMetrics.heightPixels);
+            Bitmap bitmap = decodeBitmapFromSDCard(absoluteFilePath, displayMetrics.widthPixels, 900);
             return bitmap;
 
         }
