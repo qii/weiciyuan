@@ -16,6 +16,7 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -68,6 +69,10 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
         if (!isCancelled()) {
             switch (method) {
+                case avatar_large:
+                    return ImageTool.getRoundedCornerPic(this.data, Utility.dip2px(40), Utility.dip2px(40), FileLocationMethod.avatar_large);
+                case avatar_small:
+                    return ImageTool.getRoundedCornerPic(this.data, Utility.dip2px(40), Utility.dip2px(40), FileLocationMethod.avatar_small);
 
                 case picture_thumbnail:
                     return ImageTool.getThumbnailPictureWithRoundedCorner(data);

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 
@@ -25,8 +26,6 @@ public class TimeLineBitmapDownloader implements ICommander {
 
     private Activity activity;
 
-    private Map<String, AvatarBitmapWorkerTask> avatarTasks = new ConcurrentHashMap<String, AvatarBitmapWorkerTask>();
-
     private Map<String, PictureBitmapWorkerTask> picTasks = new ConcurrentHashMap<String, PictureBitmapWorkerTask>();
 
 
@@ -40,38 +39,11 @@ public class TimeLineBitmapDownloader implements ICommander {
 
     @Override
     public void downloadAvatar(ImageView view, String urlKey, int position, ListView listView, boolean isFling) {
-        view.clearAnimation();
-        Bitmap bitmap = getBitmapFromMemCache(urlKey);
-        if (bitmap != null) {
-            view.setImageBitmap(bitmap);
-            cancelPotentialAvatarDownload(urlKey, view);
-            avatarTasks.remove(urlKey);
+        if (SettingUtility.getEnableBigAvatar()) {
+            downContentPic(view, urlKey, position, listView, FileLocationMethod.avatar_large, isFling);
         } else {
-
-            if (isFling) {
-                view.setImageDrawable(transPic);
-                return;
-            }
-
-            AvatarBitmapWorkerTask task = avatarTasks.get(urlKey);
-
-            if (task != null) {
-                task.addView(view);
-                view.setImageDrawable(new AvatarBitmapDrawable(task));
-                return;
-            }
-
-
-            if (cancelPotentialAvatarDownload(urlKey, view)) {
-                task = new AvatarBitmapWorkerTask(avatarTasks, view, urlKey, activity);
-                AvatarBitmapDrawable downloadedDrawable = new AvatarBitmapDrawable(task);
-                view.setImageDrawable(downloadedDrawable);
-                task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                avatarTasks.put(urlKey, task);
-                return;
-            }
+            downContentPic(view, urlKey, position, listView, FileLocationMethod.avatar_small, isFling);
         }
-
     }
 
     @Override
@@ -80,18 +52,10 @@ public class TimeLineBitmapDownloader implements ICommander {
         view.clearAnimation();
         final Bitmap bitmap = getBitmapFromMemCache(urlKey);
         if (bitmap != null) {
-            switch (method) {
-                case picture_thumbnail:
-                    view.setImageBitmap(bitmap);
-                    cancelPotentialDownload(urlKey, view);
-                    picTasks.remove(urlKey);
-                    break;
-                case picture_bmiddle:
-                    view.setImageBitmap(bitmap);
-                    cancelPotentialDownload(urlKey, view);
-                    picTasks.remove(urlKey);
-                    break;
-            }
+
+            view.setImageBitmap(bitmap);
+            cancelPotentialDownload(urlKey, view);
+            picTasks.remove(urlKey);
 
         } else {
 
@@ -126,11 +90,7 @@ public class TimeLineBitmapDownloader implements ICommander {
 
     @Override
     public void totalStopLoadPicture() {
-        if (avatarTasks != null) {
-            for (String task : avatarTasks.keySet()) {
-                avatarTasks.get(task).cancel(true);
-            }
-        }
+
         if (picTasks != null) {
             for (String task : picTasks.keySet()) {
                 picTasks.get(task).cancel(true);
@@ -146,7 +106,7 @@ public class TimeLineBitmapDownloader implements ICommander {
             String bitmapUrl = bitmapDownloaderTask.getUrl();
             if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
                 bitmapDownloaderTask.cancel(true);
-            } else{
+            } else {
                 // The same URL is already being downloaded.
                 return false;
             }
@@ -154,32 +114,6 @@ public class TimeLineBitmapDownloader implements ICommander {
         return true;
     }
 
-
-    private static boolean cancelPotentialAvatarDownload(String url, ImageView imageView) {
-        AvatarBitmapWorkerTask bitmapDownloaderTask = getAvatarBitmapDownloaderTask(imageView);
-
-        if (bitmapDownloaderTask != null) {
-            String bitmapUrl = bitmapDownloaderTask.getUrl();
-            if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
-                bitmapDownloaderTask.cancel(true);
-            } else  {
-                // The same URL is already being downloaded.
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static AvatarBitmapWorkerTask getAvatarBitmapDownloaderTask(ImageView imageView) {
-        if (imageView != null) {
-            Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AvatarBitmapDrawable) {
-                AvatarBitmapDrawable downloadedDrawable = (AvatarBitmapDrawable) drawable;
-                return downloadedDrawable.getBitmapDownloaderTask();
-            }
-        }
-        return null;
-    }
 
     private static PictureBitmapWorkerTask getBitmapDownloaderTask(ImageView imageView) {
         if (imageView != null) {
@@ -192,8 +126,5 @@ public class TimeLineBitmapDownloader implements ICommander {
         return null;
     }
 
-    protected String getMemCacheKey(String urlKey, int position) {
-        return urlKey + position;
-    }
 
 }
