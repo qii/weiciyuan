@@ -91,8 +91,8 @@
 
             <ImageView
                 android:id="@+id/content_pic"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="@dimen/timeline_pic_thumbnail_width"
+                android:layout_height="@dimen/timeline_pic_thumbnail_height"
                 android:visibility="gone"
                 android:clickable="true"
                 android:padding="2dp"
@@ -128,8 +128,8 @@
 
                 <ImageView
                     android:id="@+id/repost_content_pic"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="@dimen/timeline_pic_thumbnail_width"
+                    android:layout_height="@dimen/timeline_pic_thumbnail_height"
                     android:visibility="gone"
                     android:clickable="true"
                     android:padding="2dp"

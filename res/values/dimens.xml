@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<dimen name="none">10dp</dimen>
-    <dimen name="timeline_big_avatar_height">180dp</dimen>
+    <dimen name="timeline_pic_high_thumbnail_height">180dp</dimen>
+    <dimen name="timeline_pic_thumbnail_height">100dp</dimen>
+    <dimen name="timeline_pic_thumbnail_width">100dp</dimen>
+
 </resources>

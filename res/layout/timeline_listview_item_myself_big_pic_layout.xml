@@ -67,7 +67,7 @@
             <ImageView
                 android:id="@+id/content_pic"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/timeline_big_avatar_height"
+                android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
                 android:visibility="gone"
                 android:clickable="true" />
         </LinearLayout>
@@ -100,7 +100,7 @@
                 <ImageView
                     android:id="@+id/repost_content_pic"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/timeline_big_avatar_height"
+                    android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
                     android:visibility="gone"
                     android:clickable="true" />
             </LinearLayout>

@@ -95,7 +95,7 @@
             <org.qii.weiciyuan.support.lib.PerformanceImageView
                 android:id="@+id/content_pic"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/timeline_big_avatar_height"
+                android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
                 android:visibility="gone"
                 android:padding="2dp"
                 android:background="?android:selectableItemBackground"
@@ -131,7 +131,7 @@
                 <org.qii.weiciyuan.support.lib.PerformanceImageView
                     android:id="@+id/repost_content_pic"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/timeline_big_avatar_height"
+                    android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
                     android:visibility="gone"
                     android:clickable="true"
                     android:padding="2dp"

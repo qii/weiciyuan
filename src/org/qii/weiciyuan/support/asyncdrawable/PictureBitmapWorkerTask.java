@@ -73,7 +73,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
                     float reSize = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
 
-                    int height = GlobalContext.getInstance().getResources().getDimensionPixelSize(R.dimen.timeline_big_avatar_height);
+                    int height = GlobalContext.getInstance().getResources().getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
                     //8 is  layout padding
                     int width = (int) (metrics.widthPixels - (8 + 8) * reSize);
 
