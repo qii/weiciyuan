@@ -1,13 +1,11 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
-import android.view.Display;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -33,28 +31,21 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     private LruCache<String, Bitmap> lruCache;
     private String data = "";
     private final List<WeakReference<ImageView>> viewList = new ArrayList<WeakReference<ImageView>>();
-
     private Map<String, PictureBitmapWorkerTask> taskMap;
 
-    private Activity activity;
-
     private FileLocationMethod method;
-
-    int reqWidth;
-    int reqHeight;
 
     public String getUrl() {
         return data;
     }
 
     public PictureBitmapWorkerTask(Map<String, PictureBitmapWorkerTask> taskMap,
-                                   ImageView view, String url, Activity activity, FileLocationMethod method) {
+                                   ImageView view, String url, FileLocationMethod method) {
 
         this.lruCache = GlobalContext.getInstance().getAvatarCache();
         this.taskMap = taskMap;
         viewList.add(new WeakReference<ImageView>(view));
         this.data = url;
-        this.activity = activity;
         this.method = method;
 
     }
@@ -78,12 +69,11 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                     return ImageTool.getThumbnailPictureWithRoundedCorner(data);
 
                 case picture_bmiddle:
-                    DisplayMetrics metrics = new DisplayMetrics();
-                    Display display = activity.getWindowManager().getDefaultDisplay();
-                    display.getMetrics(metrics);
-                    float reSize = activity.getResources().getDisplayMetrics().density;
-                    //because height is 80dp
-                    int height = activity.getResources().getDimensionPixelSize(R.dimen.timeline_big_avatar_height);
+                    DisplayMetrics metrics = GlobalContext.getInstance().getDisplayMetrics();
+
+                    float reSize = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
+
+                    int height = GlobalContext.getInstance().getResources().getDimensionPixelSize(R.dimen.timeline_big_avatar_height);
                     //8 is  layout padding
                     int width = (int) (metrics.widthPixels - (8 + 8) * reSize);
 
@@ -144,8 +134,8 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     }
 
     private void playImageViewAnimation(final WeakReference<ImageView> view, final Bitmap bitmap) {
-        final Animation anim_out = AnimationUtils.loadAnimation(activity, R.anim.timeline_pic_fade_out);
-        final Animation anim_in = AnimationUtils.loadAnimation(activity, R.anim.timeline_pic_fade_in);
+        final Animation anim_out = AnimationUtils.loadAnimation(view.get().getContext(), R.anim.timeline_pic_fade_out);
+        final Animation anim_in = AnimationUtils.loadAnimation(view.get().getContext(), R.anim.timeline_pic_fade_in);
 
         anim_out.setAnimationListener(new Animation.AnimationListener() {
             //setTag at animation start time
@@ -190,7 +180,6 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             taskMap.remove(data);
         }
         viewList.clear();
-        activity = null;
         taskMap = null;
         lruCache = null;
     }

@@ -75,7 +75,7 @@ public class TimeLineBitmapDownloader implements ICommander {
 
 
             if (cancelPotentialDownload(urlKey, view)) {
-                task = new PictureBitmapWorkerTask(picTasks, view, urlKey, activity, method);
+                task = new PictureBitmapWorkerTask(picTasks, view, urlKey, method);
                 PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(task);
                 view.setImageDrawable(downloadedDrawable);
                 task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
