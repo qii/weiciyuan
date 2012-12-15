@@ -92,7 +92,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (this.isVisible() && isVisibleToUser) {
-            getAdapter().notifyDataSetChanged();
+//            getAdapter().notifyDataSetChanged();
         }
     }
 
