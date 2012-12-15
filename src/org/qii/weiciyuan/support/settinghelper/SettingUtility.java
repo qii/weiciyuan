@@ -56,6 +56,16 @@ public class SettingUtility {
         return Integer.valueOf(value);
     }
 
+    public static int getListAvatarMode() {
+        String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.LIST_AVATAR_MODE, "1");
+        return Integer.valueOf(value);
+    }
+
+    public static int getListPicMode() {
+        String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.LIST_PIC_MODE, "1");
+        return Integer.valueOf(value);
+    }
+
 
     public static void setEnableCommentRepostAvatar(boolean value) {
         SettingHelper.setEditor(getContext(), SettingActivity.SHOW_COMMENT_REPOST_AVATAR, value);
