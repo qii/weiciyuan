@@ -679,6 +679,13 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private class String2PicTask extends MyAsyncTask<Void, String, String> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            content.destroyDrawingCache();
+            content.buildDrawingCache();
+        }
+
+        @Override
         protected String doInBackground(Void... params) {
             return ImageEdit.convertStringToBitmap(WriteWeiboActivity.this, content);
 
