@@ -40,11 +40,15 @@ public class ControlFragment extends PreferenceFragment implements SharedPrefere
         if (key.equals(SettingActivity.COMMENT_REPOST_AVATAR)) {
             switch (SettingUtility.getCommentRepostAvatar()) {
                 case 1:
-                    SettingUtility.setEnableCommentRepostAvatar(Utility.isConnected(getActivity()));
+                    SettingUtility.setEnableCommentRepostAvatar(true);
                     break;
                 case 2:
                     SettingUtility.setEnableCommentRepostAvatar(false);
                     break;
+                case 3:
+                    SettingUtility.setEnableCommentRepostAvatar(Utility.isWifi(getActivity()));
+                    break;
+
             }
 
         }

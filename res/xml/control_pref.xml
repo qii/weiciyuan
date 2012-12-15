@@ -19,7 +19,7 @@
             android:dialogTitle="@string/comment_repost_list_avatar"
             android:entries="@array/comment_repost_list_avatar_mode"
             android:entryValues="@array/comment_repost_list_avatar_value"
-            android:defaultValue="1"/>
+            android:defaultValue="3"/>
 
 
         <ListPreference

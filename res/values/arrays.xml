@@ -76,11 +76,13 @@
         <item>2</item>
     </string-array>
     <string-array name="comment_repost_list_avatar_mode">
-        <item>自动</item>
+        <item>打开</item>
         <item>关闭</item>
+        <item>自动</item>
     </string-array>
     <string-array name="comment_repost_list_avatar_value">
         <item>1</item>
         <item>2</item>
+        <item>3</item>
     </string-array>
 </resources>

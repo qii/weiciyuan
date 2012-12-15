@@ -50,7 +50,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
     private static void decideCommentRepostAvatar(Context context) {
 
         switch (SettingUtility.getCommentRepostAvatar()) {
-            case 1:
+            case 3:
                 SettingUtility.setEnableCommentRepostAvatar(Utility.isWifi(context));
                 break;
         }
