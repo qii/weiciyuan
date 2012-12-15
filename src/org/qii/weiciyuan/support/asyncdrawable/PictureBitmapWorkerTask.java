@@ -31,6 +31,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     private String data = "";
     private final List<WeakReference<ImageView>> viewList = new ArrayList<WeakReference<ImageView>>();
     private Map<String, PictureBitmapWorkerTask> taskMap;
+    private GlobalContext globalContext;
 
     private FileLocationMethod method;
 
@@ -41,7 +42,8 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     public PictureBitmapWorkerTask(Map<String, PictureBitmapWorkerTask> taskMap,
                                    ImageView view, String url, FileLocationMethod method) {
 
-        this.lruCache = GlobalContext.getInstance().getAvatarCache();
+        this.globalContext = GlobalContext.getInstance();
+        this.lruCache = globalContext.getAvatarCache();
         this.taskMap = taskMap;
         viewList.add(new WeakReference<ImageView>(view));
         this.data = url;
@@ -57,8 +59,8 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... url) {
 
-        int avatarWidth = GlobalContext.getInstance().getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width);
-        int avatarHeight = GlobalContext.getInstance().getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height);
+        int avatarWidth = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width);
+        int avatarHeight = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height);
 
         if (!isCancelled()) {
             switch (method) {
@@ -71,11 +73,11 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                     return ImageTool.getThumbnailPictureWithRoundedCorner(data);
 
                 case picture_bmiddle:
-                    DisplayMetrics metrics = GlobalContext.getInstance().getDisplayMetrics();
+                    DisplayMetrics metrics = globalContext.getDisplayMetrics();
 
-                    float reSize = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
+                    float reSize = globalContext.getResources().getDisplayMetrics().density;
 
-                    int height = GlobalContext.getInstance().getResources().getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
+                    int height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
                     //8 is  layout padding
                     int width = (int) (metrics.widthPixels - (8 + 8) * reSize);
 
@@ -184,5 +186,6 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         viewList.clear();
         taskMap = null;
         lruCache = null;
+        globalContext = null;
     }
 }
