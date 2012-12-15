@@ -2,6 +2,8 @@ package org.qii.weiciyuan.support.asyncdrawable;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.LruCache;
 import android.view.animation.Animation;
@@ -61,7 +63,7 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             int height = width;
 
             if (SettingUtility.getEnableBigAvatar()) {
-                return ImageTool.getRoundedCornerPic(this.url, width, height,FileLocationMethod.avatar_large);
+                return ImageTool.getRoundedCornerPic(this.url, width, height, FileLocationMethod.avatar_large);
             } else
                 return ImageTool.getRoundedCornerPic(this.url, width, height, FileLocationMethod.avatar_small);
         }
@@ -70,33 +72,28 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onCancelled(Bitmap bitmap) {
-
-        if (taskMap != null && taskMap.get(url) != null) {
-            taskMap.remove(url);
-        }
-
         clean();
         super.onCancelled(bitmap);
     }
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-        if (bitmap != null) {
-            for (WeakReference<ImageView> view : viewList) {
-                if (view != null && view.get() != null) {
-                    if (canDisplay(view)) {
+        super.onPostExecute(bitmap);
+        for (WeakReference<ImageView> view : viewList) {
+            if (view != null && view.get() != null) {
+                if (canDisplay(view)) {
+                    if (bitmap != null) {
                         playImageViewAnimation(view, bitmap);
                         lruCache.put(url, bitmap);
+                    } else {
+                        view.get().setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
                     }
                 }
-
             }
 
-            if (taskMap != null && taskMap.get(url) != null) {
-                taskMap.remove(url);
-            }
         }
         clean();
+
     }
 
     private boolean canDisplay(WeakReference<ImageView> view) {
@@ -163,9 +160,13 @@ public class AvatarBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     }
 
     private void clean() {
+        if (taskMap != null && taskMap.get(url) != null) {
+            taskMap.remove(url);
+        }
         viewList.clear();
         activity = null;
         taskMap = null;
         lruCache = null;
+
     }
 }

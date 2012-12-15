@@ -146,7 +146,7 @@ public class TimeLineBitmapDownloader implements ICommander {
             String bitmapUrl = bitmapDownloaderTask.getUrl();
             if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
                 bitmapDownloaderTask.cancel(true);
-            } else if (bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.PENDING || bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.RUNNING) {
+            } else{
                 // The same URL is already being downloaded.
                 return false;
             }
@@ -162,7 +162,7 @@ public class TimeLineBitmapDownloader implements ICommander {
             String bitmapUrl = bitmapDownloaderTask.getUrl();
             if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
                 bitmapDownloaderTask.cancel(true);
-            } else if (bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.PENDING || bitmapDownloaderTask.getStatus() == MyAsyncTask.Status.RUNNING) {
+            } else  {
                 // The same URL is already being downloaded.
                 return false;
             }

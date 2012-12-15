@@ -2,6 +2,8 @@ package org.qii.weiciyuan.support.asyncdrawable;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
@@ -89,24 +91,18 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onCancelled(Bitmap bitmap) {
-
-        if (taskMap != null && taskMap.get(data) != null) {
-            taskMap.remove(data);
-        }
-
         clean();
-
         super.onCancelled(bitmap);
     }
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
 
-        if (bitmap != null) {
-            for (WeakReference<ImageView> view : viewList) {
-                if (view != null && view.get() != null) {
-
-                    if (canDisplay(view)) {
+        super.onPostExecute(bitmap);
+        for (WeakReference<ImageView> view : viewList) {
+            if (view != null && view.get() != null) {
+                if (canDisplay(view)) {
+                    if (bitmap != null) {
                         switch (method) {
                             case picture_thumbnail:
                                 playImageViewAnimation(view, bitmap);
@@ -117,14 +113,12 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                         }
 
                         lruCache.put(data, bitmap);
-
+                    } else {
+                        view.get().setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
                     }
                 }
             }
-        }
 
-        if (taskMap.get(data) != null) {
-            taskMap.remove(data);
         }
 
         clean();
@@ -195,6 +189,9 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     }
 
     private void clean() {
+        if (taskMap != null && taskMap.get(data) != null) {
+            taskMap.remove(data);
+        }
         viewList.clear();
         activity = null;
         taskMap = null;
