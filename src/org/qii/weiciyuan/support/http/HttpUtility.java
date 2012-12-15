@@ -272,6 +272,8 @@ public class HttpUtility {
 
     private HttpResponse getHttpResponse(HttpRequestBase httpRequest, HttpContext localContext) throws WeiboException {
         HttpResponse response = null;
+        GlobalContext globalContext = GlobalContext.getInstance();
+        String errorStr = globalContext.getString(R.string.timeout);
         try {
             if (localContext != null) {
                 response = httpClient.execute(httpRequest, localContext);
@@ -282,17 +284,17 @@ public class HttpUtility {
             e.printStackTrace();
             AppLogger.e(e.getMessage());
             httpRequest.abort();
-            throw new WeiboException(GlobalContext.getInstance().getString(R.string.timeout), e);
+            throw new WeiboException(errorStr, e);
 
         } catch (ClientProtocolException e) {
             AppLogger.e(e.getMessage());
             httpRequest.abort();
-            throw new WeiboException(GlobalContext.getInstance().getString(R.string.timeout), e);
+            throw new WeiboException(errorStr, e);
 
         } catch (IOException e) {
             AppLogger.e(e.getMessage());
             httpRequest.abort();
-            throw new WeiboException(GlobalContext.getInstance().getString(R.string.timeout), e);
+            throw new WeiboException(errorStr, e);
         }
         return response;
     }
@@ -313,14 +315,15 @@ public class HttpUtility {
     private String readResult(HttpResponse response) throws WeiboException {
         HttpEntity entity = response.getEntity();
         String result = "";
-
+        GlobalContext globalContext = GlobalContext.getInstance();
+        String errorStr = globalContext.getString(R.string.timeout);
         try {
             AppLogger.d(String.valueOf(entity.getContentLength()));
             result = EntityUtils.toString(entity);
             EntityUtils.consume(entity);
         } catch (IOException e) {
             AppLogger.e(e.getMessage());
-            throw new WeiboException(GlobalContext.getInstance().getString(R.string.timeout), e);
+            throw new WeiboException(errorStr, e);
         }
 
         AppLogger.d(result);
