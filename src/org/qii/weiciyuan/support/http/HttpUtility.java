@@ -274,6 +274,7 @@ public class HttpUtility {
         HttpResponse response = null;
         GlobalContext globalContext = GlobalContext.getInstance();
         String errorStr = globalContext.getString(R.string.timeout);
+        globalContext=null;
         try {
             if (localContext != null) {
                 response = httpClient.execute(httpRequest, localContext);
@@ -317,6 +318,7 @@ public class HttpUtility {
         String result = "";
         GlobalContext globalContext = GlobalContext.getInstance();
         String errorStr = globalContext.getString(R.string.timeout);
+        globalContext=null;
         try {
             AppLogger.d(String.valueOf(entity.getContentLength()));
             result = EntityUtils.toString(entity);

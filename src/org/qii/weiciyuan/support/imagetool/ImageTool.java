@@ -356,7 +356,7 @@ public class ImageTool {
                     bitmap = scaledBitmap;
                 }
 
-                Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(scaledBitmap);
+                Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
                 if (roundedBitmap != bitmap) {
                     bitmap.recycle();
                     bitmap = roundedBitmap;
