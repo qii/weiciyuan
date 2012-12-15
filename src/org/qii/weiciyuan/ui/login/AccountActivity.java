@@ -249,7 +249,10 @@ public class AccountActivity extends AbstractAppActivity {
             }
 
             TextView textView = (TextView) mView.findViewById(R.id.account_name);
-            textView.setText(accountList.get(i).getUsernick());
+            if (accountList.get(i).getInfo() != null)
+                textView.setText(accountList.get(i).getInfo().getScreen_name());
+            else
+                textView.setText(accountList.get(i).getUsernick());
             ImageView imageView = (ImageView) mView.findViewById(R.id.imageView_avatar);
 
             if (!TextUtils.isEmpty(accountList.get(i).getAvatar_url())) {
