@@ -151,6 +151,7 @@ public class BlackMagicActivity extends AbstractAppActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            setResult(RESULT_OK, null);
             finish();
         }
     }

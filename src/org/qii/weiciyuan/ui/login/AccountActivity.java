@@ -123,7 +123,8 @@ public class AccountActivity extends AbstractAppActivity {
                 addAccount();
                 break;
             case R.id.menu_hack_login:
-                startActivity(new Intent(this, BlackMagicActivity.class));
+                Intent intent = new Intent(this, BlackMagicActivity.class);
+                startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
                 break;
         }
         return true;
