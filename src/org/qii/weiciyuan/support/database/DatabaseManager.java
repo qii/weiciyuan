@@ -3,12 +3,14 @@ package org.qii.weiciyuan.support.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.support.database.table.*;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
@@ -184,19 +186,27 @@ public class DatabaseManager {
         Gson gson = new Gson();
         List<MessageBean> msgList = list.getItemList();
 
-        for (MessageBean msg : msgList) {
-            ContentValues cv = new ContentValues();
-            cv.put(HomeTable.MBLOGID, msg.getId());
-            cv.put(HomeTable.ACCOUNTID, accountId);
-            String json = gson.toJson(msg);
-            cv.put(HomeTable.JSONDATA, json);
-            wsd.insert(HomeTable.TABLE_NAME,
-                    HomeTable.ID, cv);
+        for (int i = 0; i < msgList.size(); i++) {
+            MessageBean msg = msgList.get(i);
+            if (msg != null) {
+                ContentValues cv = new ContentValues();
+                cv.put(HomeTable.MBLOGID, msg.getId());
+                cv.put(HomeTable.ACCOUNTID, accountId);
+                String json = gson.toJson(msg);
+                cv.put(HomeTable.JSONDATA, json);
+                wsd.insert(HomeTable.TABLE_NAME,
+                        HomeTable.ID, cv);
+            } else {
+                ContentValues cv = new ContentValues();
+                cv.put(HomeTable.MBLOGID, "-1");
+                cv.put(HomeTable.ACCOUNTID, accountId);
+                cv.put(HomeTable.JSONDATA, "");
+                wsd.insert(HomeTable.TABLE_NAME,
+                        HomeTable.ID, cv);
+            }
         }
 
         reduceHomeTable(accountId);
-
-
     }
 
     private void reduceHomeTable(String accountId) {
@@ -212,14 +222,14 @@ public class DatabaseManager {
 
         AppLogger.e("total=" + total);
 
-        int needDeletedNumber = total - Integer.valueOf(SettingUtility.getMsgCount());
+        int needDeletedNumber = total - AppConfig.DEFAULT_DB_CACHE_COUNT;
 
         if (needDeletedNumber > 0) {
             AppLogger.e("" + needDeletedNumber);
             String sql = " delete from " + HomeTable.TABLE_NAME + " where " + HomeTable.ID + " in "
                     + "( select " + HomeTable.ID + " from " + HomeTable.TABLE_NAME + " where "
                     + HomeTable.ACCOUNTID
-                    + " in " + "(" + accountId + ") order by " + HomeTable.ID + " asc limit " + needDeletedNumber + " ) ";
+                    + " in " + "(" + accountId + ") order by " + HomeTable.ID + " desc limit " + needDeletedNumber + " ) ";
 
             wsd.execSQL(sql);
         }
@@ -243,18 +253,39 @@ public class DatabaseManager {
 
         List<MessageBean> msgList = new ArrayList<MessageBean>();
         String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
-                + accountId + " order by " + HomeTable.MBLOGID + " desc limit 50";
+                + accountId + " order by " + HomeTable.ID + " asc limit 50";
         Cursor c = rsd.rawQuery(sql, null);
         while (c.moveToNext()) {
             String json = c.getString(c.getColumnIndex(HomeTable.JSONDATA));
-            try {
-                MessageBean value = gson.fromJson(json, MessageBean.class);
-                value.getListViewSpannableString();
-                msgList.add(value);
-            } catch (JsonSyntaxException e) {
-                AppLogger.e(e.getMessage());
-            }
+            if (!TextUtils.isEmpty(json)) {
+                try {
+                    MessageBean value = gson.fromJson(json, MessageBean.class);
+                    value.getListViewSpannableString();
+                    msgList.add(value);
+                } catch (JsonSyntaxException e) {
+                    AppLogger.e(e.getMessage());
+                }
 
+            } else {
+                msgList.add(null);
+            }
+        }
+
+        //delete the null flag at the head positon and the end position
+        for (int i = msgList.size() - 1; i >= 0; i--) {
+            if (msgList.get(i) == null) {
+                msgList.remove(i);
+            } else {
+                break;
+            }
+        }
+
+        for (int i = 0; i < msgList.size(); i++) {
+            if (msgList.get(i) == null) {
+                msgList.remove(i);
+            } else {
+                break;
+            }
         }
 
         result.setStatuses(msgList);

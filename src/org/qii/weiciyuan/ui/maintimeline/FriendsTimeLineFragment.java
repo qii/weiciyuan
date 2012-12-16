@@ -17,6 +17,7 @@ import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.FriendGroupDao;
 import org.qii.weiciyuan.dao.maintimeline.FriendGroupTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
+import org.qii.weiciyuan.othercomponent.SaveToDBService;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.database.GroupDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -97,7 +98,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
 
-
+            if (getList() != null && selectedId.equals("0")) {
+                SaveToDBService.save(getActivity(), SaveToDBService.TYPE_STATUS, getList(), accountBean.getUid());
+            }
         }
 
         afterGetNewMsg();
@@ -290,9 +293,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             dao.setSince_id(getList().getItemList().get(0).getId());
         }
         MessageListBean result = dao.getGSONMsgList();
-        if (result != null && selectedId.equals("0")) {
-            DatabaseManager.getInstance().replaceHomeLineMsg(result, accountBean.getUid());
-        }
         return result;
     }
 
