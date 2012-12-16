@@ -55,6 +55,10 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     private CommentListBean bean = new CommentListBean();
 
+    private final int TYPE_RECEIVED_COMMENT = 0;
+    private final int TYPE_MENTIONED_COMMENT_TO_ME = 1;
+    private final int TYPE_COMMENT_BY_ME = 2;
+
     @Override
     public CommentListBean getList() {
         return bean;
@@ -94,8 +98,6 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         outState.putSerializable("0", hashMap.get(0));
         outState.putSerializable("1", hashMap.get(1));
         outState.putSerializable("2", hashMap.get(2));
-        outState.putSerializable("3", hashMap.get(3));
-        outState.putSerializable("4", hashMap.get(4));
     }
 
     @Override
@@ -128,11 +130,9 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             group = savedInstanceState.getStringArray("group");
             selected = savedInstanceState.getInt("selected");
 
-            hashMap.put(0, (CommentListBean) savedInstanceState.getSerializable("0"));
-            hashMap.put(1, (CommentListBean) savedInstanceState.getSerializable("1"));
-            hashMap.put(2, (CommentListBean) savedInstanceState.getSerializable("2"));
-            hashMap.put(3, (CommentListBean) savedInstanceState.getSerializable("3"));
-            hashMap.put(4, (CommentListBean) savedInstanceState.getSerializable("4"));
+            hashMap.put(TYPE_RECEIVED_COMMENT, (CommentListBean) savedInstanceState.getSerializable("0"));
+            hashMap.put(TYPE_MENTIONED_COMMENT_TO_ME, (CommentListBean) savedInstanceState.getSerializable("1"));
+            hashMap.put(TYPE_COMMENT_BY_ME, (CommentListBean) savedInstanceState.getSerializable("2"));
 
             clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
@@ -143,11 +143,10 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
 
-            hashMap.put(0, new CommentListBean());
-            hashMap.put(1, new CommentListBean());
-            hashMap.put(2, new CommentListBean());
-            hashMap.put(3, new CommentListBean());
-            hashMap.put(4, new CommentListBean());
+            hashMap.put(TYPE_RECEIVED_COMMENT, new CommentListBean());
+            hashMap.put(TYPE_MENTIONED_COMMENT_TO_ME, new CommentListBean());
+            hashMap.put(TYPE_COMMENT_BY_ME, new CommentListBean());
+
         }
 
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -342,24 +341,24 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         CommentListBean result;
         ICommentsTimeLineDao dao;
         switch (selected) {
-            case 0:
+            case TYPE_RECEIVED_COMMENT:
                 dao = new MainCommentsTimeLineDao(token);
                 break;
-            case 1:
+            case TYPE_MENTIONED_COMMENT_TO_ME:
                 dao = new MentionsCommentTimeLineDao(token);
                 break;
-            case 2:
+            case TYPE_COMMENT_BY_ME:
                 dao = new CommentsTimeLineByMeDao(token);
                 break;
             default:
-                dao = new CommentsTimeLineByMeDao(token);
+                dao = new MainCommentsTimeLineDao(token);
                 break;
         }
         if (getList() != null && getList().getItemList().size() > 0) {
             dao.setSince_id(getList().getItemList().get(0).getId());
         }
         result = dao.getGSONMsgList();
-        if (result != null && selected == 0) {
+        if (result != null && selected == TYPE_RECEIVED_COMMENT) {
             DatabaseManager.getInstance().addCommentLineMsg(result, accountBean.getUid());
         }
         return result;
@@ -370,17 +369,17 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         CommentListBean result;
         ICommentsTimeLineDao dao;
         switch (selected) {
-            case 0:
+            case TYPE_RECEIVED_COMMENT:
                 dao = new MainCommentsTimeLineDao(token);
                 break;
-            case 1:
+            case TYPE_MENTIONED_COMMENT_TO_ME:
                 dao = new MentionsCommentTimeLineDao(token);
                 break;
-            case 2:
+            case TYPE_COMMENT_BY_ME:
                 dao = new CommentsTimeLineByMeDao(token);
                 break;
             default:
-                dao = new CommentsTimeLineByMeDao(token);
+                dao = new MainCommentsTimeLineDao(token);
                 break;
         }
         if (getList() != null && getList().getItemList().size() > 0) {
