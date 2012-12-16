@@ -278,6 +278,19 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         }
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+        group[0] = getString(R.string.all_people_send_to_me);
+        group[1] = getString(R.string.mentions_to_me);
+        group[2] = getString(R.string.my_comment);
+
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
+    }
+
 
     @Override
     protected void buildListAdapter() {
