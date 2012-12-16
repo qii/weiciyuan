@@ -8,7 +8,7 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
@@ -92,7 +92,7 @@ public class SearchDao {
 
         this.access_token = access_token;
         this.q = q;
-        this.count = String.valueOf(AppConfig.DEFAULT_MSG_NUMBERS);
+        this.count = SettingUtility.getMsgCount();
     }
 
 

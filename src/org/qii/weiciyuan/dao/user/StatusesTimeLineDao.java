@@ -8,6 +8,7 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.TimeTool;
@@ -66,6 +67,7 @@ public class StatusesTimeLineDao {
     public StatusesTimeLineDao(String token, String uid) {
         this.access_token = token;
         this.uid = uid;
+        this.count = SettingUtility.getMsgCount();
     }
 
     public void setScreen_name(String screen_name) {

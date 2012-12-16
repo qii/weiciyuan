@@ -9,7 +9,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.support.database.table.HomeTable;
 import org.qii.weiciyuan.support.database.table.MyStatusTable;
-import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +69,7 @@ public class MyStatusDBTask {
 
         c.close();
 
-        int needDeletedNumber = total - AppConfig.MAX_DATABASE_TABLE_ENTRY_NUMBER;
+        int needDeletedNumber = total - Integer.valueOf(SettingUtility.getMsgCount());
 
         if (needDeletedNumber > 0) {
             String sql = " delete from " + MyStatusTable.TABLE_NAME + " where " + MyStatusTable.ID + " in "

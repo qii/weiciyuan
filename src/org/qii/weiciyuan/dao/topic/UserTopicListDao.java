@@ -7,7 +7,7 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.ArrayList;
@@ -74,7 +74,7 @@ public class UserTopicListDao {
     public UserTopicListDao(String access_token, String uid) {
 
         this.access_token = access_token;
-        this.count = String.valueOf(AppConfig.DEFAULT_MSG_NUMBERS);
+        this.count = SettingUtility.getMsgCount();
         this.uid = uid;
     }
 

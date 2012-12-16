@@ -8,7 +8,7 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public class DMDao {
 
     private String access_token;
     private String cursor = "0";
-    private int count = AppConfig.DEFAULT_DM_USERLIST_NUMBER;
+    private String count ;
 
     public DMDao(String token) {
         this.access_token = token;
@@ -30,13 +30,14 @@ public class DMDao {
 
     public void setCursor(String cursor) {
         this.cursor = cursor;
+        this.count = SettingUtility.getMsgCount();
     }
 
     public DMUserListBean getUserList() throws WeiboException {
         String url = URLHelper.DM_USERLIST;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
-        map.put("count", String.valueOf(count));
+        map.put("count", count);
         map.put("cursor", cursor);
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);

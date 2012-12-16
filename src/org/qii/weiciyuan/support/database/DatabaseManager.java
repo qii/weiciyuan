@@ -8,7 +8,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.support.database.table.*;
-import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
@@ -212,7 +212,7 @@ public class DatabaseManager {
 
         AppLogger.e("total=" + total);
 
-        int needDeletedNumber = total - AppConfig.MAX_DATABASE_TABLE_ENTRY_NUMBER;
+        int needDeletedNumber = total -  Integer.valueOf(SettingUtility.getMsgCount());
 
         if (needDeletedNumber > 0) {
             AppLogger.e("" + needDeletedNumber);
@@ -325,7 +325,7 @@ public class DatabaseManager {
 
         AppLogger.e("total=" + total);
 
-        int needDeletedNumber = total - AppConfig.MAX_DATABASE_TABLE_ENTRY_NUMBER;
+        int needDeletedNumber = total - Integer.valueOf(SettingUtility.getMsgCount());
 
         if (needDeletedNumber > 0) {
             AppLogger.e("" + needDeletedNumber);
@@ -410,7 +410,7 @@ public class DatabaseManager {
 
         AppLogger.e("total=" + total);
 
-        int needDeletedNumber = total - AppConfig.MAX_DATABASE_TABLE_ENTRY_NUMBER;
+        int needDeletedNumber = total -  Integer.valueOf(SettingUtility.getMsgCount());
 
         if (needDeletedNumber > 0) {
             AppLogger.e("" + needDeletedNumber);

@@ -85,4 +85,14 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+    <string-array name="msg_count_title">
+        <item>25条</item>
+        <item>50条</item>
+        <item>自动</item>
+    </string-array>
+    <string-array name="msg_count_title_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>

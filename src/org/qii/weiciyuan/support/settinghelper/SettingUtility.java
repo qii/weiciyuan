@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.settinghelper;
 
 import android.content.Context;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
@@ -182,6 +183,29 @@ public class SettingUtility {
 
     public static boolean allowMentionCommentToMe() {
         return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_MENTION_COMMENT_TO_ME, true);
+
+    }
+
+    public static String getMsgCount() {
+        String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.MSG_COUNT, "3");
+
+        switch (Integer.valueOf(value)) {
+            case 1:
+                return String.valueOf(AppConfig.DEFAULT_MSG_COUNT_25);
+
+            case 2:
+                return String.valueOf(AppConfig.DEFAULT_MSG_COUNT_50);
+
+            case 3:
+                if (Utility.isConnected(getContext())) {
+                    if (Utility.isWifi(getContext()))
+                        return String.valueOf(AppConfig.DEFAULT_MSG_COUNT_50);
+                    else
+                        return String.valueOf(AppConfig.DEFAULT_MSG_COUNT_25);
+                }
+
+        }
+        return String.valueOf(AppConfig.DEFAULT_MSG_COUNT_25);
 
     }
 }

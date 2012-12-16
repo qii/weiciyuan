@@ -8,6 +8,7 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
@@ -75,6 +76,7 @@ public class CommentsTimeLineByIdDao {
 
         this.access_token = token;
         this.id = id;
+        this.count = SettingUtility.getMsgCount();
     }
 
     public void setSince_id(String since_id) {

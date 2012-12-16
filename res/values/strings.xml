@@ -17,7 +17,8 @@
 
     <!--tip dialog-->
     <string name="tip_dialog_title">提示</string>
-    <string name="tip_dialog_content">1. 搜索、私信、个人资料编辑都没接口做\n2. 受新浪微博政策限制，帐号隔3个月就会过期，需要重新登录\n3.登录是在新浪网站上进行的，登录不了不关我的事\n4.觉得不爽就老老实实用官方或者Weico
+    <string name="tip_dialog_content">1. 搜索、私信、个人资料编辑都没接口做\n2.
+        受新浪微博政策限制，帐号隔3个月就会过期，需要重新登录\n3.登录是在新浪网站上进行的，登录不了不关我的事\n4.觉得不爽就老老实实用官方或者Weico
     </string>
 
     <!--emotions-->
@@ -265,6 +266,7 @@
     <string name="disable_download_pic">禁止下载图片</string>
     <string name="disable_download_pic_summary">改进的无图模式</string>
     <string name="close_comment_repost_list_avatar">关闭评论/转发列表的头像</string>
+    <string name="msg_count_title">每次获取数据条数</string>
     <string name="comment_repost_list_avatar">评论/转发列表的头像</string>
     <string name="show_big_avatar">高清头像</string>
     <string name="show_big_avatar_summary">大屏幕手机推荐开高清</string>

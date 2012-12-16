@@ -22,7 +22,7 @@ import org.qii.weiciyuan.dao.maintimeline.MentionsCommentTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.actionmenu.CommentFloatingMenu;
 import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
@@ -479,7 +479,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
             } else {
                 Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
-                if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                if (newValue.getItemList().size() < Integer.valueOf(SettingUtility.getMsgCount())) {
                     //for speed, add old data after new data
                     newValue.getItemList().addAll(getList().getItemList());
                 } else {

@@ -6,15 +6,8 @@ package org.qii.weiciyuan.support.utils;
  */
 public class AppConfig {
 
-    public static final int DEFAULT_MSG_NUMBERS = 50;
-    public static final int MAX_DATABASE_TABLE_ENTRY_NUMBER = 50;
-
-
-    //DM
-    public static final int DEFAULT_DM_USERLIST_NUMBER = 20;
-    public static final int MAX_DATABASE_DM_TABLE_ENTRY_NUMBER = 20;
-    public static final int DEFAULT_DM_CONVERSATION_NUMBER=50;
-
+    public static final int DEFAULT_MSG_COUNT_25 = 25;
+    public static final int DEFAULT_MSG_COUNT_50 = 50;
 
     //friend timeline
     public static final long AUTO_REFRESH_INITIALDELAY = 9l;

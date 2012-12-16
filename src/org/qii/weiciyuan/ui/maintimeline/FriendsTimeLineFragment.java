@@ -445,7 +445,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
             int size = newValue.getSize();
 
-            if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+            if (newValue.getItemList().size() < Integer.valueOf(SettingUtility.getMsgCount())) {
                 //for speed, add old data after new data
                 newValue.getItemList().addAll(getList().getItemList());
             } else {

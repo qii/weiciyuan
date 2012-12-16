@@ -1,6 +1,6 @@
 package org.qii.weiciyuan.bean;
 
-import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> {
             if (newValue.getSize() == 0) {
 
             } else if (newValue.getSize() > 0) {
-                if (newValue.getItemList().size() < AppConfig.DEFAULT_MSG_NUMBERS) {
+                if (newValue.getItemList().size() < Integer.valueOf(SettingUtility.getMsgCount())) {
                     //for speed, add old data after new data
                     newValue.getItemList().addAll(getItemList());
                 } else {

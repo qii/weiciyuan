@@ -48,6 +48,7 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String COMMENT_REPOST_AVATAR = "comment_repost_list_avatar";
     public static final String SHOW_COMMENT_REPOST_AVATAR = "show_comment_repost_list_avatar";
     public static final String DISABLE_DOWNLOAD_AVATAR_PIC = "disable_download";
+    public static final String MSG_COUNT = "msg_count";
 
 
     //about
