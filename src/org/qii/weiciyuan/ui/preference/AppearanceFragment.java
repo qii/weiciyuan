@@ -54,8 +54,21 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
         value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.LIST_PIC_MODE, "1");
         listPicMode.setSummary(getActivity().getResources().getStringArray(R.array.list_pic_mode)[Integer.valueOf(value) - 1]);
 
+        value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.FONT_SIZE, "1");
+        String[] values = getActivity().getResources().getStringArray(R.array.font_value);
+        int index = -1;
+        for (int i = 0; i < values.length; i++) {
+            if (value.equals(values[i])) {
+                index = i;
+            }
+        }
+
+        if (index >= 0) {
+            listFontSize.setSummary(getActivity().getResources().getStringArray(R.array.font)[index]);
+        }
+
         value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.THEME, "2");
-        int index = Integer.valueOf(value);
+        index = Integer.valueOf(value);
         if (index > 2) {
             index = 1;
         }
@@ -67,6 +80,7 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
+        buildSummary();
 
         if (key.equals(SettingActivity.LIST_AVATAR_MODE)) {
             String value = sharedPreferences.getString(key, "1");
@@ -77,7 +91,7 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
             if (value.equals("3")) {
                 SettingUtility.setEnableBigAvatar(Utility.isWifi(getActivity()));
             }
-            buildSummary();
+
         }
 
         if (key.equals(SettingActivity.LIST_PIC_MODE))
@@ -91,7 +105,7 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
             if (value.equals("3")) {
                 SettingUtility.setEnableBigPic(Utility.isWifi(getActivity()));
             }
-            buildSummary();
+
         }
 
     }
