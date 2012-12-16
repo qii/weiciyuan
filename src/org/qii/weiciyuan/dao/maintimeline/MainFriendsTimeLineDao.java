@@ -75,8 +75,10 @@ public class MainFriendsTimeLineDao {
                 MessageBean msg = iterator.next();
                 if (msg.getUser() == null) {
                     iterator.remove();
+                    value.removedCountPlus();
                 } else if (SettingUtility.isEnableFilter() && ListViewTool.haveFilterWord(msg, filterWordList)) {
                     iterator.remove();
+                    value.removedCountPlus();
                 } else {
                     msg.getListViewSpannableString();
                     TimeTool.dealMills(msg);

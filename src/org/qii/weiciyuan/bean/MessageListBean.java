@@ -38,29 +38,30 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> {
         return getStatuses();
     }
 
+    private int removedCount = 0;
+
+    public int getReceivedNumber() {
+        return getSize() + removedCount;
+    }
+
+    public void removedCountPlus() {
+        removedCount++;
+    }
+
     @Override
     public void addNewData(MessageListBean newValue) {
-        if (newValue != null) {
-            if (newValue.getSize() == 0) {
 
-            } else if (newValue.getSize() > 0) {
-                if (newValue.getItemList().size() < Integer.valueOf(SettingUtility.getMsgCount())) {
-                    //for speed, add old data after new data
-                    newValue.getItemList().addAll(getItemList());
-                } else {
-                    //null is flag means this position has some old messages which dont appear
-                    if (getSize() > 0) {
-                        newValue.getItemList().add(null);
-                    }
-                    newValue.getItemList().addAll(this.getItemList());
-                }
-                this.getItemList().clear();
-                this.getItemList().addAll(newValue.getItemList());
-                this.setTotal_number(newValue.getTotal_number());
-
-
-            }
+        if (newValue == null || newValue.getSize() == 0) {
+            return;
         }
+
+        boolean receivedCountBelowRequestCount = newValue.getReceivedNumber() < Integer.valueOf(SettingUtility.getMsgCount());
+        boolean receivedCountEqualRequestCount = newValue.getReceivedNumber() == Integer.valueOf(SettingUtility.getMsgCount());
+        if (receivedCountEqualRequestCount) {
+            newValue.getItemList().add(null);
+        }
+        this.getItemList().addAll(0, newValue.getItemList());
+        this.setTotal_number(newValue.getTotal_number());
     }
 
     @Override

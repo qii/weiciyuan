@@ -32,7 +32,7 @@ public class DatabaseManager {
 
     }
 
-    public  static DatabaseManager getInstance() {
+    public static DatabaseManager getInstance() {
 
         if (singleton == null) {
             DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
@@ -174,8 +174,8 @@ public class DatabaseManager {
         return getAccountList();
     }
 
-    //only store 50 messages
-    public void addHomeLineMsg(MessageListBean list, String accountId) {
+
+    private void addHomeLineMsg(MessageListBean list, String accountId) {
 
         if (list == null || list.getSize() == 0) {
             return;
@@ -212,7 +212,7 @@ public class DatabaseManager {
 
         AppLogger.e("total=" + total);
 
-        int needDeletedNumber = total -  Integer.valueOf(SettingUtility.getMsgCount());
+        int needDeletedNumber = total - Integer.valueOf(SettingUtility.getMsgCount());
 
         if (needDeletedNumber > 0) {
             AppLogger.e("" + needDeletedNumber);
@@ -225,13 +225,9 @@ public class DatabaseManager {
         }
     }
 
-    private void replaceHomeLineMsg(MessageListBean list, String accountId) {
+    public void replaceHomeLineMsg(MessageListBean list, String accountId) {
 
         deleteAllHomes(accountId);
-
-//        wsd.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
-//        wsd.execSQL(DatabaseHelper.CREATE_HOME_TABLE_SQL);
-
         addHomeLineMsg(list, accountId);
     }
 
@@ -410,7 +406,7 @@ public class DatabaseManager {
 
         AppLogger.e("total=" + total);
 
-        int needDeletedNumber = total -  Integer.valueOf(SettingUtility.getMsgCount());
+        int needDeletedNumber = total - Integer.valueOf(SettingUtility.getMsgCount());
 
         if (needDeletedNumber > 0) {
             AppLogger.e("" + needDeletedNumber);

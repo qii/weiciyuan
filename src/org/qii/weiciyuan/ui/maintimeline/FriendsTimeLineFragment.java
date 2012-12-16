@@ -291,7 +291,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
         MessageListBean result = dao.getGSONMsgList();
         if (result != null && selectedId.equals("0")) {
-            DatabaseManager.getInstance().addHomeLineMsg(result, accountBean.getUid());
+            DatabaseManager.getInstance().replaceHomeLineMsg(result, accountBean.getUid());
         }
         return result;
     }
