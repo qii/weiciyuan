@@ -371,12 +371,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
         CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
-
-//        if (getList().getItemList().size() > 0) {
-//            dao.setSince_id(getList().getItemList().get(0).getId());
-//        }
-        CommentListBean result = dao.getGSONMsgList();
-        return result;
+        return dao.getGSONMsgList();
     }
 
     @Override
@@ -391,11 +386,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     protected CommentListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
-        dao.setMax_id(beginId);
-        dao.setSince_id(endId);
-        CommentListBean result = dao.getGSONMsgList();
-        return result;
+        throw new UnsupportedOperationException("comment by id list dont support this operation");
     }
 
     @Override

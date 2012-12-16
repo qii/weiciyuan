@@ -38,12 +38,7 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> {
 
     @Override
     public void addNewData(CommentListBean newValue) {
-        if (newValue != null && newValue.getSize() > 0) {
-            setTotal_number(newValue.getTotal_number());
-            getItemList().clear();
-            getItemList().addAll(newValue.getItemList());
-        }
-
+        throw new UnsupportedOperationException("use replaceAll instead");
     }
 
     @Override
