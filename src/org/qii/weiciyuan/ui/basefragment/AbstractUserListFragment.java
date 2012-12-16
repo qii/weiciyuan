@@ -29,7 +29,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     protected PullToRefreshListView pullToRefreshListView;
     protected TextView empty;
     protected ProgressBar progressBar;
-    protected UserListAdapter timeLineAdapter;
+    private UserListAdapter userListAdapter;
     protected UserListBean bean = new UserListBean();
 
     private UserListGetNewDataTask newTask;
@@ -46,7 +46,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     }
 
     protected UserListAdapter getAdapter() {
-        return timeLineAdapter;
+        return userListAdapter;
     }
 
     protected void clearAndReplaceValue(UserListBean value) {
@@ -131,8 +131,8 @@ public abstract class AbstractUserListFragment extends Fragment {
         dismissFooterView();
 
 
-        timeLineAdapter = new UserListAdapter(AbstractUserListFragment.this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), bean.getUsers(), getListView());
-        pullToRefreshListView.setAdapter(timeLineAdapter);
+        userListAdapter = new UserListAdapter(AbstractUserListFragment.this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), bean.getUsers(), getListView());
+        pullToRefreshListView.setAdapter(userListAdapter);
 
         pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override

@@ -33,8 +33,7 @@ public class SearchUserFragment extends AbstractUserListFragment {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
             clearAndReplaceValue((UserListBean) savedInstanceState.getSerializable("bean"));
-            timeLineAdapter.notifyDataSetChanged();
-
+            getAdapter().notifyDataSetChanged();
         }
         refreshLayout(bean);
     }

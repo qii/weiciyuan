@@ -68,20 +68,20 @@ public class FriendsListFragment extends AbstractFriendsFanListFragment {
                     mActionMode.finish();
                     mActionMode = null;
                     getListView().setItemChecked(position, true);
-                    timeLineAdapter.notifyDataSetChanged();
+                    getAdapter().notifyDataSetChanged();
                     if (currentUser.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
-                        mActionMode = getActivity().startActionMode(new MyFriendSingleChoiceModeListener(getListView(), timeLineAdapter, FriendsListFragment.this, bean.getUsers().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new MyFriendSingleChoiceModeListener(getListView(), getAdapter(), FriendsListFragment.this, bean.getUsers().get(position - 1)));
                     } else {
-                        mActionMode = getActivity().startActionMode(new NormalFriendShipSingleChoiceModeListener(getListView(), timeLineAdapter, FriendsListFragment.this, bean.getUsers().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new NormalFriendShipSingleChoiceModeListener(getListView(), getAdapter(), FriendsListFragment.this, bean.getUsers().get(position - 1)));
                     }
                     return true;
                 } else {
                     getListView().setItemChecked(position, true);
-                    timeLineAdapter.notifyDataSetChanged();
+                    getAdapter().notifyDataSetChanged();
                     if (currentUser.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
-                        mActionMode = getActivity().startActionMode(new MyFriendSingleChoiceModeListener(getListView(), timeLineAdapter, FriendsListFragment.this, bean.getUsers().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new MyFriendSingleChoiceModeListener(getListView(), getAdapter(), FriendsListFragment.this, bean.getUsers().get(position - 1)));
                     } else {
-                        mActionMode = getActivity().startActionMode(new NormalFriendShipSingleChoiceModeListener(getListView(), timeLineAdapter, FriendsListFragment.this, bean.getUsers().get(position - 1)));
+                        mActionMode = getActivity().startActionMode(new NormalFriendShipSingleChoiceModeListener(getListView(), getAdapter(), FriendsListFragment.this, bean.getUsers().get(position - 1)));
                     }
                     return true;
                 }
