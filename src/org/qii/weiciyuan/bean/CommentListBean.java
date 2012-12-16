@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +40,16 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> {
 
     @Override
     public void addNewData(CommentListBean newValue) {
-        throw new UnsupportedOperationException("use replaceAll instead");
+        if (newValue != null && newValue.getSize() > 0) {
+            setTotal_number(newValue.getTotal_number());
+            if (newValue.getSize() == Integer.valueOf(SettingUtility.getMsgCount())) {
+                getItemList().clear();
+                getItemList().addAll(newValue.getItemList());
+            } else {
+                getItemList().addAll(0, newValue.getItemList());
+
+            }
+        }
     }
 
     @Override

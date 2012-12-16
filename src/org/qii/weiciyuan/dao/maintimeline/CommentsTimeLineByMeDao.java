@@ -21,7 +21,7 @@ import java.util.Map;
  * User: qii
  * Date: 12-9-12
  */
-public class CommentsTimeLineByMeDao {
+public class CommentsTimeLineByMeDao implements ICommentsTimeLineDao {
 
 
     public void setSince_id(String since_id) {

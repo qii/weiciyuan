@@ -17,12 +17,12 @@ import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.dao.maintimeline.CommentsTimeLineByMeDao;
+import org.qii.weiciyuan.dao.maintimeline.ICommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MentionsCommentTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.actionmenu.CommentFloatingMenu;
 import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
@@ -324,7 +324,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 break;
             case R.id.refresh:
                 if (allowRefresh())
-                    pullToRefreshListView.startRefreshNow();
+                    getPullToRefreshListView().startRefreshNow();
                 break;
             case R.id.group_name:
                 if (canSwitchGroup()) {
@@ -339,93 +339,60 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     @Override
     protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
-        if (selected == 0) {
-            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
-            if (getList() != null && getList().getItemList().size() > 0) {
-                dao.setSince_id(getList().getItemList().get(0).getId());
-            }
-
-            CommentListBean result = dao.getGSONMsgList();
-            if (result != null && selected == 0) {
-                DatabaseManager.getInstance().addCommentLineMsg(result, accountBean.getUid());
-            }
-            return result;
-        } else if (selected == 1) {
-            MentionsCommentTimeLineDao dao = new MentionsCommentTimeLineDao(token);
-            if (getList() != null && getList().getItemList().size() > 0) {
-                dao.setSince_id(getList().getItemList().get(0).getId());
-            }
-
-            CommentListBean result = dao.getGSONMsgList();
-            return result;
-
-        } else if (selected == 2) {
-            CommentsTimeLineByMeDao dao = new CommentsTimeLineByMeDao(token);
-            if (getList() != null && getList().getItemList().size() > 0) {
-                dao.setSince_id(getList().getItemList().get(0).getId());
-            }
-
-            CommentListBean result = dao.getGSONMsgList();
-            return result;
+        CommentListBean result;
+        ICommentsTimeLineDao dao;
+        switch (selected) {
+            case 0:
+                dao = new MainCommentsTimeLineDao(token);
+                break;
+            case 1:
+                dao = new MentionsCommentTimeLineDao(token);
+                break;
+            case 2:
+                dao = new CommentsTimeLineByMeDao(token);
+                break;
+            default:
+                dao = new CommentsTimeLineByMeDao(token);
+                break;
         }
-
-        return null;
+        if (getList() != null && getList().getItemList().size() > 0) {
+            dao.setSince_id(getList().getItemList().get(0).getId());
+        }
+        result = dao.getGSONMsgList();
+        if (result != null && selected == 0) {
+            DatabaseManager.getInstance().addCommentLineMsg(result, accountBean.getUid());
+        }
+        return result;
     }
 
     @Override
     protected CommentListBean getDoInBackgroundOldData() throws WeiboException {
-        if (selected == 0) {
-            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
-            if (getList().getItemList().size() > 0) {
-                dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
-            }
-
-            CommentListBean result = dao.getGSONMsgList();
-            return result;
-        } else if (selected == 1) {
-            MentionsCommentTimeLineDao dao = new MentionsCommentTimeLineDao(token);
-            if (getList().getItemList().size() > 0) {
-                dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
-            }
-
-            CommentListBean result = dao.getGSONMsgList();
-            return result;
-        } else if (selected == 2) {
-            CommentsTimeLineByMeDao dao = new CommentsTimeLineByMeDao(token);
-            if (getList().getItemList().size() > 0) {
-                dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
-            }
-            CommentListBean result = dao.getGSONMsgList();
-            return result;
+        CommentListBean result;
+        ICommentsTimeLineDao dao;
+        switch (selected) {
+            case 0:
+                dao = new MainCommentsTimeLineDao(token);
+                break;
+            case 1:
+                dao = new MentionsCommentTimeLineDao(token);
+                break;
+            case 2:
+                dao = new CommentsTimeLineByMeDao(token);
+                break;
+            default:
+                dao = new CommentsTimeLineByMeDao(token);
+                break;
         }
-        return null;
+        if (getList() != null && getList().getItemList().size() > 0) {
+            dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
+        }
+        result = dao.getGSONMsgList();
+        return result;
     }
 
     @Override
     protected CommentListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        if (selected == 0) {
-            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
-            if (getList().getItemList().size() > 0) {
-                dao.setMax_id(beginId);
-                dao.setSince_id(endId);
-            }
-
-            CommentListBean result = dao.getGSONMsgList();
-            return result;
-        } else if (selected == 1) {
-            MentionsCommentTimeLineDao dao = new MentionsCommentTimeLineDao(token);
-            dao.setMax_id(beginId);
-            dao.setSince_id(endId);
-            CommentListBean result = dao.getGSONMsgList();
-            return result;
-        } else if (selected == 2) {
-            CommentsTimeLineByMeDao dao = new CommentsTimeLineByMeDao(token);
-            dao.setMax_id(beginId);
-            dao.setSince_id(endId);
-            CommentListBean result = dao.getGSONMsgList();
-            return result;
-        }
-        return null;
+        throw new UnsupportedOperationException("comment list dont support this operation");
     }
 
     @Override
@@ -433,21 +400,9 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         if (newValue != null) {
             if (newValue.getItemList().size() == 0) {
                 Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
-
             } else {
                 Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
-                if (newValue.getItemList().size() < Integer.valueOf(SettingUtility.getMsgCount())) {
-                    //for speed, add old data after new data
-                    newValue.getItemList().addAll(getList().getItemList());
-                } else {
-                    //null is flag means this position has some old messages which dont appear
-                    if (getList().getSize() > 0) {
-                        newValue.getItemList().add(null);
-                    }
-                    newValue.getItemList().addAll(getList().getItemList());
-                }
-
-                clearAndReplaceValue(newValue);
+                getList().addNewData(newValue);
                 clearAndReplaceValue(selected, getList());
                 getAdapter().notifyDataSetChanged();
                 getListView().setSelectionAfterHeaderView();

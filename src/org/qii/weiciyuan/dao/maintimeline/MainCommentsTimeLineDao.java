@@ -22,7 +22,7 @@ import java.util.Map;
  * User: qii
  * Date: 12-7-29
  */
-public class MainCommentsTimeLineDao {
+public class MainCommentsTimeLineDao implements ICommentsTimeLineDao {
 
 
     public void setSince_id(String since_id) {
