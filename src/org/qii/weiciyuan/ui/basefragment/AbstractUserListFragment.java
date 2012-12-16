@@ -17,7 +17,6 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.UserListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
@@ -27,7 +26,6 @@ import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 public abstract class AbstractUserListFragment extends Fragment {
 
     protected View footerView;
-    protected ICommander commander;
     protected PullToRefreshListView pullToRefreshListView;
     protected TextView empty;
     protected ProgressBar progressBar;
@@ -271,7 +269,6 @@ public abstract class AbstractUserListFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
             case R.id.refresh:
                 pullToRefreshListView.startRefreshNow();
                 break;

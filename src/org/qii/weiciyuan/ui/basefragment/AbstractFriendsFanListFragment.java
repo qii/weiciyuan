@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.widget.AbsListView;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 
 import java.util.List;
@@ -63,7 +62,7 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
+
         if (savedInstanceState != null) {
             currentUser = (UserBean) savedInstanceState.getSerializable("currentUser");
             uid = savedInstanceState.getString("uid");

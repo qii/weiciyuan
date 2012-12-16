@@ -7,7 +7,6 @@ import org.qii.weiciyuan.dao.search.SearchDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
 import java.util.List;
 
@@ -32,7 +31,6 @@ public class SearchUserFragment extends AbstractUserListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
         if (savedInstanceState != null) {
             clearAndReplaceValue((UserListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
