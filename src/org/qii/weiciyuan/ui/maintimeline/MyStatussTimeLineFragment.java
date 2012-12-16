@@ -69,7 +69,7 @@ public class MyStatussTimeLineFragment extends AbstractMessageTimeLineFragment<M
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
-        commander = ((AbstractAppActivity) getActivity()).getCommander();
+        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
 
         if (savedInstanceState != null) {
             getList().addNewData((MessageListBean) savedInstanceState.getSerializable("bean"));

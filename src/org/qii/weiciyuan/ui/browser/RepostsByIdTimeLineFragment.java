@@ -106,7 +106,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getCommander();
+        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
         if (savedInstanceState != null && bean.getSize() == 0) {
             clearAndReplaceValue((RepostListBean) savedInstanceState.getSerializable("bean"));
             token = savedInstanceState.getString("token");
@@ -228,7 +228,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     }
 
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), getListView(), false);
+        timeLineAdapter = new StatusListAdapter(this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), false);
         pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 

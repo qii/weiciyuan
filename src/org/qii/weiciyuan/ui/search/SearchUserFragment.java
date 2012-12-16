@@ -32,7 +32,7 @@ public class SearchUserFragment extends AbstractUserListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getCommander();
+        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
         if (savedInstanceState != null) {
             clearAndReplaceValue((UserListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();

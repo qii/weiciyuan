@@ -45,7 +45,7 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getCommander();
+        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
         if (savedInstanceState != null && bean.getItemList().size() == 0) {
             clearAndReplaceValue((SearchStatusListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();

@@ -129,7 +129,7 @@ public class AbstractAppActivity extends Activity {
         startActivity(intent);
     }
 
-    public ICommander getCommander() {
+    public ICommander getBitmapDownloader() {
         return commander;
     }
 

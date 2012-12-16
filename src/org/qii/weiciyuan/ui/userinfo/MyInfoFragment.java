@@ -94,7 +94,7 @@ public class MyInfoFragment extends Fragment {
         } else {
             bean = ((IUserInfo) getActivity()).getUser();
         }
-        commander = ((AbstractAppActivity) getActivity()).getCommander();
+        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
         setValue();
         refresh();
     }

@@ -75,7 +75,7 @@ public abstract class AbstractMessageTimeLineFragment<T extends ListBean<Message
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), getListView(), true);
+        timeLineAdapter = new StatusListAdapter(this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), true);
         getListView().setAdapter(timeLineAdapter);
     }
 

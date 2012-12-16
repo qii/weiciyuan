@@ -51,7 +51,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getCommander();
+        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
         if (savedInstanceState != null && bean.getItemList().size() == 0) {
             clearAndReplaceValue((FavListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();

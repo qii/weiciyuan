@@ -121,7 +121,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getCommander();
+        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
 
         if (savedInstanceState != null && (getList() == null || getList().getItemList().size() == 0)) {
             userBean = (UserBean) savedInstanceState.getSerializable("userBean");
@@ -293,7 +293,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new CommentListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), getListView(), true);
+        timeLineAdapter = new CommentListAdapter(this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), true);
         pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 

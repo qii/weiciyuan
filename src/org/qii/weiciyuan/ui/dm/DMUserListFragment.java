@@ -98,7 +98,7 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new DMUserListAdapter(this, ((AbstractAppActivity) getActivity()).getCommander(), getList().getItemList(), getListView());
+        timeLineAdapter = new DMUserListAdapter(this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView());
         getListView().setAdapter(timeLineAdapter);
     }
 

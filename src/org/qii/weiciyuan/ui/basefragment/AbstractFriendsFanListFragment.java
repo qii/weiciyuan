@@ -63,7 +63,7 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getCommander();
+        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
         if (savedInstanceState != null) {
             currentUser = (UserBean) savedInstanceState.getSerializable("currentUser");
             uid = savedInstanceState.getString("uid");

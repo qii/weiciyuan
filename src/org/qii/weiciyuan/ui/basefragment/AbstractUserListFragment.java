@@ -133,7 +133,7 @@ public abstract class AbstractUserListFragment extends Fragment {
         dismissFooterView();
 
 
-        timeLineAdapter = new UserListAdapter(AbstractUserListFragment.this, ((AbstractAppActivity) getActivity()).getCommander(), bean.getUsers(), getListView());
+        timeLineAdapter = new UserListAdapter(AbstractUserListFragment.this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), bean.getUsers(), getListView());
         pullToRefreshListView.setAdapter(timeLineAdapter);
 
         pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -251,7 +251,7 @@ public abstract class AbstractUserListFragment extends Fragment {
     public void refresh() {
         if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
 
-            ((AbstractAppActivity) getActivity()).getCommander().totalStopLoadPicture();
+            ((AbstractAppActivity) getActivity()).getBitmapDownloader().totalStopLoadPicture();
 
             newTask = new UserListGetNewDataTask();
             newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);

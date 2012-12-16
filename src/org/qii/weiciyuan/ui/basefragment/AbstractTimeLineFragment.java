@@ -266,7 +266,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
 
             newTask = new TimeLineGetNewMsgListTask();
             newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            ((AbstractAppActivity) getActivity()).getCommander().totalStopLoadPicture();
+            ((AbstractAppActivity) getActivity()).getBitmapDownloader().totalStopLoadPicture();
 
         }
 
@@ -287,7 +287,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getCommander();
+        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
 
     }
 
