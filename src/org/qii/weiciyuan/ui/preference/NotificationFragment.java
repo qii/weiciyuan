@@ -20,6 +20,9 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.othercomponent.AppNewMsgAlarm;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * User: qii
  * Date: 12-10-24
@@ -30,11 +33,25 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
     private Preference ringtone;
     private Preference notification_style;
 
+    private List<Preference> preferenceList = new ArrayList<Preference>(9);
+
     private Uri uri;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        addPreferencesFromResource(R.xml.notification_pref);
+
+        preferenceList.add(findPreference(SettingActivity.DISABLE_FETCH_AT_NIGHT));
+        preferenceList.add(findPreference(SettingActivity.FREQUENCY));
+        preferenceList.add(findPreference(SettingActivity.ENABLE_COMMENT_TO_ME));
+        preferenceList.add(findPreference(SettingActivity.ENABLE_MENTION_COMMENT_TO_ME));
+        preferenceList.add(findPreference(SettingActivity.ENABLE_MENTION_TO_ME));
+        preferenceList.add(findPreference(SettingActivity.ENABLE_VIBRATE));
+        preferenceList.add(findPreference(SettingActivity.ENABLE_LED));
+        preferenceList.add(findPreference(SettingActivity.ENABLE_RINGTONE));
+        preferenceList.add(findPreference(SettingActivity.JBNOTIFICATION_STYLE));
 
         View title = getActivity().getLayoutInflater().inflate(R.layout.filteractivity_title_layout, null);
         Switch switchBtn = (Switch) title.findViewById(R.id.switchBtn);
@@ -45,12 +62,14 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SettingUtility.setEnableFetchMSG(isChecked);
+                switchPre(isChecked);
             }
         });
 
         switchBtn.setChecked(SettingUtility.getEnableFetchMSG());
+        switchPre(SettingUtility.getEnableFetchMSG());
 
-        addPreferencesFromResource(R.xml.notification_pref);
+
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         frequency = findPreference(SettingActivity.FREQUENCY);
@@ -70,11 +89,12 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
                 return true;
             }
         });
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String path = sharedPref.getString(SettingActivity.ENABLE_RINGTONE, "");
-        if (!TextUtils.isEmpty(path)) {
+
+        String path = SettingUtility.getRingtone();
+        if (!TextUtils.isEmpty(SettingUtility.getRingtone())) {
             uri = Uri.parse(path);
         }
+
 
         buildSummary();
 
@@ -143,6 +163,13 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         }
 
         notification_style.setSummary(getActivity().getResources().getStringArray(R.array.notification_style)[SettingUtility.getNotificationStyle() - 1]);
+
+    }
+
+    private void switchPre(boolean value) {
+        for (Preference p : preferenceList) {
+            p.setEnabled(value);
+        }
     }
 
 }
