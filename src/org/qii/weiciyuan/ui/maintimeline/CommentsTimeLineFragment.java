@@ -345,10 +345,6 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 dao.setSince_id(getList().getItemList().get(0).getId());
             }
 
-//            if (selected == 1) {
-//                dao.setFilter_by_author("1");
-//            }
-
             CommentListBean result = dao.getGSONMsgList();
             if (result != null && selected == 0) {
                 DatabaseManager.getInstance().addCommentLineMsg(result, accountBean.getUid());
@@ -359,10 +355,6 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             if (getList() != null && getList().getItemList().size() > 0) {
                 dao.setSince_id(getList().getItemList().get(0).getId());
             }
-
-//            if (selected == 3) {
-//                dao.setFilter_by_author("1");
-//            }
 
             CommentListBean result = dao.getGSONMsgList();
             return result;
@@ -387,9 +379,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             if (getList().getItemList().size() > 0) {
                 dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
             }
-//            if (selected == 1) {
-//                dao.setFilter_by_author("1");
-//            }
+
             CommentListBean result = dao.getGSONMsgList();
             return result;
         } else if (selected == 1) {
@@ -397,9 +387,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             if (getList().getItemList().size() > 0) {
                 dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
             }
-//            if (selected == 3) {
-//                dao.setFilter_by_author("1");
-//            }
+
             CommentListBean result = dao.getGSONMsgList();
             return result;
         } else if (selected == 2) {
@@ -421,18 +409,13 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 dao.setMax_id(beginId);
                 dao.setSince_id(endId);
             }
-//            if (selected == 1) {
-//                dao.setFilter_by_author("1");
-//            }
+
             CommentListBean result = dao.getGSONMsgList();
             return result;
         } else if (selected == 1) {
             MentionsCommentTimeLineDao dao = new MentionsCommentTimeLineDao(token);
             dao.setMax_id(beginId);
             dao.setSince_id(endId);
-//            if (selected == 3) {
-//                dao.setFilter_by_author("1");
-//            }
             CommentListBean result = dao.getGSONMsgList();
             return result;
         } else if (selected == 2) {
