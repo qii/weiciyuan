@@ -13,17 +13,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.RepostListBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.actionmenu.RepostSingleChoiceModeListener;
+import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 /**
@@ -142,30 +143,6 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
         });
 
 
-    }
-
-    @Override
-    protected void newMsgOnPostExecute(RepostListBean newValue) {
-        if (getActivity() != null && newValue.getSize() > 0) {
-            getList().addNewData(newValue);
-            getAdapter().notifyDataSetChanged();
-            getListView().setSelectionAfterHeaderView();
-
-
-        }
-
-        afterGetNewMsg();
-    }
-
-    @Override
-    protected void oldMsgOnPostExecute(RepostListBean newValue) {
-        if (newValue != null && newValue.getSize() > 1) {
-            getList().addOldData(newValue);
-
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
-
-        }
     }
 
 
@@ -364,11 +341,6 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     @Override
     protected RepostListBean getDoInBackgroundNewData() throws WeiboException {
         RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, id);
-
-//        if (getList().getSize() > 0) {
-//            dao.setSince_id(getList().getItemList().get(0).getId());
-//        }
-
         return dao.getGSONMsgList();
     }
 
@@ -379,30 +351,34 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
             dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
         }
         return dao.getGSONMsgList();
-
     }
 
     @Override
     protected RepostListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        RepostsTimeLineByIdDao dao = new RepostsTimeLineByIdDao(token, id);
-        dao.setMax_id(beginId);
-        dao.setSince_id(endId);
-        return dao.getGSONMsgList();
-    }
-
-
-    @Override
-    protected void afterGetNewMsg() {
-        super.afterGetNewMsg();
-        invlidateTabText();
+        throw new UnsupportedOperationException("repost list dont support this operation");
     }
 
     @Override
-    protected void afterGetOldMsg() {
-        super.afterGetOldMsg();
-        invlidateTabText();
+    protected void newMsgOnPostExecute(RepostListBean newValue) {
+        if (getActivity() != null && newValue.getSize() > 0) {
+            getList().replaceAll(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
+            invlidateTabText();
+        }
+
+
     }
 
+    @Override
+    protected void oldMsgOnPostExecute(RepostListBean newValue) {
+        if (newValue != null && newValue.getSize() > 1) {
+            getList().addOldData(newValue);
+            invlidateTabText();
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }
 

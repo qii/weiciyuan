@@ -37,11 +37,7 @@ public class RepostListBean extends ListBean<MessageBean, RepostListBean> {
 
     @Override
     public void addNewData(RepostListBean newValue) {
-        if (newValue != null && newValue.getSize() > 0) {
-            setTotal_number(newValue.getTotal_number());
-            getItemList().clear();
-            getItemList().addAll(newValue.getItemList());
-        }
+        throw new UnsupportedOperationException("use replaceAll instead");
     }
 
     @Override
@@ -50,6 +46,14 @@ public class RepostListBean extends ListBean<MessageBean, RepostListBean> {
             getItemList().addAll(oldValue.getItemList().subList(1, oldValue.getSize()));
             setTotal_number(oldValue.getTotal_number());
 
+        }
+    }
+
+    public void replaceAll(RepostListBean newValue) {
+        if (newValue != null && newValue.getSize() > 0) {
+            setTotal_number(newValue.getTotal_number());
+            getItemList().clear();
+            getItemList().addAll(newValue.getItemList());
         }
     }
 }
