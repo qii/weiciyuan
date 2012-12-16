@@ -57,7 +57,7 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> {
 
         boolean receivedCountBelowRequestCount = newValue.getReceivedNumber() < Integer.valueOf(SettingUtility.getMsgCount());
         boolean receivedCountEqualRequestCount = newValue.getReceivedNumber() == Integer.valueOf(SettingUtility.getMsgCount());
-        if (receivedCountEqualRequestCount) {
+        if (receivedCountEqualRequestCount && this.getSize() > 0) {
             newValue.getItemList().add(null);
         }
         this.getItemList().addAll(0, newValue.getItemList());

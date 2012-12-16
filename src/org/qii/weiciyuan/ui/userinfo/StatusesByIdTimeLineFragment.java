@@ -86,31 +86,6 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
 
     @Override
-    protected void newMsgOnPostExecute(MessageListBean newValue) {
-        if (getActivity() != null && newValue.getSize() > 0) {
-            getList().addNewData(newValue);
-            getAdapter().notifyDataSetChanged();
-            getListView().setSelectionAfterHeaderView();
-
-
-        }
-
-        afterGetNewMsg();
-
-    }
-
-    @Override
-    protected void oldMsgOnPostExecute(MessageListBean newValue) {
-        if (newValue != null && newValue.getSize() > 1) {
-            getList().addOldData(newValue);
-
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
-
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
@@ -161,14 +136,30 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         return result;
     }
 
+
     @Override
-    protected void afterGetNewMsg() {
-        getActivity().invalidateOptionsMenu();
+    protected void newMsgOnPostExecute(MessageListBean newValue) {
+        if (getActivity() != null && newValue.getSize() > 0) {
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
+            getActivity().invalidateOptionsMenu();
+
+        }
+
+
     }
 
     @Override
-    protected void afterGetOldMsg() {
-        getActivity().invalidateOptionsMenu();
+    protected void oldMsgOnPostExecute(MessageListBean newValue) {
+        if (newValue != null && newValue.getSize() > 1) {
+            getList().addOldData(newValue);
+            getActivity().invalidateOptionsMenu();
+
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
+
+        }
     }
 
 }
