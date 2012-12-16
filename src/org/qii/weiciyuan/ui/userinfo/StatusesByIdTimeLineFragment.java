@@ -90,9 +90,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         switch (item.getItemId()) {
 
             case R.id.menu_refresh:
-                pullToRefreshListView.startRefreshNow();
-                refresh();
-
+                getPullToRefreshListView().startRefreshNow();
                 return true;
         }
         return super.onOptionsItemSelected(item);
