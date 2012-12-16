@@ -111,7 +111,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisible() && isVisibleToUser) {
             if (getActivity().getActionBar().getTabAt(2).getText().toString().contains(")")) {
-                pullToRefreshListView.startRefreshNow();
+                getPullToRefreshListView().startRefreshNow();
             }
         }
     }
@@ -276,45 +276,6 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 pullToRefreshListView.startRefreshNow();
             }
         }
-    }
-
-
-    private class RefreshDBTask extends MyAsyncTask<Object, Object, Object> {
-
-        @Override
-        protected void onPreExecute() {
-            showListView();
-
-            getListView().setSelection(0);
-        }
-
-        @Override
-        protected Object doInBackground(Object... params) {
-            CommentListBean value = DatabaseManager.getInstance().getCommentLineMsgList(accountBean.getUid());
-            clearAndReplaceValue(value);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(getList());
-
-            super.onPostExecute(o);
-        }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-        group[0] = getString(R.string.all_people_send_to_me);
-        group[1] = getString(R.string.mentions_to_me);
-        group[2] = getString(R.string.my_comment);
-
-        setHasOptionsMenu(true);
-        setRetainInstance(true);
     }
 
 
@@ -492,7 +453,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
                 clearAndReplaceValue(newValue);
                 clearAndReplaceValue(selected, getList());
-                timeLineAdapter.notifyDataSetChanged();
+                getAdapter().notifyDataSetChanged();
                 getListView().setSelectionAfterHeaderView();
             }
         }
@@ -504,10 +465,9 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     @Override
     protected void oldMsgOnPostExecute(CommentListBean newValue) {
-        if (newValue != null && newValue.getSize() > 1) {
-
-            getList().getItemList().addAll(newValue.getItemList().subList(1, newValue.getItemList().size()));
-
+        if (newValue != null && newValue.getItemList().size() > 1) {
+            getList().addOldData(newValue);
+            getAdapter().notifyDataSetChanged();
         }
     }
 
@@ -516,7 +476,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         if (hashMap.get(selected).getSize() == 0) {
             getList().getItemList().clear();
             getAdapter().notifyDataSetChanged();
-            pullToRefreshListView.startRefreshNow();
+            getPullToRefreshListView().startRefreshNow();
 
         } else {
             clearAndReplaceValue(hashMap.get(selected));
