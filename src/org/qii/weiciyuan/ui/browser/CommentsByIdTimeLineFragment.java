@@ -401,7 +401,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     protected void newMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null && newValue.getSize() > 0) {
-            getList().addNewData(newValue);
+            getList().replaceAll(newValue);
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
             invlidateTabText();
