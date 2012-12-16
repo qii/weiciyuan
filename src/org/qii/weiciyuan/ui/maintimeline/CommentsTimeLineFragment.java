@@ -265,7 +265,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
              * when this account first open app,if he don't have any data in database,fetch data from server automally
              */
             if (getList().getSize() == 0) {
-                pullToRefreshListView.startRefreshNow();
+                getPullToRefreshListView().startRefreshNow();
             }
 
             /**when one user open app from android notification center while this app is using another account,
@@ -273,7 +273,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
              * will fetch new message from server
              **/
             if (getActivity().getActionBar().getTabAt(2).getText().toString().contains(")")) {
-                pullToRefreshListView.startRefreshNow();
+                getPullToRefreshListView().startRefreshNow();
             }
         }
     }
