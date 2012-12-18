@@ -59,12 +59,8 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             ListViewTool.addJustHighLightLinks(msg);
             holder.content.setText(msg.getListViewSpannableString());
         }
-        String time = msg.getListviewItemShowTime();
 
-        if (!holder.time.getText().toString().equals(time)) {
-            holder.time.setText(time);
-        }
-        holder.time.setTag(msg.getId());
+        holder.time.setTime(msg.getMills());
 
         if (showOriStatus) {
             if (msg.getReposts_count() == 0 && msg.getComments_count() == 0) {

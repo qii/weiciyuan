@@ -17,6 +17,7 @@ import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.lib.TimeTextView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -218,7 +219,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         tp.setFakeBoldText(true);
         holder.content = (TextView) convertView.findViewById(R.id.content);
         holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
-        holder.time = (TextView) convertView.findViewById(R.id.time);
+        holder.time = (TimeTextView) convertView.findViewById(R.id.time);
         holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
         holder.content_pic = (ImageView) convertView.findViewById(R.id.content_pic);
         holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
@@ -353,8 +354,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         TextView username;
         TextView content;
         TextView repost_content;
-        //activity use this to fresh time every second
-        public TextView time;
+        TimeTextView time;
         ImageView avatar;
         ImageView content_pic;
         ImageView repost_content_pic;

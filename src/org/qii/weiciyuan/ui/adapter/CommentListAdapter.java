@@ -69,11 +69,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
         holder.content.setText(comment.getListViewSpannableString());
 
-        String time = comment.getListviewItemShowTime();
-        if (!holder.time.getText().toString().equals(time)) {
-            holder.time.setText(time);
-        }
-        holder.time.setTag(comment.getId());
+        holder.time.setTime(comment.getMills());
 
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);

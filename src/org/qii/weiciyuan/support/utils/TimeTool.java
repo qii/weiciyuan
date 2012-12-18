@@ -23,8 +23,8 @@ public class TimeTool {
     private static String MONTH = GlobalContext.getInstance().getString(R.string.month);
     private static String YEAR = GlobalContext.getInstance().getString(R.string.year);
 
+
     public static String getListTime(ItemBean bean) {
-        long now = System.currentTimeMillis();
         long msg = 0L;
 
         if (bean.getMills() != 0) {
@@ -33,6 +33,12 @@ public class TimeTool {
             TimeTool.dealMills(bean);
             msg = bean.getMills();
         }
+        return getListTime(msg);
+    }
+
+    public static String getListTime(long time) {
+        long now = System.currentTimeMillis();
+        long msg = time;
 
         long calcMills = now - msg;
 
