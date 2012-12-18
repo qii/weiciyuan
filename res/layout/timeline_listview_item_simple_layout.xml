@@ -16,7 +16,7 @@
         android:layout_marginRight="8dp"
         android:clickable="true" />
 
-    <TextView
+    <org.qii.weiciyuan.support.lib.TimeTextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
