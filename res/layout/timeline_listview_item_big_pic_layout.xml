@@ -6,7 +6,7 @@
                 android:padding="8dp"
                 android:id="@+id/listview_root">
 
-    <org.qii.weiciyuan.support.lib.PerformanceImageView
+    <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
         android:id="@+id/avatar"
         android:layout_width="@dimen/timeline_avatar_width"
         android:layout_height="@dimen/timeline_avatar_height"

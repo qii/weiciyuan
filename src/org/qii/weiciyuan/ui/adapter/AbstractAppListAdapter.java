@@ -221,7 +221,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.content = (TextView) convertView.findViewById(R.id.content);
         holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
         holder.time = (TimeTextView) convertView.findViewById(R.id.time);
-        holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
+        holder.avatar = (TimeLineImageView) convertView.findViewById(R.id.avatar);
         holder.content_pic = (TimeLineImageView) convertView.findViewById(R.id.content_pic);
         holder.repost_content_pic = (TimeLineImageView) convertView.findViewById(R.id.repost_content_pic);
         holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
@@ -280,6 +280,20 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             return -1;
     }
 
+    protected void buildAvatar(TimeLineImageView view, int position, final UserBean user) {
+        view.setVisibility(View.VISIBLE);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("user", user);
+                getActivity().startActivity(intent);
+            }
+        });
+        buildAvatar(view.getImageView(), position, user);
+    }
+
     protected void buildAvatar(ImageView view, int position, final UserBean user) {
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
@@ -294,16 +308,6 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 url = user.getProfile_image_url();
             }
             commander.downloadAvatar(view, url, position, listView, isFling);
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                    intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                    intent.putExtra("user", user);
-                    getActivity().startActivity(intent);
-                }
-            });
 
         } else {
             view.setVisibility(View.GONE);
@@ -371,7 +375,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         TextView content;
         TextView repost_content;
         TimeTextView time;
-        ImageView avatar;
+        TimeLineImageView avatar;
         TimeLineImageView content_pic;
         TimeLineImageView repost_content_pic;
         RelativeLayout listview_root;

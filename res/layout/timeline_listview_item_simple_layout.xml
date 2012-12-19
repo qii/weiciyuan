@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:id="@+id/listview_root">
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:id="@+id/listview_root">
 
-    <org.qii.weiciyuan.support.lib.PerformanceImageView
+    <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
         android:id="@+id/avatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/timeline_avatar_width"
+        android:layout_height="@dimen/timeline_avatar_height"
         android:padding="1px"
         android:background="@drawable/bg_border1"
         android:layout_gravity="left|center_vertical"
         android:layout_marginRight="8dp"
-        android:clickable="true" />
+        android:clickable="true"/>
 
     <org.qii.weiciyuan.support.lib.TimeTextView
         android:id="@+id/time"
@@ -23,7 +23,7 @@
         android:text="12:00"
 
         android:layout_alignParentRight="true"
-        android:layout_alignBottom="@id/username" />
+        android:layout_alignBottom="@id/username"/>
 
     <TextView
         android:id="@+id/username"
@@ -34,7 +34,7 @@
         android:singleLine="true"
         android:ellipsize="end"
         android:layout_toRightOf="@id/avatar"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
 
     <TextView
@@ -45,7 +45,7 @@
         android:textSize="15sp"
         android:layout_below="@id/username"
         android:layout_toRightOf="@id/avatar"
-        android:layerType="software" />
+        android:layerType="software"/>
 
     <FrameLayout
         android:layout_width="0dp"
@@ -79,7 +79,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:visibility="gone"
-                android:layerType="software" />
+                android:layerType="software"/>
 
             <LinearLayout
                 android:layout_height="0dp"
@@ -102,5 +102,5 @@
     <ImageView
         android:id="@+id/repost_flag"
         android:layout_width="0dp"
-        android:layout_height="0dp" />
+        android:layout_height="0dp"/>
 </RelativeLayout>

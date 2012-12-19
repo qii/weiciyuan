@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent">
+
+    <org.qii.weiciyuan.support.lib.PerformanceImageView
+        android:id="@+id/imageview"
+        android:layout_width="@dimen/timeline_avatar_width"
+        android:layout_height="@dimen/timeline_avatar_height"/>
+
+    <org.qii.weiciyuan.support.lib.PerformanceImageView
+        android:id="@+id/imageview_cover"
+        android:layout_width="@dimen/timeline_avatar_width"
+        android:layout_height="@dimen/timeline_avatar_height"/>
+</FrameLayout>
