@@ -17,6 +17,7 @@ import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.lib.TimeLineImageView;
 import org.qii.weiciyuan.support.lib.TimeTextView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -221,8 +222,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
         holder.time = (TimeTextView) convertView.findViewById(R.id.time);
         holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
-        holder.content_pic = (ImageView) convertView.findViewById(R.id.content_pic);
-        holder.repost_content_pic = (ImageView) convertView.findViewById(R.id.repost_content_pic);
+        holder.content_pic = (TimeLineImageView) convertView.findViewById(R.id.content_pic);
+        holder.repost_content_pic = (TimeLineImageView) convertView.findViewById(R.id.repost_content_pic);
         holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
         holder.repost_layout = (LinearLayout) convertView.findViewById(R.id.repost_layout);
         holder.repost_flag = (ImageView) convertView.findViewById(R.id.repost_flag);
@@ -309,6 +310,20 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         }
     }
 
+    protected void buildPic(final MessageBean msg, TimeLineImageView view, int position) {
+        view.setVisibility(View.VISIBLE);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
+                intent.putExtra("url", msg.getBmiddle_pic());
+                intent.putExtra("oriUrl", msg.getOriginal_pic());
+                getActivity().startActivity(intent);
+            }
+        });
+        buildPic(msg, view.getImageView(), position);
+    }
+
     protected void buildPic(final MessageBean msg, ImageView view, int position) {
         view.setVisibility(View.VISIBLE);
 
@@ -345,6 +360,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         }
 
         if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {
+            holder.repost_content_pic.setVisibility(View.VISIBLE);
             buildPic(repost_msg, holder.repost_content_pic, position);
         }
     }
@@ -356,8 +372,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         TextView repost_content;
         TimeTextView time;
         ImageView avatar;
-        ImageView content_pic;
-        ImageView repost_content_pic;
+        TimeLineImageView content_pic;
+        TimeLineImageView repost_content_pic;
         RelativeLayout listview_root;
         LinearLayout repost_layout;
         ImageView repost_flag;

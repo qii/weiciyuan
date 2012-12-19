@@ -92,13 +92,12 @@
             android:layout_width="fill_parent"
             android:gravity="center">
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.lib.TimeLineImageView
                 android:id="@+id/content_pic"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
                 android:visibility="gone"
                 android:padding="2dp"
-                android:background="?android:selectableItemBackground"
                 android:clickable="true"/>
         </LinearLayout>
 
@@ -128,14 +127,14 @@
                 android:layout_marginTop="5dp"
                 android:gravity="center">
 
-                <org.qii.weiciyuan.support.lib.PerformanceImageView
+                <org.qii.weiciyuan.support.lib.TimeLineImageView
                     android:id="@+id/repost_content_pic"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
                     android:visibility="gone"
                     android:clickable="true"
                     android:padding="2dp"
-                    android:background="?android:selectableItemBackground"/>
+                  />
             </LinearLayout>
         </LinearLayout>
 

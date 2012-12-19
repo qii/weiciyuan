@@ -3,6 +3,8 @@
 
 
     <color name="transparent">#00000000</color>
+    <color name="transparent_cover">#25000000</color>
+
     <color name="white">#FFFFFF</color>
     <!--白色 -->
     <color name="ivory">#FFFFF0</color>

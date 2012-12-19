@@ -57,7 +57,7 @@
             android:layout_width="fill_parent"
             android:gravity="center">
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.TimeLineImageView
                 android:id="@+id/content_pic"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -87,7 +87,7 @@
                 android:layout_marginTop="5dp"
                 android:gravity="center">
 
-                <ImageView
+                <org.qii.weiciyuan.support.lib.TimeLineImageView
                     android:id="@+id/repost_content_pic"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
