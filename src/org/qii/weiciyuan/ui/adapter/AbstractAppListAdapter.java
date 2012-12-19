@@ -17,6 +17,7 @@ import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.lib.TimeLineImageView;
 import org.qii.weiciyuan.support.lib.TimeTextView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -221,7 +222,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.content = (TextView) convertView.findViewById(R.id.content);
         holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
         holder.time = (TimeTextView) convertView.findViewById(R.id.time);
-        holder.avatar = (TimeLineImageView) convertView.findViewById(R.id.avatar);
+        holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
         holder.content_pic = (TimeLineImageView) convertView.findViewById(R.id.content_pic);
         holder.repost_content_pic = (TimeLineImageView) convertView.findViewById(R.id.repost_content_pic);
         holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
@@ -280,7 +281,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             return -1;
     }
 
-    protected void buildAvatar(TimeLineImageView view, int position, final UserBean user) {
+    protected void buildAvatar(TimeLineAvatarImageView view, int position, final UserBean user) {
         view.setVisibility(View.VISIBLE);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -291,6 +292,11 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 getActivity().startActivity(intent);
             }
         });
+        if (user.isVerified()) {
+            view.isVerified();
+        } else {
+            view.reset();
+        }
         buildAvatar(view.getImageView(), position, user);
     }
 
@@ -375,7 +381,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         TextView content;
         TextView repost_content;
         TimeTextView time;
-        TimeLineImageView avatar;
+        TimeLineAvatarImageView avatar;
         TimeLineImageView content_pic;
         TimeLineImageView repost_content_pic;
         RelativeLayout listview_root;
