@@ -58,7 +58,7 @@ public class StatusNewMsgDao {
 
     }
 
-    private boolean sendNewMsgWithPic(String str, FileUploaderHttpHelper.ProgressListener listener) {
+    private boolean sendNewMsgWithPic(String str, FileUploaderHttpHelper.ProgressListener listener) throws WeiboException {
         String url =  URLHelper.STATUSES_UPLOAD;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);

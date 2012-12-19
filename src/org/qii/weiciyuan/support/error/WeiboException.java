@@ -163,6 +163,10 @@ public class WeiboException extends Exception {
 
     }
 
+    public WeiboException(String detailMessage) {
+        error = detailMessage;
+    }
+
     public WeiboException(String detailMessage, Throwable throwable) {
         error = detailMessage;
     }
