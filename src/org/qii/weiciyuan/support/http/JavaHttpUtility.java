@@ -5,6 +5,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 
@@ -161,5 +163,67 @@ public class JavaHttpUtility {
         }
 
         return "";
+    }
+
+    public boolean doGetSaveFile(String urlStr, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+
+        File file = FileManager.createNewFileInSDCard(path);
+        if (file == null) {
+            return false;
+        }
+
+        FileOutputStream out = null;
+        InputStream in = null;
+        HttpURLConnection urlConnection = null;
+        try {
+
+            URL url = new URL(urlStr);
+
+            urlConnection = (HttpURLConnection) url
+                    .openConnection();
+
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoOutput(false);
+            urlConnection.setConnectTimeout(5000);
+            urlConnection.setReadTimeout(8000);
+            urlConnection.setRequestProperty("Connection", "Keep-Alive");
+            urlConnection.setRequestProperty("Charset", "UTF-8");
+            urlConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
+
+            urlConnection.connect();
+
+            int status = urlConnection.getResponseCode();
+
+            if (status != 200) {
+                return false;
+            }
+
+
+            int bytetotal = (int) urlConnection.getContentLength();
+            int bytesum = 0;
+            int byteread = 0;
+            out = new FileOutputStream(file);
+            in = urlConnection.getInputStream();
+
+            byte[] buffer = new byte[1444];
+            while ((byteread = in.read(buffer)) != -1) {
+                bytesum += byteread;
+                out.write(buffer, 0, byteread);
+                if (downloadListener != null && bytetotal > 0) {
+                    downloadListener.pushProgress(bytesum, bytetotal);
+                }
+            }
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            Utility.closeSilently(in);
+            Utility.closeSilently(out);
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+
+        return false;
     }
 }
