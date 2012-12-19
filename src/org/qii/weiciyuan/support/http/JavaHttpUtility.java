@@ -32,6 +32,9 @@ public class JavaHttpUtility {
     }
 
     public String doPost(String urlAddress, Map<String, String> param) throws WeiboException {
+        GlobalContext globalContext = GlobalContext.getInstance();
+        String errorStr = globalContext.getString(R.string.timeout);
+        globalContext = null;
         try {
             URL url = new URL(urlAddress);
             HttpURLConnection uRLConnection = (HttpURLConnection) url.openConnection();
@@ -54,7 +57,7 @@ public class JavaHttpUtility {
             return handleResponse(uRLConnection);
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            throw new WeiboException(errorStr, e);
         }
     }
 
@@ -137,6 +140,9 @@ public class JavaHttpUtility {
     }
 
     public String doGet(String urlStr, Map<String, String> param) throws WeiboException {
+        GlobalContext globalContext = GlobalContext.getInstance();
+        String errorStr = globalContext.getString(R.string.timeout);
+        globalContext = null;
         InputStream is = null;
         try {
 
@@ -160,9 +166,10 @@ public class JavaHttpUtility {
             return handleResponse(urlConnection);
         } catch (IOException e) {
             e.printStackTrace();
+            throw new WeiboException(errorStr, e);
         }
 
-        return "";
+
     }
 
     public boolean doGetSaveFile(String urlStr, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
