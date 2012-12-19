@@ -440,7 +440,12 @@ public class ImageTool {
 
 
     private static boolean getBitmapFromNetWork(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
-        return HttpUtility.getInstance().executeDownloadTask(url, path, downloadListener);
+        for (int i = 0; i < 3; i++) {
+            if (HttpUtility.getInstance().executeDownloadTask(url, path, downloadListener)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
