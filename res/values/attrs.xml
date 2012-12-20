@@ -15,6 +15,7 @@
     <attr name="location_place" format="reference"/>
     <attr name="at" format="reference"/>
     <attr name="emoticon" format="reference"/>
+    <attr name="topic" format="reference"/>
     <attr name="settings" format="reference"/>
     <attr name="picture" format="reference"/>
     <attr name="refresh" format="reference"/>

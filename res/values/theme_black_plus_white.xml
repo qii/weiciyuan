@@ -15,6 +15,7 @@
         <item name="location_place">@drawable/location_place_light</item>
         <item name="at">@drawable/at_light</item>
         <item name="emoticon">@drawable/emoticon_light</item>
+        <item name="topic">@drawable/topic_light</item>
         <item name="settings">@drawable/maintimelineactivity_settings_light</item>
         <item name="picture">@drawable/picture_black</item>
         <item name="refresh">@drawable/refresh_light</item>

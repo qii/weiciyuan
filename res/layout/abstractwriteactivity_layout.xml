@@ -31,7 +31,7 @@
         <Button
             style="?android:actionButtonStyle"
             android:layout_width="wrap_content"
-            android:text="#"
+            android:drawableLeft="?topic"
             android:id="@+id/menu_topic"
             android:textColor="?android:actionMenuTextColor"
             android:textAppearance="?android:attr/actionMenuTextAppearance"
@@ -40,7 +40,7 @@
         <Button
             style="?android:actionButtonStyle"
             android:layout_width="wrap_content"
-            android:text="@string/only_at_char"
+            android:drawableLeft="?at"
             android:id="@+id/menu_at"
             android:textColor="?android:actionMenuTextColor"
             android:textAppearance="?android:attr/actionMenuTextAppearance"
@@ -49,7 +49,7 @@
         <Button
             style="?android:actionButtonStyle"
             android:layout_width="wrap_content"
-            android:text=":-)"
+            android:drawableLeft="?emoticon"
             android:id="@+id/menu_add_emotions"
             android:textColor="?android:actionMenuTextColor"
             android:textAppearance="?android:attr/actionMenuTextAppearance"
