@@ -35,17 +35,17 @@
             android:id="@+id/menu_add_pic"
             android:layout_height="match_parent"/>
 
-        <Button
+        <ImageButton
             style="?android:actionButtonStyle"
             android:layout_width="wrap_content"
-            android:drawableLeft="?at"
+            android:src="?at"
             android:id="@+id/menu_at"
             android:layout_height="match_parent"/>
 
-        <Button
+        <ImageButton
             style="?android:actionButtonStyle"
             android:layout_width="wrap_content"
-            android:drawableLeft="?emoticon"
+            android:src="?emoticon"
             android:id="@+id/menu_emoticon"
             android:layout_height="match_parent"/>
 
