@@ -90,15 +90,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onCancelled(Bitmap bitmap) {
-        for (WeakReference<ImageView> view : viewList) {
-            ImageView imageView = view.get();
-            if (imageView != null) {
-                if (canDisplay(imageView)) {
-                    imageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
-                }
-            }
-
-        }
+        displayBitmap(bitmap);
         clean();
         super.onCancelled(bitmap);
     }
@@ -107,6 +99,11 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     protected void onPostExecute(Bitmap bitmap) {
 
         super.onPostExecute(bitmap);
+        displayBitmap(bitmap);
+        clean();
+    }
+
+    private void displayBitmap(Bitmap bitmap) {
         for (WeakReference<ImageView> view : viewList) {
             ImageView imageView = view.get();
             if (imageView != null) {
@@ -121,8 +118,6 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             }
 
         }
-
-        clean();
     }
 
     private boolean canDisplay(ImageView view) {
