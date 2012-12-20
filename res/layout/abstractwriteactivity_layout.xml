@@ -46,7 +46,7 @@
             style="?android:actionButtonStyle"
             android:layout_width="wrap_content"
             android:src="?emoticon"
-            android:id="@+id/menu_add_emotions"
+            android:id="@+id/menu_emoticon"
             android:layout_height="match_parent"/>
 
         <Space

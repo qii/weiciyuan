@@ -111,8 +111,14 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
 
         findViewById(R.id.menu_topic).setOnClickListener(this);
         findViewById(R.id.menu_at).setOnClickListener(this);
-        findViewById(R.id.menu_add_emotions).setOnClickListener(this);
+        findViewById(R.id.menu_emoticon).setOnClickListener(this);
         findViewById(R.id.menu_send).setOnClickListener(this);
+
+        View.OnLongClickListener onLongClickListener = new BottomButtonLongClickListener();
+        findViewById(R.id.menu_at).setOnLongClickListener(onLongClickListener);
+        findViewById(R.id.menu_emoticon).setOnLongClickListener(onLongClickListener);
+        findViewById(R.id.menu_topic).setOnLongClickListener(onLongClickListener);
+        findViewById(R.id.menu_send).setOnLongClickListener(onLongClickListener);
 
         if (getEmotionsTask == null || getEmotionsTask.getStatus() == MyAsyncTask.Status.FINISHED) {
             getEmotionsTask = new GetEmotionsTask();
@@ -124,7 +130,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.menu_add_emotions:
+            case R.id.menu_emoticon:
                 EmotionsGridDialog dialog = new EmotionsGridDialog();
                 dialog.show(getFragmentManager(), "");
                 break;
@@ -282,4 +288,26 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
             return null;
         }
     }
+
+    private class BottomButtonLongClickListener implements View.OnLongClickListener {
+
+            @Override
+            public boolean onLongClick(View v) {
+                switch (v.getId()) {
+                    case R.id.menu_emoticon:
+                        Toast.makeText(AbstractWriteActivity.this, getString(R.string.add_emoticon), Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.menu_at:
+                        Toast.makeText(AbstractWriteActivity.this, getString(R.string.at_other), Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.menu_topic:
+                        Toast.makeText(AbstractWriteActivity.this, getString(R.string.add_topic), Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.menu_send:
+                        Toast.makeText(AbstractWriteActivity.this, getString(R.string.send), Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return true;
+            }
+        }
 }
