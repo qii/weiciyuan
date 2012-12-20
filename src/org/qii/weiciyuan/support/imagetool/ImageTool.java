@@ -422,8 +422,8 @@ public class ImageTool {
     }
 
 
-    private static Bitmap decodeBitmapFromSDCard(String path,
-                                                 int reqWidth, int reqHeight) {
+    public static Bitmap decodeBitmapFromSDCard(String path,
+                                                int reqWidth, int reqHeight) {
 
 
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -459,9 +459,16 @@ public class ImageTool {
         if (height > reqHeight || width > reqWidth) {
             if (height > reqHeight && reqHeight != 0) {
                 inSampleSize = Math.round((float) height / (float) reqHeight);
-            } else if (width > reqWidth && reqWidth != 0) {
-                inSampleSize = Math.round((float) width / (float) reqWidth);
             }
+
+            int tmp = 0;
+
+            if (width > reqWidth && reqWidth != 0) {
+                tmp = Math.round((float) width / (float) reqWidth);
+            }
+
+            if (tmp > inSampleSize)
+                inSampleSize = tmp;
 
         }
         return inSampleSize;

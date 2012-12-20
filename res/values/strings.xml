@@ -158,6 +158,7 @@
 
     <!-- browser weibo -->
     <string name="ori_picture">原图</string>
+    <string name="browser_part_picture">查看局部图片</string>
     <string name="browser_picture">查看图片</string>
     <string name="save_pic_album">保存到图片文件夹</string>
     <string name="force_download">重新下载</string>
