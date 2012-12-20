@@ -19,10 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
@@ -109,6 +106,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
                     picPath = getPicPathFromUri(imageFileUri);
                     havePic.setVisibility(View.VISIBLE);
+                    ((ImageButton)findViewById(R.id.menu_add_pic)).setImageLevel(1);
                     break;
                 case PIC_RESULT:
                     if (TextUtils.isEmpty(content.getText().toString())) {
@@ -119,6 +117,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     Uri imageFileUri = intent.getData();
                     picPath = getPicPathFromUri(imageFileUri);
                     havePic.setVisibility(View.VISIBLE);
+                    ((ImageButton)findViewById(R.id.menu_add_pic)).setImageLevel(1);
                     break;
                 case AT_USER:
                     String name = intent.getStringExtra("name");

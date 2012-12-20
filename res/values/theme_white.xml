@@ -23,7 +23,7 @@
         <item name="search">@drawable/search_black</item>
         <item name="share">@drawable/share_black</item>
         <item name="send">@drawable/send_black</item>
-        <item name="statusnewactivity_camera">@drawable/statusnewactivity_camera_black</item>
+        <item name="statusnewactivity_camera">@drawable/camera_black</item>
         <item name="statusnewactivity_gps">@drawable/statusnewactivity_gps_black</item>
         <item name="statusnewactivity_send">@drawable/statusnewactivity_send_black</item>
         <item name="statusnewactivity_pic">@drawable/picture_black</item>

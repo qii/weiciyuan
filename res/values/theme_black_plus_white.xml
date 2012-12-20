@@ -24,7 +24,7 @@
         <item name="search">@drawable/search_light</item>
         <item name="share">@drawable/share_light</item>
         <item name="send">@drawable/send_black</item>
-        <item name="statusnewactivity_camera">@drawable/statusnewactivity_camera_light</item>
+        <item name="statusnewactivity_camera">@drawable/camera_light</item>
         <item name="statusnewactivity_gps">@drawable/statusnewactivity_gps_light</item>
         <item name="statusnewactivity_send">@drawable/statusnewactivity_send_light</item>
         <item name="statusnewactivity_pic">@drawable/picture_light</item>
