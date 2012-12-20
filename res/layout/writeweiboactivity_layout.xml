@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true"
-        android:id="@+id/scrollview">
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fillViewport="true"
+                android:id="@+id/scrollview">
 
 
         <EditText
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/say_something"
             android:id="@+id/status_new_content"
-            android:gravity="left|top" />
+            android:gravity="left|top"/>
 
 
     </ScrollView>
@@ -31,22 +31,28 @@
         <Button
             style="?android:actionButtonStyle"
             android:layout_width="wrap_content"
-            android:drawableLeft="?statusnewactivity_gps"
-            android:id="@+id/menu_add_gps"
-            android:layout_height="match_parent" />
+            android:drawableLeft="?statusnewactivity_camera"
+            android:id="@+id/menu_add_pic"
+            android:layout_height="match_parent"/>
 
         <Button
             style="?android:actionButtonStyle"
             android:layout_width="wrap_content"
-            android:drawableLeft="?statusnewactivity_camera"
-            android:id="@+id/menu_add_pic"
-            android:layout_height="match_parent" />
+            android:drawableLeft="?at"
+            android:id="@+id/menu_at"
+            android:layout_height="match_parent"/>
 
+        <Button
+            style="?android:actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:drawableLeft="?emoticon"
+            android:id="@+id/menu_emoticon"
+            android:layout_height="match_parent"/>
 
         <Space
             android:layout_height="match_parent"
             android:layout_width="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <Button
             style="?android:actionButtonStyle"
@@ -56,6 +62,6 @@
             android:id="@+id/menu_send"
             android:textColor="?android:actionMenuTextColor"
             android:textAppearance="?android:attr/actionMenuTextAppearance"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
     </LinearLayout>
 </LinearLayout>

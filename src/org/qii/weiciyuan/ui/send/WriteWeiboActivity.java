@@ -286,12 +286,14 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         content.setDrawingCacheEnabled(true);
 
         View.OnClickListener onClickListener = new BottomButtonClickListener();
-        findViewById(R.id.menu_add_gps).setOnClickListener(onClickListener);
+        findViewById(R.id.menu_at).setOnClickListener(onClickListener);
+        findViewById(R.id.menu_emoticon).setOnClickListener(onClickListener);
         findViewById(R.id.menu_add_pic).setOnClickListener(onClickListener);
         findViewById(R.id.menu_send).setOnClickListener(onClickListener);
 
         View.OnLongClickListener onLongClickListener = new BottomButtonLongClickListener();
-        findViewById(R.id.menu_add_gps).setOnLongClickListener(onLongClickListener);
+        findViewById(R.id.menu_at).setOnLongClickListener(onLongClickListener);
+        findViewById(R.id.menu_emoticon).setOnLongClickListener(onLongClickListener);
         findViewById(R.id.menu_add_pic).setOnLongClickListener(onLongClickListener);
         findViewById(R.id.menu_send).setOnLongClickListener(onLongClickListener);
     }
@@ -407,10 +409,6 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 break;
-            case R.id.menu_emoticon:
-                EmotionsGridDialog dialog = new EmotionsGridDialog();
-                dialog.show(getFragmentManager(), "");
-                break;
 
             case R.id.menu_topic:
                 String ori = content.getText().toString();
@@ -428,6 +426,9 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 break;
             case R.id.menu_clear:
                 clearContentMenu();
+                break;
+            case R.id.menu_add_gps:
+                addLocation();
                 break;
 
         }
@@ -517,7 +518,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     addPic();
                     break;
 
-                case R.id.menu_add_emotions:
+                case R.id.menu_emoticon:
                     EmotionsGridDialog dialog = new EmotionsGridDialog();
                     dialog.show(getFragmentManager(), "");
                     break;
@@ -525,6 +526,12 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 case R.id.menu_send:
                     send();
                     break;
+                case R.id.menu_at:
+                    Intent intent = new Intent(WriteWeiboActivity.this, AtUserActivity.class);
+                    intent.putExtra("token", token);
+                    startActivityForResult(intent, AT_USER);
+                    break;
+
             }
         }
     }
@@ -534,8 +541,11 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         @Override
         public boolean onLongClick(View v) {
             switch (v.getId()) {
-                case R.id.menu_add_gps:
-                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.add_gps), Toast.LENGTH_SHORT).show();
+                case R.id.menu_emoticon:
+                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.add_emoticon), Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.menu_at:
+                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.at_other), Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.menu_add_pic:
                     Toast.makeText(WriteWeiboActivity.this, getString(R.string.add_pic), Toast.LENGTH_SHORT).show();

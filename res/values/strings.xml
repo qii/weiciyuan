@@ -100,7 +100,7 @@
     <!--new activity -->
     <string name="write_weibo">写微博</string>
     <string name="draft">草稿箱</string>
-    <string name="at_other">选择好友</string>
+    <string name="at_other">添加好友</string>
     <string name="only_at_char">"@</string>
     <string name="emoticon">表情</string>
     <string name="word_emoticon">颜文字</string>
@@ -113,6 +113,7 @@
     <string name="clear">清空</string>
     <string name="add_gps">添加GPS</string>
     <string name="add_pic">添加照片</string>
+    <string name="add_emoticon">添加表情</string>
     <string name="comment_cant_be_empty">评论不能为空</string>
     <string name="send_successfully">发送成功</string>
     <string name="send_failed">发送失败</string>

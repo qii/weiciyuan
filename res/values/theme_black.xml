@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="AppTheme_Black" parent="@android:style/Theme.Holo">
 
         <item name="account">@drawable/account_light</item>
@@ -13,6 +14,8 @@
         <item name="fav_un">@drawable/fav_un_light</item>
         <item name="write_weibo">@drawable/friendstimelinefragment_write_light</item>
         <item name="location_place">@drawable/location_place_light</item>
+        <item name="at">@drawable/at_light</item>
+        <item name="emoticon">@drawable/emoticon_light</item>
         <item name="settings">@drawable/maintimelineactivity_settings_light</item>
         <item name="picture">@drawable/picture_light</item>
         <item name="refresh">@drawable/refresh_light</item>
