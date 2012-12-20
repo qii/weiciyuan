@@ -90,6 +90,15 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onCancelled(Bitmap bitmap) {
+        for (WeakReference<ImageView> view : viewList) {
+            ImageView imageView = view.get();
+            if (imageView != null) {
+                if (canDisplay(imageView)) {
+                    imageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
+                }
+            }
+
+        }
         clean();
         super.onCancelled(bitmap);
     }
@@ -99,13 +108,14 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
         super.onPostExecute(bitmap);
         for (WeakReference<ImageView> view : viewList) {
-            if (view != null && view.get() != null) {
-                if (canDisplay(view)) {
+            ImageView imageView = view.get();
+            if (imageView != null) {
+                if (canDisplay(imageView)) {
                     if (bitmap != null) {
-                        playImageViewAnimation(view, bitmap);
+                        playImageViewAnimation(imageView, bitmap);
                         lruCache.put(data, bitmap);
                     } else {
-                        view.get().setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        imageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
                     }
                 }
             }
@@ -115,10 +125,9 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         clean();
     }
 
-    private boolean canDisplay(WeakReference<ImageView> view) {
-        if (view != null && view.get() != null) {
-            ImageView imageView = view.get();
-            PictureBitmapWorkerTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
+    private boolean canDisplay(ImageView view) {
+        if (view != null) {
+            PictureBitmapWorkerTask bitmapDownloaderTask = getBitmapDownloaderTask(view);
             if (this == bitmapDownloaderTask) {
                 return true;
             }
@@ -137,12 +146,12 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         return null;
     }
 
-    private void playImageViewAnimation(final WeakReference<ImageView> view, final Bitmap bitmap) {
-        final Animation anim_out = AnimationUtils.loadAnimation(view.get().getContext(), R.anim.timeline_pic_fade_out);
-        final Animation anim_in = AnimationUtils.loadAnimation(view.get().getContext(), R.anim.timeline_pic_fade_in);
+    private void playImageViewAnimation(final ImageView view, final Bitmap bitmap) {
+        final Animation anim_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_out);
+        final Animation anim_in = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_in);
 
         anim_out.setAnimationListener(new Animation.AnimationListener() {
-            //setTag at animation start time
+
             @Override
             public void onAnimationStart(Animation animation) {
 
@@ -170,13 +179,13 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                 });
 
                 if (canDisplay(view)) {
-                    view.get().setImageBitmap(bitmap);
-                    view.get().startAnimation(anim_in);
+                    view.setImageBitmap(bitmap);
+                    view.startAnimation(anim_in);
                 }
             }
         });
-        if (view.get().getAnimation() == null || view.get().getAnimation().hasEnded())
-            view.get().startAnimation(anim_out);
+        if (view.getAnimation() == null || view.getAnimation().hasEnded())
+            view.startAnimation(anim_out);
     }
 
     private void clean() {
