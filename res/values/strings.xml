@@ -6,14 +6,11 @@
     <string name="detail">正文</string>
     <string name="weibo">微博</string>
 
-    <!--account -->
-    <string name="select_all">全选</string>
-    <string name="select_none">反选</string>
-    <string name="only_oauth_three_months">每隔3个月得重新授权一次</string>
+    <!--Account -->
     <string name="oauthing">授权中</string>
 
 
-    <!--tip dialog-->
+    <!--Tip Dialog-->
     <string name="tip_dialog_title">提示</string>
     <string name="tip_dialog_content">1. 搜索、私信、个人资料编辑都没接口做\n2.
         受新浪微博政策限制，帐号隔3个月就会过期，需要重新登录\n3.登录是在新浪网站上进行的，登录不了不关我的事\n4.觉得不爽就老老实实用官方或者Weico
@@ -97,7 +94,6 @@
 
     <!--new activity -->
     <string name="write_weibo">写微博</string>
-    <string name="draft">草稿箱</string>
     <string name="at_other">添加好友</string>
     <string name="only_at_char">"@</string>
     <string name="emoticon">表情</string>
@@ -261,23 +257,23 @@
     <!---Setting  -->
     <string name="setting">设置</string>
     <string name="normal">常规</string>
-    <string name="appearance">显示</string>
-    <string name="listview">列表</string>
-    <string name="disable_download_pic">禁止下载图片</string>
-    <string name="disable_download_pic_summary">改进的无图模式</string>
-    <string name="close_comment_repost_list_avatar">关闭评论/转发列表的头像</string>
-    <string name="msg_count_title">每次获取数据条数</string>
-    <string name="comment_repost_list_avatar">评论/转发列表的头像</string>
-    <string name="show_big_avatar">高清头像</string>
-    <string name="show_big_avatar_summary">大屏幕手机推荐开高清</string>
-    <string name="show_big_pic">列表显示大图</string>
-    <string name="show_big_pic_summary">缓存体积会猛增</string>
-    <string name="auto_show_big_pic">自动切换大图、缩略图</string>
-    <string name="auto_show_big_pic_summary">WIFI、3G 下自动开大图</string>
     <string name="sound">音效</string>
-    <string name="fast_scroll">快速滚动</string>
     <string name="auto_refresh">首页自动刷新</string>
     <string name="auto_refresh_summary">仅在 Wifi 网络下有效</string>
+    <string name="advanced">高级</string>
+    <string name="have_selected">已经选择了%s项</string>
+    <string name="other">其它</string>
+
+    <!--Setting Appearance-->
+    <string name="appearance">显示</string>
+    <string name="theme">主题</string>
+    <string name="listview">列表</string>
+    <string name="list_pic_mode">图片</string>
+    <string name="list_avatar_mode">头像</string>
+    <string name="font_size">字体大小</string>
+    <string name="fast_scroll">快速滚动</string>
+
+    <!--Setting Notification-->
     <string name="new_message">未读消息</string>
     <string name="new_message_type">类型</string>
     <string name="mention_to_me">\@我的微博</string>
@@ -299,23 +295,25 @@
     <string name="start_fetch_msg">开始后台自动获取……</string>
     <string name="frequency">间隔</string>
     <string name="stopped">已终止</string>
-    <string name="theme">主题</string>
-    <string name="current_theme">当前主题:</string>
-    <string name="list_pic_mode">图片</string>
-    <string name="list_avatar_mode">头像</string>
-    <string name="current_mode">当前模式:</string>
-    <string name="font_size">字体大小</string>
-    <string name="only_timeline_font">只影响列表字体大小</string>
-    <string name="upload_pic_quality">上传图片质量</string>
-    <string name="advanced">高级</string>
-    <string name="filter">首页过滤</string>
+
+    <!--Setting Draft-->
+    <string name="draft">草稿箱</string>
+
+    <!--Setting Control-->
     <string name="data_control">流量控制</string>
-    <string name="have_selected">已经选择了%s项</string>
-    <string name="other">其它</string>
-    <string name="clear_sd_cache">删除缓存</string>
-    <string name="clear_avatar_and_pic">清除已下载的图片</string>
-    <string name="clear_these_cache">永久删除这些缓存的图片（不影响头像）</string>
-    <string name="remove_ing">删除中……</string>
+    <string name="disable_download_pic">禁止下载图片</string>
+    <string name="disable_download_pic_summary">改进的无图模式</string>
+    <string name="upload_pic_quality">上传图片质量</string>
+    <string name="close_comment_repost_list_avatar">关闭评论/转发列表的头像</string>
+    <string name="msg_count_title">每次获取数据条数</string>
+    <string name="comment_repost_list_avatar">评论/转发列表的头像</string>
+
+    <!--Setting Filter-->
+    <string name="filter">首页过滤</string>
+    <string name="add_filter">添加过滤词</string>
+    <string name="add">添加</string>
+    <string name="input_filter_word">输入过滤词</string>
+    <string name="modify_filter_word">修改过滤词</string>
 
     <!--Setting About-->
     <string name="pref_about_title">关于</string>
@@ -335,12 +333,6 @@
     <string name="pref_author_summary">心之所在</string>
     <string name="pref_cache_path_title">缓存文件路径</string>
     <string name="pref_saved_pic_path_title">图片保存路径</string>
-
-    <!--Setting Filter-->
-    <string name="add_filter">添加过滤词</string>
-    <string name="add">添加</string>
-    <string name="input_filter_word">输入过滤词</string>
-    <string name="modify_filter_word">修改过滤词</string>
 
 
     <!-- menu-->
