@@ -52,13 +52,13 @@ public class SettingActivity extends AbstractAppActivity {
 
 
     //about
-    public static final String OFFICIAL_WEIBO = "official_weibo";
-    public static final String SUGGEST = "suggest";
-    public static final String VERSION = "version";
-    public static final String RECOMMEND = "recommend";
-    public static final String DONATE = "donate";
-    public static final String CACHE_PATH = "cache_path";
-    public static final String SAVED_PIC_PATH = "saved_pic_path";
+    public static final String OFFICIAL_WEIBO = "pref_official_weibo_key";
+    public static final String SUGGEST = "pref_suggest_key";
+    public static final String VERSION = "pref_version_key";
+    public static final String RECOMMEND = "pref_recommend_key";
+    public static final String DONATE = "pref_donate_key";
+    public static final String CACHE_PATH = "pref_cache_path_key";
+    public static final String SAVED_PIC_PATH = "pref_saved_pic_path_key";
 
 
     @Override
