@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="fill_parent"
-    android:layout_width="fill_parent">
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent">
 
     <LinearLayout
         android:orientation="vertical"
@@ -17,11 +17,11 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="@dimen/profile_avatar_width"
+                android:layout_height="@dimen/profile_avatar_height"
                 android:padding="1px"
                 android:background="@drawable/bg_border1"
-                android:id="@+id/avatar" />
+                android:id="@+id/avatar"/>
 
             <LinearLayout
                 android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:id="@+id/username" />
+                    android:id="@+id/username"/>
 
                 <TextView
                     android:layout_gravity="center"
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:visibility="gone"
-                    android:id="@+id/isVerified" />
+                    android:id="@+id/isVerified"/>
 
                 <LinearLayout
                     android:layout_gravity="center"
@@ -58,7 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="left"
-                        android:id="@+id/sex" />
+                        android:id="@+id/sex"/>
 
                 </LinearLayout>
 
@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:text="@string/he_is_not_following_you"
-                    android:id="@+id/relationship" />
+                    android:id="@+id/relationship"/>
             </LinearLayout>
 
             <Button
@@ -79,7 +79,7 @@
                 android:layout_marginRight="5dp"
                 android:text="@string/unfollow_he"
                 android:id="@+id/unfollow"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
         </LinearLayout>
 
@@ -92,7 +92,7 @@
             <TextView
                 android:layout_marginTop="5.0dip"
                 android:text="@string/verified_reason"
-                style="?android:attr/listSeparatorTextViewStyle" />
+                style="?android:attr/listSeparatorTextViewStyle"/>
 
             <TextView
                 android:linksClickable="true"
@@ -103,7 +103,7 @@
                 android:paddingBottom="5.0dip"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textIsSelectable="true" />
+                android:textIsSelectable="true"/>
         </LinearLayout>
 
         <LinearLayout
@@ -115,7 +115,7 @@
             <TextView
                 android:layout_marginTop="5.0dip"
                 android:text="@string/intro"
-                style="?android:attr/listSeparatorTextViewStyle" />
+                style="?android:attr/listSeparatorTextViewStyle"/>
 
             <TextView
                 android:linksClickable="true"
@@ -126,7 +126,7 @@
                 android:paddingBottom="5.0dip"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textIsSelectable="true" />
+                android:textIsSelectable="true"/>
         </LinearLayout>
 
 
@@ -139,7 +139,7 @@
             <TextView
                 android:layout_marginTop="5.0dip"
                 android:text="@string/address"
-                style="?android:attr/listSeparatorTextViewStyle" />
+                style="?android:attr/listSeparatorTextViewStyle"/>
 
             <TextView
                 android:linksClickable="true"
@@ -149,7 +149,7 @@
                 android:paddingRight="20.0dip"
                 android:paddingBottom="5.0dip"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
 
@@ -162,7 +162,7 @@
             <TextView
                 android:layout_marginTop="5.0dip"
                 android:text="@string/blog_url"
-                style="?android:attr/listSeparatorTextViewStyle" />
+                style="?android:attr/listSeparatorTextViewStyle"/>
 
             <TextView
                 android:linksClickable="true"
@@ -172,7 +172,7 @@
                 android:paddingRight="20.0dip"
                 android:paddingBottom="5.0dip"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout
@@ -184,7 +184,7 @@
             <TextView
                 android:layout_marginTop="5.0dip"
                 android:text="@string/neighbor"
-                style="?android:attr/listSeparatorTextViewStyle" />
+                style="?android:attr/listSeparatorTextViewStyle"/>
 
             <TableLayout
                 android:layout_width="fill_parent"
@@ -204,7 +204,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:text="@string/following_number"
-                        android:layout_weight="0.7" />
+                        android:layout_weight="0.7"/>
 
                     <TextView
                         android:layout_gravity="right|center"
@@ -212,7 +212,7 @@
                         android:drawableRight="?clickable_flag"
                         android:drawablePadding="1dp"
                         android:layout_width="fill_parent"
-                        android:layout_height="fill_parent" />
+                        android:layout_height="fill_parent"/>
                 </TableRow>
 
                 <TableRow
@@ -229,7 +229,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:text="@string/fan_number"
-                        android:layout_weight="0.7" />
+                        android:layout_weight="0.7"/>
 
                     <TextView
                         android:layout_gravity="right|center"
@@ -237,7 +237,7 @@
                         android:drawableRight="?clickable_flag"
                         android:drawablePadding="1dp"
                         android:layout_width="fill_parent"
-                        android:layout_height="fill_parent" />
+                        android:layout_height="fill_parent"/>
                 </TableRow>
 
                 <TableRow
@@ -254,7 +254,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:text="@string/topic_number"
-                        android:layout_weight="0.7" />
+                        android:layout_weight="0.7"/>
 
                     <TextView
                         android:layout_gravity="right|center"
@@ -263,7 +263,7 @@
                         android:drawablePadding="1dp"
                         android:text="0"
                         android:layout_width="fill_parent"
-                        android:layout_height="fill_parent" />
+                        android:layout_height="fill_parent"/>
                 </TableRow>
 
             </TableLayout>

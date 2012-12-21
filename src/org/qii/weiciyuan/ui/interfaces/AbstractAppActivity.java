@@ -27,7 +27,7 @@ public class AbstractAppActivity extends Activity {
 
     private int theme = 0;
 
-    protected ICommander commander = null;
+    protected TimeLineBitmapDownloader commander = null;
 
 
     @Override
@@ -66,7 +66,7 @@ public class AbstractAppActivity extends Activity {
         }
         forceShowActionBarOverflowMenu();
         initNFC();
-        commander = new TimeLineBitmapDownloader(this);
+        commander = new TimeLineBitmapDownloader();
     }
 
 
@@ -87,6 +87,7 @@ public class AbstractAppActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         commander.totalStopLoadPicture();
+        commander = null;
     }
 
 
@@ -129,7 +130,7 @@ public class AbstractAppActivity extends Activity {
         startActivity(intent);
     }
 
-    public ICommander getBitmapDownloader() {
+    public TimeLineBitmapDownloader getBitmapDownloader() {
         return commander;
     }
 

@@ -1,17 +1,17 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
-import android.widget.ListView;
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,50 +20,74 @@ import java.util.concurrent.ConcurrentHashMap;
  * User: qii
  * Date: 12-12-12
  */
-public class TimeLineBitmapDownloader implements ICommander {
+public class TimeLineBitmapDownloader {
 
     private Drawable transPic = new ColorDrawable(Color.TRANSPARENT);
 
-    private Activity activity;
-
     private Map<String, PictureBitmapWorkerTask> picTasks = new ConcurrentHashMap<String, PictureBitmapWorkerTask>();
-
-
-    public TimeLineBitmapDownloader(Activity activity) {
-        this.activity = activity;
-    }
 
     protected Bitmap getBitmapFromMemCache(String key) {
         return GlobalContext.getInstance().getAvatarCache().get(key);
     }
 
-    @Override
-    public void downloadAvatar(ImageView view, String urlKey, int position, ListView listView, boolean isFling) {
+
+    public void downloadAvatar(ImageView view, UserBean user) {
+        downloadAvatar(view, user, false);
+    }
+
+
+    public void downloadAvatar(ImageView view, UserBean user, AbstractTimeLineFragment fragment) {
+        boolean isFling = fragment.isListViewFling();
+        downloadAvatar(view, user, isFling);
+    }
+
+    public void downloadAvatar(ImageView view, UserBean user, boolean isFling) {
+
+        if (user == null) {
+            view.setImageDrawable(transPic);
+            return;
+        }
+
+        String url;
+        FileLocationMethod method;
         if (SettingUtility.getEnableBigAvatar()) {
-            downContentPic(view, urlKey, position, listView, FileLocationMethod.avatar_large, isFling);
+            url = user.getAvatar_large();
+            method = FileLocationMethod.avatar_large;
         } else {
-            downContentPic(view, urlKey, position, listView, FileLocationMethod.avatar_small, isFling);
+            url = user.getProfile_image_url();
+            method = FileLocationMethod.avatar_small;
+        }
+        display(view, url, method, isFling);
+    }
+
+    public void downContentPic(ImageView view, MessageBean msg, AbstractTimeLineFragment fragment) {
+        String picUrl;
+
+        boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
+
+        if (SettingUtility.getEnableBigPic()) {
+            picUrl = msg.getBmiddle_pic();
+            display(view, picUrl, FileLocationMethod.picture_bmiddle, isFling);
+
+        } else {
+            picUrl = msg.getThumbnail_pic();
+            display(view, picUrl, FileLocationMethod.picture_thumbnail, isFling);
+
         }
     }
 
-    @Override
-    public void downContentPic(final ImageView view, String urlKey, int position, ListView
-            listView, FileLocationMethod method, boolean isFling) {
+    private void display(ImageView view, String urlKey, FileLocationMethod method, boolean isFling) {
         view.clearAnimation();
         final Bitmap bitmap = getBitmapFromMemCache(urlKey);
         if (bitmap != null) {
-
             view.setImageBitmap(bitmap);
             cancelPotentialDownload(urlKey, view);
             picTasks.remove(urlKey);
-
         } else {
-
             if (isFling) {
                 view.setImageDrawable(transPic);
                 return;
             }
-
 
             PictureBitmapWorkerTask task = picTasks.get(urlKey);
 
@@ -83,14 +107,12 @@ public class TimeLineBitmapDownloader implements ICommander {
                 return;
             }
 
-
         }
 
     }
 
-    @Override
-    public void totalStopLoadPicture() {
 
+    public void totalStopLoadPicture() {
         if (picTasks != null) {
             for (String task : picTasks.keySet()) {
                 picTasks.get(task).cancel(true);
@@ -107,7 +129,6 @@ public class TimeLineBitmapDownloader implements ICommander {
             if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
                 bitmapDownloaderTask.cancel(true);
             } else {
-                // The same URL is already being downloaded.
                 return false;
             }
         }

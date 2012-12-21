@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarAndDetailMsgPicTask;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -117,7 +118,7 @@ public class BrowserCommentFragment extends Fragment {
                 avatar.setImageBitmap(bitmap);
             } else {
 
-                SimpleBitmapWorkerTask avatarTask = new SimpleBitmapWorkerTask(avatar, FileLocationMethod.avatar_small);
+                ProfileAvatarAndDetailMsgPicTask avatarTask = new ProfileAvatarAndDetailMsgPicTask(avatar, FileLocationMethod.avatar_small);
                 avatarTask.execute(url);
             }
 

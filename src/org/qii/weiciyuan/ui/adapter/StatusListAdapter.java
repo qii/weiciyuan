@@ -7,9 +7,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.ListViewTool;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
 
-    public StatusListAdapter(Fragment fragment, ICommander commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
+    public StatusListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
         super(fragment, commander, bean, listView, showOriStatus);
     }
 

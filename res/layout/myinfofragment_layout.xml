@@ -17,8 +17,8 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="@dimen/profile_avatar_width"
+                android:layout_height="@dimen/profile_avatar_height"
                 android:padding="1px"
                 android:background="@drawable/bg_border1"
                 android:id="@+id/avatar" />

@@ -45,7 +45,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         this.globalContext = GlobalContext.getInstance();
         this.lruCache = globalContext.getAvatarCache();
         this.taskMap = taskMap;
-        viewList.add(new WeakReference<ImageView>(view));
+        this.viewList.add(new WeakReference<ImageView>(view));
         this.data = url;
         this.method = method;
 
@@ -62,6 +62,9 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         int avatarWidth = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width);
         int avatarHeight = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height);
 
+        int thumbnailWidth = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_thumbnail_width);
+        int thumbnailHeight = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_thumbnail_height);
+
         if (!isCancelled()) {
             switch (method) {
                 case avatar_large:
@@ -70,7 +73,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                     return ImageTool.getRoundedCornerPic(this.data, avatarWidth, avatarHeight, FileLocationMethod.avatar_small);
 
                 case picture_thumbnail:
-                    return ImageTool.getThumbnailPictureWithRoundedCorner(data);
+                    return ImageTool.getRoundedCornerPic(this.data, thumbnailWidth, thumbnailHeight, FileLocationMethod.picture_thumbnail);
 
                 case picture_bmiddle:
                     DisplayMetrics metrics = globalContext.getDisplayMetrics();
@@ -112,7 +115,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                         playImageViewAnimation(imageView, bitmap);
                         lruCache.put(data, bitmap);
                     } else {
-                        imageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        imageView.setImageDrawable(new ColorDrawable(Color.BLUE));
                     }
                 }
             }

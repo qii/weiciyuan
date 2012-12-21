@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -26,14 +25,15 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.show.ShowStatusDao;
+import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarAndDetailMsgPicTask;
 import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.io.IOException;
@@ -73,8 +73,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
     private UpdateMsgTask updateMsgTask = null;
     private GetGoogleLocationInfo geoTask = null;
-    private SimpleBitmapWorkerTask picTask = null;
-    private SimpleBitmapWorkerTask avatarTask = null;
+    private ProfileAvatarAndDetailMsgPicTask picTask = null;
 
     public BrowserWeiboMsgFragment() {
     }
@@ -118,7 +117,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Utility.cancelTasks(updateMsgTask, geoTask, avatarTask, picTask);
+        Utility.cancelTasks(updateMsgTask, geoTask, picTask);
         avatar.setImageDrawable(null);
         content_pic.setImageDrawable(null);
         repost_pic.setImageDrawable(null);
@@ -308,25 +307,7 @@ public class BrowserWeiboMsgFragment extends Fragment {
     private void buildViewData() {
         if (msg.getUser() != null) {
             username.setText(msg.getUser().getScreen_name());
-            //50px avatar or 180px avatar
-            String url;
-            FileLocationMethod method;
-            if (SettingUtility.getEnableBigAvatar()) {
-                url = msg.getUser().getAvatar_large();
-                method = FileLocationMethod.avatar_large;
-            } else {
-                url = msg.getUser().getProfile_image_url();
-                method = FileLocationMethod.avatar_small;
-            }
-            Bitmap bitmap = GlobalContext.getInstance().getAvatarCache().get(url);
-            if (bitmap != null) {
-                avatar.setImageBitmap(bitmap);
-            } else {
-                if (avatarTask == null || avatarTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    avatarTask = new SimpleBitmapWorkerTask(avatar, method);
-                    avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getUser().getProfile_image_url());
-                }
-            }
+            ((AbstractAppActivity) getActivity()).getBitmapDownloader().downloadAvatar(avatar, msg.getUser());
         }
         content.setText(msg.getText());
         ListViewTool.addLinks(content);
@@ -346,12 +327,12 @@ public class BrowserWeiboMsgFragment extends Fragment {
 
         if (!TextUtils.isEmpty(msg.getBmiddle_pic())) {
             if (picTask == null || picTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                picTask = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_bmiddle, content_pic_pb);
+                picTask = new ProfileAvatarAndDetailMsgPicTask(content_pic, FileLocationMethod.picture_bmiddle, content_pic_pb);
                 picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getBmiddle_pic());
             }
         } else if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
             if (picTask == null || picTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                picTask = new SimpleBitmapWorkerTask(content_pic, FileLocationMethod.picture_thumbnail);
+                picTask = new ProfileAvatarAndDetailMsgPicTask(content_pic, FileLocationMethod.picture_thumbnail);
                 picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getThumbnail_pic());
             }
         } else {
@@ -377,14 +358,14 @@ public class BrowserWeiboMsgFragment extends Fragment {
                 repost_pic_layout.setVisibility(View.VISIBLE);
                 repost_pic.setVisibility(View.VISIBLE);
                 if (picTask == null || picTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    picTask = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_bmiddle, repost_pic_pb);
+                    picTask = new ProfileAvatarAndDetailMsgPicTask(repost_pic, FileLocationMethod.picture_bmiddle, repost_pic_pb);
                     picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getRetweeted_status().getBmiddle_pic());
                 }
             } else if (!TextUtils.isEmpty(msg.getRetweeted_status().getThumbnail_pic())) {
                 repost_pic_layout.setVisibility(View.VISIBLE);
                 repost_pic.setVisibility(View.VISIBLE);
                 if (picTask == null || picTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    picTask = new SimpleBitmapWorkerTask(repost_pic, FileLocationMethod.picture_thumbnail);
+                    picTask = new ProfileAvatarAndDetailMsgPicTask(repost_pic, FileLocationMethod.picture_thumbnail);
                     picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getRetweeted_status().getThumbnail_pic());
                 }
 

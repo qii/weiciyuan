@@ -16,7 +16,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.lib.TimeLineImageView;
 import org.qii.weiciyuan.support.lib.TimeTextView;
@@ -25,7 +25,6 @@ import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserBigPicActivity;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.List;
@@ -39,7 +38,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     protected Fragment fragment;
     protected LayoutInflater inflater;
     protected ListView listView;
-    protected ICommander commander;
+    protected TimeLineBitmapDownloader commander;
     protected boolean showOriStatus = true;
     protected int checkedBG;
     protected int defaultBG;
@@ -51,7 +50,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private final int TYPE_MIDDLE = 4;
     private final int TYPE_SIMPLE = 5;
 
-    public AbstractAppListAdapter(Fragment fragment, ICommander commander, List<T> bean, ListView listView, boolean showOriStatus) {
+    public AbstractAppListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<T> bean, ListView listView, boolean showOriStatus) {
         this.bean = bean;
         this.commander = commander;
         this.inflater = fragment.getActivity().getLayoutInflater();
@@ -304,17 +303,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
             view.setVisibility(View.VISIBLE);
-            //when listview is flying,app dont download avatar and picture
-            boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
-            //50px avatar or 180px avatar
-            String url;
-            if (SettingUtility.getEnableBigAvatar()) {
-                url = user.getAvatar_large();
-            } else {
-                url = user.getProfile_image_url();
-            }
-            commander.downloadAvatar(view, url, position, listView, isFling);
-
+            commander.downloadAvatar(view, user, (AbstractTimeLineFragment) fragment);
         } else {
             view.setVisibility(View.GONE);
         }
@@ -336,21 +325,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     protected void buildPic(final MessageBean msg, ImageView view, int position) {
         view.setVisibility(View.VISIBLE);
-
-        String picUrl;
-
-        boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
-
-        if (SettingUtility.getEnableBigPic()) {
-            picUrl = msg.getBmiddle_pic();
-            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_bmiddle, isFling);
-
-        } else {
-            picUrl = msg.getThumbnail_pic();
-            commander.downContentPic(view, picUrl, position, listView, FileLocationMethod.picture_thumbnail, isFling);
-
-        }
-
+        commander.downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

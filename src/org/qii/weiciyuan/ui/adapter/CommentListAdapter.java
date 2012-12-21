@@ -11,6 +11,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 
@@ -26,7 +27,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
     private Drawable commentPic = null;
 
 
-    public CommentListAdapter(Fragment fragment, ICommander commander, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
+    public CommentListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
         super(fragment, commander, bean, listView, showOriStatus);
 
         int[] attrs = new int[]{R.attr.timeline_reply_flag};

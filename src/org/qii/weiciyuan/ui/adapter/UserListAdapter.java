@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 
 import java.util.List;
 
@@ -24,11 +24,11 @@ public class UserListAdapter extends BaseAdapter {
     protected Fragment activity;
     protected LayoutInflater inflater;
     protected ListView listView;
-    protected ICommander commander;
+    protected TimeLineBitmapDownloader commander;
     protected int checkedBG;
     protected int defaultBG;
 
-    public UserListAdapter(Fragment activity, ICommander commander, List<UserBean> bean, ListView listView) {
+    public UserListAdapter(Fragment activity, TimeLineBitmapDownloader commander, List<UserBean> bean, ListView listView) {
         this.bean = bean;
         this.commander = commander;
         this.inflater = activity.getActivity().getLayoutInflater();
@@ -113,7 +113,7 @@ public class UserListAdapter extends BaseAdapter {
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
             boolean isFling = ((AbstractUserListFragment) activity).isListViewFling();
-            commander.downloadAvatar(holder.avatar, user.getProfile_image_url(), position, listView, isFling);
+            commander.downloadAvatar(holder.avatar, user, isFling);
         }
         holder.content.setText(user.getDescription());
 

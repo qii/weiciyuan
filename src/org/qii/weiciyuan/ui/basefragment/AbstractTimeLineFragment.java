@@ -11,6 +11,7 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.ListBean;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
@@ -18,7 +19,6 @@ import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 
 /**
  * User: qii
@@ -34,7 +34,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragm
     protected BaseAdapter timeLineAdapter;
 
     protected View footerView;
-    protected ICommander commander;
+    protected TimeLineBitmapDownloader commander;
 
     protected TimeLineGetNewMsgListTask newTask;
     protected TimeLineGetOlderMsgListTask oldTask;

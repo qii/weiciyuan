@@ -9,4 +9,7 @@
     <dimen name="timeline_pic_thumbnail_height">100dp</dimen>
     <dimen name="timeline_pic_thumbnail_width">100dp</dimen>
 
+    <dimen name="profile_avatar_height">70dp</dimen>
+    <dimen name="profile_avatar_width">70dp</dimen>
+
 </resources>

@@ -15,11 +15,11 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMUserBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.List;
@@ -29,14 +29,14 @@ import java.util.List;
  * Date: 12-11-14
  */
 public class DMUserListAdapter extends BaseAdapter {
-    private  List<DMUserBean> bean;
+    private List<DMUserBean> bean;
     private Fragment fragment;
     private LayoutInflater inflater;
     private ListView listView;
-    private ICommander commander;
+    private TimeLineBitmapDownloader commander;
 
 
-    public DMUserListAdapter(Fragment fragment, ICommander commander,  List<DMUserBean> bean, ListView listView) {
+    public DMUserListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<DMUserBean> bean, ListView listView) {
         this.bean = bean;
         this.commander = commander;
         this.inflater = fragment.getActivity().getLayoutInflater();
@@ -140,7 +140,7 @@ public class DMUserListAdapter extends BaseAdapter {
     }
 
 
-    protected  List<DMUserBean> getList() {
+    protected List<DMUserBean> getList() {
         return bean;
     }
 
@@ -177,17 +177,7 @@ public class DMUserListAdapter extends BaseAdapter {
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
             view.setVisibility(View.VISIBLE);
-            //when listview is flying,app dont download avatar and picture
-            boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
-
-            String url;
-            if (SettingUtility.getEnableBigAvatar()) {
-                url = user.getAvatar_large();
-            } else {
-                url = user.getProfile_image_url();
-            }
-            commander.downloadAvatar(view, url, position, listView, isFling);
-
+            commander.downloadAvatar(view, user, (AbstractTimeLineFragment) fragment);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

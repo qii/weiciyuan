@@ -1,10 +1,13 @@
-package org.qii.weiciyuan.ui.browser;
+package org.qii.weiciyuan.support.asyncdrawable;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.LruCache;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
@@ -15,7 +18,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
  * User: qii
  * Date: 12-8-5
  */
-public class SimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, Bitmap> {
+public class ProfileAvatarAndDetailMsgPicTask extends MyAsyncTask<String, Integer, Bitmap> {
 
     private LruCache<String, Bitmap> lruCache;
     private String data = "";
@@ -26,17 +29,19 @@ public class SimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, Bitmap>
 
     private boolean pbFlag = false;
 
+    private GlobalContext globalContext;
 
-    public SimpleBitmapWorkerTask(ImageView view, FileLocationMethod method) {
+
+    public ProfileAvatarAndDetailMsgPicTask(ImageView view, FileLocationMethod method) {
 
         this.lruCache = GlobalContext.getInstance().getAvatarCache();
         this.view = view;
         this.method = method;
-
+        this.globalContext = GlobalContext.getInstance();
     }
 
-    public SimpleBitmapWorkerTask(ImageView view, FileLocationMethod method, ProgressBar pb) {
-
+    public ProfileAvatarAndDetailMsgPicTask(ImageView view, FileLocationMethod method, ProgressBar pb) {
+        this.globalContext = GlobalContext.getInstance();
         this.lruCache = GlobalContext.getInstance().getAvatarCache();
         this.view = view;
         this.method = method;
@@ -64,11 +69,12 @@ public class SimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, Bitmap>
                             publishProgress(progress, max);
                         }
                     });
-                case avatar_small:
-                    return ImageTool.getSmallAvatarWithRoundedCorner(data);
                 case avatar_large:
-                    return ImageTool.getBigAvatarWithRoundedCorner(data);
-            }
+                    int avatarWidth = globalContext.getResources().getDimensionPixelSize(R.dimen.profile_avatar_width);
+                    int avatarHeight = globalContext.getResources().getDimensionPixelSize(R.dimen.profile_avatar_height);
+                    return ImageTool.getRoundedCornerPic(this.data, avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
+
+             }
         }
 
         return null;
@@ -99,6 +105,7 @@ public class SimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, Bitmap>
             pb.setVisibility(View.INVISIBLE);
 
         super.onCancelled(bitmap);
+        clean();
     }
 
     @Override
@@ -120,10 +127,16 @@ public class SimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, Bitmap>
                     break;
             }
 
+        } else {
+            view.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
 
-
+        clean();
     }
 
+    private void clean() {
 
+        lruCache = null;
+        globalContext = null;
+    }
 }
