@@ -17,7 +17,7 @@ public class AboutActivity extends AbstractAppActivity {
 
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(getString(R.string.about));
+        getActionBar().setTitle(getString(R.string.pref_about_title));
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()

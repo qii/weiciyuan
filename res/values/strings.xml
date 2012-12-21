@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">四次元</string>
-    <string name="official_weibo">"@四次元App</string>
-    <string name="official_weibo_link">四次元App</string>
 
     <string name="homepage">首页</string>
     <string name="detail">正文</string>
@@ -318,28 +316,27 @@
     <string name="clear_avatar_and_pic">清除已下载的图片</string>
     <string name="clear_these_cache">永久删除这些缓存的图片（不影响头像）</string>
     <string name="remove_ing">删除中……</string>
-    <string name="version">版本号</string>
-    <string name="about">关于</string>
-    <string name="suggest">反馈意见</string>
-    <string name="recommend">推荐给微博好友</string>
-    <string name="recommend_content">还在被微博的广告恶心吗？换用 四次元 吧，干净清爽的新浪微博安卓客户端，下载 => http://t.cn/zlAUwy7</string>
-    <string name="donate">捐赠支持开发</string>
-    <string name="donate_summary">支付宝: qiibeta@gmail.com</string>
-    <string name="donate_summary2">没钱好痛苦……_(:3」∠)_</string>
-    <string name="about_summary">版本号、反馈意见、开源协议、源代码</string>
-    <string name="play_store_address">Google Play</string>
-    <string name="play_store_address_summary">打分支持该应用</string>
-    <string name="github">Github</string>
-    <string name="sourcecode_address">Fork me on GitHub</string>
-    <string name="opensource_licence">GPL v3</string>
-    <string name="opensource_licence_summary">开源协议</string>
-    <string name="author">开发者</string>
-    <string name="author_summary">心之所在</string>
-    <string name="thought">看法</string>
-    <string name="cache_path">缓存文件路径</string>
-    <string name="saved_pic_path">图片保存路径</string>
 
-    <!--filter-->
+    <!--Setting About-->
+    <string name="pref_about_title">关于</string>
+    <string name="pref_version_title">版本号</string>
+    <string name="pref_official_weibo_title">"@四次元App</string>
+    <string name="official_weibo_link">四次元App</string>
+    <string name="pref_suggest_title">反馈意见</string>
+    <string name="pref_recommend_title">推荐给微博好友</string>
+    <string name="recommend_content">还在被微博的广告恶心吗？换用 四次元 吧，干净清爽的新浪微博安卓客户端，下载 => http://t.cn/zlAUwy7</string>
+    <string name="pref_donate_title">捐赠支持开发</string>
+    <string name="pref_donate_summary">支付宝: qiibeta@gmail.com</string>
+    <string name="donate_summary2">没钱好痛苦……_(:3」∠)_</string>
+    <string name="pref_play_store_address_title">Google Play</string>
+    <string name="pref_play_store_address_summary">打分支持该应用</string>
+    <string name="pref_github_title">Github</string>
+    <string name="pref_author_title">开发者</string>
+    <string name="pref_author_summary">心之所在</string>
+    <string name="pref_cache_path_title">缓存文件路径</string>
+    <string name="pref_saved_pic_path_title">图片保存路径</string>
+
+    <!--Setting Filter-->
     <string name="add_filter">添加过滤词</string>
     <string name="add">添加</string>
     <string name="input_filter_word">输入过滤词</string>

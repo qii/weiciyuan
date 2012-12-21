@@ -4,37 +4,37 @@
     >
     <Preference
         android:key="pref_official_weibo_key"
-        android:title="@string/official_weibo"
+        android:title="@string/pref_official_weibo_title"
         />
 
     <Preference
         android:key="pref_version_key"
-        android:title="@string/version"
+        android:title="@string/pref_version_title"
         android:summary="1.0 alpha"
         />
 
     <Preference
-        android:title="@string/author"
-        android:summary="@string/author_summary"
+        android:title="@string/pref_author_title"
+        android:summary="@string/pref_author_summary"
         />
 
     <Preference
         android:key="pref_donate_key"
-        android:title="@string/donate"
-        android:summary="@string/donate_summary"
+        android:title="@string/pref_donate_title"
+        android:summary="@string/pref_donate_summary"
         >
 
     </Preference>
     <Preference
-        android:title="@string/play_store_address"
-        android:summary="@string/play_store_address_summary"
+        android:title="@string/pref_play_store_address_title"
+        android:summary="@string/pref_play_store_address_summary"
         >
         <intent
             android:action="android.intent.action.VIEW"
             android:data="market://details?id=org.qii.weiciyuan"/>
     </Preference>
     <Preference
-        android:title="@string/github"
+        android:title="@string/pref_github_title"
         android:summary="github.com/qii/weiciyuan">
         <intent
             android:action="android.intent.action.VIEW"
@@ -43,14 +43,14 @@
 
     <Preference
         android:key="pref_suggest_key"
-        android:title="@string/suggest"
+        android:title="@string/pref_suggest_title"
         >
 
     </Preference>
 
     <Preference
         android:key="pref_recommend_key"
-        android:title="@string/recommend"
+        android:title="@string/pref_recommend_title"
         >
 
     </Preference>
@@ -58,14 +58,14 @@
 
     <Preference
         android:key="pref_cache_path_key"
-        android:title="@string/cache_path"
+        android:title="@string/pref_cache_path_title"
         >
 
     </Preference>
 
     <Preference
         android:key="pref_saved_pic_path_key"
-        android:title="@string/saved_pic_path"
+        android:title="@string/pref_saved_pic_path_title"
         >
 
     </Preference>

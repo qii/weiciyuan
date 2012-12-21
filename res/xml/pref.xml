@@ -1,56 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
     <PreferenceCategory android:title="@string/normal">
 
         <Preference android:title="@string/appearance">
-            <intent android:targetPackage="org.qii.weiciyuan"
-                    android:targetClass="org.qii.weiciyuan.ui.preference.AppearanceActivity"/>
+            <intent
+                android:targetPackage="org.qii.weiciyuan"
+                android:targetClass="org.qii.weiciyuan.ui.preference.AppearanceActivity"/>
         </Preference>
 
         <CheckBoxPreference
-                android:key="sound"
-                android:title="@string/sound"
-                android:defaultValue="true"/>
+            android:key="sound"
+            android:title="@string/sound"
+            android:defaultValue="true"/>
         <CheckBoxPreference
-                android:key="auto_refresh"
-                android:title="@string/auto_refresh"
-                android:summary="@string/auto_refresh_summary"
-                android:defaultValue="false"/>
+            android:key="auto_refresh"
+            android:title="@string/auto_refresh"
+            android:summary="@string/auto_refresh_summary"
+            android:defaultValue="false"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/advanced">
 
         <Preference android:title="@string/notification">
-            <intent android:targetPackage="org.qii.weiciyuan"
-                    android:targetClass="org.qii.weiciyuan.ui.preference.NotificationActivity"/>
+            <intent
+                android:targetPackage="org.qii.weiciyuan"
+                android:targetClass="org.qii.weiciyuan.ui.preference.NotificationActivity"/>
         </Preference>
-        <Preference android:title="@string/draft"
-                    android:key="draft">
-            <intent android:targetPackage="org.qii.weiciyuan"
-                    android:targetClass="org.qii.weiciyuan.ui.preference.DraftActivity"/>
+        <Preference
+            android:title="@string/draft"
+            android:key="draft">
+            <intent
+                android:targetPackage="org.qii.weiciyuan"
+                android:targetClass="org.qii.weiciyuan.ui.preference.DraftActivity"/>
         </Preference>
-        <Preference android:title="@string/data_control"
-                    android:key="data_control">
-            <intent android:targetPackage="org.qii.weiciyuan"
-                    android:targetClass="org.qii.weiciyuan.ui.preference.ControlActivity"/>
+        <Preference
+            android:title="@string/data_control"
+            android:key="data_control">
+            <intent
+                android:targetPackage="org.qii.weiciyuan"
+                android:targetClass="org.qii.weiciyuan.ui.preference.ControlActivity"/>
         </Preference>
 
 
-        <Preference android:title="@string/filter"
-                    android:key="filter">
-            <intent android:targetPackage="org.qii.weiciyuan"
-                    android:targetClass="org.qii.weiciyuan.ui.preference.FilterActivity"
-                    />
+        <Preference
+            android:title="@string/filter"
+            android:key="filter">
+            <intent
+                android:targetPackage="org.qii.weiciyuan"
+                android:targetClass="org.qii.weiciyuan.ui.preference.FilterActivity"
+                />
         </Preference>
 
     </PreferenceCategory>
     <PreferenceCategory
-            android:title="@string/other">
-        <Preference android:title="@string/about">
-            <intent android:targetPackage="org.qii.weiciyuan"
-                    android:targetClass="org.qii.weiciyuan.ui.preference.AboutActivity"/>
+        android:title="@string/other">
+        <Preference android:title="@string/pref_about_title">
+            <intent
+                android:targetPackage="org.qii.weiciyuan"
+                android:targetClass="org.qii.weiciyuan.ui.preference.AboutActivity"/>
         </Preference>
     </PreferenceCategory>
 
