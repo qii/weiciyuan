@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
@@ -22,6 +21,7 @@ import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.lib.CircleProgressView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -40,7 +40,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
     private String oriUrl;
     private MenuItem oriMenu;
     private WebView webView;
-    private ProgressBar pb;
+    private CircleProgressView pb;
     private PicSimpleBitmapWorkerTask task;
     private PicSaveTask saveTask;
     private String path;
@@ -56,7 +56,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.browser_picture);
 
-        pb = (ProgressBar) findViewById(R.id.pb);
+        pb = (CircleProgressView) findViewById(R.id.pb);
 
         webView = (WebView) findViewById(R.id.iv);
 
@@ -194,7 +194,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pb.setIndeterminate(true);
+//            pb.setIndeterminate(true);
             pb.setVisibility(View.VISIBLE);
             webView.setVisibility(View.INVISIBLE);
         }
@@ -225,7 +225,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
             super.onProgressUpdate(values);
             int progress = values[0];
             int max = values[1];
-            pb.setIndeterminate(false);
+//            pb.setIndeterminate(false);
             pb.setMax(max);
             pb.setProgress(progress);
         }
