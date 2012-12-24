@@ -27,6 +27,10 @@ public class TimeTool {
     private static String THE_DAY_BEFORE_YESTER_DAY = GlobalContext.getInstance().getString(R.string.the_day_before_yesterday);
     private static String TODAY = GlobalContext.getInstance().getString(R.string.today);
 
+    private static String DATE_FORMAT = GlobalContext.getInstance().getString(R.string.date_format);
+    private static String YEAR_FORMAT = GlobalContext.getInstance().getString(R.string.year_format);
+
+
 
     public static String getListTime(ItemBean bean) {
         long msg = 0L;
@@ -90,7 +94,7 @@ public class TimeTool {
 
             } else {
 
-                java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("MM-dd HH:mm");
+                java.text.SimpleDateFormat format = new java.text.SimpleDateFormat(DATE_FORMAT);
                 String result = format.format(msgCalendar.getTime());
                 return new StringBuilder(result).toString();
             }
@@ -99,13 +103,13 @@ public class TimeTool {
         long calMonth = calDay / 31;
 
         if (calMonth < 12) {
-            java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("MM-dd HH:mm");
+            java.text.SimpleDateFormat format = new java.text.SimpleDateFormat(DATE_FORMAT);
             String result = format.format(msgCalendar.getTime());
             return new StringBuilder().append(result).toString();
 
         }
 
-        java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+        java.text.SimpleDateFormat format = new java.text.SimpleDateFormat(YEAR_FORMAT);
         String result = format.format(msgCalendar.getTime());
         return new StringBuilder().append(result).toString();
 
