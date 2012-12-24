@@ -32,6 +32,9 @@
     <string name="min">分钟前</string>
     <string name="sec">秒前</string>
     <string name="justnow">刚刚</string>
+    <string name="yesterday">昨天</string>
+    <string name="the_day_before_yesterday">前天</string>
+    <string name="today">今天</string>
 
     <!--button -->
     <string name="close">关闭</string>

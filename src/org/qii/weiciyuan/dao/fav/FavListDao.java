@@ -11,6 +11,7 @@ import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.util.*;
 
@@ -67,6 +68,7 @@ public class FavListDao {
                     iterator.remove();
                 } else {
                     msg.getStatus().getListViewSpannableString();
+                    TimeTool.dealMills(msg.getStatus());
                 }
             }
 
