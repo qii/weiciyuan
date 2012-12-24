@@ -44,6 +44,7 @@ public class CircleProgressView extends View {
         int h = Math.min(width, height);
         RectF oval2 = new RectF((width - h) / 2, (height - h) / 2, h + (width - h) / 2, h + (height - h) / 2);
         if (getProgress() < 360) {
+            mPaint.setColor(Color.parseColor("#33B5E5"));
             canvas.drawArc(oval2, 180, getProgress(), true, mPaint);
         } else {
             mPaint.setColor(Color.TRANSPARENT);
