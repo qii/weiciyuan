@@ -260,24 +260,29 @@ public class ImageTool {
 
             Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
 
-            if (bitmap != null) {
-                if (bitmap.getHeight() < reqHeight || bitmap.getWidth() < reqWidth) {
+            if (bitmap == null) {
+                //this picture is broken,so delete it
+                new File(filePath).delete();
+                return null;
+            }
 
-                    int[] size = calcResize(bitmap.getWidth(), bitmap.getHeight(), reqWidth, reqHeight);
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size[0], size[1], true);
 
-                    if (scaledBitmap != bitmap) {
-                        bitmap.recycle();
-                        bitmap = scaledBitmap;
-                    }
+            if (bitmap.getHeight() < reqHeight || bitmap.getWidth() < reqWidth) {
 
-                    Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
-                    if (roundedBitmap != bitmap) {
-                        bitmap.recycle();
-                        bitmap = roundedBitmap;
-                    }
-                    return bitmap;
+                int[] size = calcResize(bitmap.getWidth(), bitmap.getHeight(), reqWidth, reqHeight);
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size[0], size[1], true);
+
+                if (scaledBitmap != bitmap) {
+                    bitmap.recycle();
+                    bitmap = scaledBitmap;
                 }
+
+                Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+                if (roundedBitmap != bitmap) {
+                    bitmap.recycle();
+                    bitmap = roundedBitmap;
+                }
+                return bitmap;
             }
 
             return bitmap;
