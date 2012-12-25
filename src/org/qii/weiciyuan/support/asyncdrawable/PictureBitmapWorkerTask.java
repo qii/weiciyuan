@@ -171,8 +171,12 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                     public void onAnimationRepeat(Animation animation) {
                     }
 
+                    //clear animation avoid memory leak
                     @Override
                     public void onAnimationEnd(Animation animation) {
+                        if (view.getAnimation() != null && view.getAnimation().hasEnded()) {
+                            view.clearAnimation();
+                        }
                     }
                 });
 
