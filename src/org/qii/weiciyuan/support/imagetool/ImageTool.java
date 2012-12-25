@@ -234,7 +234,8 @@ public class ImageTool {
             }
 
             String filePath = FileManager.getFilePathFromUrl(url, method);
-            filePath = filePath + ".jpg";
+            if (!filePath.endsWith(".jpg") || !filePath.endsWith(".gif"))
+                filePath = filePath + ".jpg";
 
             boolean fileExist = new File(filePath).exists();
 
@@ -375,19 +376,29 @@ public class ImageTool {
 
         if (height > reqHeight || width > reqWidth) {
             if (height > reqHeight && reqHeight != 0) {
-                inSampleSize = Math.round((float) height / (float) reqHeight);
+                inSampleSize = (int) Math.ceil((double) height / (double) reqHeight);
             }
 
             int tmp = 0;
 
             if (width > reqWidth && reqWidth != 0) {
-                tmp = Math.round((float) width / (float) reqWidth);
+                tmp = (int) Math.ceil((double) width / (double) reqWidth);
             }
 
             inSampleSize = Math.max(inSampleSize, tmp);
 
         }
-        return inSampleSize;
+        int roundedSize;
+        if (inSampleSize <= 8) {
+            roundedSize = 1;
+            while (roundedSize < inSampleSize) {
+                roundedSize <<= 1;
+            }
+        } else {
+            roundedSize = (inSampleSize + 7) / 8 * 8;
+        }
+
+        return roundedSize;
     }
 
 
