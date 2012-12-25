@@ -5,7 +5,7 @@
     <dimen name="timeline_avatar_width">40dp</dimen>
 
 
-    <dimen name="timeline_pic_high_thumbnail_height">200dp</dimen>
+    <dimen name="timeline_pic_high_thumbnail_height">230dp</dimen>
     <dimen name="timeline_pic_thumbnail_height">100dp</dimen>
     <dimen name="timeline_pic_thumbnail_width">100dp</dimen>
 

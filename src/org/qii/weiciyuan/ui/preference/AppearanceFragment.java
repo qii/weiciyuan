@@ -7,6 +7,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 
 /**
@@ -17,6 +18,7 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
 
     private Preference listAvatarMode = null;
     private Preference listPicMode = null;
+    private Preference listHighPicMode = null;
     private Preference theme = null;
     private Preference listFontSize = null;
 
@@ -29,6 +31,7 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
 
         listAvatarMode = findPreference(SettingActivity.LIST_AVATAR_MODE);
         listPicMode = findPreference(SettingActivity.LIST_PIC_MODE);
+        listHighPicMode = findPreference(SettingActivity.LIST_HIGH_PIC_MODE);
         listFontSize = findPreference(SettingActivity.FONT_SIZE);
         theme = findPreference(SettingActivity.THEME);
 
@@ -53,6 +56,9 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
 
         value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.LIST_PIC_MODE, "1");
         listPicMode.setSummary(getActivity().getResources().getStringArray(R.array.list_pic_mode)[Integer.valueOf(value) - 1]);
+
+        value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.LIST_HIGH_PIC_MODE, "1");
+        listHighPicMode.setSummary(getActivity().getResources().getStringArray(R.array.list_high_pic_mode)[Integer.valueOf(value) - 1]);
 
         value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.FONT_SIZE, "1");
         String[] values = getActivity().getResources().getStringArray(R.array.font_value);
@@ -94,20 +100,25 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
 
         }
 
-        if (key.equals(SettingActivity.LIST_PIC_MODE))
-
-        {
+        if (key.equals(SettingActivity.LIST_PIC_MODE)) {
             String value = sharedPreferences.getString(key, "1");
-            if (value.equals("1"))
+            if (value.equals("1")) {
                 SettingUtility.setEnableBigPic(false);
-            if (value.equals("2"))
+                listHighPicMode.setEnabled(false);
+            }
+            if (value.equals("2")){
                 SettingUtility.setEnableBigPic(true);
+                listHighPicMode.setEnabled(true);
+            }
             if (value.equals("3")) {
                 SettingUtility.setEnableBigPic(Utility.isWifi(getActivity()));
+                listHighPicMode.setEnabled(true);
             }
 
         }
-
+        if (key.equals(SettingActivity.LIST_HIGH_PIC_MODE)) {
+            GlobalContext.getInstance().getAvatarCache().evictAll();
+        }
     }
 
 

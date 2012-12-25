@@ -52,6 +52,12 @@ public class SettingUtility {
         }
     }
 
+    public static int getHighPicMode() {
+        String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.LIST_HIGH_PIC_MODE, "1");
+        return Integer.valueOf(value);
+    }
+
+
     public static int getCommentRepostAvatar() {
         String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.COMMENT_REPOST_AVATAR, "1");
         return Integer.valueOf(value);

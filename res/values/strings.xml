@@ -274,6 +274,7 @@
     <string name="theme">主题</string>
     <string name="listview">列表</string>
     <string name="list_pic_mode">图片</string>
+    <string name="list_high_pic_mode">高清图片</string>
     <string name="list_avatar_mode">头像</string>
     <string name="font_size">字体大小</string>
     <string name="fast_scroll">快速滚动</string>

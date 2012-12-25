@@ -13,6 +13,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.lang.ref.WeakReference;
@@ -83,8 +84,14 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                     int height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
                     //8 is  layout padding
                     int width = (int) (metrics.widthPixels - (8 + 8) * reSize);
-
-                    return ImageTool.getMiddlePictureInTimeLine(data, width, height, null);
+                    switch (SettingUtility.getHighPicMode()) {
+                        case 1:
+                            return ImageTool.getMiddlePictureInTimeLine(data, width, height, null);
+                        case 2:
+                            return ImageTool.getRoundedCornerPic(data, width, height, FileLocationMethod.picture_bmiddle);
+                        default:
+                            throw new IllegalArgumentException();
+                    }
 
             }
         }

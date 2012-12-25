@@ -20,14 +20,22 @@
         <item>3</item>
     </string-array>
     <string-array name="list_pic_mode">
-        <item>缩略图</item>
-        <item>高清裁剪缩略图</item>
+        <item>小图</item>
+        <item>高清</item>
         <item>自动</item>
     </string-array>
     <string-array name="list_pic_mode_value">
         <item>1</item>
         <item>2</item>
         <item>3</item>
+    </string-array>
+    <string-array name="list_high_pic_mode">
+        <item>固定高度裁剪</item>
+        <item>固定高度完整</item>
+    </string-array>
+    <string-array name="list_high_pic_mode_value">
+        <item>1</item>
+        <item>2</item>
     </string-array>
     <string-array name="upload_pic_quality" formatted="false">
         <item>高清不压缩</item>

@@ -20,6 +20,7 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String THEME = "theme";
     public static final String LIST_AVATAR_MODE = "list_avatar_mode";
     public static final String LIST_PIC_MODE = "list_pic_mode";
+    public static final String LIST_HIGH_PIC_MODE = "list_high_pic_mode";
     public static final String LIST_FAST_SCROLL = "list_fast_scroll";
     public static final String FONT_SIZE = "font_size";
     public static final String SHOW_BIG_PIC = "show_big_pic";

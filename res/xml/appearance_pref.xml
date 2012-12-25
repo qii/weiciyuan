@@ -32,6 +32,15 @@
             android:entries="@array/list_pic_mode"
             android:entryValues="@array/list_pic_mode_value"
             android:defaultValue="1"/>
+
+        <ListPreference
+            android:key="list_high_pic_mode"
+            android:title="@string/list_high_pic_mode"
+            android:dialogTitle="@string/list_high_pic_mode"
+            android:entries="@array/list_high_pic_mode"
+            android:entryValues="@array/list_high_pic_mode_value"
+            android:defaultValue="1"/>
+
         <ListPreference
             android:key="font_size"
             android:title="@string/font_size"
