@@ -77,9 +77,14 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 if (holder == null)
                     return;
 
+                //reduce memory and avoid memory leak
                 holder.avatar.setImageBitmap(null);
                 holder.content_pic.setImageBitmap(null);
                 holder.repost_content_pic.setImageBitmap(null);
+
+                holder.avatar.getImageView().clearAnimation();
+                holder.content_pic.getImageView().clearAnimation();
+                holder.repost_content_pic.getImageView().clearAnimation();
 
             }
         });
