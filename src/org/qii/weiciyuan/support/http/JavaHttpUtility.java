@@ -85,7 +85,7 @@ public class JavaHttpUtility {
 
     private String handleError(HttpURLConnection urlConnection) throws WeiboException {
 
-        String result = readResult(urlConnection);
+        String result = readError(urlConnection);
         String err = null;
         int errCode = 0;
         try {
@@ -140,6 +140,40 @@ public class JavaHttpUtility {
         }
 
     }
+
+    private String readError(HttpURLConnection urlConnection) throws WeiboException {
+          InputStream is = null;
+          BufferedReader buffer = null;
+          GlobalContext globalContext = GlobalContext.getInstance();
+          String errorStr = globalContext.getString(R.string.timeout);
+          globalContext = null;
+          try {
+              is = urlConnection.getErrorStream();
+
+              String content_encode = urlConnection.getContentEncoding();
+
+              if (null != content_encode && !"".equals(content_encode) && content_encode.equals("gzip")) {
+                  is = new GZIPInputStream(is);
+              }
+
+              buffer = new BufferedReader(new InputStreamReader(is));
+              StringBuilder strBuilder = new StringBuilder();
+              String line;
+              while ((line = buffer.readLine()) != null) {
+                  strBuilder.append(line);
+              }
+
+              return strBuilder.toString();
+          } catch (IOException e) {
+              e.printStackTrace();
+              throw new WeiboException(errorStr, e);
+          } finally {
+              Utility.closeSilently(is);
+              Utility.closeSilently(buffer);
+              urlConnection.disconnect();
+          }
+
+      }
 
     public String doGet(String urlStr, Map<String, String> param) throws WeiboException {
         GlobalContext globalContext = GlobalContext.getInstance();
