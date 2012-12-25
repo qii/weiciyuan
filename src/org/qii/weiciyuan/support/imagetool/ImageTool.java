@@ -234,7 +234,7 @@ public class ImageTool {
             }
 
             String filePath = FileManager.getFilePathFromUrl(url, method);
-            if (!filePath.endsWith(".jpg") || !filePath.endsWith(".gif"))
+            if (!filePath.endsWith(".jpg") && !filePath.endsWith(".gif"))
                 filePath = filePath + ".jpg";
 
             boolean fileExist = new File(filePath).exists();
