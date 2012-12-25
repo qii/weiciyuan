@@ -221,6 +221,7 @@ public class ImageTool {
 
             return null;
         } catch (OutOfMemoryError ignored) {
+            ignored.printStackTrace();
             return null;
         }
     }
@@ -287,6 +288,7 @@ public class ImageTool {
 
             return bitmap;
         } catch (OutOfMemoryError ignored) {
+            ignored.printStackTrace();
             return null;
         }
     }
@@ -410,8 +412,8 @@ public class ImageTool {
     private static int[] calcResize(int actualWidth, int actualHeight, int reqWidth, int reqHeight) {
 
 
-        int height = 0;
-        int width = 0;
+        int height = actualHeight;
+        int width = actualWidth;
 
         if (actualHeight < reqHeight && actualWidth < reqWidth) {
 
