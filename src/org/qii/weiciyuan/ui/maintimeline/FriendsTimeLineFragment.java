@@ -1,9 +1,6 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -384,14 +381,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 return;
             }
 
-            ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-
-            boolean haveNetwork = (networkInfo != null) && (networkInfo.isConnected());
-
-            boolean haveWifi = haveNetwork && (networkInfo.getType() == ConnectivityManager.TYPE_WIFI);
-
-            if (!haveWifi) {
+            if (!Utility.isWifi(getActivity())) {
                 return;
             }
 
