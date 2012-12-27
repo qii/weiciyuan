@@ -2,9 +2,7 @@ package org.qii.weiciyuan.ui.send;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,8 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -22,10 +18,7 @@ import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
 import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
+import java.util.Map;
 
 /**
  * User: qii
@@ -35,8 +28,6 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         , EmotionsGridDialog.IEmotions, SaveDraftDialog.IDraft {
 
     private SimpleTask task;
-    protected GetEmotionsTask getEmotionsTask;
-    private Map<String, Bitmap> emotionsPic = new HashMap<String, Bitmap>();
 
     protected abstract T sendData() throws WeiboException;
 
@@ -79,19 +70,13 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
     }
 
     public Map<String, Bitmap> getEmotionsPic() {
-        return emotionsPic;
+        return GlobalContext.getInstance().getEmotionsPics();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (getEmotionsTask != null)
-            getEmotionsTask.cancel(true);
 
-        Set<String> keys = emotionsPic.keySet();
-        for (String key : keys) {
-            emotionsPic.put(key, null);
-        }
     }
 
 
@@ -120,10 +105,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         findViewById(R.id.menu_topic).setOnLongClickListener(onLongClickListener);
         findViewById(R.id.menu_send).setOnLongClickListener(onLongClickListener);
 
-        if (getEmotionsTask == null || getEmotionsTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            getEmotionsTask = new GetEmotionsTask();
-            getEmotionsTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        }
+
     }
 
 
@@ -262,32 +244,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         }
     }
 
-    private class GetEmotionsTask extends MyAsyncTask<Void, Void, Void> {
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            Map<String, String> emotions = GlobalContext.getInstance().getEmotions();
-            List<String> index = new ArrayList<String>();
-            index.addAll(emotions.keySet());
-            for (String str : index) {
-                if (!isCancelled()) {
-                    String url = emotions.get(str);
-                    String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.emotion);
-                    String name = new File(path).getName();
-                    AssetManager assetManager = GlobalContext.getInstance().getAssets();
-                    InputStream inputStream;
-                    try {
-                        inputStream = assetManager.open(name);
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                        emotionsPic.put(str, bitmap);
-                    } catch (IOException ignored) {
-
-                    }
-                }
-            }
-            return null;
-        }
-    }
 
     private class BottomButtonLongClickListener implements View.OnLongClickListener {
 

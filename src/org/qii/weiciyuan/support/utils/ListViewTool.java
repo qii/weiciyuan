@@ -1,21 +1,14 @@
 package org.qii.weiciyuan.support.utils;
 
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.widget.TextView;
 import org.qii.weiciyuan.bean.*;
-import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyLinkify;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -220,24 +213,12 @@ public class ListViewTool {
             int m = localMatcher.end();
             if (m - k < 8) {
 
-                String url = GlobalContext.getInstance().getEmotions().get(str2);
-                if (!TextUtils.isEmpty(url)) {
-                    String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.emotion);
-                    String name = new File(path).getName();
-                    AssetManager assetManager = GlobalContext.getInstance().getAssets();
-                    InputStream inputStream;
-                    try {
-                        inputStream = assetManager.open(name);
-
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                        if (bitmap != null) {
-                            ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), bitmap, ImageSpan.ALIGN_BASELINE);
-                            value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                    } catch (IOException e) {
-                        AppLogger.e(e.getMessage());
-                    }
+                Bitmap bitmap = GlobalContext.getInstance().getEmotionsPics().get(str2);
+                if (bitmap != null) {
+                    ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), bitmap, ImageSpan.ALIGN_BASELINE);
+                    value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
+
             }
         }
     }
@@ -251,26 +232,12 @@ public class ListViewTool {
             int m = localMatcher.end();
             if (m - k < 8) {
 
-                String url = GlobalContext.getInstance().getEmotions().get(str2);
-                if (!TextUtils.isEmpty(url)) {
-                    String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.emotion);
-                    String name = new File(path).getName();
-                    AssetManager assetManager = GlobalContext.getInstance().getAssets();
-                    InputStream inputStream;
-                    try {
-                        inputStream = assetManager.open(name);
-
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                        if (bitmap != null) {
-                            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) (height * 1.5), (int) (height * 1.5), true);
-                            bitmap.recycle();
-                            ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), scaledBitmap, ImageSpan.ALIGN_BASELINE);
-                            value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                    } catch (IOException e) {
-                        AppLogger.e(e.getMessage());
-                    }
-
+                Bitmap bitmap = GlobalContext.getInstance().getEmotionsPics().get(str2);
+                if (bitmap != null) {
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) (height * 1.5), (int) (height * 1.5), true);
+                    bitmap.recycle();
+                    ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), scaledBitmap, ImageSpan.ALIGN_BASELINE);
+                    value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
         }

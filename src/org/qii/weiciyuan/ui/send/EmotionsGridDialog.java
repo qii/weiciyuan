@@ -2,10 +2,10 @@ package org.qii.weiciyuan.ui.send;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.app.DialogFragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,7 +24,7 @@ import java.util.Map;
  * Date: 12-9-25
  */
 public class EmotionsGridDialog extends DialogFragment {
-    Map<String, String> emotions;
+    Map<String, Bitmap> emotions;
     List<String> index = new ArrayList<String>();
 
     public static interface IEmotions {
@@ -36,8 +36,14 @@ public class EmotionsGridDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        emotions = GlobalContext.getInstance().getEmotions();
+        emotions = GlobalContext.getInstance().getEmotionsPics();
         index.addAll(emotions.keySet());
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        emotions = null;
     }
 
     @Override
@@ -92,7 +98,7 @@ public class EmotionsGridDialog extends DialogFragment {
             }
 
 
-            imageView.setImageBitmap(((IEmotions) getActivity()).getEmotionsPic().get(index.get(position)));
+            imageView.setImageBitmap(emotions.get(index.get(position)));
             return imageView;
         }
 

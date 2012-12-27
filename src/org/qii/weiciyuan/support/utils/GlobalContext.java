@@ -5,7 +5,9 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -18,9 +20,15 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.database.GroupDBTask;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +57,10 @@ public final class GlobalContext extends Application {
 
     private Map<String, String> emotions = null;
 
+    private Map<String, Bitmap> emotionsPic = new HashMap<String, Bitmap>();
+
+    private Thread emotionThread = null;
+
     private GroupListBean group = null;
 
     @Override
@@ -58,6 +70,8 @@ public final class GlobalContext extends Application {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         buildCache();
         getEmotions();
+        emotionThread = new Thread(new GetEmotionsThread());
+        emotionThread.start();
 
     }
 
@@ -77,7 +91,7 @@ public final class GlobalContext extends Application {
         this.group = group;
     }
 
-    public Map<String, String> getEmotions() {
+    private Map<String, String> getEmotions() {
         if (emotions == null) {
             InputStream inputStream = getResources().openRawResource(R.raw.emotions);
             emotions = new Gson().fromJson(new InputStreamReader(inputStream), new TypeToken<Map<String, String>>() {
@@ -179,5 +193,48 @@ public final class GlobalContext extends Application {
         };
     }
 
+    public Map<String, Bitmap> getEmotionsPics() {
+        if (emotionThread != null) {
+            try {
+                emotionThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if (emotionsPic != null && emotionsPic.size() > 0) {
+            return emotionsPic;
+        } else {
+            getEmotionsTask();
+            return emotionsPic;
+        }
+    }
 
+    private class GetEmotionsThread implements Runnable {
+
+        @Override
+        public void run() {
+            getEmotionsTask();
+        }
+    }
+
+    private void getEmotionsTask() {
+        Map<String, String> emotions = GlobalContext.getInstance().getEmotions();
+        List<String> index = new ArrayList<String>();
+        index.addAll(emotions.keySet());
+        for (String str : index) {
+            String url = emotions.get(str);
+            String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.emotion);
+            String name = new File(path).getName();
+            AssetManager assetManager = GlobalContext.getInstance().getAssets();
+            InputStream inputStream;
+            try {
+                inputStream = assetManager.open(name);
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                emotionsPic.put(str, bitmap);
+            } catch (IOException ignored) {
+
+            }
+        }
+    }
 }
+

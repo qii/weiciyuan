@@ -4,9 +4,7 @@ import android.app.ActionBar;
 import android.content.*;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.*;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,8 +24,6 @@ import org.qii.weiciyuan.othercomponent.SendWeiboService;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
-import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imagetool.ImageEdit;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -38,9 +34,7 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -67,8 +61,6 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private EditText content = null;
 
     private String2PicTask string2PicTask;
-    private GetEmotionsTask getEmotionsTask;
-    private Map<String, Bitmap> emotionsPic = new HashMap<String, Bitmap>();
 
 
     @Override
@@ -148,11 +140,8 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     protected void onDestroy() {
         super.onDestroy();
 
-        Utility.cancelTasks(string2PicTask, getEmotionsTask);
-        Set<String> keys = emotionsPic.keySet();
-        for (String key : keys) {
-            emotionsPic.put(key, null);
-        }
+        Utility.cancelTasks(string2PicTask);
+
     }
 
 
@@ -194,10 +183,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         } else {
             handleNormalOperation(intent);
         }
-        if (getEmotionsTask == null || getEmotionsTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            getEmotionsTask = new GetEmotionsTask();
-            getEmotionsTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        }
+
     }
 
     private void handleNormalOperation(Intent intent) {
@@ -227,7 +213,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
 
     public Map<String, Bitmap> getEmotionsPic() {
-        return emotionsPic;
+        return GlobalContext.getInstance().getEmotionsPics();
     }
 
 
@@ -577,32 +563,6 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
     }
 
-    private class GetEmotionsTask extends MyAsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            Map<String, String> emotions = GlobalContext.getInstance().getEmotions();
-            List<String> index = new ArrayList<String>();
-            index.addAll(emotions.keySet());
-            for (String str : index) {
-                if (!isCancelled()) {
-                    String url = emotions.get(str);
-                    String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.emotion);
-                    String name = new File(path).getName();
-                    AssetManager assetManager = GlobalContext.getInstance().getAssets();
-                    InputStream inputStream;
-                    try {
-                        inputStream = assetManager.open(name);
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                        emotionsPic.put(str, bitmap);
-                    } catch (IOException ignored) {
-
-                    }
-                }
-            }
-            return null;
-        }
-    }
 
     private final LocationListener locationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
