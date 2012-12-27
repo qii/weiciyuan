@@ -281,6 +281,5 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         Utility.cancelTasks(task, saveTask);
         webView.loadUrl("about:blank");
         webView.stopLoading();
-        webView = null;
-    }
+     }
 }
