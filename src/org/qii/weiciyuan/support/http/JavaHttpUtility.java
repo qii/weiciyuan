@@ -360,7 +360,12 @@ public class JavaHttpUtility {
             buffer = new byte[bufferSize];
             bytesRead = fis.read(buffer, 0, bufferSize);
             long transferred = 0;
+            final Thread thread = Thread.currentThread();
             while (bytesRead > 0) {
+                if (thread.isInterrupted()) {
+                    file.delete();
+                    throw new InterruptedIOException();
+                }
                 out.write(buffer, 0, bufferSize);
                 bytesAvailable = fis.available();
                 bufferSize = Math.min(bytesAvailable, maxBufferSize);

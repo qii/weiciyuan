@@ -24,11 +24,11 @@ public class HttpUtility {
     }
 
     public boolean executeDownloadTask(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
-        return new JavaHttpUtility().doGetSaveFile(url, path, downloadListener);
+        return !Thread.currentThread().isInterrupted() && new JavaHttpUtility().doGetSaveFile(url, path, downloadListener);
     }
 
     public boolean executeUploadTask(String url, Map<String, String> param, String path, FileUploaderHttpHelper.ProgressListener listener) throws WeiboException {
-        return new JavaHttpUtility().doUploadFile(url, param, path, listener);
+        return !Thread.currentThread().isInterrupted() && new JavaHttpUtility().doUploadFile(url, param, path, listener);
     }
 }
 
