@@ -1,7 +1,9 @@
 package org.qii.weiciyuan.support.utils;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
@@ -10,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.widget.ListView;
@@ -236,4 +239,17 @@ public class Utility {
 
     }
 
+    public static String getPicPathFromUri(Uri uri, Activity activity) {
+        String value = uri.getPath();
+
+        if (value.startsWith("/external")) {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            Cursor cursor = activity.managedQuery(uri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } else {
+            return value;
+        }
+    }
 }

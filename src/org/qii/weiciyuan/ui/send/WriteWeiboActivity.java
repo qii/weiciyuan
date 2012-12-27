@@ -5,7 +5,6 @@ import android.content.*;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.AssetManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.*;
@@ -117,7 +116,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                         content.setSelection(content.getText().toString().length());
                     }
 
-                    picPath = getPicPathFromUri(imageFileUri);
+                    picPath = Utility.getPicPathFromUri(imageFileUri, this);
                     ((ImageButton) findViewById(R.id.menu_add_pic)).setImageLevel(1);
                     break;
                 case PIC_RESULT:
@@ -127,7 +126,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     }
 
                     Uri imageFileUri = intent.getData();
-                    picPath = getPicPathFromUri(imageFileUri);
+                    picPath = Utility.getPicPathFromUri(imageFileUri, this);
                     enablePicture();
                     break;
                 case AT_USER:
@@ -322,27 +321,13 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
         Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUri != null) {
-            picPath = getPicPathFromUri(imageUri);
+            picPath = Utility.getPicPathFromUri(imageUri, this);
             content.setText(getString(R.string.share_pic));
             content.setSelection(content.getText().toString().length());
             enablePicture();
         }
     }
 
-
-    private String getPicPathFromUri(Uri uri) {
-        String value = uri.getPath();
-
-        if (value.startsWith("/external")) {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            Cursor cursor = managedQuery(uri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } else {
-            return value;
-        }
-    }
 
     private boolean canSend() {
 
