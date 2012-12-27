@@ -117,7 +117,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     }
 
                     picPath = Utility.getPicPathFromUri(imageFileUri, this);
-                    ((ImageButton) findViewById(R.id.menu_add_pic)).setImageLevel(1);
+                    enablePicture();
                     break;
                 case PIC_RESULT:
                     if (TextUtils.isEmpty(content.getText().toString())) {
