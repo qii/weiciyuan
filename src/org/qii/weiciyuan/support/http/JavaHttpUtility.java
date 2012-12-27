@@ -13,6 +13,8 @@ import org.qii.weiciyuan.support.utils.Utility;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,13 +35,28 @@ public class JavaHttpUtility {
         return "";
     }
 
+    private static Proxy getProxy() {
+        String proxyHost = System.getProperty("http.proxyHost");
+        String proxyPort = System.getProperty("http.proxyPort");
+        if (!TextUtils.isEmpty(proxyHost) && !TextUtils.isEmpty(proxyPort))
+            return new Proxy(java.net.Proxy.Type.HTTP, new InetSocketAddress(proxyHost, Integer.valueOf(proxyPort)));
+        else
+            return null;
+    }
+
     public String doPost(String urlAddress, Map<String, String> param) throws WeiboException {
         GlobalContext globalContext = GlobalContext.getInstance();
         String errorStr = globalContext.getString(R.string.timeout);
         globalContext = null;
         try {
             URL url = new URL(urlAddress);
-            HttpURLConnection uRLConnection = (HttpURLConnection) url.openConnection();
+            Proxy proxy = getProxy();
+            HttpURLConnection uRLConnection;
+            if (proxy != null)
+                uRLConnection = (HttpURLConnection) url.openConnection(proxy);
+            else
+                uRLConnection = (HttpURLConnection) url.openConnection();
+
             uRLConnection.setDoInput(true);
             uRLConnection.setDoOutput(true);
             uRLConnection.setRequestMethod("POST");
@@ -186,8 +203,12 @@ public class JavaHttpUtility {
             urlBuilder.append("?").append(Utility.encodeUrl(param));
             URL url = new URL(urlBuilder.toString());
 
-            HttpURLConnection urlConnection = (HttpURLConnection) url
-                    .openConnection();
+            Proxy proxy = getProxy();
+            HttpURLConnection urlConnection;
+            if (proxy != null)
+                urlConnection = (HttpURLConnection) url.openConnection(proxy);
+            else
+                urlConnection = (HttpURLConnection) url.openConnection();
 
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoOutput(false);
@@ -222,8 +243,11 @@ public class JavaHttpUtility {
 
             URL url = new URL(urlStr);
 
-            urlConnection = (HttpURLConnection) url
-                    .openConnection();
+            Proxy proxy = getProxy();
+            if (proxy != null)
+                urlConnection = (HttpURLConnection) url.openConnection(proxy);
+            else
+                urlConnection = (HttpURLConnection) url.openConnection();
 
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoOutput(false);
@@ -306,8 +330,11 @@ public class JavaHttpUtility {
 
             url = new URL(urlStr);
 
-            urlConnection = (HttpURLConnection) url
-                    .openConnection();
+            Proxy proxy = getProxy();
+            if (proxy != null)
+                urlConnection = (HttpURLConnection) url.openConnection(proxy);
+            else
+                urlConnection = (HttpURLConnection) url.openConnection();
 
             urlConnection.setConnectTimeout(5000);
             urlConnection.setReadTimeout(8000);
