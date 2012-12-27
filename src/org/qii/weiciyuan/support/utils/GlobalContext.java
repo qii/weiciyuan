@@ -230,7 +230,14 @@ public final class GlobalContext extends Application {
             try {
                 inputStream = assetManager.open(name);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                emotionsPic.put(str, bitmap);
+                if (bitmap != null) {
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, Utility.dip2px(20), Utility.dip2px(20), true);
+                    if (bitmap != scaledBitmap) {
+                        bitmap.recycle();
+                        bitmap = scaledBitmap;
+                    }
+                    emotionsPic.put(str, bitmap);
+                }
             } catch (IOException ignored) {
 
             }

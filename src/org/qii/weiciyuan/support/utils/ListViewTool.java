@@ -235,7 +235,6 @@ public class ListViewTool {
                 Bitmap bitmap = GlobalContext.getInstance().getEmotionsPics().get(str2);
                 if (bitmap != null) {
                     Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) (height * 1.5), (int) (height * 1.5), true);
-                    bitmap.recycle();
                     ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), scaledBitmap, ImageSpan.ALIGN_BASELINE);
                     value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
