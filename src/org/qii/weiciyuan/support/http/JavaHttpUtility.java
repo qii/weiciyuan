@@ -142,38 +142,38 @@ public class JavaHttpUtility {
     }
 
     private String readError(HttpURLConnection urlConnection) throws WeiboException {
-          InputStream is = null;
-          BufferedReader buffer = null;
-          GlobalContext globalContext = GlobalContext.getInstance();
-          String errorStr = globalContext.getString(R.string.timeout);
-          globalContext = null;
-          try {
-              is = urlConnection.getErrorStream();
+        InputStream is = null;
+        BufferedReader buffer = null;
+        GlobalContext globalContext = GlobalContext.getInstance();
+        String errorStr = globalContext.getString(R.string.timeout);
+        globalContext = null;
+        try {
+            is = urlConnection.getErrorStream();
 
-              String content_encode = urlConnection.getContentEncoding();
+            String content_encode = urlConnection.getContentEncoding();
 
-              if (null != content_encode && !"".equals(content_encode) && content_encode.equals("gzip")) {
-                  is = new GZIPInputStream(is);
-              }
+            if (null != content_encode && !"".equals(content_encode) && content_encode.equals("gzip")) {
+                is = new GZIPInputStream(is);
+            }
 
-              buffer = new BufferedReader(new InputStreamReader(is));
-              StringBuilder strBuilder = new StringBuilder();
-              String line;
-              while ((line = buffer.readLine()) != null) {
-                  strBuilder.append(line);
-              }
+            buffer = new BufferedReader(new InputStreamReader(is));
+            StringBuilder strBuilder = new StringBuilder();
+            String line;
+            while ((line = buffer.readLine()) != null) {
+                strBuilder.append(line);
+            }
 
-              return strBuilder.toString();
-          } catch (IOException e) {
-              e.printStackTrace();
-              throw new WeiboException(errorStr, e);
-          } finally {
-              Utility.closeSilently(is);
-              Utility.closeSilently(buffer);
-              urlConnection.disconnect();
-          }
+            return strBuilder.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new WeiboException(errorStr, e);
+        } finally {
+            Utility.closeSilently(is);
+            Utility.closeSilently(buffer);
+            urlConnection.disconnect();
+        }
 
-      }
+    }
 
     public String doGet(String urlStr, Map<String, String> param) throws WeiboException {
         GlobalContext globalContext = GlobalContext.getInstance();
@@ -248,8 +248,14 @@ public class JavaHttpUtility {
             out = new FileOutputStream(file);
             in = urlConnection.getInputStream();
 
+            final Thread thread = Thread.currentThread();
             byte[] buffer = new byte[1444];
             while ((byteread = in.read(buffer)) != -1) {
+                if (thread.isInterrupted()) {
+                    file.delete();
+                    throw new InterruptedIOException();
+                }
+
                 bytesum += byteread;
                 out.write(buffer, 0, byteread);
                 if (downloadListener != null && bytetotal > 0) {
