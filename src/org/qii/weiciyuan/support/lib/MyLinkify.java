@@ -178,7 +178,7 @@ public class MyLinkify {
         ArrayList<LinkSpec> links = new ArrayList<LinkSpec>();
 
         if ((mask & WEB_URLS) != 0) {
-            gatherLinks(links, text, Patterns.WEB_URL,
+            gatherLinks(links, text, MyPatterns.WEB_URL,
                     new String[]{"http://", "https://", "rtsp://"},
                     sUrlMatchFilter, null);
         }
