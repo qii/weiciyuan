@@ -11,7 +11,7 @@ package org.qii.weiciyuan.support.utils;
 public class AppLogger {
     protected static final String TAG = "weiciyuan";
 
-    public AppLogger() {
+    private AppLogger() {
     }
 
     /**

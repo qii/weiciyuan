@@ -10,6 +10,10 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
  */
 public class NotificationUtility {
 
+    private NotificationUtility() {
+        // Forbidden being instantiated.
+    }
+
     public static int getCount(UnreadBean unreadBean) {
         int count = 0;
 

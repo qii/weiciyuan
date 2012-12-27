@@ -15,6 +15,10 @@ public class SettingUtility {
 
     private static final String FIRSTSTART = "firststart";
 
+    private SettingUtility() {
+
+    }
+
     private static Context getContext() {
         return GlobalContext.getInstance();
     }

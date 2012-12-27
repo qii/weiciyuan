@@ -12,6 +12,10 @@ class SettingHelper {
     private static SharedPreferences.Editor editor = null;
     private static SharedPreferences sharedPreferences = null;
 
+    private SettingHelper() {
+
+    }
+
     private static SharedPreferences.Editor getEditorObject(Context paramContext) {
         if (editor == null)
             editor = PreferenceManager.getDefaultSharedPreferences(paramContext).edit();

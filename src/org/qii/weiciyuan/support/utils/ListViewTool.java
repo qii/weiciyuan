@@ -25,6 +25,11 @@ import java.util.regex.Pattern;
  * Date: 12-8-29
  */
 public class ListViewTool {
+
+    private ListViewTool() {
+        // Forbidden being instantiated.
+    }
+
     public static void addJustHighLightLinks(TextView view) {
         MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
             public final String transformUrl(final Matcher match, String url) {

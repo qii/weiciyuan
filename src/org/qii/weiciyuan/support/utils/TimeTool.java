@@ -30,7 +30,9 @@ public class TimeTool {
     private static String DATE_FORMAT = GlobalContext.getInstance().getString(R.string.date_format);
     private static String YEAR_FORMAT = GlobalContext.getInstance().getString(R.string.year_format);
 
+    private TimeTool() {
 
+    }
 
     public static String getListTime(ItemBean bean) {
         long msg = 0L;

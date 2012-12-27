@@ -29,6 +29,10 @@ import java.util.Set;
 
 public class Utility {
 
+    private Utility() {
+        // Forbidden being instantiated.
+    }
+
     public static String encodeUrl(Map<String, String> param) {
         if (param == null) {
             return "";
