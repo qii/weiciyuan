@@ -59,8 +59,6 @@ public final class GlobalContext extends Application {
 
     private Map<String, Bitmap> emotionsPic = new HashMap<String, Bitmap>();
 
-    private Thread emotionThread = null;
-
     private GroupListBean group = null;
 
     @Override
@@ -69,10 +67,6 @@ public final class GlobalContext extends Application {
         globalContext = this;
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         buildCache();
-        getEmotions();
-        emotionThread = new Thread(new GetEmotionsThread());
-        emotionThread.start();
-
     }
 
     public static GlobalContext getInstance() {
@@ -194,13 +188,6 @@ public final class GlobalContext extends Application {
     }
 
     public Map<String, Bitmap> getEmotionsPics() {
-        if (emotionThread != null) {
-            try {
-                emotionThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
         if (emotionsPic != null && emotionsPic.size() > 0) {
             return emotionsPic;
         } else {
@@ -209,13 +196,6 @@ public final class GlobalContext extends Application {
         }
     }
 
-    private class GetEmotionsThread implements Runnable {
-
-        @Override
-        public void run() {
-            getEmotionsTask();
-        }
-    }
 
     private void getEmotionsTask() {
         Map<String, String> emotions = GlobalContext.getInstance().getEmotions();

@@ -93,10 +93,10 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         buildPhoneInterface();
 
-
-        new Thread(new ClearCacheTask()).start();
+        Executors.newSingleThreadScheduledExecutor().schedule(new ClearCacheTask(), 8000, TimeUnit.SECONDS);
 
     }
+
 
     private void getUnreadCount() {
         if (getUnreadCountTask == null || getUnreadCountTask.getStatus() == MyAsyncTask.Status.FINISHED) {
