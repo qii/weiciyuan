@@ -42,10 +42,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private DBCacheTask dbTask;
 
     private AutoRefreshTask autoRefreshTask = null;
-    private ScheduledExecutorService scheduledRefreshExecutorService = null;
+    private ScheduledExecutorService autoRefreshExecutor = null;
 
     private String selectedId = "0";
-    private HashMap<String, MessageListBean> hashMap = new HashMap<String, MessageListBean>();
+    private HashMap<String, MessageListBean> groupDataCache = new HashMap<String, MessageListBean>();
 
     private GroupTask groupTask;
 
@@ -74,7 +74,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
 
-        outState.putSerializable("hashmap", hashMap);
+        outState.putSerializable("hashmap", groupDataCache);
         outState.putString("selectedId", selectedId);
     }
 
@@ -141,27 +141,27 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
             token = savedInstanceState.getString("token");
 
-            hashMap = (HashMap) savedInstanceState.getSerializable("hashmap");
+            groupDataCache = (HashMap) savedInstanceState.getSerializable("hashmap");
             selectedId = savedInstanceState.getString("selectedId");
 
-            clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
+            getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
 
             refreshLayout(getList());
         } else {
-            if (!Utility.isTaskStopped(dbTask)) {
+            if (Utility.isTaskStopped(dbTask)) {
                 dbTask = new DBCacheTask();
                 dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
 
-            if (!Utility.isTaskStopped(groupTask)) {
+            if (Utility.isTaskStopped(groupTask)) {
                 groupTask = new GroupTask(GlobalContext.getInstance().getSpecialToken());
                 groupTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
 
 
-            hashMap.put("0", new MessageListBean());
-            hashMap.put("1", new MessageListBean());
+            groupDataCache.put("0", new MessageListBean());
+            groupDataCache.put("1", new MessageListBean());
 
         }
 
@@ -189,12 +189,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             super.onPostExecute(result);
 
             if (result != null) {
-                clearAndReplaceValue(result);
-                clearAndReplaceValue("0", result);
+                getList().replaceData(result);
+                putToGroupDataMemoryCache("0", result);
             }
 
             getPullToRefreshListView().setVisibility(View.VISIBLE);
             getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
             refreshLayout(getList());
             /**
              * when this account first open app,if he don't have any data in database,fetch data from server automally
@@ -213,8 +214,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         intent.putExtra("msg", getList().getItemList().get(position));
         intent.putExtra("token", token);
         startActivity(intent);
-
-
     }
 
     private MenuItem name;
@@ -278,7 +277,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     protected void afterGetNewMsg() {
         super.afterGetNewMsg();
         getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
-        clearAndReplaceValue(selectedId, getList());
+        putToGroupDataMemoryCache(selectedId, getList());
     }
 
     @Override
@@ -329,34 +328,33 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     public void switchGroup() {
 
-        if (hashMap.get(selectedId) == null || hashMap.get(selectedId).getSize() == 0) {
+        if (groupDataCache.get(selectedId) == null || groupDataCache.get(selectedId).getSize() == 0) {
             getList().getItemList().clear();
             getAdapter().notifyDataSetChanged();
             getPullToRefreshListView().startRefreshNow();
 
         } else {
-            clearAndReplaceValue(hashMap.get(selectedId));
+            getList().replaceData(groupDataCache.get(selectedId));
             getAdapter().notifyDataSetChanged();
         }
         getActivity().invalidateOptionsMenu();
     }
 
-    private void clearAndReplaceValue(String position, MessageListBean newValue) {
-        hashMap.put(position, new MessageListBean());
-        hashMap.get(position).getItemList().clear();
-        hashMap.get(position).getItemList().addAll(newValue.getItemList());
-        hashMap.get(position).setTotal_number(newValue.getTotal_number());
+    private void putToGroupDataMemoryCache(String groupId, MessageListBean value) {
+        MessageListBean copy = new MessageListBean();
+        copy.addNewData(value);
+        groupDataCache.put(groupId, copy);
     }
 
     private void removeRefresh() {
-        if (scheduledRefreshExecutorService != null && !scheduledRefreshExecutorService.isShutdown())
-            scheduledRefreshExecutorService.shutdownNow();
+        if (autoRefreshExecutor != null && !autoRefreshExecutor.isShutdown())
+            autoRefreshExecutor.shutdownNow();
     }
 
     protected void addRefresh() {
 
-        scheduledRefreshExecutorService = Executors.newSingleThreadScheduledExecutor();
-        scheduledRefreshExecutorService
+        autoRefreshExecutor = Executors.newSingleThreadScheduledExecutor();
+        autoRefreshExecutor
                 .scheduleAtFixedRate(new AutoTask(), AppConfig.AUTO_REFRESH_INITIALDELAY, AppConfig.AUTO_REFRESH_PERIOD, TimeUnit.SECONDS);
 
     }
@@ -442,7 +440,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 }
             }
             getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
-            clearAndReplaceValue(selectedId, getList());
+            putToGroupDataMemoryCache(selectedId, getList());
 
             int index = getListView().getFirstVisiblePosition();
 
