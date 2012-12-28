@@ -44,7 +44,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private AutoRefreshTask autoRefreshTask = null;
     private ScheduledExecutorService autoRefreshExecutor = null;
 
-    private String currentGroupId = "0";
+    private final String ALL_GROUP_ID = "0";
+    private final String BILATERAL_GROUP_ID = "1";
+
+    private String currentGroupId = ALL_GROUP_ID;
+
     private HashMap<String, MessageListBean> groupDataCache = new HashMap<String, MessageListBean>();
 
     private MessageListBean bean = new MessageListBean();
@@ -93,7 +97,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
 
-            if (getList() != null && currentGroupId.equals("0")) {
+            if (getList() != null && currentGroupId.equals(ALL_GROUP_ID)) {
                 SaveToDBService.save(getActivity(), SaveToDBService.TYPE_STATUS, getList(), accountBean.getUid());
             }
             getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
@@ -157,8 +161,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             GroupInfoTask groupInfoTask = new GroupInfoTask(GlobalContext.getInstance().getSpecialToken());
             groupInfoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
-            groupDataCache.put("0", new MessageListBean());
-            groupDataCache.put("1", new MessageListBean());
+            groupDataCache.put(ALL_GROUP_ID, new MessageListBean());
+            groupDataCache.put(BILATERAL_GROUP_ID, new MessageListBean());
 
         }
 
@@ -187,7 +191,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
             if (result != null) {
                 getList().replaceData(result);
-                putToGroupDataMemoryCache("0", result);
+                putToGroupDataMemoryCache(ALL_GROUP_ID, result);
             }
 
             getPullToRefreshListView().setVisibility(View.VISIBLE);
@@ -219,10 +223,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.actionbar_menu_friendstimelinefragment, menu);
         name = menu.findItem(R.id.group_name);
-        if (currentGroupId.equals("0")) {
+        if (currentGroupId.equals(ALL_GROUP_ID)) {
             name.setTitle(userBean.getScreen_name());
         }
-        if (currentGroupId.equals("1")) {
+        if (currentGroupId.equals(BILATERAL_GROUP_ID)) {
             name.setTitle(getString(R.string.bilateral));
         } else if (GlobalContext.getInstance().getGroup() != null) {
             for (GroupBean b : GlobalContext.getInstance().getGroup().getLists()) {
@@ -273,9 +277,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     @Override
     protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
         MainFriendsTimeLineDao dao;
-        if (currentGroupId.equals("1")) {
+        if (currentGroupId.equals(BILATERAL_GROUP_ID)) {
             dao = new BilateralTimeLineDao(token);
-        } else if (currentGroupId.equals("0")) {
+        } else if (currentGroupId.equals(ALL_GROUP_ID)) {
             dao = new MainFriendsTimeLineDao(token);
         } else {
             dao = new FriendGroupTimeLineDao(token, currentGroupId);
@@ -290,9 +294,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     @Override
     protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
         MainFriendsTimeLineDao dao;
-        if (currentGroupId.equals("1")) {
+        if (currentGroupId.equals(BILATERAL_GROUP_ID)) {
             dao = new BilateralTimeLineDao(token);
-        } else if (currentGroupId.equals("0")) {
+        } else if (currentGroupId.equals(ALL_GROUP_ID)) {
             dao = new MainFriendsTimeLineDao(token);
         } else {
             dao = new FriendGroupTimeLineDao(token, currentGroupId);
@@ -425,7 +429,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
                 getList().addNewData(newValue);
 
-                if (getList() != null && currentGroupId.equals("0")) {
+                if (getList() != null && currentGroupId.equals(ALL_GROUP_ID)) {
                     SaveToDBService.save(getActivity(), SaveToDBService.TYPE_STATUS, getList(), accountBean.getUid());
                 }
             }
