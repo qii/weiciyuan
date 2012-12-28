@@ -109,7 +109,7 @@ public class ChangeLogDialog {
         //Get dialog title
         int _resID = _Resource.getIdentifier(TITLE_CHANGELOG, "string", _PackageName);
         String _Title = _Resource.getString(_resID);
-        _Title = _Title + " v" + GetAppVersion();
+//        _Title = _Title + " v" + GetAppVersion();
 
         //Get Changelog xml resource id
         _resID = _Resource.getIdentifier(CHANGELOG_XML, "xml", _PackageName);

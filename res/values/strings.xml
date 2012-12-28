@@ -20,7 +20,7 @@
         5. 没适配到平板，不推荐5寸+设备使用这个应用
         5. 觉得不爽就老老实实用官方客户端\n
     </string>
-    <string name="title_changelog">更新</string>
+    <string name="title_changelog">更新日志</string>
     <string name="changelog_close">关闭</string>
 
     <!--emotions-->
