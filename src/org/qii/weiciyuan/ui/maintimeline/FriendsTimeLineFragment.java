@@ -264,6 +264,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected boolean allowRefresh() {
+        return Utility.isTaskStopped(newTask) && getPullToRefreshListView().getVisibility() == View.VISIBLE && Utility.isTaskStopped(autoRefreshTask);
+    }
 
     public void setSelected(String selectedItemId) {
         selectedId = selectedItemId;
@@ -363,29 +367,25 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             if (!SettingUtility.getEnableAutoRefresh()) {
                 return;
             }
-            //after load database data
-            if (dbTask == null || dbTask.getStatus() != MyAsyncTask.Status.FINISHED) {
-                return;
-            }
 
-
-            if (newTask != null && newTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+            if (!Utility.isTaskStopped(dbTask))
                 return;
-            }
 
-            if (oldTask != null && oldTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+            if (!Utility.isTaskStopped(newTask))
                 return;
-            }
 
-            if (middleTask != null && middleTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+            if (!Utility.isTaskStopped(oldTask))
                 return;
-            }
+
+            if (!Utility.isTaskStopped(middleTask))
+                return;
+
 
             if (!Utility.isWifi(getActivity())) {
                 return;
             }
 
-            if (autoRefreshTask == null || autoRefreshTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            if (Utility.isTaskStopped(autoRefreshTask)) {
                 autoRefreshTask = new AutoRefreshTask();
                 autoRefreshTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
@@ -416,17 +416,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         protected void onPostExecute(MessageListBean newValue) {
             super.onPostExecute(newValue);
 
-            if (newTask != null && newTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+            if (!Utility.isTaskStopped(newTask))
                 return;
-            }
 
-            if (oldTask != null && oldTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+            if (!Utility.isTaskStopped(oldTask))
                 return;
-            }
 
-            if (middleTask != null && middleTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+            if (!Utility.isTaskStopped(middleTask))
                 return;
-            }
 
             if (newValue == null || newValue.getSize() == 0 || getActivity() == null || isListViewFling())
                 return;
@@ -459,6 +456,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getListView().setSelectionFromTop(ss + 1, top);
 //            }
 //            getListView().setLayoutTransition(null);
+            if (getList() != null && selectedId.equals("0")) {
+                SaveToDBService.save(getActivity(), SaveToDBService.TYPE_STATUS, getList(), accountBean.getUid());
+            }
         }
     }
 
