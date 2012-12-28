@@ -44,12 +44,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private AutoRefreshTask autoRefreshTask = null;
     private ScheduledExecutorService autoRefreshExecutor = null;
 
-    private String selectedId = "0";
+    private String currentGroupId = "0";
     private HashMap<String, MessageListBean> groupDataCache = new HashMap<String, MessageListBean>();
 
-    private GroupTask groupTask;
-
     private MessageListBean bean = new MessageListBean();
+
+    private MenuItem name;
 
     @Override
     public MessageListBean getList() {
@@ -75,7 +75,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         outState.putString("token", token);
 
         outState.putSerializable("hashmap", groupDataCache);
-        outState.putString("selectedId", selectedId);
+        outState.putString("currentGroupId", currentGroupId);
     }
 
     @Override
@@ -87,26 +87,26 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     @Override
     protected void newMsgOnPostExecute(MessageListBean newValue) {
-        if (getActivity() != null && newValue.getSize() > 0) {
+        if (getActivity() != null && newValue != null && newValue.getSize() > 0) {
             showNewMsgToastMessage(newValue);
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
 
-            if (getList() != null && selectedId.equals("0")) {
+            if (getList() != null && currentGroupId.equals("0")) {
                 SaveToDBService.save(getActivity(), SaveToDBService.TYPE_STATUS, getList(), accountBean.getUid());
             }
-        }
+            getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
+            putToGroupDataMemoryCache(currentGroupId, getList());
 
-        afterGetNewMsg();
+        }
 
     }
 
     @Override
-    protected void oldMsgOnPostExecute(MessageListBean newValue) {
-        if (newValue != null && newValue.getSize() > 1) {
-            getList().addOldData(newValue);
-
+    protected void oldMsgOnPostExecute(MessageListBean oldValue) {
+        if (getActivity() != null && oldValue != null && oldValue.getSize() > 1) {
+            getList().addOldData(oldValue);
         } else {
             Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
 
@@ -130,7 +130,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     @Override
     public void onDetach() {
         super.onDetach();
-        Utility.cancelTasks(dbTask, groupTask);
+        Utility.cancelTasks(dbTask);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             token = savedInstanceState.getString("token");
 
             groupDataCache = (HashMap) savedInstanceState.getSerializable("hashmap");
-            selectedId = savedInstanceState.getString("selectedId");
+            currentGroupId = savedInstanceState.getString("currentGroupId");
 
             getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
@@ -154,11 +154,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
 
-            if (Utility.isTaskStopped(groupTask)) {
-                groupTask = new GroupTask(GlobalContext.getInstance().getSpecialToken());
-                groupTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            }
-
+            GroupInfoTask groupInfoTask = new GroupInfoTask(GlobalContext.getInstance().getSpecialToken());
+            groupInfoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
             groupDataCache.put("0", new MessageListBean());
             groupDataCache.put("1", new MessageListBean());
@@ -216,21 +213,20 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         startActivity(intent);
     }
 
-    private MenuItem name;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.actionbar_menu_friendstimelinefragment, menu);
         name = menu.findItem(R.id.group_name);
-        if (selectedId.equals("0")) {
+        if (currentGroupId.equals("0")) {
             name.setTitle(userBean.getScreen_name());
         }
-        if (selectedId.equals("1")) {
+        if (currentGroupId.equals("1")) {
             name.setTitle(getString(R.string.bilateral));
         } else if (GlobalContext.getInstance().getGroup() != null) {
             for (GroupBean b : GlobalContext.getInstance().getGroup().getLists()) {
-                if (b.getIdstr().equals(selectedId)) {
+                if (b.getIdstr().equals(currentGroupId)) {
                     name.setTitle(b.getName());
                     return;
                 }
@@ -255,7 +251,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             case R.id.group_name:
 
                 if (canSwitchGroup()) {
-                    FriendsGroupDialog dialog = new FriendsGroupDialog(GlobalContext.getInstance().getGroup(), selectedId);
+                    FriendsGroupDialog dialog = new FriendsGroupDialog(GlobalContext.getInstance().getGroup(), currentGroupId);
                     dialog.setTargetFragment(this, 1);
                     dialog.show(getFragmentManager(), "");
                 }
@@ -270,25 +266,19 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     public void setSelected(String selectedItemId) {
-        selectedId = selectedItemId;
+        currentGroupId = selectedItemId;
     }
 
-    @Override
-    protected void afterGetNewMsg() {
-        super.afterGetNewMsg();
-        getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
-        putToGroupDataMemoryCache(selectedId, getList());
-    }
 
     @Override
     protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
         MainFriendsTimeLineDao dao;
-        if (selectedId.equals("1")) {
+        if (currentGroupId.equals("1")) {
             dao = new BilateralTimeLineDao(token);
-        } else if (selectedId.equals("0")) {
+        } else if (currentGroupId.equals("0")) {
             dao = new MainFriendsTimeLineDao(token);
         } else {
-            dao = new FriendGroupTimeLineDao(token, selectedId);
+            dao = new FriendGroupTimeLineDao(token, currentGroupId);
         }
         if (getList().getItemList().size() > 0) {
             dao.setSince_id(getList().getItemList().get(0).getId());
@@ -300,12 +290,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     @Override
     protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
         MainFriendsTimeLineDao dao;
-        if (selectedId.equals("1")) {
+        if (currentGroupId.equals("1")) {
             dao = new BilateralTimeLineDao(token);
-        } else if (selectedId.equals("0")) {
+        } else if (currentGroupId.equals("0")) {
             dao = new MainFriendsTimeLineDao(token);
         } else {
-            dao = new FriendGroupTimeLineDao(token, selectedId);
+            dao = new FriendGroupTimeLineDao(token, currentGroupId);
         }
         if (getList().getItemList().size() > 0) {
             dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
@@ -328,13 +318,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     public void switchGroup() {
 
-        if (groupDataCache.get(selectedId) == null || groupDataCache.get(selectedId).getSize() == 0) {
+        if (groupDataCache.get(currentGroupId) == null || groupDataCache.get(currentGroupId).getSize() == 0) {
             getList().getItemList().clear();
             getAdapter().notifyDataSetChanged();
             getPullToRefreshListView().startRefreshNow();
 
         } else {
-            getList().replaceData(groupDataCache.get(selectedId));
+            getList().replaceData(groupDataCache.get(currentGroupId));
             getAdapter().notifyDataSetChanged();
         }
         getActivity().invalidateOptionsMenu();
@@ -435,12 +425,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
                 getList().addNewData(newValue);
 
-                if (getList() != null && selectedId.equals("0")) {
+                if (getList() != null && currentGroupId.equals("0")) {
                     SaveToDBService.save(getActivity(), SaveToDBService.TYPE_STATUS, getList(), accountBean.getUid());
                 }
             }
             getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
-            putToGroupDataMemoryCache(selectedId, getList());
+            putToGroupDataMemoryCache(currentGroupId, getList());
 
             int index = getListView().getFirstVisiblePosition();
 

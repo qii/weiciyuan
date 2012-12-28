@@ -11,14 +11,14 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
  * User: qii
  * Date: 12-12-28
  */
-public class GroupTask extends MyAsyncTask<Void, GroupListBean, GroupListBean> {
+public class GroupInfoTask extends MyAsyncTask<Void, GroupListBean, GroupListBean> {
 
 
     private WeiboException e;
 
     private String token;
 
-    public GroupTask(String token) {
+    public GroupInfoTask(String token) {
         this.token = token;
     }
 
