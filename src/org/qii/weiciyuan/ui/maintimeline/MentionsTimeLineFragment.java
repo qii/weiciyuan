@@ -40,14 +40,14 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
     private DBCacheTask dbTask;
 
 
-    private String[] group = new String[3];
+    private String[] groupNames = new String[3];
 
     private String filter_by_author = "0";
     private String filter_by_type = "0";
 
-    private int selected = 0;
+    private int currentGroupId = 0;
 
-    private Map<Integer, MessageListBean> hashMap = new HashMap<Integer, MessageListBean>();
+    private Map<Integer, MessageListBean> groupDataCache = new HashMap<Integer, MessageListBean>();
 
     public void setFilter_by_author(String filter_by_author) {
         this.filter_by_author = filter_by_author;
@@ -57,8 +57,8 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
         this.filter_by_type = filter_by_type;
     }
 
-    public void setSelected(int selected) {
-        this.selected = selected;
+    public void setCurrentGroupId(int currentGroupId) {
+        this.currentGroupId = currentGroupId;
     }
 
     @Override
@@ -87,9 +87,9 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        group[0] = getString(R.string.all_people);
-        group[1] = getString(R.string.all_following);
-        group[2] = getString(R.string.original);
+        groupNames[0] = getString(R.string.all_people);
+        groupNames[1] = getString(R.string.all_following);
+        groupNames[2] = getString(R.string.original);
         super.onCreate(savedInstanceState);
     }
 
@@ -102,14 +102,14 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
         outState.putString("token", token);
 
 
-        outState.putStringArray("group", group);
-        outState.putInt("selected", selected);
+        outState.putStringArray("groupNames", groupNames);
+        outState.putInt("currentGroupId", currentGroupId);
         outState.putString("filter_by_author", filter_by_author);
         outState.putString("filter_by_type", filter_by_type);
 
-        outState.putSerializable("0", hashMap.get(0));
-        outState.putSerializable("1", hashMap.get(1));
-        outState.putSerializable("2", hashMap.get(2));
+        outState.putSerializable("0", groupDataCache.get(0));
+        outState.putSerializable("1", groupDataCache.get(1));
+        outState.putSerializable("2", groupDataCache.get(2));
     }
 
 
@@ -134,7 +134,12 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
 
         }
 
-        afterGetNewMsg();
+        getActivity().getActionBar().getTabAt(1).setText(getString(R.string.mentions));
+        NotificationManager notificationManager = (NotificationManager) getActivity()
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(Long.valueOf(GlobalContext.getInstance().getCurrentAccountId()).intValue());
+
+        putToGroupDataMemoryCache(currentGroupId, bean);
 
     }
 
@@ -144,7 +149,6 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
             getList().addOldData(newValue);
         } else {
             Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
-
         }
     }
 
@@ -157,28 +161,28 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
             token = savedInstanceState.getString("token");
 
-            group = savedInstanceState.getStringArray("group");
-            selected = savedInstanceState.getInt("selected");
+            groupNames = savedInstanceState.getStringArray("groupNames");
+            currentGroupId = savedInstanceState.getInt("currentGroupId");
             filter_by_author = savedInstanceState.getString("filter_by_author");
             filter_by_type = savedInstanceState.getString("filter_by_type");
 
-            hashMap.put(0, (MessageListBean) savedInstanceState.getSerializable("0"));
-            hashMap.put(1, (MessageListBean) savedInstanceState.getSerializable("1"));
-            hashMap.put(2, (MessageListBean) savedInstanceState.getSerializable("2"));
+            groupDataCache.put(0, (MessageListBean) savedInstanceState.getSerializable("0"));
+            groupDataCache.put(1, (MessageListBean) savedInstanceState.getSerializable("1"));
+            groupDataCache.put(2, (MessageListBean) savedInstanceState.getSerializable("2"));
 
-            clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
+            getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(bean);
+            refreshLayout(getList());
 
         } else {
-            if (dbTask == null || dbTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            if (Utility.isTaskStopped(dbTask)) {
                 dbTask = new DBCacheTask();
                 dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
 
-            hashMap.put(0, new MessageListBean());
-            hashMap.put(1, new MessageListBean());
-            hashMap.put(2, new MessageListBean());
+            groupDataCache.put(0, new MessageListBean());
+            groupDataCache.put(1, new MessageListBean());
+            groupDataCache.put(2, new MessageListBean());
         }
 
 
@@ -202,8 +206,8 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
             super.onPostExecute(result);
 
             if (result != null) {
-                clearAndReplaceValue(result);
-                clearAndReplaceValue(0, result);
+                getList().replaceData(result);
+                putToGroupDataMemoryCache(0, result);
             }
 
             getPullToRefreshListView().setVisibility(View.VISIBLE);
@@ -243,7 +247,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.actionbar_menu_mentionstimelinefragment, menu);
-        menu.findItem(R.id.group_name).setTitle(group[selected]);
+        menu.findItem(R.id.group_name).setTitle(groupNames[currentGroupId]);
     }
 
     @Override
@@ -260,11 +264,11 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
 
             case R.id.refresh:
                 if (allowRefresh())
-                    pullToRefreshListView.startRefreshNow();
+                    getPullToRefreshListView().startRefreshNow();
                 break;
             case R.id.group_name:
                 if (canSwitchGroup()) {
-                    MentionsGroupDialog dialog = new MentionsGroupDialog(group, selected);
+                    MentionsGroupDialog dialog = new MentionsGroupDialog(groupNames, currentGroupId);
                     dialog.setTargetFragment(MentionsTimeLineFragment.this, 0);
                     dialog.show(getFragmentManager(), "");
                 }
@@ -283,22 +287,13 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
         dao.setFilter_by_author(filter_by_author);
         dao.setFilter_by_type(filter_by_type);
         MessageListBean result = dao.getGSONMsgList();
-        if (result != null && selected == 0) {
+        if (result != null && currentGroupId == 0) {
             DatabaseManager.getInstance().addRepostLineMsg(result, accountBean.getUid());
 
         }
         return result;
     }
 
-    @Override
-    protected void afterGetNewMsg() {
-        getActivity().getActionBar().getTabAt(1).setText(getString(R.string.mentions));
-        NotificationManager notificationManager = (NotificationManager) getActivity()
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(Long.valueOf(GlobalContext.getInstance().getCurrentAccountId()).intValue());
-
-        clearAndReplaceValue(selected, bean);
-    }
 
     @Override
     protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
@@ -330,23 +325,23 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
     public void switchGroup() {
 
 
-        if (hashMap.get(selected).getSize() == 0) {
+        if (groupDataCache.get(currentGroupId).getSize() == 0) {
             bean.getItemList().clear();
             getAdapter().notifyDataSetChanged();
-            pullToRefreshListView.startRefreshNow();
+            getPullToRefreshListView().startRefreshNow();
 
         } else {
-            clearAndReplaceValue(hashMap.get(selected));
+            getList().replaceData(groupDataCache.get(currentGroupId));
             getAdapter().notifyDataSetChanged();
         }
         getActivity().invalidateOptionsMenu();
     }
 
 
-    private void clearAndReplaceValue(int position, MessageListBean newValue) {
-        hashMap.get(position).getItemList().clear();
-        hashMap.get(position).getItemList().addAll(newValue.getItemList());
-        hashMap.get(position).setTotal_number(newValue.getTotal_number());
+    private void putToGroupDataMemoryCache(int groupId, MessageListBean value) {
+        MessageListBean copy = new MessageListBean();
+        copy.addNewData(value);
+        groupDataCache.put(groupId, copy);
     }
 
 }

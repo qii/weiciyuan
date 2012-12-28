@@ -68,7 +68,7 @@ public class MentionsGroupDialog extends DialogFragment {
                 }
                 if (selected != which) {
                     selected = which;
-                    fragment.setSelected(which);
+                    fragment.setCurrentGroupId(which);
                     fragment.switchGroup();
                 }
                 dismiss();
