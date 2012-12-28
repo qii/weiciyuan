@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog>
+    <release
+        version="0.482"
+        versioncode="23">
+        <change>修正網址鏈接帶進漢字的bug</change>
+        <change>轉發評論頭像可以在2g時候自動關閉</change>
+        <change>用戶資料頁面點擊頭像彈出放大的頭像框</change>
+        <change>添加列表快速滾動（設置-外觀）</change>
+        <change>通知細分出類型：@，評論，@我的評論</change>
+        <change>修正圖片重複下載的bug</change>
+        <change>通知在4.1+上有新的類型：顯示最新的一條</change>
+        <change>修正動畫引發的內存洩漏</change>
+        <change>修正動畫引發的列表圖片混亂</change>
+        <change>重寫聯網部分，去掉第三方庫，apk大小從1.2mb降到800kb</change>
+        <change>重啟數據壓縮</change>
+        <change>流量控制裡可以設置刷新數據的條數：25條或者50條</change>
+        <change>列表頭像按下去的時候有反饋效果</change>
+        <change>列表頭像加V</change>
+        <change>寫微博界面改動，左下角3個圖標</change>
+        <change>新的應用圖標</change>
+        <change>查看圖片的進度條改為圓形</change>
+        <change>列表的高清圖可以不裁剪了（設置-外觀），但是高度還是固定的，顯示等比縮放的高清圖</change>
+        <change>列表日期格式改動</change>
+        <change>如果有設置代理，網絡就走代理</change>
+        <change>修正因為過濾詞導致2個時間段中間的載入消失</change>
+        <change>表情放大了些</change>
+
+    </release>
+    <release
+        version="0.481"
+        versioncode="22">
+        <change>查看某人的话题列表，添加自己新关注话题标签</change>
+        <change>转发的界面右上角有菜单可以精简掉多余的 @</change>
+        <change>发微博的字数bug修正</change>
+        <change>发微博右上角可以文字转图片</change>
+        <change>微博列表中转发内容的间距问题应该已经修正</change>
+        <change>图片保存位置从相册改到sd卡的pictures，具体见设置-关于最后面</change>
+        <change>关注用户后会弹出设置分组框</change>
+        <change>列表上转发数和评论数</change>
+        <change>通知可以设定铃声、LED提示灯、震动</change>
+        <change>设置-关于，加了捐赠方式……</change>
+    </release>
+</changelog>

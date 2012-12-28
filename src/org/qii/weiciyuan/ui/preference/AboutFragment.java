@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.lib.changelogdialog.ChangeLogDialog;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
@@ -72,6 +73,16 @@ public class AboutFragment extends PreferenceFragment {
         });
 
         findPreference(SettingActivity.VERSION).setSummary(buildVersionInfo());
+
+        findPreference(SettingActivity.VERSION).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                ChangeLogDialog changeLogDialog = new ChangeLogDialog(getActivity());
+                changeLogDialog.show();
+                return true;
+            }
+        });
+
 
         findPreference(SettingActivity.DONATE).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
