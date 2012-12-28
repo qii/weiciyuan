@@ -24,6 +24,7 @@ import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.CommentFloatingMenu;
 import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
@@ -46,12 +47,12 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     private UserBean userBean;
     private String token;
 
-    private String[] group = new String[3];
-    private int selected = 0;
+    private String[] groupNames = new String[3];
+    private int currentGroupId = 0;
     private RemoveTask removeTask;
     private DBCacheTask dbTask;
 
-    private Map<Integer, CommentListBean> hashMap = new HashMap<Integer, CommentListBean>();
+    private Map<Integer, CommentListBean> groupDataCache = new HashMap<Integer, CommentListBean>();
 
     private CommentListBean bean = new CommentListBean();
 
@@ -74,8 +75,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         this.token = token;
     }
 
-    public void setSelected(int positoin) {
-        selected = positoin;
+    public void setCurrentGroupId(int positoin) {
+        currentGroupId = positoin;
     }
 
     protected void clearAndReplaceValue(CommentListBean value) {
@@ -92,19 +93,18 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
 
-        outState.putStringArray("group", group);
-        outState.putInt("selected", selected);
+        outState.putStringArray("groupNames", groupNames);
+        outState.putInt("currentGroupId", currentGroupId);
 
-        outState.putSerializable("0", hashMap.get(0));
-        outState.putSerializable("1", hashMap.get(1));
-        outState.putSerializable("2", hashMap.get(2));
+        outState.putSerializable("0", groupDataCache.get(0));
+        outState.putSerializable("1", groupDataCache.get(1));
+        outState.putSerializable("2", groupDataCache.get(2));
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        if (dbTask != null)
-            dbTask.cancel(true);
+        Utility.cancelTasks(dbTask);
     }
 
 
@@ -127,25 +127,25 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             userBean = (UserBean) savedInstanceState.getSerializable("userBean");
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
             token = savedInstanceState.getString("token");
-            group = savedInstanceState.getStringArray("group");
-            selected = savedInstanceState.getInt("selected");
+            groupNames = savedInstanceState.getStringArray("groupNames");
+            currentGroupId = savedInstanceState.getInt("currentGroupId");
 
-            hashMap.put(TYPE_RECEIVED_COMMENT, (CommentListBean) savedInstanceState.getSerializable("0"));
-            hashMap.put(TYPE_MENTIONED_COMMENT_TO_ME, (CommentListBean) savedInstanceState.getSerializable("1"));
-            hashMap.put(TYPE_COMMENT_BY_ME, (CommentListBean) savedInstanceState.getSerializable("2"));
+            groupDataCache.put(TYPE_RECEIVED_COMMENT, (CommentListBean) savedInstanceState.getSerializable("0"));
+            groupDataCache.put(TYPE_MENTIONED_COMMENT_TO_ME, (CommentListBean) savedInstanceState.getSerializable("1"));
+            groupDataCache.put(TYPE_COMMENT_BY_ME, (CommentListBean) savedInstanceState.getSerializable("2"));
 
             clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
             refreshLayout(getList());
         } else {
-            if (dbTask == null || dbTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            if (Utility.isTaskStopped(dbTask)) {
                 dbTask = new DBCacheTask();
                 dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
 
-            hashMap.put(TYPE_RECEIVED_COMMENT, new CommentListBean());
-            hashMap.put(TYPE_MENTIONED_COMMENT_TO_ME, new CommentListBean());
-            hashMap.put(TYPE_COMMENT_BY_ME, new CommentListBean());
+            groupDataCache.put(TYPE_RECEIVED_COMMENT, new CommentListBean());
+            groupDataCache.put(TYPE_MENTIONED_COMMENT_TO_ME, new CommentListBean());
+            groupDataCache.put(TYPE_COMMENT_BY_ME, new CommentListBean());
 
         }
 
@@ -282,9 +282,9 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         super.onCreate(savedInstanceState);
 
 
-        group[0] = getString(R.string.all_people_send_to_me);
-        group[1] = getString(R.string.mentions_to_me);
-        group[2] = getString(R.string.my_comment);
+        groupNames[0] = getString(R.string.all_people_send_to_me);
+        groupNames[1] = getString(R.string.mentions_to_me);
+        groupNames[2] = getString(R.string.my_comment);
 
         setHasOptionsMenu(true);
         setRetainInstance(true);
@@ -308,7 +308,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.actionbar_menu_mentionstimelinefragment, menu);
-        menu.findItem(R.id.group_name).setTitle(group[selected]);
+        menu.findItem(R.id.group_name).setTitle(groupNames[currentGroupId]);
     }
 
     @Override
@@ -327,7 +327,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 break;
             case R.id.group_name:
                 if (canSwitchGroup()) {
-                    CommentsGroupDialog dialog = new CommentsGroupDialog(group, selected);
+                    CommentsGroupDialog dialog = new CommentsGroupDialog(groupNames, currentGroupId);
                     dialog.setTargetFragment(CommentsTimeLineFragment.this, 0);
                     dialog.show(getFragmentManager(), "");
                 }
@@ -340,7 +340,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
         CommentListBean result;
         ICommentsTimeLineDao dao;
-        switch (selected) {
+        switch (currentGroupId) {
             case TYPE_RECEIVED_COMMENT:
                 dao = new MainCommentsTimeLineDao(token);
                 break;
@@ -358,7 +358,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             dao.setSince_id(getList().getItemList().get(0).getId());
         }
         result = dao.getGSONMsgList();
-        if (result != null && selected == TYPE_RECEIVED_COMMENT) {
+        if (result != null && currentGroupId == TYPE_RECEIVED_COMMENT) {
             DatabaseManager.getInstance().addCommentLineMsg(result, accountBean.getUid());
         }
         return result;
@@ -368,7 +368,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     protected CommentListBean getDoInBackgroundOldData() throws WeiboException {
         CommentListBean result;
         ICommentsTimeLineDao dao;
-        switch (selected) {
+        switch (currentGroupId) {
             case TYPE_RECEIVED_COMMENT:
                 dao = new MainCommentsTimeLineDao(token);
                 break;
@@ -402,7 +402,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
             } else {
                 Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
                 getList().addNewData(newValue);
-                clearAndReplaceValue(selected, getList());
+                clearAndReplaceValue(currentGroupId, getList());
                 getAdapter().notifyDataSetChanged();
                 getListView().setSelectionAfterHeaderView();
             }
@@ -423,21 +423,21 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
     public void switchGroup() {
 
-        if (hashMap.get(selected).getSize() == 0) {
+        if (groupDataCache.get(currentGroupId).getSize() == 0) {
             getList().getItemList().clear();
             getAdapter().notifyDataSetChanged();
             getPullToRefreshListView().startRefreshNow();
 
         } else {
-            clearAndReplaceValue(hashMap.get(selected));
+            clearAndReplaceValue(groupDataCache.get(currentGroupId));
             getAdapter().notifyDataSetChanged();
         }
         getActivity().invalidateOptionsMenu();
     }
 
     private void clearAndReplaceValue(int position, CommentListBean newValue) {
-        hashMap.get(position).getItemList().clear();
-        hashMap.get(position).getItemList().addAll(newValue.getItemList());
-        hashMap.get(position).setTotal_number(newValue.getTotal_number());
+        groupDataCache.get(position).getItemList().clear();
+        groupDataCache.get(position).getItemList().addAll(newValue.getItemList());
+        groupDataCache.get(position).setTotal_number(newValue.getTotal_number());
     }
 }
