@@ -149,9 +149,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
             refreshLayout(getList());
         } else {
-            if (dbTask == null || dbTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            if (!Utility.isTaskStopped(dbTask)) {
                 dbTask = new DBCacheTask();
                 dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            }
+
+            if (!Utility.isTaskStopped(groupTask)) {
+                groupTask = new GroupTask(GlobalContext.getInstance().getSpecialToken());
+                groupTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
 
 
@@ -162,8 +167,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         super.onActivityCreated(savedInstanceState);
 
-        groupTask = new GroupTask(GlobalContext.getInstance().getSpecialToken());
-        groupTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
@@ -430,22 +433,23 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
             int size = newValue.getSize();
 
-            if (newValue.getItemList().size() < Integer.valueOf(SettingUtility.getMsgCount())) {
-                //for speed, add old data after new data
-                newValue.getItemList().addAll(getList().getItemList());
-            } else {
-                //null is flag means this position has some old messages which dont appear
-                if (getList().getSize() > 0) {
-                    newValue.getItemList().add(null);
+            if (getActivity() != null && newValue.getSize() > 0) {
+
+                getList().addNewData(newValue);
+
+                if (getList() != null && selectedId.equals("0")) {
+                    SaveToDBService.save(getActivity(), SaveToDBService.TYPE_STATUS, getList(), accountBean.getUid());
                 }
-                newValue.getItemList().addAll(getList().getItemList());
             }
+            getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
+            clearAndReplaceValue(selectedId, getList());
+
             int index = getListView().getFirstVisiblePosition();
-            clearAndReplaceValue(newValue);
+
             View v = getListView().getChildAt(1);
             int top = (v == null) ? 0 : v.getTop();
 
-            timeLineAdapter.notifyDataSetChanged();
+            getAdapter().notifyDataSetChanged();
             int ss = index + size;
 
 //            if (firstPosition == 0) {
@@ -454,9 +458,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getListView().setSelectionFromTop(ss + 1, top);
 //            }
 //            getListView().setLayoutTransition(null);
-            if (getList() != null && selectedId.equals("0")) {
-                SaveToDBService.save(getActivity(), SaveToDBService.TYPE_STATUS, getList(), accountBean.getUid());
-            }
+
         }
     }
 
