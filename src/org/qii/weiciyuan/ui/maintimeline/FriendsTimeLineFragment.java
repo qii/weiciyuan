@@ -11,12 +11,10 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
-import org.qii.weiciyuan.dao.maintimeline.FriendGroupDao;
 import org.qii.weiciyuan.dao.maintimeline.FriendGroupTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.othercomponent.SaveToDBService;
 import org.qii.weiciyuan.support.database.DatabaseManager;
-import org.qii.weiciyuan.support.database.GroupDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -164,7 +162,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         super.onActivityCreated(savedInstanceState);
 
-        groupTask = new GroupTask();
+        groupTask = new GroupTask(GlobalContext.getInstance().getSpecialToken());
         groupTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
     }
@@ -462,30 +460,5 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
     }
 
-
-    private class GroupTask extends MyAsyncTask<Void, GroupListBean, GroupListBean> {
-        WeiboException e;
-
-        @Override
-        protected GroupListBean doInBackground(Void... params) {
-            try {
-                return new FriendGroupDao(token).getGroup();
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-            }
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(GroupListBean groupListBean) {
-            GroupDBTask.update(groupListBean, GlobalContext.getInstance().getCurrentAccountId());
-            GlobalContext.getInstance().setGroup(groupListBean);
-
-            super.onPostExecute(groupListBean);
-        }
-
-    }
 
 }
