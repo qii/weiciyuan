@@ -2,7 +2,7 @@
 <changelog>
     <release
         version="0.482"
-        versioncode="23">
+        versioncode="24">
         <change>修正網址鏈接帶進漢字的bug</change>
         <change>轉發評論頭像可以在2g時候自動關閉</change>
         <change>用戶資料頁面點擊頭像彈出放大的頭像框</change>
@@ -29,7 +29,7 @@
     </release>
     <release
         version="0.481"
-        versioncode="22">
+        versioncode="23">
         <change>查看某人的话题列表，添加自己新关注话题标签</change>
         <change>转发的界面右上角有菜单可以精简掉多余的 @</change>
         <change>发微博的字数bug修正</change>

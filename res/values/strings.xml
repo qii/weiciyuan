@@ -334,7 +334,7 @@
     <string name="pref_support_title">支持</string>
     <string name="pref_thanks_title">感谢</string>
     <string name="pref_storage_title">存储</string>
-    <string name="pref_version_title">版本号</string>
+    <string name="pref_version_title">@string/title_changelog</string>
     <string name="pref_official_weibo_title">"@四次元App</string>
     <string name="official_weibo_link">四次元App</string>
     <string name="pref_suggest_title">反馈意见</string>
