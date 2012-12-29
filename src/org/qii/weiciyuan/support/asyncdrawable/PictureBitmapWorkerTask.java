@@ -122,7 +122,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                         playImageViewAnimation(imageView, bitmap);
                         lruCache.put(data, bitmap);
                     } else {
-                        imageView.setImageDrawable(new ColorDrawable(Color.BLUE));
+                        imageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
                     }
                 }
             }

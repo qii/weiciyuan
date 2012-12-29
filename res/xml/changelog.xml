@@ -24,8 +24,8 @@
         <change>列表日期格式改動</change>
         <change>如果有設置代理，網絡就走代理</change>
         <change>修正因為過濾詞導致2個時間段中間的載入消失</change>
-        <change>表情放大了些</change>
-
+        <change>表情放大了些，列表圖片放大了些</change>
+        <change>修復橫屏查看圖片時候崩潰的bug</change>
     </release>
     <release
         version="0.481"

@@ -71,7 +71,7 @@
         >
         <Preference
             android:title="@string/pref_icon_design_title"
-            android:summary="HoloDNG-7"
+            android:summary="NovaDNG"
             >
 
         </Preference>
