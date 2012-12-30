@@ -66,13 +66,22 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            q = savedInstanceState.getString("q");
-            page = savedInstanceState.getInt("page");
-            bean = (TopicResultListBean) savedInstanceState.getSerializable("bean");
-        } else {
-            getPullToRefreshListView().startRefreshNow();
 
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                getPullToRefreshListView().startRefreshNow();
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+                refreshLayout(bean);
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                q = savedInstanceState.getString("q");
+                page = savedInstanceState.getInt("page");
+                getList().addNewData((TopicResultListBean) savedInstanceState.getSerializable("bean"));
+                getAdapter().notifyDataSetChanged();
+                refreshLayout(getList());
+                break;
         }
     }
 

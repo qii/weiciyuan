@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.basefragment;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
@@ -17,13 +16,14 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.UserListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
  * User: qii
  * Date: 12-8-18
  */
-public abstract class AbstractUserListFragment extends Fragment {
+public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
     protected View footerView;
     protected PullToRefreshListView pullToRefreshListView;

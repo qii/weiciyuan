@@ -63,15 +63,20 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            currentUser = (UserBean) savedInstanceState.getSerializable("currentUser");
-            uid = savedInstanceState.getString("uid");
-            clearAndReplaceValue((UserListBean) savedInstanceState.getSerializable("bean"));
-            getAdapter().notifyDataSetChanged();
-
-        } else {
-            pullToRefreshListView.startRefreshNow();
-
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                pullToRefreshListView.startRefreshNow();
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+                refreshLayout(bean);
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                currentUser = (UserBean) savedInstanceState.getSerializable("currentUser");
+                uid = savedInstanceState.getString("uid");
+                clearAndReplaceValue((UserListBean) savedInstanceState.getSerializable("bean"));
+                getAdapter().notifyDataSetChanged();
+                break;
         }
 
         refreshLayout(bean);
