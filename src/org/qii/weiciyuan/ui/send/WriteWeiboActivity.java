@@ -28,6 +28,7 @@ import org.qii.weiciyuan.support.imagetool.ImageEdit;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.browser.BrowserLocalPicActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -35,7 +36,9 @@ import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * User: qii
@@ -47,6 +50,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private static final int CAMERA_RESULT = 0;
     private static final int PIC_RESULT = 1;
     public static final int AT_USER = 3;
+    public static final int BROWSER_PIC = 4;
 
     private AccountBean accountBean;
     protected String token = "";
@@ -130,9 +134,16 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     content.setText(stringBuilder.toString());
                     content.setSelection(index + name.length());
                     break;
+                case BROWSER_PIC:
+                    boolean deleted = intent.getBooleanExtra("deleted", false);
+                    if (deleted)
+                        deletePicture();
+                    break;
             }
 
         }
+
+
     }
 
 
@@ -446,7 +457,9 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     private void showPic() {
-        new BrowserPictureDialog(picPath).show(getFragmentManager(), "");
+        Intent intent = new Intent(WriteWeiboActivity.this, BrowserLocalPicActivity.class);
+        intent.putExtra("path", picPath);
+        startActivityForResult(intent, BROWSER_PIC);
     }
 
     protected void executeTask(String contentString) {

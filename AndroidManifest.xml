@@ -78,6 +78,9 @@
         <activity
             android:name=".ui.browser.BrowserBigPicActivity"
             android:launchMode="singleTop"/>
+        <activity
+            android:name=".ui.browser.BrowserLocalPicActivity"
+            android:launchMode="singleTop"/>
 
 
         <!--topic activity -->
