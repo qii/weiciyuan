@@ -8,6 +8,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 
@@ -145,7 +146,7 @@ public class JavaHttpUtility {
             while ((line = buffer.readLine()) != null) {
                 strBuilder.append(line);
             }
-
+            AppLogger.d("result=" + strBuilder.toString());
             return strBuilder.toString();
         } catch (IOException e) {
             e.printStackTrace();
@@ -163,9 +164,14 @@ public class JavaHttpUtility {
         BufferedReader buffer = null;
         GlobalContext globalContext = GlobalContext.getInstance();
         String errorStr = globalContext.getString(R.string.timeout);
-        globalContext = null;
+
         try {
             is = urlConnection.getErrorStream();
+
+            if (is == null) {
+                errorStr = globalContext.getString(R.string.unknown_sina_network_error);
+                throw new WeiboException(errorStr);
+            }
 
             String content_encode = urlConnection.getContentEncoding();
 
@@ -179,7 +185,7 @@ public class JavaHttpUtility {
             while ((line = buffer.readLine()) != null) {
                 strBuilder.append(line);
             }
-
+            AppLogger.d("error result=" + strBuilder.toString());
             return strBuilder.toString();
         } catch (IOException e) {
             e.printStackTrace();
@@ -188,6 +194,7 @@ public class JavaHttpUtility {
             Utility.closeSilently(is);
             Utility.closeSilently(buffer);
             urlConnection.disconnect();
+            globalContext = null;
         }
 
     }
@@ -202,7 +209,7 @@ public class JavaHttpUtility {
             StringBuilder urlBuilder = new StringBuilder(urlStr);
             urlBuilder.append("?").append(Utility.encodeUrl(param));
             URL url = new URL(urlBuilder.toString());
-
+            AppLogger.d("get request" + url);
             Proxy proxy = getProxy();
             HttpURLConnection urlConnection;
             if (proxy != null)
