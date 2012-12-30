@@ -60,14 +60,21 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
-        if (savedInstanceState != null) {
-            clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
-            userBean = (UserBean) savedInstanceState.getSerializable("userBean");
-            token = savedInstanceState.getString("token");
-            getAdapter().notifyDataSetChanged();
-            refreshLayout(bean);
-        } else {
-            getPullToRefreshListView().startRefreshNow();
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                getPullToRefreshListView().startRefreshNow();
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+                refreshLayout(bean);
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
+                userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+                token = savedInstanceState.getString("token");
+                getAdapter().notifyDataSetChanged();
+                refreshLayout(bean);
+                break;
         }
 
         super.onActivityCreated(savedInstanceState);

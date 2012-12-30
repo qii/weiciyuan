@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.basefragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -19,12 +18,13 @@ import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 
 /**
  * User: qii
  * Date: 12-8-27
  */
-public abstract class AbstractTimeLineFragment<T extends ListBean> extends Fragment {
+public abstract class AbstractTimeLineFragment<T extends ListBean> extends AbstractAppFragment {
 
 
     protected PullToRefreshListView pullToRefreshListView;

@@ -107,14 +107,25 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
-        if (savedInstanceState != null && bean.getSize() == 0) {
-            clearAndReplaceValue((RepostListBean) savedInstanceState.getSerializable("bean"));
-            token = savedInstanceState.getString("token");
-            id = savedInstanceState.getString("id");
-            msg = (MessageBean) savedInstanceState.getSerializable("msg");
-            timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(bean);
+
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                //nothing
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+                refreshLayout(bean);
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                clearAndReplaceValue((RepostListBean) savedInstanceState.getSerializable("bean"));
+                token = savedInstanceState.getString("token");
+                id = savedInstanceState.getString("id");
+                msg = (MessageBean) savedInstanceState.getSerializable("msg");
+                timeLineAdapter.notifyDataSetChanged();
+                refreshLayout(bean);
+                break;
         }
+
 
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

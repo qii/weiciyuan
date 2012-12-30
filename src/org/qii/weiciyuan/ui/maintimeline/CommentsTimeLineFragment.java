@@ -123,31 +123,38 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
 
-        if (savedInstanceState != null && (getList() == null || getList().getItemList().size() == 0)) {
-            userBean = (UserBean) savedInstanceState.getSerializable("userBean");
-            accountBean = (AccountBean) savedInstanceState.getSerializable("account");
-            token = savedInstanceState.getString("token");
-            groupNames = savedInstanceState.getStringArray("groupNames");
-            currentGroupId = savedInstanceState.getInt("currentGroupId");
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                if (Utility.isTaskStopped(dbTask)) {
+                    dbTask = new DBCacheTask();
+                    dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
 
-            groupDataCache.put(TYPE_RECEIVED_COMMENT, (CommentListBean) savedInstanceState.getSerializable("0"));
-            groupDataCache.put(TYPE_MENTIONED_COMMENT_TO_ME, (CommentListBean) savedInstanceState.getSerializable("1"));
-            groupDataCache.put(TYPE_COMMENT_BY_ME, (CommentListBean) savedInstanceState.getSerializable("2"));
+                groupDataCache.put(TYPE_RECEIVED_COMMENT, new CommentListBean());
+                groupDataCache.put(TYPE_MENTIONED_COMMENT_TO_ME, new CommentListBean());
+                groupDataCache.put(TYPE_COMMENT_BY_ME, new CommentListBean());
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+                refreshLayout(bean);
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+                accountBean = (AccountBean) savedInstanceState.getSerializable("account");
+                token = savedInstanceState.getString("token");
+                groupNames = savedInstanceState.getStringArray("groupNames");
+                currentGroupId = savedInstanceState.getInt("currentGroupId");
 
-            clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
-            timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(getList());
-        } else {
-            if (Utility.isTaskStopped(dbTask)) {
-                dbTask = new DBCacheTask();
-                dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            }
+                groupDataCache.put(TYPE_RECEIVED_COMMENT, (CommentListBean) savedInstanceState.getSerializable("0"));
+                groupDataCache.put(TYPE_MENTIONED_COMMENT_TO_ME, (CommentListBean) savedInstanceState.getSerializable("1"));
+                groupDataCache.put(TYPE_COMMENT_BY_ME, (CommentListBean) savedInstanceState.getSerializable("2"));
 
-            groupDataCache.put(TYPE_RECEIVED_COMMENT, new CommentListBean());
-            groupDataCache.put(TYPE_MENTIONED_COMMENT_TO_ME, new CommentListBean());
-            groupDataCache.put(TYPE_COMMENT_BY_ME, new CommentListBean());
-
+                clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
+                timeLineAdapter.notifyDataSetChanged();
+                refreshLayout(getList());
+                break;
         }
+
 
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

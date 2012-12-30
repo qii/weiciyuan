@@ -114,16 +114,23 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         super.onActivityCreated(savedInstanceState);
         commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
 
-        if (savedInstanceState != null && bean.getItemList().size() == 0) {
-            getList().replaceAll((CommentListBean) savedInstanceState.getSerializable("bean"));
-            token = savedInstanceState.getString("token");
-            id = savedInstanceState.getString("id");
-            timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(bean);
-        } else {
-            pullToRefreshListView.startRefreshNow();
-            refresh();
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                getPullToRefreshListView().startRefreshNow();
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+                refreshLayout(bean);
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                getList().replaceAll((CommentListBean) savedInstanceState.getSerializable("bean"));
+                token = savedInstanceState.getString("token");
+                id = savedInstanceState.getString("id");
+                timeLineAdapter.notifyDataSetChanged();
+                refreshLayout(bean);
+                break;
         }
+
 
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

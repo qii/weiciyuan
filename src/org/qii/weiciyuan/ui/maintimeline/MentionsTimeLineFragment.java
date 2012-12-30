@@ -156,35 +156,41 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            userBean = (UserBean) savedInstanceState.getSerializable("userBean");
-            accountBean = (AccountBean) savedInstanceState.getSerializable("account");
-            token = savedInstanceState.getString("token");
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                if (Utility.isTaskStopped(dbTask)) {
+                    dbTask = new DBCacheTask();
+                    dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
 
-            groupNames = savedInstanceState.getStringArray("groupNames");
-            currentGroupId = savedInstanceState.getInt("currentGroupId");
-            filter_by_author = savedInstanceState.getString("filter_by_author");
-            filter_by_type = savedInstanceState.getString("filter_by_type");
+                groupDataCache.put(0, new MessageListBean());
+                groupDataCache.put(1, new MessageListBean());
+                groupDataCache.put(2, new MessageListBean());
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+                refreshLayout(bean);
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+                accountBean = (AccountBean) savedInstanceState.getSerializable("account");
+                token = savedInstanceState.getString("token");
 
-            groupDataCache.put(0, (MessageListBean) savedInstanceState.getSerializable("0"));
-            groupDataCache.put(1, (MessageListBean) savedInstanceState.getSerializable("1"));
-            groupDataCache.put(2, (MessageListBean) savedInstanceState.getSerializable("2"));
+                groupNames = savedInstanceState.getStringArray("groupNames");
+                currentGroupId = savedInstanceState.getInt("currentGroupId");
+                filter_by_author = savedInstanceState.getString("filter_by_author");
+                filter_by_type = savedInstanceState.getString("filter_by_type");
 
-            getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
-            timeLineAdapter.notifyDataSetChanged();
-            refreshLayout(getList());
+                groupDataCache.put(0, (MessageListBean) savedInstanceState.getSerializable("0"));
+                groupDataCache.put(1, (MessageListBean) savedInstanceState.getSerializable("1"));
+                groupDataCache.put(2, (MessageListBean) savedInstanceState.getSerializable("2"));
 
-        } else {
-            if (Utility.isTaskStopped(dbTask)) {
-                dbTask = new DBCacheTask();
-                dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            }
+                getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
+                timeLineAdapter.notifyDataSetChanged();
+                refreshLayout(getList());
 
-            groupDataCache.put(0, new MessageListBean());
-            groupDataCache.put(1, new MessageListBean());
-            groupDataCache.put(2, new MessageListBean());
+                break;
         }
-
 
     }
 

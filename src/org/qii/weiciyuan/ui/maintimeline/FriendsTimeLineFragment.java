@@ -140,30 +140,36 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
-        if (savedInstanceState != null) {
-            userBean = (UserBean) savedInstanceState.getSerializable("userBean");
-            accountBean = (AccountBean) savedInstanceState.getSerializable("account");
-            token = savedInstanceState.getString("token");
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                if (Utility.isTaskStopped(dbTask)) {
+                    dbTask = new DBCacheTask();
+                    dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
 
-            groupDataCache = (HashMap) savedInstanceState.getSerializable("hashmap");
-            currentGroupId = savedInstanceState.getString("currentGroupId");
+                GroupInfoTask groupInfoTask = new GroupInfoTask(GlobalContext.getInstance().getSpecialToken());
+                groupInfoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
-            getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
-            timeLineAdapter.notifyDataSetChanged();
+                groupDataCache.put(ALL_GROUP_ID, new MessageListBean());
+                groupDataCache.put(BILATERAL_GROUP_ID, new MessageListBean());
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+                refreshLayout(bean);
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+                accountBean = (AccountBean) savedInstanceState.getSerializable("account");
+                token = savedInstanceState.getString("token");
 
-            refreshLayout(getList());
-        } else {
-            if (Utility.isTaskStopped(dbTask)) {
-                dbTask = new DBCacheTask();
-                dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            }
+                groupDataCache = (HashMap) savedInstanceState.getSerializable("hashmap");
+                currentGroupId = savedInstanceState.getString("currentGroupId");
 
-            GroupInfoTask groupInfoTask = new GroupInfoTask(GlobalContext.getInstance().getSpecialToken());
-            groupInfoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
+                timeLineAdapter.notifyDataSetChanged();
 
-            groupDataCache.put(ALL_GROUP_ID, new MessageListBean());
-            groupDataCache.put(BILATERAL_GROUP_ID, new MessageListBean());
-
+                refreshLayout(getList());
+                break;
         }
 
         super.onActivityCreated(savedInstanceState);
