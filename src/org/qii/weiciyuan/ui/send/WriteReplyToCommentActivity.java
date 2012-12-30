@@ -30,7 +30,7 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
     private CommentBean bean;
     private ReplyDraftBean replyDraftBean;
     private MenuItem enableRepost;
-
+    private boolean savedEnableRepost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,17 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
         }
 
         getEditTextView().setHint("@" + bean.getUser().getScreen_name() + "：" + bean.getText());
+
+        //this time menu item is null...omg fuck android
+        if (savedInstanceState != null) {
+            savedEnableRepost = savedInstanceState.getBoolean("repost");
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("repost", enableRepost.isChecked());
     }
 
     @Override
@@ -82,7 +93,7 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
         menu.findItem(R.id.menu_enable_ori_comment).setVisible(false);
         menu.findItem(R.id.menu_enable_repost).setVisible(true);
         enableRepost = menu.findItem(R.id.menu_enable_repost);
-
+        enableRepost.setChecked(savedEnableRepost);
         return true;
     }
 
