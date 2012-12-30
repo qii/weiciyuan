@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.widget.ImageView;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
@@ -27,7 +28,10 @@ public class TimeLineBitmapDownloader {
     private Map<String, PictureBitmapWorkerTask> picTasks = new ConcurrentHashMap<String, PictureBitmapWorkerTask>();
 
     protected Bitmap getBitmapFromMemCache(String key) {
-        return GlobalContext.getInstance().getAvatarCache().get(key);
+        if (TextUtils.isEmpty(key))
+            return null;
+        else
+            return GlobalContext.getInstance().getAvatarCache().get(key);
     }
 
 

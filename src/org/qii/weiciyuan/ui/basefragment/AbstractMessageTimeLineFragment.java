@@ -14,6 +14,7 @@ import org.qii.weiciyuan.dao.destroy.DestroyStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -138,7 +139,7 @@ public abstract class AbstractMessageTimeLineFragment<T extends ListBean<Message
         @Override
         protected void onCancelled(Boolean aBoolean) {
             super.onCancelled(aBoolean);
-            if (this.e != null) {
+            if (Utility.isAllNotNull(this.e, getActivity())) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             }
         }

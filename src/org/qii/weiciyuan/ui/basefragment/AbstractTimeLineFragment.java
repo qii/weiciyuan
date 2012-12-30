@@ -384,7 +384,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         protected void onCancelled(T messageListBean) {
             super.onCancelled(messageListBean);
             if (getActivity() != null) {
-                if (this.e != null) {
+                if (Utility.isAllNotNull(this.e, getActivity())) {
                     Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
                     showErrorFooterView();
                     getPullToRefreshListView().onRefreshComplete();

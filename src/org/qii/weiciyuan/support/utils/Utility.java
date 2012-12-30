@@ -252,4 +252,13 @@ public class Utility {
             return value;
         }
     }
+
+    public static boolean isAllNotNull(Object... obs) {
+        for (int i = 0; i < obs.length; i++) {
+            if (obs[i] == null) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
