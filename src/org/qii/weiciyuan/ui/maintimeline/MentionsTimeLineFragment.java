@@ -62,8 +62,8 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroy() {
+        super.onDestroy();
         Utility.cancelTasks(dbTask);
     }
 

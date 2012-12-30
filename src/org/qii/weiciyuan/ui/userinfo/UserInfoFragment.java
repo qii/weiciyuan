@@ -84,12 +84,12 @@ public class UserInfoFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroy() {
+        super.onDestroy();
         Utility.cancelTasks(task, avatarTask, topicListTask);
-
-
     }
+
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

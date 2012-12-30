@@ -102,8 +102,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroy() {
+        super.onDestroy();
         Utility.cancelTasks(dbTask);
     }
 

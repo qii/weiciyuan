@@ -132,8 +132,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroy() {
+        super.onDestroy();
         Utility.cancelTasks(dbTask);
     }
 

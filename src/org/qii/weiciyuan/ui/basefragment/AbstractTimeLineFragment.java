@@ -241,8 +241,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     protected abstract void buildListAdapter();
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroy() {
+        super.onDestroy();
         Utility.cancelTasks(newTask, oldTask, middleTask);
     }
 
