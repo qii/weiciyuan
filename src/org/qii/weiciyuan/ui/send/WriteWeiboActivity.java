@@ -195,6 +195,25 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             handleNormalOperation(intent);
         }
 
+        if (savedInstanceState != null) {
+            picPath = savedInstanceState.getString("picPath");
+            if (!TextUtils.isEmpty(picPath))
+                enablePicture();
+            geoBean = (GeoBean) savedInstanceState.getSerializable("geoBean");
+            location = savedInstanceState.getString("location");
+            if (geoBean != null && !TextUtils.isEmpty(location))
+                enableGeo();
+            else
+                disableGeo();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("picPath", picPath);
+        outState.putSerializable("geoBean", geoBean);
+        outState.putString("location", location);
     }
 
     private void handleNormalOperation(Intent intent) {
@@ -633,9 +652,17 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         protected void onPostExecute(String s) {
             Toast.makeText(WriteWeiboActivity.this, s, Toast.LENGTH_SHORT).show();
             location = s;
-            haveGPS.setVisibility(View.VISIBLE);
+            enableGeo();
             super.onPostExecute(s);
         }
+    }
+
+    private void enableGeo() {
+        haveGPS.setVisibility(View.VISIBLE);
+    }
+
+    private void disableGeo() {
+        haveGPS.setVisibility(View.GONE);
     }
 
     private class String2PicTask extends MyAsyncTask<Void, String, String> {
