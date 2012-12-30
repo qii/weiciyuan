@@ -33,4 +33,10 @@ public class AbstractAppFragment extends Fragment {
         isFirstTimeStartFlag = false;
         return FIRST_TIME_START;
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 }

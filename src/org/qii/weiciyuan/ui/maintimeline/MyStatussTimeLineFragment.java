@@ -71,17 +71,24 @@ public class MyStatussTimeLineFragment extends AbstractMessageTimeLineFragment<M
 
         commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
 
-        if (savedInstanceState != null) {
-            getList().addNewData((MessageListBean) savedInstanceState.getSerializable("bean"));
-            userBean = (UserBean) savedInstanceState.getSerializable("userBean");
-            token = savedInstanceState.getString("token");
-            getAdapter().notifyDataSetChanged();
-            refreshLayout(bean);
-        } else {
-            if (Utility.isTaskStopped(dbTask)) {
-                dbTask = new DBCacheTask();
-                dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            }
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                if (Utility.isTaskStopped(dbTask)) {
+                    dbTask = new DBCacheTask();
+                    dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+                refreshLayout(getList());
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                getList().addNewData((MessageListBean) savedInstanceState.getSerializable("bean"));
+                userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+                token = savedInstanceState.getString("token");
+                getAdapter().notifyDataSetChanged();
+                refreshLayout(bean);
+                break;
         }
 
 
@@ -107,6 +114,12 @@ public class MyStatussTimeLineFragment extends AbstractMessageTimeLineFragment<M
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Utility.cancelTasks(dbTask);
     }
 
     private class DBCacheTask extends MyAsyncTask<Object, Object, Object> {

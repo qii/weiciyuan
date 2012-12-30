@@ -14,6 +14,7 @@ import org.qii.weiciyuan.support.database.DMDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.DMUserListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -48,16 +49,30 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        if (savedInstanceState != null) {
-            bean.addNewData((DMUserListBean) savedInstanceState.getSerializable("bean"));
-            getAdapter().notifyDataSetChanged();
-        } else {
-            if (dbTask == null || dbTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                dbTask = new DBCacheTask();
-                dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            }
-
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                if (Utility.isTaskStopped(dbTask)) {
+                    dbTask = new DBCacheTask();
+                    dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+                refreshLayout(getList());
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                bean.addNewData((DMUserListBean) savedInstanceState.getSerializable("bean"));
+                getAdapter().notifyDataSetChanged();
+                refreshLayout(getList());
+                break;
         }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Utility.cancelTasks(dbTask);
     }
 
     @Override
