@@ -34,6 +34,10 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
     private MenuItem enableCommentOri;
     private MenuItem enableRepost;
 
+    private boolean savedEnableCommentOri;
+    private boolean savedEnableRepost;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +58,17 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         }
 
         getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+        if (savedInstanceState != null) {
+            savedEnableCommentOri = savedInstanceState.getBoolean("commentOri");
+            savedEnableRepost = savedInstanceState.getBoolean("repost");
+        }
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("commentOri", enableCommentOri.isChecked());
+        outState.putBoolean("repost", enableRepost.isChecked());
     }
 
     @Override
@@ -86,6 +100,9 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         getMenuInflater().inflate(R.menu.actionbar_menu_commentnewactivity, menu);
         enableCommentOri = menu.findItem(R.id.menu_enable_ori_comment);
         enableRepost = menu.findItem(R.id.menu_enable_repost);
+
+        enableCommentOri.setChecked(savedEnableCommentOri);
+        enableRepost.setChecked(savedEnableRepost);
         return true;
     }
 
