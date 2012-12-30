@@ -2,7 +2,6 @@ package org.qii.weiciyuan.ui.interfaces;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -10,7 +9,6 @@ import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.view.ViewConfiguration;
 import android.widget.Toast;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -34,9 +32,6 @@ public class AbstractAppActivity extends Activity {
     protected void onResume() {
         super.onResume();
         GlobalContext.getInstance().setActivity(this);
-        if (getResources().getBoolean(R.bool.is_phone)) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
 
         if (theme == SettingUtility.getAppTheme()) {
 
@@ -61,9 +56,6 @@ public class AbstractAppActivity extends Activity {
         }
         setTheme(theme);
         super.onCreate(savedInstanceState);
-        if (getResources().getBoolean(R.bool.is_phone)) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
         forceShowActionBarOverflowMenu();
         initNFC();
         commander = new TimeLineBitmapDownloader();
