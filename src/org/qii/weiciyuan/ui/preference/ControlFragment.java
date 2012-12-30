@@ -41,7 +41,7 @@ public class ControlFragment extends PreferenceFragment implements SharedPrefere
         String value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.MSG_COUNT, "3");
         msgCount.setSummary(getActivity().getResources().getStringArray(R.array.msg_count_title)[Integer.valueOf(value) - 1]);
 
-        value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.LIST_PIC_MODE, "3");
+        value = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(SettingActivity.COMMENT_REPOST_AVATAR, "3");
         commentRepostListAvatar.setSummary(getActivity().getResources().getStringArray(R.array.comment_repost_list_avatar_mode)[Integer.valueOf(value) - 1]);
 
 
