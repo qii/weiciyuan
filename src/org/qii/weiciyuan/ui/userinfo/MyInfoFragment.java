@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,6 +22,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
 
@@ -33,7 +33,7 @@ import java.util.ArrayList;
  * User: qii
  * Date: 12-7-30
  */
-public class MyInfoFragment extends Fragment {
+public class MyInfoFragment extends AbstractAppFragment {
 
     private UserBean bean;
 
@@ -88,15 +88,23 @@ public class MyInfoFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            topicList = savedInstanceState.getStringArrayList("topicList");
-            bean = (UserBean) savedInstanceState.getSerializable("bean");
-        } else {
-            bean = ((IUserInfo) getActivity()).getUser();
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                bean = ((IUserInfo) getActivity()).getUser();
+                refresh();
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                topicList = savedInstanceState.getStringArrayList("topicList");
+                bean = (UserBean) savedInstanceState.getSerializable("bean");
+                break;
         }
+
         commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
         setValue();
-        refresh();
     }
 
     @Override
