@@ -91,7 +91,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     @Override
     protected void newMsgOnPostExecute(MessageListBean newValue) {
-        if (getActivity() != null && newValue != null && newValue.getSize() > 0) {
+        if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 0) {
             showNewMsgToastMessage(newValue);
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();
@@ -109,7 +109,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     @Override
     protected void oldMsgOnPostExecute(MessageListBean oldValue) {
-        if (getActivity() != null && oldValue != null && oldValue.getSize() > 1) {
+        if (Utility.isAllNotNull(getActivity(), oldValue) && oldValue.getSize() > 1) {
             getList().addOldData(oldValue);
         } else {
             Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();

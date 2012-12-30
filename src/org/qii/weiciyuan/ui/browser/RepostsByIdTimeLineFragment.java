@@ -21,6 +21,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.RepostSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
@@ -371,7 +372,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
 
     @Override
     protected void newMsgOnPostExecute(RepostListBean newValue) {
-        if (getActivity() != null && newValue.getSize() > 0) {
+        if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 0) {
             getList().replaceAll(newValue);
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
@@ -383,7 +384,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
 
     @Override
     protected void oldMsgOnPostExecute(RepostListBean newValue) {
-        if (newValue != null && newValue.getSize() > 1) {
+        if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 1) {
             getList().addOldData(newValue);
             invlidateTabText();
         } else {
