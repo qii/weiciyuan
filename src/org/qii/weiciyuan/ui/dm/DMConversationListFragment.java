@@ -33,13 +33,37 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         this.userBean = userBean;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("bean", bean);
+        outState.putSerializable("userBean", userBean);
+        outState.putInt("page",page);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
-        getPullToRefreshListView().startRefreshNow();
+
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                getPullToRefreshListView().startRefreshNow();
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+                refreshLayout(getList());
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                getList().addNewData((DMListBean) savedInstanceState.getSerializable("bean"));
+                userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+                page=savedInstanceState.getInt("page");
+                getAdapter().notifyDataSetChanged();
+                refreshLayout(bean);
+                break;
+        }
+
     }
 
     @Override

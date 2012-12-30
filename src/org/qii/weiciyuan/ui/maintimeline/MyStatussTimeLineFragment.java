@@ -53,12 +53,6 @@ public class MyStatussTimeLineFragment extends AbstractMessageTimeLineFragment<M
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        Utility.cancelTasks(dbTask);
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.actionbar_menu_mystatustimelinefragment, menu);
