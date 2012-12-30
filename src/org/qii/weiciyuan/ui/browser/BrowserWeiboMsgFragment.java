@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.browser;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -34,6 +33,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ import java.util.Locale;
  * User: qii
  * Date: 12-9-1
  */
-public class BrowserWeiboMsgFragment extends Fragment {
+public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
     private MessageBean msg;
 
@@ -94,13 +94,23 @@ public class BrowserWeiboMsgFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
-        if (savedInstanceState != null) {
-            msg = (MessageBean) savedInstanceState.getSerializable("msg");
-        } else {
-            updateMsgTask = new UpdateMsgTask();
-            updateMsgTask.execute();
 
+        switch (getCurrentState(savedInstanceState)) {
+            case FIRST_TIME_START:
+                if (Utility.isTaskStopped(updateMsgTask)) {
+                    updateMsgTask = new UpdateMsgTask();
+                    updateMsgTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
+                break;
+            case SCREEN_ROTATE:
+                //nothing
+
+                break;
+            case ACTIVITY_DESTROY_AND_CREATE:
+                msg = (MessageBean) savedInstanceState.getSerializable("msg");
+                break;
         }
+
 
     }
 
@@ -115,8 +125,8 @@ public class BrowserWeiboMsgFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroy() {
+        super.onDestroy();
         Utility.cancelTasks(updateMsgTask, geoTask, picTask);
         avatar.setImageDrawable(null);
         content_pic.setImageDrawable(null);
