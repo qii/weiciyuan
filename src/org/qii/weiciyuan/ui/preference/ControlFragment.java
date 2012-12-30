@@ -23,6 +23,7 @@ public class ControlFragment extends PreferenceFragment implements SharedPrefere
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(false);
 
         addPreferencesFromResource(R.xml.control_pref);
 

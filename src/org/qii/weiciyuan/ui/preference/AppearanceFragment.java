@@ -38,7 +38,7 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
         buildSummary();
 
 
-        setRetainInstance(true);
+        setRetainInstance(false);
         PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
 
     }

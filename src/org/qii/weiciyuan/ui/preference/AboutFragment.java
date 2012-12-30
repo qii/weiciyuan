@@ -31,6 +31,7 @@ public class AboutFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(false);
 
         addPreferencesFromResource(R.xml.about_pref);
 
