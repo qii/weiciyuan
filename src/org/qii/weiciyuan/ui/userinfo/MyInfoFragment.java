@@ -248,8 +248,8 @@ public class MyInfoFragment extends Fragment {
 
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroy() {
+        super.onDestroy();
         Utility.cancelTasks(refreshTask, avatarTask, topicListTask);
     }
 
