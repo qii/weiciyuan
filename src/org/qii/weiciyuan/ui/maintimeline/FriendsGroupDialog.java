@@ -20,6 +20,7 @@ public class FriendsGroupDialog extends DialogFragment {
 
     private GroupListBean group;
     private String selected;
+    private List<GroupBean> list;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -45,18 +46,17 @@ public class FriendsGroupDialog extends DialogFragment {
             group = (GroupListBean) savedInstanceState.getSerializable("group");
             selected = savedInstanceState.getString("selected");
         }
-
-        final List<GroupBean> list = group.getLists();
-
+        if (group != null) {
+            list = group.getLists();
+        } else {
+            list = new ArrayList<GroupBean>();
+        }
         List<String> name = new ArrayList<String>();
         name.add(getString(R.string.all_people));
         name.add(getString(R.string.bilateral));
-        int position = 0;
+
         for (GroupBean b : list) {
             name.add(b.getName());
-            if (b.getIdstr().equals(selected)) {
-                position = list.indexOf(b) + 1;
-            }
         }
 
         String[] valueArray = name.toArray(new String[0]);
