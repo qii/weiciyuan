@@ -23,6 +23,7 @@ import org.qii.weiciyuan.support.lib.TimeTextView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserBigPicActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
@@ -256,15 +257,37 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     }
 
     private void configViewFont(ViewHolder holder) {
-        holder.time.setTextSize(SettingUtility.getFontSize() - 3);
-        holder.content.setTextSize(SettingUtility.getFontSize());
-        holder.username.setTextSize(SettingUtility.getFontSize());
-        holder.repost_content.setTextSize(SettingUtility.getFontSize());
-        if (holder.repost_count != null)
-            holder.repost_count.setTextSize(SettingUtility.getFontSize() - 5);
-        if (holder.comment_count != null)
-            holder.comment_count.setTextSize(SettingUtility.getFontSize() - 5);
+        int prefFontSizeSp = SettingUtility.getFontSize();
+        float currentWidgetTextSizePx;
 
+        currentWidgetTextSizePx = holder.time.getTextSize();
+
+        if (Utility.sp2px(prefFontSizeSp - 3) != currentWidgetTextSizePx) {
+            holder.time.setTextSize(prefFontSizeSp - 3);
+        }
+
+        currentWidgetTextSizePx = holder.content.getTextSize();
+
+        if (Utility.sp2px(prefFontSizeSp) != currentWidgetTextSizePx) {
+            holder.content.setTextSize(prefFontSizeSp);
+            holder.username.setTextSize(prefFontSizeSp);
+            holder.repost_content.setTextSize(prefFontSizeSp);
+        }
+
+
+        if (holder.repost_count != null) {
+            currentWidgetTextSizePx = holder.repost_count.getTextSize();
+            if (Utility.sp2px(prefFontSizeSp - 5) != currentWidgetTextSizePx) {
+                holder.repost_count.setTextSize(prefFontSizeSp - 5);
+            }
+        }
+
+        if (holder.comment_count != null) {
+            currentWidgetTextSizePx = holder.comment_count.getTextSize();
+            if (Utility.sp2px(prefFontSizeSp - 5) != currentWidgetTextSizePx) {
+                holder.comment_count.setTextSize(prefFontSizeSp - 5);
+            }
+        }
     }
 
     protected abstract void bindViewData(ViewHolder holder, int position);

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.widget.ListView;
 import org.qii.weiciyuan.bean.GeoBean;
@@ -140,6 +141,10 @@ public class Utility {
     public static int px2dip(int pxValue) {
         float reSize = GlobalContext.getInstance().getResources().getDisplayMetrics().density;
         return (int) ((pxValue / reSize) + 0.5);
+    }
+
+    public static float sp2px(int spValue) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spValue, GlobalContext.getInstance().getResources().getDisplayMetrics());
     }
 
     public static int length(String paramString) {
