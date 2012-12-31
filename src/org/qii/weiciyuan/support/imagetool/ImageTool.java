@@ -268,22 +268,19 @@ public class ImageTool {
             }
 
 
-            if (bitmap.getHeight() < reqHeight || bitmap.getWidth() < reqWidth) {
-
-                int[] size = calcResize(bitmap.getWidth(), bitmap.getHeight(), reqWidth, reqHeight);
+            int[] size = calcResize(bitmap.getWidth(), bitmap.getHeight(), reqWidth, reqHeight);
+            if (size[0] > 0 && size[1] > 0) {
                 Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size[0], size[1], true);
-
                 if (scaledBitmap != bitmap) {
                     bitmap.recycle();
                     bitmap = scaledBitmap;
                 }
+            }
 
-                Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
-                if (roundedBitmap != bitmap) {
-                    bitmap.recycle();
-                    bitmap = roundedBitmap;
-                }
-                return bitmap;
+            Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+            if (roundedBitmap != bitmap) {
+                bitmap.recycle();
+                bitmap = roundedBitmap;
             }
 
             return bitmap;
@@ -383,13 +380,13 @@ public class ImageTool {
 
         if (height > reqHeight || width > reqWidth) {
             if (height > reqHeight && reqHeight != 0) {
-                inSampleSize = (int) Math.ceil((double) height / (double) reqHeight);
+                inSampleSize = (int) Math.floor((double) height / (double) reqHeight);
             }
 
             int tmp = 0;
 
             if (width > reqWidth && reqWidth != 0) {
-                tmp = (int) Math.ceil((double) width / (double) reqWidth);
+                tmp = (int) Math.floor((double) width / (double) reqWidth);
             }
 
             inSampleSize = Math.max(inSampleSize, tmp);
@@ -415,18 +412,14 @@ public class ImageTool {
         int height = actualHeight;
         int width = actualWidth;
 
-        if (actualHeight < reqHeight && actualWidth < reqWidth) {
 
+        float betweenWidth = ((float) reqWidth) / (float) actualWidth;
+        float betweenHeight = ((float) reqHeight) / (float) actualHeight;
 
-            float betweenWidth = ((float) reqWidth) / (float) actualWidth;
-            float betweenHeight = ((float) reqHeight) / (float) actualHeight;
+        float min = Math.min(betweenHeight, betweenWidth);
 
-            float min = Math.min(betweenHeight, betweenWidth);
-
-            height = (int) (min * actualHeight);
-            width = (int) (min * actualWidth);
-
-        }
+        height = (int) (min * actualHeight);
+        width = (int) (min * actualWidth);
 
         return new int[]{width, height};
     }

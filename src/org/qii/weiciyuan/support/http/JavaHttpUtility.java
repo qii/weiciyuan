@@ -249,7 +249,7 @@ public class JavaHttpUtility {
         try {
 
             URL url = new URL(urlStr);
-
+            AppLogger.d("download request=" +urlStr);
             Proxy proxy = getProxy();
             if (proxy != null)
                 urlConnection = (HttpURLConnection) url.openConnection(proxy);
