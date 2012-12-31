@@ -6,7 +6,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 
 /**
  * User: qii
@@ -61,8 +60,7 @@ public class RemoveWeiboMsgDialog extends DialogFragment {
                 .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        IRemoveItem iRemoveItem = (IRemoveItem) getTargetFragment();
-                        iRemoveItem.removeCancel();
+
                     }
                 });
 
