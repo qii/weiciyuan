@@ -198,7 +198,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
         @Override
         protected void onCancelled(Boolean aBoolean) {
             super.onCancelled(aBoolean);
-            if (getActivity() != null && e != null) {
+            if (Utility.isAllNotNull(getActivity(), this.e)) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             }
         }
@@ -232,7 +232,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
         @Override
         protected void onCancelled(Boolean aBoolean) {
             super.onCancelled(aBoolean);
-            if (getActivity() != null && e != null) {
+            if (Utility.isAllNotNull(getActivity(), this.e)) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             }
         }

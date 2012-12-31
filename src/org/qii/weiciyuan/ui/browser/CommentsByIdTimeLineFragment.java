@@ -24,6 +24,7 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.CommentByIdFloatingMenu;
 import org.qii.weiciyuan.ui.actionmenu.CommentByIdSingleChoiceModeLinstener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
@@ -282,7 +283,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         @Override
         protected void onCancelled(Boolean aBoolean) {
             super.onCancelled(aBoolean);
-            if (this.e != null) {
+            if (Utility.isAllNotNull(getActivity(), this.e)) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             }
         }

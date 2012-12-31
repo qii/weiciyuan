@@ -341,7 +341,7 @@ public class UserInfoFragment extends AbstractAppFragment {
         @Override
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
-            if (e != null && getActivity() != null) {
+            if (Utility.isAllNotNull(getActivity(), this.e)) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             }
         }

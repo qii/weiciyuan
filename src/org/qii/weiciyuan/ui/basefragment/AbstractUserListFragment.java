@@ -302,9 +302,12 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         @Override
         protected void onCancelled(UserListBean newValue) {
             super.onCancelled(newValue);
-            if (this.e != null && getActivity() != null)
-                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-            cleanWork();
+            if (Utility.isAllNotNull(getActivity())) {
+                if (Utility.isAllNotNull(this.e)) {
+                    Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+                }
+                cleanWork();
+            }
         }
 
 

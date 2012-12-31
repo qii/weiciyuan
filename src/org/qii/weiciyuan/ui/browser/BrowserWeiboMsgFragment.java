@@ -161,12 +161,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         @Override
         protected void onCancelled(MessageBean weiboMsgBean) {
             super.onCancelled(weiboMsgBean);
-            if (getActivity() != null) {
-                if (this.e != null) {
-                    Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-                    if (e.getError_code() == ErrorCode.DELETED) {
-                        setTextViewDeleted();
-                    }
+            if (Utility.isAllNotNull(getActivity(), this.e)) {
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+                if (e.getError_code() == ErrorCode.DELETED) {
+                    setTextViewDeleted();
                 }
             }
         }

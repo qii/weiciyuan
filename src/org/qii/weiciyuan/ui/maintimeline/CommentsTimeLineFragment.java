@@ -226,7 +226,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         @Override
         protected void onCancelled(Boolean aBoolean) {
             super.onCancelled(aBoolean);
-            if (this.e != null) {
+            if (Utility.isAllNotNull(getActivity(), this.e)) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             }
         }
