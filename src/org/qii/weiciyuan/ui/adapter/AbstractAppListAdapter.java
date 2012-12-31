@@ -27,8 +27,9 @@ import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserBigPicActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: qii
@@ -51,7 +52,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private final int TYPE_MIDDLE = 4;
     private final int TYPE_SIMPLE = 5;
 
-    private List<Integer> tagIndexList = new ArrayList<Integer>();
+    private Set<Integer> tagIndexList = new HashSet<Integer>();
 
 
     public AbstractAppListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<T> bean, ListView listView, boolean showOriStatus) {
@@ -76,33 +77,26 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 if (index == null)
                     return;
 
-                ViewHolder holder = (ViewHolder) view.getTag(index);
-
-                if (holder == null)
-                    return;
-
-                //reduce memory and avoid memory leak
-                holder.avatar.setImageBitmap(null);
-                holder.content_pic.setImageBitmap(null);
-                holder.repost_content_pic.setImageBitmap(null);
-
-                holder.avatar.getImageView().clearAnimation();
-                holder.content_pic.getImageView().clearAnimation();
-                holder.repost_content_pic.getImageView().clearAnimation();
-
                 for (Integer tag : tagIndexList) {
-                    if (!tag.equals(index)) {
-                        ViewHolder otherViewHolder = (ViewHolder) view.getTag(tag);
-                        if (otherViewHolder != null) {
-                            otherViewHolder.avatar.setImageBitmap(null);
-                            otherViewHolder.content_pic.setImageBitmap(null);
-                            otherViewHolder.repost_content_pic.setImageBitmap(null);
 
-                            otherViewHolder.avatar.getImageView().clearAnimation();
-                            otherViewHolder.content_pic.getImageView().clearAnimation();
-                            otherViewHolder.repost_content_pic.getImageView().clearAnimation();
-                            otherViewHolder.listview_root.removeAllViews();
-                            otherViewHolder.listview_root = null;
+                    ViewHolder holder = (ViewHolder) view.getTag(tag);
+
+                    if (holder != null) {
+                        holder.avatar.getImageView().getDrawable().setCallback(null);
+                        holder.content_pic.getImageView().getDrawable().setCallback(null);
+                        holder.repost_content_pic.getImageView().getDrawable().setCallback(null);
+
+                        holder.avatar.setImageBitmap(null);
+                        holder.content_pic.setImageBitmap(null);
+                        holder.repost_content_pic.setImageBitmap(null);
+
+                        holder.avatar.getImageView().clearAnimation();
+                        holder.content_pic.getImageView().clearAnimation();
+                        holder.repost_content_pic.getImageView().clearAnimation();
+
+                        if (!tag.equals(index)) {
+                            holder.listview_root.removeAllViewsInLayout();
+                            holder.listview_root = null;
                             view.setTag(tag, null);
                         }
                     }
