@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 
 /**
@@ -36,7 +37,12 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
             SettingUtility.setEnableBigAvatar(Utility.isWifi(context));
         }
         if (SettingUtility.getListPicMode() == 3) {
-            SettingUtility.setEnableBigPic(Utility.isWifi(context));
+            boolean currentStatus = Utility.isWifi(context);
+            boolean lastStatus = SettingUtility.getEnableBigPic();
+            if (currentStatus != lastStatus) {
+                SettingUtility.setEnableBigPic(currentStatus);
+                GlobalContext.getInstance().getAvatarCache().evictAll();
+            }
         }
     }
 

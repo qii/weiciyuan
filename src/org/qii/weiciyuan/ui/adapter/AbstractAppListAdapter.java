@@ -27,6 +27,7 @@ import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserBigPicActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,6 +50,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private final int TYPE_MYSELF_BIG_PIC = 3;
     private final int TYPE_MIDDLE = 4;
     private final int TYPE_SIMPLE = 5;
+
+    private List<Integer> tagIndexList = new ArrayList<Integer>();
+
 
     public AbstractAppListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<T> bean, ListView listView, boolean showOriStatus) {
         this.bean = bean;
@@ -86,6 +90,22 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 holder.content_pic.getImageView().clearAnimation();
                 holder.repost_content_pic.getImageView().clearAnimation();
 
+                for (Integer tag : tagIndexList) {
+                    if (!tag.equals(index)) {
+                        ViewHolder otherViewHolder = (ViewHolder) view.getTag(tag);
+                        if (otherViewHolder != null) {
+                            otherViewHolder.avatar.setImageBitmap(null);
+                            otherViewHolder.content_pic.setImageBitmap(null);
+                            otherViewHolder.repost_content_pic.setImageBitmap(null);
+
+                            otherViewHolder.avatar.getImageView().clearAnimation();
+                            otherViewHolder.content_pic.getImageView().clearAnimation();
+                            otherViewHolder.repost_content_pic.getImageView().clearAnimation();
+
+                            view.setTag(tag, null);
+                        }
+                    }
+                }
             }
         });
     }
@@ -125,6 +145,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             return TYPE_NORMAL;
 
     }
+
 
     /**
      * use getTag(int) and setTag(int, final Object) to sovle getItemViewType(int) bug.
@@ -169,6 +190,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 holder = buildHolder(convertView);
                 convertView.setTag(R.drawable.ic_launcher + getItemViewType(position), holder);
                 convertView.setTag(R.string.listview_index_tag, R.drawable.ic_launcher + getItemViewType(position));
+                tagIndexList.add(R.drawable.ic_launcher + getItemViewType(position));
             }
 
         } else {

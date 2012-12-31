@@ -105,14 +105,21 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
             if (value.equals("1")) {
                 SettingUtility.setEnableBigPic(false);
                 listHighPicMode.setEnabled(false);
+                GlobalContext.getInstance().getAvatarCache().evictAll();
             }
-            if (value.equals("2")){
+            if (value.equals("2")) {
                 SettingUtility.setEnableBigPic(true);
                 listHighPicMode.setEnabled(true);
+                GlobalContext.getInstance().getAvatarCache().evictAll();
             }
             if (value.equals("3")) {
-                SettingUtility.setEnableBigPic(Utility.isWifi(getActivity()));
-                listHighPicMode.setEnabled(true);
+                boolean currentStatus = Utility.isWifi(getActivity());
+                boolean lastStatus = SettingUtility.getEnableBigPic();
+                if (currentStatus != lastStatus) {
+                    SettingUtility.setEnableBigPic(currentStatus);
+                    listHighPicMode.setEnabled(currentStatus);
+                    GlobalContext.getInstance().getAvatarCache().evictAll();
+                }
             }
 
         }
