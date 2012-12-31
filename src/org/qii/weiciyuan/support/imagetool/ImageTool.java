@@ -332,8 +332,7 @@ public class ImageTool {
         } else {
             getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
 
-            file = new File(absoluteFilePath);
-            if (file.exists()) {
+            if (isThisBitmapCanRead(absoluteFilePath)) {
                 return absoluteFilePath;
             } else {
                 return "about:blank";
@@ -342,6 +341,47 @@ public class ImageTool {
 
         }
 
+    }
+
+    public static boolean isThisBitmapCanRead(String path) {
+        File file = new File(path);
+
+        if (!file.exists()) {
+            return false;
+        }
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        int width = options.outWidth;
+        int height = options.outHeight;
+        if (width == -1 || height == -1) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    public static int[] getBitmapSize(String path) {
+        int[] result = {-1, -1};
+        File file = new File(path);
+
+        if (!file.exists()) {
+            return result;
+        }
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        int width = options.outWidth;
+        int height = options.outHeight;
+        if (width > 0 && height > 0) {
+            result[0] = width;
+            result[1] = height;
+        }
+
+        return result;
     }
 
 
