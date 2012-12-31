@@ -147,9 +147,9 @@ public class AtUserFragment extends ListFragment {
             super.onPostExecute(atUserBeans);
             if (isCancelled())
                 return;
-            if (atUserBeans.size() == 0) {
+            if (atUserBeans == null||atUserBeans.size() == 0) {
                 result.clear();
-                atList = atUserBeans;
+                atList.clear();
                 adapter.notifyDataSetChanged();
                 return;
             }
