@@ -36,15 +36,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
             SettingUtility.setEnableBigAvatar(Utility.isWifi(context));
         }
         if (SettingUtility.getListPicMode() == 3) {
-            boolean currentStatus = Utility.isWifi(context);
-            boolean lastStatus = SettingUtility.getEnableBigPic();
-            if (currentStatus != lastStatus) {
-                SettingUtility.setEnableBigPic(currentStatus);
-                /**because often, android system send three plus time this broadcast at same time,so you cant clear cache and gc each time
-                 GlobalContext.getInstance().getAvatarCache().evictAll();
-                 System.gc();
-                 **/
-            }
+            SettingUtility.setEnableBigPic(Utility.isWifi(context));
         }
     }
 

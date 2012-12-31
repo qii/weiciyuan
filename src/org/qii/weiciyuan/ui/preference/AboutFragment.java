@@ -103,7 +103,6 @@ public class AboutFragment extends PreferenceFragment {
         findPreference(SettingActivity.SAVED_PIC_PATH).setSummary(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES).getAbsolutePath());
 
-
     }
 
     @Override
