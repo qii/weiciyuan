@@ -1,7 +1,9 @@
 package org.qii.weiciyuan.ui.preference;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -29,6 +31,7 @@ import java.io.File;
  */
 public class AboutFragment extends PreferenceFragment {
 
+    private BroadcastReceiver sdCardReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,16 +97,48 @@ public class AboutFragment extends PreferenceFragment {
                 return true;
             }
         });
+
+        buildCacheSummary();
+
+        findPreference(SettingActivity.SAVED_PIC_PATH).setSummary(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES).getAbsolutePath());
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sdCardReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                buildCacheSummary();
+            }
+        };
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
+        filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
+        filter.addDataScheme("file");
+
+        getActivity().registerReceiver(sdCardReceiver, filter);
+    }
+
+    private void buildCacheSummary() {
         File cachedDir = GlobalContext.getInstance().getExternalCacheDir();
         if (cachedDir != null) {
             findPreference(SettingActivity.CACHE_PATH).setSummary(cachedDir.getAbsolutePath());
         } else {
             findPreference(SettingActivity.CACHE_PATH).setSummary(getString(R.string.sd_card_in_not_mounted));
         }
-        findPreference(SettingActivity.SAVED_PIC_PATH).setSummary(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES).getAbsolutePath());
+    }
 
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (sdCardReceiver != null) {
+            getActivity().unregisterReceiver(sdCardReceiver);
+        }
     }
 
     private String buildVersionInfo() {
