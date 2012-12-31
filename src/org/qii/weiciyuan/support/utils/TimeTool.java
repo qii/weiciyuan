@@ -30,6 +30,12 @@ public class TimeTool {
     private static String DATE_FORMAT = GlobalContext.getInstance().getString(R.string.date_format);
     private static String YEAR_FORMAT = GlobalContext.getInstance().getString(R.string.year_format);
 
+    private static Calendar msgCalendar = null;
+    private static java.text.SimpleDateFormat dayFormat = null;
+    private static java.text.SimpleDateFormat dateFormat = null;
+    private static java.text.SimpleDateFormat yearFormat = null;
+
+
     private TimeTool() {
 
     }
@@ -52,7 +58,9 @@ public class TimeTool {
 
         Calendar nowCalendar = Calendar.getInstance();
 
-        Calendar msgCalendar = Calendar.getInstance();
+        if (msgCalendar == null)
+            msgCalendar = Calendar.getInstance();
+
         msgCalendar.setTimeInMillis(time);
 
         long calcMills = now - msg;
@@ -73,9 +81,10 @@ public class TimeTool {
         long calHours = calMins / 60;
 
         if (calHours < 24 && isSameDay(nowCalendar, msgCalendar)) {
+            if (dayFormat == null)
+                dayFormat = new java.text.SimpleDateFormat("HH:mm");
 
-            java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("HH:mm");
-            String result = format.format(msgCalendar.getTime());
+            String result = dayFormat.format(msgCalendar.getTime());
             return new StringBuilder().append(TODAY).append(" ").append(result).toString();
 
         }
@@ -85,19 +94,24 @@ public class TimeTool {
 
         if (calDay < 31) {
             if (isYesterDay(nowCalendar, msgCalendar)) {
-                java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("HH:mm");
-                String result = format.format(msgCalendar.getTime());
+                if (dayFormat == null)
+                    dayFormat = new java.text.SimpleDateFormat("HH:mm");
+
+                String result = dayFormat.format(msgCalendar.getTime());
                 return new StringBuilder(YESTER_DAY).append(" ").append(result).toString();
 
             } else if (isTheDayBeforeYesterDay(nowCalendar, msgCalendar)) {
-                java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("HH:mm");
-                String result = format.format(msgCalendar.getTime());
+                if (dayFormat == null)
+                    dayFormat = new java.text.SimpleDateFormat("HH:mm");
+
+                String result = dayFormat.format(msgCalendar.getTime());
                 return new StringBuilder(THE_DAY_BEFORE_YESTER_DAY).append(" ").append(result).toString();
 
             } else {
+                if (dateFormat == null)
+                    dateFormat = new java.text.SimpleDateFormat(DATE_FORMAT);
 
-                java.text.SimpleDateFormat format = new java.text.SimpleDateFormat(DATE_FORMAT);
-                String result = format.format(msgCalendar.getTime());
+                String result = dateFormat.format(msgCalendar.getTime());
                 return new StringBuilder(result).toString();
             }
         }
@@ -105,14 +119,16 @@ public class TimeTool {
         long calMonth = calDay / 31;
 
         if (calMonth < 12) {
-            java.text.SimpleDateFormat format = new java.text.SimpleDateFormat(DATE_FORMAT);
-            String result = format.format(msgCalendar.getTime());
+            if (dateFormat == null)
+                dateFormat = new java.text.SimpleDateFormat(DATE_FORMAT);
+
+            String result = dateFormat.format(msgCalendar.getTime());
             return new StringBuilder().append(result).toString();
 
         }
-
-        java.text.SimpleDateFormat format = new java.text.SimpleDateFormat(YEAR_FORMAT);
-        String result = format.format(msgCalendar.getTime());
+        if (yearFormat == null)
+            yearFormat = new java.text.SimpleDateFormat(YEAR_FORMAT);
+        String result = yearFormat.format(msgCalendar.getTime());
         return new StringBuilder().append(result).toString();
 
 
