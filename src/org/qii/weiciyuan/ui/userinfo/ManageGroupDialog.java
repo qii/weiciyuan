@@ -134,11 +134,7 @@ public class ManageGroupDialog extends DialogFragment {
         protected List<String> doInBackground(Void... params) {
             GroupListDao dao = new GroupListDao(GlobalContext.getInstance().getSpecialToken(), uid);
             try {
-                List<String> list = dao.getInfo();
-                for (String s : list) {
-                    AppLogger.e(s);
-                }
-                return list;
+                return dao.getInfo();
             } catch (WeiboException e) {
                 cancel(true);
                 AppLogger.e(e.getMessage());
