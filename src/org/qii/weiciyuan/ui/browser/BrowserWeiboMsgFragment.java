@@ -325,7 +325,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         if (msg.getGeo() != null) {
             if (geoTask == null || geoTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                 geoTask = new GetGoogleLocationInfo(msg.getGeo());
-                geoTask.execute();
+                geoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
         if (!TextUtils.isEmpty(msg.getSource())) {
@@ -436,6 +436,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
             List<Address> addresses = null;
             try {
+                if (!Utility.isGPSLocationCorrect(geoBean)) {
+                    return "";
+                }
                 addresses = geocoder.getFromLocation(geoBean.getLat(), geoBean.getLon(), 1);
             } catch (IOException e) {
                 cancel(true);
@@ -456,8 +459,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
         @Override
         protected void onPostExecute(String s) {
-            location.setVisibility(View.VISIBLE);
-            location.setText(s);
+            if (!TextUtils.isEmpty(s)) {
+                location.setVisibility(View.VISIBLE);
+                location.setText(s);
+            }
             super.onPostExecute(s);
         }
     }

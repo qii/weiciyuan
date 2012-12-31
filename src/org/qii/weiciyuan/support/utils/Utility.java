@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.widget.ListView;
+import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
@@ -258,6 +259,18 @@ public class Utility {
             if (obs[i] == null) {
                 return false;
             }
+        }
+        return true;
+    }
+
+    public static boolean isGPSLocationCorrect(GeoBean geoBean) {
+        double latitude = geoBean.getLat();
+        double longitude = geoBean.getLon();
+        if (latitude < -90.0 || latitude > 90.0) {
+            return false;
+        }
+        if (longitude < -180.0 || longitude > 180.0) {
+            return false;
         }
         return true;
     }
