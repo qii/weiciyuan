@@ -26,6 +26,16 @@ import java.util.zip.GZIPInputStream;
  * Date: 12-12-19
  */
 public class JavaHttpUtility {
+
+    private static final int CONNECT_TIMEOUT = 10 * 1000;
+    private static final int READ_TIMEOUT = 10 * 1000;
+
+    private static final int DOWNLOAD_CONNECT_TIMEOUT = 15 * 1000;
+    private static final int DOWNLOAD_READ_TIMEOUT = 60 * 1000;
+
+    private static final int UPLOAD_CONNECT_TIMEOUT = 15 * 1000;
+    private static final int UPLOAD_READ_TIMEOUT = 5 * 60 * 1000;
+
     public String executeNormalTask(HttpMethod httpMethod, String url, Map<String, String> param) throws WeiboException {
         switch (httpMethod) {
             case Post:
@@ -62,8 +72,8 @@ public class JavaHttpUtility {
             uRLConnection.setDoOutput(true);
             uRLConnection.setRequestMethod("POST");
             uRLConnection.setUseCaches(false);
-            uRLConnection.setConnectTimeout(5000);
-            uRLConnection.setReadTimeout(8000);
+            uRLConnection.setConnectTimeout(CONNECT_TIMEOUT);
+            uRLConnection.setReadTimeout(READ_TIMEOUT);
             uRLConnection.setInstanceFollowRedirects(false);
             uRLConnection.setRequestProperty("Connection", "Keep-Alive");
             uRLConnection.setRequestProperty("Charset", "UTF-8");
@@ -219,8 +229,8 @@ public class JavaHttpUtility {
 
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoOutput(false);
-            urlConnection.setConnectTimeout(5000);
-            urlConnection.setReadTimeout(8000);
+            urlConnection.setConnectTimeout(CONNECT_TIMEOUT);
+            urlConnection.setReadTimeout(READ_TIMEOUT);
             urlConnection.setRequestProperty("Connection", "Keep-Alive");
             urlConnection.setRequestProperty("Charset", "UTF-8");
             urlConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
@@ -249,7 +259,7 @@ public class JavaHttpUtility {
         try {
 
             URL url = new URL(urlStr);
-            AppLogger.d("download request=" +urlStr);
+            AppLogger.d("download request=" + urlStr);
             Proxy proxy = getProxy();
             if (proxy != null)
                 urlConnection = (HttpURLConnection) url.openConnection(proxy);
@@ -258,8 +268,8 @@ public class JavaHttpUtility {
 
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoOutput(false);
-            urlConnection.setConnectTimeout(5000);
-            urlConnection.setReadTimeout(8000);
+            urlConnection.setConnectTimeout(DOWNLOAD_CONNECT_TIMEOUT);
+            urlConnection.setReadTimeout(DOWNLOAD_READ_TIMEOUT);
             urlConnection.setRequestProperty("Connection", "Keep-Alive");
             urlConnection.setRequestProperty("Charset", "UTF-8");
             urlConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
@@ -343,8 +353,8 @@ public class JavaHttpUtility {
             else
                 urlConnection = (HttpURLConnection) url.openConnection();
 
-            urlConnection.setConnectTimeout(5000);
-            urlConnection.setReadTimeout(8000);
+            urlConnection.setConnectTimeout(UPLOAD_CONNECT_TIMEOUT);
+            urlConnection.setReadTimeout(UPLOAD_READ_TIMEOUT);
             urlConnection.setRequestMethod("POST");
             urlConnection.setUseCaches(false);
             urlConnection.setRequestProperty("Content-type", "multipart/form-data;boundary=" + BOUNDARYSTR);
