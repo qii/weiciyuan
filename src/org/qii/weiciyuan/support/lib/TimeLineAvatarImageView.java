@@ -36,7 +36,7 @@ public class TimeLineAvatarImageView extends TimeLineImageView {
         mCover = (ImageView) v.findViewById(R.id.imageview_cover);
         vImageView = (ImageView) v.findViewById(R.id.imageview_v);
         mImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
-        mCover.setImageDrawable(getResources().getDrawable(R.drawable.timelineimageview_cover));
+        mCover.setImageDrawable(context.getResources().getDrawable(R.drawable.timelineimageview_cover));
         mCover.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

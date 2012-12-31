@@ -90,12 +90,24 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
 
         if (key.equals(SettingActivity.LIST_AVATAR_MODE)) {
             String value = sharedPreferences.getString(key, "1");
-            if (value.equals("1"))
+            if (value.equals("1")) {
                 SettingUtility.setEnableBigAvatar(false);
-            if (value.equals("2"))
+                GlobalContext.getInstance().getAvatarCache().evictAll();
+                System.gc();
+            }
+            if (value.equals("2")) {
                 SettingUtility.setEnableBigAvatar(true);
+                GlobalContext.getInstance().getAvatarCache().evictAll();
+                System.gc();
+            }
             if (value.equals("3")) {
-                SettingUtility.setEnableBigAvatar(Utility.isWifi(getActivity()));
+                boolean currentStatus = Utility.isWifi(getActivity());
+                boolean lastStatus = SettingUtility.getEnableBigAvatar();
+                if (currentStatus != lastStatus) {
+                    SettingUtility.setEnableBigAvatar(currentStatus);
+                    GlobalContext.getInstance().getAvatarCache().evictAll();
+                    System.gc();
+                }
             }
 
         }
@@ -106,11 +118,13 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
                 SettingUtility.setEnableBigPic(false);
                 listHighPicMode.setEnabled(false);
                 GlobalContext.getInstance().getAvatarCache().evictAll();
+                System.gc();
             }
             if (value.equals("2")) {
                 SettingUtility.setEnableBigPic(true);
                 listHighPicMode.setEnabled(true);
                 GlobalContext.getInstance().getAvatarCache().evictAll();
+                System.gc();
             }
             if (value.equals("3")) {
                 boolean currentStatus = Utility.isWifi(getActivity());
@@ -119,6 +133,7 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
                     SettingUtility.setEnableBigPic(currentStatus);
                     listHighPicMode.setEnabled(currentStatus);
                     GlobalContext.getInstance().getAvatarCache().evictAll();
+                    System.gc();
                 }
             }
 

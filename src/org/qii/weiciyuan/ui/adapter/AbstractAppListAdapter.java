@@ -101,7 +101,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                             otherViewHolder.avatar.getImageView().clearAnimation();
                             otherViewHolder.content_pic.getImageView().clearAnimation();
                             otherViewHolder.repost_content_pic.getImageView().clearAnimation();
-
+                            otherViewHolder.listview_root.removeAllViews();
+                            otherViewHolder.listview_root = null;
                             view.setTag(tag, null);
                         }
                     }

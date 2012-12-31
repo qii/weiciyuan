@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 
 /**
@@ -41,7 +40,10 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
             boolean lastStatus = SettingUtility.getEnableBigPic();
             if (currentStatus != lastStatus) {
                 SettingUtility.setEnableBigPic(currentStatus);
-                GlobalContext.getInstance().getAvatarCache().evictAll();
+                /**because often, android system send three plus time this broadcast at same time,so you cant clear cache and gc each time
+                 GlobalContext.getInstance().getAvatarCache().evictAll();
+                 System.gc();
+                 **/
             }
         }
     }
