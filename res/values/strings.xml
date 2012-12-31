@@ -18,7 +18,7 @@
         3. 登录是在新浪网站上进行的，登录不了找新浪\n
         4. Flyme 和 Miui 这2个系统的问题都不解决
         5. 没适配到平板，不推荐5寸+设备使用这个应用
-        5. 觉得不爽就老老实实用官方客户端\n
+        6. 觉得不爽就老老实实用官方客户端\n
     </string>
     <string name="title_changelog">更新日志</string>
     <string name="changelog_close">关闭</string>
@@ -57,6 +57,7 @@
     <string name="timeout">网络有问题，连不上</string>
     <string name="unknown_error_error_code">未知错误，错误代码</string>
     <string name="unknown_sina_network_error">新浪微博某些网络节点又出故障，换个网络试试</string>
+    <string name="sd_card_in_not_mounted">SD卡未挂载</string>
 
     <!-- timeline -->
     <string name="refresh">刷新</string>

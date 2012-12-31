@@ -21,6 +21,8 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
+import java.io.File;
+
 /**
  * User: qii
  * Date: 12-9-29
@@ -92,8 +94,12 @@ public class AboutFragment extends PreferenceFragment {
                 return true;
             }
         });
-
-        findPreference(SettingActivity.CACHE_PATH).setSummary(GlobalContext.getInstance().getExternalCacheDir().getAbsolutePath());
+        File cachedDir = GlobalContext.getInstance().getExternalCacheDir();
+        if (cachedDir != null) {
+            findPreference(SettingActivity.CACHE_PATH).setSummary(cachedDir.getAbsolutePath());
+        } else {
+            findPreference(SettingActivity.CACHE_PATH).setSummary(getString(R.string.sd_card_in_not_mounted));
+        }
         findPreference(SettingActivity.SAVED_PIC_PATH).setSummary(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES).getAbsolutePath());
 
