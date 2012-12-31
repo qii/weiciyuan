@@ -96,9 +96,12 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
             uri = Uri.parse(path);
         }
 
-
+    }
+    //confirm getActivity() is not null
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         buildSummary();
-
     }
 
     @Override
