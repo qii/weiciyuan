@@ -333,6 +333,7 @@
     <!--Setting Performance-->
     <string name="pref_performance_title">性能</string>
     <string name="enable_hardware_accelerated">启用硬件加速</string>
+    <string name="pref_enable_hardware_accelerated_summary">Android 4.1+ 的黄油项目</string>
 
 
     <!--Setting About-->
