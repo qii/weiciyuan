@@ -112,7 +112,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     @Override
     public int getViewTypeCount() {
-        return 6;
+        return 4;
     }
 
     @Override
@@ -121,22 +121,11 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         if (bean.get(position) == null)
             return TYPE_MIDDLE;
 
-        boolean myself = bean.get(position).getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId());
-
-        boolean myselfBigPic = myself && SettingUtility.getEnableBigPic();
-
-        boolean normal = !myself;
-
-        boolean normalBigPic = normal && SettingUtility.getEnableBigPic();
-
         if (!showOriStatus)
             return TYPE_SIMPLE;
-        if (myselfBigPic)
-            return TYPE_MYSELF_BIG_PIC;
-        if (normalBigPic)
+
+        if (SettingUtility.getEnableBigPic())
             return TYPE_NORMAL_BIG_PIC;
-        if (myself)
-            return TYPE_MYSELF;
         else
             return TYPE_NORMAL;
 
