@@ -569,18 +569,20 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         LocationManager locationManager = (LocationManager) WriteWeiboActivity.this
                 .getSystemService(Context.LOCATION_SERVICE);
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            Toast.makeText(WriteWeiboActivity.this, getString(R.string.gps_is_searching), Toast.LENGTH_SHORT).show();
-        } else {
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             Toast.makeText(WriteWeiboActivity.this, getString(R.string.please_open_gps), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0,
-                locationListener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0,
-                locationListener);
+        Toast.makeText(WriteWeiboActivity.this, getString(R.string.gps_is_searching), Toast.LENGTH_SHORT).show();
+
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0,
+                    locationListener);
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0,
+                    locationListener);
     }
 
 
