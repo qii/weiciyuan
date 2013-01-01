@@ -255,11 +255,16 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
         if (prefLayerType != currentWidgetLayerType) {
             holder.username.setLayerType(prefLayerType, null);
-            holder.content.setLayerType(prefLayerType, null);
-            holder.repost_content.setLayerType(prefLayerType, null);
-            holder.time.setLayerType(prefLayerType, null);
-            holder.repost_count.setLayerType(prefLayerType, null);
-            holder.comment_count.setLayerType(prefLayerType, null);
+            if (holder.content != null)
+                holder.content.setLayerType(prefLayerType, null);
+            if (holder.repost_content != null)
+                holder.repost_content.setLayerType(prefLayerType, null);
+            if (holder.time != null)
+                holder.time.setLayerType(prefLayerType, null);
+            if (holder.repost_count != null)
+                holder.repost_count.setLayerType(prefLayerType, null);
+            if (holder.comment_count != null)
+                holder.comment_count.setLayerType(prefLayerType, null);
         }
 
     }
