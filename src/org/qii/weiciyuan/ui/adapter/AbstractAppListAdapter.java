@@ -112,7 +112,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     @Override
     public int getViewTypeCount() {
-        return 4;
+        return 6;
     }
 
     @Override
