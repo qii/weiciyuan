@@ -51,6 +51,8 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String DISABLE_DOWNLOAD_AVATAR_PIC = "disable_download";
     public static final String MSG_COUNT = "msg_count";
 
+    //performance
+    public static final String HARDWARE_ACCELERATED = "pref_hardware_accelerated_key";
 
     //about
     public static final String OFFICIAL_WEIBO = "pref_official_weibo_key";

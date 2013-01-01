@@ -218,4 +218,10 @@ public class SettingUtility {
         return String.valueOf(AppConfig.DEFAULT_MSG_COUNT_25);
 
     }
+
+    public static boolean enableHardwareAccelerated() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.HARDWARE_ACCELERATED, false);
+
+    }
+
 }
