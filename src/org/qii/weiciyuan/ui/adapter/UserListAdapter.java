@@ -10,6 +10,8 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
 
 import java.util.List;
@@ -91,7 +93,8 @@ public class UserListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
+        configViewFont(holder);
+        configLayerType(holder);
         bindViewData(holder, position);
 
 
@@ -117,6 +120,34 @@ public class UserListAdapter extends BaseAdapter {
         }
         holder.content.setText(user.getDescription());
 
+    }
+
+    private void configLayerType(ViewHolder holder) {
+
+        boolean hardAccelerated = SettingUtility.enableHardwareAccelerated();
+
+        int prefLayerType = hardAccelerated ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_SOFTWARE;
+        int currentWidgetLayerType = holder.username.getLayerType();
+
+        if (prefLayerType != currentWidgetLayerType) {
+            holder.username.setLayerType(prefLayerType, null);
+            if (holder.content != null)
+                holder.content.setLayerType(prefLayerType, null);
+        }
+
+    }
+
+    private void configViewFont(ViewHolder holder) {
+        int prefFontSizeSp = SettingUtility.getFontSize();
+        float currentWidgetTextSizePx;
+
+        currentWidgetTextSizePx = holder.content.getTextSize();
+
+
+        if (Utility.sp2px(prefFontSizeSp) != currentWidgetTextSizePx) {
+            holder.content.setTextSize(prefFontSizeSp);
+            holder.username.setTextSize(prefFontSizeSp);
+        }
     }
 
     private class ViewHolder {

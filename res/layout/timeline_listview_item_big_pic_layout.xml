@@ -31,6 +31,8 @@
             android:text="0"
             android:layerType="software"
             android:textColor="?android:textColorTertiary"
+            android:drawablePadding="4dp"
+            android:fontFamily="monospace"
             android:drawableLeft="?timeline_repost_flag"/>
 
         <TextView
@@ -39,7 +41,9 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:layerType="software"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="8dp"
+            android:drawablePadding="4dp"
+            android:fontFamily="monospace"
             android:textColor="?android:textColorTertiary"
             android:drawableLeft="?timeline_comment_flag"/>
 
@@ -134,7 +138,7 @@
                     android:visibility="gone"
                     android:clickable="true"
                     android:padding="2dp"
-                  />
+                    />
             </LinearLayout>
         </LinearLayout>
 
