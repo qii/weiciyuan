@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="listview_hardware_accelerated">false</bool>
+    <bool name="jb_notification">false</bool>
+
+</resources>

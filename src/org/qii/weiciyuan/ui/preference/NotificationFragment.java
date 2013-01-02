@@ -174,6 +174,8 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         for (Preference p : preferenceList) {
             p.setEnabled(value);
         }
+
+        findPreference(SettingActivity.JBNOTIFICATION_STYLE).setEnabled(getResources().getBoolean(R.bool.jb_notification));
     }
 
 }

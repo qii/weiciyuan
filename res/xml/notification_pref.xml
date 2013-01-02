@@ -64,7 +64,8 @@
             android:dialogTitle="@string/notification_style"
             android:entries="@array/notification_style"
             android:entryValues="@array/notification_style_value"
-            android:defaultValue="1"/>
+            android:defaultValue="1"
+            android:enabled="@bool/jb_notification"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -8,6 +8,7 @@
         android:key="pref_hardware_accelerated_key"
         android:title="@string/enable_hardware_accelerated"
         android:summary="@string/pref_enable_hardware_accelerated_summary"
+        android:enabled="@bool/listview_hardware_accelerated"
         android:defaultValue="false"/>
 
 </PreferenceScreen>
