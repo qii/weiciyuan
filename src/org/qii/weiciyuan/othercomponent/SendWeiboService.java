@@ -44,7 +44,7 @@ public class SendWeiboService extends Service {
 
     private StatusDraftBean statusDraftBean;
 
-    private Map<UploadTask, Boolean> tasksResult = new HashMap<UploadTask, Boolean>();
+    private Map<WeiboSendTask, Boolean> tasksResult = new HashMap<WeiboSendTask, Boolean>();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -62,7 +62,7 @@ public class SendWeiboService extends Service {
 
         statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("draft");
 
-        UploadTask task = new UploadTask();
+        WeiboSendTask task = new WeiboSendTask();
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
         tasksResult.put(task, false);
@@ -72,7 +72,7 @@ public class SendWeiboService extends Service {
     }
 
 
-    class UploadTask extends MyAsyncTask<Void, Long, Void> {
+    private class WeiboSendTask extends MyAsyncTask<Void, Long, Void> {
 
         Notification notification;
         final int NOTIFICATION_ID = 1;
@@ -210,7 +210,7 @@ public class SendWeiboService extends Service {
             if (statusDraftBean != null)
                 DraftDBManager.getInstance().remove(statusDraftBean.getId());
             Toast.makeText(SendWeiboService.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
-            stopServiceIfTasksAreEnd(UploadTask.this);
+            stopServiceIfTasksAreEnd(WeiboSendTask.this);
         }
 
         @Override
@@ -224,17 +224,17 @@ public class SendWeiboService extends Service {
             }
             Toast.makeText(SendWeiboService.this, getString(R.string.send_failed_and_save_to_draft), Toast.LENGTH_SHORT).show();
 
-            stopServiceIfTasksAreEnd(UploadTask.this);
+            stopServiceIfTasksAreEnd(WeiboSendTask.this);
         }
     }
 
-    private void stopServiceIfTasksAreEnd(UploadTask currentTask) {
+    private void stopServiceIfTasksAreEnd(WeiboSendTask currentTask) {
 
         tasksResult.put(currentTask, true);
 
         boolean isAllTaskEnd = true;
-        Set<UploadTask> taskSet = tasksResult.keySet();
-        for (UploadTask task : taskSet) {
+        Set<WeiboSendTask> taskSet = tasksResult.keySet();
+        for (WeiboSendTask task : taskSet) {
             if (!tasksResult.get(task)) {
                 isAllTaskEnd = false;
                 break;
