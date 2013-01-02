@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.othercomponent;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -19,6 +20,7 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -35,6 +37,7 @@ public class SendWeiboService extends Service {
     private StatusDraftBean statusDraftBean;
 
     private Map<WeiboSendTask, Boolean> tasksResult = new HashMap<WeiboSendTask, Boolean>();
+    private Map<WeiboSendTask, Integer> tasksNotifications = new HashMap<WeiboSendTask, Integer>();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -65,7 +68,6 @@ public class SendWeiboService extends Service {
     private class WeiboSendTask extends MyAsyncTask<Void, Long, Void> {
 
         Notification notification;
-        final int NOTIFICATION_ID = 1;
         WeiboException e;
         long size;
 
@@ -87,7 +89,14 @@ public class SendWeiboService extends Service {
             }
 
             notification = builder.getNotification();
-            startForeground(NOTIFICATION_ID, notification);
+
+            int notificationId = new Random().nextInt(Integer.MAX_VALUE);
+            NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+                    .getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(notificationId, notification);
+
+            tasksNotifications.put(WeiboSendTask.this, notificationId);
+
             Toast.makeText(SendWeiboService.this, getString(R.string.background_sending), Toast.LENGTH_SHORT).show();
         }
 
@@ -153,8 +162,9 @@ public class SendWeiboService extends Service {
                         .setOngoing(true)
                         .setSmallIcon(R.drawable.upload_white);
                 notification = builder.getNotification();
-
-                startForeground(NOTIFICATION_ID, notification);
+                NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+                        .getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(tasksNotifications.get(WeiboSendTask.this), notification);
 
             }
         }
@@ -193,7 +203,10 @@ public class SendWeiboService extends Service {
         for (WeiboSendTask task : taskSet) {
             if (!tasksResult.get(task)) {
                 isAllTaskEnd = false;
-                break;
+            } else {
+                NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+                        .getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.cancel(tasksNotifications.get(task));
             }
         }
         if (isAllTaskEnd) {
