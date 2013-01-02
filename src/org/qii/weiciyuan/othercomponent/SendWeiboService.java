@@ -211,18 +211,7 @@ public class SendWeiboService extends Service {
                 DraftDBManager.getInstance().remove(statusDraftBean.getId());
             Toast.makeText(SendWeiboService.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
 
-            boolean isAllTaskEnd = true;
-
-            for (UploadTask task : taskList) {
-                if (!Utility.isTaskStopped(task)) {
-                    isAllTaskEnd = false;
-                    break;
-                }
-            }
-            if (isAllTaskEnd) {
-                stopForeground(true);
-                stopSelf();
-            }
+            stopServiceIfTasksAreEnd();
         }
 
         @Override
@@ -235,10 +224,23 @@ public class SendWeiboService extends Service {
                 DraftDBManager.getInstance().insertStatus(content, geoBean, picPath, accountId);
             }
             Toast.makeText(SendWeiboService.this, getString(R.string.send_failed_and_save_to_draft), Toast.LENGTH_SHORT).show();
+
+            stopServiceIfTasksAreEnd();
+        }
+    }
+
+    private void stopServiceIfTasksAreEnd() {
+        boolean isAllTaskEnd = true;
+
+        for (UploadTask task : taskList) {
+            if (!Utility.isTaskStopped(task)) {
+                isAllTaskEnd = false;
+                break;
+            }
+        }
+        if (isAllTaskEnd) {
             stopForeground(true);
             stopSelf();
         }
     }
-
-
 }
