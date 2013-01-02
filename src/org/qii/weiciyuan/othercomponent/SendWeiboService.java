@@ -102,9 +102,16 @@ public class SendWeiboService extends Service {
 
         private boolean sendPic(String uploadPicPath) throws WeiboException {
             return new StatusNewMsgDao(token).setPic(uploadPicPath).setGeoBean(geoBean).sendNewMsg(content, new FileUploaderHttpHelper.ProgressListener() {
+
                 @Override
                 public void transferred(long data) {
-                    publishProgress(data);
+
+                    publishProgress((long) (data * 0.9));
+                }
+
+                @Override
+                public void completed() {
+                    publishProgress(size);
                 }
             });
         }

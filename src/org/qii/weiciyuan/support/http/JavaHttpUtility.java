@@ -117,6 +117,7 @@ public class JavaHttpUtility {
         String err = null;
         int errCode = 0;
         try {
+            AppLogger.e("error=" + result);
             JSONObject json = new JSONObject(result);
             err = json.optString("error_description", "");
             if (TextUtils.isEmpty(err))
@@ -406,6 +407,7 @@ public class JavaHttpUtility {
             long transferred = 0;
             final Thread thread = Thread.currentThread();
             while (bytesRead > 0) {
+
                 if (thread.isInterrupted()) {
                     file.delete();
                     throw new InterruptedIOException();
@@ -420,7 +422,6 @@ public class JavaHttpUtility {
                 if (listener != null)
                     listener.transferred(transferred);
 
-
             }
 
             out.write("\r\n\r\n".getBytes());
@@ -430,6 +431,9 @@ public class JavaHttpUtility {
             out.flush();
             out.close();
             int status = urlConnection.getResponseCode();
+            if (listener != null) {
+                listener.completed();
+            }
             if (status != 200) {
                 String error = handleError(urlConnection);
                 throw new WeiboException(error);
