@@ -22,11 +22,14 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: qii
@@ -38,10 +41,10 @@ public class SendWeiboService extends Service {
     private String picPath;
     private String content;
     private GeoBean geoBean;
-    private UploadTask task;
 
     private StatusDraftBean statusDraftBean;
 
+    private List<UploadTask> taskList = new ArrayList<UploadTask>();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -59,10 +62,11 @@ public class SendWeiboService extends Service {
 
         statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("draft");
 
-        if (task == null) {
-            task = new UploadTask();
-            task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        }
+        UploadTask task = new UploadTask();
+        task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+
+        taskList.add(task);
+
         return super.onStartCommand(intent, flags, startId);
 
     }
@@ -206,8 +210,19 @@ public class SendWeiboService extends Service {
             if (statusDraftBean != null)
                 DraftDBManager.getInstance().remove(statusDraftBean.getId());
             Toast.makeText(SendWeiboService.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
-            stopForeground(true);
-            stopSelf();
+
+            boolean isAllTaskEnd = true;
+
+            for (UploadTask task : taskList) {
+                if (!Utility.isTaskStopped(task)) {
+                    isAllTaskEnd = false;
+                    break;
+                }
+            }
+            if (isAllTaskEnd) {
+                stopForeground(true);
+                stopSelf();
+            }
         }
 
         @Override
