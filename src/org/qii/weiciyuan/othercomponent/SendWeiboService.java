@@ -86,6 +86,8 @@ public class SendWeiboService extends Service {
                     .setTicker(getString(R.string.sending))
                     .setContentTitle(getString(R.string.sending))
                     .setContentText(content)
+                    .setOnlyAlertOnce(true)
+                    .setOngoing(true)
                     .setSmallIcon(R.drawable.upload_white);
 
             if (!TextUtils.isEmpty(picPath)) {
@@ -184,18 +186,30 @@ public class SendWeiboService extends Service {
 
         }
 
+        private double lastStatus = -1d;
 
         @Override
         protected void onProgressUpdate(Long... values) {
 
             if (values.length > 0) {
+
                 long data = values[0];
+
+                double r = data / (double) size;
+
+                if (Math.abs(r - lastStatus) < 0.01d) {
+                    return;
+                }
+
+                lastStatus = r;
 
                 Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
                         .setTicker(getString(R.string.send_photo))
                         .setContentTitle(getString(R.string.background_sending))
                         .setContentText(content)
                         .setProgress((int) size, (int) data, false)
+                        .setOnlyAlertOnce(true)
+                        .setOngoing(true)
                         .setSmallIcon(R.drawable.upload_white);
                 notification = builder.getNotification();
 
