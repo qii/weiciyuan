@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:id="@+id/listview_root">
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:id="@+id/listview_root">
 
     <org.qii.weiciyuan.support.lib.PerformanceImageView
         android:id="@+id/avatar"
@@ -13,7 +13,7 @@
         android:padding="1px"
         android:background="@drawable/bg_border1"
         android:layout_gravity="left|center_vertical"
-        android:layout_marginRight="8dp" />
+        android:layout_marginRight="8dp"/>
 
 
     <TextView
@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="username"
-        android:layout_toRightOf="@id/avatar" />
+        android:layout_toRightOf="@id/avatar"/>
 
 
     <TextView
@@ -33,6 +33,6 @@
         android:layout_toRightOf="@id/avatar"
         android:layerType="software"
         android:ellipsize="end"
-        android:singleLine="true" />
+        android:singleLine="true"/>
 
 </RelativeLayout>

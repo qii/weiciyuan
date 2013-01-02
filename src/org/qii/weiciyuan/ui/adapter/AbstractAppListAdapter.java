@@ -286,8 +286,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             holder.content.setTextSize(prefFontSizeSp);
             holder.username.setTextSize(prefFontSizeSp);
             holder.repost_content.setTextSize(prefFontSizeSp);
-        }
 
+        }
 
         if (holder.repost_count != null) {
             currentWidgetTextSizePx = holder.repost_count.getTextSize();

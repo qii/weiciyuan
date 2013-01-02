@@ -81,6 +81,7 @@
         android:text="content"
         android:textSize="15sp"
         android:layout_below="@id/avatar"
+        android:lineSpacingMultiplier="1.3"
         android:layerType="software"/>
 
     <FrameLayout
@@ -122,6 +123,7 @@
                 android:layout_height="wrap_content"
                 android:text="content"
                 android:textSize="15sp"
+                android:lineSpacingMultiplier="1.3"
                 android:visibility="gone"
                 android:layerType="software"/>
 
