@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
     <release
+        version="0.4821"
+        versioncode="25">
+        <change>更換部分按鈕圖標</change>
+        <change>列表文本添加行間距</change>
+        <change>寫微博界面添加完照片後查看圖片方式換掉</change>
+        <change>修正設置-评论/转发列表的头像，顯示不正確的bug</change>
+        <change>不再限制手機上的橫屏</change>
+        <change>修正高清頭像模糊的bug</change>
+        <change>修正登錄有機率崩潰的bug</change>
+        <change>修正沒掛載SD卡時候查看設置-關於崩潰的bug</change>
+        <change>新增設置-性能-硬件加速，只適合4.1+系統</change>
+        <change>修正發送圖片導致通知欄卡頓以及影響之後發送微博的bug</change>
+    </release>
+    <release
         version="0.482"
         versioncode="24">
         <change>修正網址鏈接帶進漢字的bug</change>
