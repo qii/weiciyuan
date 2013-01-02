@@ -163,6 +163,7 @@ public class SendWeiboService extends Service {
                 Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
                         .setTicker(getString(R.string.send_photo))
                         .setContentTitle(getString(R.string.background_sending))
+                        .setNumber((int) (r * 100))
                         .setContentText(content)
                         .setProgress((int) size, (int) data, false)
                         .setOnlyAlertOnce(true)
