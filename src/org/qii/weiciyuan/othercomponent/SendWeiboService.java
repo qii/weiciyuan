@@ -106,7 +106,7 @@ public class SendWeiboService extends Service {
                 @Override
                 public void transferred(long data) {
 
-                    publishProgress((long) (data * 0.9));
+                    publishProgress((long) (data * 0.95));
                 }
 
                 @Override
