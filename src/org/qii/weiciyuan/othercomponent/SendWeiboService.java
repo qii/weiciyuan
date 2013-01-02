@@ -22,14 +22,14 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * User: qii
@@ -44,7 +44,7 @@ public class SendWeiboService extends Service {
 
     private StatusDraftBean statusDraftBean;
 
-    private List<UploadTask> taskList = new ArrayList<UploadTask>();
+    private Map<UploadTask, Boolean> tasksResult = new HashMap<UploadTask, Boolean>();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -65,7 +65,7 @@ public class SendWeiboService extends Service {
         UploadTask task = new UploadTask();
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
-        taskList.add(task);
+        tasksResult.put(task, false);
 
         return super.onStartCommand(intent, flags, startId);
 
@@ -210,8 +210,7 @@ public class SendWeiboService extends Service {
             if (statusDraftBean != null)
                 DraftDBManager.getInstance().remove(statusDraftBean.getId());
             Toast.makeText(SendWeiboService.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
-
-            stopServiceIfTasksAreEnd();
+            stopServiceIfTasksAreEnd(UploadTask.this);
         }
 
         @Override
@@ -225,15 +224,18 @@ public class SendWeiboService extends Service {
             }
             Toast.makeText(SendWeiboService.this, getString(R.string.send_failed_and_save_to_draft), Toast.LENGTH_SHORT).show();
 
-            stopServiceIfTasksAreEnd();
+            stopServiceIfTasksAreEnd(UploadTask.this);
         }
     }
 
-    private void stopServiceIfTasksAreEnd() {
-        boolean isAllTaskEnd = true;
+    private void stopServiceIfTasksAreEnd(UploadTask currentTask) {
 
-        for (UploadTask task : taskList) {
-            if (!Utility.isTaskStopped(task)) {
+        tasksResult.put(currentTask, true);
+
+        boolean isAllTaskEnd = true;
+        Set<UploadTask> taskSet = tasksResult.keySet();
+        for (UploadTask task : taskSet) {
+            if (!tasksResult.get(task)) {
                 isAllTaskEnd = false;
                 break;
             }
