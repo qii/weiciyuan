@@ -415,8 +415,12 @@ public class JavaHttpUtility {
                 bufferSize = Math.min(bytesAvailable, maxBufferSize);
                 bytesRead = fis.read(buffer, 0, bufferSize);
                 transferred += bytesRead;
+                if (transferred % 50 == 0)
+                    out.flush();
                 if (listener != null)
                     listener.transferred(transferred);
+
+
             }
 
             out.write("\r\n\r\n".getBytes());
@@ -426,7 +430,6 @@ public class JavaHttpUtility {
             out.flush();
             out.close();
             int status = urlConnection.getResponseCode();
-
             if (status != 200) {
                 String error = handleError(urlConnection);
                 throw new WeiboException(error);
