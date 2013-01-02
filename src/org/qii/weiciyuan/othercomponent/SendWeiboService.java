@@ -2,15 +2,8 @@ package org.qii.weiciyuan.othercomponent;
 
 import android.app.Notification;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
@@ -19,14 +12,11 @@ import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
+import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.ui.preference.SettingActivity;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -120,7 +110,7 @@ public class SendWeiboService extends Service {
 
             try {
                 if (!TextUtils.isEmpty(picPath)) {
-                    String uploadPicPath = compressPic();
+                    String uploadPicPath = ImageTool.compressPic(SendWeiboService.this, picPath);
                     size = new File(uploadPicPath).length();
                     result = sendPic(uploadPicPath);
                 } else {
@@ -136,55 +126,6 @@ public class SendWeiboService extends Service {
             return null;
         }
 
-        private String compressPic() {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String value = sharedPref.getString(SettingActivity.UPLOAD_PIC_QUALITY, "4");
-            if (value.equals("1")) {
-                return picPath;
-            } else {
-
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = false;
-                options.inSampleSize = 1;
-
-                if (value.equals("2")) {
-                    options.inSampleSize = 2;
-                } else if (value.equals("3")) {
-                    options.inSampleSize = 4;
-                } else if (value.equals("4")) {
-                    options.inSampleSize = 4;
-                    ConnectivityManager cm = (ConnectivityManager)
-                            getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-                    if (networkInfo != null && networkInfo.isConnected() && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-                        return picPath;
-                    }
-
-                }
-                Bitmap bitmap = BitmapFactory.decodeFile(picPath, options);
-                FileOutputStream stream = null;
-                String tmp = FileManager.getUploadPicTempFile();
-                try {
-                    new File(tmp).getParentFile().mkdirs();
-                    new File(tmp).createNewFile();
-                    stream = new FileOutputStream(new File(tmp));
-                } catch (IOException ignored) {
-
-                }
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-
-                if (stream != null) {
-                    try {
-                        stream.close();
-                        bitmap.recycle();
-                    } catch (IOException ignored) {
-
-                    }
-                }
-                return tmp;
-            }
-
-        }
 
         private double lastStatus = -1d;
 
@@ -240,6 +181,7 @@ public class SendWeiboService extends Service {
 
             stopServiceIfTasksAreEnd(WeiboSendTask.this);
         }
+
     }
 
     private void stopServiceIfTasksAreEnd(WeiboSendTask currentTask) {

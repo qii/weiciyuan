@@ -224,4 +224,9 @@ public class SettingUtility {
 
     }
 
+    public static int getUploadQuality() {
+        String result = SettingHelper.getSharedPreferences(getContext(), SettingActivity.UPLOAD_PIC_QUALITY, "2");
+        return Integer.valueOf(result);
+    }
+
 }

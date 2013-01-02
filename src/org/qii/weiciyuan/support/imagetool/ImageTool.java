@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.support.imagetool;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
@@ -11,8 +12,10 @@ import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -462,6 +465,54 @@ public class ImageTool {
         width = (int) (min * actualWidth);
 
         return new int[]{width, height};
+    }
+
+
+    public static String compressPic(Context context, String picPath) {
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = false;
+        options.inSampleSize = 1;
+
+        switch (SettingUtility.getUploadQuality()) {
+            case 1:
+                return picPath;
+            case 2:
+                options.inSampleSize = 2;
+                break;
+            case 3:
+                options.inSampleSize = 4;
+                break;
+            case 4:
+                options.inSampleSize = 2;
+
+                if (Utility.isWifi(context)) {
+                    return picPath;
+                }
+                break;
+        }
+
+        Bitmap bitmap = BitmapFactory.decodeFile(picPath, options);
+        FileOutputStream stream = null;
+        String tmp = FileManager.getUploadPicTempFile();
+        try {
+            new File(tmp).getParentFile().mkdirs();
+            new File(tmp).createNewFile();
+            stream = new FileOutputStream(new File(tmp));
+        } catch (IOException ignored) {
+
+        }
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
+        if (stream != null) {
+            try {
+                stream.close();
+                bitmap.recycle();
+            } catch (IOException ignored) {
+
+            }
+        }
+        return tmp;
     }
 }
 
