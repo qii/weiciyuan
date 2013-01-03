@@ -32,9 +32,15 @@
         android:theme="@style/AppTheme_Four"
         android:name="org.qii.weiciyuan.support.utils.GlobalContext">
 
+        <!--this is debug key-->
+        <!--<meta-data-->
+            <!--android:name="com.google.android.maps.v2.API_KEY"-->
+            <!--android:value="AIzaSyDizhP6l9ekit374ZpPXMNjVYDqurwgfrc"/>-->
+
+        <!-- this is release key-->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDizhP6l9ekit374ZpPXMNjVYDqurwgfrc"/>
+            android:value="AIzaSyA_Ozn9WNG58ImFlmOFOItHvn1JShWvIpE"/>
 
         <activity
             android:name=".ui.login.DummyActivity"
