@@ -187,7 +187,7 @@ public final class GlobalContext extends Application {
         };
     }
 
-    public Map<String, Bitmap> getEmotionsPics() {
+    public synchronized Map<String, Bitmap> getEmotionsPics() {
         if (emotionsPic != null && emotionsPic.size() > 0) {
             return emotionsPic;
         } else {
