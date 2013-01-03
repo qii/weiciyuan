@@ -14,8 +14,6 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  * Date: 12-8-18
  */
 public class MyFavActivity extends AbstractAppActivity implements IUserInfo {
-    private String token;
-
     private UserBean bean;
 
 
@@ -29,7 +27,7 @@ public class MyFavActivity extends AbstractAppActivity implements IUserInfo {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.my_fav_list));
-        token = getIntent().getStringExtra("token");
+        String token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
         if (getFragmentManager().findFragmentByTag(MyFavListFragment.class.getName()) == null) {
             getFragmentManager().beginTransaction()

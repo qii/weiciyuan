@@ -13,6 +13,7 @@
         <change>修正沒掛載SD卡時候查看設置-關於崩潰的bug</change>
         <change>新增設置-性能-硬件加速，只適合4.1+系統</change>
         <change>修正發送圖片導致通知欄卡頓以及影響之後發送微博的bug</change>
+        <change>修正某些情況拍照崩潰的bug</change>
     </release>
     <release
         version="0.482"

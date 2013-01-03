@@ -358,6 +358,8 @@ public class JavaHttpUtility {
             urlConnection.setReadTimeout(UPLOAD_READ_TIMEOUT);
             urlConnection.setRequestMethod("POST");
             urlConnection.setUseCaches(false);
+            urlConnection.setRequestProperty("Connection", "Keep-Alive");
+            urlConnection.setRequestProperty("Charset", "UTF-8");
             urlConnection.setRequestProperty("Content-type", "multipart/form-data;boundary=" + BOUNDARYSTR);
             urlConnection.connect();
 
