@@ -104,7 +104,7 @@ public class JavaHttpUtility {
             throw new WeiboException(errorStr, e);
         }
 
-        if (status != 200) {
+        if (status != HttpURLConnection.HTTP_OK) {
             return handleError(httpURLConnection);
         }
 
@@ -279,7 +279,7 @@ public class JavaHttpUtility {
 
             int status = urlConnection.getResponseCode();
 
-            if (status != 200) {
+            if (status != HttpURLConnection.HTTP_OK) {
                 return false;
             }
 
@@ -356,6 +356,8 @@ public class JavaHttpUtility {
 
             urlConnection.setConnectTimeout(UPLOAD_CONNECT_TIMEOUT);
             urlConnection.setReadTimeout(UPLOAD_READ_TIMEOUT);
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod("POST");
             urlConnection.setUseCaches(false);
             urlConnection.setRequestProperty("Connection", "Keep-Alive");
@@ -436,7 +438,7 @@ public class JavaHttpUtility {
             if (listener != null) {
                 listener.completed();
             }
-            if (status != 200) {
+            if (status != HttpURLConnection.HTTP_OK) {
                 String error = handleError(urlConnection);
                 throw new WeiboException(error);
             }
