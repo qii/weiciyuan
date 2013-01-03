@@ -2,8 +2,6 @@ package org.qii.weiciyuan.ui.send;
 
 import android.app.ActionBar;
 import android.content.*;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.location.*;
 import android.net.Uri;
@@ -28,6 +26,7 @@ import org.qii.weiciyuan.support.imagetool.ImageEdit;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.browser.AppMapActivity;
 import org.qii.weiciyuan.ui.browser.BrowserLocalPicActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
@@ -267,15 +266,20 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             @Override
             public void onClick(View v) {
 
-                String geoUriString = "geo:" + geoBean.getLat() + "," + geoBean.getLon() + "?q=" + location;
-                Uri geoUri = Uri.parse(geoUriString);
-                Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
-                PackageManager packageManager = getPackageManager();
-                List<ResolveInfo> activities = packageManager.queryIntentActivities(mapCall, 0);
-                boolean isIntentSafe = activities.size() > 0;
-                if (isIntentSafe) {
-                    startActivity(mapCall);
-                }
+//                String geoUriString = "geo:" + geoBean.getLat() + "," + geoBean.getLon() + "?q=" + location;
+//                Uri geoUri = Uri.parse(geoUriString);
+//                Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
+//                PackageManager packageManager = getPackageManager();
+//                List<ResolveInfo> activities = packageManager.queryIntentActivities(mapCall, 0);
+//                boolean isIntentSafe = activities.size() > 0;
+//                if (isIntentSafe) {
+//                    startActivity(mapCall);
+//                }
+                Intent intent=new Intent(WriteWeiboActivity.this, AppMapActivity.class);
+                intent.putExtra("lat",geoBean.getLat());
+                intent.putExtra("lon",geoBean.getLon());
+                intent.putExtra("locationStr",location);
+                startActivity(intent);
             }
         });
         haveGPS.setOnLongClickListener(new View.OnLongClickListener() {

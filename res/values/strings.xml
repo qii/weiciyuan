@@ -178,6 +178,9 @@
     <string name="switch_to_ori_pic">原图</string>
     <string name="cant_open_deleted_weibo">原微博已经被删除，看不懂中文吗？</string>
 
+    <!--map-->
+    <string name="browser_map">查看地图</string>
+
     <!--friends-->
     <string name="bilateral">互相关注</string>
     <string name="remove_fan">移除粉丝</string>

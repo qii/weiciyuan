@@ -7,20 +7,35 @@
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="16"/>
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.NFC"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <permission
+        android:name="org.qii.weiciyuan.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature"/>
+    <uses-permission android:name="org.qii.weiciyuan.permission.MAPS_RECEIVE"/>
 
     <application
         android:label="@string/app_name"
         android:icon="@drawable/ic_launcher"
         android:theme="@style/AppTheme_Four"
         android:name="org.qii.weiciyuan.support.utils.GlobalContext">
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDizhP6l9ekit374ZpPXMNjVYDqurwgfrc"/>
+
         <activity
             android:name=".ui.login.DummyActivity"
             android:uiOptions="splitActionBarWhenNarrow">
@@ -80,6 +95,9 @@
             android:launchMode="singleTop"/>
         <activity
             android:name=".ui.browser.BrowserLocalPicActivity"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".ui.browser.AppMapActivity"
             android:launchMode="singleTop"/>
 
 

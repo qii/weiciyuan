@@ -232,7 +232,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
              * activity will restart, and then mentions and comment fragment
              * will fetch new message from server
              **/
-            if (getActivity().getActionBar().getTabAt(1).getText().toString().contains(")")) {
+            if (getActivity() != null && getActivity().getActionBar().getTabAt(1).getText().toString().contains(")")) {
                 pullToRefreshListView.startRefreshNow();
             }
         }
