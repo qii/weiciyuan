@@ -75,9 +75,13 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
                 imageFileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         new ContentValues());
-                Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageFileUri);
-                startActivityForResult(i, CAMERA_RESULT);
+                if (imageFileUri != null) {
+                    Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageFileUri);
+                    startActivityForResult(i, CAMERA_RESULT);
+                } else {
+                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.cant_insert_album), Toast.LENGTH_SHORT).show();
+                }
                 break;
             case 1:
                 Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,
@@ -205,6 +209,8 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 enableGeo();
             else
                 disableGeo();
+
+            imageFileUri = savedInstanceState.getParcelable("imageFileUri");
         }
     }
 
@@ -214,6 +220,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         outState.putString("picPath", picPath);
         outState.putSerializable("geoBean", geoBean);
         outState.putString("location", location);
+        outState.putParcelable("imageFileUri", imageFileUri);
     }
 
     private void handleNormalOperation(Intent intent) {
