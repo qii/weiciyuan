@@ -90,8 +90,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("msg", msg);
         mapView.onSaveInstanceState(outState);
+        outState.putSerializable("msg", msg);
     }
 
     @Override
