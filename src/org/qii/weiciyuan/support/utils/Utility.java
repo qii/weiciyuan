@@ -3,6 +3,9 @@ package org.qii.weiciyuan.support.utils;
 import android.app.Activity;
 import android.app.Notification;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -28,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -278,5 +282,12 @@ public class Utility {
             return false;
         }
         return true;
+    }
+
+    public static boolean isIntentSafe(Activity activity, Uri uri) {
+        Intent mapCall = new Intent(Intent.ACTION_VIEW, uri);
+        PackageManager packageManager = activity.getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(mapCall, 0);
+        return activities.size() > 0;
     }
 }

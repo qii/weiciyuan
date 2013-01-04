@@ -64,6 +64,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private EditText content = null;
 
     private String2PicTask string2PicTask;
+    private GetGoogleLocationInfo locationTask;
 
 
     @Override
@@ -154,7 +155,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     protected void onDestroy() {
         super.onDestroy();
 
-        Utility.cancelTasks(string2PicTask);
+        Utility.cancelTasks(string2PicTask, locationTask);
 
     }
 
@@ -241,9 +242,12 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             if (!TextUtils.isEmpty(picPath))
                 enablePicture();
 
-            if (geoBean != null)
-                new GetGoogleLocationInfo(geoBean).execute();
-
+            if (geoBean != null) {
+                if (Utility.isTaskStopped(locationTask)) {
+                    locationTask = new GetGoogleLocationInfo(geoBean);
+                    locationTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
+            }
         }
     }
 
@@ -266,19 +270,10 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             @Override
             public void onClick(View v) {
 
-//                String geoUriString = "geo:" + geoBean.getLat() + "," + geoBean.getLon() + "?q=" + location;
-//                Uri geoUri = Uri.parse(geoUriString);
-//                Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
-//                PackageManager packageManager = getPackageManager();
-//                List<ResolveInfo> activities = packageManager.queryIntentActivities(mapCall, 0);
-//                boolean isIntentSafe = activities.size() > 0;
-//                if (isIntentSafe) {
-//                    startActivity(mapCall);
-//                }
-                Intent intent=new Intent(WriteWeiboActivity.this, AppMapActivity.class);
-                intent.putExtra("lat",geoBean.getLat());
-                intent.putExtra("lon",geoBean.getLon());
-                intent.putExtra("locationStr",location);
+                Intent intent = new Intent(WriteWeiboActivity.this, AppMapActivity.class);
+                intent.putExtra("lat", geoBean.getLat());
+                intent.putExtra("lon", geoBean.getLon());
+                intent.putExtra("locationStr", location);
                 startActivity(intent);
             }
         });
@@ -602,7 +597,10 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         geoBean = new GeoBean();
         geoBean.setLatitude(result.getLatitude());
         geoBean.setLongitude(result.getLongitude());
-        new GetGoogleLocationInfo(geoBean).execute();
+        if (Utility.isTaskStopped(locationTask)) {
+            locationTask = new GetGoogleLocationInfo(geoBean);
+            locationTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
         ((LocationManager) WriteWeiboActivity.this
                 .getSystemService(Context.LOCATION_SERVICE)).removeUpdates(locationListener);
 
