@@ -223,7 +223,7 @@
             android:background="@color/red"
             class="com.google.android.gms.maps.MapView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             android:layout_below="@id/location"
             android:id="@+id/location_mv"
             android:visibility="gone"
