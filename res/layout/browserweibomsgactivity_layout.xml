@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
 
     <RelativeLayout
@@ -25,7 +26,7 @@
                 android:background="@drawable/bg_border1"
                 android:id="@+id/avatar"
                 android:layout_gravity="left|center_vertical"
-                android:layout_marginRight="5dp" />
+                android:layout_marginRight="5dp"/>
 
             <TextView
                 android:layout_gravity="center_vertical"
@@ -33,12 +34,12 @@
                 android:layout_height="wrap_content"
                 android:text="username"
                 android:layout_marginLeft="8dp"
-                android:id="@+id/username" />
+                android:id="@+id/username"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
 
             <ImageView
 
@@ -47,7 +48,7 @@
                 android:padding="1px"
                 android:src="?clickable_flag"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginRight="5dp" />
+                android:layout_marginRight="5dp"/>
 
 
         </LinearLayout>
@@ -69,7 +70,7 @@
                 android:layout_weight="1"
                 android:gravity="left"
                 android:textIsSelectable="true"
-                android:id="@+id/time" />
+                android:id="@+id/time"/>
 
             <TextView
                 android:gravity="right"
@@ -78,7 +79,7 @@
                 android:layout_weight="1"
                 android:hint="sina"
                 android:textIsSelectable="true"
-                android:id="@+id/source" />
+                android:id="@+id/source"/>
         </LinearLayout>
 
         <TextView
@@ -90,7 +91,7 @@
             android:textSize="17sp"
             android:lineSpacingMultiplier="1.2"
             android:layout_below="@id/second"
-            android:textIsSelectable="true" />
+            android:textIsSelectable="true"/>
 
         <FrameLayout
 
@@ -117,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:indeterminate="true"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:id="@+id/content_pic_pb" />
+                    android:id="@+id/content_pic_pb"/>
 
                 <ImageView
                     android:id="@+id/content_pic"
@@ -127,7 +128,7 @@
                     android:visibility="gone"
                     android:clickable="true"
                     android:layout_gravity="center_horizontal"
-                    android:background="?android:selectableItemBackground" />
+                    android:background="?android:selectableItemBackground"/>
             </FrameLayout>
 
             <LinearLayout
@@ -147,7 +148,7 @@
                     android:text="content"
                     android:visibility="gone"
                     android:textSize="17sp"
-                    android:lineSpacingMultiplier="1.2" />
+                    android:lineSpacingMultiplier="1.2"/>
 
                 <FrameLayout
                     android:layout_width="fill_parent"
@@ -164,7 +165,7 @@
                         android:layout_height="wrap_content"
                         android:indeterminate="true"
                         style="?android:attr/progressBarStyleHorizontal"
-                        android:id="@+id/repost_content_pic_pb" />
+                        android:id="@+id/repost_content_pic_pb"/>
 
                     <ImageView
                         android:padding="3dp"
@@ -193,7 +194,7 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="?android:textColorTertiary"
-                        android:drawableLeft="?timeline_repost_flag" />
+                        android:drawableLeft="?timeline_repost_flag"/>
 
                     <TextView
                         android:id="@+id/comment_count"
@@ -202,7 +203,7 @@
                         android:text="0"
                         android:layout_marginLeft="5dp"
                         android:textColor="?android:textColorTertiary"
-                        android:drawableLeft="?timeline_comment_flag" />
+                        android:drawableLeft="?timeline_comment_flag"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -216,7 +217,25 @@
             android:id="@+id/location"
             android:visibility="gone"
             android:onClick="true"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"/>
+
+        <view
+            android:background="@color/red"
+            class="com.google.android.gms.maps.MapView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@id/location"
+            android:id="@+id/location_mv"
+            android:visibility="gone"
+            android:layout_marginTop="4dp"
+            map:cameraZoom="14"
+            map:mapType="normal"
+            map:uiCompass="false"
+            map:uiRotateGestures="false"
+            map:uiScrollGestures="false"
+            map:uiTiltGestures="false"
+            map:uiZoomControls="false"
+            map:uiZoomGestures="false"/>
 
     </RelativeLayout>
 
