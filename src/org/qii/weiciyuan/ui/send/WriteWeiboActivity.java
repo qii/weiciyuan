@@ -2,8 +2,6 @@ package org.qii.weiciyuan.ui.send;
 
 import android.app.ActionBar;
 import android.content.*;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.location.*;
 import android.net.Uri;
@@ -284,10 +282,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     }
                     Uri geoUri = Uri.parse(geoUriString.toString());
                     Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
-                    PackageManager packageManager = getPackageManager();
-                    List<ResolveInfo> activities = packageManager.queryIntentActivities(mapCall, 0);
-                    boolean isIntentSafe = activities.size() > 0;
-                    if (isIntentSafe) {
+                    if (Utility.isIntentSafe(WriteWeiboActivity.this, mapCall)) {
                         startActivity(mapCall);
                     }
 

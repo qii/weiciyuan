@@ -5,8 +5,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
@@ -22,10 +20,9 @@ import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarAndDetailMsgPicTask;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
-
-import java.util.List;
 
 /**
  * User: qii
@@ -153,10 +150,7 @@ public class BrowserCommentFragment extends Fragment {
         sharingIntent.setType("text/plain");
         if (msg != null) {
             sharingIntent.putExtra(Intent.EXTRA_TEXT, msg.getText());
-            PackageManager packageManager = getActivity().getPackageManager();
-            List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
-            boolean isIntentSafe = activities.size() > 0;
-            if (isIntentSafe && mShareActionProvider != null) {
+            if (Utility.isIntentSafe(getActivity(), sharingIntent) && mShareActionProvider != null) {
                 mShareActionProvider.setShareIntent(sharingIntent);
             }
         }

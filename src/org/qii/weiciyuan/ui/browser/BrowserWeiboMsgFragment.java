@@ -2,8 +2,6 @@ package org.qii.weiciyuan.ui.browser;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -284,12 +282,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                     String geoUriString = "geo:" + bean.getLat() + "," + bean.getLon() + "?q=" + location.getText();
                     Uri geoUri = Uri.parse(geoUriString);
                     Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
-                    PackageManager packageManager = getActivity().getPackageManager();
-                    List<ResolveInfo> activities = packageManager.queryIntentActivities(mapCall, 0);
-                    boolean isIntentSafe = activities.size() > 0;
-                    if (isIntentSafe) {
+                    if (Utility.isIntentSafe(getActivity(), mapCall)) {
                         startActivity(mapCall);
                     }
+
                 }
             }
         });

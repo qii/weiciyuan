@@ -291,6 +291,12 @@ public class Utility {
         return activities.size() > 0;
     }
 
+    public static boolean isIntentSafe(Activity activity, Intent intent) {
+        PackageManager packageManager = activity.getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+        return activities.size() > 0;
+    }
+
 
     public static boolean isGooglePlaySafe(Activity activity) {
         Uri uri = Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms");
