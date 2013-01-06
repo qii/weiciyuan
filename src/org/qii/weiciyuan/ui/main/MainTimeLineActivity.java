@@ -96,7 +96,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
 
     private void getUnreadCount() {
-        if (getUnreadCountTask == null || getUnreadCountTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+        if (Utility.isTaskStopped(getUnreadCountTask)) {
             getUnreadCountTask = new GetUnreadCountTask();
             getUnreadCountTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -221,13 +221,13 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 FriendsTimeLineFragment.class.getName()));
     }
 
-    private AbstractTimeLineFragment getMentionFragment() {
-        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
+    private MentionsTimeLineFragment getMentionFragment() {
+        return ((MentionsTimeLineFragment) getFragmentManager().findFragmentByTag(
                 MentionsTimeLineFragment.class.getName()));
     }
 
-    private AbstractTimeLineFragment getCommentFragment() {
-        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
+    private CommentsTimeLineFragment getCommentFragment() {
+        return ((CommentsTimeLineFragment) getFragmentManager().findFragmentByTag(
                 CommentsTimeLineFragment.class.getName()));
     }
 
@@ -550,11 +550,12 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         int unreadMentionsCount = unreadBean.getMention_status();
         int unreadCommentsCount = unreadBean.getMention_cmt() + unreadBean.getCmt();
 
-        if (unreadMentionsCount > 0)
-            buildTabText(1, unreadMentionsCount);
+        if (unreadMentionsCount > 0 && getMentionFragment() != null)
+            getMentionFragment().refreshUnread(unreadBean);
 
-        if (unreadCommentsCount > 0)
-            buildTabText(2, unreadCommentsCount);
+
+        if (unreadCommentsCount > 0 && getCommentFragment() != null)
+            getCommentFragment().refreshUnread(unreadBean);
     }
 
 

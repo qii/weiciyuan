@@ -1,9 +1,11 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.dao.maintimeline.CommentsTimeLineByMeDao;
@@ -60,6 +63,9 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
     private final int TYPE_MENTIONED_COMMENT_TO_ME = 1;
     private final int TYPE_COMMENT_BY_ME = 2;
 
+    private UnreadBean unreadBean;
+
+
     @Override
     public CommentListBean getList() {
         return bean;
@@ -99,7 +105,26 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         outState.putSerializable("0", groupDataCache.get(0));
         outState.putSerializable("1", groupDataCache.get(1));
         outState.putSerializable("2", groupDataCache.get(2));
+
+        outState.putSerializable("unreadBean", unreadBean);
     }
+
+
+    public void refreshUnread(UnreadBean unreadBean) {
+
+        Activity activity = getActivity();
+        if (activity != null) {
+            if (unreadBean == null) {
+                activity.getActionBar().getTabAt(2).setText(getString(R.string.comments));
+                return;
+            }
+            this.unreadBean = unreadBean;
+            String number = Utility.buildTabText(unreadBean.getMention_cmt() + unreadBean.getCmt());
+            if (!TextUtils.isEmpty(number))
+                activity.getActionBar().getTabAt(2).setText(getString(R.string.comments) + number);
+        }
+    }
+
 
     @Override
     public void onDestroy() {
@@ -144,6 +169,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 token = savedInstanceState.getString("token");
                 groupNames = savedInstanceState.getStringArray("groupNames");
                 currentGroupId = savedInstanceState.getInt("currentGroupId");
+                unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
 
                 groupDataCache.put(TYPE_RECEIVED_COMMENT, (CommentListBean) savedInstanceState.getSerializable("0"));
                 groupDataCache.put(TYPE_MENTIONED_COMMENT_TO_ME, (CommentListBean) savedInstanceState.getSerializable("1"));
@@ -155,6 +181,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 break;
         }
 
+        refreshUnread(unreadBean);
 
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -414,7 +441,8 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
                 getListView().setSelectionAfterHeaderView();
             }
         }
-        getActivity().getActionBar().getTabAt(2).setText(getString(R.string.comments));
+        unreadBean = null;
+        refreshUnread(unreadBean);
         NotificationManager notificationManager = (NotificationManager) getActivity()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(Long.valueOf(GlobalContext.getInstance().getCurrentAccountId()).intValue());

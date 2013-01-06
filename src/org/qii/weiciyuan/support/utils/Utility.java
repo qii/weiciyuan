@@ -307,5 +307,21 @@ public class Utility {
         List<ResolveInfo> activities = packageManager.queryIntentActivities(mapCall, 0);
         return activities.size() > 0;
     }
+
+    public static String buildTabText(int number) {
+
+        if (number == 0) {
+            return null;
+        }
+
+        String num;
+        if (number < 99) {
+            num = "(" + number + ")";
+        } else {
+            num = "(99+)";
+        }
+        return num;
+
+    }
 }
 

@@ -1,9 +1,11 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.DatabaseManager;
@@ -48,6 +51,9 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
     private int currentGroupId = 0;
 
     private Map<Integer, MessageListBean> groupDataCache = new HashMap<Integer, MessageListBean>();
+
+    private UnreadBean unreadBean;
+
 
     public void setFilter_by_author(String filter_by_author) {
         this.filter_by_author = filter_by_author;
@@ -100,7 +106,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
         outState.putSerializable("bean", bean);
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
-
+        outState.putSerializable("unreadBean", unreadBean);
 
         outState.putStringArray("groupNames", groupNames);
         outState.putInt("currentGroupId", currentGroupId);
@@ -110,6 +116,22 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
         outState.putSerializable("0", groupDataCache.get(0));
         outState.putSerializable("1", groupDataCache.get(1));
         outState.putSerializable("2", groupDataCache.get(2));
+    }
+
+
+    public void refreshUnread(UnreadBean unreadBean) {
+
+        Activity activity = getActivity();
+        if (activity != null) {
+            if (unreadBean == null) {
+                activity.getActionBar().getTabAt(1).setText(getString(R.string.mentions));
+                return;
+            }
+            this.unreadBean = unreadBean;
+            String number = Utility.buildTabText(unreadBean.getMention_status());
+            if (!TextUtils.isEmpty(number))
+                activity.getActionBar().getTabAt(1).setText(getString(R.string.mentions) + number);
+        }
     }
 
 
@@ -133,8 +155,8 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
             getListView().setSelectionAfterHeaderView();
 
         }
-
-        getActivity().getActionBar().getTabAt(1).setText(getString(R.string.mentions));
+        unreadBean = null;
+        refreshUnread(unreadBean);
         NotificationManager notificationManager = (NotificationManager) getActivity()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(Long.valueOf(GlobalContext.getInstance().getCurrentAccountId()).intValue());
@@ -175,6 +197,8 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
                 userBean = (UserBean) savedInstanceState.getSerializable("userBean");
                 accountBean = (AccountBean) savedInstanceState.getSerializable("account");
                 token = savedInstanceState.getString("token");
+                unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
+
 
                 groupNames = savedInstanceState.getStringArray("groupNames");
                 currentGroupId = savedInstanceState.getInt("currentGroupId");
@@ -191,7 +215,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
 
                 break;
         }
-
+        refreshUnread(this.unreadBean);
     }
 
     private class DBCacheTask extends MyAsyncTask<Void, MessageListBean, MessageListBean> {
