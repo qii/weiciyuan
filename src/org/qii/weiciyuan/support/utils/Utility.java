@@ -290,4 +290,16 @@ public class Utility {
         List<ResolveInfo> activities = packageManager.queryIntentActivities(mapCall, 0);
         return activities.size() > 0;
     }
+
+
+    public static boolean isGooglePlaySafe(Activity activity) {
+        Uri uri = Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms");
+        Intent mapCall = new Intent(Intent.ACTION_VIEW, uri);
+        mapCall.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        mapCall.setPackage("com.android.vending");
+        PackageManager packageManager = activity.getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(mapCall, 0);
+        return activities.size() > 0;
+    }
 }
+

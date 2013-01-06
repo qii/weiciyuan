@@ -444,31 +444,35 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             super.onPreExecute();
             location.setVisibility(View.VISIBLE);
             location.setText(String.valueOf(geoBean.getLat() + "," + geoBean.getLon()));
-            mapView.setVisibility(View.VISIBLE);
-            GoogleMap mMap = mapView.getMap();
-            if (mMap != null) {
+            if (Utility.isGooglePlaySafe(getActivity())) {
+                mapView.setVisibility(View.VISIBLE);
+                GoogleMap mMap = mapView.getMap();
+                if (mMap != null) {
 
-                final LatLng MELBOURNE = new LatLng(geoBean.getLat(), geoBean.getLon());
-                Marker melbourne = mMap.addMarker(new MarkerOptions()
-                        .position(MELBOURNE));
+                    final LatLng MELBOURNE = new LatLng(geoBean.getLat(), geoBean.getLon());
+                    Marker melbourne = mMap.addMarker(new MarkerOptions()
+                            .position(MELBOURNE));
 
-                LatLng latLng = new LatLng(geoBean.getLat(), geoBean.getLon());
-                CameraUpdate update = CameraUpdateFactory.newLatLng(latLng);
-                mMap.moveCamera(update);
+                    LatLng latLng = new LatLng(geoBean.getLat(), geoBean.getLon());
+                    CameraUpdate update = CameraUpdateFactory.newLatLng(latLng);
+                    mMap.moveCamera(update);
 
-                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-                        GeoBean bean = msg.getGeo();
+                    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                        @Override
+                        public void onMapClick(LatLng latLng) {
+                            GeoBean bean = msg.getGeo();
 
-                        Intent intent = new Intent(getActivity(), AppMapActivity.class);
-                        intent.putExtra("lat", bean.getLat());
-                        intent.putExtra("lon", bean.getLon());
-                        if (!String.valueOf(bean.getLat() + "," + bean.getLon()).equals(location.getText()))
-                            intent.putExtra("locationStr", location.getText());
-                        startActivity(intent);
-                    }
-                });
+                            Intent intent = new Intent(getActivity(), AppMapActivity.class);
+                            intent.putExtra("lat", bean.getLat());
+                            intent.putExtra("lon", bean.getLon());
+                            if (!String.valueOf(bean.getLat() + "," + bean.getLon()).equals(location.getText()))
+                                intent.putExtra("locationStr", location.getText());
+                            startActivity(intent);
+                        }
+                    });
+                }
+            }else {
+                mapView.setVisibility(View.GONE);
             }
         }
 
