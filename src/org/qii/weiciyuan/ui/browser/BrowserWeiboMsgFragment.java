@@ -258,10 +258,15 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         time = (TextView) view.findViewById(R.id.time);
         location = (TextView) view.findViewById(R.id.location);
         source = (TextView) view.findViewById(R.id.source);
-
         mapView = (MapView) view.findViewById(R.id.location_mv);
-        mapView.onCreate(savedInstanceState);
-
+        if (savedInstanceState != null) {
+            MessageBean msg = (MessageBean) savedInstanceState.get("msg");
+            savedInstanceState.remove("msg");
+            mapView.onCreate(savedInstanceState);
+            savedInstanceState.putSerializable("msg", msg);
+        } else {
+            mapView.onCreate(savedInstanceState);
+        }
         comment_count = (TextView) view.findViewById(R.id.comment_count);
         repost_count = (TextView) view.findViewById(R.id.repost_count);
         count_layout = (LinearLayout) view.findViewById(R.id.count_layout);
