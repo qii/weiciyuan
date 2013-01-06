@@ -19,6 +19,14 @@ public class SettingUtility {
 
     }
 
+    public static void setDefaultAccountId(String id) {
+        SettingHelper.setEditor(getContext(), "id", id);
+    }
+
+    public static String getDefaultAccountId() {
+        return SettingHelper.getSharedPreferences(getContext(), "id", "");
+    }
+
     private static Context getContext() {
         return GlobalContext.getInstance();
     }

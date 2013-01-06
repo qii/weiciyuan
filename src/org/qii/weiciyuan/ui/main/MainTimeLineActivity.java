@@ -4,9 +4,11 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
@@ -48,15 +50,15 @@ import java.util.concurrent.TimeUnit;
 public class MainTimeLineActivity extends AbstractAppActivity implements IUserInfo,
         IAccountInfo {
 
-    private ViewPager mViewPager = null;
+    private ViewPager mViewPager;
 
-    private AccountBean accountBean = null;
+    private AccountBean accountBean;
 
-    private GetUnreadCountTask getUnreadCountTask = null;
+    private GetUnreadCountTask getUnreadCountTask;
 
-    private NewMsgBroadcastReceiver newMsgBroadcastReceiver = null;
+    private NewMsgBroadcastReceiver newMsgBroadcastReceiver;
 
-    private ScheduledExecutorService newMsgScheduledExecutorService = null;
+    private ScheduledExecutorService newMsgScheduledExecutorService;
 
     public String getToken() {
         return accountBean.getAccess_token();
@@ -84,12 +86,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
             accountBean = GlobalContext.getInstance().getAccountBean();
 
         GlobalContext.getInstance().setAccountBean(accountBean);
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("id", accountBean.getUid());
-        editor.commit();
-
+        SettingUtility.setDefaultAccountId(accountBean.getUid());
 
         buildPhoneInterface();
 

@@ -20,6 +20,7 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.database.GroupDBTask;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -120,7 +121,7 @@ public final class GlobalContext extends Application {
 
     public AccountBean getAccountBean() {
         if (accountBean == null) {
-            String id = sharedPref.getString("id", "");
+            String id = SettingUtility.getDefaultAccountId();
             if (!TextUtils.isEmpty(id)) {
                 accountBean = DatabaseManager.getInstance().getAccount(id);
             } else {
