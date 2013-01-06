@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="common_google_play_services_install_title" msgid="26645092511305524">"取得 Google Play 服務"</string>
+    <string name="common_google_play_services_install_text_phone" msgid="8685301130651051380">"您的手機並未安裝 Google Play 服務，所以無法執行這個應用程式。"</string>
+    <string name="common_google_play_services_install_text_tablet" msgid="1589957570365247855">"您的平板電腦並未安裝 Google Play 服務，所以無法執行這個應用程式。"</string>
+    <string name="common_google_play_services_install_button" msgid="8515591849428043265">"取得 Google Play 服務"</string>
+    <string name="common_google_play_services_enable_title" msgid="529078775174559253">"啟用 Google Play 服務"</string>
+    <string name="common_google_play_services_enable_text" msgid="7627896071867667758">"您必須啟用 Google Play 服務，這個應用程式才能運作。"</string>
+    <string name="common_google_play_services_enable_button" msgid="4181637455539816337">"啟用 Google Play 服務"</string>
+    <string name="common_google_play_services_update_title" msgid="6006316683626838685">"更新 Google Play 服務"</string>
+    <string name="common_google_play_services_update_text" msgid="448354684997260580">"您必須更新 Google Play 服務，才能執行這個應用程式。"</string>
+    <!-- no translation found for common_google_play_services_unknown_issue (4762332809710093730) -->
+    <skip />
+    <string name="common_google_play_services_update_button" msgid="8932944190611227642">"更新"</string>
+</resources>

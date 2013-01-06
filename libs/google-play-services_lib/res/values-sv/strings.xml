@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="common_google_play_services_install_title" msgid="26645092511305524">"Få Google Play-tjänster"</string>
+    <string name="common_google_play_services_install_text_phone" msgid="8685301130651051380">"Den här appen kan inte köras utan Google Play-tjänsterna, som saknas på mobilen."</string>
+    <string name="common_google_play_services_install_text_tablet" msgid="1589957570365247855">"Den här appen kan inte köras utan Google Play-tjänsterna, som saknas på pekdatorn."</string>
+    <string name="common_google_play_services_install_button" msgid="8515591849428043265">"Få Google Play-tjänster"</string>
+    <string name="common_google_play_services_enable_title" msgid="529078775174559253">"Aktivera Google Play-tjänster"</string>
+    <string name="common_google_play_services_enable_text" msgid="7627896071867667758">"Du måste aktivera Google Play-tjänsterna för att den här appen ska fungera."</string>
+    <string name="common_google_play_services_enable_button" msgid="4181637455539816337">"Aktivera Google Play-tjänster"</string>
+    <string name="common_google_play_services_update_title" msgid="6006316683626838685">"Uppdatera Google Play-tjänster"</string>
+    <string name="common_google_play_services_update_text" msgid="448354684997260580">"Du måste uppdatera Google Play-tjänsterna innan du kan köra den här appen."</string>
+    <!-- no translation found for common_google_play_services_unknown_issue (4762332809710093730) -->
+    <skip />
+    <string name="common_google_play_services_update_button" msgid="8932944190611227642">"Uppdatera"</string>
+</resources>

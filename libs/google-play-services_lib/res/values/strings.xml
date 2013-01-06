@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Title of confirmation dialog informing user that they need to install
+        Google Play services (from Play Store) [CHAR LIMIT=40] -->
+    <string name="common_google_play_services_install_title" msgid="7215213145546190223">Get Google Play services</string>
+
+    <!-- (For phones) Message in confirmation dialog informing user that
+        they need to install Google Play services (from Play Store) [CHAR LIMIT=NONE] -->
+    <string name="common_google_play_services_install_text_phone" msgid="2122112764540849864">This app won\'t run without Google Play services, which are missing from your phone.</string>
+
+    <!-- (For tablets) Message in confirmation dialog informing user that
+        they need to install Google Play services (from Play Store) [CHAR LIMIT=NONE] -->
+    <string name="common_google_play_services_install_text_tablet" msgid="7351599665250191022">This app won\'t run without Google Play services, which are missing from your tablet.</string>
+
+    <!-- Button in confirmation dialog for installing Google Play services [CHAR LIMIT=30] -->
+    <string name="common_google_play_services_install_button" msgid="7153882981874058840">Get Google Play services</string>
+
+    <!-- Title of confirmation dialog informing user they need to enable
+        Google Play services in application settings [CHAR LIMIT=40] -->
+    <string name="common_google_play_services_enable_title" msgid="5122002158466380389">Enable Google Play services</string>
+
+    <!-- Message in confirmation dialog informing user they need to enable
+        Google Play services in application settings [CHAR LIMIT=NONE] -->
+    <string name="common_google_play_services_enable_text" msgid="227660514972886228">This app won\'t work unless you enable Google Play services.</string>
+
+    <!-- Button in confirmation dialog to enable Google Play services.  Clicking it
+        will direct user to application settings of Google Play services where they
+        can enable it [CHAR LIMIT=30] -->
+    <string name="common_google_play_services_enable_button" msgid="2523291102206661146">Enable Google Play services</string>
+
+    <!-- Title of confirmation dialog informing user that they need to update
+        Google Play services (from Play Store) [CHAR LIMIT=40] -->
+    <string name="common_google_play_services_update_title" msgid="1788179980625863495">Update Google Play services</string>
+
+    <!-- Message in confirmation dialog informing user that they need to update
+        Google Play services (from Play Store) [CHAR LIMIT=NONE] -->
+    <string name="common_google_play_services_update_text" msgid="9053896323427875356">This app won\'t run unless you update Google Play services.</string>
+
+    <!-- Message in confirmation dialog informing user there is an unknow issue in Google Player
+        services [CHAR LIMIT=NONE] -->
+    <string name="common_google_play_services_unknown_issue">Unknown issue with Google Play services.</string>
+
+    <!-- Button in confirmation dialog for updating Google Play services [CHAR LIMIT=20] -->
+    <string name="common_google_play_services_update_button" msgid="6556509956452265614">Update</string>
+
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="common_google_play_services_install_title" msgid="26645092511305524">"Iegūt Google Play pakalpojumus"</string>
+    <string name="common_google_play_services_install_text_phone" msgid="8685301130651051380">"Lai šī lietotne darbotos, jūsu tālrunī ir jāinstalē Google Play pakalpojumi."</string>
+    <string name="common_google_play_services_install_text_tablet" msgid="1589957570365247855">"Lai šī lietotne darbotos, jūsu planšetdatorā ir jāinstalē Google Play pakalpojumi."</string>
+    <string name="common_google_play_services_install_button" msgid="8515591849428043265">"Iegūt Google Play pakalpojumus"</string>
+    <string name="common_google_play_services_enable_title" msgid="529078775174559253">"Iespējot Google Play pakalpojumus"</string>
+    <string name="common_google_play_services_enable_text" msgid="7627896071867667758">"Lai šī lietotne darbotos, iespējojiet Google Play pakalpojumus."</string>
+    <string name="common_google_play_services_enable_button" msgid="4181637455539816337">"Iespējot Play pakalpojumus"</string>
+    <string name="common_google_play_services_update_title" msgid="6006316683626838685">"Google Play pakalpojumu atjaunināšana"</string>
+    <string name="common_google_play_services_update_text" msgid="448354684997260580">"Lai šī lietotne darbotos, atjauniniet Google Play pakalpojumus."</string>
+    <!-- no translation found for common_google_play_services_unknown_issue (4762332809710093730) -->
+    <skip />
+    <string name="common_google_play_services_update_button" msgid="8932944190611227642">"Atjaunināt"</string>
+</resources>
