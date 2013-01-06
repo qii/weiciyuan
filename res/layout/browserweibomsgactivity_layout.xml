@@ -193,6 +193,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
+                        android:drawablePadding="4dp"
                         android:textColor="?android:textColorTertiary"
                         android:drawableLeft="?timeline_repost_flag"/>
 
@@ -201,7 +202,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="8dp"
+                        android:drawablePadding="4dp"
                         android:textColor="?android:textColorTertiary"
                         android:drawableLeft="?timeline_comment_flag"/>
 
