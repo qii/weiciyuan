@@ -2,6 +2,8 @@ package org.qii.weiciyuan.ui.send;
 
 import android.app.ActionBar;
 import android.content.*;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.location.*;
 import android.net.Uri;
@@ -269,12 +271,27 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         haveGPS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Utility.isGooglePlaySafe(WriteWeiboActivity.this)) {
+                    Intent intent = new Intent(WriteWeiboActivity.this, AppMapActivity.class);
+                    intent.putExtra("lat", geoBean.getLat());
+                    intent.putExtra("lon", geoBean.getLon());
+                    intent.putExtra("locationStr", location);
+                    startActivity(intent);
+                } else {
+                    StringBuilder geoUriString = new StringBuilder().append("geo:" + geoBean.getLat() + "," + geoBean.getLon());
+                    if (!TextUtils.isEmpty(location)) {
+                        geoUriString.append("?q=").append(location);
+                    }
+                    Uri geoUri = Uri.parse(geoUriString.toString());
+                    Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
+                    PackageManager packageManager = getPackageManager();
+                    List<ResolveInfo> activities = packageManager.queryIntentActivities(mapCall, 0);
+                    boolean isIntentSafe = activities.size() > 0;
+                    if (isIntentSafe) {
+                        startActivity(mapCall);
+                    }
 
-                Intent intent = new Intent(WriteWeiboActivity.this, AppMapActivity.class);
-                intent.putExtra("lat", geoBean.getLat());
-                intent.putExtra("lon", geoBean.getLon());
-                intent.putExtra("locationStr", location);
-                startActivity(intent);
+                }
             }
         });
         haveGPS.setOnLongClickListener(new View.OnLongClickListener() {
@@ -702,6 +719,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 Toast.makeText(WriteWeiboActivity.this, getString(R.string.convert_failed), Toast.LENGTH_SHORT).show();
             }
         }
+
     }
 
     public void deletePicture() {
