@@ -220,7 +220,6 @@
             android:layout_marginTop="8dp"/>
 
         <view
-            android:background="@color/red"
             class="com.google.android.gms.maps.MapView"
             android:layout_width="match_parent"
             android:layout_height="150dp"
