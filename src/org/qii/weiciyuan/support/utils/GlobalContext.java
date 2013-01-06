@@ -20,10 +20,7 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.database.GroupDBTask;
-import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.file.FileManager;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -203,8 +200,8 @@ public final class GlobalContext extends Application {
         index.addAll(emotions.keySet());
         for (String str : index) {
             String url = emotions.get(str);
-            String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.emotion);
-            String name = new File(path).getName();
+            int position = url.lastIndexOf("/");
+            String name = url.substring(position + 1);
             AssetManager assetManager = GlobalContext.getInstance().getAssets();
             InputStream inputStream;
             try {
