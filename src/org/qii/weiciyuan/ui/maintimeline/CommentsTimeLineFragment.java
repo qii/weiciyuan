@@ -23,7 +23,7 @@ import org.qii.weiciyuan.dao.maintimeline.CommentsTimeLineByMeDao;
 import org.qii.weiciyuan.dao.maintimeline.ICommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MentionsCommentTimeLineDao;
-import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.CommentsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -279,7 +279,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
         @Override
         protected CommentListBean doInBackground(Void... params) {
-            return DatabaseManager.getInstance().getCommentLineMsgList(accountBean.getUid());
+            return CommentsTimeLineDBTask.getCommentLineMsgList(accountBean.getUid());
         }
 
         @Override
@@ -393,7 +393,7 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         }
         result = dao.getGSONMsgList();
         if (result != null && currentGroupId == TYPE_RECEIVED_COMMENT) {
-            DatabaseManager.getInstance().addCommentLineMsg(result, accountBean.getUid());
+            CommentsTimeLineDBTask.addCommentLineMsg(result, accountBean.getUid());
         }
         return result;
     }
