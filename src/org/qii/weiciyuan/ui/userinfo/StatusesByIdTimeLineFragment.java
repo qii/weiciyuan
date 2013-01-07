@@ -12,6 +12,7 @@ import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.utils.DataMemoryCache;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 
@@ -25,11 +26,10 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     protected UserBean userBean;
     protected String token;
 
-    private MessageListBean bean = new MessageListBean();
 
     @Override
     public MessageListBean getList() {
-        return bean;
+        return DataMemoryCache.getStatusByIdTimeLineData();
     }
 
     public StatusesByIdTimeLineFragment() {
@@ -45,8 +45,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("bean", bean);
-        outState.putSerializable("bean", bean);
+        outState.putSerializable("bean", getList());
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
     }
@@ -66,25 +65,30 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
                 break;
             case SCREEN_ROTATE:
                 //nothing
-                refreshLayout(bean);
+                refreshLayout(getList());
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                clearAndReplaceValue((MessageListBean) savedInstanceState.getSerializable("bean"));
+                getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
                 userBean = (UserBean) savedInstanceState.getSerializable("userBean");
                 token = savedInstanceState.getString("token");
                 getAdapter().notifyDataSetChanged();
-                refreshLayout(bean);
+                refreshLayout(getList());
                 break;
         }
 
         super.onActivityCreated(savedInstanceState);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        DataMemoryCache.clearStatusByIdTimeLineData();
+    }
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("token", token);
-        intent.putExtra("msg", bean.getItem(position));
+        intent.putExtra("msg", getList().getItem(position));
         startActivity(intent);
     }
 

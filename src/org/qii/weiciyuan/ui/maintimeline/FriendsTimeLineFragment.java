@@ -90,6 +90,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     }
 
+
     @Override
     protected void newMsgOnPostExecute(MessageListBean newValue) {
         if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 0) {
@@ -136,6 +137,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     public void onDestroy() {
         super.onDestroy();
         Utility.cancelTasks(dbTask);
+        DataMemoryCache.clearFriendsTimeLineData();
     }
 
     @Override
