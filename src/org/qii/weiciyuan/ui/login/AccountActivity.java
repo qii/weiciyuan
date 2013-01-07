@@ -10,7 +10,7 @@ import android.view.*;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.changelogdialog.ChangeLogDialog;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -96,7 +96,7 @@ public class AccountActivity extends AbstractAppActivity {
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
                 String id = sharedPref.getString("id", "");
                 if (!TextUtils.isEmpty(id)) {
-                    AccountBean bean = DatabaseManager.getInstance().getAccount(id);
+                    AccountBean bean = AccountDBTask.getAccount(id);
                     if (bean != null) {
                         Intent start = new Intent(AccountActivity.this, MainTimeLineActivity.class);
                         start.putExtra("account", bean);
@@ -268,7 +268,7 @@ public class AccountActivity extends AbstractAppActivity {
 
         @Override
         protected List<AccountBean> doInBackground(Void... params) {
-            return DatabaseManager.getInstance().getAccountList();
+            return AccountDBTask.getAccountList();
         }
 
         @Override
@@ -294,7 +294,7 @@ public class AccountActivity extends AbstractAppActivity {
 
         @Override
         protected List<AccountBean> doInBackground(Void... params) {
-            return DatabaseManager.getInstance().removeAndGetNewAccountList(set);
+            return AccountDBTask.removeAndGetNewAccountList(set);
         }
 
         @Override

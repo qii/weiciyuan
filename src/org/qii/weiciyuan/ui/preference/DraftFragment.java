@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.*;
 import org.qii.weiciyuan.support.database.table.DraftTable;
@@ -85,7 +85,7 @@ public class DraftFragment extends ListFragment {
                 Intent intent;
                 switch (item.getType()) {
                     case DraftTable.TYPE_WEIBO:
-                        AccountBean accountBean = DatabaseManager.getInstance().getAccount(item.getStatusDraftBean().getAccountId());
+                        AccountBean accountBean = AccountDBTask.getAccount(item.getStatusDraftBean().getAccountId());
                         intent = new Intent(getActivity(), WriteWeiboActivity.class);
                         intent.putExtra("draft", item.getStatusDraftBean());
                         intent.putExtra("account", accountBean);

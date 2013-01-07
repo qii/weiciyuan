@@ -49,133 +49,6 @@ public class DatabaseManager {
         return singleton;
     }
 
-    public OAuthActivity.DBResult addOrUpdateAccount(AccountBean account) {
-
-        ContentValues cv = new ContentValues();
-        cv.put(AccountTable.UID, account.getUid());
-        cv.put(AccountTable.OAUTH_TOKEN, account.getAccess_token());
-        cv.put(AccountTable.USERNAME, account.getUsername());
-        cv.put(AccountTable.USERNICK, account.getUsernick());
-        cv.put(AccountTable.AVATAR_URL, account.getAvatar_url());
-
-        String json = new Gson().toJson(account.getInfo());
-        cv.put(AccountTable.INFOJSON, json);
-
-        Cursor c = rsd.query(AccountTable.TABLE_NAME, null, AccountTable.UID + "=?",
-                new String[]{account.getUid()}, null, null, null);
-
-        if (c != null && c.getCount() > 0) {
-            String[] args = {account.getUid()};
-            wsd.update(AccountTable.TABLE_NAME, cv, AccountTable.UID + "=?", args);
-            return OAuthActivity.DBResult.update_successfully;
-        } else {
-
-            wsd.insert(AccountTable.TABLE_NAME,
-                    AccountTable.UID, cv);
-            return OAuthActivity.DBResult.add_successfuly;
-        }
-
-    }
-
-    public void updateAccountMyInfo(AccountBean account, UserBean myUserBean) {
-        String uid = account.getUid();
-        String json = new Gson().toJson(myUserBean);
-
-        ContentValues cv = new ContentValues();
-        cv.put(AccountTable.UID, uid);
-        cv.put(AccountTable.INFOJSON, json);
-
-        int c = rsd.update(AccountTable.TABLE_NAME, cv, AccountTable.UID + "=?",
-                new String[]{uid});
-    }
-
-
-    public List<AccountBean> getAccountList() {
-        List<AccountBean> accountList = new ArrayList<AccountBean>();
-        String sql = "select * from " + AccountTable.TABLE_NAME;
-        Cursor c = rsd.rawQuery(sql, null);
-        while (c.moveToNext()) {
-            AccountBean account = new AccountBean();
-            int colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN);
-            account.setAccess_token(c.getString(colid));
-
-            colid = c.getColumnIndex(AccountTable.USERNICK);
-            account.setUsernick(c.getString(colid));
-
-            colid = c.getColumnIndex(AccountTable.UID);
-            account.setUid(c.getString(colid));
-
-            colid = c.getColumnIndex(AccountTable.AVATAR_URL);
-            account.setAvatar_url(c.getString(colid));
-
-            Gson gson = new Gson();
-            String json = c.getString(c.getColumnIndex(AccountTable.INFOJSON));
-            try {
-                UserBean value = gson.fromJson(json, UserBean.class);
-                account.setInfo(value);
-            } catch (JsonSyntaxException e) {
-                AppLogger.e(e.getMessage());
-            }
-
-            accountList.add(account);
-        }
-        c.close();
-        return accountList;
-    }
-
-    public AccountBean getAccount(String id) {
-
-        String sql = "select * from " + AccountTable.TABLE_NAME + " where " + AccountTable.UID + " = " + id;
-        Cursor c = rsd.rawQuery(sql, null);
-        if (c.moveToNext()) {
-            AccountBean account = new AccountBean();
-            int colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN);
-            account.setAccess_token(c.getString(colid));
-
-            colid = c.getColumnIndex(AccountTable.USERNICK);
-            account.setUsernick(c.getString(colid));
-
-            colid = c.getColumnIndex(AccountTable.UID);
-            account.setUid(c.getString(colid));
-
-            colid = c.getColumnIndex(AccountTable.AVATAR_URL);
-            account.setAvatar_url(c.getString(colid));
-
-            Gson gson = new Gson();
-            String json = c.getString(c.getColumnIndex(AccountTable.INFOJSON));
-            try {
-                UserBean value = gson.fromJson(json, UserBean.class);
-                account.setInfo(value);
-            } catch (JsonSyntaxException e) {
-                AppLogger.e(e.getMessage());
-            }
-
-            return account;
-        }
-        return null;
-
-    }
-
-    public List<AccountBean> removeAndGetNewAccountList(Set<String> checkedItemPosition) {
-        String[] args = checkedItemPosition.toArray(new String[0]);
-        String asString = Arrays.toString(args);
-        asString = asString.replace("[", "(");
-        asString = asString.replace("]", ")");
-
-        String sql = "delete from " + AccountTable.TABLE_NAME + " where " + AccountTable.UID + " in " + asString;
-
-        wsd.execSQL(sql);
-
-        for (String id : args) {
-            deleteAllHomes(id);
-            deleteAllReposts(id);
-            deleteAllComments(id);
-            MyStatusDBTask.clear(id);
-        }
-
-        return getAccountList();
-    }
-
 
     private void addHomeLineMsg(MessageListBean list, String accountId) {
 
@@ -241,7 +114,7 @@ public class DatabaseManager {
         addHomeLineMsg(list, accountId);
     }
 
-    private void deleteAllHomes(String accountId) {
+    void deleteAllHomes(String accountId) {
         String sql = "delete from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + " in " + "(" + accountId + ")";
 
         wsd.execSQL(sql);
@@ -376,7 +249,7 @@ public class DatabaseManager {
         addRepostLineMsg(list, accountId);
     }
 
-    private void deleteAllReposts(String accountId) {
+    void deleteAllReposts(String accountId) {
         String sql = "delete from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID + " in " + "(" + accountId + ")";
 
         wsd.execSQL(sql);
@@ -461,7 +334,7 @@ public class DatabaseManager {
         addCommentLineMsg(list, accountId);
     }
 
-    private void deleteAllComments(String accountId) {
+    void deleteAllComments(String accountId) {
         String sql = "delete from " + CommentsTable.TABLE_NAME + " where " + CommentsTable.ACCOUNTID + " in " + "(" + accountId + ")";
 
         wsd.execSQL(sql);

@@ -19,7 +19,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.othercomponent.SendWeiboService;
-import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
 import org.qii.weiciyuan.support.imagetool.ImageEdit;
@@ -322,12 +322,12 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String id = sharedPref.getString("id", "");
         if (!TextUtils.isEmpty(id)) {
-            accountBean = DatabaseManager.getInstance().getAccount(id);
+            accountBean = AccountDBTask.getAccount(id);
             if (accountBean != null) {
                 token = accountBean.getAccess_token();
                 getActionBar().setSubtitle(accountBean.getUsernick());
             } else {
-                List<AccountBean> accountList = DatabaseManager.getInstance().getAccountList();
+                List<AccountBean> accountList = AccountDBTask.getAccountList();
                 if (accountList != null && accountList.size() > 0) {
                     AccountBean account = accountList.get(0);
                     accountBean = account;

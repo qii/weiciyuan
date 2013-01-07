@@ -12,7 +12,7 @@ import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MentionsCommentTimeLineDao;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.othercomponent.notification.UnreadMsgReceiver;
-import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -61,7 +61,7 @@ public class FetchNewMsgService extends Service {
 
         @Override
         protected List<AccountBean> doInBackground(Void... params) {
-            List<AccountBean> accountBeanList = DatabaseManager.getInstance().getAccountList();
+            List<AccountBean> accountBeanList = AccountDBTask.getAccountList();
             if (accountBeanList.size() > 0) {
                 return accountBeanList;
             } else {

@@ -18,7 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
-import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.GroupDBTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
@@ -123,9 +123,9 @@ public final class GlobalContext extends Application {
         if (accountBean == null) {
             String id = SettingUtility.getDefaultAccountId();
             if (!TextUtils.isEmpty(id)) {
-                accountBean = DatabaseManager.getInstance().getAccount(id);
+                accountBean = AccountDBTask.getAccount(id);
             } else {
-                List<AccountBean> accountList = DatabaseManager.getInstance().getAccountList();
+                List<AccountBean> accountList = AccountDBTask.getAccountList();
                 if (accountList != null && accountList.size() > 0) {
                     accountBean = accountList.get(0);
                 }

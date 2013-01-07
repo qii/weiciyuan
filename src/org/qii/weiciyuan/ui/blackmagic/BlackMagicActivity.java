@@ -12,7 +12,7 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.login.BMOAuthDao;
 import org.qii.weiciyuan.dao.login.OAuthDao;
-import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -132,7 +132,7 @@ public class BlackMagicActivity extends AbstractAppActivity {
                 account.setUsernick(user.getScreen_name());
                 account.setAvatar_url(user.getProfile_image_url());
                 account.setInfo(user);
-                DatabaseManager.getInstance().addOrUpdateAccount(account);
+                AccountDBTask.addOrUpdateAccount(account);
                 return token;
             } catch (WeiboException e) {
                 this.e = e;

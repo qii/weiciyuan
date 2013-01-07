@@ -13,7 +13,7 @@ import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
 import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarAndDetailMsgPicTask;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
-import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -300,7 +300,7 @@ public class MyInfoFragment extends AbstractAppFragment {
             }
             if (user != null) {
                 bean = user;
-                DatabaseManager.getInstance().updateAccountMyInfo(GlobalContext.getInstance().getAccountBean(), bean);
+                AccountDBTask.updateAccountMyInfo(GlobalContext.getInstance().getAccountBean(), bean);
             } else {
                 cancel(true);
             }
