@@ -19,10 +19,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.MapsInitializer;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -59,7 +56,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private TextView location;
     private TextView source;
 
-    private MapView mapView;
 
     private ImageView avatar;
     private ImageView content_pic;
@@ -91,7 +87,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
         outState.putSerializable("msg", msg);
     }
 
@@ -138,7 +133,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     public void onResume() {
         super.onResume();
         buildViewData();
-        mapView.onResume();
     }
 
     @Override
@@ -258,15 +252,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         time = (TextView) view.findViewById(R.id.time);
         location = (TextView) view.findViewById(R.id.location);
         source = (TextView) view.findViewById(R.id.source);
-        mapView = (MapView) view.findViewById(R.id.location_mv);
-        if (savedInstanceState != null) {
-            MessageBean msg = (MessageBean) savedInstanceState.get("msg");
-            savedInstanceState.remove("msg");
-            mapView.onCreate(savedInstanceState);
-            savedInstanceState.putSerializable("msg", msg);
-        } else {
-            mapView.onCreate(savedInstanceState);
-        }
+
         comment_count = (TextView) view.findViewById(R.id.comment_count);
         repost_count = (TextView) view.findViewById(R.id.repost_count);
         count_layout = (LinearLayout) view.findViewById(R.id.count_layout);
@@ -274,24 +260,15 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utility.isGooglePlaySafe(getActivity())) {
-                    GeoBean bean = msg.getGeo();
-                    Intent intent = new Intent(getActivity(), AppMapActivity.class);
-                    intent.putExtra("lat", bean.getLat());
-                    intent.putExtra("lon", bean.getLon());
-                    if (!String.valueOf(bean.getLat() + "," + bean.getLon()).equals(location.getText()))
-                        intent.putExtra("locationStr", location.getText());
-                    startActivity(intent);
-                } else {
-                    GeoBean bean = msg.getGeo();
-                    String geoUriString = "geo:" + bean.getLat() + "," + bean.getLon() + "?q=" + location.getText();
-                    Uri geoUri = Uri.parse(geoUriString);
-                    Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
-                    if (Utility.isIntentSafe(getActivity(), mapCall)) {
-                        startActivity(mapCall);
-                    }
 
+                GeoBean bean = msg.getGeo();
+                String geoUriString = "geo:" + bean.getLat() + "," + bean.getLon() + "?q=" + location.getText();
+                Uri geoUri = Uri.parse(geoUriString);
+                Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
+                if (Utility.isIntentSafe(getActivity(), mapCall)) {
+                    startActivity(mapCall);
                 }
+
             }
         });
 
@@ -458,36 +435,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             super.onPreExecute();
             location.setVisibility(View.VISIBLE);
             location.setText(String.valueOf(geoBean.getLat() + "," + geoBean.getLon()));
-            if (Utility.isGooglePlaySafe(getActivity())) {
-                mapView.setVisibility(View.VISIBLE);
-                GoogleMap mMap = mapView.getMap();
-                if (mMap != null) {
-
-                    final LatLng MELBOURNE = new LatLng(geoBean.getLat(), geoBean.getLon());
-                    Marker melbourne = mMap.addMarker(new MarkerOptions()
-                            .position(MELBOURNE));
-
-                    LatLng latLng = new LatLng(geoBean.getLat(), geoBean.getLon());
-                    CameraUpdate update = CameraUpdateFactory.newLatLng(latLng);
-                    mMap.moveCamera(update);
-
-                    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                        @Override
-                        public void onMapClick(LatLng latLng) {
-                            GeoBean bean = msg.getGeo();
-
-                            Intent intent = new Intent(getActivity(), AppMapActivity.class);
-                            intent.putExtra("lat", bean.getLat());
-                            intent.putExtra("lon", bean.getLon());
-                            if (!String.valueOf(bean.getLat() + "," + bean.getLon()).equals(location.getText()))
-                                intent.putExtra("locationStr", location.getText());
-                            startActivity(intent);
-                        }
-                    });
-                }
-            } else {
-                mapView.setVisibility(View.GONE);
-            }
         }
 
         @Override
