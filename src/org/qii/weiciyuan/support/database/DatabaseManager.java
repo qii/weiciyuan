@@ -8,11 +8,13 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.qii.weiciyuan.bean.EmotionBean;
 import org.qii.weiciyuan.support.database.table.EmotionsTable;
-import org.qii.weiciyuan.support.database.table.FilterTable;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: qii
@@ -45,59 +47,6 @@ public class DatabaseManager {
         }
 
         return singleton;
-    }
-
-
-    public OAuthActivity.DBResult addFilterKeyword(String word) {
-
-        ContentValues cv = new ContentValues();
-        cv.put(FilterTable.NAME, word);
-        cv.put(FilterTable.ACTIVE, "true");
-
-        Cursor c = rsd.query(FilterTable.TABLE_NAME, null, FilterTable.NAME + "=?",
-                new String[]{word}, null, null, null);
-
-        if (c != null && c.getCount() > 0) {
-
-            return OAuthActivity.DBResult.update_successfully;
-        } else {
-
-            wsd.insert(FilterTable.TABLE_NAME,
-                    FilterTable.ID, cv);
-            return OAuthActivity.DBResult.add_successfuly;
-        }
-
-    }
-
-
-    public List<String> getFilterList() {
-
-        List<String> keywordList = new ArrayList<String>();
-        String sql = "select * from " + FilterTable.TABLE_NAME + " order by " + FilterTable.ID + " desc ";
-        Cursor c = rsd.rawQuery(sql, null);
-        while (c.moveToNext()) {
-            String word = c.getString(c.getColumnIndex(FilterTable.NAME));
-            keywordList.add(word);
-        }
-
-        c.close();
-        return keywordList;
-
-    }
-
-    public void removeAndGetNewFilterList(String word) {
-
-        String sql = "delete from " + FilterTable.TABLE_NAME + " where " + FilterTable.NAME + " = " + "\"" + word + "\"";
-
-        wsd.execSQL(sql);
-
-    }
-
-    public List<String> removeAndGetNewFilterList(Set<String> words) {
-        for (String word : words)
-            removeAndGetNewFilterList(word);
-
-        return getFilterList();
     }
 
 

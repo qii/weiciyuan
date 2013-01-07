@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.view.WindowManager;
 import android.widget.EditText;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.FilterDBTask;
 
 /**
  * User: qii
@@ -41,7 +41,7 @@ public class ModifyFilterDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         String newValue = et.getText().toString().trim();
                         if (!TextUtils.isEmpty(word)) {
-                            DatabaseManager.getInstance().removeAndGetNewFilterList(word);
+                            FilterDBTask.removeAndGetNewFilterList(word);
                             FilterFragment filterFragment = (FilterFragment) getTargetFragment();
                             filterFragment.addFilter(newValue);
                         }

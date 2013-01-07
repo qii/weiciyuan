@@ -6,7 +6,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
-import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.FilterDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
@@ -69,7 +69,7 @@ public class MainFriendsTimeLineDao {
             List<MessageBean> msgList = value.getItemList();
             Iterator<MessageBean> iterator = msgList.iterator();
 
-            List<String> filterWordList = DatabaseManager.getInstance().getFilterList();
+            List<String> filterWordList = FilterDBTask.getFilterList();
 
             while (iterator.hasNext()) {
                 MessageBean msg = iterator.next();

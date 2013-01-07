@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.FilterDBTask;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class FilterFragment extends ListFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ModifyFilterDialog dialog = new ModifyFilterDialog(list.get(position));
-                dialog.setTargetFragment(FilterFragment.this,1);
+                dialog.setTargetFragment(FilterFragment.this, 1);
                 dialog.show(getFragmentManager(), "");
             }
         });
@@ -94,7 +94,7 @@ public class FilterFragment extends ListFragment {
 
 
     public void addFilter(String word) {
-        DatabaseManager.getInstance().addFilterKeyword(word);
+        FilterDBTask.addFilterKeyword(word);
         if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
             task = new DBTask();
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
@@ -158,7 +158,7 @@ public class FilterFragment extends ListFragment {
 
         @Override
         protected List<String> doInBackground(Void... params) {
-            return DatabaseManager.getInstance().removeAndGetNewFilterList(set);
+            return FilterDBTask.removeAndGetNewFilterList(set);
         }
 
         @Override
@@ -172,7 +172,7 @@ public class FilterFragment extends ListFragment {
 
         @Override
         protected List<String> doInBackground(Void... params) {
-            List<String> set = DatabaseManager.getInstance().getFilterList();
+            List<String> set = FilterDBTask.getFilterList();
 
             return set;
         }
