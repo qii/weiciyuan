@@ -72,9 +72,12 @@
         <Preference
             android:title="@string/pref_icon_design_title"
             android:summary="NovaDNG"
-            >
+            />
+        <Preference
+            android:title="@string/pref_icon_design_title"
+            android:summary="LPF"
+            />
 
-        </Preference>
     </PreferenceCategory>
 
 

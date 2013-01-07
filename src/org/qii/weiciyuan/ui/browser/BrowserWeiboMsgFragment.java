@@ -18,8 +18,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.maps.MapsInitializer;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -93,11 +91,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            MapsInitializer.initialize(getActivity());
-        } catch (GooglePlayServicesNotAvailableException impossible) {
-                      /* Impossible */
-        }
+
     }
 
     @Override
