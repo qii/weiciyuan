@@ -23,6 +23,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.utils.DataMemoryCache;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.CommentByIdFloatingMenu;
@@ -404,6 +405,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
             invlidateTabText();
+            DataMemoryCache.updateTimeLineDataCommentCount(newValue.getItem(0).getStatus(), newValue.getTotal_number());
         } else if (newValue != null && newValue.getSize() == 0) {
             getList().clear();
             invlidateTabText();
@@ -416,6 +418,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             getList().addOldData(newValue);
             getAdapter().notifyDataSetChanged();
             invlidateTabText();
+            DataMemoryCache.updateTimeLineDataCommentCount(newValue.getItem(0).getStatus(), newValue.getTotal_number());
+
         }
     }
 

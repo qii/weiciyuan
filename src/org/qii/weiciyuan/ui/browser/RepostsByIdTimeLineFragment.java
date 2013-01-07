@@ -20,6 +20,7 @@ import org.qii.weiciyuan.dao.timeline.RepostsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.utils.DataMemoryCache;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.RepostSingleChoiceModeListener;
@@ -377,6 +378,8 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
             invlidateTabText();
+            DataMemoryCache.updateTimeLineDataRepostCount(newValue.getItem(0).getRetweeted_status(), newValue.getTotal_number());
+
         }
 
 
@@ -387,6 +390,8 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
         if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 1) {
             getList().addOldData(newValue);
             invlidateTabText();
+            DataMemoryCache.updateTimeLineDataRepostCount(newValue.getItem(0).getRetweeted_status(), newValue.getTotal_number());
+
         } else {
             Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
         }
