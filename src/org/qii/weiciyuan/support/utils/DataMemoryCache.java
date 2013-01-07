@@ -46,7 +46,7 @@ public class DataMemoryCache {
 
         List<MessageBean> msgList = friendTimeLineData.getItemList();
         for (int i = 0; i < msgList.size(); i++) {
-            if (msgList.get(i).getId().equals(msg.getId())) {
+            if (msgList.get(i).equals(msg)) {
                 msgList.get(i).setReposts_count(repostCount);
                 break;
             }
