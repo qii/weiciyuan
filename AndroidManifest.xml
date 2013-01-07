@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.qii.weiciyuan"
-          android:versionCode="24"
-          android:versionName="0.482">
+          android:versionCode="25"
+          android:versionName="0.483">
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -39,8 +39,8 @@
 
         <!-- this is release key-->
         <!--<meta-data-->
-            <!--android:name="com.google.android.maps.v2.API_KEY"-->
-            <!--android:value="AIzaSyA_Ozn9WNG58ImFlmOFOItHvn1JShWvIpE"/>-->
+        <!--android:name="com.google.android.maps.v2.API_KEY"-->
+        <!--android:value="AIzaSyA_Ozn9WNG58ImFlmOFOItHvn1JShWvIpE"/>-->
 
         <activity
             android:name=".ui.login.DummyActivity"

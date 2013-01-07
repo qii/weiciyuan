@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
     <release
-        version="0.4821"
+        version="0.483"
         versioncode="25">
         <change>更換部分按鈕圖標</change>
         <change>列表文本添加行間距</change>
