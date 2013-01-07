@@ -14,7 +14,7 @@ import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.FriendGroupTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.othercomponent.SaveToDBService;
-import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.FriendsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -189,7 +189,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         @Override
         protected MessageListBean doInBackground(Void... params) {
-            return DatabaseManager.getInstance().getHomeLineMsgList(accountBean.getUid());
+            return FriendsTimeLineDBTask.getHomeLineMsgList(accountBean.getUid());
         }
 
         @Override

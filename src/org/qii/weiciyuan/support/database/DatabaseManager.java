@@ -3,14 +3,15 @@ package org.qii.weiciyuan.support.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.qii.weiciyuan.bean.*;
-import org.qii.weiciyuan.support.database.table.*;
+import org.qii.weiciyuan.support.database.table.CommentsTable;
+import org.qii.weiciyuan.support.database.table.EmotionsTable;
+import org.qii.weiciyuan.support.database.table.FilterTable;
+import org.qii.weiciyuan.support.database.table.RepostsTable;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 
@@ -49,123 +50,6 @@ public class DatabaseManager {
         return singleton;
     }
 
-
-    private void addHomeLineMsg(MessageListBean list, String accountId) {
-
-        if (list == null || list.getSize() == 0) {
-            return;
-        }
-
-        Gson gson = new Gson();
-        List<MessageBean> msgList = list.getItemList();
-
-        for (int i = 0; i < msgList.size(); i++) {
-            MessageBean msg = msgList.get(i);
-            if (msg != null) {
-                ContentValues cv = new ContentValues();
-                cv.put(HomeTable.MBLOGID, msg.getId());
-                cv.put(HomeTable.ACCOUNTID, accountId);
-                String json = gson.toJson(msg);
-                cv.put(HomeTable.JSONDATA, json);
-                wsd.insert(HomeTable.TABLE_NAME,
-                        HomeTable.ID, cv);
-            } else {
-                ContentValues cv = new ContentValues();
-                cv.put(HomeTable.MBLOGID, "-1");
-                cv.put(HomeTable.ACCOUNTID, accountId);
-                cv.put(HomeTable.JSONDATA, "");
-                wsd.insert(HomeTable.TABLE_NAME,
-                        HomeTable.ID, cv);
-            }
-        }
-
-        reduceHomeTable(accountId);
-    }
-
-    private void reduceHomeTable(String accountId) {
-        String searchCount = "select count(" + HomeTable.ID + ") as total" + " from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID
-                + " = " + accountId;
-        int total = 0;
-        Cursor c = rsd.rawQuery(searchCount, null);
-        if (c.moveToNext()) {
-            total = c.getInt(c.getColumnIndex("total"));
-        }
-
-        c.close();
-
-        AppLogger.e("total=" + total);
-
-        int needDeletedNumber = total - AppConfig.DEFAULT_DB_CACHE_COUNT;
-
-        if (needDeletedNumber > 0) {
-            AppLogger.e("" + needDeletedNumber);
-            String sql = " delete from " + HomeTable.TABLE_NAME + " where " + HomeTable.ID + " in "
-                    + "( select " + HomeTable.ID + " from " + HomeTable.TABLE_NAME + " where "
-                    + HomeTable.ACCOUNTID
-                    + " in " + "(" + accountId + ") order by " + HomeTable.ID + " desc limit " + needDeletedNumber + " ) ";
-
-            wsd.execSQL(sql);
-        }
-    }
-
-    public void replaceHomeLineMsg(MessageListBean list, String accountId) {
-
-        deleteAllHomes(accountId);
-        addHomeLineMsg(list, accountId);
-    }
-
-    void deleteAllHomes(String accountId) {
-        String sql = "delete from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + " in " + "(" + accountId + ")";
-
-        wsd.execSQL(sql);
-    }
-
-    public MessageListBean getHomeLineMsgList(String accountId) {
-        Gson gson = new Gson();
-        MessageListBean result = new MessageListBean();
-
-        List<MessageBean> msgList = new ArrayList<MessageBean>();
-        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
-                + accountId + " order by " + HomeTable.ID + " asc limit 50";
-        Cursor c = rsd.rawQuery(sql, null);
-        while (c.moveToNext()) {
-            String json = c.getString(c.getColumnIndex(HomeTable.JSONDATA));
-            if (!TextUtils.isEmpty(json)) {
-                try {
-                    MessageBean value = gson.fromJson(json, MessageBean.class);
-                    value.getListViewSpannableString();
-                    msgList.add(value);
-                } catch (JsonSyntaxException e) {
-                    AppLogger.e(e.getMessage());
-                }
-
-            } else {
-                msgList.add(null);
-            }
-        }
-
-        //delete the null flag at the head positon and the end position
-        for (int i = msgList.size() - 1; i >= 0; i--) {
-            if (msgList.get(i) == null) {
-                msgList.remove(i);
-            } else {
-                break;
-            }
-        }
-
-        for (int i = 0; i < msgList.size(); i++) {
-            if (msgList.get(i) == null) {
-                msgList.remove(i);
-            } else {
-                break;
-            }
-        }
-
-        result.setStatuses(msgList);
-        c.close();
-        return result;
-
-    }
 
     public MessageListBean getRepostLineMsgList(String accountId) {
         Gson gson = new Gson();

@@ -155,7 +155,7 @@ public class AccountDBTask {
         getWsd().execSQL(sql);
 
         for (String id : args) {
-            DatabaseManager.getInstance().deleteAllHomes(id);
+            FriendsTimeLineDBTask.deleteAllHomes(id);
             DatabaseManager.getInstance().deleteAllReposts(id);
             DatabaseManager.getInstance().deleteAllComments(id);
             MyStatusDBTask.clear(id);
