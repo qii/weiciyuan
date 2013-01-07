@@ -163,8 +163,17 @@ public class MessageBean extends ItemBean {
         this.listviewItemShowTime = listviewItemShowTime;
     }
 
+    public String getIdstr() {
+        return idstr;
+    }
+
+    public void setIdstr(String idstr) {
+        this.idstr = idstr;
+    }
+
     private String created_at;
     private String id;
+    private String idstr;
     private String text;
     private String source;
     private boolean favorited;
@@ -174,7 +183,7 @@ public class MessageBean extends ItemBean {
     private String in_reply_to_screen_name;
     private String mid;
     private int reposts_count = 0;
-    private int comments_count =0;
+    private int comments_count = 0;
     //    private Object annotations;
     private UserBean user;
     private MessageBean retweeted_status;
@@ -234,4 +243,33 @@ public class MessageBean extends ItemBean {
     }
 
     private String listviewItemShowTime;
+
+    @Override
+    public boolean equals(Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        }
+
+        if (otherObject == null) {
+            return false;
+        }
+
+        if (getClass() != otherObject.getClass()) {
+            return false;
+        }
+
+        if (!(otherObject instanceof MessageBean)) {
+            return false;
+        }
+
+        MessageBean other = (MessageBean) otherObject;
+        return getIdstr().equals(other.getIdstr());
+    }
+
+    @Override
+    public int hashCode() {
+        return getIdstr().hashCode();
+    }
+
+
 }
