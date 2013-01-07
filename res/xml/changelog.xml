@@ -6,7 +6,7 @@
         <change>更換部分按鈕圖標</change>
         <change>列表文本添加行間距</change>
         <change>寫微博界面添加完照片後查看圖片方式換掉</change>
-        <change>修正設置-评论/转发列表的头像，顯示不正確的bug</change>
+        <change>修正設置-评论/转发列表的头像的文字，顯示不正確的bug</change>
         <change>不再限制手機上的橫屏</change>
         <change>修正高清頭像模糊的bug</change>
         <change>修正登錄有機率崩潰的bug</change>
@@ -15,7 +15,6 @@
         <change>修正發送圖片導致通知欄卡頓以及影響之後發送微博的bug</change>
         <change>修正某些情況拍照崩潰的bug</change>
         <change>加快應用啟動速度</change>
-        <change>引入 Google Map 接口，可以在微博內瀏覽2D地圖</change>
         <change>修正表情按鈕崩潰的bug</change>
     </release>
     <release
