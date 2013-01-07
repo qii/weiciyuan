@@ -156,7 +156,7 @@ public class AccountDBTask {
 
         for (String id : args) {
             FriendsTimeLineDBTask.deleteAllHomes(id);
-            DatabaseManager.getInstance().deleteAllReposts(id);
+            MentionsTimeLineDBTask.deleteAllReposts(id);
             DatabaseManager.getInstance().deleteAllComments(id);
             MyStatusDBTask.clear(id);
         }

@@ -18,7 +18,7 @@ import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
-import org.qii.weiciyuan.support.database.DatabaseManager;
+import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -228,7 +228,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
 
         @Override
         protected MessageListBean doInBackground(Void... params) {
-            return DatabaseManager.getInstance().getRepostLineMsgList(GlobalContext.getInstance().getCurrentAccountId());
+            return MentionsTimeLineDBTask.getRepostLineMsgList(GlobalContext.getInstance().getCurrentAccountId());
         }
 
         @Override
@@ -318,7 +318,7 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
         dao.setFilter_by_type(filter_by_type);
         MessageListBean result = dao.getGSONMsgList();
         if (result != null && currentGroupId == 0) {
-            DatabaseManager.getInstance().addRepostLineMsg(result, accountBean.getUid());
+            MentionsTimeLineDBTask.addRepostLineMsg(result, accountBean.getUid());
 
         }
         return result;

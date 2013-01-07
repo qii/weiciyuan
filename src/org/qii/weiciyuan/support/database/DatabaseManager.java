@@ -6,11 +6,12 @@ import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.EmotionBean;
 import org.qii.weiciyuan.support.database.table.CommentsTable;
 import org.qii.weiciyuan.support.database.table.EmotionsTable;
 import org.qii.weiciyuan.support.database.table.FilterTable;
-import org.qii.weiciyuan.support.database.table.RepostsTable;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
@@ -50,94 +51,6 @@ public class DatabaseManager {
         return singleton;
     }
 
-
-    public MessageListBean getRepostLineMsgList(String accountId) {
-        Gson gson = new Gson();
-        MessageListBean result = new MessageListBean();
-
-        List<MessageBean> msgList = new ArrayList<MessageBean>();
-        String sql = "select * from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID + "  = "
-                + accountId + " order by " + RepostsTable.MBLOGID + " desc limit 50";
-        Cursor c = rsd.rawQuery(sql, null);
-        while (c.moveToNext()) {
-            String json = c.getString(c.getColumnIndex(RepostsTable.JSONDATA));
-            try {
-                MessageBean value = gson.fromJson(json, MessageBean.class);
-                value.getListViewSpannableString();
-                msgList.add(value);
-            } catch (JsonSyntaxException e) {
-                AppLogger.e(e.getMessage());
-            }
-
-        }
-
-        result.setStatuses(msgList);
-        c.close();
-        return result;
-
-    }
-
-    public void addRepostLineMsg(MessageListBean list, String accountId) {
-        Gson gson = new Gson();
-        List<MessageBean> msgList = list.getItemList();
-        int size = msgList.size();
-        for (int i = 0; i < size; i++) {
-            MessageBean msg = msgList.get(i);
-            ContentValues cv = new ContentValues();
-            cv.put(RepostsTable.MBLOGID, msg.getId());
-            cv.put(RepostsTable.ACCOUNTID, accountId);
-            String json = gson.toJson(msg);
-            cv.put(RepostsTable.JSONDATA, json);
-            wsd.insert(RepostsTable.TABLE_NAME,
-                    RepostsTable.ID, cv);
-        }
-
-        reduceRepostTable(accountId);
-    }
-
-
-    private void reduceRepostTable(String accountId) {
-        String searchCount = "select count(" + RepostsTable.ID + ") as total" + " from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID
-                + " = " + accountId;
-        int total = 0;
-        Cursor c = rsd.rawQuery(searchCount, null);
-        if (c.moveToNext()) {
-            total = c.getInt(c.getColumnIndex("total"));
-        }
-
-        c.close();
-
-        AppLogger.e("total=" + total);
-
-        int needDeletedNumber = total - Integer.valueOf(SettingUtility.getMsgCount());
-
-        if (needDeletedNumber > 0) {
-            AppLogger.e("" + needDeletedNumber);
-            String sql = " delete from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ID + " in "
-                    + "( select " + RepostsTable.ID + " from " + RepostsTable.TABLE_NAME + " where "
-                    + RepostsTable.ACCOUNTID
-                    + " in " + "(" + accountId + ") order by " + RepostsTable.ID + " asc limit " + needDeletedNumber + " ) ";
-
-            wsd.execSQL(sql);
-        }
-    }
-
-    private void replaceRepostLineMsg(MessageListBean list, String accountId) {
-
-        deleteAllReposts(accountId);
-
-        //need modification
-//        wsd.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
-//        wsd.execSQL(DatabaseHelper.CREATE_REPOSTS_TABLE_SQL);
-
-        addRepostLineMsg(list, accountId);
-    }
-
-    void deleteAllReposts(String accountId) {
-        String sql = "delete from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID + " in " + "(" + accountId + ")";
-
-        wsd.execSQL(sql);
-    }
 
     public void addCommentLineMsg(CommentListBean list, String accountId) {
         Gson gson = new Gson();
