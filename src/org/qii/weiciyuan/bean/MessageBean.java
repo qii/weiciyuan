@@ -254,10 +254,6 @@ public class MessageBean extends ItemBean {
             return false;
         }
 
-        if (getClass() != otherObject.getClass()) {
-            return false;
-        }
-
         if (!(otherObject instanceof MessageBean)) {
             return false;
         }
