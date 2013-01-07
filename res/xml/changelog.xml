@@ -16,6 +16,7 @@
         <change>修正某些情況拍照崩潰的bug</change>
         <change>加快應用啟動速度</change>
         <change>引入 Google Map 接口，可以在微博內瀏覽2D地圖</change>
+        <change>修正表情按鈕崩潰的bug</change>
     </release>
     <release
         version="0.482"
