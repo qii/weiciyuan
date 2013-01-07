@@ -155,7 +155,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 break;
             case SCREEN_ROTATE:
                 //nothing
-                refreshLayout(bean);
+                refreshLayout(getList());
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 userBean = (UserBean) savedInstanceState.getSerializable("userBean");
