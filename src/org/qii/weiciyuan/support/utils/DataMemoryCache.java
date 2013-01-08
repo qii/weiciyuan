@@ -44,7 +44,7 @@ public class DataMemoryCache {
 
         List<MessageBean> msgList = friendTimeLineData.getItemList();
         for (int i = 0; i < msgList.size(); i++) {
-            if (msgList.get(i).equals(msg)) {
+            if (msgList.get(i) != null && msgList.get(i).equals(msg)) {
                 msgList.get(i).setComments_count(commentCount);
 
                 break;
@@ -53,7 +53,7 @@ public class DataMemoryCache {
 
         msgList = statusByIdTimeLineData.getItemList();
         for (int i = 0; i < msgList.size(); i++) {
-            if (msgList.get(i).equals(msg)) {
+            if (msgList.get(i) != null && msgList.get(i).equals(msg)) {
                 msgList.get(i).setComments_count(commentCount);
                 break;
             }
