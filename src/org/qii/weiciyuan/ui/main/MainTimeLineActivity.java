@@ -172,6 +172,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     public void onBackPressed() {
         super.onBackPressed();
         GlobalContext.getInstance().startedApp = false;
+        GlobalContext.getInstance().getAvatarCache().evictAll();
         finish();
     }
 
