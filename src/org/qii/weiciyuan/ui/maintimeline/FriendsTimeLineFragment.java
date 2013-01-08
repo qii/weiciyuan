@@ -137,7 +137,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     public void onDestroy() {
         super.onDestroy();
         Utility.cancelTasks(dbTask);
-        DataMemoryCache.clearFriendsTimeLineData();
     }
 
     @Override
@@ -145,16 +144,22 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                if (Utility.isTaskStopped(dbTask)) {
+                if (Utility.isTaskStopped(dbTask) && getList().getSize() == 0) {
                     dbTask = new DBCacheTask();
                     dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                    GroupInfoTask groupInfoTask = new GroupInfoTask(GlobalContext.getInstance().getSpecialToken());
+                    groupInfoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    getAdapter().notifyDataSetChanged();
+                    refreshLayout(getList());
                 }
-
-                GroupInfoTask groupInfoTask = new GroupInfoTask(GlobalContext.getInstance().getSpecialToken());
-                groupInfoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
                 groupDataCache.put(ALL_GROUP_ID, new MessageListBean());
                 groupDataCache.put(BILATERAL_GROUP_ID, new MessageListBean());
+
+                if (getList().getSize() > 0) {
+                    groupDataCache.put(ALL_GROUP_ID, getList().copy());
+                }
                 break;
             case SCREEN_ROTATE:
                 //nothing

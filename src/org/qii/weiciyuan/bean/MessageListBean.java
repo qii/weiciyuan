@@ -78,4 +78,10 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> {
         getItemList().addAll(value.getItemList());
         setTotal_number(value.getTotal_number());
     }
+
+    public MessageListBean copy() {
+        MessageListBean object = new MessageListBean();
+        object.replaceData(MessageListBean.this);
+        return object;
+    }
 }
