@@ -379,10 +379,10 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 getActivity().startActivity(intent);
             }
         });
-        buildPic(msg, view.getImageView(), position);
+        buildPic(msg, view.getImageView());
     }
 
-    protected void buildPic(final MessageBean msg, ImageView view, int position) {
+    private void buildPic(final MessageBean msg, ImageView view) {
         view.setVisibility(View.VISIBLE);
         commander.downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
         view.setOnClickListener(new View.OnClickListener() {
