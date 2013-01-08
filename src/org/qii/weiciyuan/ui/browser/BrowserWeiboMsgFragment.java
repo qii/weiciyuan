@@ -32,7 +32,6 @@ import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.DataMemoryCache;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -190,7 +189,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         @Override
         protected void onPostExecute(MessageBean newValue) {
             if (newValue != null && e == null) {
-                DataMemoryCache.update(newValue);
                 if (isStatusDeleted(newValue)) {
                     setTextViewDeleted(content);
                     if (recontent.getVisibility() == View.VISIBLE) {
@@ -201,6 +199,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 } else {
                     msg = newValue;
                     buildViewData();
+                    Intent intent = new Intent();
+                    intent.putExtra("msg", msg);
+                    getActivity().setResult(0, intent);
                 }
             }
             super.onPostExecute(newValue);

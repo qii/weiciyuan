@@ -21,7 +21,6 @@ import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
-import org.qii.weiciyuan.support.utils.DataMemoryCache;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -194,8 +193,6 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
                 intent.putExtra("launcher", false);
                 startActivity(intent);
                 finish();
-                DataMemoryCache.clearFriendsTimeLineData();
-                DataMemoryCache.clearStatusByIdTimeLineData();
                 return true;
             case R.id.menu_search:
                 startActivity(new Intent(this, SearchMainActivity.class));

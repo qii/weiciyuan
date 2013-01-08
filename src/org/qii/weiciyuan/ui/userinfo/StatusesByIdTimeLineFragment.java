@@ -8,11 +8,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.utils.DataMemoryCache;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 
@@ -25,11 +25,27 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
     protected UserBean userBean;
     protected String token;
+    private MessageListBean bean = new MessageListBean();
 
 
     @Override
     public MessageListBean getList() {
-        return DataMemoryCache.getStatusByIdTimeLineData();
+        return bean;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        MessageBean msg = (MessageBean) data.getSerializableExtra("msg");
+        if (msg != null) {
+            for (int i = 0; i < getList().getSize(); i++) {
+                if (msg.equals(getList().getItem(i))) {
+                    getList().getItem(i).setReposts_count(msg.getReposts_count());
+                    getList().getItem(i).setComments_count(msg.getComments_count());
+                    break;
+                }
+            }
+            getAdapter().notifyDataSetChanged();
+        }
     }
 
     public StatusesByIdTimeLineFragment() {
@@ -79,17 +95,13 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         super.onActivityCreated(savedInstanceState);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        DataMemoryCache.clearStatusByIdTimeLineData();
-    }
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("token", token);
         intent.putExtra("msg", getList().getItem(position));
-        startActivity(intent);
+        startActivityForResult(intent, 0);
+
     }
 
 

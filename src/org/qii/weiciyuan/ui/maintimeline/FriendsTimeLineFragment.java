@@ -19,7 +19,6 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppConfig;
-import org.qii.weiciyuan.support.utils.DataMemoryCache;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
@@ -58,11 +57,26 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     @Override
     public MessageListBean getList() {
-        return DataMemoryCache.getFriendsTimeLineData();
+        return bean;
     }
 
     public FriendsTimeLineFragment() {
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        MessageBean msg = (MessageBean) data.getSerializableExtra("msg");
+        if (msg != null) {
+            for (int i = 0; i < getList().getSize(); i++) {
+                if (msg.equals(getList().getItem(i))) {
+                    getList().getItem(i).setReposts_count(msg.getReposts_count());
+                    getList().getItem(i).setComments_count(msg.getComments_count());
+                    break;
+                }
+            }
+            getAdapter().notifyDataSetChanged();
+        }
     }
 
     public FriendsTimeLineFragment(AccountBean accountBean, UserBean userBean, String token) {
@@ -228,7 +242,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("msg", getList().getItemList().get(position));
         intent.putExtra("token", token);
-        startActivity(intent);
+        startActivityForResult(intent, 0);
     }
 
 
