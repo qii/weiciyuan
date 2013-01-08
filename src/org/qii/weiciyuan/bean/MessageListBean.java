@@ -74,6 +74,8 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> {
     }
 
     public void replaceData(MessageListBean value) {
+        if (value == null)
+            return;
         getItemList().clear();
         getItemList().addAll(value.getItemList());
         setTotal_number(value.getTotal_number());
