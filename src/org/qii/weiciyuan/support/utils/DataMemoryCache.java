@@ -23,6 +23,10 @@ public class DataMemoryCache {
         return statusByIdTimeLineData;
     }
 
+    /**
+     * because user can switch theme (fragment will be destroyed and recreated, ignore setRetainInstance(true) ),
+     * so you cant call this two method in fragment's onDestroy() method
+     */
     public static void clearStatusByIdTimeLineData() {
         statusByIdTimeLineData = new MessageListBean();
     }
