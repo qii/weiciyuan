@@ -66,6 +66,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //use Up instead of Back to reach this fragment
+        if (data == null)
+            return;
         MessageBean msg = (MessageBean) data.getSerializableExtra("msg");
         if (msg != null) {
             for (int i = 0; i < getList().getSize(); i++) {
