@@ -21,6 +21,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.ui.preference.DraftActivity;
 
 import java.io.File;
 import java.util.HashMap;
@@ -287,11 +288,19 @@ public class SendWeiboService extends Service {
     private void showFailedNotification(final WeiboSendTask task) {
         Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
                 .setTicker(getString(R.string.send_failed_and_save_to_draft))
-                .setContentTitle(getString(R.string.send_failed_and_save_to_draft))
+                .setContentTitle(getString(R.string.send_failed))
+                .setContentText(getString(R.string.click_to_open_draft))
                 .setOnlyAlertOnce(true)
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.send_failed)
                 .setOngoing(false);
+
+        Intent notifyIntent = new Intent(SendWeiboService.this, DraftActivity.class);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentIntent(pendingIntent);
+
         Notification notification = builder.getNotification();
         final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
                 .getSystemService(NOTIFICATION_SERVICE);
@@ -301,7 +310,6 @@ public class SendWeiboService extends Service {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                notificationManager.cancel(id);
                 stopServiceIfTasksAreEnd(task);
             }
         }, 3000);
