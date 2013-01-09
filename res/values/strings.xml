@@ -125,7 +125,9 @@
     <string name="comment_cant_be_empty">评论不能为空</string>
     <string name="send_successfully">发送成功</string>
     <string name="send_failed">发送失败</string>
+    <string name="cancel_send">取消上传</string>
     <string name="send_failed_and_save_to_draft">发送失败，已保存到草稿箱</string>
+    <string name="cancel_send_and_save_to_draft">取消上传，已保存到草稿箱</string>
     <string name="click_to_open_draft">点击打开草稿箱</string>
     <string name="background_sending">后台发送中</string>
     <string name="send_photo">发送照片</string>
