@@ -369,17 +369,21 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     }
 
     protected void buildPic(final MessageBean msg, TimeLineImageView view, int position) {
-        view.setVisibility(View.VISIBLE);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
-                intent.putExtra("url", msg.getBmiddle_pic());
-                intent.putExtra("oriUrl", msg.getOriginal_pic());
-                getActivity().startActivity(intent);
-            }
-        });
-        buildPic(msg, view.getImageView());
+        if (SettingUtility.isEnablePic()) {
+            view.setVisibility(View.VISIBLE);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
+                    intent.putExtra("url", msg.getBmiddle_pic());
+                    intent.putExtra("oriUrl", msg.getOriginal_pic());
+                    getActivity().startActivity(intent);
+                }
+            });
+            buildPic(msg, view.getImageView());
+        } else {
+            view.setVisibility(View.GONE);
+        }
     }
 
     private void buildPic(final MessageBean msg, ImageView view) {

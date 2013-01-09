@@ -4,9 +4,9 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
@@ -38,6 +38,8 @@ public class SendWeiboService extends Service {
 
     private Map<WeiboSendTask, Boolean> tasksResult = new HashMap<WeiboSendTask, Boolean>();
     private Map<WeiboSendTask, Integer> tasksNotifications = new HashMap<WeiboSendTask, Integer>();
+
+    private Handler handler = new Handler();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -97,7 +99,6 @@ public class SendWeiboService extends Service {
 
             tasksNotifications.put(WeiboSendTask.this, notificationId);
 
-            Toast.makeText(SendWeiboService.this, getString(R.string.background_sending), Toast.LENGTH_SHORT).show();
         }
 
         private boolean sendPic(String uploadPicPath) throws WeiboException {
@@ -182,8 +183,7 @@ public class SendWeiboService extends Service {
             super.onPostExecute(aVoid);
             if (statusDraftBean != null)
                 DraftDBManager.getInstance().remove(statusDraftBean.getId());
-            Toast.makeText(SendWeiboService.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
-            stopServiceIfTasksAreEnd(WeiboSendTask.this);
+            showSuccessfulNotification(WeiboSendTask.this);
         }
 
         @Override
@@ -195,9 +195,8 @@ public class SendWeiboService extends Service {
             } else {
                 DraftDBManager.getInstance().insertStatus(content, geoBean, picPath, accountId);
             }
-            Toast.makeText(SendWeiboService.this, getString(R.string.send_failed_and_save_to_draft), Toast.LENGTH_SHORT).show();
 
-            stopServiceIfTasksAreEnd(WeiboSendTask.this);
+            showFailedNotification(WeiboSendTask.this);
         }
 
     }
@@ -211,15 +210,56 @@ public class SendWeiboService extends Service {
         for (WeiboSendTask task : taskSet) {
             if (!tasksResult.get(task)) {
                 isAllTaskEnd = false;
-            } else {
-                NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                        .getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.cancel(tasksNotifications.get(task));
+                break;
             }
         }
         if (isAllTaskEnd) {
             stopForeground(true);
             stopSelf();
         }
+    }
+
+    private void showSuccessfulNotification(final WeiboSendTask task) {
+        Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
+                .setTicker(getString(R.string.send_successfully))
+                .setOnlyAlertOnce(true)
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.send_successfully)
+                .setOngoing(false);
+        Notification notification = builder.getNotification();
+        final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+                .getSystemService(NOTIFICATION_SERVICE);
+        final int id = tasksNotifications.get(task);
+        notificationManager.notify(id, notification);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                notificationManager.cancel(id);
+                stopServiceIfTasksAreEnd(task);
+            }
+        }, 3000);
+    }
+
+    private void showFailedNotification(final WeiboSendTask task) {
+        Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
+                .setTicker(getString(R.string.send_failed_and_save_to_draft))
+                .setOnlyAlertOnce(true)
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.send_failed)
+                .setOngoing(false);
+        Notification notification = builder.getNotification();
+        final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+                .getSystemService(NOTIFICATION_SERVICE);
+        final int id = tasksNotifications.get(task);
+        notificationManager.notify(id, notification);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                notificationManager.cancel(id);
+                stopServiceIfTasksAreEnd(task);
+            }
+        }, 3000);
     }
 }
