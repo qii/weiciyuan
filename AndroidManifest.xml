@@ -177,7 +177,7 @@
 
 
         <!---broadcast receiver -->
-        <receiver android:name=".othercomponent.notification.UnreadMsgReceiver">
+        <receiver android:name=".othercomponent.unreadnotification.UnreadMsgReceiver">
             <intent-filter>
                 <action android:name="org.qii.weiciyuan.newmsg"/>
             </intent-filter>

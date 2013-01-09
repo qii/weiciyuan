@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.othercomponent.notification;
+package org.qii.weiciyuan.othercomponent.unreadnotification;
 
 import android.app.Notification;
 import android.app.PendingIntent;

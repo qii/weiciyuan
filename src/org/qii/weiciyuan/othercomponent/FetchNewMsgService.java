@@ -11,7 +11,7 @@ import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MentionsCommentTimeLineDao;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
-import org.qii.weiciyuan.othercomponent.notification.UnreadMsgReceiver;
+import org.qii.weiciyuan.othercomponent.unreadnotification.UnreadMsgReceiver;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;

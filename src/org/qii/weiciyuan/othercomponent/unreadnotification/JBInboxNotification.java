@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.othercomponent.notification;
+package org.qii.weiciyuan.othercomponent.unreadnotification;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -14,7 +14,8 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  * User: qii
  * Date: 12-12-5
  */
-public class JBBigTextNotification {
+public class JBInboxNotification {
+
     private Context context;
 
     private AccountBean accountBean;
@@ -25,11 +26,11 @@ public class JBBigTextNotification {
 
     private UnreadBean unreadBean;
 
-    public JBBigTextNotification(Context context,
-                                 AccountBean accountBean,
-                                 CommentListBean comment,
-                                 MessageListBean repost,
-                                 CommentListBean mentionCommentsResult, UnreadBean unreadBean) {
+    public JBInboxNotification(Context context,
+                               AccountBean accountBean,
+                               CommentListBean comment,
+                               MessageListBean repost,
+                               CommentListBean mentionCommentsResult, UnreadBean unreadBean) {
         this.context = context;
         this.accountBean = accountBean;
         this.comment = comment;
@@ -50,6 +51,7 @@ public class JBBigTextNotification {
     }
 
     public Notification get() {
+
         Notification.Builder builder = new Notification.Builder(context)
                 .setTicker(NotificationUtility.getTicker(unreadBean))
                 .setContentText(accountBean.getUsernick())
@@ -64,30 +66,32 @@ public class JBBigTextNotification {
             builder.setNumber(NotificationUtility.getCount(unreadBean));
         }
 
-        Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(builder);
-
+        Notification.InboxStyle inboxStyle = new Notification.InboxStyle(builder);
+        inboxStyle.setBigContentTitle(NotificationUtility.getTicker(unreadBean));
+        if (comment != null) {
+            for (CommentBean c : comment.getItemList()) {
+                inboxStyle.addLine(c.getUser().getScreen_name() + ":" + c.getText());
+            }
+        }
 
         if (repost != null) {
             for (MessageBean m : repost.getItemList()) {
-                bigTextStyle.setBigContentTitle(m.getUser().getScreen_name() + "：");
-                bigTextStyle.bigText(m.getText());
+                inboxStyle.addLine(m.getUser().getScreen_name() + ":" + m.getText());
             }
         }
 
         if (mentionCommentsResult != null) {
             for (CommentBean m : mentionCommentsResult.getItemList()) {
-                bigTextStyle.setBigContentTitle(m.getUser().getScreen_name() + "：");
-                bigTextStyle.bigText(m.getText());
+                inboxStyle.addLine(m.getUser().getScreen_name() + ":" + m.getText());
             }
         }
 
+        inboxStyle.setSummaryText(accountBean.getUsernick());
 
-        bigTextStyle.setSummaryText(accountBean.getUsernick());
-
-        builder.setStyle(bigTextStyle);
+        builder.setStyle(inboxStyle);
         Utility.configVibrateLedRingTone(builder);
-
         return builder.build();
     }
+
 
 }

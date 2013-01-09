@@ -15,7 +15,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
-import org.qii.weiciyuan.othercomponent.notification.UnreadMsgReceiver;
+import org.qii.weiciyuan.othercomponent.unreadnotification.UnreadMsgReceiver;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
