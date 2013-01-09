@@ -62,7 +62,7 @@ public class SendWeiboService extends Service {
 
         tasksResult.put(task, false);
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_REDELIVER_INTENT;
 
     }
 
