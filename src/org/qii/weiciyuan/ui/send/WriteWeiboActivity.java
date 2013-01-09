@@ -18,7 +18,7 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
-import org.qii.weiciyuan.othercomponent.SendWeiboService;
+import org.qii.weiciyuan.othercomponent.sendweiboservice.SendWeiboService;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;

@@ -1,9 +1,14 @@
-package org.qii.weiciyuan.othercomponent;
+package org.qii.weiciyuan.othercomponent.sendweiboservice;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -72,6 +77,8 @@ public class SendWeiboService extends Service {
         Notification notification;
         WeiboException e;
         long size;
+        BroadcastReceiver receiver;
+        PendingIntent pendingIntent;
 
         @Override
         protected void onPreExecute() {
@@ -90,9 +97,29 @@ public class SendWeiboService extends Service {
                 builder.setProgress(0, 100, true);
             }
 
-            notification = builder.getNotification();
-
             int notificationId = new Random().nextInt(Integer.MAX_VALUE);
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+
+                receiver = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        WeiboSendTask.this.cancel(true);
+                    }
+                };
+
+                IntentFilter intentFilter = new IntentFilter("org.qii.weiciyuan.SendWeiboService.stop." + String.valueOf(notificationId));
+
+                registerReceiver(receiver, intentFilter);
+
+                Intent broadcastIntent = new Intent("org.qii.weiciyuan.SendWeiboService.stop." + String.valueOf(notificationId));
+
+                pendingIntent = PendingIntent.getBroadcast(SendWeiboService.this, 1, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.addAction(R.drawable.send_failed, getString(R.string.cancel), pendingIntent);
+                notification = builder.build();
+            } else {
+                notification = builder.getNotification();
+            }
             NotificationManager notificationManager = (NotificationManager) getApplicationContext()
                     .getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(notificationId, notification);
@@ -170,7 +197,14 @@ public class SendWeiboService extends Service {
                         .setOnlyAlertOnce(true)
                         .setOngoing(true)
                         .setSmallIcon(R.drawable.upload_white);
-                notification = builder.getNotification();
+
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    builder.addAction(R.drawable.send_failed, getString(R.string.cancel), pendingIntent);
+                    notification = builder.build();
+                } else {
+                    notification = builder.getNotification();
+                }
+
                 NotificationManager notificationManager = (NotificationManager) getApplicationContext()
                         .getSystemService(NOTIFICATION_SERVICE);
                 notificationManager.notify(tasksNotifications.get(WeiboSendTask.this), notification);
@@ -184,6 +218,10 @@ public class SendWeiboService extends Service {
             if (statusDraftBean != null)
                 DraftDBManager.getInstance().remove(statusDraftBean.getId());
             showSuccessfulNotification(WeiboSendTask.this);
+
+            if (receiver != null) {
+                unregisterReceiver(receiver);
+            }
         }
 
         @Override
@@ -197,6 +235,10 @@ public class SendWeiboService extends Service {
             }
 
             showFailedNotification(WeiboSendTask.this);
+
+            if (receiver != null) {
+                unregisterReceiver(receiver);
+            }
         }
 
     }
@@ -222,6 +264,7 @@ public class SendWeiboService extends Service {
     private void showSuccessfulNotification(final WeiboSendTask task) {
         Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
                 .setTicker(getString(R.string.send_successfully))
+                .setContentTitle(getString(R.string.send_successfully))
                 .setOnlyAlertOnce(true)
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.send_successfully)
@@ -244,6 +287,7 @@ public class SendWeiboService extends Service {
     private void showFailedNotification(final WeiboSendTask task) {
         Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
                 .setTicker(getString(R.string.send_failed_and_save_to_draft))
+                .setContentTitle(getString(R.string.send_failed_and_save_to_draft))
                 .setOnlyAlertOnce(true)
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.send_failed)
