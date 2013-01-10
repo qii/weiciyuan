@@ -7,6 +7,7 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.ViewConfiguration;
 import android.widget.Toast;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
@@ -58,7 +59,7 @@ public class AbstractAppActivity extends Activity {
         super.onCreate(savedInstanceState);
         forceShowActionBarOverflowMenu();
         initNFC();
-        commander = new TimeLineBitmapDownloader();
+        commander = new TimeLineBitmapDownloader(new Handler());
     }
 
 

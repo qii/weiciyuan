@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -26,6 +27,12 @@ public class TimeLineBitmapDownloader {
     private Drawable transPic = new ColorDrawable(Color.TRANSPARENT);
 
     private Map<String, PictureBitmapWorkerTask> picTasks = new ConcurrentHashMap<String, PictureBitmapWorkerTask>();
+
+    private Handler handler;
+
+    public TimeLineBitmapDownloader(Handler handler) {
+        this.handler = handler;
+    }
 
     protected Bitmap getBitmapFromMemCache(String key) {
         if (TextUtils.isEmpty(key))
@@ -80,7 +87,7 @@ public class TimeLineBitmapDownloader {
         }
     }
 
-    private void display(ImageView view, String urlKey, FileLocationMethod method, boolean isFling) {
+    private void display(final ImageView view, final String urlKey, final FileLocationMethod method, boolean isFling) {
         view.clearAnimation();
         final Bitmap bitmap = getBitmapFromMemCache(urlKey);
         if (bitmap != null) {
@@ -101,15 +108,30 @@ public class TimeLineBitmapDownloader {
                 return;
             }
 
-
-            if (cancelPotentialDownload(urlKey, view)) {
-                task = new PictureBitmapWorkerTask(picTasks, view, urlKey, method);
-                PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(task);
-                view.setImageDrawable(downloadedDrawable);
-                task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                picTasks.put(urlKey, task);
+            if (!cancelPotentialDownload(urlKey, view)) {
                 return;
             }
+
+            final PictureBitmapWorkerTask newTask = new PictureBitmapWorkerTask(picTasks, view, urlKey, method);
+            PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(newTask);
+            view.setImageDrawable(downloadedDrawable);
+
+            //listview fast scroll performance
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (getBitmapDownloaderTask(view) == newTask) {
+                        newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                        picTasks.put(urlKey, newTask);
+                    }
+
+                    return;
+
+
+                }
+            }, 200);
+
 
         }
 
