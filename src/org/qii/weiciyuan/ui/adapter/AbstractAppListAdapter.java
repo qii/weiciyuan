@@ -184,7 +184,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
 
         if (getItemViewType(position) != TYPE_MIDDLE) {
-            configLayerType(holder);
+//            configLayerType(holder);
             configViewFont(holder);
             bindViewData(holder, position);
         }
