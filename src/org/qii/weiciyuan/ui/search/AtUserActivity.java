@@ -21,15 +21,16 @@ public class AtUserActivity extends AbstractAppActivity {
         actionBar.setTitle(R.string.at_other);
 
         String token = getIntent().getStringExtra("token");
-
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new AtUserFragment(token))
-                .commit();
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new AtUserFragment(token))
+                    .commit();
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-         switch (item.getItemId()) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
