@@ -25,6 +25,14 @@
         android:layout_alignParentRight="true"
         android:layout_alignBottom="@id/username"/>
 
+    <ImageView
+        android:id="@+id/replyIV"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="?timeline_reply_to_comment"
+        android:layout_alignRight="@id/time"
+        android:layout_below="@id/time"/>
+
     <TextView
         android:id="@+id/username"
         android:layout_width="wrap_content"
@@ -45,7 +53,8 @@
         android:textSize="15sp"
         android:layout_below="@id/username"
         android:layout_toRightOf="@id/avatar"
-        android:lineSpacingMultiplier="1.3"
+        android:layout_toLeftOf="@id/replyIV"
+        android:lineSpacingMultiplier="1.2"
         android:layerType="software"/>
 
     <FrameLayout

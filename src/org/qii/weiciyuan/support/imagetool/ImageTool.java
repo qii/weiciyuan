@@ -403,6 +403,64 @@ public class ImageTool {
 
     }
 
+    public static Bitmap getWriteWeiboRoundedCornerPic(String url, int reqWidth, int reqHeight, FileLocationMethod method) {
+        try {
+
+            if (!FileManager.isExternalStorageMounted()) {
+                return null;
+            }
+
+            String filePath = FileManager.getFilePathFromUrl(url, method);
+            if (!filePath.endsWith(".jpg") && !filePath.endsWith(".gif"))
+                filePath = filePath + ".jpg";
+
+            boolean fileExist = new File(filePath).exists();
+
+            if (!fileExist) {
+                return null;
+            }
+
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(filePath, options);
+
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+            options.inJustDecodeBounds = false;
+            options.inPurgeable = true;
+            options.inInputShareable = true;
+
+            Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
+
+            if (bitmap == null) {
+                //this picture is broken,so delete it
+                new File(filePath).delete();
+                return null;
+            }
+
+
+            int[] size = calcResize(bitmap.getWidth(), bitmap.getHeight(), reqWidth, reqHeight);
+            if (size[0] > 0 && size[1] > 0) {
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size[0], size[1], true);
+                if (scaledBitmap != bitmap) {
+                    bitmap.recycle();
+                    bitmap = scaledBitmap;
+                }
+            }
+
+            Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+            if (roundedBitmap != bitmap) {
+                bitmap.recycle();
+                bitmap = roundedBitmap;
+            }
+
+            return bitmap;
+        } catch (OutOfMemoryError ignored) {
+            ignored.printStackTrace();
+            return null;
+        }
+    }
+
 
     private static boolean getBitmapFromNetWork(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
         for (int i = 0; i < 3; i++) {

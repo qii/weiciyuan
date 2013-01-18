@@ -3,6 +3,7 @@ package org.qii.weiciyuan.ui.send;
 import android.app.ActionBar;
 import android.content.*;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.*;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,7 +23,9 @@ import org.qii.weiciyuan.othercomponent.sendweiboservice.SendWeiboService;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageEdit;
+import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -261,6 +264,19 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.write_weibo);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
+
+        int avatarWidth = getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width);
+        int avatarHeight = getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height);
+
+        Bitmap bitmap = ImageTool.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getAvatar_large(), avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
+        if (bitmap == null) {
+            bitmap = ImageTool.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getProfile_image_url(), avatarWidth, avatarHeight, FileLocationMethod.avatar_small);
+        }
+        if (bitmap != null) {
+            actionBar.setIcon(new BitmapDrawable(getResources(), bitmap));
+        }
 
         View title = getLayoutInflater().inflate(R.layout.writeweiboactivity_title_layout, null);
         TextView contentNumber = (TextView) title.findViewById(R.id.content_number);
