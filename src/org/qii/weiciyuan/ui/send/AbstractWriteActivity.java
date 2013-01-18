@@ -1,8 +1,10 @@
 package org.qii.weiciyuan.ui.send;
 
+import android.app.ActionBar;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -85,8 +89,23 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         super.onCreate(savedInstanceState);
         setContentView(R.layout.abstractwriteactivity_layout);
 
-        getActionBar().setDisplayShowCustomEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
+
+        int avatarWidth = getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width);
+        int avatarHeight = getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height);
+
+        Bitmap bitmap = ImageTool.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getAvatar_large(), avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
+        if (bitmap == null) {
+            bitmap = ImageTool.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getProfile_image_url(), avatarWidth, avatarHeight, FileLocationMethod.avatar_small);
+        }
+        if (bitmap != null) {
+            actionBar.setIcon(new BitmapDrawable(getResources(), bitmap));
+        }
+
         token = getIntent().getStringExtra("token");
 
 
@@ -245,26 +264,25 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
     }
 
 
-
     private class BottomButtonLongClickListener implements View.OnLongClickListener {
 
-            @Override
-            public boolean onLongClick(View v) {
-                switch (v.getId()) {
-                    case R.id.menu_emoticon:
-                        Toast.makeText(AbstractWriteActivity.this, getString(R.string.add_emoticon), Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.menu_at:
-                        Toast.makeText(AbstractWriteActivity.this, getString(R.string.at_other), Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.menu_topic:
-                        Toast.makeText(AbstractWriteActivity.this, getString(R.string.add_topic), Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.menu_send:
-                        Toast.makeText(AbstractWriteActivity.this, getString(R.string.send), Toast.LENGTH_SHORT).show();
-                        break;
-                }
-                return true;
+        @Override
+        public boolean onLongClick(View v) {
+            switch (v.getId()) {
+                case R.id.menu_emoticon:
+                    Toast.makeText(AbstractWriteActivity.this, getString(R.string.add_emoticon), Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.menu_at:
+                    Toast.makeText(AbstractWriteActivity.this, getString(R.string.at_other), Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.menu_topic:
+                    Toast.makeText(AbstractWriteActivity.this, getString(R.string.add_topic), Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.menu_send:
+                    Toast.makeText(AbstractWriteActivity.this, getString(R.string.send), Toast.LENGTH_SHORT).show();
+                    break;
             }
+            return true;
         }
+    }
 }
