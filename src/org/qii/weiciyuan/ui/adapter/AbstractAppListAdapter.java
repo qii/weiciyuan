@@ -375,8 +375,13 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
-                    intent.putExtra("url", msg.getBmiddle_pic());
-                    intent.putExtra("oriUrl", msg.getOriginal_pic());
+                    if (SettingUtility.getEnableBigPic()) {
+                        intent.putExtra("url", msg.getOriginal_pic());
+                        intent.putExtra("oriUrl", "");
+                    } else {
+                        intent.putExtra("url", msg.getBmiddle_pic());
+                        intent.putExtra("oriUrl", msg.getOriginal_pic());
+                    }
                     getActivity().startActivity(intent);
                 }
             });
@@ -389,15 +394,6 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private void buildPic(final MessageBean msg, ImageView view) {
         view.setVisibility(View.VISIBLE);
         commander.downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
-                intent.putExtra("url", msg.getBmiddle_pic());
-                intent.putExtra("oriUrl", msg.getOriginal_pic());
-                getActivity().startActivity(intent);
-            }
-        });
     }
 
     protected void buildRepostContent(final MessageBean repost_msg, ViewHolder holder, int position) {

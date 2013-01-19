@@ -77,8 +77,8 @@ public class TimeLineBitmapDownloader {
         boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
 
         if (SettingUtility.getEnableBigPic()) {
-            picUrl = msg.getBmiddle_pic();
-            display(view, picUrl, FileLocationMethod.picture_bmiddle, isFling);
+            picUrl = msg.getOriginal_pic();
+            display(view, picUrl, FileLocationMethod.picture_large, isFling);
 
         } else {
             picUrl = msg.getThumbnail_pic();

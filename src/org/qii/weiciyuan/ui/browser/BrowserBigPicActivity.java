@@ -85,6 +85,9 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
         oriMenu = menu.findItem(R.id.menu_switch);
+        if (TextUtils.isEmpty(oriUrl)) {
+            oriMenu.setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -253,7 +256,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
 
 
                 if (ImageTool.isThisBitmapCanRead(bitmapPath)) {
-                    int[] size=ImageTool.getBitmapSize(bitmapPath);
+                    int[] size = ImageTool.getBitmapSize(bitmapPath);
                     getActionBar().setSubtitle(String.valueOf(size[0]) + "x" + String.valueOf(size[1]));
                 }
                 webView.setVisibility(View.VISIBLE);

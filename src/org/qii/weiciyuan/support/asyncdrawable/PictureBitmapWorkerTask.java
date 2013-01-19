@@ -76,7 +76,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                 case picture_thumbnail:
                     return ImageTool.getRoundedCornerPic(this.data, thumbnailWidth, thumbnailHeight, FileLocationMethod.picture_thumbnail);
 
-                case picture_bmiddle:
+                case picture_large:
                     DisplayMetrics metrics = globalContext.getDisplayMetrics();
 
                     float reSize = globalContext.getResources().getDisplayMetrics().density;
