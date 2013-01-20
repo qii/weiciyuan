@@ -222,6 +222,10 @@ public class MyLinkMovementMethod extends ScrollingMovementMethod {
             }
         }
 
+        if (action == MotionEvent.ACTION_MOVE) {
+            pressed = false;
+        }
+
         return super.onTouchEvent(widget, buffer, event);
     }
 
