@@ -3,7 +3,6 @@ package org.qii.weiciyuan.support.lib;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.text.style.URLSpan;
 import android.util.Patterns;
@@ -216,7 +215,7 @@ public class MyLinkify {
      * Scans the text of the provided TextView and turns all occurrences of
      * the link types indicated in the mask into clickable links.  If matches
      * are found the movement method for the TextView is set to
-     * LinkMovementMethod.
+     * MyLinkMovementMethod.
      */
     public static final boolean addLinks(TextView text, int mask) {
         if (mask == 0) {
@@ -227,7 +226,7 @@ public class MyLinkify {
 
         if (t instanceof Spannable) {
             if (addLinks((Spannable) t, mask)) {
-                addLinkMovementMethod(text);
+                addMyLinkMovementMethod(text);
                 return true;
             }
 
@@ -236,7 +235,7 @@ public class MyLinkify {
             SpannableString s = SpannableString.valueOf(t);
 
             if (addLinks(s, mask)) {
-                addLinkMovementMethod(text);
+                addMyLinkMovementMethod(text);
                 text.setText(s);
 
                 return true;
@@ -256,7 +255,7 @@ public class MyLinkify {
 
         if (t instanceof Spannable) {
             if (addLinks((Spannable) t, mask)) {
-                //addLinkMovementMethod(text);
+                //addMyLinkMovementMethod(text);
                 return true;
             }
 
@@ -265,7 +264,7 @@ public class MyLinkify {
             SpannableString s = SpannableString.valueOf(t);
 
             if (addLinks(s, mask)) {
-                // addLinkMovementMethod(text);
+                // addMyLinkMovementMethod(text);
                 text.setText(s);
 
                 return true;
@@ -285,7 +284,7 @@ public class MyLinkify {
 
         if (t instanceof Spannable) {
             if (addLinks((Spannable) t, mask)) {
-                //addLinkMovementMethod(text);
+                //addMyLinkMovementMethod(text);
                 return SpannableString.valueOf(t);
             }
 
@@ -293,7 +292,7 @@ public class MyLinkify {
             SpannableString s = SpannableString.valueOf(t);
 
             if (addLinks(s, mask)) {
-                // addLinkMovementMethod(text);
+                // addMyLinkMovementMethod(text);
                 return s;
 
             }
@@ -303,12 +302,12 @@ public class MyLinkify {
         return SpannableString.valueOf(text);
     }
 
-    private static final void addLinkMovementMethod(TextView t) {
+    private static final void addMyLinkMovementMethod(TextView t) {
         MovementMethod m = t.getMovementMethod();
 
-        if ((m == null) || !(m instanceof LinkMovementMethod)) {
+        if ((m == null) || !(m instanceof MyLinkMovementMethod)) {
             if (t.getLinksClickable()) {
-                t.setMovementMethod(LinkMovementMethod.getInstance());
+                t.setMovementMethod(MyLinkMovementMethod.getInstance());
             }
         }
     }
@@ -317,7 +316,7 @@ public class MyLinkify {
      * Applies a regex to the text of a TextView turning the matches into
      * links.  If links are found then UrlSpans are applied to the link
      * text match areas, and the movement method for the text is changed
-     * to LinkMovementMethod.
+     * to MyLinkMovementMethod.
      *
      * @param text    TextView whose text is to be marked-up with links
      * @param pattern Regex pattern to be used for finding links
@@ -333,7 +332,7 @@ public class MyLinkify {
      * Applies a regex to the text of a TextView turning the matches into
      * links.  If links are found then UrlSpans are applied to the link
      * text match areas, and the movement method for the text is changed
-     * to LinkMovementMethod.
+     * to MyLinkMovementMethod.
      *
      * @param text        TextView whose text is to be marked-up with links
      * @param p           Regex pattern to be used for finding links
@@ -350,7 +349,7 @@ public class MyLinkify {
 
         if (addLinks(s, p, scheme, matchFilter, transformFilter)) {
             text.setText(s);
-            addLinkMovementMethod(text);
+            addMyLinkMovementMethod(text);
         }
     }
 

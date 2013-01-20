@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
@@ -16,6 +15,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.lib.MyLinkMovementMethod;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -114,8 +114,8 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             }
         });
 
-        holder.content.setMovementMethod(LinkMovementMethod.getInstance());
-        holder.repost_content.setMovementMethod(LinkMovementMethod.getInstance());
+        holder.content.setMovementMethod(MyLinkMovementMethod.getInstance());
+        holder.repost_content.setMovementMethod(MyLinkMovementMethod.getInstance());
 
         //onTouchListener has some strange problem, when user click link, holder.listview_root may also receive a MotionEvent.ACTION_DOWN event
         //the background then changed

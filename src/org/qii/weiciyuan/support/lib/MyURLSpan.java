@@ -10,6 +10,7 @@ import android.text.ParcelableSpan;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
@@ -51,6 +52,16 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
         context.startActivity(intent);
+    }
+
+    public void onLongClick(View widget) {
+        Uri data = Uri.parse(getURL());
+        if (data != null) {
+            String d = data.toString();
+            int index = d.lastIndexOf("/");
+            String newValue = d.substring(index + 1);
+            Toast.makeText(widget.getContext(), newValue, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

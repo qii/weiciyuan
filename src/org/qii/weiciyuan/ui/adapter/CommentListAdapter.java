@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -14,6 +13,7 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.lib.MyLinkMovementMethod;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
@@ -78,6 +78,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);
 
+        holder.content.setMovementMethod(MyLinkMovementMethod.getInstance());
+        holder.repost_content.setMovementMethod(MyLinkMovementMethod.getInstance());
 
         CommentBean reply = comment.getReply_comment();
         if (holder.replyIV != null)
@@ -107,7 +109,6 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
                             getActivity().startActivity(intent);
                         }
                     });
-                    holder.content.setMovementMethod(LinkMovementMethod.getInstance());
                 }
             }
 
