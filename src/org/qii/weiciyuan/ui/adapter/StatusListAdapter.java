@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
@@ -32,15 +31,10 @@ import java.util.WeakHashMap;
  */
 public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
-    private Drawable background;
     private Map<ViewHolder, Drawable> bg = new WeakHashMap<ViewHolder, Drawable>();
 
     public StatusListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
         super(fragment, commander, bean, listView, showOriStatus);
-//        int[] attrs = new int[]{R.attr.listview_checked_color};
-//        TypedArray ta = fragment.getActivity().obtainStyledAttributes(attrs);
-//        background = ta.getDrawable(0);
-        background = getActivity().getResources().getDrawable(R.drawable.listview_item_background_selector);
     }
 
 
