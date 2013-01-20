@@ -243,6 +243,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.count_layout = (LinearLayout) convertView.findViewById(R.id.count_layout);
         holder.repost_count = (TextView) convertView.findViewById(R.id.repost_count);
         holder.comment_count = (TextView) convertView.findViewById(R.id.comment_count);
+        holder.replyIV = (ImageView) convertView.findViewById(R.id.replyIV);
+
         return holder;
     }
 
@@ -424,6 +426,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         LinearLayout count_layout;
         TextView repost_count;
         TextView comment_count;
+        ImageView replyIV;
     }
 
     public void removeItem(final int postion) {

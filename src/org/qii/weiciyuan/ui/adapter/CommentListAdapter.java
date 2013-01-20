@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.adapter;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -13,7 +14,8 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
 import java.util.List;
 
@@ -77,7 +79,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
 
         CommentBean reply = comment.getReply_comment();
-
+        if (holder.replyIV != null)
+            holder.replyIV.setVisibility(View.GONE);
         if (reply != null && showOriStatus) {
             holder.repost_layout.setVisibility(View.VISIBLE);
             holder.repost_flag.setVisibility(View.VISIBLE);
@@ -92,6 +95,18 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             } else {
                 holder.repost_layout.setVisibility(View.GONE);
                 holder.repost_flag.setVisibility(View.GONE);
+                if (holder.replyIV != null) {
+                    holder.replyIV.setVisibility(View.VISIBLE);
+                    holder.replyIV.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
+                            intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                            intent.putExtra("msg", comment);
+                            getActivity().startActivity(intent);
+                        }
+                    });
+                }
             }
 
         }
