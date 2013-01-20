@@ -186,8 +186,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.writeweiboactivity_layout);
-        initLayout();
+        buildInterface();
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -260,7 +259,9 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
 
-    private void initLayout() {
+    private void buildInterface() {
+        setContentView(R.layout.writeweiboactivity_layout);
+
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.write_weibo);
