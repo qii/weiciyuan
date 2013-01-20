@@ -129,7 +129,7 @@
     <string name="send_failed_and_save_to_draft">发送失败，已保存到草稿箱</string>
     <string name="cancel_send_and_save_to_draft">取消上传，已保存到草稿箱</string>
     <string name="click_to_open_draft">点击打开草稿箱</string>
-    <string name="background_sending">后台发送中</string>
+    <string name="background_sending">发送中</string>
     <string name="wait_server_response">发送结束，等待结果</string>
     <string name="send_photo">发送照片</string>
     <string name="dont_have_account">没用可用的发微博帐号</string>
