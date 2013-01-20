@@ -178,6 +178,7 @@ public class SendWeiboService extends Service {
 
 
         private double lastStatus = -1d;
+        private long lastMillis = -1L;
 
         @Override
         protected void onProgressUpdate(Long... values) {
@@ -192,7 +193,13 @@ public class SendWeiboService extends Service {
                         return;
                     }
 
+                    if (System.currentTimeMillis() - lastMillis < 200L) {
+                        return;
+                    }
+
                     lastStatus = r;
+
+                    lastMillis = System.currentTimeMillis();
 
                     Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
                             .setTicker(getString(R.string.send_photo))
