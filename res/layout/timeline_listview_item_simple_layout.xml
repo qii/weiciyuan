@@ -31,6 +31,7 @@
         android:layout_height="30dp"
         android:src="?timeline_reply_to_comment"
         android:layout_alignRight="@id/time"
+        android:visibility="gone"
         android:layout_below="@id/time"/>
 
     <TextView
