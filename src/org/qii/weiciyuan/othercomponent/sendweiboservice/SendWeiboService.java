@@ -135,7 +135,12 @@ public class SendWeiboService extends Service {
                 @Override
                 public void transferred(long data) {
 
-                    publishProgress((long) (data * 0.95));
+                    publishProgress(data);
+                }
+
+                @Override
+                public void waitServerResponse() {
+                    publishProgress(-1L);
                 }
 
                 @Override
@@ -180,29 +185,41 @@ public class SendWeiboService extends Service {
             if (values.length > 0) {
 
                 long data = values[0];
+                if (data != -1) {
+                    double r = data / (double) size;
 
-                double r = data / (double) size;
+                    if (Math.abs(r - lastStatus) < 0.01d) {
+                        return;
+                    }
 
-                if (Math.abs(r - lastStatus) < 0.01d) {
-                    return;
-                }
+                    lastStatus = r;
 
-                lastStatus = r;
+                    Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
+                            .setTicker(getString(R.string.send_photo))
+                            .setContentTitle(getString(R.string.background_sending))
+                            .setNumber((int) (r * 100))
+                            .setContentText(content)
+                            .setProgress((int) size, (int) data, false)
+                            .setOnlyAlertOnce(true)
+                            .setOngoing(true)
+                            .setSmallIcon(R.drawable.upload_white);
 
-                Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
-                        .setTicker(getString(R.string.send_photo))
-                        .setContentTitle(getString(R.string.background_sending))
-                        .setNumber((int) (r * 100))
-                        .setContentText(content)
-                        .setProgress((int) size, (int) data, false)
-                        .setOnlyAlertOnce(true)
-                        .setOngoing(true)
-                        .setSmallIcon(R.drawable.upload_white);
-
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    builder.addAction(R.drawable.send_failed, getString(R.string.cancel), pendingIntent);
-                    notification = builder.build();
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        builder.addAction(R.drawable.send_failed, getString(R.string.cancel), pendingIntent);
+                        notification = builder.build();
+                    } else {
+                        notification = builder.getNotification();
+                    }
                 } else {
+                    Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
+                            .setTicker(getString(R.string.send_photo))
+                            .setContentTitle(getString(R.string.wait_server_response))
+                            .setContentText(content)
+                            .setProgress(100, 100, false)
+                            .setOnlyAlertOnce(true)
+                            .setOngoing(true)
+                            .setSmallIcon(R.drawable.upload_white);
+
                     notification = builder.getNotification();
                 }
 

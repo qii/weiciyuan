@@ -434,10 +434,11 @@ public class JavaHttpUtility {
             out.write(("--" + BOUNDARYSTR + "--\r\n").getBytes());
             out.flush();
             out.close();
-            int status = urlConnection.getResponseCode();
             if (listener != null) {
-                listener.completed();
+                listener.waitServerResponse();
             }
+            int status = urlConnection.getResponseCode();
+
             if (status != HttpURLConnection.HTTP_OK) {
                 String error = handleError(urlConnection);
                 throw new WeiboException(error);
