@@ -3,9 +3,15 @@ package org.qii.weiciyuan.ui.adapter;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.text.Spannable;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.text.style.BackgroundColorSpan;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -43,7 +49,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
     }
 
     @Override
-    protected void bindViewData(ViewHolder holder, int position) {
+    protected void bindViewData(final ViewHolder holder, int position) {
 
         holder.listview_root.setBackgroundColor(defaultBG);
 
@@ -108,6 +114,40 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
                         }
                     });
                     holder.content.setMovementMethod(LinkMovementMethod.getInstance());
+                    final BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(Color.parseColor("#33B5E5"));
+                    holder.content.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            final Spannable sps = (Spannable) holder.content.getText();
+                            int start = holder.content.getSelectionStart();
+                            int end = holder.content.getSelectionEnd();
+                            boolean isLink = start != -1 && end != -1;
+                            if (isLink) {
+                                sps.setSpan(backgroundColorSpan, start, end, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            }
+                            switch (event.getActionMasked()) {
+
+                                case MotionEvent.ACTION_CANCEL:
+                                case MotionEvent.ACTION_UP:
+
+                                    //sometimes when click links, android first call MotionEvent.ACTION_UP event, at this time
+                                    //background color is ignored, this runnable is the workaround;
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            sps.removeSpan(backgroundColorSpan);
+                                        }
+                                    }, 100L);
+                                    break;
+
+                            }
+
+                            return false;
+                        }
+                    }
+
+                    );
+
                 }
             }
 
