@@ -238,6 +238,20 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         }
     }
 
+    public boolean clearActionModeIfOpen() {
+        boolean flag = false;
+        if (mActionMode != null) {
+            mActionMode.finish();
+            mActionMode = null;
+            flag = true;
+        }
+        if (pullToRefreshListView != null && getListView().getCheckedItemCount() > 0) {
+            getListView().clearChoices();
+            if (getAdapter() != null) getAdapter().notifyDataSetChanged();
+        }
+        return flag;
+    }
+
     protected abstract void buildListAdapter();
 
     @Override

@@ -4,6 +4,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
+                android:clickable="true"
+                android:background="@drawable/listview_item_background_selector"
                 android:id="@+id/listview_root">
 
     <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
@@ -56,6 +58,7 @@
         android:ellipsize="end"
         android:layout_toRightOf="@id/avatar"
         android:layout_toLeftOf="@id/count_layout"
+        android:clickable="true"
         android:textStyle="bold"/>
 
 
@@ -77,6 +80,7 @@
         android:textSize="15sp"
         android:layout_below="@id/avatar"
         android:lineSpacingMultiplier="1.2"
+        android:clickable="true"
         />
 
     <FrameLayout
@@ -122,6 +126,7 @@
                 android:textSize="15sp"
                 android:visibility="gone"
                 android:lineSpacingMultiplier="1.2"
+                android:clickable="true"
                 />
 
             <LinearLayout
