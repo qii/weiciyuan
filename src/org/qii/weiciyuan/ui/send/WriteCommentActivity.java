@@ -199,11 +199,6 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
 
     }
 
-    @Override
-    protected ItemBean sendData() throws WeiboException {
-
-        return null;
-    }
 
     /**
      * 1. this message has repost's message

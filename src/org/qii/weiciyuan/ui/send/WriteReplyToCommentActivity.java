@@ -14,7 +14,6 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.othercomponent.sendweiboservice.SendReplyToCommentService;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.ReplyDraftBean;
-import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
@@ -137,12 +136,6 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
             startService(intent);
             finish();
         }
-    }
-
-
-    @Override
-    protected CommentBean sendData() throws WeiboException {
-        return null;
     }
 
 

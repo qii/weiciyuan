@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.ui.send;
 
 import android.app.ActionBar;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,15 +11,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
-import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
 
 import java.util.Map;
 
@@ -31,9 +27,6 @@ import java.util.Map;
 public abstract class AbstractWriteActivity<T> extends AbstractAppActivity implements View.OnClickListener, ClearContentDialog.IClear
         , EmotionsGridDialog.IEmotions, SaveDraftDialog.IDraft {
 
-    private SimpleTask task;
-
-    protected abstract T sendData() throws WeiboException;
 
     protected abstract boolean canSend();
 
@@ -54,14 +47,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         getEditTextView().setText("");
     }
 
-    protected void send() {
-        if (canSend()) {
-            if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
-                task = new SimpleTask();
-                task.execute();
-            }
-        }
-    }
+    protected abstract void send();
 
     @Override
     public void insertEmotion(String emotionChar) {
@@ -193,72 +179,6 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
                     getEditTextView().setSelection(index + name.length());
                     break;
             }
-
-        }
-    }
-
-
-    private class SimpleTask extends MyAsyncTask<Void, Void, T> {
-
-        SendProgressFragment progressFragment = new SendProgressFragment();
-        WeiboException e;
-
-        @Override
-        protected void onPreExecute() {
-            progressFragment.onCancel(new DialogInterface() {
-
-                @Override
-                public void cancel() {
-                    SimpleTask.this.cancel(true);
-                }
-
-                @Override
-                public void dismiss() {
-                    SimpleTask.this.cancel(true);
-                }
-            });
-
-            progressFragment.show(getFragmentManager(), "");
-
-        }
-
-        @Override
-        protected T doInBackground(Void... params) {
-
-            try {
-                return sendData();
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-                return null;
-            }
-        }
-
-        @Override
-        protected void onCancelled(T commentBean) {
-            super.onCancelled(commentBean);
-            if (this.e != null) {
-                Toast.makeText(AbstractWriteActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
-
-            }
-
-            if (progressFragment != null)
-                progressFragment.dismissAllowingStateLoss();
-        }
-
-
-        @Override
-        protected void onPostExecute(T s) {
-            progressFragment.dismissAllowingStateLoss();
-            if (s != null) {
-                removeDraft();
-                Toast.makeText(AbstractWriteActivity.this, getString(R.string.send_successfully), Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                Toast.makeText(AbstractWriteActivity.this, getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
-
-            }
-            super.onPostExecute(s);
 
         }
     }

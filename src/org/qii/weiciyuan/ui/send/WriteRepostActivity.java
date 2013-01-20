@@ -14,7 +14,6 @@ import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.othercomponent.sendweiboservice.SendRepostService;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.RepostDraftBean;
-import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
@@ -219,10 +218,6 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         }
     }
 
-    @Override
-    protected MessageBean sendData() throws WeiboException {
-        return null;
-    }
 
     @Override
     protected boolean canSend() {
