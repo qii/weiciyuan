@@ -75,8 +75,8 @@ public class SendRepostService extends Service {
         protected void onPreExecute() {
             super.onPreExecute();
             Notification.Builder builder = new Notification.Builder(SendRepostService.this)
-                    .setTicker(getString(R.string.sending))
-                    .setContentTitle(getString(R.string.sending))
+                    .setTicker(getString(R.string.sending_repost))
+                    .setContentTitle(getString(R.string.sending_repost))
                     .setContentText(content)
                     .setOnlyAlertOnce(true)
                     .setOngoing(true)

@@ -75,8 +75,8 @@ public class SendCommentService extends Service {
         protected void onPreExecute() {
             super.onPreExecute();
             Notification.Builder builder = new Notification.Builder(SendCommentService.this)
-                    .setTicker(getString(R.string.sending))
-                    .setContentTitle(getString(R.string.sending))
+                    .setTicker(getString(R.string.sending_comment))
+                    .setContentTitle(getString(R.string.sending_comment))
                     .setContentText(content)
                     .setOnlyAlertOnce(true)
                     .setOngoing(true)
