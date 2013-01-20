@@ -188,24 +188,18 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("picPath", picPath);
+        outState.putSerializable("geoBean", geoBean);
+        outState.putString("location", location);
+        outState.putParcelable("imageFileUri", imageFileUri);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         buildInterface();
-
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
-        if (Intent.ACTION_SEND.equals(action) && type != null) {
-            if ("text/plain".equals(type)) {
-                handleSendText(intent);
-            } else if (type.startsWith("image/")) {
-                handleSendImage(intent);
-            }
-        } else if (WriteWeiboActivity.ACTION_DRAFT.equals(action)) {
-            handleDraftOperation(intent);
-        } else {
-            handleNormalOperation(intent);
-        }
 
         if (savedInstanceState != null) {
             picPath = savedInstanceState.getString("picPath");
@@ -219,17 +213,26 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 disableGeo();
 
             imageFileUri = savedInstanceState.getParcelable("imageFileUri");
+        } else {
+            Intent intent = getIntent();
+            String action = intent.getAction();
+            String type = intent.getType();
+            if (!TextUtils.isEmpty(action)) {
+                if (action.equals(Intent.ACTION_SEND) && !TextUtils.isEmpty(type)) {
+                    if ("text/plain".equals(type)) {
+                        handleSendText(intent);
+                    } else if (type.startsWith("image/")) {
+                        handleSendImage(intent);
+                    }
+                } else if (action.equals(WriteWeiboActivity.ACTION_DRAFT)) {
+                    handleDraftOperation(intent);
+                }
+            } else {
+                handleNormalOperation(intent);
+            }
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("picPath", picPath);
-        outState.putSerializable("geoBean", geoBean);
-        outState.putString("location", location);
-        outState.putParcelable("imageFileUri", imageFileUri);
-    }
 
     private void handleDraftOperation(Intent intent) {
         accountBean = (AccountBean) intent.getSerializableExtra("account");
