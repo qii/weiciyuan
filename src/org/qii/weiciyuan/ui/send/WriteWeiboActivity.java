@@ -55,6 +55,9 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     public static final int AT_USER = 3;
     public static final int BROWSER_PIC = 4;
 
+    public static final String ACTION_DRAFT = "org.qii.weiciyuan.DRAFT";
+    public static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
+
     private AccountBean accountBean;
     protected String token = "";
     private StatusDraftBean statusDraftBean;
@@ -198,6 +201,8 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             } else if (type.startsWith("image/")) {
                 handleSendImage(intent);
             }
+        } else if (WriteWeiboActivity.ACTION_DRAFT.equals(action)) {
+            handleDraftOperation(intent);
         } else {
             handleNormalOperation(intent);
         }
@@ -226,15 +231,10 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         outState.putParcelable("imageFileUri", imageFileUri);
     }
 
-    private void handleNormalOperation(Intent intent) {
+    private void handleDraftOperation(Intent intent) {
         accountBean = (AccountBean) intent.getSerializableExtra("account");
         token = accountBean.getAccess_token();
         getActionBar().setSubtitle(accountBean.getUsernick());
-        String contentTxt = intent.getStringExtra("content");
-        if (!TextUtils.isEmpty(contentTxt)) {
-            content.setText(contentTxt + " ");
-            content.setSelection(content.getText().toString().length());
-        }
 
         statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("draft");
         if (statusDraftBean != null) {
@@ -252,6 +252,13 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 }
             }
         }
+    }
+
+    private void handleNormalOperation(Intent intent) {
+        accountBean = (AccountBean) intent.getSerializableExtra("account");
+        token = accountBean.getAccess_token();
+        getActionBar().setSubtitle(accountBean.getUsernick());
+
     }
 
 

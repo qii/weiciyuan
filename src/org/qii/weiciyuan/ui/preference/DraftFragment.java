@@ -87,6 +87,7 @@ public class DraftFragment extends ListFragment {
                     case DraftTable.TYPE_WEIBO:
                         AccountBean accountBean = AccountDBTask.getAccount(item.getStatusDraftBean().getAccountId());
                         intent = new Intent(getActivity(), WriteWeiboActivity.class);
+                        intent.setAction(WriteWeiboActivity.ACTION_DRAFT);
                         intent.putExtra("draft", item.getStatusDraftBean());
                         intent.putExtra("account", accountBean);
                         startActivity(intent);
