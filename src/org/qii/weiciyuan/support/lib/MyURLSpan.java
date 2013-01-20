@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.support.lib;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -8,6 +10,7 @@ import android.os.Parcel;
 import android.provider.Browser;
 import android.text.ParcelableSpan;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Toast;
@@ -58,9 +61,18 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
         Uri data = Uri.parse(getURL());
         if (data != null) {
             String d = data.toString();
-            int index = d.lastIndexOf("/");
-            String newValue = d.substring(index + 1);
-            Toast.makeText(widget.getContext(), newValue, Toast.LENGTH_SHORT).show();
+            String newValue = "";
+            if (d.startsWith("org.qii.weiciyuan")) {
+                int index = d.lastIndexOf("/");
+                newValue = d.substring(index + 1);
+            } else if (d.startsWith("http")) {
+                newValue = d;
+            }
+            if (!TextUtils.isEmpty(newValue)) {
+                ClipboardManager cm = (ClipboardManager) widget.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", newValue));
+                Toast.makeText(widget.getContext(), String.format(widget.getContext().getString(R.string.have_copied), newValue), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
