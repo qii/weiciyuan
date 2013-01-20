@@ -12,8 +12,9 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
+import org.qii.weiciyuan.othercomponent.sendweiboservice.SendCommentService;
+import org.qii.weiciyuan.othercomponent.sendweiboservice.SendRepostService;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.CommentDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -179,20 +180,29 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
     }
 
     @Override
-    protected ItemBean sendData() throws WeiboException {
+    protected void send() {
         if (!enableRepost.isChecked()) {
-            CommentNewMsgDao dao = new CommentNewMsgDao(token, msg.getId(), ((EditText) findViewById(R.id.status_new_content)).getText().toString());
-            if (enableCommentOri.isChecked()) {
-                dao.enableComment_ori(true);
-            } else {
-                dao.enableComment_ori(false);
-            }
+            String content = ((EditText) findViewById(R.id.status_new_content)).getText().toString();
+            Intent intent = new Intent(WriteCommentActivity.this, SendCommentService.class);
+            intent.putExtra("oriMsg", msg);
+            intent.putExtra("content", content);
+            intent.putExtra("comment_ori", enableCommentOri.isChecked());
+            intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+            intent.putExtra("accountId", GlobalContext.getInstance().getCurrentAccountId());
+            startService(intent);
+            finish();
 
-            return dao.sendNewMsg();
         } else {
-            return repost();
+            repost();
         }
 
+
+    }
+
+    @Override
+    protected ItemBean sendData() throws WeiboException {
+
+        return null;
     }
 
     /**
@@ -203,7 +213,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
      * if total word number above 140,discard current msg content
      */
 
-    private ItemBean repost() throws WeiboException {
+    private void repost() {
 
         String content = ((EditText) findViewById(R.id.status_new_content)).getText().toString();
 
@@ -215,22 +225,26 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
             }
         }
 
-        RepostNewMsgDao dao = new RepostNewMsgDao(token, msg.getId());
 
         boolean comment = true;
         boolean oriComment = enableCommentOri.isChecked();
-
+        String is_comment = "";
         if (comment && oriComment) {
-            dao.setIs_comment(RepostNewMsgDao.ENABLE_COMMENT_ALL);
+            is_comment = RepostNewMsgDao.ENABLE_COMMENT_ALL;
         } else if (comment) {
-            dao.setIs_comment(RepostNewMsgDao.ENABLE_COMMENT);
+            is_comment = RepostNewMsgDao.ENABLE_COMMENT;
         } else if (oriComment) {
-            dao.setIs_comment(RepostNewMsgDao.ENABLE_ORI_COMMENT);
+            is_comment = RepostNewMsgDao.ENABLE_ORI_COMMENT;
         }
 
+        Intent intent = new Intent(WriteCommentActivity.this, SendRepostService.class);
+        intent.putExtra("oriMsg", msg);
+        intent.putExtra("content", content);
+        intent.putExtra("is_comment", is_comment);
+        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+        intent.putExtra("accountId", GlobalContext.getInstance().getCurrentAccountId());
+        startService(intent);
+        finish();
 
-        dao.setStatus(content);
-
-        return dao.sendNewMsg();
     }
 }
