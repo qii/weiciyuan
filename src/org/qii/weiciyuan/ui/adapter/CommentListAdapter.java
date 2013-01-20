@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -106,6 +107,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
                             getActivity().startActivity(intent);
                         }
                     });
+                    holder.content.setMovementMethod(LinkMovementMethod.getInstance());
                 }
             }
 
