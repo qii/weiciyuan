@@ -93,7 +93,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                     Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
                     intent.putExtra("msg", msg);
                     intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                    getActivity().startActivityForResult(intent, 0);
+                    fragment.startActivityForResult(intent, 0);
                 }
             }
         });
