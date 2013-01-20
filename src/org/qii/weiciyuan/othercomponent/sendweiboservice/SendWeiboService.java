@@ -222,6 +222,7 @@ public class SendWeiboService extends Service {
                             .setTicker(getString(R.string.send_photo))
                             .setContentTitle(getString(R.string.wait_server_response))
                             .setContentText(content)
+                            .setNumber(100)
                             .setProgress(100, 100, false)
                             .setOnlyAlertOnce(true)
                             .setOngoing(true)
