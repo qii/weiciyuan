@@ -175,6 +175,7 @@
         <service android:name=".othercomponent.sendweiboservice.SendWeiboService"/>
         <service android:name=".othercomponent.sendweiboservice.SendRepostService"/>
         <service android:name=".othercomponent.sendweiboservice.SendCommentService"/>
+        <service android:name=".othercomponent.sendweiboservice.SendReplyToCommentService"/>
         <service android:name=".othercomponent.SaveToDBService"/>
 
 

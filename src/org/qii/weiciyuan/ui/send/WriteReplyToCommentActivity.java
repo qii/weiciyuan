@@ -11,9 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
-import org.qii.weiciyuan.bean.ItemBean;
-import org.qii.weiciyuan.dao.send.ReplyToCommentMsgDao;
-import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
+import org.qii.weiciyuan.othercomponent.sendweiboservice.SendReplyToCommentService;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.ReplyDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -123,17 +121,32 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
     }
 
     @Override
-    protected CommentBean sendData() throws WeiboException {
-        ReplyToCommentMsgDao dao = new ReplyToCommentMsgDao(token, bean, ((EditText) findViewById(R.id.status_new_content)).getText().toString());
-        CommentBean commentBean = dao.reply();
-        if (enableRepost.isChecked()) {
-            repost();
+    protected void send() {
+        if (canSend()) {
+            String content = ((EditText) findViewById(R.id.status_new_content)).getText().toString();
+
+            Intent intent = new Intent(WriteReplyToCommentActivity.this, SendReplyToCommentService.class);
+            intent.putExtra("oriMsg", bean);
+            intent.putExtra("content", content);
+            intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+            intent.putExtra("accountId", GlobalContext.getInstance().getCurrentAccountId());
+            if (enableRepost.isChecked()) {
+                intent.putExtra("repostContent", repost());
+
+            }
+            startService(intent);
+            finish();
         }
-        return commentBean;
     }
 
 
-    private ItemBean repost() throws WeiboException {
+    @Override
+    protected CommentBean sendData() throws WeiboException {
+        return null;
+    }
+
+
+    private String repost() {
 
         String content = ((EditText) findViewById(R.id.status_new_content)).getText().toString();
         String msgContent = "//@" + bean.getUser().getScreen_name() + ": " + bean.getText();
@@ -142,11 +155,7 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
             content = total;
         }
 
-        RepostNewMsgDao dao = new RepostNewMsgDao(token, bean.getStatus().getId());
-
-        dao.setStatus(content);
-
-        return dao.sendNewMsg();
+        return content;
     }
 
 
