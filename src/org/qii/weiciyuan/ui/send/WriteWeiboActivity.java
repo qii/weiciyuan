@@ -1,13 +1,15 @@
 package org.qii.weiciyuan.ui.send;
 
 import android.app.ActionBar;
-import android.content.*;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.*;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -20,7 +22,6 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.othercomponent.sendweiboservice.SendWeiboService;
-import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
@@ -336,22 +337,12 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
 
     private void getAccountInfo() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String id = sharedPref.getString("id", "");
-        if (!TextUtils.isEmpty(id)) {
-            accountBean = AccountDBTask.getAccount(id);
-            if (accountBean != null) {
-                token = accountBean.getAccess_token();
-                getActionBar().setSubtitle(accountBean.getUsernick());
-            } else {
-                List<AccountBean> accountList = AccountDBTask.getAccountList();
-                if (accountList != null && accountList.size() > 0) {
-                    AccountBean account = accountList.get(0);
-                    accountBean = account;
-                    token = account.getAccess_token();
-                    getActionBar().setSubtitle(account.getUsernick());
-                }
-            }
+
+        AccountBean account = GlobalContext.getInstance().getAccountBean();
+        if (account != null) {
+            accountBean = account;
+            token = account.getAccess_token();
+            getActionBar().setSubtitle(account.getUsernick());
         }
     }
 
