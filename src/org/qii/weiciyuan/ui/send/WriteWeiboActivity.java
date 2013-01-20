@@ -194,13 +194,13 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         outState.putSerializable("geoBean", geoBean);
         outState.putString("location", location);
         outState.putParcelable("imageFileUri", imageFileUri);
+        outState.putSerializable("statusDraftBean", statusDraftBean);
+        outState.putSerializable("accountBean", accountBean);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        buildInterface();
-
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
             picPath = savedInstanceState.getString("picPath");
             if (!TextUtils.isEmpty(picPath))
@@ -213,7 +213,17 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 disableGeo();
 
             imageFileUri = savedInstanceState.getParcelable("imageFileUri");
-        } else {
+            statusDraftBean = (StatusDraftBean) savedInstanceState.getSerializable("statusDraftBean");
+            accountBean = (AccountBean) savedInstanceState.getSerializable("accountBean");
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        buildInterface();
+
+        if (savedInstanceState == null) {
             Intent intent = getIntent();
             String action = intent.getAction();
             String type = intent.getType();
