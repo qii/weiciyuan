@@ -11,6 +11,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
+import org.qii.weiciyuan.othercomponent.sendweiboservice.SendRepostService;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.RepostDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -193,29 +194,34 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
     }
 
     @Override
+    protected void send() {
+        if (canSend()) {
+
+            boolean comment = menuEnableComment.isChecked();
+            boolean oriComment = (menuEnableOriComment != null && menuEnableOriComment.isChecked());
+            String is_comment = "";
+            if (comment && oriComment) {
+                is_comment = RepostNewMsgDao.ENABLE_COMMENT_ALL;
+            } else if (comment) {
+                is_comment = RepostNewMsgDao.ENABLE_COMMENT;
+            } else if (oriComment) {
+                is_comment = RepostNewMsgDao.ENABLE_ORI_COMMENT;
+            }
+
+            Intent intent = new Intent(WriteRepostActivity.this, SendRepostService.class);
+            intent.putExtra("oriMsg", msg);
+            intent.putExtra("content", getEditTextView().getText().toString());
+            intent.putExtra("is_comment", is_comment);
+            intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+            intent.putExtra("accountId", GlobalContext.getInstance().getCurrentAccountId());
+            startService(intent);
+            finish();
+        }
+    }
+
+    @Override
     protected MessageBean sendData() throws WeiboException {
-        String content = getEditTextView().getText().toString();
-        if (TextUtils.isEmpty(content)) {
-            content = getString(R.string.repost);
-        }
-
-        RepostNewMsgDao dao = new RepostNewMsgDao(token, id);
-
-        boolean comment = menuEnableComment.isChecked();
-        boolean oriComment = (menuEnableOriComment != null && menuEnableOriComment.isChecked());
-
-        if (comment && oriComment) {
-            dao.setIs_comment(RepostNewMsgDao.ENABLE_COMMENT_ALL);
-        } else if (comment) {
-            dao.setIs_comment(RepostNewMsgDao.ENABLE_COMMENT);
-        } else if (oriComment) {
-            dao.setIs_comment(RepostNewMsgDao.ENABLE_ORI_COMMENT);
-        }
-
-
-        dao.setStatus(content);
-
-        return dao.sendNewMsg();
+        return null;
     }
 
     @Override

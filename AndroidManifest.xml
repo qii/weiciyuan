@@ -173,6 +173,7 @@
         <service android:name=".othercomponent.FetchNewMsgService"/>
         <service android:name=".othercomponent.DownloadEmotionsService"/>
         <service android:name=".othercomponent.sendweiboservice.SendWeiboService"/>
+        <service android:name=".othercomponent.sendweiboservice.SendRepostService"/>
         <service android:name=".othercomponent.SaveToDBService"/>
 
 
