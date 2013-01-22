@@ -312,7 +312,9 @@ public class SendWeiboService extends Service {
                     .setSmallIcon(R.drawable.send_failed)
                     .setOngoing(false);
 
-            Intent notifyIntent = WriteWeiboActivity.startBecauseSendFailed(SendWeiboService.this, account, content, picPath, geoBean, statusDraftBean, e.getError());
+            Intent notifyIntent = WriteWeiboActivity.startBecauseSendFailed(SendWeiboService.this,
+                    account, content, picPath, geoBean, statusDraftBean,
+                    String.format(SendWeiboService.this.getString(R.string.failed_reason), e.getError()));
 
             PendingIntent pendingIntent = PendingIntent.getActivity(SendWeiboService.this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 

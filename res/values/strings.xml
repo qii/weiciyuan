@@ -169,6 +169,7 @@
     <string name="save">保存</string>
     <string name="convert_successfully">转换成功，你可以精简文字了</string>
     <string name="convert_failed">转换失败</string>
+    <string name="failed_reason">发送失败：%s</string>
 
     <!--write comment -->
     <string name="sending_comment">发送评论</string>
