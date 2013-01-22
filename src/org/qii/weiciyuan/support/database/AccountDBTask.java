@@ -72,6 +72,9 @@ public class AccountDBTask {
         ContentValues cv = new ContentValues();
         cv.put(AccountTable.UID, uid);
         cv.put(AccountTable.INFOJSON, json);
+        cv.put(AccountTable.USERNAME, myUserBean.getScreen_name());
+        cv.put(AccountTable.USERNICK, myUserBean.getScreen_name());
+        cv.put(AccountTable.AVATAR_URL, myUserBean.getAvatar_large());
 
         int c = getWsd().update(AccountTable.TABLE_NAME, cv, AccountTable.UID + "=?",
                 new String[]{uid});
