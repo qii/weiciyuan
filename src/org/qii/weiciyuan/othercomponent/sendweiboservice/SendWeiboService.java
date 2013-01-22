@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -246,7 +245,7 @@ public class SendWeiboService extends Service {
                             .setOngoing(true)
                             .setSmallIcon(R.drawable.upload_white);
 
-                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    if (Utility.isJB()) {
                         builder.addAction(R.drawable.send_failed, getString(R.string.cancel), pendingIntent);
                         notification = builder.build();
                     } else {
