@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -321,12 +322,28 @@ public class SendWeiboService extends Service {
 
             Notification notification;
             if (Utility.isJB()) {
-                Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(builder);
-                bigTextStyle.setBigContentTitle(getString(R.string.send_faile_click_to_open));
-                bigTextStyle.bigText(content);
-                bigTextStyle.setSummaryText(account.getUsernick());
-                builder.setStyle(bigTextStyle);
-
+                if (TextUtils.isEmpty(picPath)) {
+                    Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(builder);
+                    bigTextStyle.setBigContentTitle(getString(R.string.send_faile_click_to_open));
+                    bigTextStyle.bigText(content);
+                    bigTextStyle.setSummaryText(account.getUsernick());
+                    builder.setStyle(bigTextStyle);
+                } else {
+                    Bitmap bitmap = ImageTool.getNotificationSendFailedPic(picPath);
+                    if (bitmap != null) {
+                        Notification.BigPictureStyle bigPictureStyle = new Notification.BigPictureStyle(builder);
+                        bigPictureStyle.setBigContentTitle(getString(R.string.send_faile_click_to_open));
+                        bigPictureStyle.bigPicture(bitmap);
+                        bigPictureStyle.setSummaryText(account.getUsernick());
+                        builder.setStyle(bigPictureStyle);
+                    } else {
+                        Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(builder);
+                        bigTextStyle.setBigContentTitle(getString(R.string.send_faile_click_to_open));
+                        bigTextStyle.bigText(content);
+                        bigTextStyle.setSummaryText(account.getUsernick());
+                        builder.setStyle(bigTextStyle);
+                    }
+                }
                 Intent intent = new Intent(SendWeiboService.this, SendWeiboService.class);
                 intent.putExtra("token", token);
                 intent.putExtra("picPath", picPath);

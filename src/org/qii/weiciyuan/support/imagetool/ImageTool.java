@@ -403,6 +403,20 @@ public class ImageTool {
 
     }
 
+    public static Bitmap getNotificationSendFailedPic(String path) {
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+
+        options.inSampleSize = calculateInSampleSize(options, Utility.getScreenWidth(), Utility.getScreenHeight());
+
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(path, options);
+
+    }
+
     public static Bitmap getWriteWeiboRoundedCornerPic(String url, int reqWidth, int reqHeight, FileLocationMethod method) {
         try {
 

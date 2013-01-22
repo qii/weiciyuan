@@ -17,7 +17,9 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.widget.ListView;
 import org.qii.weiciyuan.bean.GeoBean;
@@ -326,6 +328,29 @@ public class Utility {
 
     public static boolean isJB() {
         return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+    }
+
+    public static int getScreenWidth() {
+        Activity activity = GlobalContext.getInstance().getActivity();
+        if (activity != null) {
+            Display display = activity.getWindowManager().getDefaultDisplay();
+            DisplayMetrics metrics = new DisplayMetrics();
+            display.getMetrics(metrics);
+            return metrics.widthPixels;
+        }
+
+        return 480;
+    }
+
+    public static int getScreenHeight() {
+        Activity activity = GlobalContext.getInstance().getActivity();
+        if (activity != null) {
+            Display display = activity.getWindowManager().getDefaultDisplay();
+            DisplayMetrics metrics = new DisplayMetrics();
+            display.getMetrics(metrics);
+            return metrics.heightPixels;
+        }
+        return 800;
     }
 }
 
