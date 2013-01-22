@@ -103,7 +103,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         View view = inflater.inflate(R.layout.listview_layout, container, false);
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
-        progressBar.setVisibility(View.GONE);
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
 
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
