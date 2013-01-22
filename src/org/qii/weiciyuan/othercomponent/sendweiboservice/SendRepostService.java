@@ -17,7 +17,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.preference.DraftActivity;
+import org.qii.weiciyuan.ui.send.WriteRepostActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -182,7 +182,7 @@ public class SendRepostService extends Service {
 
         private void showFailedNotification(final WeiboSendTask task) {
             Notification.Builder builder = new Notification.Builder(SendRepostService.this)
-                    .setTicker(getString(R.string.send_failed_and_save_to_draft))
+                    .setTicker(getString(R.string.send_failed))
                     .setContentTitle(getString(R.string.send_faile_click_to_open))
                     .setContentText(content)
                     .setOnlyAlertOnce(true)
@@ -191,7 +191,8 @@ public class SendRepostService extends Service {
                     .setOngoing(false);
 
 
-            Intent notifyIntent = new Intent(SendRepostService.this, DraftActivity.class);
+            Intent notifyIntent = WriteRepostActivity.startBecauseSendFailed(
+                    SendRepostService.this, account, content, oriMsg, repostDraftBean, e.getError());
 
             PendingIntent pendingIntent = PendingIntent.getActivity(SendRepostService.this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 

@@ -76,9 +76,35 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         }
     }
 
+    public static Intent startBecauseSendFailed(Context context,
+                                                AccountBean accountBean,
+                                                String content,
+                                                MessageBean oriMsg,
+                                                RepostDraftBean repostDraftBean,
+                                                String failedReason) {
+        Intent intent = new Intent(context, WriteRepostActivity.class);
+        intent.setAction(WriteRepostActivity.ACTION_SEND_FAILED);
+        intent.putExtra("account", accountBean);
+        intent.putExtra("content", content);
+        intent.putExtra("oriMsg", oriMsg);
+        intent.putExtra("failedReason", failedReason);
+        intent.putExtra("repostDraftBean", repostDraftBean);
+        return intent;
+    }
+
     private void handleFailedOperation(Intent intent) {
+        token = ((AccountBean) intent.getSerializableExtra("account")).getAccess_token();
 
+        msg = (MessageBean) intent.getSerializableExtra("oriMsg");
+        getEditTextView().setText(intent.getStringExtra("content"));
 
+        if (msg.getRetweeted_status() != null) {
+            getEditTextView().setHint("//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
+        } else {
+            getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+        }
+        getEditTextView().setError(intent.getStringExtra("failedReason"));
+        repostDraftBean = (RepostDraftBean) intent.getSerializableExtra("repostDraftBean");
     }
 
     private void handleNormalOperation(Intent intent) {
