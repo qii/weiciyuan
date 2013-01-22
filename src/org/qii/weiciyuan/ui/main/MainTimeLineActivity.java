@@ -90,7 +90,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
         buildPhoneInterface();
 
-        Executors.newSingleThreadScheduledExecutor().schedule(new ClearCacheTask(), 8000, TimeUnit.SECONDS);
+        Executors.newSingleThreadScheduledExecutor().schedule(new ClearCacheTask(), 8, TimeUnit.SECONDS);
 
     }
 

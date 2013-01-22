@@ -158,10 +158,12 @@ public class FileManager {
             String thumbnailPath = getSdCardPath() + File.separator + PICTURE_THUMBNAIL;
             String middlePath = getSdCardPath() + File.separator + PICTURE_BMIDDLE;
             String oriPath = getSdCardPath() + File.separator + PICTURE_LARGE;
+            String largeAvatarPath = getSdCardPath() + File.separator + AVATAR_LARGE;
 
             path.add(thumbnailPath);
             path.add(middlePath);
             path.add(oriPath);
+            path.add(largeAvatarPath);
         }
         return path;
     }

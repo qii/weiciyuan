@@ -1,13 +1,11 @@
 package org.qii.weiciyuan.othercomponent;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import java.io.File;
 import java.util.List;
@@ -24,11 +22,8 @@ public class ClearCacheTask implements Runnable {
     @Override
     public void run() {
         AppLogger.d("clear cache task start");
-        ConnectivityManager cm = (ConnectivityManager)
-                GlobalContext.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 
-        if (networkInfo != null && networkInfo.isConnected() && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+        if (Utility.isWifi(GlobalContext.getInstance())) {
 
             List<String> pathList = FileManager.getCachePath();
 
@@ -63,6 +58,7 @@ public class ClearCacheTask implements Runnable {
         long calcMills = now - time;
         long day = TimeUnit.MILLISECONDS.toDays(calcMills);
         if (day > AppConfig.SAVED_DAYS) {
+            AppLogger.d(file.getAbsolutePath());
             file.delete();
         }
     }

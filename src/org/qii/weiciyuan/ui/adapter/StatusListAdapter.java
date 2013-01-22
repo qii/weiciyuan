@@ -108,8 +108,10 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             }
         });
 
-        holder.content.setMovementMethod(MyLinkMovementMethod.getInstance());
-        holder.repost_content.setMovementMethod(MyLinkMovementMethod.getInstance());
+        if (holder.content.getMovementMethod() != MyLinkMovementMethod.getInstance())
+            holder.content.setMovementMethod(MyLinkMovementMethod.getInstance());
+        if (holder.repost_content.getMovementMethod() != MyLinkMovementMethod.getInstance())
+            holder.repost_content.setMovementMethod(MyLinkMovementMethod.getInstance());
 
         //onTouchListener has some strange problem, when user click link, holder.listview_root may also receive a MotionEvent.ACTION_DOWN event
         //the background then changed

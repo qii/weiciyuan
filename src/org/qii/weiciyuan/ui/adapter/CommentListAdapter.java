@@ -94,8 +94,10 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);
 
-        holder.content.setMovementMethod(MyLinkMovementMethod.getInstance());
-        holder.repost_content.setMovementMethod(MyLinkMovementMethod.getInstance());
+        if (holder.content.getMovementMethod() != MyLinkMovementMethod.getInstance())
+            holder.content.setMovementMethod(MyLinkMovementMethod.getInstance());
+        if (holder.repost_content.getMovementMethod() != MyLinkMovementMethod.getInstance())
+            holder.repost_content.setMovementMethod(MyLinkMovementMethod.getInstance());
 
         CommentBean reply = comment.getReply_comment();
         if (holder.replyIV != null)
