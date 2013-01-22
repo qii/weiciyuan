@@ -251,7 +251,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
             intent.putExtra("content", getEditTextView().getText().toString());
             intent.putExtra("is_comment", is_comment);
             intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-            intent.putExtra("accountId", GlobalContext.getInstance().getCurrentAccountId());
+            intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
             startService(intent);
             finish();
         }

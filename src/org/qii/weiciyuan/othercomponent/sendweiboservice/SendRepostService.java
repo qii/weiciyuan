@@ -16,6 +16,7 @@ import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.RepostDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.preference.DraftActivity;
 
 import java.util.HashMap;
@@ -180,12 +181,13 @@ public class SendRepostService extends Service {
         private void showFailedNotification(final WeiboSendTask task) {
             Notification.Builder builder = new Notification.Builder(SendRepostService.this)
                     .setTicker(getString(R.string.send_failed_and_save_to_draft))
-                    .setContentTitle(getString(R.string.send_failed))
-                    .setContentText(getString(R.string.click_to_open_draft))
+                    .setContentTitle(getString(R.string.send_faile_click_to_open))
+                    .setContentText(content)
                     .setOnlyAlertOnce(true)
                     .setAutoCancel(true)
                     .setSmallIcon(R.drawable.send_failed)
                     .setOngoing(false);
+
 
             Intent notifyIntent = new Intent(SendRepostService.this, DraftActivity.class);
 
@@ -193,7 +195,17 @@ public class SendRepostService extends Service {
 
             builder.setContentIntent(pendingIntent);
 
-            Notification notification = builder.getNotification();
+            Notification notification;
+            if (Utility.isJB()) {
+                Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(builder);
+                bigTextStyle.setBigContentTitle(getString(R.string.send_faile_click_to_open));
+                bigTextStyle.bigText(content);
+                bigTextStyle.setSummaryText(account.getUsernick());
+                builder.setStyle(bigTextStyle);
+                notification = builder.build();
+            } else {
+                notification = builder.getNotification();
+            }
             final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
                     .getSystemService(NOTIFICATION_SERVICE);
             final int id = tasksNotifications.get(task);
