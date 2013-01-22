@@ -323,5 +323,9 @@ public class Utility {
         return num;
 
     }
+
+    public static boolean isJB() {
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+    }
 }
 

@@ -22,6 +22,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 import java.io.File;
@@ -135,8 +136,7 @@ public class SendWeiboService extends Service {
 
             int notificationId = new Random().nextInt(Integer.MAX_VALUE);
 
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-
+            if (Utility.isJB()) {
                 receiver = new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
@@ -314,7 +314,18 @@ public class SendWeiboService extends Service {
 
             builder.setContentIntent(pendingIntent);
 
-            Notification notification = builder.getNotification();
+            Notification notification;
+            if (Utility.isJB()) {
+                Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(builder);
+                bigTextStyle.setBigContentTitle(getString(R.string.send_faile_click_to_open));
+                bigTextStyle.bigText(content);
+                bigTextStyle.setSummaryText(account.getUsernick());
+                builder.setStyle(bigTextStyle);
+                notification = builder.build();
+            } else {
+                notification = builder.getNotification();
+            }
+
             final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
                     .getSystemService(NOTIFICATION_SERVICE);
             final int id = tasksNotifications.get(task);

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.support.database.DraftDBManager;
@@ -27,13 +28,6 @@ import java.util.Set;
  * Date: 13-1-20
  */
 public class SendRepostService extends Service {
-    private String accountId;
-    private String token;
-    private String content;
-    private MessageBean oriMsg;
-    private String is_comment;
-
-    private RepostDraftBean repostDraftBean;
 
     private Map<WeiboSendTask, Boolean> tasksResult = new HashMap<WeiboSendTask, Boolean>();
     private Map<WeiboSendTask, Integer> tasksNotifications = new HashMap<WeiboSendTask, Integer>();
@@ -48,15 +42,15 @@ public class SendRepostService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        token = intent.getStringExtra("token");
-        accountId = intent.getStringExtra("accountId");
-        content = intent.getStringExtra("content");
-        oriMsg = (MessageBean) intent.getSerializableExtra("oriMsg");
-        is_comment = intent.getStringExtra("is_comment");
+        String token = intent.getStringExtra("token");
+        AccountBean account = (AccountBean) intent.getSerializableExtra("account");
+        String content = intent.getStringExtra("content");
+        MessageBean oriMsg = (MessageBean) intent.getSerializableExtra("oriMsg");
+        String is_comment = intent.getStringExtra("is_comment");
 
-        repostDraftBean = (RepostDraftBean) intent.getSerializableExtra("draft");
+        RepostDraftBean repostDraftBean = (RepostDraftBean) intent.getSerializableExtra("draft");
 
-        WeiboSendTask task = new WeiboSendTask();
+        WeiboSendTask task = new WeiboSendTask(token, account, content, oriMsg, is_comment, repostDraftBean);
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
         tasksResult.put(task, false);
@@ -70,6 +64,28 @@ public class SendRepostService extends Service {
 
         Notification notification;
         WeiboException e;
+
+        String token;
+        AccountBean account;
+        String content;
+        MessageBean oriMsg;
+        String is_comment;
+        RepostDraftBean repostDraftBean;
+
+
+        public WeiboSendTask(String token,
+                             AccountBean account,
+                             String content,
+                             MessageBean oriMsg,
+                             String is_comment,
+                             RepostDraftBean repostDraftBean) {
+            this.token = token;
+            this.account = account;
+            this.content = content;
+            this.oriMsg = oriMsg;
+            this.is_comment = is_comment;
+            this.repostDraftBean = repostDraftBean;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -138,6 +154,59 @@ public class SendRepostService extends Service {
 
         }
 
+        private void showSuccessfulNotification(final WeiboSendTask task) {
+            Notification.Builder builder = new Notification.Builder(SendRepostService.this)
+                    .setTicker(getString(R.string.send_successfully))
+                    .setContentTitle(getString(R.string.send_successfully))
+                    .setOnlyAlertOnce(true)
+                    .setAutoCancel(true)
+                    .setSmallIcon(R.drawable.send_successfully)
+                    .setOngoing(false);
+            Notification notification = builder.getNotification();
+            final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+                    .getSystemService(NOTIFICATION_SERVICE);
+            final int id = tasksNotifications.get(task);
+            notificationManager.notify(id, notification);
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    notificationManager.cancel(id);
+                    stopServiceIfTasksAreEnd(task);
+                }
+            }, 3000);
+        }
+
+        private void showFailedNotification(final WeiboSendTask task) {
+            Notification.Builder builder = new Notification.Builder(SendRepostService.this)
+                    .setTicker(getString(R.string.send_failed_and_save_to_draft))
+                    .setContentTitle(getString(R.string.send_failed))
+                    .setContentText(getString(R.string.click_to_open_draft))
+                    .setOnlyAlertOnce(true)
+                    .setAutoCancel(true)
+                    .setSmallIcon(R.drawable.send_failed)
+                    .setOngoing(false);
+
+            Intent notifyIntent = new Intent(SendRepostService.this, DraftActivity.class);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(SendRepostService.this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            builder.setContentIntent(pendingIntent);
+
+            Notification notification = builder.getNotification();
+            final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+                    .getSystemService(NOTIFICATION_SERVICE);
+            final int id = tasksNotifications.get(task);
+            notificationManager.notify(id, notification);
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    stopServiceIfTasksAreEnd(task);
+                }
+            }, 3000);
+        }
+
     }
 
     private void stopServiceIfTasksAreEnd(WeiboSendTask currentTask) {
@@ -158,56 +227,5 @@ public class SendRepostService extends Service {
         }
     }
 
-    private void showSuccessfulNotification(final WeiboSendTask task) {
-        Notification.Builder builder = new Notification.Builder(SendRepostService.this)
-                .setTicker(getString(R.string.send_successfully))
-                .setContentTitle(getString(R.string.send_successfully))
-                .setOnlyAlertOnce(true)
-                .setAutoCancel(true)
-                .setSmallIcon(R.drawable.send_successfully)
-                .setOngoing(false);
-        Notification notification = builder.getNotification();
-        final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                .getSystemService(NOTIFICATION_SERVICE);
-        final int id = tasksNotifications.get(task);
-        notificationManager.notify(id, notification);
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                notificationManager.cancel(id);
-                stopServiceIfTasksAreEnd(task);
-            }
-        }, 3000);
-    }
-
-    private void showFailedNotification(final WeiboSendTask task) {
-        Notification.Builder builder = new Notification.Builder(SendRepostService.this)
-                .setTicker(getString(R.string.send_failed_and_save_to_draft))
-                .setContentTitle(getString(R.string.send_failed))
-                .setContentText(getString(R.string.click_to_open_draft))
-                .setOnlyAlertOnce(true)
-                .setAutoCancel(true)
-                .setSmallIcon(R.drawable.send_failed)
-                .setOngoing(false);
-
-        Intent notifyIntent = new Intent(SendRepostService.this, DraftActivity.class);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        builder.setContentIntent(pendingIntent);
-
-        Notification notification = builder.getNotification();
-        final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                .getSystemService(NOTIFICATION_SERVICE);
-        final int id = tasksNotifications.get(task);
-        notificationManager.notify(id, notification);
-
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                stopServiceIfTasksAreEnd(task);
-            }
-        }, 3000);
-    }
 }
