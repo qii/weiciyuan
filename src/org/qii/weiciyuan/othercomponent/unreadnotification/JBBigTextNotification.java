@@ -77,7 +77,6 @@ public class JBBigTextNotification {
             Intent intent = new Intent(context, WriteCommentActivity.class);
             intent.putExtra("token", accountBean.getAccess_token());
             intent.putExtra("msg", repost.getItem(0));
-            intent.putExtra("id", repost.getItem(0).getId());
 
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             builder.addAction(R.drawable.comment_light, context.getString(R.string.comments), pendingIntent);
