@@ -43,6 +43,13 @@ public class SendRepostService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        int lastNotificationId = intent.getIntExtra("lastNotificationId", -1);
+        if (lastNotificationId != -1) {
+            final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+                    .getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancel(lastNotificationId);
+        }
+
         String token = intent.getStringExtra("token");
         AccountBean account = (AccountBean) intent.getSerializableExtra("account");
         String content = intent.getStringExtra("content");
@@ -202,7 +209,20 @@ public class SendRepostService extends Service {
                 bigTextStyle.bigText(content);
                 bigTextStyle.setSummaryText(account.getUsernick());
                 builder.setStyle(bigTextStyle);
+
+                Intent intent = new Intent(SendRepostService.this, SendRepostService.class);
+                intent.putExtra("oriMsg", oriMsg);
+                intent.putExtra("content", content);
+                intent.putExtra("is_comment", is_comment);
+                intent.putExtra("token", token);
+                intent.putExtra("account", account);
+
+                intent.putExtra("lastNotificationId", tasksNotifications.get(task));
+
+                PendingIntent retrySendIntent = PendingIntent.getService(SendRepostService.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.addAction(R.drawable.send_light, getString(R.string.retry_send), retrySendIntent);
                 notification = builder.build();
+
             } else {
                 notification = builder.getNotification();
             }
