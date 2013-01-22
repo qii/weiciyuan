@@ -12,6 +12,8 @@ import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.send.WriteCommentActivity;
+import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
 /**
  * User: qii
@@ -70,16 +72,37 @@ public class JBBigTextNotification {
         if (unreadBean.getMention_status() == 1) {
             bigTextStyle.setBigContentTitle(repost.getItem(0).getUser().getScreen_name() + "：");
             bigTextStyle.bigText(repost.getItem(0).getText());
+
+
+            Intent intent = new Intent(context, WriteCommentActivity.class);
+            intent.putExtra("token", accountBean.getAccess_token());
+            intent.putExtra("msg", repost.getItem(0));
+            intent.putExtra("id", repost.getItem(0).getId());
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.addAction(R.drawable.comment_light, context.getString(R.string.comments), pendingIntent);
         }
 
         if (unreadBean.getCmt() == 1) {
             bigTextStyle.setBigContentTitle(comment.getItem(0).getUser().getScreen_name() + "：");
             bigTextStyle.bigText(comment.getItem(0).getText());
+
+            Intent intent = new Intent(context, WriteReplyToCommentActivity.class);
+            intent.putExtra("token", accountBean.getAccess_token());
+            intent.putExtra("msg", comment.getItem(0));
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.addAction(R.drawable.reply_to_comment_light, context.getString(R.string.reply_to_comment), pendingIntent);
         }
 
         if (unreadBean.getMention_cmt() == 1) {
             bigTextStyle.setBigContentTitle(mentionCommentsResult.getItem(0).getUser().getScreen_name() + "：");
             bigTextStyle.bigText(mentionCommentsResult.getItem(0).getText());
+
+            Intent intent = new Intent(context, WriteReplyToCommentActivity.class);
+            intent.putExtra("token", accountBean.getAccess_token());
+            intent.putExtra("msg", mentionCommentsResult.getItem(0));
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.addAction(R.drawable.reply_to_comment_light, context.getString(R.string.reply_to_comment), pendingIntent);
         }
 
 
