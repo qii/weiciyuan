@@ -288,12 +288,6 @@ public class SendWeiboService extends Service {
         @Override
         protected void onCancelled(Void aVoid) {
             super.onCancelled(aVoid);
-            if (statusDraftBean != null) {
-                DraftDBManager.getInstance().remove(statusDraftBean.getId());
-                DraftDBManager.getInstance().insertStatus(content, geoBean, picPath, account.getUid());
-            } else {
-                DraftDBManager.getInstance().insertStatus(content, geoBean, picPath, account.getUid());
-            }
 
             showFailedNotification(WeiboSendTask.this);
 
@@ -304,9 +298,9 @@ public class SendWeiboService extends Service {
 
         private void showFailedNotification(final WeiboSendTask task) {
             Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
-                    .setTicker(getString(R.string.send_failed_and_save_to_draft))
-                    .setContentTitle(getString(R.string.send_failed))
-                    .setContentText(getString(R.string.click_to_open_draft))
+                    .setTicker(getString(R.string.send_failed))
+                    .setContentTitle(getString(R.string.send_faile_click_to_open))
+                    .setContentText(content)
                     .setOnlyAlertOnce(true)
                     .setAutoCancel(true)
                     .setSmallIcon(R.drawable.send_failed)
