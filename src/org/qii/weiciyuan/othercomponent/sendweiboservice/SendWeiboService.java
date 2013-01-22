@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.othercomponent.sendweiboservice;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -22,6 +21,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
@@ -162,10 +162,8 @@ public class SendWeiboService extends Service {
             } else {
                 notification = builder.getNotification();
             }
-            NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                    .getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.notify(notificationId, notification);
 
+            NotificationUtility.show(getApplicationContext(), notification, notificationId);
             tasksNotifications.put(WeiboSendTask.this, notificationId);
 
         }
@@ -272,9 +270,7 @@ public class SendWeiboService extends Service {
                     notification = builder.getNotification();
                 }
 
-                NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                        .getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.notify(tasksNotifications.get(WeiboSendTask.this), notification);
+                NotificationUtility.show(getApplicationContext(), notification, tasksNotifications.get(WeiboSendTask.this));
 
             }
         }
@@ -361,10 +357,9 @@ public class SendWeiboService extends Service {
                 notification = builder.getNotification();
             }
 
-            final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                    .getSystemService(NOTIFICATION_SERVICE);
+
             final int id = tasksNotifications.get(task);
-            notificationManager.notify(id, notification);
+            NotificationUtility.show(getApplicationContext(), notification, id);
 
             handler.postDelayed(new Runnable() {
                 @Override
@@ -384,15 +379,12 @@ public class SendWeiboService extends Service {
                     .setSmallIcon(R.drawable.send_successfully)
                     .setOngoing(false);
             Notification notification = builder.getNotification();
-            final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                    .getSystemService(NOTIFICATION_SERVICE);
             final int id = tasksNotifications.get(task);
-            notificationManager.notify(id, notification);
-
+            NotificationUtility.show(getApplicationContext(), notification, id);
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    notificationManager.cancel(id);
+                    NotificationUtility.cancel(getApplicationContext(), id);
                     stopServiceIfTasksAreEnd(task);
                 }
             }, 3000);
