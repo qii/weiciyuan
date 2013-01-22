@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.othercomponent.sendweiboservice;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -16,6 +15,7 @@ import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.RepostDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.preference.DraftActivity;
 
@@ -45,9 +45,7 @@ public class SendRepostService extends Service {
 
         int lastNotificationId = intent.getIntExtra("lastNotificationId", -1);
         if (lastNotificationId != -1) {
-            final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                    .getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.cancel(lastNotificationId);
+            NotificationUtility.cancel(getApplicationContext(), lastNotificationId);
         }
 
         String token = intent.getStringExtra("token");
@@ -115,9 +113,7 @@ public class SendRepostService extends Service {
 
             notification = builder.getNotification();
 
-            NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                    .getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.notify(notificationId, notification);
+            NotificationUtility.show(getApplicationContext(), notification, notificationId);
 
             tasksNotifications.put(WeiboSendTask.this, notificationId);
 
@@ -171,15 +167,14 @@ public class SendRepostService extends Service {
                     .setSmallIcon(R.drawable.send_successfully)
                     .setOngoing(false);
             Notification notification = builder.getNotification();
-            final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                    .getSystemService(NOTIFICATION_SERVICE);
+
             final int id = tasksNotifications.get(task);
-            notificationManager.notify(id, notification);
+            NotificationUtility.show(getApplicationContext(), notification, id);
 
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    notificationManager.cancel(id);
+                    NotificationUtility.cancel(getApplicationContext(), id);
                     stopServiceIfTasksAreEnd(task);
                 }
             }, 3000);
@@ -226,10 +221,10 @@ public class SendRepostService extends Service {
             } else {
                 notification = builder.getNotification();
             }
-            final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                    .getSystemService(NOTIFICATION_SERVICE);
+
             final int id = tasksNotifications.get(task);
-            notificationManager.notify(id, notification);
+
+            NotificationUtility.show(getApplicationContext(), notification, id);
 
             handler.postDelayed(new Runnable() {
                 @Override

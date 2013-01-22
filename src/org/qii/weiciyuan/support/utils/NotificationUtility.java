@@ -1,5 +1,8 @@
 package org.qii.weiciyuan.support.utils;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -61,5 +64,16 @@ public class NotificationUtility {
         return stringBuilder.toString();
     }
 
+    public static void show(Context context, Notification notification, int id) {
+        NotificationManager notificationManager = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(id, notification);
+    }
+
+    public static void cancel(Context context, int id) {
+        NotificationManager notificationManager = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(id);
+    }
 
 }
