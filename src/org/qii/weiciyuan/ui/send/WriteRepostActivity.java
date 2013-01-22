@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
 import org.qii.weiciyuan.othercomponent.sendweiboservice.SendRepostService;
@@ -24,8 +25,8 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
  */
 public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
 
-    private static final String ACTION_DRAFT = "org.qii.weiciyuan.DRAFT";
-    private static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
+    public static final String ACTION_DRAFT = "org.qii.weiciyuan.DRAFT";
+    public static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
 
     private String token;
     private MessageBean msg;
@@ -45,33 +46,57 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         getActionBar().setSubtitle(GlobalContext.getInstance().getCurrentAccountName());
 
         if (savedInstanceState == null) {
-            token = getIntent().getStringExtra("token");
-            if (TextUtils.isEmpty(token))
-                token = GlobalContext.getInstance().getSpecialToken();
 
-            msg = (MessageBean) getIntent().getSerializableExtra("msg");
-            if (msg != null) {
-
-                if (msg.getRetweeted_status() != null) {
-                    getEditTextView().setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
+            Intent intent = getIntent();
+            String action = intent.getAction();
+            if (!TextUtils.isEmpty(action)) {
+                if (action.equals(WriteRepostActivity.ACTION_DRAFT)) {
+                    handleDraftOperation(intent);
+                } else if (action.equals(WriteRepostActivity.ACTION_SEND_FAILED)) {
+                    handleFailedOperation(intent);
                 }
-
             } else {
-
-                repostDraftBean = (RepostDraftBean) getIntent().getSerializableExtra("draft");
-                if (repostDraftBean != null) {
-                    getEditTextView().setText(repostDraftBean.getContent());
-                    msg = repostDraftBean.getMessageBean();
-                }
-            }
-
-            if (msg.getRetweeted_status() != null) {
-                getEditTextView().setHint("//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
-            } else {
-                getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+                handleNormalOperation(intent);
             }
         }
     }
+
+    private void handleDraftOperation(Intent intent) {
+        AccountBean account = (AccountBean) intent.getSerializableExtra("account");
+        token = account.getAccess_token();
+
+        repostDraftBean = (RepostDraftBean) intent.getSerializableExtra("draft");
+        getEditTextView().setText(repostDraftBean.getContent());
+        msg = repostDraftBean.getMessageBean();
+
+        if (msg.getRetweeted_status() != null) {
+            getEditTextView().setHint("//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
+        } else {
+            getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+        }
+    }
+
+    private void handleFailedOperation(Intent intent) {
+
+
+    }
+
+    private void handleNormalOperation(Intent intent) {
+
+        token = intent.getStringExtra("token");
+        if (TextUtils.isEmpty(token))
+            token = GlobalContext.getInstance().getSpecialToken();
+
+        msg = (MessageBean) intent.getSerializableExtra("msg");
+
+        if (msg.getRetweeted_status() != null) {
+            getEditTextView().setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
+            getEditTextView().setHint("//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
+        } else {
+            getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+        }
+    }
+
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {

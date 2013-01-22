@@ -94,9 +94,12 @@ public class DraftFragment extends ListFragment {
                         break;
 
                     case DraftTable.TYPE_REPOST:
+                        accountBean = AccountDBTask.getAccount(item.getRepostDraftBean().getAccountId());
                         RepostDraftBean repostDraftBean = list.get(position).getRepostDraftBean();
                         intent = new Intent(getActivity(), WriteRepostActivity.class);
+                        intent.setAction(WriteRepostActivity.ACTION_DRAFT);
                         intent.putExtra("draft", repostDraftBean);
+                        intent.putExtra("account", accountBean);
                         startActivity(intent);
                         break;
                     case DraftTable.TYPE_COMMENT:
