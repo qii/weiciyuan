@@ -73,6 +73,43 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private String2PicTask string2PicTask;
     private GetGoogleLocationInfo locationTask;
 
+    public static Intent startBecauseSendFailed(Context context,
+                                                AccountBean accountBean,
+                                                String content,
+                                                String picPath,
+                                                GeoBean geoBean,
+                                                StatusDraftBean statusDraftBean,
+                                                String failedReason) {
+        Intent intent = new Intent(context, WriteWeiboActivity.class);
+        intent.setAction(WriteWeiboActivity.ACTION_SEND_FAILED);
+        intent.putExtra("account", accountBean);
+        intent.putExtra("content", content);
+        intent.putExtra("failedReason", failedReason);
+        intent.putExtra("picPath", picPath);
+        intent.putExtra("geoBean", geoBean);
+        intent.putExtra("statusDraftBean", statusDraftBean);
+        return intent;
+    }
+
+    private void handleFailedOperation(Intent intent) {
+        accountBean = (AccountBean) intent.getSerializableExtra("account");
+        token = accountBean.getAccess_token();
+        getActionBar().setSubtitle(accountBean.getUsernick());
+        String stringExtra = intent.getStringExtra("content");
+        content.setText(stringExtra);
+        String failedReason = intent.getStringExtra("failedReason");
+        content.setError(failedReason);
+        picPath = intent.getStringExtra("picPath");
+        if (!TextUtils.isEmpty(picPath))
+            enablePicture();
+
+        geoBean = (GeoBean) intent.getSerializableExtra("geoBean");
+        if (geoBean != null)
+            enableGeo();
+
+        statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("statusDraftBean");
+    }
+
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
@@ -236,6 +273,8 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     }
                 } else if (action.equals(WriteWeiboActivity.ACTION_DRAFT)) {
                     handleDraftOperation(intent);
+                } else if (action.equals(WriteWeiboActivity.ACTION_SEND_FAILED)) {
+                    handleFailedOperation(intent);
                 }
             } else {
                 handleNormalOperation(intent);
@@ -531,7 +570,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         Intent intent = new Intent(WriteWeiboActivity.this, SendWeiboService.class);
         intent.putExtra("token", token);
         intent.putExtra("picPath", picPath);
-        intent.putExtra("accountId", accountBean.getUid());
+        intent.putExtra("account", accountBean);
         intent.putExtra("content", contentString);
         intent.putExtra("geo", geoBean);
         intent.putExtra("draft", statusDraftBean);

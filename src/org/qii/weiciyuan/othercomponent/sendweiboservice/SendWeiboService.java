@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.dao.send.StatusNewMsgDao;
 import org.qii.weiciyuan.support.database.DraftDBManager;
@@ -21,7 +22,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.ui.preference.DraftActivity;
+import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 import java.io.File;
 import java.util.HashMap;
@@ -34,13 +35,7 @@ import java.util.Set;
  * Date: 12-8-21
  */
 public class SendWeiboService extends Service {
-    private String accountId;
-    private String token;
-    private String picPath;
-    private String content;
-    private GeoBean geoBean;
 
-    private StatusDraftBean statusDraftBean;
 
     private Map<WeiboSendTask, Boolean> tasksResult = new HashMap<WeiboSendTask, Boolean>();
     private Map<WeiboSendTask, Integer> tasksNotifications = new HashMap<WeiboSendTask, Integer>();
@@ -55,15 +50,15 @@ public class SendWeiboService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        token = intent.getStringExtra("token");
-        accountId = intent.getStringExtra("accountId");
-        picPath = intent.getStringExtra("picPath");
-        content = intent.getStringExtra("content");
-        geoBean = (GeoBean) intent.getSerializableExtra("geo");
+        String token = intent.getStringExtra("token");
+        AccountBean account = (AccountBean) intent.getSerializableExtra("account");
+        String picPath = intent.getStringExtra("picPath");
+        String content = intent.getStringExtra("content");
+        GeoBean geoBean = (GeoBean) intent.getSerializableExtra("geo");
 
-        statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("draft");
+        StatusDraftBean statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("draft");
 
-        WeiboSendTask task = new WeiboSendTask();
+        WeiboSendTask task = new WeiboSendTask(token, account, picPath, content, geoBean, statusDraftBean);
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
         tasksResult.put(task, false);
@@ -72,6 +67,23 @@ public class SendWeiboService extends Service {
 
     }
 
+    public void stopServiceIfTasksAreEnd(WeiboSendTask currentTask) {
+
+        tasksResult.put(currentTask, true);
+
+        boolean isAllTaskEnd = true;
+        Set<WeiboSendTask> taskSet = tasksResult.keySet();
+        for (WeiboSendTask task : taskSet) {
+            if (!tasksResult.get(task)) {
+                isAllTaskEnd = false;
+                break;
+            }
+        }
+        if (isAllTaskEnd) {
+            stopForeground(true);
+            stopSelf();
+        }
+    }
 
     private class WeiboSendTask extends MyAsyncTask<Void, Long, Void> {
 
@@ -80,6 +92,29 @@ public class SendWeiboService extends Service {
         long size;
         BroadcastReceiver receiver;
         PendingIntent pendingIntent;
+
+        String token;
+        AccountBean account;
+        String picPath;
+        String content;
+        GeoBean geoBean;
+
+        StatusDraftBean statusDraftBean;
+
+
+        public WeiboSendTask(String token,
+                             AccountBean account,
+                             String picPath,
+                             String content,
+                             GeoBean geoBean,
+                             StatusDraftBean statusDraftBean) {
+            this.token = token;
+            this.account = account;
+            this.content = content;
+            this.picPath = picPath;
+            this.geoBean = geoBean;
+            this.statusDraftBean = statusDraftBean;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -255,9 +290,9 @@ public class SendWeiboService extends Service {
             super.onCancelled(aVoid);
             if (statusDraftBean != null) {
                 DraftDBManager.getInstance().remove(statusDraftBean.getId());
-                DraftDBManager.getInstance().insertStatus(content, geoBean, picPath, accountId);
+                DraftDBManager.getInstance().insertStatus(content, geoBean, picPath, account.getUid());
             } else {
-                DraftDBManager.getInstance().insertStatus(content, geoBean, picPath, accountId);
+                DraftDBManager.getInstance().insertStatus(content, geoBean, picPath, account.getUid());
             }
 
             showFailedNotification(WeiboSendTask.this);
@@ -267,76 +302,62 @@ public class SendWeiboService extends Service {
             }
         }
 
-    }
+        private void showFailedNotification(final WeiboSendTask task) {
+            Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
+                    .setTicker(getString(R.string.send_failed_and_save_to_draft))
+                    .setContentTitle(getString(R.string.send_failed))
+                    .setContentText(getString(R.string.click_to_open_draft))
+                    .setOnlyAlertOnce(true)
+                    .setAutoCancel(true)
+                    .setSmallIcon(R.drawable.send_failed)
+                    .setOngoing(false);
 
-    private void stopServiceIfTasksAreEnd(WeiboSendTask currentTask) {
+            Intent notifyIntent = WriteWeiboActivity.startBecauseSendFailed(SendWeiboService.this, account, content, picPath, geoBean, statusDraftBean, e.getError());
 
-        tasksResult.put(currentTask, true);
+            PendingIntent pendingIntent = PendingIntent.getActivity(SendWeiboService.this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        boolean isAllTaskEnd = true;
-        Set<WeiboSendTask> taskSet = tasksResult.keySet();
-        for (WeiboSendTask task : taskSet) {
-            if (!tasksResult.get(task)) {
-                isAllTaskEnd = false;
-                break;
-            }
+            builder.setContentIntent(pendingIntent);
+
+            Notification notification = builder.getNotification();
+            final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+                    .getSystemService(NOTIFICATION_SERVICE);
+            final int id = tasksNotifications.get(task);
+            notificationManager.notify(id, notification);
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    stopServiceIfTasksAreEnd(task);
+                }
+            }, 3000);
         }
-        if (isAllTaskEnd) {
-            stopForeground(true);
-            stopSelf();
+
+
+        private void showSuccessfulNotification(final WeiboSendTask task) {
+            Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
+                    .setTicker(getString(R.string.send_successfully))
+                    .setContentTitle(getString(R.string.send_successfully))
+                    .setOnlyAlertOnce(true)
+                    .setAutoCancel(true)
+                    .setSmallIcon(R.drawable.send_successfully)
+                    .setOngoing(false);
+            Notification notification = builder.getNotification();
+            final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+                    .getSystemService(NOTIFICATION_SERVICE);
+            final int id = tasksNotifications.get(task);
+            notificationManager.notify(id, notification);
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    notificationManager.cancel(id);
+                    stopServiceIfTasksAreEnd(task);
+                }
+            }, 3000);
         }
+
+
     }
 
-    private void showSuccessfulNotification(final WeiboSendTask task) {
-        Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
-                .setTicker(getString(R.string.send_successfully))
-                .setContentTitle(getString(R.string.send_successfully))
-                .setOnlyAlertOnce(true)
-                .setAutoCancel(true)
-                .setSmallIcon(R.drawable.send_successfully)
-                .setOngoing(false);
-        Notification notification = builder.getNotification();
-        final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                .getSystemService(NOTIFICATION_SERVICE);
-        final int id = tasksNotifications.get(task);
-        notificationManager.notify(id, notification);
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                notificationManager.cancel(id);
-                stopServiceIfTasksAreEnd(task);
-            }
-        }, 3000);
-    }
-
-    private void showFailedNotification(final WeiboSendTask task) {
-        Notification.Builder builder = new Notification.Builder(SendWeiboService.this)
-                .setTicker(getString(R.string.send_failed_and_save_to_draft))
-                .setContentTitle(getString(R.string.send_failed))
-                .setContentText(getString(R.string.click_to_open_draft))
-                .setOnlyAlertOnce(true)
-                .setAutoCancel(true)
-                .setSmallIcon(R.drawable.send_failed)
-                .setOngoing(false);
-
-        Intent notifyIntent = new Intent(SendWeiboService.this, DraftActivity.class);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        builder.setContentIntent(pendingIntent);
-
-        Notification notification = builder.getNotification();
-        final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                .getSystemService(NOTIFICATION_SERVICE);
-        final int id = tasksNotifications.get(task);
-        notificationManager.notify(id, notification);
-
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                stopServiceIfTasksAreEnd(task);
-            }
-        }, 3000);
-    }
 }
