@@ -188,7 +188,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
             intent.putExtra("content", content);
             intent.putExtra("comment_ori", enableCommentOri.isChecked());
             intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-            intent.putExtra("accountId", GlobalContext.getInstance().getCurrentAccountId());
+            intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
             startService(intent);
             finish();
 

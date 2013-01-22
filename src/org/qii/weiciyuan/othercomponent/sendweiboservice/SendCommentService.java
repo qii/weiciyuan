@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
@@ -27,7 +28,7 @@ import java.util.Set;
  * Date: 13-1-20
  */
 public class SendCommentService extends Service {
-    private String accountId;
+    private AccountBean account;
     private String token;
     private String content;
     private MessageBean oriMsg;
@@ -49,7 +50,7 @@ public class SendCommentService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         token = intent.getStringExtra("token");
-        accountId = intent.getStringExtra("accountId");
+        account = (AccountBean) intent.getSerializableExtra("account");
         content = intent.getStringExtra("content");
         oriMsg = (MessageBean) intent.getSerializableExtra("oriMsg");
         comment_ori = intent.getBooleanExtra("comment_ori", false);
