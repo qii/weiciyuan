@@ -127,6 +127,7 @@
     <string name="send_successfully">发送成功</string>
     <string name="send_failed">发送失败</string>
     <string name="cancel_send">取消上传</string>
+    <string name="retry_send">重新发送</string>
     <string name="send_faile_click_to_open">发送失败，点击打开</string>
     <string name="send_failed_and_save_to_draft">发送失败，已保存到草稿箱</string>
     <string name="cancel_send_and_save_to_draft">取消上传，已保存到草稿箱</string>

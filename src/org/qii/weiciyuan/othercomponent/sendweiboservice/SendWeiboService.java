@@ -50,6 +50,8 @@ public class SendWeiboService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        int lastNotificationId = intent.getIntExtra("lastNotificationId", -1);
+
         String token = intent.getStringExtra("token");
         AccountBean account = (AccountBean) intent.getSerializableExtra("account");
         String picPath = intent.getStringExtra("picPath");
@@ -58,7 +60,7 @@ public class SendWeiboService extends Service {
 
         StatusDraftBean statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("draft");
 
-        WeiboSendTask task = new WeiboSendTask(token, account, picPath, content, geoBean, statusDraftBean);
+        WeiboSendTask task = new WeiboSendTask(lastNotificationId, token, account, picPath, content, geoBean, statusDraftBean);
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
         tasksResult.put(task, false);
@@ -93,6 +95,8 @@ public class SendWeiboService extends Service {
         BroadcastReceiver receiver;
         PendingIntent pendingIntent;
 
+        int lastNotificationId;
+
         String token;
         AccountBean account;
         String picPath;
@@ -102,12 +106,14 @@ public class SendWeiboService extends Service {
         StatusDraftBean statusDraftBean;
 
 
-        public WeiboSendTask(String token,
+        public WeiboSendTask(int lastNotificationId,
+                             String token,
                              AccountBean account,
                              String picPath,
                              String content,
                              GeoBean geoBean,
                              StatusDraftBean statusDraftBean) {
+            this.lastNotificationId = lastNotificationId;
             this.token = token;
             this.account = account;
             this.content = content;
@@ -133,7 +139,7 @@ public class SendWeiboService extends Service {
                 builder.setProgress(0, 100, true);
             }
 
-            int notificationId = new Random().nextInt(Integer.MAX_VALUE);
+            int notificationId = (lastNotificationId != -1) ? lastNotificationId : new Random().nextInt(Integer.MAX_VALUE);
 
             if (Utility.isJB()) {
                 receiver = new BroadcastReceiver() {
@@ -320,6 +326,19 @@ public class SendWeiboService extends Service {
                 bigTextStyle.bigText(content);
                 bigTextStyle.setSummaryText(account.getUsernick());
                 builder.setStyle(bigTextStyle);
+
+                Intent intent = new Intent(SendWeiboService.this, SendWeiboService.class);
+                intent.putExtra("token", token);
+                intent.putExtra("picPath", picPath);
+                intent.putExtra("account", account);
+                intent.putExtra("content", content);
+                intent.putExtra("geo", geoBean);
+                intent.putExtra("draft", statusDraftBean);
+
+                intent.putExtra("lastNotificationId", tasksNotifications.get(task));
+
+                PendingIntent retrySendIntent = PendingIntent.getService(SendWeiboService.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.addAction(R.drawable.send_light, getString(R.string.retry_send), retrySendIntent);
                 notification = builder.build();
             } else {
                 notification = builder.getNotification();
