@@ -24,7 +24,9 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
  */
 public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
 
-    private String id;
+    private static final String ACTION_DRAFT = "org.qii.weiciyuan.DRAFT";
+    private static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
+
     private String token;
     private MessageBean msg;
     private RepostDraftBean repostDraftBean;
@@ -42,37 +44,45 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         getActionBar().setTitle(getString(R.string.repost));
         getActionBar().setSubtitle(GlobalContext.getInstance().getCurrentAccountName());
 
-        token = getIntent().getStringExtra("token");
-        if (TextUtils.isEmpty(token))
-            token = GlobalContext.getInstance().getSpecialToken();
+        if (savedInstanceState == null) {
+            token = getIntent().getStringExtra("token");
+            if (TextUtils.isEmpty(token))
+                token = GlobalContext.getInstance().getSpecialToken();
 
-        msg = (MessageBean) getIntent().getSerializableExtra("msg");
-        if (msg != null) {
-            id = msg.getId();
+            msg = (MessageBean) getIntent().getSerializableExtra("msg");
+            if (msg != null) {
+
+                if (msg.getRetweeted_status() != null) {
+                    getEditTextView().setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
+                }
+
+            } else {
+
+                repostDraftBean = (RepostDraftBean) getIntent().getSerializableExtra("draft");
+                if (repostDraftBean != null) {
+                    getEditTextView().setText(repostDraftBean.getContent());
+                    msg = repostDraftBean.getMessageBean();
+                }
+            }
 
             if (msg.getRetweeted_status() != null) {
-                getEditTextView().setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
-            }
-
-        } else {
-
-            repostDraftBean = (RepostDraftBean) getIntent().getSerializableExtra("draft");
-            if (repostDraftBean != null) {
-                getEditTextView().setText(repostDraftBean.getContent());
-                msg = repostDraftBean.getMessageBean();
-                id = msg.getId();
+                getEditTextView().setHint("//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
+            } else {
+                getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
             }
         }
+    }
 
-        if (msg.getRetweeted_status() != null) {
-            getEditTextView().setHint("//@" + msg.getRetweeted_status().getUser().getScreen_name() + "：" + msg.getRetweeted_status().getText());
-        } else {
-            getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
-        }
-
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
             savedEnableComment = savedInstanceState.getBoolean("comment");
             savedEnableOriComment = savedInstanceState.getBoolean("oriComment");
+
+            token = savedInstanceState.getString("token");
+            msg = (MessageBean) savedInstanceState.getSerializable("msg");
+            repostDraftBean = (RepostDraftBean) savedInstanceState.getSerializable("repostDraftBean");
         }
     }
 
@@ -81,6 +91,10 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         super.onSaveInstanceState(outState);
         outState.putBoolean("comment", menuEnableComment.isChecked());
         outState.putBoolean("oriComment", menuEnableOriComment.isChecked());
+
+        outState.putString("token", token);
+        outState.putSerializable("msg", msg);
+        outState.putSerializable("repostDraftBean", repostDraftBean);
     }
 
     @Override
