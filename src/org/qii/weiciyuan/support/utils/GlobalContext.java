@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
@@ -38,7 +36,6 @@ public final class GlobalContext extends Application {
 
     //singleton
     private static GlobalContext globalContext = null;
-    private SharedPreferences sharedPref = null;
 
     //image size
     private Activity activity = null;
@@ -63,7 +60,6 @@ public final class GlobalContext extends Application {
     public void onCreate() {
         super.onCreate();
         globalContext = this;
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         buildCache();
     }
 
