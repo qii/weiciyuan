@@ -5,12 +5,11 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: Jiang Qi
@@ -66,19 +65,13 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification;
 
-        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+        if (!Utility.isJB()) {
             notification = new ICSNotification(context, accountBean, comment, repost, mentionCommentsResult, unreadBean).get();
         } else {
-            switch (SettingUtility.getNotificationStyle()) {
-                case 1:
-                    notification = new JBInboxNotification(context, accountBean, comment, repost, mentionCommentsResult, unreadBean).get();
-                    break;
-                case 2:
-                    notification = new JBBigTextNotification(context, accountBean, comment, repost, mentionCommentsResult, unreadBean).get();
-                    break;
-                default:
-                    notification = new JBInboxNotification(context, accountBean, comment, repost, mentionCommentsResult, unreadBean).get();
-
+            if (sum == 1) {
+                notification = new JBBigTextNotification(context, accountBean, comment, repost, mentionCommentsResult, unreadBean).get();
+            } else {
+                notification = new JBInboxNotification(context, accountBean, comment, repost, mentionCommentsResult, unreadBean).get();
             }
         }
 

@@ -55,17 +55,17 @@
         </Preference>
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/notification_style_version"
-        >
-        <ListPreference
-            android:key="jbnotification"
-            android:title="@string/notification_style"
-            android:dialogTitle="@string/notification_style"
-            android:entries="@array/notification_style"
-            android:entryValues="@array/notification_style_value"
-            android:defaultValue="1"
-            android:enabled="@bool/jb_notification"/>
-    </PreferenceCategory>
+    <!--<PreferenceCategory-->
+    <!--android:title="@string/notification_style_version"-->
+    <!-->-->
+    <!--<ListPreference-->
+    <!--android:key="jbnotification"-->
+    <!--android:title="@string/notification_style"-->
+    <!--android:dialogTitle="@string/notification_style"-->
+    <!--android:entries="@array/notification_style"-->
+    <!--android:entryValues="@array/notification_style_value"-->
+    <!--android:defaultValue="1"-->
+    <!--android:enabled="@bool/jb_notification"/>-->
+    <!--</PreferenceCategory>-->
 
 </PreferenceScreen>

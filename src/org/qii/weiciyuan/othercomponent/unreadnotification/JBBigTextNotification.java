@@ -5,7 +5,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -60,25 +63,23 @@ public class JBBigTextNotification {
 
         builder.setContentTitle(NotificationUtility.getTicker(unreadBean));
 
-        if (NotificationUtility.getCount(unreadBean) > 1) {
-            builder.setNumber(NotificationUtility.getCount(unreadBean));
-        }
+        builder.setNumber(1);
 
         Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(builder);
 
-
-        if (repost != null) {
-            for (MessageBean m : repost.getItemList()) {
-                bigTextStyle.setBigContentTitle(m.getUser().getScreen_name() + "：");
-                bigTextStyle.bigText(m.getText());
-            }
+        if (unreadBean.getMention_status() == 1) {
+            bigTextStyle.setBigContentTitle(repost.getItem(0).getUser().getScreen_name() + "：");
+            bigTextStyle.bigText(repost.getItem(0).getText());
         }
 
-        if (mentionCommentsResult != null) {
-            for (CommentBean m : mentionCommentsResult.getItemList()) {
-                bigTextStyle.setBigContentTitle(m.getUser().getScreen_name() + "：");
-                bigTextStyle.bigText(m.getText());
-            }
+        if (unreadBean.getCmt() == 1) {
+            bigTextStyle.setBigContentTitle(comment.getItem(0).getUser().getScreen_name() + "：");
+            bigTextStyle.bigText(comment.getItem(0).getText());
+        }
+
+        if (unreadBean.getMention_cmt() == 1) {
+            bigTextStyle.setBigContentTitle(mentionCommentsResult.getItem(0).getUser().getScreen_name() + "：");
+            bigTextStyle.bigText(mentionCommentsResult.getItem(0).getText());
         }
 
 
