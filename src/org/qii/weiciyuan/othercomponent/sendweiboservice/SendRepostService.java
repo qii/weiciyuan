@@ -45,7 +45,7 @@ public class SendRepostService extends Service {
 
         int lastNotificationId = intent.getIntExtra("lastNotificationId", -1);
         if (lastNotificationId != -1) {
-            NotificationUtility.cancel(getApplicationContext(), lastNotificationId);
+            NotificationUtility.cancel(lastNotificationId);
         }
 
         String token = intent.getStringExtra("token");
@@ -113,7 +113,7 @@ public class SendRepostService extends Service {
 
             notification = builder.getNotification();
 
-            NotificationUtility.show(getApplicationContext(), notification, notificationId);
+            NotificationUtility.show(notification, notificationId);
 
             tasksNotifications.put(WeiboSendTask.this, notificationId);
 
@@ -169,12 +169,12 @@ public class SendRepostService extends Service {
             Notification notification = builder.getNotification();
 
             final int id = tasksNotifications.get(task);
-            NotificationUtility.show(getApplicationContext(), notification, id);
+            NotificationUtility.show(notification, id);
 
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    NotificationUtility.cancel(getApplicationContext(), id);
+                    NotificationUtility.cancel(id);
                     stopServiceIfTasksAreEnd(task);
                 }
             }, 3000);
@@ -224,7 +224,7 @@ public class SendRepostService extends Service {
 
             final int id = tasksNotifications.get(task);
 
-            NotificationUtility.show(getApplicationContext(), notification, id);
+            NotificationUtility.show(notification, id);
 
             handler.postDelayed(new Runnable() {
                 @Override

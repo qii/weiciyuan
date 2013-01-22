@@ -64,14 +64,14 @@ public class NotificationUtility {
         return stringBuilder.toString();
     }
 
-    public static void show(Context context, Notification notification, int id) {
-        NotificationManager notificationManager = (NotificationManager) context
+    public static void show(Notification notification, int id) {
+        NotificationManager notificationManager = (NotificationManager) GlobalContext.getInstance()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(id, notification);
     }
 
-    public static void cancel(Context context, int id) {
-        NotificationManager notificationManager = (NotificationManager) context
+    public static void cancel(int id) {
+        NotificationManager notificationManager = (NotificationManager) GlobalContext.getInstance()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(id);
     }

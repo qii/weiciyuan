@@ -163,7 +163,7 @@ public class SendWeiboService extends Service {
                 notification = builder.getNotification();
             }
 
-            NotificationUtility.show(getApplicationContext(), notification, notificationId);
+            NotificationUtility.show(notification, notificationId);
             tasksNotifications.put(WeiboSendTask.this, notificationId);
 
         }
@@ -270,7 +270,7 @@ public class SendWeiboService extends Service {
                     notification = builder.getNotification();
                 }
 
-                NotificationUtility.show(getApplicationContext(), notification, tasksNotifications.get(WeiboSendTask.this));
+                NotificationUtility.show(notification, tasksNotifications.get(WeiboSendTask.this));
 
             }
         }
@@ -359,7 +359,7 @@ public class SendWeiboService extends Service {
 
 
             final int id = tasksNotifications.get(task);
-            NotificationUtility.show(getApplicationContext(), notification, id);
+            NotificationUtility.show(notification, id);
 
             handler.postDelayed(new Runnable() {
                 @Override
@@ -380,11 +380,11 @@ public class SendWeiboService extends Service {
                     .setOngoing(false);
             Notification notification = builder.getNotification();
             final int id = tasksNotifications.get(task);
-            NotificationUtility.show(getApplicationContext(), notification, id);
+            NotificationUtility.show(notification, id);
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    NotificationUtility.cancel(getApplicationContext(), id);
+                    NotificationUtility.cancel(id);
                     stopServiceIfTasksAreEnd(task);
                 }
             }, 3000);
