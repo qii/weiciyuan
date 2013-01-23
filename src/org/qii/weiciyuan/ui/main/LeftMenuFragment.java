@@ -10,6 +10,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -345,6 +346,19 @@ public class LeftMenuFragment extends PreferenceFragment {
         @Override
         public void onPageSelected(int position) {
             getActivity().getActionBar().setSelectedNavigationItem(position);
+            switch (position) {
+                case 0:
+                    getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+                    break;
+                default:
+                    getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+                    break;
+            }
         }
+
     };
+
+    private SlidingMenu getSlidingMenu() {
+        return ((MainTimeLineActivity) getActivity()).getSlidingMenu();
+    }
 }
