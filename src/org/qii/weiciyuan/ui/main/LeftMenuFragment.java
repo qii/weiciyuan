@@ -46,6 +46,17 @@ public class LeftMenuFragment extends PreferenceFragment {
 
         final View fl = getActivity().findViewById(R.id.menu_right_fl);
 
+        mentionVP.setAdapter(new MentionsTimeLinePagerAdapter(getFragmentManager()));
+        commentVP.setAdapter(new CommentsTimeLinePagerAdapter(getFragmentManager()));
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+        for (Fragment f : commentFragments) {
+            ft.hide(f);
+        }
+
+        for (Fragment f : mentionFragments) {
+            ft.hide(f);
+        }
 
         findPreference("a").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

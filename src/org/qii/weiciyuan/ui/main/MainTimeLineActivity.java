@@ -115,6 +115,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         slidingMenu.setShadowDrawable(R.drawable.shadow);
         slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         slidingMenu.setFadeDegree(0.35f);
+
+
     }
 
     @Override
@@ -169,32 +171,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
 
-    public FriendsTimeLineFragment getHomeFragment() {
-        return ((FriendsTimeLineFragment) getFragmentManager().findFragmentByTag(
-                FriendsTimeLineFragment.class.getName()));
-    }
-
-    private MentionsTimeLineFragment getMentionFragment() {
-        return ((MentionsTimeLineFragment) getFragmentManager().findFragmentByTag(
-                MentionsTimeLineFragment.class.getName()));
-    }
-
-    private CommentsTimeLineFragment getCommentFragment() {
-        return ((CommentsTimeLineFragment) getFragmentManager().findFragmentByTag(
-                CommentsTimeLineFragment.class.getName()));
-    }
-
-    private AbstractTimeLineFragment getMyFragment() {
-        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
-                MyStatussTimeLineFragment.class.getName()));
-    }
-
-    private AbstractTimeLineFragment getDMFragment() {
-        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
-                DMUserListFragment.class.getName()));
-    }
-
-
     @Override
     public UserBean getUser() {
         return accountBean.getInfo();
@@ -233,6 +209,31 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         newMsgScheduledExecutorService.shutdownNow();
         if (getUnreadCountTask != null)
             getUnreadCountTask.cancel(true);
+    }
+
+    public FriendsTimeLineFragment getHomeFragment() {
+        return ((FriendsTimeLineFragment) getFragmentManager().findFragmentByTag(
+                FriendsTimeLineFragment.class.getName()));
+    }
+
+    private MentionsTimeLineFragment getMentionFragment() {
+        return ((MentionsTimeLineFragment) getFragmentManager().findFragmentByTag(
+                MentionsTimeLineFragment.class.getName()));
+    }
+
+    private CommentsTimeLineFragment getCommentFragment() {
+        return ((CommentsTimeLineFragment) getFragmentManager().findFragmentByTag(
+                CommentsTimeLineFragment.class.getName()));
+    }
+
+    private AbstractTimeLineFragment getMyFragment() {
+        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
+                MyStatussTimeLineFragment.class.getName()));
+    }
+
+    private AbstractTimeLineFragment getDMFragment() {
+        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
+                DMUserListFragment.class.getName()));
     }
 
 
@@ -322,15 +323,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     private void buildUnreadTabTxt(UnreadBean unreadBean) {
-        int unreadMentionsCount = unreadBean.getMention_status();
-        int unreadCommentsCount = unreadBean.getMention_cmt() + unreadBean.getCmt();
 
-        if (unreadMentionsCount > 0 && getMentionFragment() != null)
-            getMentionFragment().refreshUnread(unreadBean);
-
-
-        if (unreadCommentsCount > 0 && getCommentFragment() != null)
-            getCommentFragment().refreshUnread(unreadBean);
     }
 
 
