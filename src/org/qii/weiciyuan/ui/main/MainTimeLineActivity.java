@@ -93,7 +93,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
-
+        getWindow().setBackgroundDrawable(null);
         setContentView(R.layout.menu_right);
         setBehindContentView(R.layout.menu_frame);
 
