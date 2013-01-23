@@ -52,6 +52,8 @@ public class LeftMenuFragment extends PreferenceFragment {
         findPreference("a").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+
                 if (index == 0) {
                     ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
                     return true;
@@ -59,9 +61,7 @@ public class LeftMenuFragment extends PreferenceFragment {
 
                 index = 0;
 
-
                 getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-                getActivity().getActionBar().show();
                 getActivity().getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
 
@@ -74,7 +74,6 @@ public class LeftMenuFragment extends PreferenceFragment {
                 }
 
                 Fragment fragment = ((MainTimeLineActivity) getActivity()).getOrNewFriendsTimeLineFragment();
-
 
                 if (fragment.isAdded() && fragment.isHidden()) {
                     ft.show(fragment);
