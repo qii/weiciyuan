@@ -28,7 +28,7 @@ import java.util.Map;
  * User: qii
  * Date: 12-7-29
  */
-public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<MessageListBean> {
+public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragment<MessageListBean> {
 
     private AccountBean accountBean;
     private UserBean userBean;
@@ -54,11 +54,11 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
         return bean;
     }
 
-    public MentionsTimeLineFragment() {
+    public MentionsWeiboTimeLineFragment() {
 
     }
 
-    public MentionsTimeLineFragment(AccountBean accountBean, UserBean userBean, String token) {
+    public MentionsWeiboTimeLineFragment(AccountBean accountBean, UserBean userBean, String token) {
         this.accountBean = accountBean;
         this.userBean = userBean;
         this.token = token;

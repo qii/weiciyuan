@@ -322,7 +322,7 @@ public class LeftMenuFragment extends PreferenceFragment {
         @Override
         protected String getTag(int position) {
             List<String> tagList = new ArrayList<String>();
-            tagList.add(CommentsTimeLineFragment.class.getName());
+            tagList.add(CommentsToMeTimeLineFragment.class.getName());
             tagList.add(CommentsByMeTimeLineFragment.class.getName());
 
             return tagList.get(position);
@@ -357,7 +357,7 @@ public class LeftMenuFragment extends PreferenceFragment {
         @Override
         protected String getTag(int position) {
             List<String> tagList = new ArrayList<String>();
-            tagList.add(MentionsTimeLineFragment.class.getName());
+            tagList.add(MentionsWeiboTimeLineFragment.class.getName());
             tagList.add(MentionsCommentTimeLineFragment.class.getName());
 
             return tagList.get(position);

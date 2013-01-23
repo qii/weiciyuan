@@ -207,14 +207,14 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 FriendsTimeLineFragment.class.getName()));
     }
 
-    private MentionsTimeLineFragment getMentionFragment() {
-        return ((MentionsTimeLineFragment) getFragmentManager().findFragmentByTag(
-                MentionsTimeLineFragment.class.getName()));
+    private MentionsWeiboTimeLineFragment getMentionFragment() {
+        return ((MentionsWeiboTimeLineFragment) getFragmentManager().findFragmentByTag(
+                MentionsWeiboTimeLineFragment.class.getName()));
     }
 
-    private CommentsTimeLineFragment getCommentFragment() {
-        return ((CommentsTimeLineFragment) getFragmentManager().findFragmentByTag(
-                CommentsTimeLineFragment.class.getName()));
+    private CommentsToMeTimeLineFragment getCommentFragment() {
+        return ((CommentsToMeTimeLineFragment) getFragmentManager().findFragmentByTag(
+                CommentsToMeTimeLineFragment.class.getName()));
     }
 
     private AbstractTimeLineFragment getMyFragment() {
@@ -243,9 +243,9 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             return getHomeFragment();
     }
 
-    public MentionsTimeLineFragment newMentionsTimeLineFragment() {
+    public MentionsWeiboTimeLineFragment newMentionsTimeLineFragment() {
         if (getMentionFragment() == null)
-            return new MentionsTimeLineFragment(getAccount(), getUser(), getToken());
+            return new MentionsWeiboTimeLineFragment(getAccount(), getUser(), getToken());
         else
             return getMentionFragment();
     }
@@ -256,10 +256,10 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
     }
 
-    public CommentsTimeLineFragment newCommentsTimeLineFragment() {
+    public CommentsToMeTimeLineFragment newCommentsTimeLineFragment() {
 
         if (getCommentFragment() == null)
-            return new CommentsTimeLineFragment(getAccount(), getUser(), getToken());
+            return new CommentsToMeTimeLineFragment(getAccount(), getUser(), getToken());
         else
             return getCommentFragment();
     }
