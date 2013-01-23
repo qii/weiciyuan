@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
+import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
@@ -25,14 +26,10 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.dm.DMUserListFragment;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.login.AccountActivity;
-import org.qii.weiciyuan.ui.maintimeline.CommentsTimeLineFragment;
-import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
-import org.qii.weiciyuan.ui.maintimeline.MentionsTimeLineFragment;
-import org.qii.weiciyuan.ui.maintimeline.MyStatussTimeLineFragment;
+import org.qii.weiciyuan.ui.maintimeline.*;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 import org.qii.weiciyuan.ui.search.SearchMainActivity;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
@@ -47,7 +44,7 @@ import java.util.concurrent.TimeUnit;
  * User: Jiang Qi
  * Date: 12-7-27
  */
-public class MainTimeLineActivity extends AbstractAppActivity implements IUserInfo,
+public class MainTimeLineActivity extends MainTimeLineParentActivity implements IUserInfo,
         IAccountInfo {
 
     private ViewPager mViewPager;
@@ -74,6 +71,20 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewpager_layout);
+
+        setBehindContentView(R.layout.menu_frame);
+        FragmentTransaction t = getFragmentManager().beginTransaction();
+        MenuFragment mFrag = new MenuFragment();
+        t.replace(R.id.menu_frame, mFrag);
+        t.commit();
+
+        SlidingMenu slidingMenu = getSlidingMenu();
+        slidingMenu.setMode(SlidingMenu.LEFT);
+        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+        slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
+        slidingMenu.setShadowDrawable(R.drawable.shadow);
+        slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        slidingMenu.setFadeDegree(0.35f);
 
         if (savedInstanceState != null) {
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
@@ -104,7 +115,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
 
     private void buildPhoneInterface() {
-        buildViewPager();
+//        buildViewPager();
         buildActionBarAndViewPagerTitles();
         buildTabTitle(getIntent());
     }
@@ -180,6 +191,9 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
+            case android.R.id.home:
+                getSlidingMenu().showMenu();
+                return true;
             case R.id.menu_my_info:
                 intent = new Intent(this, MyInfoActivity.class);
                 intent.putExtra("token", getToken());
@@ -216,9 +230,15 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
         mViewPager.setOnPageChangeListener(onPageChangeListener);
     }
 
+    public void clearAllFragments() {
+        getFragmentManager().beginTransaction().remove(getHomeFragment()).commit();
+        getFragmentManager().beginTransaction().remove(getMentionFragment()).commit();
+        getFragmentManager().beginTransaction().remove(getCommentFragment()).commit();
 
-    private AbstractTimeLineFragment getHomeFragment() {
-        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
+    }
+
+    public FriendsTimeLineFragment getHomeFragment() {
+        return ((FriendsTimeLineFragment) getFragmentManager().findFragmentByTag(
                 FriendsTimeLineFragment.class.getName()));
     }
 
@@ -244,37 +264,13 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
     private void buildActionBarAndViewPagerTitles() {
         ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        if (SettingUtility.getAppTheme() == R.style.AppTheme_Four && getResources().getBoolean(R.bool.is_phone))
-            actionBar.setStackedBackgroundDrawable(getResources().getDrawable(R.drawable.ab_solid_custom_blue_inverse_holo));
-        if (getResources().getBoolean(R.bool.is_phone)) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayShowHomeEnabled(false);
-        }
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
 
-        MainTabListener tabListener = new MainTabListener();
-
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.home))
-                .setTabListener(tabListener));
-
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.mentions))
-                .setTabListener(tabListener));
-
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.comments))
-                .setTabListener(tabListener));
-
-        if (getResources().getBoolean(R.bool.blackmagic)) {
-            actionBar.addTab(actionBar.newTab()
-                    .setText(getString(R.string.dm))
-                    .setTabListener(tabListener));
-        } else {
-            actionBar.addTab(actionBar.newTab()
-                    .setText(getString(R.string.me))
-                    .setTabListener(tabListener));
-        }
+        setContentView(R.layout.menu_right);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.menu_right_fl, newFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName())
+                .commit();
     }
 
 
@@ -435,6 +431,50 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
     }
 
 
+    public FriendsTimeLineFragment getOrNewFriendsTimeLineFragment() {
+        if (getHomeFragment() == null)
+            return new FriendsTimeLineFragment(getAccount(), getUser(), getToken());
+        else
+            return getHomeFragment();
+    }
+
+    public FriendsTimeLineFragment newFriendsTimeLineFragment() {
+
+        if (getHomeFragment() == null)
+            return new FriendsTimeLineFragment(getAccount(), getUser(), getToken());
+        else
+            return getHomeFragment();
+    }
+
+    public MentionsTimeLineFragment newMentionsTimeLineFragment() {
+
+        return new MentionsTimeLineFragment(getAccount(), getUser(), getToken());
+
+    }
+
+    public MentionsCommentTimeLineFragment newMentionsCommentTimeLineFragment() {
+
+        return new MentionsCommentTimeLineFragment(getAccount(), getUser(), getToken());
+
+    }
+
+    public CommentsTimeLineFragment newCommentsTimeLineFragment() {
+
+        if (getCommentFragment() == null)
+            return new CommentsTimeLineFragment(getAccount(), getUser(), getToken());
+        else
+            return getCommentFragment();
+    }
+
+    public CommentsByMeTimeLineFragment newCommentsByMeTimeLineFragment() {
+        CommentsByMeTimeLineFragment fragment = ((CommentsByMeTimeLineFragment) getFragmentManager().findFragmentByTag(
+                CommentsByMeTimeLineFragment.class.getName()));
+        if (fragment == null)
+            return new CommentsByMeTimeLineFragment(getAccount(), getUser(), getToken());
+        else
+            return fragment;
+    }
+
     private class TimeLinePagerAdapter extends AppFragmentPagerAdapter {
 
 
@@ -506,6 +546,7 @@ public class MainTimeLineActivity extends AbstractAppActivity implements IUserIn
 
 
     }
+
 
     private class GetUnreadCountTask extends MyAsyncTask<Void, Void, UnreadBean> {
 

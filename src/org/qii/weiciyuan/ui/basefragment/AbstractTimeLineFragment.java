@@ -17,8 +17,8 @@ import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
+import org.qii.weiciyuan.ui.interfaces.ICommander;
 
 /**
  * User: qii
@@ -103,6 +103,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         View view = inflater.inflate(R.layout.listview_layout, container, false);
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.GONE);
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
 
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
@@ -280,7 +281,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
             newTask = new TimeLineGetNewMsgListTask();
             newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            ((AbstractAppActivity) getActivity()).getBitmapDownloader().totalStopLoadPicture();
+            ((ICommander) getActivity()).getBitmapDownloader().totalStopLoadPicture();
 
         }
 
@@ -301,7 +302,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
+        commander = ((ICommander) getActivity()).getBitmapDownloader();
 
     }
 

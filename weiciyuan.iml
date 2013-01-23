@@ -63,6 +63,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="google-play-services_lib" />
+    <orderEntry type="module" module-name="slidingmenulibrary" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

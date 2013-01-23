@@ -1,13 +1,9 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -121,17 +117,17 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
 
     public void refreshUnread(UnreadBean unreadBean) {
 
-        Activity activity = getActivity();
-        if (activity != null) {
-            if (unreadBean == null) {
-                activity.getActionBar().getTabAt(1).setText(getString(R.string.mentions));
-                return;
-            }
-            this.unreadBean = unreadBean;
-            String number = Utility.buildTabText(unreadBean.getMention_status());
-            if (!TextUtils.isEmpty(number))
-                activity.getActionBar().getTabAt(1).setText(getString(R.string.mentions) + number);
-        }
+//        Activity activity = getActivity();
+//        if (activity != null) {
+//            if (unreadBean == null) {
+//                activity.getActionBar().getTabAt(1).setText(getString(R.string.mentions));
+//                return;
+//            }
+//            this.unreadBean = unreadBean;
+//            String number = Utility.buildTabText(unreadBean.getMention_status());
+//            if (!TextUtils.isEmpty(number))
+//                activity.getActionBar().getTabAt(1).setText(getString(R.string.mentions) + number);
+//        }
     }
 
 
@@ -256,9 +252,9 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
              * activity will restart, and then mentions and comment fragment
              * will fetch new message from server
              **/
-            if (getActivity() != null && getActivity().getActionBar().getTabAt(1).getText().toString().contains(")")) {
-                pullToRefreshListView.startRefreshNow();
-            }
+//            if (getActivity() != null && getActivity().getActionBar().getTabAt(1).getText().toString().contains(")")) {
+//                pullToRefreshListView.startRefreshNow();
+//            }
         }
 
     }
@@ -272,13 +268,6 @@ public class MentionsTimeLineFragment extends AbstractMessageTimeLineFragment<Me
         startActivity(intent);
     }
 
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.actionbar_menu_mentionstimelinefragment, menu);
-        menu.findItem(R.id.group_name).setTitle(groupNames[currentGroupId]);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
  * User: Jiang Qi
  * Date: 12-7-31
  */
-public class AbstractAppActivity extends Activity {
+public class AbstractAppActivity extends Activity implements ICommander {
 
     private int theme = 0;
 

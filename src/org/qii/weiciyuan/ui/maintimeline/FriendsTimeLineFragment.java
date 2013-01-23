@@ -119,7 +119,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             if (getList() != null && currentGroupId.equals(ALL_GROUP_ID)) {
                 SaveToDBService.save(getActivity(), SaveToDBService.TYPE_STATUS, getList(), accountBean.getUid());
             }
-            getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
+//            getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
             putToGroupDataMemoryCache(currentGroupId, getList());
 
         }
@@ -136,6 +136,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);    //To change body of overridden methods use File | Settings | File Templates.
+        if (true)
+            refreshLayout(getList());
+    }
 
     @Override
     public void onPause() {
@@ -155,6 +161,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         super.onDestroy();
         Utility.cancelTasks(dbTask);
     }
+
+//    @Override
+//    public void onHiddenChanged(boolean hidden) {
+//        super.onHiddenChanged(hidden);    //To change body of overridden methods use File | Settings | File Templates.
+//        refreshLayout(getList());
+//    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -198,7 +211,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
 
         super.onActivityCreated(savedInstanceState);
-
 
     }
 
@@ -255,7 +267,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         inflater.inflate(R.menu.actionbar_menu_friendstimelinefragment, menu);
         name = menu.findItem(R.id.group_name);
         if (currentGroupId.equals(ALL_GROUP_ID)) {
-            name.setTitle(userBean.getScreen_name());
+//            name.setTitle(userBean.getScreen_name());
+            name.setTitle(getString(R.string.all_people));
         }
         if (currentGroupId.equals(BILATERAL_GROUP_ID)) {
             name.setTitle(getString(R.string.bilateral));
@@ -278,6 +291,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 intent.putExtra("token", token);
                 intent.putExtra("account", accountBean);
                 startActivity(intent);
+//                getActivity().setContentView(new TextView(getActivity()));
+//                getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+//                getActivity().closeOptionsMenu();
+//                FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                ft.remove(FriendsTimeLineFragment.this);
+//                ft.commit();
                 break;
             case R.id.refresh:
                 if (allowRefresh())
