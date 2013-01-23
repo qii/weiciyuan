@@ -44,6 +44,7 @@
 
         <activity
             android:name=".ui.login.DummyActivity"
+            android:label=" "
             android:uiOptions="splitActionBarWhenNarrow">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -54,6 +55,7 @@
         <!-- login activity -->
         <activity
             android:name=".ui.login.AccountActivity"
+            android:label=" "
             android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.login.OAuthActivity"/>
 

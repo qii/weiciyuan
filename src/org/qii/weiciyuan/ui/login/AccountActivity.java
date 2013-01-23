@@ -46,7 +46,7 @@ public class AccountActivity extends AbstractAppActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.accountactivity_layout);
-
+        getActionBar().setTitle(getString(R.string.app_name));
         listAdapter = new AccountAdapter();
         listView = (ListView) findViewById(R.id.listView);
         listView.setOnItemClickListener(new AccountListItemClickListener());
