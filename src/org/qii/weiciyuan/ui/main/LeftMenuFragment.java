@@ -19,6 +19,7 @@ import org.qii.weiciyuan.ui.maintimeline.*;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 import org.qii.weiciyuan.ui.search.SearchMainActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
+import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -275,6 +276,18 @@ public class LeftMenuFragment extends PreferenceFragment {
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
                 intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
+                startActivity(intent);
+                return true;
+            }
+        });
+
+        findPreference("i").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(getActivity(), MyInfoActivity.class);
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("user", GlobalContext.getInstance().getAccountBean().getInfo());
                 intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
                 startActivity(intent);
                 return true;

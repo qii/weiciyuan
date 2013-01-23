@@ -27,7 +27,6 @@ import org.qii.weiciyuan.ui.dm.DMUserListFragment;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.maintimeline.*;
-import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -156,14 +155,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             case android.R.id.home:
                 getSlidingMenu().showMenu();
                 return true;
-            case R.id.menu_my_info:
-                intent = new Intent(this, MyInfoActivity.class);
-                intent.putExtra("token", getToken());
-                intent.putExtra("user", getUser());
-                intent.putExtra("account", getAccount());
-                startActivity(intent);
-                return true;
-
 
         }
 
