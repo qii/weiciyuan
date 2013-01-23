@@ -244,9 +244,10 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     public MentionsTimeLineFragment newMentionsTimeLineFragment() {
-
-        return new MentionsTimeLineFragment(getAccount(), getUser(), getToken());
-
+        if (getMentionFragment() == null)
+            return new MentionsTimeLineFragment(getAccount(), getUser(), getToken());
+        else
+            return getMentionFragment();
     }
 
     public MentionsCommentTimeLineFragment newMentionsCommentTimeLineFragment() {

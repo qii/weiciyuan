@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v4.view.ViewPager;
@@ -47,17 +48,6 @@ public class LeftMenuFragment extends PreferenceFragment {
 
         final View fl = getActivity().findViewById(R.id.menu_right_fl);
 
-        mentionVP.setAdapter(new MentionsTimeLinePagerAdapter(getFragmentManager()));
-        commentVP.setAdapter(new CommentsTimeLinePagerAdapter(getFragmentManager()));
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-
-        for (Fragment f : commentFragments) {
-            ft.hide(f);
-        }
-
-        for (Fragment f : mentionFragments) {
-            ft.hide(f);
-        }
 
         findPreference("a").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -127,8 +117,11 @@ public class LeftMenuFragment extends PreferenceFragment {
 
                 ft.commit();
 
-                if (mentionVP.getAdapter() == null)
-                    mentionVP.setAdapter(new MentionsTimeLinePagerAdapter(getFragmentManager()));
+                ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+                fl.setVisibility(View.GONE);
+                mentionVP.setVisibility(View.VISIBLE);
+                commentVP.setVisibility(View.GONE);
+                index = 1;
 
                 ActionBar.TabListener tabListener = new ActionBar.TabListener() {
                     @Override
@@ -161,12 +154,16 @@ public class LeftMenuFragment extends PreferenceFragment {
                         .setTabListener(tabListener));
                 mentionVP.setOnPageChangeListener(onPageChangeListener);
 
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mentionVP.getAdapter() == null)
+                            mentionVP.setAdapter(new MentionsTimeLinePagerAdapter(getFragmentManager()));
 
-                ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
-                fl.setVisibility(View.GONE);
-                mentionVP.setVisibility(View.VISIBLE);
-                commentVP.setVisibility(View.GONE);
-                index = 1;
+
+                    }
+                }, 500);
+
                 return true;
             }
         });
@@ -193,8 +190,16 @@ public class LeftMenuFragment extends PreferenceFragment {
 
                 ft.commit();
 
-                if (commentVP.getAdapter() == null)
-                    commentVP.setAdapter(new CommentsTimeLinePagerAdapter(getFragmentManager()));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (commentVP.getAdapter() == null)
+                            commentVP.setAdapter(new CommentsTimeLinePagerAdapter(getFragmentManager()));
+
+
+                    }
+                }, 500);
+
 
                 ActionBar.TabListener tabListener = new ActionBar.TabListener() {
                     @Override
