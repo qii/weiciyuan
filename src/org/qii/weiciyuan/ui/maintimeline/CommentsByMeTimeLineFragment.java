@@ -12,6 +12,7 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.dao.maintimeline.CommentsTimeLineByMeDao;
 import org.qii.weiciyuan.dao.maintimeline.ICommentsTimeLineDao;
+import org.qii.weiciyuan.support.database.CommentByMeTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -207,7 +208,8 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
         @Override
         protected CommentListBean doInBackground(Void... params) {
-            return null;
+            return CommentByMeTimeLineDBTask.getCommentLineMsgList(GlobalContext.getInstance().getCurrentAccountId());
+
         }
 
         @Override
@@ -264,7 +266,9 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             dao.setSince_id(getList().getItemList().get(0).getId());
         }
         result = dao.getGSONMsgList();
-
+        if (result != null) {
+            CommentByMeTimeLineDBTask.addCommentLineMsg(result, accountBean.getUid());
+        }
         return result;
     }
 
@@ -279,6 +283,7 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
         }
         result = dao.getGSONMsgList();
+
         return result;
     }
 

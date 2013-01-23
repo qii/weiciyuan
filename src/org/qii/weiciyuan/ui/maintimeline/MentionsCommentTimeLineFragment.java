@@ -13,6 +13,7 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.dao.maintimeline.ICommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MentionsCommentTimeLineDao;
+import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -241,7 +242,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
         @Override
         protected CommentListBean doInBackground(Void... params) {
-            return null;
+            return MentionCommentsTimeLineDBTask.getCommentLineMsgList(GlobalContext.getInstance().getCurrentAccountId());
         }
 
         @Override
@@ -305,7 +306,10 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
             dao.setSince_id(getList().getItemList().get(0).getId());
         }
         result = dao.getGSONMsgList();
+        if (result != null) {
+            MentionCommentsTimeLineDBTask.addCommentLineMsg(result, accountBean.getUid());
 
+        }
         return result;
     }
 
