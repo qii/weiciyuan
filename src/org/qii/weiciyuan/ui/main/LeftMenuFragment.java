@@ -15,6 +15,7 @@ import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.dm.DMUserListActivity;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.maintimeline.*;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
@@ -245,7 +246,7 @@ public class LeftMenuFragment extends PreferenceFragment {
         findPreference("d").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
+                startActivity(new Intent(getActivity(), DMUserListActivity.class));
                 return true;
             }
         });

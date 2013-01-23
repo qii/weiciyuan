@@ -2,12 +2,8 @@ package org.qii.weiciyuan.ui.dm;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMUserListBean;
 import org.qii.weiciyuan.dao.dm.DMDao;
 import org.qii.weiciyuan.support.database.DMDBTask;
@@ -18,8 +14,6 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.DMUserListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
-import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
 /**
  * User: qii
@@ -46,9 +40,7 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
         setRetainInstance(true);
-
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 if (Utility.isTaskStopped(dbTask)) {
@@ -82,34 +74,6 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         startActivity(intent);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        inflater.inflate(R.menu.actionbar_menu_mystatustimelinefragment, menu);
-        menu.findItem(R.id.name).setTitle(getString(R.string.personal_info));
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        switch (item.getItemId()) {
-            case R.id.name:
-                intent = new Intent(getActivity(), MyInfoActivity.class);
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                intent.putExtra("user", GlobalContext.getInstance().getAccountBean().getInfo());
-                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
-                startActivity(intent);
-                break;
-            case R.id.write_weibo:
-                intent = new Intent(getActivity(), WriteWeiboActivity.class);
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
-                startActivity(intent);
-                break;
-        }
-        return true;
-    }
 
     @Override
     protected void buildListAdapter() {
