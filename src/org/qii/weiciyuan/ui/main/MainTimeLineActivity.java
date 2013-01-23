@@ -1,24 +1,22 @@
 package org.qii.weiciyuan.ui.main;
 
 import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
 import org.qii.weiciyuan.othercomponent.unreadnotification.UnreadMsgReceiver;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -28,14 +26,9 @@ import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.dm.DMUserListFragment;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
-import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.maintimeline.*;
-import org.qii.weiciyuan.ui.preference.SettingActivity;
-import org.qii.weiciyuan.ui.search.SearchMainActivity;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -46,8 +39,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class MainTimeLineActivity extends MainTimeLineParentActivity implements IUserInfo,
         IAccountInfo {
-
-    private ViewPager mViewPager;
 
     private AccountBean accountBean;
 
@@ -70,21 +61,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.viewpager_layout);
-
-        setBehindContentView(R.layout.menu_frame);
-        FragmentTransaction t = getFragmentManager().beginTransaction();
-        MenuFragment mFrag = new MenuFragment();
-        t.replace(R.id.menu_frame, mFrag);
-        t.commit();
-
-        SlidingMenu slidingMenu = getSlidingMenu();
-        slidingMenu.setMode(SlidingMenu.LEFT);
-        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-        slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
-        slidingMenu.setShadowDrawable(R.drawable.shadow);
-        slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        slidingMenu.setFadeDegree(0.35f);
 
         if (savedInstanceState != null) {
             accountBean = (AccountBean) savedInstanceState.getSerializable("account");
@@ -115,9 +91,30 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
 
     private void buildPhoneInterface() {
-//        buildViewPager();
-        buildActionBarAndViewPagerTitles();
-        buildTabTitle(getIntent());
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
+
+        setContentView(R.layout.menu_right);
+        setBehindContentView(R.layout.menu_frame);
+
+        FragmentTransaction t = getFragmentManager().beginTransaction();
+        LeftMenuFragment mFrag = new LeftMenuFragment();
+        t.replace(R.id.menu_frame, mFrag);
+        t.commit();
+
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.menu_right_fl, newFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName())
+                .commit();
+
+        SlidingMenu slidingMenu = getSlidingMenu();
+        slidingMenu.setMode(SlidingMenu.LEFT);
+        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+        slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
+        slidingMenu.setShadowDrawable(R.drawable.shadow);
+        slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        slidingMenu.setFadeDegree(0.35f);
     }
 
     @Override
@@ -131,7 +128,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         if (newAccountBean.getUid().equals(accountBean.getUid())) {
             accountBean = newAccountBean;
             GlobalContext.getInstance().setAccountBean(accountBean);
-            buildTabTitle(intent);
         } else {
             overridePendingTransition(0, 0);
             finish();
@@ -142,42 +138,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
     }
 
-
-    private void buildTabTitle(Intent intent) {
-
-
-        CommentListBean comment = (CommentListBean) intent.getSerializableExtra("comment");
-        MessageListBean repost = (MessageListBean) intent.getSerializableExtra("repost");
-
-        if (repost != null && repost.getSize() > 0) {
-            buildTabText(1, repost.getSize());
-            getActionBar().setSelectedNavigationItem(1);
-        }
-        if (comment != null && comment.getSize() > 0) {
-            buildTabText(2, comment.getSize());
-            getActionBar().setSelectedNavigationItem(2);
-        }
-    }
-
-    private void buildTabText(int index, int number) {
-
-        ActionBar.Tab tab = getActionBar().getTabAt(index);
-        String name = tab.getText().toString();
-        String num;
-        if (number < 99) {
-            num = "(" + number + ")";
-        } else {
-            num = "(99+)";
-        }
-        if (!name.endsWith(")")) {
-            tab.setText(name + num);
-        } else {
-            int i = name.indexOf("(");
-            String newName = name.substring(0, i);
-            tab.setText(newName + num);
-        }
-
-    }
 
     @Override
     public void onBackPressed() {
@@ -202,40 +162,12 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 startActivity(intent);
                 return true;
 
-            case R.id.menu_account:
-                intent = new Intent(this, AccountActivity.class);
-                intent.putExtra("launcher", false);
-                startActivity(intent);
-                finish();
-                return true;
-            case R.id.menu_search:
-                startActivity(new Intent(this, SearchMainActivity.class));
 
-                return true;
-
-
-            case R.id.menu_setting:
-                startActivity(new Intent(this, SettingActivity.class));
-                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void buildViewPager() {
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
-        mViewPager.setOffscreenPageLimit(5);
-        mViewPager.setAdapter(adapter);
-        mViewPager.setOnPageChangeListener(onPageChangeListener);
-    }
-
-    public void clearAllFragments() {
-        getFragmentManager().beginTransaction().remove(getHomeFragment()).commit();
-        getFragmentManager().beginTransaction().remove(getMentionFragment()).commit();
-        getFragmentManager().beginTransaction().remove(getCommentFragment()).commit();
-
-    }
 
     public FriendsTimeLineFragment getHomeFragment() {
         return ((FriendsTimeLineFragment) getFragmentManager().findFragmentByTag(
@@ -262,133 +194,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 DMUserListFragment.class.getName()));
     }
 
-    private void buildActionBarAndViewPagerTitles() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
-
-        setContentView(R.layout.menu_right);
-        getFragmentManager().beginTransaction()
-                .replace(R.id.menu_right_fl, newFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName())
-                .commit();
-    }
-
-
-    ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
-        @Override
-        public void onPageSelected(int position) {
-            getActionBar().setSelectedNavigationItem(position);
-        }
-    };
-
-    private class MainTabListener implements ActionBar.TabListener {
-        boolean home = false;
-        boolean mentions = false;
-        boolean comments = false;
-        boolean my = false;
-
-        public void onTabSelected(ActionBar.Tab tab,
-                                  FragmentTransaction ft) {
-
-            /**
-             * workaround for fragment option menu bug
-             *
-             * http://stackoverflow.com/questions/9338122/action-items-from-viewpager-initial-fragment-not-being-displayed
-             *
-             */
-            if (mViewPager.getCurrentItem() != tab.getPosition())
-                mViewPager.setCurrentItem(tab.getPosition());
-
-
-            if (getHomeFragment() != null) {
-                getHomeFragment().clearActionMode();
-            }
-
-            if (getMentionFragment() != null) {
-                getMentionFragment().clearActionMode();
-            }
-
-            if (getCommentFragment() != null) {
-                getCommentFragment().clearActionMode();
-            }
-
-            if (getMyFragment() != null) {
-                getMyFragment().clearActionMode();
-            }
-
-
-            switch (tab.getPosition()) {
-                case 0:
-                    home = true;
-                    break;
-                case 1:
-                    mentions = true;
-                    break;
-                case 2:
-                    comments = true;
-                    break;
-                case 3:
-                    my = true;
-                    break;
-            }
-
-        }
-
-        public void onTabUnselected(ActionBar.Tab tab,
-                                    FragmentTransaction ft) {
-            switch (tab.getPosition()) {
-                case 0:
-                    home = false;
-                    break;
-                case 1:
-                    mentions = false;
-                    break;
-                case 2:
-                    comments = false;
-                    break;
-                case 3:
-                    my = false;
-                    break;
-            }
-        }
-
-        public void onTabReselected(ActionBar.Tab tab,
-                                    FragmentTransaction ft) {
-
-            switch (tab.getPosition()) {
-                case 0:
-                    if (home) {
-                        Utility.stopListViewScrollingAndScrollToTop(getHomeFragment().getListView());
-                    }
-                    break;
-                case 1:
-                    if (mentions) {
-                        Utility.stopListViewScrollingAndScrollToTop(getMentionFragment().getListView());
-                    }
-                    break;
-                case 2:
-                    if (comments) {
-                        Utility.stopListViewScrollingAndScrollToTop(getCommentFragment().getListView());
-                    }
-                    break;
-                case 3:
-                    if (my) {
-
-                        AbstractTimeLineFragment fragment;
-
-                        if (getResources().getBoolean(R.bool.blackmagic)) {
-                            fragment = getDMFragment();
-                        } else {
-                            fragment = getMyFragment();
-                        }
-                        Utility.stopListViewScrollingAndScrollToTop(fragment.getListView());
-                    }
-                    break;
-            }
-        }
-    }
-
-    ;
 
     @Override
     public UserBean getUser() {
@@ -473,78 +278,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             return new CommentsByMeTimeLineFragment(getAccount(), getUser(), getToken());
         else
             return fragment;
-    }
-
-    private class TimeLinePagerAdapter extends AppFragmentPagerAdapter {
-
-
-        List<Fragment> list = new ArrayList<Fragment>();
-
-
-        public TimeLinePagerAdapter(FragmentManager fm) {
-            super(fm);
-            if (getHomeFragment() == null) {
-                list.add(new FriendsTimeLineFragment(getAccount(), getUser(), getToken()));
-            } else {
-                list.add(getHomeFragment());
-            }
-
-            if (getMentionFragment() == null) {
-                list.add(new MentionsTimeLineFragment(getAccount(), getUser(), getToken()));
-            } else {
-                list.add(getMentionFragment());
-            }
-
-            if (getCommentFragment() == null) {
-                list.add(new CommentsTimeLineFragment(getAccount(), getUser(), getToken()));
-            } else {
-                list.add(getCommentFragment());
-            }
-
-
-            if (getResources().getBoolean(R.bool.blackmagic)) {
-                if (getDMFragment() == null) {
-                    list.add(new DMUserListFragment());
-                } else {
-                    list.add(getDMFragment());
-                }
-            } else {
-                if (getMyFragment() == null) {
-                    list.add(new MyStatussTimeLineFragment(getUser(), getToken()));
-                } else {
-                    list.add(getMyFragment());
-                }
-
-            }
-
-        }
-
-
-        public Fragment getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        protected String getTag(int position) {
-            List<String> tagList = new ArrayList<String>();
-            tagList.add(FriendsTimeLineFragment.class.getName());
-            tagList.add(MentionsTimeLineFragment.class.getName());
-            tagList.add(CommentsTimeLineFragment.class.getName());
-            if (getResources().getBoolean(R.bool.blackmagic)) {
-                tagList.add(DMUserListFragment.class.getName());
-            } else {
-                tagList.add(MyStatussTimeLineFragment.class.getName());
-            }
-            return tagList.get(position);
-        }
-
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-
     }
 
 

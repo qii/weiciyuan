@@ -26,7 +26,7 @@ import java.util.List;
  * User: qii
  * Date: 13-1-22
  */
-public class MenuFragment extends PreferenceFragment {
+public class LeftMenuFragment extends PreferenceFragment {
 
     List<Fragment> commentFragments = new ArrayList<Fragment>();
     List<Fragment> mentionFragments = new ArrayList<Fragment>();
