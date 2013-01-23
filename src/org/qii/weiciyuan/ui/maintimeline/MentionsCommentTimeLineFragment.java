@@ -36,11 +36,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     private UserBean userBean;
     private String token;
 
-    private String[] groupNames = new String[3];
-    private int currentGroupId = 0;
     private RemoveTask removeTask;
     private DBCacheTask dbTask;
-
 
     private CommentListBean bean = new CommentListBean();
 
@@ -62,9 +59,6 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         this.token = token;
     }
 
-    public void setCurrentGroupId(int positoin) {
-        currentGroupId = positoin;
-    }
 
     protected void clearAndReplaceValue(CommentListBean value) {
         getList().getItemList().clear();
@@ -79,9 +73,6 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         outState.putSerializable("bean", bean);
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
-
-        outState.putStringArray("groupNames", groupNames);
-        outState.putInt("currentGroupId", currentGroupId);
 
 
         outState.putSerializable("unreadBean", unreadBean);
@@ -142,8 +133,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                 userBean = (UserBean) savedInstanceState.getSerializable("userBean");
                 accountBean = (AccountBean) savedInstanceState.getSerializable("account");
                 token = savedInstanceState.getString("token");
-                groupNames = savedInstanceState.getStringArray("groupNames");
-                currentGroupId = savedInstanceState.getInt("currentGroupId");
+
                 unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
 
 

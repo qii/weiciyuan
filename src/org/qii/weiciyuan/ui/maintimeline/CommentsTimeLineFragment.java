@@ -256,7 +256,6 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
 
             if (result != null) {
                 clearAndReplaceValue(result);
-                clearAndReplaceValue(0, result);
             }
 
             getPullToRefreshListView().setVisibility(View.VISIBLE);
@@ -352,11 +351,5 @@ public class CommentsTimeLineFragment extends AbstractTimeLineFragment<CommentLi
         }
     }
 
-    public void switchGroup() {
 
-    }
-
-    private void clearAndReplaceValue(int position, CommentListBean newValue) {
-
-    }
 }
