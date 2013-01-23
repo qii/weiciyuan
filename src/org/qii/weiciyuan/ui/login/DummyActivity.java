@@ -25,7 +25,6 @@ public class DummyActivity extends AbstractAppActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (!GlobalContext.getInstance().startedApp) {
             Intent intent = new Intent(this, AccountActivity.class);
             startActivity(intent);
