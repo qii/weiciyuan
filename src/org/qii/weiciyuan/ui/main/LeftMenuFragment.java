@@ -38,12 +38,8 @@ public class LeftMenuFragment extends PreferenceFragment {
     int index = 0;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(false);
-
-        addPreferencesFromResource(R.xml.slidingmenu_layout);
-
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);    //To change body of overridden methods use File | Settings | File Templates.
         final ViewPager mentionVP = (ViewPager) getActivity().findViewById(R.id.menu_right_vp_mention);
         final ViewPager commentVP = (ViewPager) getActivity().findViewById(R.id.menu_right_vp_comment);
 
@@ -299,6 +295,16 @@ public class LeftMenuFragment extends PreferenceFragment {
                 return true;
             }
         });
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
+        addPreferencesFromResource(R.xml.slidingmenu_layout);
+
 
     }
 
