@@ -173,6 +173,9 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         if (repost_msg != null && showOriStatus) {
             holder.repost_layout.setVisibility(View.VISIBLE);
             holder.repost_flag.setVisibility(View.VISIBLE);
+            //sina weibo official account can send repost message with picture, fuck sina weibo
+            if (holder.content_pic.getVisibility() != View.GONE)
+                holder.content_pic.setVisibility(View.GONE);
             buildRepostContent(repost_msg, holder, position);
         } else {
             holder.repost_layout.setVisibility(View.GONE);
