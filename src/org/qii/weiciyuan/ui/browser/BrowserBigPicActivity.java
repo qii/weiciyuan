@@ -145,7 +145,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
                 if (!TextUtils.isEmpty(path)) {
                     new File(path).delete();
                 }
-                if (oriMenu.isVisible()) {
+                if (oriMenu.isVisible() || TextUtils.isEmpty(oriUrl)) {
                     task = new PicSimpleBitmapWorkerTask(url);
                 } else {
                     task = new PicSimpleBitmapWorkerTask(oriUrl);
