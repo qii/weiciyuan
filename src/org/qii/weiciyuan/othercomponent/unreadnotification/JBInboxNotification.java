@@ -101,11 +101,11 @@ public class JBInboxNotification {
             }
         };
 
-        IntentFilter intentFilter = new IntentFilter("org.qii.weiciyuan.JBBigTextNotification.unread");
+        IntentFilter intentFilter = new IntentFilter("org.qii.weiciyuan.Notification.unread");
 
         GlobalContext.getInstance().registerReceiver(clearNotificationEventReceiver, intentFilter);
 
-        Intent broadcastIntent = new Intent("org.qii.weiciyuan.JBBigTextNotification.unread");
+        Intent broadcastIntent = new Intent("org.qii.weiciyuan.Notification.unread");
 
         PendingIntent deletedPendingIntent = PendingIntent.getBroadcast(GlobalContext.getInstance(), 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setDeleteIntent(deletedPendingIntent);
