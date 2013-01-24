@@ -2,14 +2,19 @@ package org.qii.weiciyuan.othercomponent.unreadnotification;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -28,6 +33,9 @@ public class ICSNotification {
     private CommentListBean mentionCommentsResult;
 
     private UnreadBean unreadBean;
+
+    //only leave one broadcast receiver
+    private static BroadcastReceiver clearNotificationEventReceiver;
 
     public ICSNotification(Context context,
                            AccountBean accountBean,
@@ -110,6 +118,42 @@ public class ICSNotification {
         }
 
         Utility.configVibrateLedRingTone(builder);
+
+        if (clearNotificationEventReceiver != null) {
+            GlobalContext.getInstance().unregisterReceiver(clearNotificationEventReceiver);
+            ICSNotification.clearNotificationEventReceiver = null;
+        }
+
+        clearNotificationEventReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            new ClearUnreadDao(accountBean.getAccess_token()).clearMentionStatusUnread(unreadBean, accountBean.getUid());
+                            new ClearUnreadDao(accountBean.getAccess_token()).clearMentionCommentUnread(unreadBean, accountBean.getUid());
+                            new ClearUnreadDao(accountBean.getAccess_token()).clearCommentUnread(unreadBean, accountBean.getUid());
+                        } catch (WeiboException ignored) {
+
+                        } finally {
+                            GlobalContext.getInstance().unregisterReceiver(clearNotificationEventReceiver);
+                            ICSNotification.clearNotificationEventReceiver = null;
+                        }
+
+                    }
+                }).start();
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter("org.qii.weiciyuan.JBBigTextNotification.unread");
+
+        GlobalContext.getInstance().registerReceiver(clearNotificationEventReceiver, intentFilter);
+
+        Intent broadcastIntent = new Intent("org.qii.weiciyuan.JBBigTextNotification.unread");
+
+        PendingIntent deletedPendingIntent = PendingIntent.getBroadcast(GlobalContext.getInstance(), 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setDeleteIntent(deletedPendingIntent);
 
         return builder.getNotification();
     }
