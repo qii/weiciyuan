@@ -2,6 +2,7 @@ package org.qii.weiciyuan.dao.search;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.SearchStatusListBean;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.dao.URLHelper;
@@ -10,8 +11,10 @@ import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -73,6 +76,10 @@ public class SearchDao {
         SearchStatusListBean value = null;
         try {
             value = gson.fromJson(jsonData, SearchStatusListBean.class);
+            List<MessageBean> list = value.getItemList();
+            for (MessageBean msg : list) {
+                TimeTool.dealMills(msg);
+            }
         } catch (JsonSyntaxException e) {
 
             AppLogger.e(e.getMessage());
