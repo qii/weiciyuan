@@ -357,7 +357,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         time.setText(msg.getTimeInFormat());
 
         if (msg.getGeo() != null) {
-            if (geoTask == null || geoTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            if (Utility.isTaskStopped(geoTask)) {
                 geoTask = new GetGoogleLocationInfo(msg.getGeo());
                 geoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
@@ -368,14 +368,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
         //sina weibo official account can send repost message with picture, fuck sina weibo
         if (!TextUtils.isEmpty(msg.getBmiddle_pic()) && msg.getRetweeted_status() == null) {
-            if (picTask == null || picTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            if (Utility.isTaskStopped(picTask)) {
                 picTask = new ProfileAvatarAndDetailMsgPicTask(content_pic, FileLocationMethod.picture_bmiddle, content_pic_pb);
                 picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getBmiddle_pic());
-            }
-        } else if (!TextUtils.isEmpty(msg.getThumbnail_pic()) && msg.getRetweeted_status() == null) {
-            if (picTask == null || picTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                picTask = new ProfileAvatarAndDetailMsgPicTask(content_pic, FileLocationMethod.picture_thumbnail);
-                picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getThumbnail_pic());
             }
         } else {
             content_pic.setVisibility(View.GONE);
@@ -404,19 +399,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             if (!TextUtils.isEmpty(repostMsg.getBmiddle_pic())) {
                 repost_pic_layout.setVisibility(View.VISIBLE);
                 repost_pic.setVisibility(View.VISIBLE);
-                if (picTask == null || picTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                if (Utility.isTaskStopped(picTask)) {
                     picTask = new ProfileAvatarAndDetailMsgPicTask(repost_pic, FileLocationMethod.picture_bmiddle, repost_pic_pb);
                     picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getRetweeted_status().getBmiddle_pic());
                 }
-            } else if (!TextUtils.isEmpty(repostMsg.getThumbnail_pic())) {
-                repost_pic_layout.setVisibility(View.VISIBLE);
-                repost_pic.setVisibility(View.VISIBLE);
-                if (picTask == null || picTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                    picTask = new ProfileAvatarAndDetailMsgPicTask(repost_pic, FileLocationMethod.picture_thumbnail);
-                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getRetweeted_status().getThumbnail_pic());
-                }
-
-
             }
         } else {
             repost_layout.setVisibility(View.GONE);
