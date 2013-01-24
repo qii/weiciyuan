@@ -28,4 +28,7 @@ public class AppConfig {
 
     //swipe to close
     public static final int SWIPE_MIN_DISTANCE = 30;
+
+
+    public static final int REFRESH_DELAYED_MILL_SECOND_TIME = 600;
 }

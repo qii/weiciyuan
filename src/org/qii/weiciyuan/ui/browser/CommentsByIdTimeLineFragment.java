@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.CommentByIdFloatingMenu;
@@ -117,7 +119,13 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                getPullToRefreshListView().startRefreshNow();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPullToRefreshListView().startRefreshNow();
+
+                    }
+                }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
                 break;
             case SCREEN_ROTATE:
                 //nothing

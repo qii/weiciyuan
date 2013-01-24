@@ -1,12 +1,14 @@
 package org.qii.weiciyuan.ui.dm;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.bean.DMListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.dm.DMConversationDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.adapter.DMConversationAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -38,7 +40,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
         outState.putSerializable("userBean", userBean);
-        outState.putInt("page",page);
+        outState.putInt("page", page);
     }
 
     @Override
@@ -49,7 +51,13 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                getPullToRefreshListView().startRefreshNow();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPullToRefreshListView().startRefreshNow();
+
+                    }
+                }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
                 break;
             case SCREEN_ROTATE:
                 //nothing
@@ -58,7 +66,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
             case ACTIVITY_DESTROY_AND_CREATE:
                 getList().addNewData((DMListBean) savedInstanceState.getSerializable("bean"));
                 userBean = (UserBean) savedInstanceState.getSerializable("userBean");
-                page=savedInstanceState.getInt("page");
+                page = savedInstanceState.getInt("page");
                 getAdapter().notifyDataSetChanged();
                 refreshLayout(bean);
                 break;

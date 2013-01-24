@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.userinfo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,7 @@ import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 
@@ -77,7 +79,13 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                getPullToRefreshListView().startRefreshNow();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPullToRefreshListView().startRefreshNow();
+
+                    }
+                }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
                 break;
             case SCREEN_ROTATE:
                 //nothing
