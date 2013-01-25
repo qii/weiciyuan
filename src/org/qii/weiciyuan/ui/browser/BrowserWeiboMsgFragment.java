@@ -132,10 +132,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         super.onDestroy();
         Utility.cancelTasks(updateMsgTask, geoTask, picTask);
 
-        layout.avatar.getDrawable().setCallback(null);
-        layout.content_pic.getDrawable().setCallback(null);
-        layout.repost_pic.getDrawable().setCallback(null);
-
         layout.avatar.setImageDrawable(null);
         layout.content_pic.setImageDrawable(null);
         layout.repost_pic.setImageDrawable(null);
