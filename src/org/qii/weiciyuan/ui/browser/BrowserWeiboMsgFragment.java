@@ -364,13 +364,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         //sina weibo official account can send repost message with picture, fuck sina weibo
         if (!TextUtils.isEmpty(msg.getBmiddle_pic()) && msg.getRetweeted_status() == null) {
             if (Utility.isTaskStopped(picTask)) {
+                layout.pic_layout.setVisibility(View.VISIBLE);
                 picTask = new ProfileAvatarAndDetailMsgPicTask(layout.content_pic, FileLocationMethod.picture_bmiddle, layout.content_pic_pb);
                 picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getBmiddle_pic());
             }
-        } else {
-            layout.content_pic.setVisibility(View.GONE);
-            layout.content_pic_pb.setVisibility(View.GONE);
-            layout.pic_layout.setVisibility(View.GONE);
         }
 
         MessageBean repostMsg = msg.getRetweeted_status();
@@ -399,8 +396,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                     picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getRetweeted_status().getBmiddle_pic());
                 }
             }
-        } else {
-            layout.repost_layout.setVisibility(View.GONE);
         }
 
 
