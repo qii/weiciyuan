@@ -26,7 +26,7 @@ import java.util.Locale;
  * User: qii
  * Date: 13-1-25
  */
-public class GetGoogleLocationInfo extends MyAsyncTask<Void, String, String> {
+public class GetGoogleLocationInfoTask extends MyAsyncTask<Void, String, String> {
 
     private Activity activity;
     private TextView location;
@@ -34,7 +34,7 @@ public class GetGoogleLocationInfo extends MyAsyncTask<Void, String, String> {
 
     private GeoBean geoBean;
 
-    public GetGoogleLocationInfo(Activity activity, GeoBean geoBean, MapView mapView, TextView location) {
+    public GetGoogleLocationInfoTask(Activity activity, GeoBean geoBean, MapView mapView, TextView location) {
         this.geoBean = geoBean;
         this.activity = activity;
         this.mapView = mapView;

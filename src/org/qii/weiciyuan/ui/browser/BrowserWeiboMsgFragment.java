@@ -46,7 +46,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private BrowserWeiboMsgLayout layout;
 
     private UpdateMsgTask updateMsgTask;
-    private GetGoogleLocationInfo geoTask;
+    private GetGoogleLocationInfoTask geoTask;
     private ProfileAvatarAndDetailMsgPicTask picTask;
 
     private static class BrowserWeiboMsgLayout {
@@ -353,7 +353,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
         if (msg.getGeo() != null) {
             if (Utility.isTaskStopped(geoTask)) {
-                geoTask = new GetGoogleLocationInfo(getActivity(), msg.getGeo(), layout.mapView, layout.location);
+                geoTask = new GetGoogleLocationInfoTask(getActivity(), msg.getGeo(), layout.mapView, layout.location);
                 geoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
