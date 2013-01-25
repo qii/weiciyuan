@@ -1,20 +1,14 @@
 package org.qii.weiciyuan.ui.browser;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.MapView;
@@ -22,10 +16,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.dao.show.ShowStatusDao;
 import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarAndDetailMsgPicTask;
-import org.qii.weiciyuan.support.error.ErrorCode;
-import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -45,7 +36,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
     private BrowserWeiboMsgLayout layout;
 
-    private UpdateMsgTask updateMsgTask;
+    private UpdateMessageTask updateMsgTask;
     private GetGoogleLocationInfoTask geoTask;
     private ProfileAvatarAndDetailMsgPicTask picTask;
 
@@ -109,7 +100,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 if (Utility.isTaskStopped(updateMsgTask)) {
-                    updateMsgTask = new UpdateMsgTask();
+                    updateMsgTask = new UpdateMessageTask(BrowserWeiboMsgFragment.this, layout.content, layout.recontent, msg);
                     updateMsgTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 break;
@@ -140,111 +131,16 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     public void onDestroy() {
         super.onDestroy();
         Utility.cancelTasks(updateMsgTask, geoTask, picTask);
+
+        layout.avatar.getDrawable().setCallback(null);
+        layout.content_pic.getDrawable().setCallback(null);
+        layout.repost_pic.getDrawable().setCallback(null);
+
         layout.avatar.setImageDrawable(null);
         layout.content_pic.setImageDrawable(null);
         layout.repost_pic.setImageDrawable(null);
     }
 
-    class UpdateMsgTask extends MyAsyncTask<Void, Void, MessageBean> {
-        WeiboException e;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
-
-            Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh);
-            iv.startAnimation(rotation);
-
-        }
-
-        @Override
-        protected MessageBean doInBackground(Void... params) {
-            try {
-                return new ShowStatusDao(GlobalContext.getInstance().getSpecialToken(), msg.getId()).getMsg();
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onCancelled(MessageBean weiboMsgBean) {
-            super.onCancelled(weiboMsgBean);
-            if (Utility.isAllNotNull(getActivity(), this.e)) {
-                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-                if (e.getError_code() == ErrorCode.DELETED) {
-                    setTextViewDeleted();
-                }
-            }
-        }
-
-        @Override
-        protected void onPostExecute(MessageBean newValue) {
-            if (newValue != null && e == null) {
-                if (isStatusDeleted(newValue)) {
-                    setTextViewDeleted(layout.content);
-                    if (layout.recontent.getVisibility() == View.VISIBLE) {
-                        setTextViewDeleted(layout.recontent);
-                    }
-                } else if (isRepostDeleted(newValue)) {
-                    setTextViewDeleted(layout.recontent);
-                } else {
-                    msg = newValue;
-                    buildViewData();
-                    Intent intent = new Intent();
-                    intent.putExtra("msg", msg);
-                    getActivity().setResult(0, intent);
-                }
-            }
-            super.onPostExecute(newValue);
-        }
-    }
-
-    //sometime status is deleted
-    private boolean isStatusDeleted(MessageBean newValue) {
-
-        //status is deleted
-        if ((msg != null))
-            if ((msg.getUser() != null) && (newValue.getUser() == null)) {
-                return true;
-            }
-
-        return false;
-
-    }
-
-
-    //sometime the ori status is deleted
-    private boolean isRepostDeleted(MessageBean newValue) {
-
-        if (msg.getRetweeted_status() != null && msg.getRetweeted_status().getUser() != null) {
-
-            //ori status is deleted
-            if (newValue.getRetweeted_status() != null && newValue.getRetweeted_status().getUser() == null) {
-                return true;
-            }
-        }
-
-        return false;
-
-    }
-
-    private void setTextViewDeleted() {
-        SpannableString ss = SpannableString.valueOf(layout.content.getText());
-        ss.setSpan(new StrikethroughSpan(), 0, ss.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        layout.content.setText(ss);
-    }
-
-    private void setTextViewDeleted(TextView tv) {
-        SpannableString ss = SpannableString.valueOf(tv.getText());
-        ss.setSpan(new StrikethroughSpan(), 0, ss.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tv.setText(ss);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -341,7 +237,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         return view;
     }
 
-    private void buildViewData() {
+    public void buildViewData() {
         if (msg.getUser() != null) {
             layout.username.setText(msg.getUser().getScreen_name());
             ((AbstractAppActivity) getActivity()).getBitmapDownloader().downloadAvatar(layout.avatar, msg.getUser());
@@ -436,8 +332,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
             case R.id.menu_refresh:
                 if (Utility.isTaskStopped(updateMsgTask)) {
-                    updateMsgTask = new UpdateMsgTask();
-                    updateMsgTask.execute();
+                    updateMsgTask = new UpdateMessageTask(BrowserWeiboMsgFragment.this, layout.content, layout.recontent, msg);
+                    updateMsgTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 break;
 
