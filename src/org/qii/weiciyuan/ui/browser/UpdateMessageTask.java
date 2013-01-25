@@ -1,19 +1,13 @@
 package org.qii.weiciyuan.ui.browser;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.show.ShowStatusDao;
 import org.qii.weiciyuan.support.error.ErrorCode;
@@ -47,11 +41,7 @@ public class UpdateMessageTask extends MyAsyncTask<Void, Void, MessageBean> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
 
-        Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh);
-        iv.startAnimation(rotation);
 
     }
 
