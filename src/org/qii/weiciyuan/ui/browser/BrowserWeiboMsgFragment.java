@@ -2,8 +2,6 @@ package org.qii.weiciyuan.ui.browser;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -19,10 +17,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -38,10 +34,6 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * User: qii
@@ -361,7 +353,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
         if (msg.getGeo() != null) {
             if (Utility.isTaskStopped(geoTask)) {
-                geoTask = new GetGoogleLocationInfo(msg.getGeo());
+                geoTask = new GetGoogleLocationInfo(getActivity(), msg.getGeo(), layout.mapView, layout.location);
                 geoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
@@ -442,97 +434,13 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         }
     }
 
-    private class GetGoogleLocationInfo extends MyAsyncTask<Void, String, String> {
-
-        GeoBean geoBean;
-
-        public GetGoogleLocationInfo(GeoBean geoBean) {
-            this.geoBean = geoBean;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            layout.location.setVisibility(View.VISIBLE);
-            layout.location.setText(String.valueOf(geoBean.getLat() + "," + geoBean.getLon()));
-            if (Utility.isGooglePlaySafe(getActivity())) {
-                layout.mapView.setVisibility(View.VISIBLE);
-                GoogleMap mMap = layout.mapView.getMap();
-                if (mMap != null) {
-
-                    final LatLng MELBOURNE = new LatLng(geoBean.getLat(), geoBean.getLon());
-                    Marker melbourne = mMap.addMarker(new MarkerOptions()
-                            .position(MELBOURNE));
-
-                    LatLng latLng = new LatLng(geoBean.getLat(), geoBean.getLon());
-                    CameraUpdate update = CameraUpdateFactory.newLatLng(latLng);
-                    mMap.moveCamera(update);
-
-                    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                        @Override
-                        public void onMapClick(LatLng latLng) {
-                            GeoBean bean = msg.getGeo();
-
-                            Intent intent = new Intent(getActivity(), AppMapActivity.class);
-                            intent.putExtra("lat", bean.getLat());
-                            intent.putExtra("lon", bean.getLon());
-                            if (!String.valueOf(bean.getLat() + "," + bean.getLon()).equals(layout.location.getText()))
-                                intent.putExtra("locationStr", layout.location.getText());
-                            startActivity(intent);
-                        }
-                    });
-                }
-            } else {
-                layout.mapView.setVisibility(View.GONE);
-            }
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-
-            List<Address> addresses = null;
-            try {
-                if (!Utility.isGPSLocationCorrect(geoBean)) {
-                    return "";
-                }
-                addresses = geocoder.getFromLocation(geoBean.getLat(), geoBean.getLon(), 1);
-            } catch (IOException e) {
-                cancel(true);
-            }
-            if (addresses != null && addresses.size() > 0) {
-                Address address = addresses.get(0);
-
-                StringBuilder builder = new StringBuilder();
-                int size = address.getMaxAddressLineIndex();
-                for (int i = 0; i < size; i++) {
-                    builder.append(address.getAddressLine(i));
-                }
-                return builder.toString();
-            }
-
-            return "";
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (!TextUtils.isEmpty(s)) {
-                layout.location.setVisibility(View.VISIBLE);
-                layout.location.setText(s);
-            }
-
-            super.onPostExecute(s);
-        }
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
             case R.id.menu_refresh:
-                if (updateMsgTask == null || updateMsgTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                if (Utility.isTaskStopped(updateMsgTask)) {
                     updateMsgTask = new UpdateMsgTask();
                     updateMsgTask.execute();
                 }

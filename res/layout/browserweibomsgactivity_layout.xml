@@ -88,7 +88,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="content"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:lineSpacingMultiplier="1.2"
             android:layout_below="@id/second"
             android:textIsSelectable="true"/>
@@ -149,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:text="content"
                     android:visibility="gone"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     android:lineSpacingMultiplier="1.2"/>
 
                 <FrameLayout
