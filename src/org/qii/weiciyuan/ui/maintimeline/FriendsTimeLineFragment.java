@@ -136,12 +136,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);    //To change body of overridden methods use File | Settings | File Templates.
-        if (true)
-            refreshLayout(getList());
-    }
 
     @Override
     public void onPause() {
@@ -161,12 +155,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         super.onDestroy();
         Utility.cancelTasks(dbTask);
     }
-
-//    @Override
-//    public void onHiddenChanged(boolean hidden) {
-//        super.onHiddenChanged(hidden);    //To change body of overridden methods use File | Settings | File Templates.
-//        refreshLayout(getList());
-//    }
 
 
     @Override
@@ -291,12 +279,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 intent.putExtra("token", token);
                 intent.putExtra("account", accountBean);
                 startActivity(intent);
-//                getActivity().setContentView(new TextView(getActivity()));
-//                getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-//                getActivity().closeOptionsMenu();
-//                FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                ft.remove(FriendsTimeLineFragment.this);
-//                ft.commit();
                 break;
             case R.id.refresh:
                 if (allowRefresh())
