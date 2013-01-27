@@ -17,7 +17,6 @@ import org.qii.weiciyuan.othercomponent.sendweiboservice.SendCommentService;
 import org.qii.weiciyuan.othercomponent.sendweiboservice.SendRepostService;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.CommentDraftBean;
-import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
@@ -27,6 +26,9 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
  * Date: 12-8-2
  */
 public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
+
+    public static final String ACTION_DRAFT = "org.qii.weiciyuan.DRAFT";
+    public static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
 
     private String token;
     private MessageBean msg;
@@ -59,10 +61,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         }
 
         getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
-        if (savedInstanceState != null) {
-            savedEnableCommentOri = savedInstanceState.getBoolean("commentOri");
-            savedEnableRepost = savedInstanceState.getBoolean("repost");
-        }
+
     }
 
     @Override
@@ -70,6 +69,21 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         super.onSaveInstanceState(outState);
         outState.putBoolean("commentOri", enableCommentOri.isChecked());
         outState.putBoolean("repost", enableRepost.isChecked());
+        outState.putString("token", token);
+        outState.putSerializable("msg", msg);
+        outState.putSerializable("commentDraftBean", commentDraftBean);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            savedEnableCommentOri = savedInstanceState.getBoolean("commentOri");
+            savedEnableRepost = savedInstanceState.getBoolean("repost");
+            token = savedInstanceState.getString("token");
+            msg = (MessageBean) savedInstanceState.getSerializable("msg");
+            commentDraftBean = (CommentDraftBean) savedInstanceState.getSerializable("commentDraftBean");
+        }
     }
 
     @Override

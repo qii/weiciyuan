@@ -105,6 +105,7 @@ public class DraftFragment extends ListFragment {
                     case DraftTable.TYPE_COMMENT:
                         CommentDraftBean commentDraftBean = list.get(position).getCommentDraftBean();
                         intent = new Intent(getActivity(), WriteCommentActivity.class);
+                        intent.setAction(WriteCommentActivity.ACTION_DRAFT);
                         intent.putExtra("draft", commentDraftBean);
                         startActivity(intent);
                         break;
