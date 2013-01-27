@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentBean;
@@ -181,6 +182,8 @@ public class SendCommentService extends Service {
                     stopServiceIfTasksAreEnd(task);
                 }
             }, 3000);
+
+            LocalBroadcastManager.getInstance(SendCommentService.this).sendBroadcast(new Intent("org.qii.weiciyuan.SEND.COMMENT.COMPLETED"));
         }
 
         private void showFailedNotification(final WeiboSendTask task) {

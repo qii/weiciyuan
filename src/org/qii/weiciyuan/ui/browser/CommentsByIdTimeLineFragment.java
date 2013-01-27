@@ -2,10 +2,11 @@ package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.DialogInterface;
+import android.content.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -261,6 +262,27 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void removeCancel() {
         clearActionMode();
+    }
+
+    private BroadcastReceiver sendCompletedReceiver;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sendCompletedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                getPullToRefreshListView().startRefreshNow();
+            }
+        };
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(sendCompletedReceiver,
+                new IntentFilter("org.qii.weiciyuan.SEND.COMMENT.COMPLETED"));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(sendCompletedReceiver);
     }
 
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
