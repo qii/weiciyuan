@@ -50,6 +50,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     private String token;
     private MessageBean msg;
 
+    private BroadcastReceiver sendCompletedReceiver;
+
 
     @Override
     public CommentListBean getList() {
@@ -264,7 +266,6 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         clearActionMode();
     }
 
-    private BroadcastReceiver sendCompletedReceiver;
 
     @Override
     public void onResume() {
