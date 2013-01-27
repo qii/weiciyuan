@@ -19,6 +19,10 @@ public class ClearCacheTask implements Runnable {
 
     private long now = System.currentTimeMillis();
 
+    public ClearCacheTask() {
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+    }
+
     @Override
     public void run() {
         AppLogger.d("clear cache task start");
