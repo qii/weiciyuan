@@ -111,6 +111,7 @@ public class DraftFragment extends ListFragment {
                     case DraftTable.TYPE_REPLY:
                         ReplyDraftBean replyDraftBean = list.get(position).getReplyDraftBean();
                         intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
+                        intent.setAction(WriteReplyToCommentActivity.ACTION_DRAFT);
                         intent.putExtra("draft", replyDraftBean);
                         startActivity(intent);
                         break;
