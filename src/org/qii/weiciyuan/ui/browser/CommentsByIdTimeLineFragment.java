@@ -18,6 +18,7 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.CommentsTimeLineByIdDao;
@@ -44,21 +45,20 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     private LinearLayout quick_repost;
     private RemoveTask removeTask;
-
     private CommentListBean bean = new CommentListBean();
+    private EditText et;
+    private String token;
+    private MessageBean msg;
+
 
     @Override
     public CommentListBean getList() {
         return bean;
     }
 
-    private EditText et;
-    private String token;
-    private String id;
-
-    public CommentsByIdTimeLineFragment(String token, String id) {
+    public CommentsByIdTimeLineFragment(String token, MessageBean msg) {
         this.token = token;
-        this.id = id;
+        this.msg = msg;
     }
 
     public CommentsByIdTimeLineFragment() {
@@ -70,7 +70,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
-        outState.putString("id", id);
+        outState.putSerializable("msg", msg);
         outState.putString("token", token);
     }
 
@@ -135,7 +135,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             case ACTIVITY_DESTROY_AND_CREATE:
                 getList().replaceAll((CommentListBean) savedInstanceState.getSerializable("bean"));
                 token = savedInstanceState.getString("token");
-                id = savedInstanceState.getString("id");
+                msg = (MessageBean) savedInstanceState.get("msg");
                 timeLineAdapter.notifyDataSetChanged();
                 refreshLayout(bean);
                 break;
@@ -246,7 +246,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     private void sendComment() {
 
         if (canSend()) {
-            new QuickCommentTask().execute();
+            new QuickCommentTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -353,7 +353,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
         @Override
         protected CommentBean doInBackground(Void... params) {
-            CommentNewMsgDao dao = new CommentNewMsgDao(token, id, et.getText().toString());
+            CommentNewMsgDao dao = new CommentNewMsgDao(token, msg.getId(), et.getText().toString());
             try {
                 return dao.sendNewMsg();
             } catch (WeiboException e) {
@@ -408,13 +408,13 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
-        CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
+        CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, msg.getId());
         return dao.getGSONMsgList();
     }
 
     @Override
     protected CommentListBean getDoInBackgroundOldData() throws WeiboException {
-        CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
+        CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, msg.getId());
         if (getList().getItemList().size() > 0) {
             dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
         }

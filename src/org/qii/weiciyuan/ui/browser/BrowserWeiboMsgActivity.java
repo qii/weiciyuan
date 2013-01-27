@@ -312,7 +312,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
                 list.add(getBrowserWeiboMsgFragment());
             }
             if (getCommentFragment() == null) {
-                list.add(new CommentsByIdTimeLineFragment(token, msg.getId()));
+                list.add(new CommentsByIdTimeLineFragment(token, msg));
             } else {
                 list.add(getCommentFragment());
             }
