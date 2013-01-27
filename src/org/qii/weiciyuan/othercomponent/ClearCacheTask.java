@@ -21,6 +21,9 @@ public class ClearCacheTask implements Runnable {
 
     @Override
     public void run() {
+
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+
         AppLogger.d("clear cache task start");
 
         if (Utility.isWifi(GlobalContext.getInstance())) {
