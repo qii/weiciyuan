@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
@@ -48,20 +49,76 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         getActionBar().setTitle(R.string.comments);
         getActionBar().setSubtitle(GlobalContext.getInstance().getCurrentAccountName());
 
+        if (savedInstanceState == null) {
+
+            Intent intent = getIntent();
+            String action = intent.getAction();
+            if (!TextUtils.isEmpty(action)) {
+                if (action.equals(WriteReplyToCommentActivity.ACTION_DRAFT)) {
+                    handleDraftOperation(intent);
+                } else if (action.equals(WriteReplyToCommentActivity.ACTION_SEND_FAILED)) {
+                    handleFailedOperation(intent);
+                }
+            } else {
+                handleNormalOperation(intent);
+            }
+        }
+
+    }
+
+    public static Intent startBecauseSendFailed(Context context,
+                                                AccountBean account,
+                                                String content,
+                                                MessageBean oriMsg,
+                                                CommentDraftBean draft,
+                                                boolean comment_ori,
+                                                String failedReason) {
+        Intent intent = new Intent(context, WriteCommentActivity.class);
+        intent.setAction(WriteCommentActivity.ACTION_SEND_FAILED);
+        intent.putExtra("account", account);
+        intent.putExtra("content", content);
+        intent.putExtra("oriMsg", oriMsg);
+        intent.putExtra("comment_ori", comment_ori);
+        intent.putExtra("failedReason", failedReason);
+        intent.putExtra("draft", draft);
+        return intent;
+    }
+
+    private void handleFailedOperation(Intent intent) {
+        token = ((AccountBean) intent.getSerializableExtra("account")).getAccess_token();
+        msg = (MessageBean) getIntent().getSerializableExtra("oriMsg");
+
+        getEditTextView().setError(intent.getStringExtra("failedReason"));
+        getEditTextView().setText(intent.getStringExtra("content"));
+        commentDraftBean = (CommentDraftBean) intent.getSerializableExtra("draft");
+        getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+
+        savedEnableRepost = intent.getBooleanExtra("comment_ori", false);
+
+    }
+
+    private void handleNormalOperation(Intent intent) {
+
         token = getIntent().getStringExtra("token");
         if (TextUtils.isEmpty(token))
             token = GlobalContext.getInstance().getSpecialToken();
 
         msg = (MessageBean) getIntent().getSerializableExtra("msg");
-        if (msg == null) {
-            commentDraftBean = (CommentDraftBean) getIntent().getSerializableExtra("draft");
-            msg = commentDraftBean.getMessageBean();
-            getEditTextView().setText(commentDraftBean.getContent());
+        getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+    }
 
-        }
+    private void handleDraftOperation(Intent intent) {
+
+        token = getIntent().getStringExtra("token");
+        if (TextUtils.isEmpty(token))
+            token = GlobalContext.getInstance().getSpecialToken();
+
+
+        commentDraftBean = (CommentDraftBean) getIntent().getSerializableExtra("draft");
+        msg = commentDraftBean.getMessageBean();
+        getEditTextView().setText(commentDraftBean.getContent());
 
         getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
-
     }
 
     @Override
