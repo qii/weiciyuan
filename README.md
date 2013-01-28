@@ -2,7 +2,10 @@
 =========
 Sina Weibo Android Client, require Android 4.0.4+, ICS Holo Style，GPL v3 License
 
-Download https://play.google.com/store/apps/details?id=org.qii.weiciyuan
+<a href="https://play.google.com/store/apps/details?id=org.qii.weiciyuan">
+  <img alt="Android app on Google Play"
+       src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" />
+</a>
 
 文档
 --------------
