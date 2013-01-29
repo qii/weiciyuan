@@ -97,7 +97,7 @@
     <string name="verified_user">认证账户</string>
     <string name="verified_reason">新浪认证</string>
 
-    <!--maintimelineactivity_layout -->
+    <!--main category -->
     <string name="home">首页</string>
     <string name="mentions">提及</string>
     <string name="comments">评论</string>
@@ -107,7 +107,7 @@
     <string name="mail">私信</string>
     <string name="info">资料</string>
 
-    <!--new activity -->
+    <!--write activity -->
     <string name="write_weibo">写微博</string>
     <string name="at_other">添加好友</string>
     <string name="only_at_char">"@</string>
@@ -146,18 +146,6 @@
     <string name="enable_repost">转发到我的微博</string>
     <string name="comment_detail">评论</string>
     <string name="cant_insert_album">发生意外，无法写入相册</string>
-
-    <!--accountactivity_layout-->
-    <string name="you_cancel_login">你取消了授权</string>
-    <string name="login_success">授权成功</string>
-    <string name="update_account_success">已有该帐号，授权信息更新成功</string>
-    <string name="account_management">帐号管理</string>
-    <string name="remove_successfully">删除成功</string>
-    <string name="add_account">添加</string>
-    <string name="hack_login">黑魔法</string>
-    <string name="login">登录</string>
-
-    <!--status new!-->
     <string name="select">选择</string>
     <string name="take_camera">拍照</string>
     <string name="select_pic">图库</string>
@@ -173,6 +161,18 @@
     <string name="convert_successfully">转换成功，你可以精简文字了</string>
     <string name="convert_failed">转换失败</string>
     <string name="failed_reason">发送失败：%s</string>
+
+
+    <!--accountactivity_layout-->
+    <string name="you_cancel_login">你取消了授权</string>
+    <string name="login_success">授权成功</string>
+    <string name="update_account_success">已有该帐号，授权信息更新成功</string>
+    <string name="account_management">帐号管理</string>
+    <string name="remove_successfully">删除成功</string>
+    <string name="add_account">添加</string>
+    <string name="hack_login">黑魔法</string>
+    <string name="login">登录</string>
+
 
     <!--write comment -->
     <string name="sending_comment">发送评论</string>
