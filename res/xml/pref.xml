@@ -2,7 +2,7 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
-    <PreferenceCategory android:title="@string/normal">
+    <PreferenceCategory android:title="@string/pref_normal_title">
 
         <Preference android:title="@string/pref_appearance_title">
             <intent
@@ -12,16 +12,16 @@
 
         <CheckBoxPreference
             android:key="sound"
-            android:title="@string/sound"
+            android:title="@string/pref_sound_title"
             android:defaultValue="true"/>
         <CheckBoxPreference
             android:key="auto_refresh"
-            android:title="@string/auto_refresh"
-            android:summary="@string/auto_refresh_summary"
+            android:title="@string/pref_auto_refresh_title"
+            android:summary="@string/pref_auto_refresh_summary"
             android:defaultValue="false"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/advanced">
+    <PreferenceCategory android:title="@string/pref_advanced_title">
 
         <Preference android:title="@string/notification">
             <intent
@@ -55,7 +55,7 @@
 
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/other">
+        android:title="@string/pref_other_title">
         <Preference android:title="@string/pref_about_title">
             <intent
                 android:targetPackage="org.qii.weiciyuan"
