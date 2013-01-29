@@ -31,8 +31,6 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
 
     private Preference frequency;
     private Preference ringtone;
-//    private Preference notification_style;
-
     private List<Preference> preferenceList = new ArrayList<Preference>(9);
 
     private Uri uri;
@@ -52,7 +50,6 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         preferenceList.add(findPreference(SettingActivity.ENABLE_VIBRATE));
         preferenceList.add(findPreference(SettingActivity.ENABLE_LED));
         preferenceList.add(findPreference(SettingActivity.ENABLE_RINGTONE));
-//        preferenceList.add(findPreference(SettingActivity.JBNOTIFICATION_STYLE));
 
         View title = getActivity().getLayoutInflater().inflate(R.layout.filteractivity_title_layout, null);
         Switch switchBtn = (Switch) title.findViewById(R.id.switchBtn);
@@ -74,13 +71,12 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         frequency = findPreference(SettingActivity.FREQUENCY);
-//        notification_style = findPreference(SettingActivity.JBNOTIFICATION_STYLE);
         ringtone = findPreference(SettingActivity.ENABLE_RINGTONE);
         ringtone.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.ringtone));
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.pref_ringtone_title));
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
@@ -167,7 +163,6 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
             ringtone.setSummary(getString(R.string.silent));
         }
 
-//        notification_style.setSummary(getActivity().getResources().getStringArray(R.array.notification_style)[SettingUtility.getNotificationStyle() - 1]);
 
     }
 
@@ -176,7 +171,6 @@ public class NotificationFragment extends PreferenceFragment implements SharedPr
             p.setEnabled(value);
         }
 
-//        findPreference(SettingActivity.JBNOTIFICATION_STYLE).setEnabled(getResources().getBoolean(R.bool.jb_notification));
     }
 
 }

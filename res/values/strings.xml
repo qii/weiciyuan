@@ -308,23 +308,22 @@
     <string name="pref_fast_scroll_title">快速滚动</string>
 
     <!--Setting Notification-->
-    <string name="new_message">未读消息</string>
-    <string name="new_message_type">类型</string>
-    <string name="mention_to_me">\@我的微博</string>
-    <string name="comment_to_me">收到的评论</string>
-    <string name="mention_comment_to_me">\@我的评论</string>
-    <string name="notification_feedback">提醒方式</string>
+    <string name="pref_new_message_title">未读消息</string>
+    <string name="pref_disable_notification_at_night_title">深夜勿扰</string>
+    <string name="pref_disable_notification_at_night_summary">凌晨1点到早上8点暂停</string>
+    <string name="pref_new_message_type_title">类型</string>
+    <string name="pref_mention_to_me_title">\@我的微博</string>
+    <string name="pref_comment_to_me_title">收到的评论</string>
+    <string name="pref_mention_comment_to_me_title">\@我的评论</string>
+    <string name="pref_notification_feedback_title">提醒方式</string>
+    <string name="pref_vibrate_title">振动</string>
+    <string name="pref_led_title">呼吸灯</string>
+    <string name="pref_ringtone_title">铃声</string>
+
     <string name="new_comments">%s 条评论</string>
     <string name="new_mentions">%s 条@</string>
     <string name="notification">通知</string>
-    <string name="notification_style_version">Jelly Bean 通知栏</string>
-    <string name="notification_style">通知栏扩展样式</string>
-    <string name="vibrate">振动</string>
-    <string name="led">呼吸灯</string>
-    <string name="ringtone">铃声</string>
     <string name="silent">静音</string>
-    <string name="disable_notification_at_night">深夜勿扰</string>
-    <string name="disable_notification_at_night_summary">凌晨1点到早上8点暂停</string>
     <string name="enable_fetch_new_msg">获取未读的消息</string>
     <string name="start_fetch_msg">开始后台自动获取……</string>
     <string name="frequency">间隔</string>

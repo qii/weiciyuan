@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
     <PreferenceCategory
-        android:title="@string/new_message"
+        android:title="@string/pref_new_message_title"
         >
 
         <CheckBoxPreference
             android:key="disable_fetch_at_night"
-            android:title="@string/disable_notification_at_night"
-            android:summary="@string/disable_notification_at_night_summary"
+            android:title="@string/pref_disable_notification_at_night_title"
+            android:summary="@string/pref_disable_notification_at_night_summary"
             android:defaultValue="true"/>
         <ListPreference
             android:key="frequency"
@@ -20,52 +20,40 @@
             android:defaultValue="1"/>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/new_message_type"
+        android:title="@string/pref_new_message_type_title"
         >
         <CheckBoxPreference
             android:key="mention_to_me"
-            android:title="@string/mention_to_me"
+            android:title="@string/pref_mention_to_me_title"
             android:defaultValue="true"/>
         <CheckBoxPreference
             android:key="comment_to_me"
-            android:title="@string/comment_to_me"
+            android:title="@string/pref_comment_to_me_title"
             android:defaultValue="true"/>
         <CheckBoxPreference
             android:key="mention_comment_to_me"
-            android:title="@string/mention_comment_to_me"
+            android:title="@string/pref_mention_comment_to_me_title"
             android:defaultValue="true"/>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/notification_feedback"
+        android:title="@string/pref_notification_feedback_title"
         >
         <CheckBoxPreference
             android:key="vibrate"
-            android:title="@string/vibrate"
+            android:title="@string/pref_vibrate_title"
             android:defaultValue="false"/>
 
         <CheckBoxPreference
             android:key="led"
-            android:title="@string/led"
+            android:title="@string/pref_led_title"
             android:defaultValue="false"/>
 
         <Preference
-            android:title="@string/ringtone"
+            android:title="@string/pref_ringtone_title"
             android:key="ringtone">
 
         </Preference>
     </PreferenceCategory>
 
-    <!--<PreferenceCategory-->
-    <!--android:title="@string/notification_style_version"-->
-    <!-->-->
-    <!--<ListPreference-->
-    <!--android:key="jbnotification"-->
-    <!--android:title="@string/notification_style"-->
-    <!--android:dialogTitle="@string/notification_style"-->
-    <!--android:entries="@array/notification_style"-->
-    <!--android:entryValues="@array/notification_style_value"-->
-    <!--android:defaultValue="1"-->
-    <!--android:enabled="@bool/jb_notification"/>-->
-    <!--</PreferenceCategory>-->
 
 </PreferenceScreen>
