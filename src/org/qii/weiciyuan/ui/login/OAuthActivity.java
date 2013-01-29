@@ -268,7 +268,7 @@ public class OAuthActivity extends AbstractAppActivity {
             webView.stopLoading();
     }
 
-    static class ProgressFragment extends DialogFragment {
+    public static class ProgressFragment extends DialogFragment {
 
         AsyncTask asyncTask = null;
 
