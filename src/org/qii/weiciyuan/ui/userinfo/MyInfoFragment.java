@@ -110,7 +110,6 @@ public class MyInfoFragment extends AbstractAppFragment {
     @Override
     public void onStart() {
         super.onStart();
-        // new SimpleTask().execute();
     }
 
     private void setValue() {

@@ -79,13 +79,13 @@ public class FetchNewMsgService extends Service {
         @Override
         protected void onPostExecute(List<AccountBean> accountBeans) {
             for (AccountBean account : accountBeans) {
-                new SimpleTask(account).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                new FetchMsgTask(account).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
     }
 
 
-    class SimpleTask extends MyAsyncTask<Void, Void, Void> {
+    class FetchMsgTask extends MyAsyncTask<Void, Void, Void> {
         WeiboException e;
         AccountBean accountBean;
         CommentListBean commentResult;
@@ -93,7 +93,7 @@ public class FetchNewMsgService extends Service {
         CommentListBean mentionCommentsResult;
         UnreadBean unreadBean;
 
-        public SimpleTask(AccountBean bean) {
+        public FetchMsgTask(AccountBean bean) {
             accountBean = bean;
         }
 
