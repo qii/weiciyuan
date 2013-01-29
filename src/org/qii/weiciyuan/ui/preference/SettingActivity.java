@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.preference;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -93,6 +94,14 @@ public class SettingActivity extends AbstractAppActivity {
         return false;
     }
 
+    public static class SettingsFragment extends PreferenceFragment {
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref);
+        }
+    }
 
 }
 
