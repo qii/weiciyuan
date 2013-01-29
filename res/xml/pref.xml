@@ -36,7 +36,7 @@
                 android:targetClass="org.qii.weiciyuan.ui.preference.DraftActivity"/>
         </Preference>
         <Preference
-            android:title="@string/data_control"
+            android:title="@string/pref_data_control_title"
             android:key="data_control">
             <intent
                 android:targetPackage="org.qii.weiciyuan"
@@ -52,15 +52,6 @@
                 android:targetClass="org.qii.weiciyuan.ui.preference.FilterActivity"
                 />
         </Preference>
-
-        <!--<Preference-->
-        <!--android:title="@string/pref_performance_title"-->
-        <!-->-->
-        <!--<intent-->
-        <!--android:targetPackage="org.qii.weiciyuan"-->
-        <!--android:targetClass="org.qii.weiciyuan.ui.preference.PerformanceActivity"-->
-        <!--/>-->
-        <!--</Preference>-->
 
     </PreferenceCategory>
     <PreferenceCategory

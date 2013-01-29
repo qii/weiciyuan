@@ -16,7 +16,7 @@ public class ControlActivity extends AbstractAppActivity {
 
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(getString(R.string.data_control));
+        getActionBar().setTitle(getString(R.string.pref_data_control_title));
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()

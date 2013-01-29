@@ -333,13 +333,13 @@
     <string name="draft">草稿箱</string>
 
     <!--Setting Control-->
-    <string name="data_control">流量控制</string>
-    <string name="disable_download_pic">关闭图片</string>
-    <string name="disable_download_pic_summary">同时暂停头像的下载</string>
-    <string name="upload_pic_quality">上传图片质量</string>
-    <string name="close_comment_repost_list_avatar">关闭评论/转发列表的头像</string>
-    <string name="msg_count_title">每次获取数据条数</string>
-    <string name="comment_repost_list_avatar">评论/转发列表的头像</string>
+    <string name="pref_data_control_title">流量控制</string>
+    <string name="pref_disable_download_pic_title">关闭图片</string>
+    <string name="pref_disable_download_pic_summary">同时暂停头像的下载</string>
+    <string name="pref_upload_pic_quality_title">上传图片质量</string>
+    <string name="pref_close_comment_repost_list_avatar_title">关闭评论/转发列表的头像</string>
+    <string name="pref_msg_count_title">每次获取数据条数</string>
+    <string name="pref_comment_repost_list_avatar_title">评论/转发列表的头像</string>
 
     <!--Setting Filter-->
     <string name="filter">首页过滤</string>
