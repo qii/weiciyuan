@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.ui.main;
 
 import android.app.ActionBar;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -74,7 +73,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         GlobalContext.getInstance().setAccountBean(accountBean);
         SettingUtility.setDefaultAccountId(accountBean.getUid());
 
-        buildPhoneInterface();
+        buildPhoneInterface(savedInstanceState);
 
         Executors.newSingleThreadScheduledExecutor().schedule(new ClearCacheTask(), 8, TimeUnit.SECONDS);
 
@@ -89,7 +88,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
 
-    private void buildPhoneInterface() {
+    private void buildPhoneInterface(Bundle savedInstanceState) {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
@@ -97,15 +96,15 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         setContentView(R.layout.menu_right);
         setBehindContentView(R.layout.menu_frame);
 
-        FragmentTransaction t = getFragmentManager().beginTransaction();
-        LeftMenuFragment mFrag = new LeftMenuFragment();
-        t.replace(R.id.menu_frame, mFrag);
-        t.commit();
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.menu_frame, newMenuFragment(), LeftMenuFragment.class.getName())
+                    .commit();
 
-
-        getFragmentManager().beginTransaction()
-                .replace(R.id.menu_right_fl, newFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName())
-                .commit();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.menu_right_fl, newFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName())
+                    .commit();
+        }
 
         SlidingMenu slidingMenu = getSlidingMenu();
         slidingMenu.setMode(SlidingMenu.LEFT);
@@ -225,6 +224,21 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     private AbstractTimeLineFragment getDMFragment() {
         return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
                 DMUserListFragment.class.getName()));
+    }
+
+
+    private LeftMenuFragment getMenuFragment() {
+        return ((LeftMenuFragment) getFragmentManager().findFragmentByTag(
+                LeftMenuFragment.class.getName()));
+    }
+
+
+    public LeftMenuFragment newMenuFragment() {
+
+        if (getHomeFragment() == null)
+            return new LeftMenuFragment();
+        else
+            return getMenuFragment();
     }
 
 
