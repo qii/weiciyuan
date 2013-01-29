@@ -298,14 +298,14 @@
     <string name="other">其它</string>
 
     <!--Setting Appearance-->
-    <string name="appearance">显示</string>
-    <string name="theme">主题</string>
-    <string name="listview">列表</string>
-    <string name="list_pic_mode">图片</string>
-    <string name="list_high_pic_mode">高清图片</string>
-    <string name="list_avatar_mode">头像</string>
-    <string name="font_size">字体大小</string>
-    <string name="fast_scroll">快速滚动</string>
+    <string name="pref_appearance_title">显示</string>
+    <string name="pref_theme_title">主题</string>
+    <string name="pref_listview_title">列表</string>
+    <string name="pref_list_pic_mode_title">图片</string>
+    <string name="pref_list_high_pic_mode_title">高清图片</string>
+    <string name="pref_list_avatar_mode_title">头像</string>
+    <string name="pref_font_size_title">字体大小</string>
+    <string name="pref_fast_scroll_title">快速滚动</string>
 
     <!--Setting Notification-->
     <string name="new_message">未读消息</string>

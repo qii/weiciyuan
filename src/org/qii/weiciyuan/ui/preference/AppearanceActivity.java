@@ -19,7 +19,7 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
 
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(getString(R.string.appearance));
+        getActionBar().setTitle(getString(R.string.pref_appearance_title));
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
@@ -60,14 +60,7 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             overridePendingTransition(R.anim.stay, R.anim.alphaout);
-
-
-//            finish();
-//            overridePendingTransition(0, 0);
-//            startActivity(new Intent(this, AppearanceActivity.class));
-//            overridePendingTransition(R.anim.stay, R.anim.alphaout);
         }
-
 
 
     }

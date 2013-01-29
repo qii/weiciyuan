@@ -4,7 +4,7 @@
     >
     <PreferenceCategory android:title="@string/normal">
 
-        <Preference android:title="@string/appearance">
+        <Preference android:title="@string/pref_appearance_title">
             <intent
                 android:targetPackage="org.qii.weiciyuan"
                 android:targetClass="org.qii.weiciyuan.ui.preference.AppearanceActivity"/>
