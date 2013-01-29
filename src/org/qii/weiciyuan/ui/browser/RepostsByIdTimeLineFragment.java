@@ -26,7 +26,7 @@ import org.qii.weiciyuan.ui.actionmenu.RepostSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
+import org.qii.weiciyuan.ui.widgets.QuickSendProgressFragment;
 
 /**
  * User: qii
@@ -254,7 +254,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     class SimpleTask extends AsyncTask<Void, Void, MessageBean> {
         WeiboException e;
 
-        SendProgressFragment progressFragment = new SendProgressFragment();
+        QuickSendProgressFragment progressFragment = new QuickSendProgressFragment();
 
         @Override
         protected void onPreExecute() {

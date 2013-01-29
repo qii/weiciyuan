@@ -35,7 +35,7 @@ import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
-import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
+import org.qii.weiciyuan.ui.widgets.QuickSendProgressFragment;
 
 /**
  * User: qii
@@ -331,7 +331,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     private class QuickCommentTask extends AsyncTask<Void, Void, CommentBean> {
         WeiboException e;
-        SendProgressFragment progressFragment = new SendProgressFragment();
+        QuickSendProgressFragment progressFragment = new QuickSendProgressFragment();
 
         @Override
         protected void onPreExecute() {
