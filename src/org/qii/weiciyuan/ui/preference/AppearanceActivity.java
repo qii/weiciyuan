@@ -52,9 +52,8 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
         if (key.equals(SettingActivity.THEME)) {
 
             Intent intent = new Intent(this, AppearanceActivity.class);
-            //        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
 
+            finish();
             overridePendingTransition(0, 0);
 
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
