@@ -11,6 +11,7 @@ import android.widget.EditText;
 /**
  * User: qii
  * Date: 13-1-18
+ * from top to bottom:statusbar, actionbar, app content, keyboard
  */
 public class SmileyPickerUtility {
     public static void hideSoftInput(EditText paramEditText) {
@@ -55,6 +56,11 @@ public class SmileyPickerUtility {
         Rect localRect = new Rect();
         paramActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
         return localRect.height();
+    }
+
+    //below actionbar, above softkeyboard
+    public static int getAppContentHeight(Activity paramActivity) {
+        return SmileyPickerUtility.getAppHeight(paramActivity) - SmileyPickerUtility.getActionBarHeight(paramActivity);
     }
 
     public static int getKeyboardHeight(Activity paramActivity) {
