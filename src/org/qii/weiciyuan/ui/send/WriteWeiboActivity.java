@@ -27,8 +27,12 @@ import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageEdit;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.lib.KeyboardControlEditText;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.SmileyPicker;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.browser.AppMapActivity;
 import org.qii.weiciyuan.ui.browser.BrowserLocalPicActivity;
@@ -48,7 +52,7 @@ import java.util.Map;
  * Date: 12-7-29
  */
 public class WriteWeiboActivity extends AbstractAppActivity implements DialogInterface.OnClickListener,
-        IAccountInfo, ClearContentDialog.IClear, EmotionsGridDialog.IEmotions, SaveDraftDialog.IDraft {
+        IAccountInfo, ClearContentDialog.IClear, SaveDraftDialog.IDraft {
 
     private static final int CAMERA_RESULT = 0;
     private static final int PIC_RESULT = 1;
@@ -68,7 +72,9 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private String location;
 
     private ImageView haveGPS = null;
-    private EditText content = null;
+    private KeyboardControlEditText content = null;
+    private SmileyPicker smiley = null;
+    private LinearLayout mContainer = null;
 
     private String2PicTask string2PicTask;
     private GetGoogleLocationInfo locationTask;
@@ -215,8 +221,9 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
     @Override
     public void onBackPressed() {
-
-        if (!TextUtils.isEmpty(content.getText().toString()) && canShowSaveDraftDialog()) {
+        if (smiley.isShown()) {
+            hideSmileyPicker(false);
+        } else if (!TextUtils.isEmpty(content.getText().toString()) && canShowSaveDraftDialog()) {
             SaveDraftDialog dialog = new SaveDraftDialog();
             dialog.show(getFragmentManager(), "");
         } else {
@@ -377,7 +384,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
         actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
         actionBar.setDisplayShowCustomEnabled(true);
-        content = ((EditText) findViewById(R.id.status_new_content));
+        content = ((KeyboardControlEditText) findViewById(R.id.status_new_content));
         content.addTextChangedListener(new TextNumLimitWatcher((TextView) findViewById(R.id.menu_send), content, this));
         content.setDrawingCacheEnabled(true);
 
@@ -392,6 +399,16 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         findViewById(R.id.menu_emoticon).setOnLongClickListener(onLongClickListener);
         findViewById(R.id.menu_add_pic).setOnLongClickListener(onLongClickListener);
         findViewById(R.id.menu_send).setOnLongClickListener(onLongClickListener);
+
+        smiley = (SmileyPicker) findViewById(R.id.smiley_picker);
+        smiley.setEditText(content);
+        mContainer = (LinearLayout) findViewById(R.id.container);
+        content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSmileyPicker(true);
+            }
+        });
     }
 
 
@@ -601,12 +618,17 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     break;
 
                 case R.id.menu_emoticon:
-                    EmotionsGridDialog dialog = new EmotionsGridDialog();
-                    dialog.show(getFragmentManager(), "");
+                    if (smiley.isShown()) {
+                        hideSmileyPicker(true);
+                    } else {
+                        showSmileyPicker();
+                    }
                     break;
 
                 case R.id.menu_send:
-                    send();
+//                    send();
+                    int dd = SmileyPickerUtility.getActionBarHeight(WriteWeiboActivity.this);
+                    AppLogger.e("actionbar=" + dd);
                     break;
                 case R.id.menu_at:
                     Intent intent = new Intent(WriteWeiboActivity.this, AtUserActivity.class);
@@ -616,6 +638,49 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
             }
         }
+    }
+
+
+    private void showSmileyPicker() {
+        this.smiley.show(WriteWeiboActivity.this);
+        lockContainerHeight(SmileyPickerUtility.getAppContentHeight(WriteWeiboActivity.this));
+
+    }
+
+    public void hideSmileyPicker(boolean showKeyBoard) {
+        if (this.smiley.isShown()) {
+            if (showKeyBoard) {
+                //this time softkeyboard is hidden
+                LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
+                localLayoutParams.height = smiley.getTop();
+                localLayoutParams.weight = 0.0F;
+                this.smiley.hide(WriteWeiboActivity.this);
+
+                SmileyPickerUtility.showKeyBoard(content);
+                content.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        unlockContainerHeightDelayed();
+                    }
+                }, 200L);
+            } else {
+                this.smiley.hide(WriteWeiboActivity.this);
+                unlockContainerHeightDelayed();
+            }
+        }
+
+    }
+
+    private void lockContainerHeight(int paramInt) {
+        LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
+        localLayoutParams.height = paramInt;
+        localLayoutParams.weight = 0.0F;
+    }
+
+    public void unlockContainerHeightDelayed() {
+
+        ((LinearLayout.LayoutParams) WriteWeiboActivity.this.mContainer.getLayoutParams()).weight = 1.0F;
+
     }
 
     private class BottomButtonLongClickListener implements View.OnLongClickListener {
@@ -638,15 +703,6 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             }
             return true;
         }
-    }
-
-    public void insertEmotion(String emotionChar) {
-        String ori = content.getText().toString();
-        int index = content.getSelectionStart();
-        StringBuilder stringBuilder = new StringBuilder(ori);
-        stringBuilder.insert(index, emotionChar);
-        content.setText(stringBuilder.toString());
-        content.setSelection(index + emotionChar.length());
     }
 
 
