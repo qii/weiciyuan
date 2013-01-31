@@ -70,4 +70,8 @@ public class SmileyPickerUtility {
                 - SmileyPickerUtility.getAppHeight(paramActivity);
 
     }
+
+    public static boolean isKeyBoardShow(Activity paramActivity) {
+        return getKeyboardHeight(paramActivity) == 0;
+    }
 }
