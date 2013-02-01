@@ -30,7 +30,6 @@ import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.KeyboardControlEditText;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.SmileyPicker;
-import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.support.utils.Utility;
