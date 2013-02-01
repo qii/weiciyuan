@@ -29,6 +29,8 @@ public class SmileyPicker extends LinearLayout {
     private LayoutInflater mInflater;
     private List<String> keys;
     private Activity activity;
+    private final LayoutTransition transitioner = new LayoutTransition();
+
 
     public SmileyPicker(Context paramContext) {
         super(paramContext);
@@ -61,10 +63,13 @@ public class SmileyPicker extends LinearLayout {
 
     }
 
-    final LayoutTransition transitioner = new LayoutTransition();
 
-    public void show(Activity paramActivity) {
-
+    public void show(Activity paramActivity, boolean showAnimation) {
+        if (showAnimation) {
+            transitioner.setDuration(200);
+        } else {
+            transitioner.setDuration(0);
+        }
         this.mPickerHeight = SmileyPickerUtility.getKeyboardHeight(paramActivity);
         SmileyPickerUtility.hideSoftInput(this.mEditText);
         getLayoutParams().height = this.mPickerHeight;

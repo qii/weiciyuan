@@ -636,7 +636,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     if (smiley.isShown()) {
                         hideSmileyPicker(true);
                     } else {
-                        showSmileyPicker();
+                        showSmileyPicker(SmileyPickerUtility.isKeyBoardShow(WriteWeiboActivity.this));
                     }
                     break;
 
@@ -655,8 +655,8 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
 
-    private void showSmileyPicker() {
-        this.smiley.show(WriteWeiboActivity.this);
+    private void showSmileyPicker(boolean showAnimation) {
+        this.smiley.show(WriteWeiboActivity.this, showAnimation);
         lockContainerHeight(SmileyPickerUtility.getAppContentHeight(WriteWeiboActivity.this));
 
     }
