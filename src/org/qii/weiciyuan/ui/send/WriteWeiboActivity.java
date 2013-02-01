@@ -128,7 +128,11 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 if (imageFileUri != null) {
                     Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageFileUri);
-                    startActivityForResult(i, CAMERA_RESULT);
+                    if (Utility.isIntentSafe(WriteWeiboActivity.this, i)) {
+                        startActivityForResult(i, CAMERA_RESULT);
+                    } else {
+                        Toast.makeText(WriteWeiboActivity.this, getString(R.string.dont_have_camera_app), Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(WriteWeiboActivity.this, getString(R.string.cant_insert_album), Toast.LENGTH_SHORT).show();
                 }
@@ -142,11 +146,15 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     private void enablePicture() {
-        ((ImageButton) findViewById(R.id.menu_add_pic)).setImageLevel(1);
+
+        Bitmap bitmap = ImageTool.getWriteWeiboPictureThumblr(picPath);
+        if (bitmap != null) {
+            ((ImageButton) findViewById(R.id.menu_add_pic)).setImageBitmap(bitmap);
+        }
     }
 
     private void disablePicture() {
-        ((ImageButton) findViewById(R.id.menu_add_pic)).setImageLevel(0);
+        ((ImageButton) findViewById(R.id.menu_add_pic)).setImageDrawable(getResources().getDrawable(R.drawable.camera_light));
     }
 
 
@@ -610,8 +618,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     addLocation();
                     break;
                 case R.id.menu_add_pic:
-                    ImageButton imageButton = (ImageButton) findViewById(R.id.menu_add_pic);
-                    if (imageButton.getDrawable().getLevel() == 0)
+                    if (TextUtils.isEmpty(picPath))
                         addPic();
                     else
                         showPic();
@@ -626,9 +633,8 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     break;
 
                 case R.id.menu_send:
-//                    send();
-                    int dd = SmileyPickerUtility.getActionBarHeight(WriteWeiboActivity.this);
-                    AppLogger.e("actionbar=" + dd);
+                    send();
+
                     break;
                 case R.id.menu_at:
                     Intent intent = new Intent(WriteWeiboActivity.this, AtUserActivity.class);

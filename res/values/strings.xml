@@ -146,6 +146,7 @@
     <string name="enable_repost">转发到我的微博</string>
     <string name="comment_detail">评论</string>
     <string name="cant_insert_album">发生意外，无法写入相册</string>
+    <string name="dont_have_camera_app">该设备没有拍照应用</string>
     <string name="select">选择</string>
     <string name="take_camera">拍照</string>
     <string name="select_pic">图库</string>

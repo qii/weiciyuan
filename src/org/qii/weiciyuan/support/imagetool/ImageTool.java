@@ -475,6 +475,64 @@ public class ImageTool {
         }
     }
 
+    public static Bitmap getWriteWeiboPictureThumblr(String filePath) {
+        try {
+            //actionbar button image width and height is 32 dip
+            int reqWidth = Utility.dip2px(32);
+            int reqHeight = Utility.dip2px(32);
+
+            if (!FileManager.isExternalStorageMounted()) {
+                return null;
+            }
+
+
+            boolean fileExist = new File(filePath).exists();
+
+            if (!fileExist) {
+                return null;
+            }
+
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(filePath, options);
+
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+            options.inJustDecodeBounds = false;
+            options.inPurgeable = true;
+            options.inInputShareable = true;
+
+            Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
+
+            if (bitmap == null) {
+                //this picture is broken,so delete it
+                new File(filePath).delete();
+                return null;
+            }
+
+
+            int[] size = calcResize(bitmap.getWidth(), bitmap.getHeight(), reqWidth, reqHeight);
+            if (size[0] > 0 && size[1] > 0) {
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size[0], size[1], true);
+                if (scaledBitmap != bitmap) {
+                    bitmap.recycle();
+                    bitmap = scaledBitmap;
+                }
+            }
+
+            Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+            if (roundedBitmap != bitmap) {
+                bitmap.recycle();
+                bitmap = roundedBitmap;
+            }
+
+            return bitmap;
+        } catch (OutOfMemoryError ignored) {
+            ignored.printStackTrace();
+            return null;
+        }
+    }
+
 
     private static boolean getBitmapFromNetWork(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
         for (int i = 0; i < 3; i++) {
