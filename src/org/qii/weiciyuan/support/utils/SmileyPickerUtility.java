@@ -7,6 +7,7 @@ import android.view.Display;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 /**
  * User: qii
@@ -60,15 +61,24 @@ public class SmileyPickerUtility {
 
     //below actionbar, above softkeyboard
     public static int getAppContentHeight(Activity paramActivity) {
-        return SmileyPickerUtility.getAppHeight(paramActivity) - SmileyPickerUtility.getActionBarHeight(paramActivity);
+        return SmileyPickerUtility.getScreenHeight(paramActivity)
+                - SmileyPickerUtility.getStatusBarHeight(paramActivity)
+                - SmileyPickerUtility.getActionBarHeight(paramActivity)
+                - SmileyPickerUtility.getKeyboardHeight(paramActivity);
     }
 
     public static int getKeyboardHeight(Activity paramActivity) {
 
-        return SmileyPickerUtility.getScreenHeight(paramActivity)
+        int height = SmileyPickerUtility.getScreenHeight(paramActivity)
                 - SmileyPickerUtility.getStatusBarHeight(paramActivity)
                 - SmileyPickerUtility.getAppHeight(paramActivity);
+        if (height == 0) {
+            height = SettingUtility.getDefaultSoftKeyBoardHeight();
+        }
 
+        SettingUtility.setDefaultSoftKeyBoardHeight(height);
+
+        return height;
     }
 
     public static boolean isKeyBoardShow(Activity paramActivity) {

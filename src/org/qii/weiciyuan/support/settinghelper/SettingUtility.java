@@ -237,4 +237,12 @@ public class SettingUtility {
         return Integer.valueOf(result);
     }
 
+    public static void setDefaultSoftKeyBoardHeight(int height) {
+        SettingHelper.setEditor(getContext(), "default_softkeyboard_height", height);
+    }
+
+    public static int getDefaultSoftKeyBoardHeight() {
+        return SettingHelper.getSharedPreferences(getContext(), "default_softkeyboard_height", 400);
+    }
+
 }
