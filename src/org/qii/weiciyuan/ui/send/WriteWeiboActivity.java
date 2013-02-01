@@ -604,6 +604,15 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (locationListener != null) {
+            ((LocationManager) WriteWeiboActivity.this
+                    .getSystemService(Context.LOCATION_SERVICE)).removeUpdates(locationListener);
+        }
+    }
+
+    @Override
     public AccountBean getAccount() {
         return accountBean;
     }
