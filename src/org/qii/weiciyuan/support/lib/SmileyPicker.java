@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -60,11 +61,17 @@ public class SmileyPicker extends LinearLayout {
         SmileyPickerUtility.hideSoftInput(this.mEditText);
         getLayoutParams().height = this.mPickerHeight;
         setVisibility(View.VISIBLE);
+        //open smilepicker, press home, press app switcher to return to write weibo interface,
+        //softkeyboard will be opened by android system when smilepicker is showing,
+        // this method is used to fix this issue
+        paramActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     }
 
     public void hide(Activity paramActivity) {
         setVisibility(View.GONE);
+        paramActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
     }
 
     private final class SmileyAdapter extends BaseAdapter {
