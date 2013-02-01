@@ -28,7 +28,7 @@ public class SmileyPicker extends LinearLayout {
     private KeyboardControlEditText mEditText;
     private LayoutInflater mInflater;
     private List<String> keys;
-
+    private Activity activity;
 
     public SmileyPicker(Context paramContext) {
         super(paramContext);
@@ -55,6 +55,7 @@ public class SmileyPicker extends LinearLayout {
 
     public void setEditText(Activity activity, KeyboardControlEditText paramEditText) {
         this.mEditText = paramEditText;
+        this.activity = activity;
         ((LinearLayout) activity.findViewById(R.id.root_layout)).setLayoutTransition(transitioner);
         setupAnimations(transitioner);
 
@@ -121,12 +122,12 @@ public class SmileyPicker extends LinearLayout {
     private void setupAnimations(LayoutTransition transition) {
 
         ObjectAnimator animIn = ObjectAnimator.ofFloat(null, "translationY",
-                SmileyPickerUtility.getScreenHeight(GlobalContext.getInstance().getActivity()), mPickerHeight).
+                SmileyPickerUtility.getScreenHeight(this.activity), mPickerHeight).
                 setDuration(transition.getDuration(LayoutTransition.APPEARING));
         transition.setAnimator(LayoutTransition.APPEARING, animIn);
 
         ObjectAnimator animOut = ObjectAnimator.ofFloat(null, "translationY", mPickerHeight,
-                SmileyPickerUtility.getScreenHeight(GlobalContext.getInstance().getActivity())).
+                SmileyPickerUtility.getScreenHeight(this.activity)).
                 setDuration(transition.getDuration(LayoutTransition.DISAPPEARING));
         transition.setAnimator(LayoutTransition.DISAPPEARING, animOut);
 
