@@ -401,7 +401,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         findViewById(R.id.menu_send).setOnLongClickListener(onLongClickListener);
 
         smiley = (SmileyPicker) findViewById(R.id.smiley_picker);
-        smiley.setEditText(content);
+        smiley.setEditText(WriteWeiboActivity.this, content);
         mContainer = (LinearLayout) findViewById(R.id.container);
         content.setOnClickListener(new View.OnClickListener() {
             @Override

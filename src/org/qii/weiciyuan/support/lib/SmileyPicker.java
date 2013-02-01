@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.support.lib;
 
+import android.animation.LayoutTransition;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -51,9 +53,14 @@ public class SmileyPicker extends LinearLayout {
         });
     }
 
-    public void setEditText(KeyboardControlEditText paramEditText) {
+    public void setEditText(Activity activity, KeyboardControlEditText paramEditText) {
         this.mEditText = paramEditText;
+        ((LinearLayout) activity.findViewById(R.id.root_layout)).setLayoutTransition(transitioner);
+        setupAnimations(transitioner);
+
     }
+
+    final LayoutTransition transitioner = new LayoutTransition();
 
     public void show(Activity paramActivity) {
 
@@ -109,5 +116,20 @@ public class SmileyPicker extends LinearLayout {
             bindView(paramInt, paramView);
             return paramView;
         }
+    }
+
+    private void setupAnimations(LayoutTransition transition) {
+
+        ObjectAnimator animIn = ObjectAnimator.ofFloat(null, "translationY",
+                SmileyPickerUtility.getScreenHeight(GlobalContext.getInstance().getActivity()), mPickerHeight).
+                setDuration(transition.getDuration(LayoutTransition.APPEARING));
+        transition.setAnimator(LayoutTransition.APPEARING, animIn);
+
+        ObjectAnimator animOut = ObjectAnimator.ofFloat(null, "translationY", mPickerHeight,
+                SmileyPickerUtility.getScreenHeight(GlobalContext.getInstance().getActivity())).
+                setDuration(transition.getDuration(LayoutTransition.DISAPPEARING));
+        transition.setAnimator(LayoutTransition.DISAPPEARING, animOut);
+
+
     }
 }

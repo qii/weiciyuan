@@ -82,6 +82,9 @@ public class SmileyPickerUtility {
     }
 
     public static boolean isKeyBoardShow(Activity paramActivity) {
-        return getKeyboardHeight(paramActivity) == 0;
+        int height = SmileyPickerUtility.getScreenHeight(paramActivity)
+                - SmileyPickerUtility.getStatusBarHeight(paramActivity)
+                - SmileyPickerUtility.getAppHeight(paramActivity);
+        return height != 0;
     }
 }
