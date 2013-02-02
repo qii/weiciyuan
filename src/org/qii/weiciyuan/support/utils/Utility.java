@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,6 +22,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ListView;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -351,6 +353,23 @@ public class Utility {
             return metrics.heightPixels;
         }
         return 800;
+    }
+
+    public static Rect locateView(View v) {
+        int[] location = new int[2];
+        if (v == null) return null;
+        try {
+            v.getLocationOnScreen(location);
+        } catch (NullPointerException npe) {
+            //Happens when the view doesn't exist on screen anymore.
+            return null;
+        }
+        Rect locationRect = new Rect();
+        locationRect.left = location[0];
+        locationRect.top = location[1];
+        locationRect.right = locationRect.left + v.getWidth();
+        locationRect.bottom = locationRect.top + v.getHeight();
+        return locationRect;
     }
 }
 
