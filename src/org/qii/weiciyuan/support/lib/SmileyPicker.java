@@ -9,7 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
@@ -42,17 +45,6 @@ public class SmileyPicker extends LinearLayout {
         GridView gridView = (GridView) this.mInflater.inflate(R.layout.writeweiboactivity_smileypicker, null);
         addView(gridView);
         gridView.setAdapter(new SmileyAdapter(paramContext));
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String ori = mEditText.getText().toString();
-                int index = mEditText.getSelectionStart();
-                StringBuilder stringBuilder = new StringBuilder(ori);
-                stringBuilder.insert(index, keys.get(position));
-                mEditText.setText(stringBuilder.toString());
-                mEditText.setSelection(index + keys.get(position).length());
-            }
-        });
     }
 
     public void setEditText(Activity activity, KeyboardControlEditText paramEditText) {
@@ -99,9 +91,20 @@ public class SmileyPicker extends LinearLayout {
             keys.addAll(keySet);
         }
 
-        private void bindView(int paramInt, View paramView) {
-            ((ImageView) paramView.findViewById(R.id.smiley_item))
-                    .setImageBitmap(GlobalContext.getInstance().getEmotionsPics().get(keys.get(paramInt)));
+        private void bindView(final int position, View paramView) {
+            ImageView imageView = ((ImageView) paramView.findViewById(R.id.smiley_item));
+            imageView.setImageBitmap(GlobalContext.getInstance().getEmotionsPics().get(keys.get(position)));
+            paramView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String ori = mEditText.getText().toString();
+                    int index = mEditText.getSelectionStart();
+                    StringBuilder stringBuilder = new StringBuilder(ori);
+                    stringBuilder.insert(index, keys.get(position));
+                    mEditText.setText(stringBuilder.toString());
+                    mEditText.setSelection(index + keys.get(position).length());
+                }
+            });
         }
 
         public int getCount() {
