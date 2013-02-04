@@ -473,7 +473,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     SaveToDBService.save(getActivity(), SaveToDBService.TYPE_STATUS, getList(), accountBean.getUid());
                 }
             }
-            getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
+//            getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
             putToGroupDataMemoryCache(currentGroupId, getList());
 
             int index = getListView().getFirstVisiblePosition();
