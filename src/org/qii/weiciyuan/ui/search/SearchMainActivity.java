@@ -33,9 +33,23 @@ public class SearchMainActivity extends AbstractAppActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewpager_layout);
-
         buildViewPager();
         buildActionBarAndViewPagerTitles();
+
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            search(query);
+        }
     }
 
     private void buildViewPager() {
@@ -98,22 +112,6 @@ public class SearchMainActivity extends AbstractAppActivity {
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         searchView.setIconifiedByDefault(false);
         searchView.setSubmitButtonEnabled(false);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                search(query);
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm.isActive())
-                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
         searchView.requestFocus();
         return super.onCreateOptionsMenu(menu);
 
