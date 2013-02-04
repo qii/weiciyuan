@@ -59,7 +59,7 @@
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
         <item name="android:actionDropDownStyle">@style/ActionBarDropDownStyle</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabView</item>
-        <item name="android:actionBarWidgetTheme">@style/ActionBarTheme</item>
+        <!--<item name="android:actionBarWidgetTheme">@style/ActionBarTheme</item>-->
         <item name="android:actionBarItemBackground">@drawable/action_bar_item_background</item>
 
     </style>
