@@ -458,7 +458,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             if (!Utility.isTaskStopped(middleTask))
                 return;
 
-            if (newValue == null || newValue.getSize() == 0 || getActivity() == null || isListViewFling())
+            if (newValue == null || newValue.getSize() == 0 || getActivity() == null || isListViewFling() || !isVisible())
                 return;
 
             int firstPosition = getListView().getFirstVisiblePosition();
