@@ -114,7 +114,7 @@ public class SearchMainActivity extends AbstractAppActivity {
                 return false;
             }
         });
-
+        searchView.requestFocus();
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -128,10 +128,12 @@ public class SearchMainActivity extends AbstractAppActivity {
     private void search(final String q) {
         if (!TextUtils.isEmpty(q)) {
             this.q = q;
-            switch (mViewPager.getCurrentItem()){
-                case 0: ((SearchStatusFragment) getSearchStatusFragment()).search();
+            switch (mViewPager.getCurrentItem()) {
+                case 0:
+                    ((SearchStatusFragment) getSearchStatusFragment()).search();
                     break;
-                case 1: ((SearchUserFragment) getSearchUserFragment()).search();
+                case 1:
+                    ((SearchUserFragment) getSearchUserFragment()).search();
                     break;
             }
         }
@@ -175,7 +177,6 @@ public class SearchMainActivity extends AbstractAppActivity {
             getActionBar().setSelectedNavigationItem(position);
         }
     };
-
 
 
     private class SearchTabPagerAdapter extends AppFragmentPagerAdapter {
