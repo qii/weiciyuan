@@ -14,6 +14,7 @@ import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ import java.util.Map;
  * Date: 12-9-8
  */
 public class SearchDao {
-    public UserListBean getUserList() {
+    public UserListBean getUserList() throws WeiboException {
 
         String url = URLHelper.USERS_SEARCH;
 
@@ -34,11 +35,9 @@ public class SearchDao {
 
 
         String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();
-        }
+
+        jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
+
 
         Gson gson = new Gson();
 
@@ -53,7 +52,7 @@ public class SearchDao {
         return value;
     }
 
-    public SearchStatusListBean getStatusList() {
+    public SearchStatusListBean getStatusList() throws WeiboException {
 
         String url = URLHelper.STATUSES_SEARCH;
 
@@ -65,11 +64,8 @@ public class SearchDao {
 
 
         String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();
-        }
+
+        jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
         Gson gson = new Gson();
 
@@ -77,8 +73,17 @@ public class SearchDao {
         try {
             value = gson.fromJson(jsonData, SearchStatusListBean.class);
             List<MessageBean> list = value.getItemList();
-            for (MessageBean msg : list) {
-                TimeTool.dealMills(msg);
+
+            Iterator<MessageBean> iterator = list.iterator();
+            while (iterator.hasNext()) {
+                MessageBean msg = iterator.next();
+                //message is deleted by sina
+                if (msg.getUser() == null) {
+                    iterator.remove();
+                } else {
+                    msg.getListViewSpannableString();
+                    TimeTool.dealMills(msg);
+                }
             }
         } catch (JsonSyntaxException e) {
 
