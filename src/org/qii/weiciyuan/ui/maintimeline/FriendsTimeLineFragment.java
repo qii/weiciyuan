@@ -431,7 +431,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if (isListViewFling())
+            if (isListViewFling() || !isVisible())
                 cancel(true);
         }
 
