@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.maintimeline;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -480,14 +481,21 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
             View v = getListView().getChildAt(1);
             int top = (v == null) ? 0 : v.getTop();
-
+            getListView().setFastScrollEnabled(false);
             getAdapter().notifyDataSetChanged();
             int ss = index + size;
 
 //            if (firstPosition == 0) {
 ////
 //            } else {
+
             getListView().setSelectionFromTop(ss + 1, top);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getListView().setFastScrollEnabled(SettingUtility.allowFastScroll());
+                }
+            }, 2000);
 //            }
 //            getListView().setLayoutTransition(null);
 
