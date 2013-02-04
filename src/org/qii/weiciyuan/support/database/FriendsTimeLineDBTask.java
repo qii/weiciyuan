@@ -107,6 +107,33 @@ public class FriendsTimeLineDBTask {
         getWsd().execSQL(sql);
     }
 
+    public static void updateCount(String msgId, String accountId, int commentCount, int repostCount) {
+        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.MBLOGID + "  = "
+                + msgId + " and " + HomeTable.ACCOUNTID + " = " + accountId + " order by "
+                + HomeTable.ID + " asc limit 50";
+        Cursor c = getRsd().rawQuery(sql, null);
+        Gson gson = new Gson();
+        while (c.moveToNext()) {
+            String id = c.getString(c.getColumnIndex(HomeTable.ID));
+            String json = c.getString(c.getColumnIndex(HomeTable.JSONDATA));
+            if (!TextUtils.isEmpty(json)) {
+                try {
+                    MessageBean value = gson.fromJson(json, MessageBean.class);
+                    value.setComments_count(commentCount);
+                    value.setReposts_count(repostCount);
+                    String[] args = {id};
+                    ContentValues cv = new ContentValues();
+                    cv.put(HomeTable.JSONDATA, gson.toJson(value));
+                    getWsd().update(HomeTable.TABLE_NAME, cv, HomeTable.ID + "=?", args);
+                } catch (JsonSyntaxException e) {
+
+                }
+
+            }
+        }
+    }
+
+
     public static MessageListBean getHomeLineMsgList(String accountId) {
         Gson gson = new Gson();
         MessageListBean result = new MessageListBean();

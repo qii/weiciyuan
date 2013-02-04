@@ -69,12 +69,20 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         //use Up instead of Back to reach this fragment
         if (data == null)
             return;
-        MessageBean msg = (MessageBean) data.getSerializableExtra("msg");
+        final MessageBean msg = (MessageBean) data.getSerializableExtra("msg");
         if (msg != null) {
             for (int i = 0; i < getList().getSize(); i++) {
                 if (msg.equals(getList().getItem(i))) {
                     getList().getItem(i).setReposts_count(msg.getReposts_count());
                     getList().getItem(i).setComments_count(msg.getComments_count());
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            FriendsTimeLineDBTask.updateCount(msg.getId(), GlobalContext.getInstance().getCurrentAccountId()
+                                    , msg.getComments_count(), msg.getReposts_count());
+                        }
+                    }).start();
+
                     break;
                 }
             }
