@@ -43,15 +43,19 @@ public class ClearCacheTask implements Runnable {
 
     private void handleDir(File file) {
         File[] fileArray = file.listFiles();
-        if (fileArray != null && fileArray.length != 0) {
-            for (File fileSI : fileArray) {
-                if (fileSI.isDirectory()) {
-                    handleDir(fileSI);
-                }
+        if (fileArray != null) {
+            if (fileArray.length != 0) {
+                for (File fileSI : fileArray) {
+                    if (fileSI.isDirectory()) {
+                        handleDir(fileSI);
+                    }
 
-                if (fileSI.isFile()) {
-                    handleFile(fileSI);
+                    if (fileSI.isFile()) {
+                        handleFile(fileSI);
+                    }
                 }
+            } else {
+                file.delete();
             }
         }
     }
