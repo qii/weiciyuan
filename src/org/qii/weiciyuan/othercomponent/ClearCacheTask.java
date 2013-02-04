@@ -41,6 +41,18 @@ public class ClearCacheTask implements Runnable {
         }
     }
 
+    private void clearEmptyDir(File file) {
+        File[] fileArray = file.listFiles();
+        if (fileArray == null)
+            return;
+
+        if (fileArray.length == 0) {
+            if (file.delete()) {
+                clearEmptyDir(file.getParentFile());
+            }
+        }
+    }
+
     private void handleDir(File file) {
         File[] fileArray = file.listFiles();
         if (fileArray != null) {
@@ -55,7 +67,7 @@ public class ClearCacheTask implements Runnable {
                     }
                 }
             } else {
-                file.delete();
+                clearEmptyDir(file);
             }
         }
     }
@@ -66,7 +78,8 @@ public class ClearCacheTask implements Runnable {
         long day = TimeUnit.MILLISECONDS.toDays(calcMills);
         if (day > AppConfig.SAVED_DAYS) {
             AppLogger.d(file.getAbsolutePath());
-            file.delete();
+            if (file.delete())
+                clearEmptyDir(file.getParentFile());
         }
     }
 }
