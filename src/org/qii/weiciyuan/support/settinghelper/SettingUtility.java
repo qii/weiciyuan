@@ -65,7 +65,7 @@ public class SettingUtility {
     }
 
     public static int getHighPicMode() {
-        String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.LIST_HIGH_PIC_MODE, "1");
+        String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.LIST_HIGH_PIC_MODE, "2");
         return Integer.valueOf(value);
     }
 
