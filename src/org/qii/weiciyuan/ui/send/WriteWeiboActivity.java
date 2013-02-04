@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.*;
@@ -121,6 +122,26 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
         switch (which) {
             case 0:
+                String[] projection = new String[]{MediaStore.Images.ImageColumns._ID,
+                        MediaStore.Images.ImageColumns.DATA,
+                        MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+                        MediaStore.Images.ImageColumns.DATE_TAKEN,
+                        MediaStore.Images.ImageColumns.MIME_TYPE
+                };
+                final Cursor cursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        projection, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+                if (cursor.moveToFirst()) {
+                    String path = cursor.getString(1);
+                    if (!TextUtils.isEmpty(path)) {
+                        picPath = path;
+                        enablePicture();
+                        break;
+                    }
+                }
+                Toast.makeText(WriteWeiboActivity.this, getString(R.string.dont_have_the_last_picture), Toast.LENGTH_SHORT).show();
+
+                break;
+            case 1:
 
                 imageFileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         new ContentValues());
@@ -136,7 +157,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     Toast.makeText(WriteWeiboActivity.this, getString(R.string.cant_insert_album), Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case 1:
+            case 2:
                 Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(choosePictureIntent, PIC_RESULT);

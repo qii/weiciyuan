@@ -148,6 +148,8 @@
     <string name="cant_insert_album">发生意外，无法写入相册</string>
     <string name="dont_have_camera_app">该设备没有拍照应用</string>
     <string name="select">选择</string>
+    <string name="get_the_last_picture">刚拍的照片</string>
+    <string name="dont_have_the_last_picture">没有找到拍过的照片</string>
     <string name="take_camera">拍照</string>
     <string name="select_pic">图库</string>
     <string name="send">发送</string>
