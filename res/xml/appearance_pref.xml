@@ -49,10 +49,10 @@
             android:entryValues="@array/font_value"
             android:defaultValue="15"/>
 
-        <CheckBoxPreference
-            android:key="list_fast_scroll"
-            android:title="@string/pref_fast_scroll_title"
-            android:defaultValue="false"/>
+        <!--<CheckBoxPreference-->
+        <!--android:key="list_fast_scroll"-->
+        <!--android:title="@string/pref_fast_scroll_title"-->
+        <!--android:defaultValue="true"/>-->
 
     </PreferenceCategory>
 
