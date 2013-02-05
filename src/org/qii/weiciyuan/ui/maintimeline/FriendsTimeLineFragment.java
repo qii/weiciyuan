@@ -24,6 +24,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 import java.util.HashMap;
@@ -432,7 +433,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if (isListViewFling() || !isVisible())
+            if (isListViewFling() || !isVisible() || ((MainTimeLineActivity) getActivity()).getSlidingMenu().isMenuShowing())
                 cancel(true);
         }
 
@@ -459,7 +460,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             if (!Utility.isTaskStopped(middleTask))
                 return;
 
-            if (newValue == null || newValue.getSize() == 0 || getActivity() == null || isListViewFling() || !isVisible())
+            if (newValue == null || newValue.getSize() == 0 || getActivity() == null
+                    || isListViewFling()
+                    || !isVisible()
+                    || ((MainTimeLineActivity) getActivity()).getSlidingMenu().isMenuShowing())
                 return;
 
             int firstPosition = getListView().getFirstVisiblePosition();
