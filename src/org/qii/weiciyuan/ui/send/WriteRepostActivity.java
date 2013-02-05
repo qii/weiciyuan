@@ -194,11 +194,6 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         menuEnableComment.setChecked(savedEnableComment);
         menuEnableOriComment.setChecked(savedEnableOriComment);
 
-        String contentStr = getEditTextView().getText().toString();
-        if (Utility.countWord(contentStr, "//@", 0) > 2) {
-            menu.findItem(R.id.menu_short_right).setVisible(true);
-            menu.findItem(R.id.menu_short_middle).setVisible(true);
-        }
         return true;
     }
 
@@ -209,6 +204,16 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         if (msg.getRetweeted_status() != null) {
             menuEnableOriComment.setVisible(true);
         }
+
+        String contentStr = getEditTextView().getText().toString();
+        if (Utility.countWord(contentStr, "//@", 0) > 2) {
+            menu.findItem(R.id.menu_short_right).setVisible(true);
+            menu.findItem(R.id.menu_short_middle).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_short_right).setVisible(false);
+            menu.findItem(R.id.menu_short_middle).setVisible(false);
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
