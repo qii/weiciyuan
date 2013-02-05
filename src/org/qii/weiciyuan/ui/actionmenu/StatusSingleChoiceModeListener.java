@@ -107,6 +107,10 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        if (listView.getCheckedItemCount() == 0) {
+            return true;
+        }
+
         Intent intent;
         MessageBean msg;
         long[] ids = listView.getCheckedItemIds();
@@ -124,7 +128,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
             case R.id.menu_comment:
                 msg = (MessageBean) adapter.getItem(listView.getCheckedItemPositions().keyAt(listView.getCheckedItemCount() - 1) - 1);
                 intent = new Intent(getActivity(), WriteCommentActivity.class);
-                intent.putExtra("token",GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("id", String.valueOf(ids[0]));
                 intent.putExtra("msg", msg);
                 getActivity().startActivity(intent);
