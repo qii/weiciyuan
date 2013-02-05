@@ -513,6 +513,20 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        String contentStr = content.getText().toString();
+        if (!TextUtils.isEmpty(contentStr)) {
+            menu.findItem(R.id.menu_txt_to_pic).setVisible(true);
+            menu.findItem(R.id.menu_clear).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_txt_to_pic).setVisible(false);
+            menu.findItem(R.id.menu_clear).setVisible(false);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
