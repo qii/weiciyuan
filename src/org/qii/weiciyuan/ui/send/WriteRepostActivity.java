@@ -194,7 +194,11 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         menuEnableComment.setChecked(savedEnableComment);
         menuEnableOriComment.setChecked(savedEnableOriComment);
 
-        menu.findItem(R.id.menu_short).setVisible(true);
+        String contentStr = getEditTextView().getText().toString();
+        if (Utility.countWord(contentStr, "//@", 0) > 2) {
+            menu.findItem(R.id.menu_short_right).setVisible(true);
+            menu.findItem(R.id.menu_short_middle).setVisible(true);
+        }
         return true;
     }
 
@@ -239,8 +243,11 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
             case R.id.menu_clear:
                 clearContentMenu();
                 break;
-            case R.id.menu_short:
+            case R.id.menu_short_right:
                 shortContent();
+                break;
+            case R.id.menu_short_middle:
+                shortMiddleContent();
                 break;
         }
         return true;
@@ -255,6 +262,23 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
             getEditTextView().setText(result);
             if (index <= result.length())
                 getEditTextView().setSelection(index);
+        }
+    }
+
+    private void shortMiddleContent() {
+        String content = getEditTextView().getText().toString();
+        int index = getEditTextView().getSelectionStart();
+        int a = content.lastIndexOf("//@");
+        if (a >= 0) {
+            String result = content.substring(0, a);
+            int b = result.lastIndexOf("//@");
+            if (b >= 0) {
+                String startPart = content.substring(0, b);
+                String endPart = content.substring(a);
+                getEditTextView().setText(startPart + endPart);
+                if (index <= result.length())
+                    getEditTextView().setSelection(index);
+            }
         }
     }
 

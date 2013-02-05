@@ -118,7 +118,8 @@
     <string name="clear_content">清空内容</string>
     <string name="are_you_sure">确定吗？</string>
     <string name="ask_clear">清空内容？</string>
-    <string name="short_content">精简\@</string>
+    <string name="short_content_middle">精简中间\@</string>
+    <string name="short_content_right">精简右侧\@</string>
     <string name="clear">清空</string>
     <string name="add_gps">添加GPS</string>
     <string name="add_pic">添加照片</string>

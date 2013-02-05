@@ -371,5 +371,16 @@ public class Utility {
         locationRect.bottom = locationRect.top + v.getHeight();
         return locationRect;
     }
+
+    public static int countWord(String content, String word, int preCount) {
+        int count = preCount;
+        int index = content.indexOf(word);
+        if (index == -1) {
+            return count;
+        } else {
+            count++;
+            return countWord(content.substring(index + word.length()), word, count);
+        }
+    }
 }
 
