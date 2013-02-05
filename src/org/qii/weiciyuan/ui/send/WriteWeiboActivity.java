@@ -28,6 +28,7 @@ import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageEdit;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.lib.CheatSheet;
 import org.qii.weiciyuan.support.lib.KeyboardControlEditText;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.SmileyPicker;
@@ -422,11 +423,10 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         findViewById(R.id.menu_add_pic).setOnClickListener(onClickListener);
         findViewById(R.id.menu_send).setOnClickListener(onClickListener);
 
-        View.OnLongClickListener onLongClickListener = new BottomButtonLongClickListener();
-        findViewById(R.id.menu_at).setOnLongClickListener(onLongClickListener);
-        findViewById(R.id.menu_emoticon).setOnLongClickListener(onLongClickListener);
-        findViewById(R.id.menu_add_pic).setOnLongClickListener(onLongClickListener);
-        findViewById(R.id.menu_send).setOnLongClickListener(onLongClickListener);
+        CheatSheet.setup(WriteWeiboActivity.this, findViewById(R.id.menu_at), R.string.at_other);
+        CheatSheet.setup(WriteWeiboActivity.this, findViewById(R.id.menu_emoticon), R.string.add_emoticon);
+        CheatSheet.setup(WriteWeiboActivity.this, findViewById(R.id.menu_add_pic), R.string.add_pic);
+        CheatSheet.setup(WriteWeiboActivity.this, findViewById(R.id.menu_send), R.string.send);
 
         smiley = (SmileyPicker) findViewById(R.id.smiley_picker);
         smiley.setEditText(WriteWeiboActivity.this, content);
@@ -716,28 +716,6 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
         ((LinearLayout.LayoutParams) WriteWeiboActivity.this.mContainer.getLayoutParams()).weight = 1.0F;
 
-    }
-
-    private class BottomButtonLongClickListener implements View.OnLongClickListener {
-
-        @Override
-        public boolean onLongClick(View v) {
-            switch (v.getId()) {
-                case R.id.menu_emoticon:
-                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.add_emoticon), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.menu_at:
-                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.at_other), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.menu_add_pic:
-                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.add_pic), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.menu_send:
-                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.send), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-            return true;
-        }
     }
 
 

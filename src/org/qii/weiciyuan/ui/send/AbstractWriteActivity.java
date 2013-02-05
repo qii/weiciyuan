@@ -9,10 +9,10 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.lib.CheatSheet;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
@@ -104,12 +104,10 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         findViewById(R.id.menu_emoticon).setOnClickListener(this);
         findViewById(R.id.menu_send).setOnClickListener(this);
 
-        View.OnLongClickListener onLongClickListener = new BottomButtonLongClickListener();
-        findViewById(R.id.menu_at).setOnLongClickListener(onLongClickListener);
-        findViewById(R.id.menu_emoticon).setOnLongClickListener(onLongClickListener);
-        findViewById(R.id.menu_topic).setOnLongClickListener(onLongClickListener);
-        findViewById(R.id.menu_send).setOnLongClickListener(onLongClickListener);
-
+        CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_at), R.string.at_other);
+        CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_emoticon), R.string.add_emoticon);
+        CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_topic), R.string.add_topic);
+        CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_send), R.string.send);
 
     }
 
@@ -184,25 +182,4 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
     }
 
 
-    private class BottomButtonLongClickListener implements View.OnLongClickListener {
-
-        @Override
-        public boolean onLongClick(View v) {
-            switch (v.getId()) {
-                case R.id.menu_emoticon:
-                    Toast.makeText(AbstractWriteActivity.this, getString(R.string.add_emoticon), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.menu_at:
-                    Toast.makeText(AbstractWriteActivity.this, getString(R.string.at_other), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.menu_topic:
-                    Toast.makeText(AbstractWriteActivity.this, getString(R.string.add_topic), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.menu_send:
-                    Toast.makeText(AbstractWriteActivity.this, getString(R.string.send), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-            return true;
-        }
-    }
 }
