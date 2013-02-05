@@ -121,6 +121,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         } else {
             getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
         }
+        getEditTextView().setSelection(0);
     }
 
 
