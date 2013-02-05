@@ -346,7 +346,11 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         accountBean = (AccountBean) intent.getSerializableExtra("account");
         token = accountBean.getAccess_token();
         getActionBar().setSubtitle(accountBean.getUsernick());
-
+        String contentStr = intent.getStringExtra("content");
+        if (!TextUtils.isEmpty(contentStr)) {
+            content.setText(contentStr + " ");
+            content.setSelection(content.getText().toString().length());
+        }
     }
 
 
