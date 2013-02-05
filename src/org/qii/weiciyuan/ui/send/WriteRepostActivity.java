@@ -214,6 +214,12 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
             menu.findItem(R.id.menu_short_middle).setVisible(false);
         }
 
+        if (!TextUtils.isEmpty(contentStr)) {
+            menu.findItem(R.id.menu_clear).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_clear).setVisible(false);
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 

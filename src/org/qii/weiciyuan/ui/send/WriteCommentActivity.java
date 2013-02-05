@@ -183,6 +183,12 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         if (msg != null && msg.getRetweeted_status() != null) {
             enableCommentOri.setVisible(true);
         }
+        String contentStr = getEditTextView().getText().toString();
+        if (!TextUtils.isEmpty(contentStr)) {
+            menu.findItem(R.id.menu_clear).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_clear).setVisible(false);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -245,6 +251,9 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
                 Intent intent = new Intent(WriteCommentActivity.this, AtUserActivity.class);
                 intent.putExtra("token", token);
                 startActivityForResult(intent, AT_USER);
+                break;
+            case R.id.menu_clear:
+                clearContentMenu();
                 break;
         }
         return true;

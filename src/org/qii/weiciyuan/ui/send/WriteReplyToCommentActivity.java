@@ -161,6 +161,19 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        String contentStr = getEditTextView().getText().toString();
+        if (!TextUtils.isEmpty(contentStr)) {
+            menu.findItem(R.id.menu_clear).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_clear).setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -180,6 +193,9 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
                 Intent intent = new Intent(WriteReplyToCommentActivity.this, AtUserActivity.class);
                 intent.putExtra("token", token);
                 startActivityForResult(intent, AT_USER);
+                break;
+            case R.id.menu_clear:
+                clearContentMenu();
                 break;
         }
         return true;
