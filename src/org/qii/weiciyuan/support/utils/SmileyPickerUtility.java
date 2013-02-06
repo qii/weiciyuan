@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.support.utils;
 
 import android.app.Activity;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -45,11 +46,19 @@ public class SmileyPickerUtility {
     }
 
     public static int getActionBarHeight(Activity paramActivity) {
+        //test on samsung 9300 android 4.1.2, this value is 96px
+        //but on galaxy nexus android 4.2, this value is 146px
+        //statusbar height is 50px
+        //I guess 4.1 Window.ID_ANDROID_CONTENT contain statusbar
         int contentViewTop =
                 paramActivity.getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();
         AppLogger.e("contentViewTop=" + contentViewTop);
 
-        return contentViewTop - getStatusBarHeight(paramActivity);
+//        return contentViewTop - getStatusBarHeight(paramActivity);
+
+        int[] attrs = new int[]{android.R.attr.actionBarSize};
+        TypedArray ta = paramActivity.obtainStyledAttributes(attrs);
+        return ta.getDimensionPixelSize(0, Utility.dip2px(48));
     }
 
     //below status bar,include actionbar, above softkeyboard
