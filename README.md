@@ -1,6 +1,6 @@
 四次元（原微次元） weiciyuan
 =========
-Sina Weibo Android Client, require Android 4.0.4+, ICS Holo Style，GPL v3 License
+Sina Weibo Android App, require Android 4.1+, GPL v3 License
 
 <a href="https://play.google.com/store/apps/details?id=org.qii.weiciyuan">
   <img alt="Android app on Google Play"
