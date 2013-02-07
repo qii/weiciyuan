@@ -527,6 +527,13 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             menu.findItem(R.id.menu_clear).setVisible(false);
         }
 
+        MainTimeLineActivity.MusicInfo musicInfo = GlobalContext.getInstance().getMusicInfo();
+        if (!musicInfo.isEmpty()) {
+            MenuItem musicMenu = menu.findItem(R.id.menu_add_now_playing);
+            musicMenu.setVisible(true);
+            musicMenu.setTitle(musicInfo.toString());
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -564,6 +571,11 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 break;
             case R.id.menu_add_gps:
                 addLocation();
+                break;
+            case R.id.menu_add_now_playing:
+                MainTimeLineActivity.MusicInfo musicInfo = GlobalContext.getInstance().getMusicInfo();
+                if (!musicInfo.isEmpty())
+                    content.append(musicInfo.toString());
                 break;
 
         }

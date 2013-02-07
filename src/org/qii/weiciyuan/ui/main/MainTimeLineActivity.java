@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
@@ -77,8 +79,86 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
         Executors.newSingleThreadScheduledExecutor().schedule(new ClearCacheTask(), 8, TimeUnit.SECONDS);
 
+        startListenMusicPlaying();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (musicReceiver != null)
+            unregisterReceiver(musicReceiver);
+    }
+
+    private void startListenMusicPlaying() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                IntentFilter musicFilter = new IntentFilter();
+                musicFilter.addAction("com.android.music.metachanged");
+                musicFilter.addAction("com.android.music.playstatechanged");
+                musicFilter.addAction("com.android.music.playbackcomplete");
+                musicFilter.addAction("com.android.music.queuechanged");
+
+                musicFilter.addAction("com.htc.music.metachanged");
+                musicFilter.addAction("fm.last.android.metachanged");
+                musicFilter.addAction("com.sec.android.app.music.metachanged");
+                musicFilter.addAction("com.nullsoft.winamp.metachanged");
+                musicFilter.addAction("com.amazon.mp3.metachanged");
+                musicFilter.addAction("com.miui.player.metachanged");
+                musicFilter.addAction("com.real.IMP.metachanged");
+                musicFilter.addAction("com.sonyericsson.music.metachanged");
+                musicFilter.addAction("com.rdio.android.metachanged");
+                musicFilter.addAction("com.samsung.sec.android.MusicPlayer.metachanged");
+                musicFilter.addAction("com.andrew.apollo.metachanged");
+
+                registerReceiver(musicReceiver, musicFilter);
+            }
+        }, 3000);
+    }
+
+    private BroadcastReceiver musicReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String artist = intent.getStringExtra("artist");
+            String album = intent.getStringExtra("album");
+            String track = intent.getStringExtra("track");
+            if (!TextUtils.isEmpty(artist) && !TextUtils.isEmpty(track)) {
+                MusicInfo musicInfo = new MusicInfo();
+                musicInfo.setArtist(artist);
+                musicInfo.setAlbum(album);
+                musicInfo.setTrack(track);
+                AppLogger.d("Music" + artist + ":" + album + ":" + track);
+                GlobalContext.getInstance().updateMusicInfo(musicInfo);
+            }
+        }
+    };
+
+    public static class MusicInfo {
+        String artist;
+        String album;
+        String track;
+
+        public void setArtist(String artist) {
+            this.artist = artist;
+        }
+
+        public void setAlbum(String album) {
+            this.album = album;
+        }
+
+        public void setTrack(String track) {
+            this.track = track;
+        }
+
+        @Override
+        public String toString() {
+            return "Now Playing:" + artist + ":" + track;
+        }
+
+        public boolean isEmpty() {
+            return TextUtils.isEmpty(track);
+        }
+    }
 
     private void getUnreadCount() {
         if (Utility.isTaskStopped(getUnreadCountTask)) {

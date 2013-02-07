@@ -19,6 +19,7 @@ import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.GroupDBTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,6 +56,8 @@ public final class GlobalContext extends Application {
     private Map<String, Bitmap> emotionsPic = new HashMap<String, Bitmap>();
 
     private GroupListBean group = null;
+
+    private MainTimeLineActivity.MusicInfo musicInfo = new MainTimeLineActivity.MusicInfo();
 
     @Override
     public void onCreate() {
@@ -216,6 +219,14 @@ public final class GlobalContext extends Application {
 
             }
         }
+    }
+
+    public void updateMusicInfo(MainTimeLineActivity.MusicInfo musicInfo) {
+        this.musicInfo = musicInfo;
+    }
+
+    public MainTimeLineActivity.MusicInfo getMusicInfo() {
+        return musicInfo;
     }
 }
 
