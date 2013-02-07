@@ -281,9 +281,9 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     private void buildShareActionMenu() {
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        if (msg != null) {
+        if (msg != null && msg.getUser() != null) {
             shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, msg.getText());
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "@" + msg.getUser().getScreen_name() + "：" + msg.getText());
             if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
                 Uri picUrl = null;
                 String smallPath = FileManager.getFilePathFromUrl(msg.getThumbnail_pic(), FileLocationMethod.picture_thumbnail);
