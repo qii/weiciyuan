@@ -114,7 +114,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             if (repost_msg != null && showOriStatus) {
                 buildRepostContent(repost_msg, holder, position);
             } else {
-                holder.repost_layout.setVisibility(View.GONE);
+                if (holder.repost_layout != null)
+                    holder.repost_layout.setVisibility(View.GONE);
                 holder.repost_flag.setVisibility(View.GONE);
                 if (holder.replyIV != null) {
                     holder.replyIV.setVisibility(View.VISIBLE);
