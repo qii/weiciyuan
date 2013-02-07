@@ -19,6 +19,7 @@ import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
@@ -94,10 +95,23 @@ public class DMUserListAdapter extends BaseAdapter {
     }
 
     private void configViewFont(DMViewHolder holder) {
-        holder.time.setTextSize(SettingUtility.getFontSize() - 3);
-        holder.content.setTextSize(SettingUtility.getFontSize());
-        holder.username.setTextSize(SettingUtility.getFontSize());
 
+        int prefFontSizeSp = SettingUtility.getFontSize();
+        float currentWidgetTextSizePx;
+
+        currentWidgetTextSizePx = holder.time.getTextSize();
+
+        if (Utility.sp2px(prefFontSizeSp - 3) != currentWidgetTextSizePx) {
+            holder.time.setTextSize(prefFontSizeSp - 3);
+        }
+
+        currentWidgetTextSizePx = holder.content.getTextSize();
+
+        if (Utility.sp2px(prefFontSizeSp) != currentWidgetTextSizePx) {
+            holder.content.setTextSize(prefFontSizeSp);
+            holder.username.setTextSize(prefFontSizeSp);
+
+        }
     }
 
     protected void bindViewData(DMViewHolder holder, int position) {
