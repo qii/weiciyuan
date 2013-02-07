@@ -94,45 +94,34 @@
         android:visibility="gone"
         android:clickable="true"/>
 
-    <LinearLayout
+
+    <TextView
         android:layout_below="@id/content"
-        android:id="@+id/repost_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="3dp"
-        android:orientation="vertical"
+        android:includeFontPadding="true"
+        android:id="@+id/repost_content"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="content"
+        android:textSize="15sp"
+        android:lineSpacingMultiplier="1.2"
+        android:visibility="gone"
+        android:clickable="true"
+        />
 
-        >
 
-        <TextView
-            android:includeFontPadding="true"
-            android:id="@+id/repost_content"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="content"
-            android:textSize="15sp"
-            android:lineSpacingMultiplier="1.2"
-            android:visibility="gone"
-            android:clickable="true"
-            />
-
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:layout_marginTop="5dp"
-            android:gravity="center">
-
-            <org.qii.weiciyuan.support.lib.TimeLineImageView
-                android:id="@+id/repost_content_pic"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
-                android:visibility="gone"
-                android:clickable="true"
-                android:padding="2dp"
-                />
-        </LinearLayout>
-    </LinearLayout>
+    <org.qii.weiciyuan.support.lib.TimeLineImageView
+        android:layout_below="@id/repost_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:id="@+id/repost_content_pic"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
+        android:visibility="gone"
+        android:clickable="true"
+        android:padding="2dp"
+        />
 
 
     <ImageView
@@ -140,9 +129,19 @@
         android:layout_width="6dp"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/avatar"
-        android:layout_alignTop="@id/repost_layout"
-        android:layout_alignBottom="@id/repost_layout"
+        android:layout_alignTop="@id/repost_content"
+        android:layout_alignBottom="@id/repost_content"
         android:layout_marginTop="3dp"
         android:layout_below="@id/avatar"
+        android:background="@color/lightgray"/>
+
+    <ImageView
+        android:layout_width="6dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/avatar"
+        android:layout_alignTop="@id/repost_content"
+        android:layout_alignBottom="@id/repost_content_pic"
+        android:layout_marginTop="3dp"
+        android:layout_below="@id/repost_flag"
         android:background="@color/lightgray"/>
 </RelativeLayout>
