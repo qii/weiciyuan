@@ -30,25 +30,13 @@
 
             <TextView
                 android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="username"
                 android:layout_marginLeft="8dp"
+                android:drawableEnd="?clickable_flag"
                 android:id="@+id/username"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"/>
-
-            <ImageView
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="1px"
-                android:src="?clickable_flag"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginRight="5dp"/>
 
 
         </LinearLayout>
