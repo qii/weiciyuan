@@ -238,7 +238,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.content_pic = (TimeLineImageView) convertView.findViewById(R.id.content_pic);
         holder.repost_content_pic = (TimeLineImageView) convertView.findViewById(R.id.repost_content_pic);
         holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
-        holder.repost_layout = (LinearLayout) convertView.findViewById(R.id.repost_layout);
+        holder.repost_layout = convertView.findViewById(R.id.repost_layout);
         holder.repost_flag = (ImageView) convertView.findViewById(R.id.repost_flag);
         holder.count_layout = (LinearLayout) convertView.findViewById(R.id.count_layout);
         holder.repost_count = (TextView) convertView.findViewById(R.id.repost_count);
@@ -421,7 +421,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         TimeLineImageView content_pic;
         TimeLineImageView repost_content_pic;
         RelativeLayout listview_root;
-        LinearLayout repost_layout;
+        View repost_layout;
         ImageView repost_flag;
         LinearLayout count_layout;
         TextView repost_count;
