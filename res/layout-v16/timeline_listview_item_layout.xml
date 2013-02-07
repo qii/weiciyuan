@@ -83,21 +83,55 @@
         android:clickable="true"
         />
 
-    <FrameLayout
 
+    <LinearLayout
+        android:layout_below="@id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <org.qii.weiciyuan.support.lib.TimeLineImageView
+            android:id="@+id/content_pic"
+            android:layout_width="@dimen/timeline_pic_thumbnail_width"
+            android:layout_height="@dimen/timeline_pic_thumbnail_height"
+            android:visibility="gone"
+            android:clickable="true"
+            android:padding="2dp"
+            android:scaleType="fitCenter"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/repost_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="3dp"
+        android:orientation="vertical"
         android:layout_below="@id/content"
+        >
 
-        android:id="@+id/repost_and_pic">
+        <TextView
+            android:includeFontPadding="true"
+            android:id="@+id/repost_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="content"
+            android:textSize="15sp"
+            android:visibility="gone"
+            android:lineSpacingMultiplier="1.2"
+            android:clickable="true"
+            />
 
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
+            android:layout_marginTop="5dp"
             android:gravity="center">
 
             <org.qii.weiciyuan.support.lib.TimeLineImageView
-                android:id="@+id/content_pic"
+                android:id="@+id/repost_content_pic"
                 android:layout_width="@dimen/timeline_pic_thumbnail_width"
                 android:layout_height="@dimen/timeline_pic_thumbnail_height"
                 android:visibility="gone"
@@ -106,56 +140,16 @@
                 android:scaleType="fitCenter"
                 />
         </LinearLayout>
+    </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/repost_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="3dp"
-            android:orientation="vertical"
-
-            >
-
-            <TextView
-                android:includeFontPadding="true"
-                android:id="@+id/repost_content"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="content"
-                android:textSize="15sp"
-                android:visibility="gone"
-                android:lineSpacingMultiplier="1.2"
-                android:clickable="true"
-                />
-
-            <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:layout_marginTop="5dp"
-                android:gravity="center">
-
-                <org.qii.weiciyuan.support.lib.TimeLineImageView
-                    android:id="@+id/repost_content_pic"
-                    android:layout_width="@dimen/timeline_pic_thumbnail_width"
-                    android:layout_height="@dimen/timeline_pic_thumbnail_height"
-                    android:visibility="gone"
-                    android:clickable="true"
-                    android:padding="2dp"
-                    android:scaleType="fitCenter"
-                    />
-            </LinearLayout>
-        </LinearLayout>
-
-    </FrameLayout>
 
     <ImageView
         android:id="@+id/repost_flag"
         android:layout_width="6dp"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/avatar"
-        android:layout_alignTop="@id/repost_and_pic"
-        android:layout_alignBottom="@id/repost_and_pic"
+        android:layout_alignTop="@id/repost_layout"
+        android:layout_alignBottom="@id/repost_layout"
         android:layout_marginTop="3dp"
         android:layout_below="@id/avatar"
         android:background="@color/lightgray"/>
