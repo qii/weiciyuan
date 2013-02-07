@@ -84,31 +84,25 @@
         />
 
 
-    <LinearLayout
+    <org.qii.weiciyuan.support.lib.TimeLineImageView
+        android:id="@+id/content_pic"
         android:layout_below="@id/content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
-
-        <org.qii.weiciyuan.support.lib.TimeLineImageView
-            android:id="@+id/content_pic"
-            android:layout_width="@dimen/timeline_pic_thumbnail_width"
-            android:layout_height="@dimen/timeline_pic_thumbnail_height"
-            android:visibility="gone"
-            android:clickable="true"
-            android:padding="2dp"
-            android:scaleType="fitCenter"
-            />
-    </LinearLayout>
+        android:layout_width="@dimen/timeline_pic_thumbnail_width"
+        android:layout_height="@dimen/timeline_pic_thumbnail_height"
+        android:visibility="gone"
+        android:clickable="true"
+        android:padding="2dp"
+        android:scaleType="fitCenter"
+        android:layout_centerHorizontal="true"
+        />
 
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/repost_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="3dp"
-        android:orientation="vertical"
         android:layout_below="@id/content"
         >
 
@@ -124,23 +118,20 @@
             android:clickable="true"
             />
 
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:layout_marginTop="5dp"
-            android:gravity="center">
 
-            <org.qii.weiciyuan.support.lib.TimeLineImageView
-                android:id="@+id/repost_content_pic"
-                android:layout_width="@dimen/timeline_pic_thumbnail_width"
-                android:layout_height="@dimen/timeline_pic_thumbnail_height"
-                android:visibility="gone"
-                android:clickable="true"
-                android:padding="2dp"
-                android:scaleType="fitCenter"
-                />
-        </LinearLayout>
-    </LinearLayout>
+        <org.qii.weiciyuan.support.lib.TimeLineImageView
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/repost_content"
+            android:id="@+id/repost_content_pic"
+            android:layout_width="@dimen/timeline_pic_thumbnail_width"
+            android:layout_height="@dimen/timeline_pic_thumbnail_height"
+            android:visibility="gone"
+            android:clickable="true"
+            android:padding="2dp"
+            android:scaleType="fitCenter"
+            android:layout_centerHorizontal="true"
+            />
+    </RelativeLayout>
 
 
     <ImageView
