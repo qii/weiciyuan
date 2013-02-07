@@ -76,6 +76,10 @@
             >
 
         </Preference>
+        <Preference
+            android:title="@string/pref_icon_design_title"
+            android:summary="LPF"
+            />
     </PreferenceCategory>
 
 
