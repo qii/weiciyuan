@@ -134,13 +134,12 @@
                     android:background="?android:selectableItemBackground"/>
             </FrameLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/repost_layout"
                 android:clickable="true"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/browser_msg_repost_line"
-                android:orientation="vertical"
                 android:visibility="gone">
 
                 <TextView
@@ -154,6 +153,7 @@
                     android:lineSpacingMultiplier="1.2"/>
 
                 <FrameLayout
+                    android:layout_below="@id/repost_content"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -186,34 +186,32 @@
                 </FrameLayout>
 
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/comment_count"
+                    android:layout_below="@id/repost_pic_layout"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:visibility="gone"
-                    android:id="@+id/count_layout">
+                    android:text="0"
+                    android:layout_marginLeft="8dp"
+                    android:drawablePadding="4dp"
+                    android:textColor="?android:textColorTertiary"
+                    android:drawableLeft="?timeline_comment_flag"/>
 
-                    <TextView
-                        android:id="@+id/repost_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:drawablePadding="4dp"
-                        android:textColor="?android:textColorTertiary"
-                        android:drawableLeft="?timeline_repost_flag"/>
+                <TextView
+                    android:layout_below="@id/repost_pic_layout"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@id/comment_count"
+                    android:id="@+id/repost_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:drawablePadding="4dp"
+                    android:textColor="?android:textColorTertiary"
+                    android:drawableLeft="?timeline_repost_flag"/>
 
-                    <TextView
-                        android:id="@+id/comment_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:layout_marginLeft="8dp"
-                        android:drawablePadding="4dp"
-                        android:textColor="?android:textColorTertiary"
-                        android:drawableLeft="?timeline_comment_flag"/>
-
-                </LinearLayout>
-            </LinearLayout>
+            </RelativeLayout>
 
         </FrameLayout>
 

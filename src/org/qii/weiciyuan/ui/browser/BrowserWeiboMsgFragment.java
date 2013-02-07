@@ -54,8 +54,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         ImageView content_pic;
         ImageView repost_pic;
 
-        LinearLayout repost_layout;
-        LinearLayout count_layout;
+        RelativeLayout repost_layout;
         FrameLayout pic_layout;
         FrameLayout repost_pic_layout;
 
@@ -159,7 +158,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         }
         layout.comment_count = (TextView) view.findViewById(R.id.comment_count);
         layout.repost_count = (TextView) view.findViewById(R.id.repost_count);
-        layout.count_layout = (LinearLayout) view.findViewById(R.id.count_layout);
 
         layout.location.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,7 +203,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         layout.content_pic.setOnClickListener(picOnClickListener);
         layout.repost_pic.setOnClickListener(picOnClickListener);
 
-        layout.repost_layout = (LinearLayout) view.findViewById(R.id.repost_layout);
+        layout.repost_layout = (RelativeLayout) view.findViewById(R.id.repost_layout);
         layout.pic_layout = (FrameLayout) view.findViewById(R.id.pic_layout);
 
         layout.recontent.setOnClickListener(new View.OnClickListener() {
@@ -300,10 +298,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         MessageBean repostBean = msg.getRetweeted_status();
 
         if (repostBean.getComments_count() == 0 && repostBean.getReposts_count() == 0) {
-            layout.count_layout.setVisibility(View.GONE);
             return;
-        } else {
-            layout.count_layout.setVisibility(View.VISIBLE);
         }
 
         if (repostBean.getComments_count() > 0) {
