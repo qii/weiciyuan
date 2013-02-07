@@ -17,6 +17,7 @@
             />
 
         <Preference
+            android:key="pref_author_key"
             android:title="@string/pref_author_title"
             android:summary="@string/pref_author_summary"
             />

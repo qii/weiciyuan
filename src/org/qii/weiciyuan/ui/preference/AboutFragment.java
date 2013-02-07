@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -32,6 +33,8 @@ import java.io.File;
 public class AboutFragment extends PreferenceFragment {
 
     private BroadcastReceiver sdCardReceiver;
+    private MediaPlayer mp;
+    private boolean playing;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,23 @@ public class AboutFragment extends PreferenceFragment {
             }
         });
 
+        findPreference(SettingActivity.AUTHOR).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if (mp != null && mp.isPlaying()) {
+                    mp.stop();
+                    playing = false;
+                    return true;
+                }
+                if (mp == null || !playing) {
+                    mp = MediaPlayer.create(getActivity(), R.raw.star);
+                }
+                mp.start();
+                playing = true;
+                return true;
+            }
+        });
+
         buildCacheSummary();
 
         findPreference(SettingActivity.SAVED_PIC_PATH).setSummary(Environment.getExternalStoragePublicDirectory(
@@ -137,6 +157,11 @@ public class AboutFragment extends PreferenceFragment {
         super.onPause();
         if (sdCardReceiver != null) {
             getActivity().unregisterReceiver(sdCardReceiver);
+        }
+
+        if (mp != null && mp.isPlaying()) {
+            mp.stop();
+            playing = false;
         }
     }
 
