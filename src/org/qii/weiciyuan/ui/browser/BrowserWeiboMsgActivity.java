@@ -8,10 +8,10 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.*;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
@@ -19,6 +19,8 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.destroy.DestroyStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
@@ -31,6 +33,7 @@ import org.qii.weiciyuan.ui.send.WriteCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteRepostActivity;
 import org.qii.weiciyuan.ui.task.FavAsyncTask;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -223,7 +226,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
 
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
-        buildShareActionMenu();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -277,15 +279,30 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     }
 
     private void buildShareActionMenu() {
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
         if (msg != null) {
-            sharingIntent.putExtra(Intent.EXTRA_TEXT, msg.getText());
-            PackageManager packageManager = getPackageManager();
-            List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
-            boolean isIntentSafe = activities.size() > 0;
-            if (isIntentSafe && mShareActionProvider != null) {
-                mShareActionProvider.setShareIntent(sharingIntent);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, msg.getText());
+            if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
+                Uri picUrl = null;
+                String smallPath = FileManager.getFilePathFromUrl(msg.getThumbnail_pic(), FileLocationMethod.picture_thumbnail);
+                String middlePath = FileManager.getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
+                String largePath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
+                if (new File(largePath).exists()) {
+                    picUrl = Uri.fromFile(new File(largePath));
+                } else if (new File(middlePath).exists()) {
+                    picUrl = Uri.fromFile(new File(middlePath));
+                } else if (new File(smallPath).exists()) {
+                    picUrl = Uri.fromFile(new File(smallPath));
+                }
+                if (picUrl != null) {
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, picUrl);
+                    shareIntent.setType("image/*");
+                }
+            }
+            if (Utility.isIntentSafe(BrowserWeiboMsgActivity.this, shareIntent) && mShareActionProvider != null) {
+                mShareActionProvider.setShareIntent(shareIntent);
             }
         }
     }

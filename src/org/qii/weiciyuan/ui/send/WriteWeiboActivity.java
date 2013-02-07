@@ -467,13 +467,18 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
 
     private void handleSendImage(Intent intent) {
+
+        handleSendText(intent);
+
         getAccountInfo();
 
         Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUri != null) {
             picPath = Utility.getPicPathFromUri(imageUri, this);
-            content.setText(getString(R.string.share_pic));
-            content.setSelection(content.getText().toString().length());
+            if (TextUtils.isEmpty(content.getText().toString())) {
+                content.setText(getString(R.string.share_pic));
+                content.setSelection(content.getText().toString().length());
+            }
             enablePicture();
         }
     }
