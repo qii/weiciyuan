@@ -77,132 +77,128 @@
             android:layout_below="@id/time"
             android:textIsSelectable="true"/>
 
-        <FrameLayout
 
+        <!-- hack to center progressbar when set indeterminate equal true -->
+
+        <FrameLayout
+            android:layout_below="@id/content"
+            android:layout_marginTop="8dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:minHeight="140dp"
+            android:visibility="gone"
+            android:id="@+id/pic_layout">
+
+            <ProgressBar
+                android:visibility="gone"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:id="@+id/content_pic_pb"/>
+
+            <ImageView
+                android:id="@+id/content_pic"
+                android:padding="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="200dp"
+                android:minHeight="200dp"
+                android:visibility="gone"
+                android:clickable="true"
+                android:layout_gravity="center_horizontal"
+                android:background="?android:selectableItemBackground"/>
+        </FrameLayout>
+
+
+        <RelativeLayout
             android:layout_below="@id/content"
-            android:layout_toRightOf="@id/avatar"
             android:layout_marginTop="8dp"
-            android:id="@+id/third">
+            android:id="@+id/repost_layout"
+            android:clickable="true"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/browser_msg_repost_line"
+            android:visibility="gone">
 
-            <!-- hack to center progressbar when set indeterminate equal true -->
-
-            <FrameLayout
+            <TextView
+                android:background="?android:selectableItemBackground"
+                android:id="@+id/repost_content"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="140dp"
+                android:text="content"
                 android:visibility="gone"
-                android:id="@+id/pic_layout">
+                android:textSize="16sp"
+                android:lineSpacingMultiplier="1.2"/>
+
+            <FrameLayout
+                android:layout_below="@id/repost_content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:minHeight="140dp"
+                android:id="@+id/repost_pic_layout"
+                android:visibility="gone">
 
                 <ProgressBar
                     android:visibility="gone"
-                    android:gravity="center"
                     android:layout_gravity="center"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:indeterminate="true"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:id="@+id/content_pic_pb"/>
+                    android:id="@+id/repost_content_pic_pb"/>
 
                 <ImageView
-                    android:id="@+id/content_pic"
                     android:padding="3dp"
+                    android:id="@+id/repost_content_pic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="200dp"
                     android:minHeight="200dp"
                     android:visibility="gone"
                     android:clickable="true"
+                    android:background="?android:selectableItemBackground"
                     android:layout_gravity="center_horizontal"
-                    android:background="?android:selectableItemBackground"/>
+
+                    />
             </FrameLayout>
 
-            <RelativeLayout
-                android:id="@+id/repost_layout"
-                android:clickable="true"
-                android:layout_width="fill_parent"
+
+            <TextView
+                android:id="@+id/comment_count"
+                android:layout_below="@id/repost_pic_layout"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/browser_msg_repost_line"
-                android:visibility="gone">
+                android:text="0"
+                android:layout_marginLeft="8dp"
+                android:drawablePadding="4dp"
+                android:textColor="?android:textColorTertiary"
+                android:drawableLeft="?timeline_comment_flag"/>
 
-                <TextView
-                    android:background="?android:selectableItemBackground"
-                    android:id="@+id/repost_content"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="content"
-                    android:visibility="gone"
-                    android:textSize="16sp"
-                    android:lineSpacingMultiplier="1.2"/>
+            <TextView
+                android:layout_below="@id/repost_pic_layout"
+                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@id/comment_count"
+                android:id="@+id/repost_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:drawablePadding="4dp"
+                android:textColor="?android:textColorTertiary"
+                android:drawableLeft="?timeline_repost_flag"/>
 
-                <FrameLayout
-                    android:layout_below="@id/repost_content"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:minHeight="140dp"
-                    android:id="@+id/repost_pic_layout"
-                    android:visibility="gone">
+        </RelativeLayout>
 
-                    <ProgressBar
-                        android:visibility="gone"
-                        android:layout_gravity="center"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:indeterminate="true"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:id="@+id/repost_content_pic_pb"/>
-
-                    <ImageView
-                        android:padding="3dp"
-                        android:id="@+id/repost_content_pic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minWidth="200dp"
-                        android:minHeight="200dp"
-                        android:visibility="gone"
-                        android:clickable="true"
-                        android:background="?android:selectableItemBackground"
-                        android:layout_gravity="center_horizontal"
-
-                        />
-                </FrameLayout>
-
-
-                <TextView
-                    android:id="@+id/comment_count"
-                    android:layout_below="@id/repost_pic_layout"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:layout_marginLeft="8dp"
-                    android:drawablePadding="4dp"
-                    android:textColor="?android:textColorTertiary"
-                    android:drawableLeft="?timeline_comment_flag"/>
-
-                <TextView
-                    android:layout_below="@id/repost_pic_layout"
-                    android:layout_alignParentBottom="true"
-                    android:layout_toLeftOf="@id/comment_count"
-                    android:id="@+id/repost_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:drawablePadding="4dp"
-                    android:textColor="?android:textColorTertiary"
-                    android:drawableLeft="?timeline_repost_flag"/>
-
-            </RelativeLayout>
-
-        </FrameLayout>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/third"
+            android:layout_below="@id/repost_layout"
             android:id="@+id/location"
             android:visibility="gone"
             android:onClick="true"
