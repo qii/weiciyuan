@@ -67,8 +67,13 @@ public class UpdateMessageTask extends MyAsyncTask<Void, Void, MessageBean> {
         }
     }
 
+    //sometime, onPostExecute method is executed after fragment is onDestroy(),
+    //you must check activity status
     @Override
     protected void onPostExecute(MessageBean newValue) {
+        if (fragment.getActivity() == null)
+            return;
+
         if (newValue != null && e == null) {
             if (isStatusDeleted(newValue)) {
                 setTextViewDeleted(content);
