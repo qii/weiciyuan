@@ -46,12 +46,17 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     protected int checkedBG;
     protected int defaultBG;
 
+//    private final int TYPE_NORMAL = 0;
+//    private final int TYPE_MYSELF = 1;
+//    private final int TYPE_NORMAL_BIG_PIC = 2;
+//    private final int TYPE_MYSELF_BIG_PIC = 3;
+//    private final int TYPE_MIDDLE = 4;
+//    private final int TYPE_SIMPLE = 5;
+
     private final int TYPE_NORMAL = 0;
-    private final int TYPE_MYSELF = 1;
-    private final int TYPE_NORMAL_BIG_PIC = 2;
-    private final int TYPE_MYSELF_BIG_PIC = 3;
-    private final int TYPE_MIDDLE = 4;
-    private final int TYPE_SIMPLE = 5;
+    private final int TYPE_NORMAL_BIG_PIC = 1;
+    private final int TYPE_MIDDLE = 2;
+    private final int TYPE_SIMPLE = 3;
 
     private Set<Integer> tagIndexList = new HashSet<Integer>();
 
@@ -112,7 +117,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     @Override
     public int getViewTypeCount() {
-        return 6;
+        return 4;
     }
 
     @Override
@@ -133,7 +138,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
 
     /**
-     * use getTag(int) and setTag(int, final Object) to sovle getItemViewType(int) bug.
+     * use getTag(int) and setTag(int, final Object) to solve getItemViewType(int) bug.
      * When you use getItemViewType(int),getTag(),setTag() together, if getItemViewType(int) change because
      * network switch to use another layout when you are scrolling listview, bug appears,the other listviews in other tabs
      * (Actionbar tab navigation) will mix several layout up, for example, the correct layout should be TYPE_NORMAL_BIG_PIC,
@@ -155,12 +160,12 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 case TYPE_MIDDLE:
                     convertView = initMiddleLayout(parent);
                     break;
-                case TYPE_MYSELF:
-                    convertView = initMylayout(parent);
-                    break;
-                case TYPE_MYSELF_BIG_PIC:
-                    convertView = initMylayout(parent);
-                    break;
+//                case TYPE_MYSELF:
+//                    convertView = initMylayout(parent);
+//                    break;
+//                case TYPE_MYSELF_BIG_PIC:
+//                    convertView = initMylayout(parent);
+//                    break;
                 case TYPE_NORMAL:
                     convertView = initNormallayout(parent);
                     break;
