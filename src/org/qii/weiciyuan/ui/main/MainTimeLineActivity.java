@@ -122,7 +122,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             String artist = intent.getStringExtra("artist");
             String album = intent.getStringExtra("album");
             String track = intent.getStringExtra("track");
-            if (!TextUtils.isEmpty(artist) && !TextUtils.isEmpty(track)) {
+            if (!TextUtils.isEmpty(track)) {
                 MusicInfo musicInfo = new MusicInfo();
                 musicInfo.setArtist(artist);
                 musicInfo.setAlbum(album);
@@ -152,7 +152,10 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
         @Override
         public String toString() {
-            return "Now Playing:" + artist + ":" + track;
+            if (!TextUtils.isEmpty(artist))
+                return "Now Playing:" + artist + ":" + track;
+            else
+                return "Now Playing:" + track;
         }
 
         public boolean isEmpty() {
