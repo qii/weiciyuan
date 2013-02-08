@@ -66,57 +66,62 @@
             android:textIsSelectable="true"
             android:id="@+id/source"/>
 
-
-        <TextView
-            android:layout_marginTop="8dp"
-            android:id="@+id/content"
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="content"
-            android:textSize="16sp"
-            android:lineSpacingMultiplier="1.2"
             android:layout_below="@id/time"
-            android:textIsSelectable="true"/>
+            android:orientation="vertical"
+            android:id="@+id/second">
 
-
-        <!-- hack to center progressbar when set indeterminate equal true -->
-
-        <FrameLayout
-            android:layout_below="@id/content"
-            android:layout_marginTop="8dp"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="200dp"
-            android:visibility="gone"
-            android:id="@+id/pic_layout">
-
-            <ProgressBar
-                android:visibility="gone"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_width="150dp"
+            <TextView
+                android:layout_marginTop="8dp"
+                android:id="@+id/content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:indeterminate="true"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:id="@+id/content_pic_pb"/>
+                android:text="content"
+                android:textSize="16sp"
+                android:lineSpacingMultiplier="1.2"
+                android:textIsSelectable="true"/>
 
-            <ImageView
-                android:id="@+id/content_pic"
-                android:padding="3dp"
-                android:layout_width="wrap_content"
+
+            <!-- hack to center progressbar when set indeterminate equal true -->
+
+            <FrameLayout
+                android:layout_marginTop="8dp"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:minWidth="200dp"
                 android:minHeight="200dp"
                 android:visibility="gone"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:adjustViewBounds="true"
-                android:background="?android:selectableItemBackground"/>
-        </FrameLayout>
+                android:id="@+id/pic_layout">
 
+                <ProgressBar
+                    android:visibility="gone"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/content_pic_pb"/>
+
+                <ImageView
+                    android:id="@+id/content_pic"
+                    android:padding="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="200dp"
+                    android:minHeight="200dp"
+                    android:visibility="gone"
+                    android:clickable="true"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:background="?android:selectableItemBackground"/>
+            </FrameLayout>
+
+        </LinearLayout>
 
         <RelativeLayout
-            android:layout_below="@id/content"
+            android:layout_below="@id/second"
             android:layout_marginTop="8dp"
             android:id="@+id/repost_layout"
             android:clickable="true"
@@ -205,7 +210,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/content"
+            android:layout_below="@id/second"
             android:id="@+id/location"
             android:visibility="gone"
             android:onClick="true"

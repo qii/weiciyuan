@@ -62,9 +62,6 @@ public class MsgDetailPicTask extends MyAsyncTask<MessageBean, Integer, Bitmap> 
         } else if (new File(middlePath).exists()) {
             data = msg[0].getBmiddle_pic();
             method = FileLocationMethod.picture_bmiddle;
-        } else if (new File(smallPath).exists()) {
-            data = msg[0].getThumbnail_pic();
-            method = FileLocationMethod.picture_thumbnail;
         } else {
             data = msg[0].getBmiddle_pic();
             method = FileLocationMethod.picture_bmiddle;
