@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -9,6 +8,7 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.debug.DebugColor;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TimeLineBitmapDownloader {
 
-    private Drawable transPic = new ColorDrawable(Color.TRANSPARENT);
+    private Drawable transPic = new ColorDrawable(DebugColor.LISTVIEW_FLING);
 
     private Map<String, PictureBitmapWorkerTask> picTasks = new ConcurrentHashMap<String, PictureBitmapWorkerTask>();
 

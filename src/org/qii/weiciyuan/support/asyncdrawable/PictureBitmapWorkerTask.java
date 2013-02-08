@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
@@ -10,6 +9,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.debug.DebugColor;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -35,6 +36,8 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     private GlobalContext globalContext;
 
     private FileLocationMethod method;
+
+    private WeiboException e;
 
     public String getUrl() {
         return data;
@@ -67,32 +70,37 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
         int thumbnailHeight = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_thumbnail_height);
 
         if (!isCancelled()) {
-            switch (method) {
-                case avatar_large:
-                    return ImageTool.getRoundedCornerPic(this.data, avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
-                case avatar_small:
-                    return ImageTool.getRoundedCornerPic(this.data, avatarWidth, avatarHeight, FileLocationMethod.avatar_small);
+            try {
+                switch (method) {
+                    case avatar_large:
+                        return ImageTool.getRoundedCornerPic(this.data, avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
+                    case avatar_small:
+                        return ImageTool.getRoundedCornerPic(this.data, avatarWidth, avatarHeight, FileLocationMethod.avatar_small);
 
-                case picture_thumbnail:
-                    return ImageTool.getRoundedCornerPic(this.data, thumbnailWidth, thumbnailHeight, FileLocationMethod.picture_thumbnail);
+                    case picture_thumbnail:
+                        return ImageTool.getRoundedCornerPic(this.data, thumbnailWidth, thumbnailHeight, FileLocationMethod.picture_thumbnail);
 
-                case picture_large:
-                    DisplayMetrics metrics = globalContext.getDisplayMetrics();
+                    case picture_large:
+                        DisplayMetrics metrics = globalContext.getDisplayMetrics();
 
-                    float reSize = globalContext.getResources().getDisplayMetrics().density;
+                        float reSize = globalContext.getResources().getDisplayMetrics().density;
 
-                    int height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
-                    //8 is  layout padding
-                    int width = (int) (metrics.widthPixels - (8 + 8) * reSize);
-                    switch (SettingUtility.getHighPicMode()) {
-                        case 1:
-                            return ImageTool.getMiddlePictureInTimeLine(data, width, height, null);
-                        case 2:
-                            return ImageTool.getRoundedCornerPic(data, width, height, FileLocationMethod.picture_large);
-                        default:
-                            throw new IllegalArgumentException();
-                    }
+                        int height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
+                        //8 is  layout padding
+                        int width = (int) (metrics.widthPixels - (8 + 8) * reSize);
+                        switch (SettingUtility.getHighPicMode()) {
+                            case 1:
+                                return ImageTool.getMiddlePictureInTimeLine(data, width, height, null);
+                            case 2:
+                                return ImageTool.getRoundedCornerPic(data, width, height, FileLocationMethod.picture_large);
+                            default:
+                                throw new IllegalArgumentException();
+                        }
 
+                }
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
             }
         }
         return null;
@@ -100,7 +108,15 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onCancelled(Bitmap bitmap) {
-        displayBitmap(bitmap);
+        for (WeakReference<ImageView> view : viewList) {
+            ImageView imageView = view.get();
+            if (imageView != null) {
+                if (canDisplay(imageView)) {
+                    imageView.setImageDrawable(new ColorDrawable(this.e != null ? DebugColor.DOWNLOAD_FAILED : DebugColor.DOWNLOAD_CANCEL));
+                }
+            }
+
+        }
         clean();
         super.onCancelled(bitmap);
     }
@@ -122,7 +138,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                         playImageViewAnimation(imageView, bitmap);
                         lruCache.put(data, bitmap);
                     } else {
-                        imageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        imageView.setImageDrawable(new ColorDrawable(DebugColor.PICTURE_ERROR));
                     }
                 }
             }

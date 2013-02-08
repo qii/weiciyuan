@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -122,7 +124,7 @@ public class ImageTool {
         return path.endsWith(".gif");
     }
 
-    public static Bitmap getMiddlePictureInTimeLine(String url, int reqWidth, int reqHeight, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    public static Bitmap getMiddlePictureInTimeLine(String url, int reqWidth, int reqHeight, FileDownloaderHttpHelper.DownloadListener downloadListener) throws WeiboException {
         try {
 
             String filePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_bmiddle);
@@ -230,7 +232,7 @@ public class ImageTool {
     }
 
 
-    public static Bitmap getRoundedCornerPic(String url, int reqWidth, int reqHeight, FileLocationMethod method) {
+    public static Bitmap getRoundedCornerPic(String url, int reqWidth, int reqHeight, FileLocationMethod method) throws WeiboException {
         try {
 
             if (!FileManager.isExternalStorageMounted()) {
@@ -307,7 +309,11 @@ public class ImageTool {
             }
 
             if (!isThisBitmapCanRead(filePath)) {
-                getBitmapFromNetWork(url, filePath, downloadListener);
+                try {
+                    getBitmapFromNetWork(url, filePath, downloadListener);
+                } catch (WeiboException e) {
+
+                }
 
             }
             file = new File(filePath);
@@ -333,7 +339,11 @@ public class ImageTool {
             return absoluteFilePath;
 
         } else {
-            getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
+            try {
+                getBitmapFromNetWork(url, absoluteFilePath, downloadListener);
+            } catch (WeiboException e) {
+
+            }
 
             if (isThisBitmapCanRead(absoluteFilePath)) {
                 return absoluteFilePath;
@@ -534,13 +544,18 @@ public class ImageTool {
     }
 
 
-    private static boolean getBitmapFromNetWork(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    private static boolean getBitmapFromNetWork(String url, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) throws WeiboException {
         for (int i = 0; i < 3; i++) {
             if (HttpUtility.getInstance().executeDownloadTask(url, path, downloadListener)) {
                 return true;
             }
+            new File(path).delete();
         }
-        return false;
+
+        GlobalContext globalContext = GlobalContext.getInstance();
+        String errorStr = globalContext.getString(R.string.timeout);
+        throw new WeiboException(errorStr);
+
     }
 
 

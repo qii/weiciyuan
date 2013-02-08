@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -65,7 +66,11 @@ public class ProfileAvatarAndDetailMsgPicTask extends MyAsyncTask<String, Intege
                 case avatar_large:
                     int avatarWidth = globalContext.getResources().getDimensionPixelSize(R.dimen.profile_avatar_width);
                     int avatarHeight = globalContext.getResources().getDimensionPixelSize(R.dimen.profile_avatar_height);
-                    return ImageTool.getRoundedCornerPic(this.data, avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
+                    try {
+                        return ImageTool.getRoundedCornerPic(this.data, avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
+                    } catch (WeiboException e) {
+
+                    }
 
             }
         }
