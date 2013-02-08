@@ -26,12 +26,14 @@ public class UpdateMessageTask extends MyAsyncTask<Void, Void, MessageBean> {
     private TextView recontent;
     private BrowserWeiboMsgFragment fragment;
     private WeiboException e;
+    private boolean refreshPic;
 
-    public UpdateMessageTask(BrowserWeiboMsgFragment fragment, TextView content, TextView recontent, MessageBean msg) {
+    public UpdateMessageTask(BrowserWeiboMsgFragment fragment, TextView content, TextView recontent, MessageBean msg, boolean refreshPic) {
         this.fragment = fragment;
         this.content = content;
         this.recontent = recontent;
         this.msg = msg;
+        this.refreshPic = refreshPic;
     }
 
     private Activity getActivity() {
@@ -84,7 +86,7 @@ public class UpdateMessageTask extends MyAsyncTask<Void, Void, MessageBean> {
                 setTextViewDeleted(recontent);
             } else {
                 msg = newValue;
-                fragment.buildViewData(false);
+                fragment.buildViewData(refreshPic);
                 Intent intent = new Intent();
                 intent.putExtra("msg", msg);
                 getActivity().setResult(0, intent);

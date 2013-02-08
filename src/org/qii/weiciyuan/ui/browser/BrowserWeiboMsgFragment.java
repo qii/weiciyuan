@@ -106,7 +106,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            updateMsgTask = new UpdateMessageTask(BrowserWeiboMsgFragment.this, layout.content, layout.recontent, msg);
+                            updateMsgTask = new UpdateMessageTask(BrowserWeiboMsgFragment.this, layout.content, layout.recontent, msg, false);
                             updateMsgTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }, 2000);
@@ -354,7 +354,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
             case R.id.menu_refresh:
                 if (Utility.isTaskStopped(updateMsgTask)) {
-                    updateMsgTask = new UpdateMessageTask(BrowserWeiboMsgFragment.this, layout.content, layout.recontent, msg);
+                    updateMsgTask = new UpdateMessageTask(BrowserWeiboMsgFragment.this, layout.content, layout.recontent, msg, true);
                     updateMsgTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 break;
