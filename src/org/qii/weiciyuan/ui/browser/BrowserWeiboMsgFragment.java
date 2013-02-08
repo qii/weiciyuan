@@ -366,26 +366,13 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private View.OnClickListener picOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String url = "";
-            String oriUrl = "";
-            switch (v.getId()) {
-                case R.id.content_pic:
-                    url = msg.getBmiddle_pic();
-                    oriUrl = msg.getOriginal_pic();
-                    break;
-                case R.id.repost_content_pic:
-                    url = msg.getRetweeted_status().getBmiddle_pic();
-                    oriUrl = msg.getRetweeted_status().getOriginal_pic();
-                    break;
+            Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
+            if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
+                intent.putExtra("msg", msg);
+            } else {
+                intent.putExtra("msg", msg.getRetweeted_status());
             }
-            if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(oriUrl)) {
-                Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
-                intent.putExtra("url", url);
-                intent.putExtra("oriUrl", oriUrl);
-                startActivity(intent);
-            }
+            startActivity(intent);
         }
-
-
     };
 }

@@ -382,13 +382,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
-                    if (SettingUtility.getEnableBigPic()) {
-                        intent.putExtra("url", msg.getOriginal_pic());
-                        intent.putExtra("oriUrl", "");
-                    } else {
-                        intent.putExtra("url", msg.getBmiddle_pic());
-                        intent.putExtra("oriUrl", msg.getOriginal_pic());
-                    }
+                    intent.putExtra("msg", msg);
                     getActivity().startActivity(intent);
                 }
             });

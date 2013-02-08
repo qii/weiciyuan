@@ -16,6 +16,7 @@ import android.webkit.WebView;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -35,8 +36,7 @@ import java.util.List;
  */
 public class BrowserBigPicActivity extends AbstractAppActivity {
 
-    private String url;
-    private String oriUrl;
+
     private MenuItem oriMenu;
     private WebView webView;
     private CircleProgressView pb;
@@ -44,7 +44,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
     private PicSaveTask saveTask;
     private String path;
     private ShareActionProvider mShareActionProvider;
-
+    private MessageBean msg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,15 +69,18 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
 
-
-        url = getIntent().getStringExtra("url");
-        oriUrl = getIntent().getStringExtra("oriUrl");
+        msg = (MessageBean) getIntent().getSerializableExtra("msg");
         if (Utility.isTaskStopped(task)) {
-            task = new PicSimpleBitmapWorkerTask(url);
+            task = new PicSimpleBitmapWorkerTask();
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("msg", msg);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,7 +88,8 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
         oriMenu = menu.findItem(R.id.menu_switch);
-        if (TextUtils.isEmpty(oriUrl)) {
+        String largePath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
+        if (new File(largePath).exists()) {
             oriMenu.setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);
@@ -104,7 +108,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
                     task.cancel(true);
                 }
 
-                task = new PicSimpleBitmapWorkerTask(oriUrl);
+                task = new PicSimpleBitmapWorkerTask();
                 task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 path = "";
                 oriMenu.setVisible(false);
@@ -145,10 +149,10 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
                 if (!TextUtils.isEmpty(path)) {
                     new File(path).delete();
                 }
-                if (oriMenu.isVisible() || TextUtils.isEmpty(oriUrl)) {
-                    task = new PicSimpleBitmapWorkerTask(url);
+                if (oriMenu.isVisible()) {
+                    task = new PicSimpleBitmapWorkerTask();
                 } else {
-                    task = new PicSimpleBitmapWorkerTask(oriUrl);
+                    task = new PicSimpleBitmapWorkerTask();
                 }
                 task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -187,12 +191,6 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
 
     class PicSimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, String> {
 
-        String downloadUrl;
-
-        public PicSimpleBitmapWorkerTask(String downloadUrl) {
-            this.downloadUrl = downloadUrl;
-        }
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -212,10 +210,18 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
             };
 
             if (!isCancelled()) {
-                if (downloadUrl.equals(url)) {
-                    return ImageTool.getLargePictureWithoutRoundedCorner(downloadUrl, downloadListener, FileLocationMethod.picture_bmiddle);
-                } else if (downloadUrl.equals(oriUrl)) {
-                    return ImageTool.getLargePictureWithoutRoundedCorner(downloadUrl, downloadListener, FileLocationMethod.picture_large);
+
+                String middlePath = FileManager.getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
+                String largePath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
+                if (new File(largePath).exists()) {
+                    return largePath;
+                } else if (new File(middlePath).exists()) {
+                    return middlePath;
+                } else {
+                    String data = msg.getBmiddle_pic();
+                    FileLocationMethod method = FileLocationMethod.picture_bmiddle;
+                    return ImageTool.getLargePictureWithoutRoundedCorner(data, downloadListener, method);
+
                 }
             }
 
