@@ -84,7 +84,7 @@ public class UpdateMessageTask extends MyAsyncTask<Void, Void, MessageBean> {
                 setTextViewDeleted(recontent);
             } else {
                 msg = newValue;
-                fragment.buildViewData();
+                fragment.buildViewData(false);
                 Intent intent = new Intent();
                 intent.putExtra("msg", msg);
                 getActivity().setResult(0, intent);

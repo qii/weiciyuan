@@ -47,9 +47,7 @@ public class MsgDetailPicTask extends MyAsyncTask<MessageBean, Integer, Bitmap> 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        if (pb != null) {
-            pb.setVisibility(View.VISIBLE);
-        }
+
     }
 
     @Override
@@ -91,6 +89,9 @@ public class MsgDetailPicTask extends MyAsyncTask<MessageBean, Integer, Bitmap> 
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
         if (pb != null) {
+            if (pb.getVisibility() != View.VISIBLE) {
+                pb.setVisibility(View.VISIBLE);
+            }
             if (!pbFlag) {
                 pb.setIndeterminate(false);
                 pbFlag = true;
