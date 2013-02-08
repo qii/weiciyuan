@@ -25,6 +25,10 @@ import java.util.Map;
 /**
  * User: Jiang Qi
  * Date: 12-8-3
+ * <p/>
+ * when app load picture, there are two reason why it is failed, one is download failed,
+ * the other is the picture file cant be read by android system (too many devices,android fragmentation)
+ * <p/>
  */
 public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
@@ -37,7 +41,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
 
     private FileLocationMethod method;
 
-    private WeiboException e;
+    private WeiboException failedBecauseOfNetwork;
 
     public String getUrl() {
         return data;
@@ -63,47 +67,50 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... url) {
 
+        if (isCancelled())
+            return null;
+
         int avatarWidth = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width);
         int avatarHeight = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height);
 
         int thumbnailWidth = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_thumbnail_width);
         int thumbnailHeight = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_thumbnail_height);
 
-        if (!isCancelled()) {
-            try {
-                switch (method) {
-                    case avatar_large:
-                        return ImageTool.getRoundedCornerPic(this.data, avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
-                    case avatar_small:
-                        return ImageTool.getRoundedCornerPic(this.data, avatarWidth, avatarHeight, FileLocationMethod.avatar_small);
 
-                    case picture_thumbnail:
-                        return ImageTool.getRoundedCornerPic(this.data, thumbnailWidth, thumbnailHeight, FileLocationMethod.picture_thumbnail);
+        try {
+            switch (method) {
+                case avatar_large:
+                    return ImageTool.getRoundedCornerPic(this.data, avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
+                case avatar_small:
+                    return ImageTool.getRoundedCornerPic(this.data, avatarWidth, avatarHeight, FileLocationMethod.avatar_small);
 
-                    case picture_large:
-                        DisplayMetrics metrics = globalContext.getDisplayMetrics();
+                case picture_thumbnail:
+                    return ImageTool.getRoundedCornerPic(this.data, thumbnailWidth, thumbnailHeight, FileLocationMethod.picture_thumbnail);
 
-                        float reSize = globalContext.getResources().getDisplayMetrics().density;
+                case picture_large:
+                    DisplayMetrics metrics = globalContext.getDisplayMetrics();
 
-                        int height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
-                        //8 is  layout padding
-                        int width = (int) (metrics.widthPixels - (8 + 8) * reSize);
-                        switch (SettingUtility.getHighPicMode()) {
-                            case 1:
-                                return ImageTool.getMiddlePictureInTimeLine(data, width, height, null);
-                            case 2:
-                                return ImageTool.getRoundedCornerPic(data, width, height, FileLocationMethod.picture_large);
-                            default:
-                                throw new IllegalArgumentException();
-                        }
+                    float reSize = globalContext.getResources().getDisplayMetrics().density;
 
-                }
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
+                    int height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
+                    //8 is  layout padding
+                    int width = (int) (metrics.widthPixels - (8 + 8) * reSize);
+                    switch (SettingUtility.getHighPicMode()) {
+                        case 1:
+                            return ImageTool.getMiddlePictureInTimeLine(data, width, height, null);
+                        case 2:
+                            return ImageTool.getRoundedCornerPic(data, width, height, FileLocationMethod.picture_large);
+                        default:
+                            throw new IllegalArgumentException();
+                    }
+
             }
+        } catch (WeiboException failedBecauseOfNetwork) {
+            this.failedBecauseOfNetwork = failedBecauseOfNetwork;
+            cancel(true);
         }
         return null;
+
     }
 
     @Override
@@ -112,7 +119,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
             ImageView imageView = view.get();
             if (imageView != null) {
                 if (canDisplay(imageView)) {
-                    imageView.setImageDrawable(new ColorDrawable(this.e != null ? DebugColor.DOWNLOAD_FAILED : DebugColor.DOWNLOAD_CANCEL));
+                    imageView.setImageDrawable(new ColorDrawable(this.failedBecauseOfNetwork != null ? DebugColor.DOWNLOAD_FAILED : DebugColor.DOWNLOAD_CANCEL));
                 }
             }
 
