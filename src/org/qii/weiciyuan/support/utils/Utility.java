@@ -24,11 +24,16 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ShareActionProvider;
 import org.qii.weiciyuan.bean.GeoBean;
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -380,6 +385,34 @@ public class Utility {
         } else {
             count++;
             return countWord(content.substring(index + word.length()), word, count);
+        }
+    }
+
+    public static void setShareIntent(Activity activity, ShareActionProvider mShareActionProvider, MessageBean msg) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        if (msg != null && msg.getUser() != null) {
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+            if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
+                Uri picUrl = null;
+                String smallPath = FileManager.getFilePathFromUrl(msg.getThumbnail_pic(), FileLocationMethod.picture_thumbnail);
+                String middlePath = FileManager.getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
+                String largePath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
+                if (new File(largePath).exists()) {
+                    picUrl = Uri.fromFile(new File(largePath));
+                } else if (new File(middlePath).exists()) {
+                    picUrl = Uri.fromFile(new File(middlePath));
+                } else if (new File(smallPath).exists()) {
+                    picUrl = Uri.fromFile(new File(smallPath));
+                }
+                if (picUrl != null) {
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, picUrl);
+                    shareIntent.setType("image/*");
+                }
+            }
+            if (Utility.isIntentSafe(activity, shareIntent) && mShareActionProvider != null) {
+                mShareActionProvider.setShareIntent(shareIntent);
+            }
         }
     }
 }

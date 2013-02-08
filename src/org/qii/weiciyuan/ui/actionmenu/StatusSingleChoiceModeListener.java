@@ -6,8 +6,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,13 +17,12 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.WriteCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteRepostActivity;
 import org.qii.weiciyuan.ui.task.FavAsyncTask;
-
-import java.util.List;
 
 /**
  * User: qii
@@ -83,16 +80,8 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
-
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, bean.getText());
-        PackageManager packageManager = getActivity().getPackageManager();
-        List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
-        boolean isIntentSafe = activities.size() > 0;
-        if (isIntentSafe && mShareActionProvider != null) {
-            mShareActionProvider.setShareIntent(sharingIntent);
-        }
+        if (fragment.getActivity() != null)
+            Utility.setShareIntent(fragment.getActivity(), mShareActionProvider, bean);
         mShareActionProvider.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
             @Override
             public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
@@ -154,15 +143,8 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
                 break;
             case R.id.menu_share:
-                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(Intent.EXTRA_TEXT, bean.getText());
-                PackageManager packageManager = getActivity().getPackageManager();
-                List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
-                boolean isIntentSafe = activities.size() > 0;
-                if (isIntentSafe && mShareActionProvider != null) {
-                    mShareActionProvider.setShareIntent(sharingIntent);
-                }
+                if (fragment.getActivity() != null)
+                    Utility.setShareIntent(fragment.getActivity(), mShareActionProvider, bean);
                 mShareActionProvider.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
                     @Override
                     public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {

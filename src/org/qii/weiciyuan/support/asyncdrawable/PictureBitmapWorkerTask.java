@@ -88,7 +88,7 @@ public class PictureBitmapWorkerTask extends MyAsyncTask<String, Void, Bitmap> {
                         case 1:
                             return ImageTool.getMiddlePictureInTimeLine(data, width, height, null);
                         case 2:
-                            return ImageTool.getRoundedCornerPic(data, width, height, FileLocationMethod.picture_bmiddle);
+                            return ImageTool.getRoundedCornerPic(data, width, height, FileLocationMethod.picture_large);
                         default:
                             throw new IllegalArgumentException();
                     }
