@@ -126,7 +126,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
                 break;
             case R.id.menu_fav:
-                if (favTask == null || favTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                if (Utility.isTaskStopped(favTask)) {
                     favTask = new FavAsyncTask(GlobalContext.getInstance().getSpecialToken(), bean.getId());
                     favTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
