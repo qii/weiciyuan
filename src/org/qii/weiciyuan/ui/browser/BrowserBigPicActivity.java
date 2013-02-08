@@ -72,7 +72,7 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
 
         url = getIntent().getStringExtra("url");
         oriUrl = getIntent().getStringExtra("oriUrl");
-        if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
+        if (Utility.isTaskStopped(task)) {
             task = new PicSimpleBitmapWorkerTask(url);
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
