@@ -259,7 +259,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
                 Toast.makeText(this, getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_fav:
-                if (favTask == null || favTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                if (Utility.isTaskStopped(favTask)) {
                     favTask = new FavAsyncTask(getToken(), msg.getId());
                     favTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
