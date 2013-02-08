@@ -366,13 +366,28 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private View.OnClickListener picOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
-            if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
-                intent.putExtra("msg", msg);
+            Object object = v.getTag();
+            if (object != null && (Boolean) object) {
+                Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
+                if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
+                    intent.putExtra("msg", msg);
+                } else {
+                    intent.putExtra("msg", msg.getRetweeted_status());
+                }
+                startActivity(intent);
             } else {
-                intent.putExtra("msg", msg.getRetweeted_status());
+                if (picTask != null) {
+                    picTask.cancel(true);
+                }
+                if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
+                    picTask = new MsgDetailPicTask(layout.content_pic, FileLocationMethod.picture_bmiddle, layout.content_pic_pb);
+                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg);
+                } else {
+                    picTask = new MsgDetailPicTask(layout.repost_pic, FileLocationMethod.picture_bmiddle, layout.repost_pic_pb);
+                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getRetweeted_status());
+
+                }
             }
-            startActivity(intent);
         }
     };
 }

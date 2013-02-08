@@ -306,7 +306,7 @@ public class ImageTool {
                 return null;
             }
 
-            if (!file.exists()) {
+            if (!isThisBitmapCanRead(filePath)) {
                 getBitmapFromNetWork(url, filePath, downloadListener);
 
             }

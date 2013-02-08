@@ -57,16 +57,16 @@ public class MsgDetailPicTask extends MyAsyncTask<MessageBean, Integer, Bitmap> 
         String middlePath = FileManager.getFilePathFromUrl(msg[0].getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
         String largePath = FileManager.getFilePathFromUrl(msg[0].getOriginal_pic(), FileLocationMethod.picture_large);
         if (new File(largePath).exists()) {
-            data = largePath;
+            data = msg[0].getOriginal_pic();
             method = FileLocationMethod.picture_large;
         } else if (new File(middlePath).exists()) {
-            data = middlePath;
+            data = msg[0].getBmiddle_pic();
             method = FileLocationMethod.picture_bmiddle;
         } else if (new File(smallPath).exists()) {
-            data = smallPath;
+            data = msg[0].getThumbnail_pic();
             method = FileLocationMethod.picture_thumbnail;
         } else {
-            data = middlePath;
+            data = msg[0].getBmiddle_pic();
             method = FileLocationMethod.picture_bmiddle;
         }
 
@@ -119,7 +119,7 @@ public class MsgDetailPicTask extends MyAsyncTask<MessageBean, Integer, Bitmap> 
             pb.setVisibility(View.INVISIBLE);
 
         if (bitmap != null) {
-
+            view.setTag(true);
             view.setVisibility(View.VISIBLE);
             view.setImageBitmap(bitmap);
         } else {
