@@ -122,16 +122,6 @@ public class MsgDetailPicTask extends MyAsyncTask<MessageBean, Integer, Bitmap> 
 
             view.setVisibility(View.VISIBLE);
             view.setImageBitmap(bitmap);
-
-            switch (method) {
-                case avatar_small:
-                    lruCache.put(data, bitmap);
-                    break;
-                case avatar_large:
-                    lruCache.put(data, bitmap);
-                    break;
-            }
-
         } else {
             view.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
