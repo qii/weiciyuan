@@ -3,6 +3,7 @@ package org.qii.weiciyuan.ui.browser;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,7 +17,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarAndDetailMsgPicTask;
+import org.qii.weiciyuan.support.asyncdrawable.MsgDetailPicTask;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -38,7 +39,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
     private UpdateMessageTask updateMsgTask;
     private GetGoogleLocationInfoTask geoTask;
-    private ProfileAvatarAndDetailMsgPicTask picTask;
+    private MsgDetailPicTask picTask;
+
+    private Handler handler = new Handler();
 
     private static class BrowserWeiboMsgLayout {
         TextView username;
@@ -60,6 +63,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
         TextView comment_count;
         TextView repost_count;
+        View count_layout;
 
         ProgressBar content_pic_pb;
         ProgressBar repost_pic_pb;
@@ -99,8 +103,14 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 if (Utility.isTaskStopped(updateMsgTask)) {
-                    updateMsgTask = new UpdateMessageTask(BrowserWeiboMsgFragment.this, layout.content, layout.recontent, msg);
-                    updateMsgTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateMsgTask = new UpdateMessageTask(BrowserWeiboMsgFragment.this, layout.content, layout.recontent, msg);
+                            updateMsgTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                        }
+                    }, 2000);
+
                 }
                 break;
             case SCREEN_ROTATE:
@@ -158,6 +168,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         }
         layout.comment_count = (TextView) view.findViewById(R.id.comment_count);
         layout.repost_count = (TextView) view.findViewById(R.id.repost_count);
+        layout.count_layout = view.findViewById(R.id.count_layout);
 
         layout.location.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,8 +266,15 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         if (!TextUtils.isEmpty(msg.getBmiddle_pic()) && msg.getRetweeted_status() == null) {
             if (Utility.isTaskStopped(picTask)) {
                 layout.pic_layout.setVisibility(View.VISIBLE);
-                picTask = new ProfileAvatarAndDetailMsgPicTask(layout.content_pic, FileLocationMethod.picture_bmiddle, layout.content_pic_pb);
-                picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getBmiddle_pic());
+                layout.content_pic_pb.setVisibility(View.VISIBLE);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        picTask = new MsgDetailPicTask(layout.content_pic, FileLocationMethod.picture_bmiddle, layout.content_pic_pb);
+                        picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg);
+                    }
+                }, 1000);
+
             }
         }
 
@@ -281,9 +299,16 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             if (!TextUtils.isEmpty(repostMsg.getBmiddle_pic())) {
                 layout.repost_pic_layout.setVisibility(View.VISIBLE);
                 layout.repost_pic.setVisibility(View.VISIBLE);
+                layout.repost_pic_pb.setVisibility(View.VISIBLE);
                 if (Utility.isTaskStopped(picTask)) {
-                    picTask = new ProfileAvatarAndDetailMsgPicTask(layout.repost_pic, FileLocationMethod.picture_bmiddle, layout.repost_pic_pb);
-                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getRetweeted_status().getBmiddle_pic());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            picTask = new MsgDetailPicTask(layout.repost_pic, FileLocationMethod.picture_bmiddle, layout.repost_pic_pb);
+                            picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getRetweeted_status());
+                        }
+                    }, 1000);
+
                 }
             }
         }
@@ -298,7 +323,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         MessageBean repostBean = msg.getRetweeted_status();
 
         if (repostBean.getComments_count() == 0 && repostBean.getReposts_count() == 0) {
+            layout.count_layout.setVisibility(View.GONE);
             return;
+        } else {
+            layout.count_layout.setVisibility(View.VISIBLE);
         }
 
         if (repostBean.getComments_count() > 0) {

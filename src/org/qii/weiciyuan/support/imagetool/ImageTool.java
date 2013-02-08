@@ -294,11 +294,11 @@ public class ImageTool {
     }
 
 
-    public static Bitmap getMiddlePictureInBrowserMSGActivity(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    public static Bitmap getMiddlePictureInBrowserMSGActivity(String url, FileLocationMethod method, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
         try {
 
-            String filePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_bmiddle);
+            String filePath = FileManager.getFilePathFromUrl(url, method);
 
             File file = new File(filePath);
 

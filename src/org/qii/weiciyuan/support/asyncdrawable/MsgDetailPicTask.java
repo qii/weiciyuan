@@ -7,17 +7,21 @@ import android.util.LruCache;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
+import java.io.File;
+
 /**
  * User: qii
- * Date: 12-8-5
+ * Date: 13-2-8
  */
-public class ProfileAvatarAndDetailMsgPicTask extends MyAsyncTask<String, Integer, Bitmap> {
+public class MsgDetailPicTask extends MyAsyncTask<MessageBean, Integer, Bitmap> {
 
     private LruCache<String, Bitmap> lruCache;
     private String data = "";
@@ -31,15 +35,7 @@ public class ProfileAvatarAndDetailMsgPicTask extends MyAsyncTask<String, Intege
     private GlobalContext globalContext;
 
 
-    public ProfileAvatarAndDetailMsgPicTask(ImageView view, FileLocationMethod method) {
-
-        this.lruCache = GlobalContext.getInstance().getAvatarCache();
-        this.view = view;
-        this.method = method;
-        this.globalContext = GlobalContext.getInstance();
-    }
-
-    public ProfileAvatarAndDetailMsgPicTask(ImageView view, FileLocationMethod method, ProgressBar pb) {
+    public MsgDetailPicTask(ImageView view, FileLocationMethod method, ProgressBar pb) {
         this.globalContext = GlobalContext.getInstance();
         this.lruCache = GlobalContext.getInstance().getAvatarCache();
         this.view = view;
@@ -57,19 +53,34 @@ public class ProfileAvatarAndDetailMsgPicTask extends MyAsyncTask<String, Intege
     }
 
     @Override
-    protected Bitmap doInBackground(String... url) {
-        data = url[0];
-        if (!isCancelled()) {
-            switch (method) {
-
-                case avatar_large:
-                    int avatarWidth = globalContext.getResources().getDimensionPixelSize(R.dimen.profile_avatar_width);
-                    int avatarHeight = globalContext.getResources().getDimensionPixelSize(R.dimen.profile_avatar_height);
-                    return ImageTool.getRoundedCornerPic(this.data, avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
-
-            }
+    protected Bitmap doInBackground(MessageBean... msg) {
+        FileLocationMethod method;
+        String smallPath = FileManager.getFilePathFromUrl(msg[0].getThumbnail_pic(), FileLocationMethod.picture_thumbnail);
+        String middlePath = FileManager.getFilePathFromUrl(msg[0].getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
+        String largePath = FileManager.getFilePathFromUrl(msg[0].getOriginal_pic(), FileLocationMethod.picture_large);
+        if (new File(largePath).exists()) {
+            data = largePath;
+            method = FileLocationMethod.picture_large;
+        } else if (new File(middlePath).exists()) {
+            data = middlePath;
+            method = FileLocationMethod.picture_bmiddle;
+        } else if (new File(smallPath).exists()) {
+            data = smallPath;
+            method = FileLocationMethod.picture_thumbnail;
+        } else {
+            data = middlePath;
+            method = FileLocationMethod.picture_bmiddle;
         }
 
+        if (!isCancelled()) {
+            return ImageTool.getMiddlePictureInBrowserMSGActivity(data, method, new FileDownloaderHttpHelper.DownloadListener() {
+                @Override
+                public void pushProgress(int progress, int max) {
+                    publishProgress(progress, max);
+                }
+            });
+
+        }
         return null;
     }
 
