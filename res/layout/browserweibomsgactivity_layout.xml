@@ -86,7 +86,7 @@
             android:layout_marginTop="8dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:minHeight="140dp"
+            android:minHeight="200dp"
             android:visibility="gone"
             android:id="@+id/pic_layout">
 
@@ -110,6 +110,8 @@
                 android:visibility="gone"
                 android:clickable="true"
                 android:layout_gravity="center_horizontal"
+                android:scaleType="centerInside"
+                android:adjustViewBounds="true"
                 android:background="?android:selectableItemBackground"/>
         </FrameLayout>
 
@@ -139,7 +141,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:minHeight="140dp"
+                android:minHeight="200dp"
                 android:id="@+id/repost_pic_layout"
                 android:visibility="gone">
 
@@ -163,7 +165,8 @@
                     android:clickable="true"
                     android:background="?android:selectableItemBackground"
                     android:layout_gravity="center_horizontal"
-
+                    android:scaleType="centerInside"
+                    android:adjustViewBounds="true"
                     />
             </FrameLayout>
 
