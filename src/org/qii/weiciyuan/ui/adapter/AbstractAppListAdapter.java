@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.PictureBitmapDrawable;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.lib.TimeLineImageView;
@@ -88,17 +90,25 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                     ViewHolder holder = (ViewHolder) view.getTag(tag);
 
                     if (holder != null) {
-                        holder.avatar.getImageView().getDrawable().setCallback(null);
-                        holder.content_pic.getImageView().getDrawable().setCallback(null);
-                        holder.repost_content_pic.getImageView().getDrawable().setCallback(null);
+                        Drawable drawable = holder.avatar.getImageView().getDrawable();
+                        if (!(drawable instanceof PictureBitmapDrawable)) {
+                            drawable.setCallback(null);
+                            holder.avatar.setImageBitmap(null);
+                            holder.avatar.getImageView().clearAnimation();
+                        }
+                        drawable = holder.content_pic.getImageView().getDrawable();
+                        if (!(drawable instanceof PictureBitmapDrawable)) {
+                            drawable.setCallback(null);
+                            holder.content_pic.setImageBitmap(null);
+                            holder.content_pic.getImageView().clearAnimation();
+                        }
+                        drawable = holder.repost_content_pic.getImageView().getDrawable();
+                        if (!(drawable instanceof PictureBitmapDrawable)) {
+                            drawable.setCallback(null);
+                            holder.repost_content_pic.setImageBitmap(null);
+                            holder.repost_content_pic.getImageView().clearAnimation();
+                        }
 
-                        holder.avatar.setImageBitmap(null);
-                        holder.content_pic.setImageBitmap(null);
-                        holder.repost_content_pic.setImageBitmap(null);
-
-                        holder.avatar.getImageView().clearAnimation();
-                        holder.content_pic.getImageView().clearAnimation();
-                        holder.repost_content_pic.getImageView().clearAnimation();
 
                         if (!tag.equals(index)) {
                             holder.listview_root.removeAllViewsInLayout();

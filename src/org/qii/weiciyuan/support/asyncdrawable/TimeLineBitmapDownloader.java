@@ -95,6 +95,10 @@ public class TimeLineBitmapDownloader {
             cancelPotentialDownload(urlKey, view);
             picTasks.remove(urlKey);
         } else {
+            if (!cancelPotentialDownload(urlKey, view)) {
+                return;
+            }
+
             if (isFling) {
                 view.setImageDrawable(transPic);
                 return;
@@ -105,10 +109,6 @@ public class TimeLineBitmapDownloader {
             if (task != null) {
                 task.addView(view);
                 view.setImageDrawable(new PictureBitmapDrawable(task));
-                return;
-            }
-
-            if (!cancelPotentialDownload(urlKey, view)) {
                 return;
             }
 
