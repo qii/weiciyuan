@@ -43,7 +43,7 @@ public class TaskCache {
 
 
             try {
-                return downloadWorker.get(15, TimeUnit.SECONDS);
+                return downloadWorker.get(30, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 return false;
@@ -107,7 +107,7 @@ public class TaskCache {
 
             try {
                 downloadWorker.addDownloadListener(downloadListener);
-                downloadWorker.get(15, TimeUnit.SECONDS);
+                downloadWorker.get(30, TimeUnit.SECONDS);
                 return;
             } catch (InterruptedException e) {
                 e.printStackTrace();
