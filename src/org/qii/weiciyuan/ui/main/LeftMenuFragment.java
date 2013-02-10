@@ -77,7 +77,7 @@ public class LeftMenuFragment extends PreferenceFragment {
                 } else if (!fragment.isAdded()) {
                     ft.add(R.id.menu_right_fl, fragment, FriendsTimeLineFragment.class.getName());
                 }
-
+                fragment.setUserVisibleHint(true);
                 fl.setVisibility(View.VISIBLE);
                 mentionVP.setVisibility(View.GONE);
                 commentVP.setVisibility(View.GONE);
@@ -92,6 +92,7 @@ public class LeftMenuFragment extends PreferenceFragment {
         findPreference("b").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                getActivity().getActionBar().setDisplayShowTitleEnabled(true);
                 getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
                 if (index == 1) {
                     ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
@@ -168,6 +169,7 @@ public class LeftMenuFragment extends PreferenceFragment {
         findPreference("c").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                getActivity().getActionBar().setDisplayShowTitleEnabled(true);
                 if (index == 2) {
                     ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
                     return true;

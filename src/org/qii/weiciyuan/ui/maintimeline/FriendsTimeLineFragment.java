@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
@@ -27,7 +29,9 @@ import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -210,8 +214,64 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         super.onActivityCreated(savedInstanceState);
 
+        buildActionBarNav();
+
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            buildActionBarNav();
+        }
+    }
+
+    private void buildActionBarNav() {
+        getActivity().getActionBar().setDisplayShowTitleEnabled(false);
+        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+
+        List<GroupBean> list = new ArrayList<GroupBean>();
+        if (GlobalContext.getInstance().getGroup() != null) {
+            list = GlobalContext.getInstance().getGroup().getLists();
+        } else {
+            list = new ArrayList<GroupBean>();
+        }
+        List<String> name = new ArrayList<String>();
+        name.add(getString(R.string.all_people));
+        name.add(getString(R.string.bilateral));
+
+        for (GroupBean b : list) {
+            name.add(b.getName());
+        }
+
+        String[] valueArray = name.toArray(new String[0]);
+
+//        String[] keys = {GlobalContext.getInstance().getCurrentAccountName(), "wo", "ni"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_selector_text_view,
+                valueArray);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        final List<GroupBean> finalList = list;
+        getActivity().getActionBar().setListNavigationCallbacks(adapter, new ActionBar.OnNavigationListener() {
+            @Override
+            public boolean onNavigationItemSelected(int which, long itemId) {
+                String selectedItemId;
+
+                if (which == 0) {
+                    selectedItemId = "0";
+                } else if (which == 1) {
+                    selectedItemId = "1";
+                } else {
+                    selectedItemId = finalList.get(which - 2).getIdstr();
+                }
+                if (!selectedItemId.equals(currentGroupId)) {
+                    setSelected(selectedItemId);
+                    switchGroup();
+                }
+                return false;
+            }
+        });
+    }
 
     private class DBCacheTask extends MyAsyncTask<Void, MessageListBean, MessageListBean> {
 
@@ -264,6 +324,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.actionbar_menu_friendstimelinefragment, menu);
         name = menu.findItem(R.id.group_name);
+        name.setVisible(false);
         if (currentGroupId.equals(ALL_GROUP_ID)) {
 //            name.setTitle(userBean.getScreen_name());
             name.setTitle(getString(R.string.all_people));

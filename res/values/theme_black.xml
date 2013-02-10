@@ -47,8 +47,16 @@
 
         <item name="backgroundSplit">@drawable/ab_bottom_transparent_dark_holo</item>
 
+        <item name="android:actionDropDownStyle">@style/ActionBarDropDownStyle_Black</item>
 
     </style>
 
+    <style name="ActionBarDropDownStyle_Black" parent="@android:style/Widget.Holo.Spinner">
+        <item name="android:gravity">center</item>
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:dropDownWidth">200dp</item>
+        <item name="android:dropDownVerticalOffset">0dip</item>
+        <item name="android:dropDownHorizontalOffset">0dip</item>
+    </style>
 
 </resources>
