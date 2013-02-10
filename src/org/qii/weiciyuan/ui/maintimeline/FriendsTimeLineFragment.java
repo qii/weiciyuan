@@ -4,13 +4,8 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
@@ -245,12 +240,45 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             name.add(b.getName());
         }
 
-        String[] valueArray = name.toArray(new String[0]);
+        final String[] valueArray = name.toArray(new String[0]);
 
-//        String[] keys = {GlobalContext.getInstance().getCurrentAccountName(), "wo", "ni"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_selector_text_view,
-                valueArray);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        BaseAdapter adapter = new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return valueArray.length;
+            }
+
+            @Override
+            public Object getItem(int position) {
+                return valueArray[position];
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return 0;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                View view = inflater.inflate(R.layout.spinner_selector_text_view, parent, false);
+                if (position != 0) {
+                    ((TextView) view).setText(valueArray[position]);
+                } else {
+                    ((TextView) view).setText(GlobalContext.getInstance().getCurrentAccountName());
+                }
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                View view = inflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+                ((CheckedTextView) view).setText(valueArray[position]);
+                return view;
+            }
+        };
+
         final List<GroupBean> finalList = list;
         getActivity().getActionBar().setListNavigationCallbacks(adapter, new ActionBar.OnNavigationListener() {
             @Override
