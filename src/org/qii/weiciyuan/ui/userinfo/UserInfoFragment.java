@@ -11,7 +11,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
-import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarAndDetailMsgPicTask;
+import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarReadWorker;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
@@ -59,7 +59,7 @@ public class UserInfoFragment extends AbstractAppFragment {
     protected TimeLineBitmapDownloader commander;
 
     private RefreshTask task;
-    private ProfileAvatarAndDetailMsgPicTask avatarTask;
+    private ProfileAvatarReadWorker avatarTask;
     private TopicListTask topicListTask;
 
 
@@ -143,8 +143,8 @@ public class UserInfoFragment extends AbstractAppFragment {
 
         String avatarUrl = bean.getAvatar_large();
         if (!TextUtils.isEmpty(avatarUrl)) {
-            avatarTask = new ProfileAvatarAndDetailMsgPicTask(avatar, FileLocationMethod.avatar_large);
-            avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, avatarUrl);
+            avatarTask = new ProfileAvatarReadWorker(avatar, avatarUrl);
+            avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
         if (!TextUtils.isEmpty(bean.getUrl())) {
 

@@ -304,6 +304,9 @@ public class JavaHttpUtility {
                     downloadListener.pushProgress(bytesum, bytetotal);
                 }
             }
+            if (downloadListener != null) {
+                downloadListener.completed();
+            }
             return true;
 
         } catch (IOException e) {

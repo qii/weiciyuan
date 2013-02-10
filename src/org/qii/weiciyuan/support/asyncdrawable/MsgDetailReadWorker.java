@@ -3,7 +3,6 @@ package org.qii.weiciyuan.support.asyncdrawable;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.util.LruCache;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -13,71 +12,74 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.File;
 
 /**
  * User: qii
  * Date: 13-2-8
+ * insert progress update listener into  download worker if it exists
+ * or create a new download worker
  */
-public class MsgDetailPicTask extends MyAsyncTask<MessageBean, Integer, Bitmap> {
+public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, Bitmap> {
 
-    private LruCache<String, Bitmap> lruCache;
-    private String data = "";
     private ImageView view;
-    private FileLocationMethod method;
-
     private ProgressBar pb;
 
     private boolean pbFlag = false;
 
-    private GlobalContext globalContext;
+    private MessageBean msg;
 
-
-    public MsgDetailPicTask(ImageView view, FileLocationMethod method, ProgressBar pb) {
-        this.globalContext = GlobalContext.getInstance();
-        this.lruCache = GlobalContext.getInstance().getAvatarCache();
+    public MsgDetailReadWorker(ImageView view, ProgressBar pb, MessageBean msg) {
         this.view = view;
-        this.method = method;
         this.pb = pb;
-
+        this.msg = msg;
     }
 
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
+    protected Bitmap doInBackground(Void... arg) {
+        if (isCancelled()) {
+            return null;
+        }
 
-    }
+        TaskCache.waitForMsgDetailPictureDownload(msg, downloadListener);
 
-    @Override
-    protected Bitmap doInBackground(MessageBean... msg) {
         FileLocationMethod method;
-        String smallPath = FileManager.getFilePathFromUrl(msg[0].getThumbnail_pic(), FileLocationMethod.picture_thumbnail);
-        String middlePath = FileManager.getFilePathFromUrl(msg[0].getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
-        String largePath = FileManager.getFilePathFromUrl(msg[0].getOriginal_pic(), FileLocationMethod.picture_large);
+        String middlePath = FileManager.getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
+        String largePath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
+        String data = "";
         if (new File(largePath).exists()) {
-            data = msg[0].getOriginal_pic();
+            data = msg.getOriginal_pic();
             method = FileLocationMethod.picture_large;
         } else if (new File(middlePath).exists()) {
-            data = msg[0].getBmiddle_pic();
+            data = msg.getBmiddle_pic();
             method = FileLocationMethod.picture_bmiddle;
         } else {
-            data = msg[0].getBmiddle_pic();
+            data = msg.getBmiddle_pic();
             method = FileLocationMethod.picture_bmiddle;
         }
 
-        if (!isCancelled()) {
-            return ImageTool.getMiddlePictureInBrowserMSGActivity(data, method, new FileDownloaderHttpHelper.DownloadListener() {
-                @Override
-                public void pushProgress(int progress, int max) {
-                    publishProgress(progress, max);
-                }
-            });
+        return ImageTool.getMiddlePictureInBrowserMSGActivity(data, method, downloadListener);
+
+    }
+
+
+    FileDownloaderHttpHelper.DownloadListener downloadListener = new FileDownloaderHttpHelper.DownloadListener() {
+        @Override
+        public void pushProgress(int progress, int max) {
+            publishProgress(progress, max);
+        }
+
+        @Override
+        public void completed() {
 
         }
-        return null;
-    }
+
+        @Override
+        public void cancel() {
+
+        }
+    };
 
     /**
      * sometime picture has been cached in sd card,so only set indeterminate equal false to show progress when downloading
@@ -107,7 +109,6 @@ public class MsgDetailPicTask extends MyAsyncTask<MessageBean, Integer, Bitmap> 
             pb.setVisibility(View.INVISIBLE);
 
         super.onCancelled(bitmap);
-        clean();
     }
 
     @Override
@@ -123,12 +124,6 @@ public class MsgDetailPicTask extends MyAsyncTask<MessageBean, Integer, Bitmap> 
             view.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
 
-        clean();
     }
 
-    private void clean() {
-
-        lruCache = null;
-        globalContext = null;
-    }
 }

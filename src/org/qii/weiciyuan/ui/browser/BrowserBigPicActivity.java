@@ -17,6 +17,7 @@ import android.widget.ShareActionProvider;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.support.asyncdrawable.TaskCache;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -191,6 +192,16 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
 
     class PicSimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, String> {
 
+        FileDownloaderHttpHelper.DownloadListener downloadListener = new FileDownloaderHttpHelper.DownloadListener() {
+            @Override
+            public void pushProgress(int progress, int max) {
+                publishProgress(progress, max);
+            }
+
+
+        };
+
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -201,31 +212,26 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
 
         @Override
         protected String doInBackground(String... dd) {
-
-            FileDownloaderHttpHelper.DownloadListener downloadListener = new FileDownloaderHttpHelper.DownloadListener() {
-                @Override
-                public void pushProgress(int progress, int max) {
-                    publishProgress(progress, max);
-                }
-            };
-
-            if (!isCancelled()) {
-
-                String middlePath = FileManager.getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
-                String largePath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
-                if (new File(largePath).exists()) {
-                    return largePath;
-                } else if (new File(middlePath).exists()) {
-                    return middlePath;
-                } else {
-                    String data = msg.getBmiddle_pic();
-                    FileLocationMethod method = FileLocationMethod.picture_bmiddle;
-                    return ImageTool.getLargePictureWithoutRoundedCorner(data, downloadListener, method);
-
-                }
+            if (isCancelled()) {
+                return null;
             }
 
-            return null;
+            TaskCache.waitForMsgDetailPictureDownload(msg, downloadListener);
+
+            String middlePath = FileManager.getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
+            String largePath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
+            if (new File(largePath).exists()) {
+                return largePath;
+            } else if (new File(middlePath).exists()) {
+                return middlePath;
+            } else {
+                String data = msg.getBmiddle_pic();
+                FileLocationMethod method = FileLocationMethod.picture_bmiddle;
+                return ImageTool.getLargePictureWithoutRoundedCorner(data, downloadListener, method);
+
+            }
+
+
         }
 
         @Override

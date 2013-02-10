@@ -15,9 +15,6 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * User: qii
  * Date: 12-12-12
@@ -25,8 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TimeLineBitmapDownloader {
 
     private Drawable transPic = new ColorDrawable(DebugColor.LISTVIEW_FLING);
-
-    private Map<String, PictureBitmapWorkerTask> picTasks = new ConcurrentHashMap<String, PictureBitmapWorkerTask>();
 
     private Handler handler;
 
@@ -93,26 +88,18 @@ public class TimeLineBitmapDownloader {
         if (bitmap != null) {
             view.setImageBitmap(bitmap);
             cancelPotentialDownload(urlKey, view);
-            picTasks.remove(urlKey);
         } else {
-            if (!cancelPotentialDownload(urlKey, view)) {
-                return;
-            }
 
             if (isFling) {
                 view.setImageDrawable(transPic);
                 return;
             }
 
-            PictureBitmapWorkerTask task = picTasks.get(urlKey);
-
-            if (task != null) {
-                task.addView(view);
-                view.setImageDrawable(new PictureBitmapDrawable(task));
+            if (!cancelPotentialDownload(urlKey, view)) {
                 return;
             }
 
-            final PictureBitmapWorkerTask newTask = new PictureBitmapWorkerTask(picTasks, view, urlKey, method);
+            final ReadWorker newTask = new ReadWorker(view, urlKey, method);
             PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(newTask);
             view.setImageDrawable(downloadedDrawable);
 
@@ -123,14 +110,12 @@ public class TimeLineBitmapDownloader {
 
                     if (getBitmapDownloaderTask(view) == newTask) {
                         newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                        picTasks.put(urlKey, newTask);
                     }
-
                     return;
 
 
                 }
-            }, 200);
+            }, 800);
 
 
         }
@@ -139,21 +124,19 @@ public class TimeLineBitmapDownloader {
 
 
     public void totalStopLoadPicture() {
-        if (picTasks != null) {
-            for (String task : picTasks.keySet()) {
-                picTasks.get(task).cancel(true);
-            }
-        }
+
+
     }
 
 
     private static boolean cancelPotentialDownload(String url, ImageView imageView) {
-        PictureBitmapWorkerTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
+        IPictureWorker bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
 
         if (bitmapDownloaderTask != null) {
             String bitmapUrl = bitmapDownloaderTask.getUrl();
             if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
-                bitmapDownloaderTask.cancel(true);
+                if (bitmapDownloaderTask instanceof MyAsyncTask)
+                    ((MyAsyncTask) bitmapDownloaderTask).cancel(true);
             } else {
                 return false;
             }
@@ -162,7 +145,7 @@ public class TimeLineBitmapDownloader {
     }
 
 
-    private static PictureBitmapWorkerTask getBitmapDownloaderTask(ImageView imageView) {
+    private static IPictureWorker getBitmapDownloaderTask(ImageView imageView) {
         if (imageView != null) {
             Drawable drawable = imageView.getDrawable();
             if (drawable instanceof PictureBitmapDrawable) {

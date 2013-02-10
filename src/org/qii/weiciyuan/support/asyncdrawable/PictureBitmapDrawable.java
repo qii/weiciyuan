@@ -10,15 +10,15 @@ import java.lang.ref.WeakReference;
  * Date: 12-9-5
  */
 public class PictureBitmapDrawable extends ColorDrawable {
-    private final WeakReference<PictureBitmapWorkerTask> bitmapDownloaderTaskReference;
+    private final WeakReference<IPictureWorker> bitmapDownloaderTaskReference;
 
-    public PictureBitmapDrawable(PictureBitmapWorkerTask bitmapDownloaderTask) {
+    public PictureBitmapDrawable(IPictureWorker bitmapDownloaderTask) {
         super(DebugColor.DOWNLOAD_START);
         bitmapDownloaderTaskReference =
-                new WeakReference<PictureBitmapWorkerTask>(bitmapDownloaderTask);
+                new WeakReference<IPictureWorker>(bitmapDownloaderTask);
     }
 
-    public PictureBitmapWorkerTask getBitmapDownloaderTask() {
+    public IPictureWorker getBitmapDownloaderTask() {
         return bitmapDownloaderTaskReference.get();
     }
 }

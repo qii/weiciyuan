@@ -95,8 +95,11 @@ public class FileManager {
                 break;
         }
 
-        return getSdCardPath() + File.separator + newRelativePath;
+        String result = getSdCardPath() + File.separator + newRelativePath;
+        if (!result.endsWith(".jpg") && !result.endsWith(".gif"))
+            result = result + ".jpg";
 
+        return result;
     }
 
     public static String getTxt2picPath() {

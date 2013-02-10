@@ -17,8 +17,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.support.asyncdrawable.MsgDetailPicTask;
-import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.asyncdrawable.MsgDetailReadWorker;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -39,7 +38,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
     private UpdateMessageTask updateMsgTask;
     private GetGoogleLocationInfoTask geoTask;
-    private MsgDetailPicTask picTask;
+    private MsgDetailReadWorker picTask;
 
     private Handler handler = new Handler();
 
@@ -271,8 +270,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                     @Override
                     public void run() {
                         if (refreshPic) {
-                            picTask = new MsgDetailPicTask(layout.content_pic, FileLocationMethod.picture_bmiddle, layout.content_pic_pb);
-                            picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg);
+                            picTask = new MsgDetailReadWorker(layout.content_pic, layout.content_pic_pb, msg);
+                            picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }
                 }, 1000);
@@ -306,8 +305,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                         @Override
                         public void run() {
                             if (refreshPic) {
-                                picTask = new MsgDetailPicTask(layout.repost_pic, FileLocationMethod.picture_bmiddle, layout.repost_pic_pb);
-                                picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getRetweeted_status());
+                                picTask = new MsgDetailReadWorker(layout.repost_pic, layout.repost_pic_pb, msg.getRetweeted_status());
+                                picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                             }
                         }
                     }, 1000);
@@ -380,11 +379,11 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                     picTask.cancel(true);
                 }
                 if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
-                    picTask = new MsgDetailPicTask(layout.content_pic, FileLocationMethod.picture_bmiddle, layout.content_pic_pb);
-                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg);
+                    picTask = new MsgDetailReadWorker(layout.content_pic, layout.content_pic_pb, msg);
+                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
-                    picTask = new MsgDetailPicTask(layout.repost_pic, FileLocationMethod.picture_bmiddle, layout.repost_pic_pb);
-                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR, msg.getRetweeted_status());
+                    picTask = new MsgDetailReadWorker(layout.repost_pic, layout.repost_pic_pb, msg.getRetweeted_status());
+                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
                 }
             }
