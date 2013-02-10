@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.support.debug;
+package org.qii.weiciyuan.support.asyncdrawable;
 
 import android.graphics.Color;
 

@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
 import android.graphics.drawable.ColorDrawable;
-import org.qii.weiciyuan.support.debug.DebugColor;
 
 import java.lang.ref.WeakReference;
 
