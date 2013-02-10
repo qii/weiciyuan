@@ -2,5 +2,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:id="@+id/menu_frame"
              android:layout_width="match_parent"
-             android:background="@color/white"
+             android:background="@color/gray"
              android:layout_height="match_parent"/>
