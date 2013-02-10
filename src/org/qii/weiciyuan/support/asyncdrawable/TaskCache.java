@@ -17,9 +17,9 @@ public class TaskCache {
 
     private static ConcurrentHashMap<String, DownloadWorker> downloadTasks = new ConcurrentHashMap<String, DownloadWorker>();
 
-    public static void removeDownloadTask(String url) {
+    public static void removeDownloadTask(String url, DownloadWorker downloadWorker) {
 
-        downloadTasks.remove(url);
+        downloadTasks.remove(url, downloadWorker);
 
     }
 

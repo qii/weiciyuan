@@ -53,7 +53,7 @@ public class DownloadWorker extends MyAsyncTask<String, Integer, Boolean> implem
         });
 
 
-        TaskCache.removeDownloadTask(url);
+        TaskCache.removeDownloadTask(url, DownloadWorker.this);
 
         return result;
 
