@@ -51,6 +51,14 @@ public class CheatSheet {
         });
     }
 
+    public static void setup(final Activity activity, View view, final String text) {
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                return showCheatSheet(activity, view, text);
+            }
+        });
+    }
 
     /**
      * Removes the cheat sheet for the given view by removing the view's {@link

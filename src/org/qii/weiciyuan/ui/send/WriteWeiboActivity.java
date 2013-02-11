@@ -382,38 +382,55 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         View title = getLayoutInflater().inflate(R.layout.writeweiboactivity_title_layout, null);
         TextView contentNumber = (TextView) title.findViewById(R.id.content_number);
         contentNumber.setVisibility(View.GONE);
+
+
         haveGPS = (ImageView) title.findViewById(R.id.have_gps);
+        final PopupMenu popupMenu = new PopupMenu(this, haveGPS);
+        popupMenu.inflate(R.menu.popmenu_gps);
         haveGPS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utility.isGooglePlaySafe(WriteWeiboActivity.this)) {
-                    Intent intent = new Intent(WriteWeiboActivity.this, AppMapActivity.class);
-                    intent.putExtra("lat", geoBean.getLat());
-                    intent.putExtra("lon", geoBean.getLon());
-                    intent.putExtra("locationStr", location);
-                    startActivity(intent);
-                } else {
-                    StringBuilder geoUriString = new StringBuilder().append("geo:" + geoBean.getLat() + "," + geoBean.getLon());
-                    if (!TextUtils.isEmpty(location)) {
-                        geoUriString.append("?q=").append(location);
-                    }
-                    Uri geoUri = Uri.parse(geoUriString.toString());
-                    Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
-                    if (Utility.isIntentSafe(WriteWeiboActivity.this, mapCall)) {
-                        startActivity(mapCall);
-                    }
+                popupMenu.show();
+            }
+        });
 
-                }
-            }
-        });
-        haveGPS.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                haveGPS.setVisibility(View.GONE);
-                geoBean = null;
-                return true;
-            }
-        });
+        CheatSheet.setup(WriteWeiboActivity.this, haveGPS, location);
+
+        popupMenu.setOnMenuItemClickListener(
+                new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_view:
+                                if (Utility.isGooglePlaySafe(WriteWeiboActivity.this)) {
+                                    Intent intent = new Intent(WriteWeiboActivity.this, AppMapActivity.class);
+                                    intent.putExtra("lat", geoBean.getLat());
+                                    intent.putExtra("lon", geoBean.getLon());
+                                    intent.putExtra("locationStr", location);
+                                    startActivity(intent);
+                                } else {
+                                    StringBuilder geoUriString = new StringBuilder().append("geo:" + geoBean.getLat() + "," + geoBean.getLon());
+                                    if (!TextUtils.isEmpty(location)) {
+                                        geoUriString.append("?q=").append(location);
+                                    }
+                                    Uri geoUri = Uri.parse(geoUriString.toString());
+                                    Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
+                                    if (Utility.isIntentSafe(WriteWeiboActivity.this, mapCall)) {
+                                        startActivity(mapCall);
+                                    }
+
+                                }
+                                break;
+                            case R.id.menu_delete:
+                                haveGPS.setVisibility(View.GONE);
+                                geoBean = null;
+                                break;
+
+                        }
+
+                        return true;
+                    }
+                });
 
         actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
         actionBar.setDisplayShowCustomEnabled(true);
