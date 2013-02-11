@@ -79,6 +79,17 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
         mode.setTitle(bean.getUser().getScreen_name());
 
+        //fuck sina weibo
+//        MenuItem favItem = menu.findItem(R.id.menu_fav);
+//        MenuItem unFavItem = menu.findItem(R.id.menu_unfav);
+//        if (bean.isFavorited()) {
+//            favItem.setVisible(false);
+//            unFavItem.setVisible(true);
+//        } else {
+//            favItem.setVisible(true);
+//            unFavItem.setVisible(false);
+//        }
+
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
         if (fragment.getActivity() != null)
