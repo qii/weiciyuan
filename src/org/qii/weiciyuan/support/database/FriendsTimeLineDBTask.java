@@ -107,9 +107,9 @@ public class FriendsTimeLineDBTask {
         getWsd().execSQL(sql);
     }
 
-    public static void updateCount(String msgId, String accountId, int commentCount, int repostCount) {
+    public static void updateCount(String msgId, int commentCount, int repostCount) {
         String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.MBLOGID + "  = "
-                + msgId + " and " + HomeTable.ACCOUNTID + " = " + accountId + " order by "
+                + msgId + " order by "
                 + HomeTable.ID + " asc limit 50";
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();

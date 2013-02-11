@@ -80,8 +80,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            FriendsTimeLineDBTask.updateCount(msg.getId(), GlobalContext.getInstance().getCurrentAccountId()
-                                    , msg.getComments_count(), msg.getReposts_count());
+                            FriendsTimeLineDBTask.updateCount(msg.getId(), msg.getComments_count(), msg.getReposts_count());
+                            HomeOtherGroupTimeLineDBTask.updateCount(msg.getId(), msg.getComments_count(), msg.getReposts_count());
                         }
                     }).start();
 

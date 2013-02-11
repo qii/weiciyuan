@@ -165,4 +165,30 @@ public class HomeOtherGroupTimeLineDBTask {
 
     }
 
+    public static void updateCount(String msgId, int commentCount, int repostCount) {
+        String sql = "select * from " + HomeOtherGroupTable.TABLE_NAME + " where " + HomeOtherGroupTable.MBLOGID + "  = "
+                + msgId + " order by "
+                + HomeOtherGroupTable.ID + " asc limit 50";
+        Cursor c = getRsd().rawQuery(sql, null);
+        Gson gson = new Gson();
+        while (c.moveToNext()) {
+            String id = c.getString(c.getColumnIndex(HomeOtherGroupTable.ID));
+            String json = c.getString(c.getColumnIndex(HomeOtherGroupTable.JSONDATA));
+            if (!TextUtils.isEmpty(json)) {
+                try {
+                    MessageBean value = gson.fromJson(json, MessageBean.class);
+                    value.setComments_count(commentCount);
+                    value.setReposts_count(repostCount);
+                    String[] args = {id};
+                    ContentValues cv = new ContentValues();
+                    cv.put(HomeOtherGroupTable.JSONDATA, gson.toJson(value));
+                    getWsd().update(HomeOtherGroupTable.TABLE_NAME, cv, HomeOtherGroupTable.ID + "=?", args);
+                } catch (JsonSyntaxException e) {
+
+                }
+
+            }
+        }
+    }
+
 }
