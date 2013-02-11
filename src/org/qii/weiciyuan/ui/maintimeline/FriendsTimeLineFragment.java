@@ -4,7 +4,10 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
@@ -13,6 +16,7 @@ import org.qii.weiciyuan.dao.maintimeline.FriendGroupTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.othercomponent.SaveToDBService;
 import org.qii.weiciyuan.support.database.FriendsTimeLineDBTask;
+import org.qii.weiciyuan.support.database.HomeOtherGroupTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -24,9 +28,7 @@ import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -54,7 +56,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private MessageListBean bean = new MessageListBean();
 
-    private MenuItem name;
 
     @Override
     public MessageListBean getList() {
@@ -114,35 +115,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         super.onCreate(savedInstanceState);
 
 
-    }
-
-
-    @Override
-    protected void newMsgOnPostExecute(MessageListBean newValue) {
-        if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 0) {
-            showNewMsgToastMessage(newValue);
-            getList().addNewData(newValue);
-            getAdapter().notifyDataSetChanged();
-            getListView().setSelectionAfterHeaderView();
-
-            if (getList() != null && currentGroupId.equals(ALL_GROUP_ID)) {
-                SaveToDBService.save(getActivity(), SaveToDBService.TYPE_STATUS, getList(), accountBean.getUid());
-            }
-//            getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
-            putToGroupDataMemoryCache(currentGroupId, getList());
-
-        }
-
-    }
-
-    @Override
-    protected void oldMsgOnPostExecute(MessageListBean oldValue) {
-        if (Utility.isAllNotNull(getActivity(), oldValue) && oldValue.getSize() > 1) {
-            getList().addOldData(oldValue);
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
-
-        }
     }
 
 
@@ -301,7 +273,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         });
     }
 
-    private class DBCacheTask extends MyAsyncTask<Void, MessageListBean, MessageListBean> {
+    private class DBCacheTask extends MyAsyncTask<Void, Map<String, MessageListBean>, Map<String, MessageListBean>> {
 
         @Override
         protected void onPreExecute() {
@@ -310,17 +282,35 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
 
         @Override
-        protected MessageListBean doInBackground(Void... params) {
-            return FriendsTimeLineDBTask.getHomeLineMsgList(accountBean.getUid());
+        protected Map<String, MessageListBean> doInBackground(Void... params) {
+
+            MessageListBean allGroup = FriendsTimeLineDBTask.getHomeLineMsgList(accountBean.getUid());
+            Map<String, MessageListBean> map = new HashMap<String, MessageListBean>();
+            map.put(ALL_GROUP_ID, allGroup);
+            MessageListBean biGroup = HomeOtherGroupTimeLineDBTask.get(accountBean.getUid(), BILATERAL_GROUP_ID);
+            map.put(BILATERAL_GROUP_ID, biGroup);
+            GroupListBean groupListBean = GlobalContext.getInstance().getGroup();
+            if (groupListBean != null) {
+                List<GroupBean> lists = groupListBean.getLists();
+                for (GroupBean groupBean : lists) {
+                    MessageListBean dbMsg = HomeOtherGroupTimeLineDBTask.get(accountBean.getUid(), groupBean.getId());
+                    map.put(groupBean.getId(), dbMsg);
+                }
+            }
+            return map;
         }
 
         @Override
-        protected void onPostExecute(MessageListBean result) {
+        protected void onPostExecute(Map<String, MessageListBean> result) {
             super.onPostExecute(result);
 
             if (result != null) {
-                getList().replaceData(result);
-                putToGroupDataMemoryCache(ALL_GROUP_ID, result);
+                getList().replaceData(result.get(ALL_GROUP_ID));
+                putToGroupDataMemoryCache(BILATERAL_GROUP_ID, result.get(BILATERAL_GROUP_ID));
+                Set<String> keys = result.keySet();
+                for (String key : keys) {
+                    putToGroupDataMemoryCache(key, result.get(key));
+                }
             }
 
             getPullToRefreshListView().setVisibility(View.VISIBLE);
@@ -344,30 +334,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         intent.putExtra("msg", getList().getItemList().get(position));
         intent.putExtra("token", token);
         startActivityForResult(intent, 0);
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.actionbar_menu_friendstimelinefragment, menu);
-        name = menu.findItem(R.id.group_name);
-        name.setVisible(false);
-        if (currentGroupId.equals(ALL_GROUP_ID)) {
-//            name.setTitle(userBean.getScreen_name());
-            name.setTitle(getString(R.string.all_people));
-        }
-        if (currentGroupId.equals(BILATERAL_GROUP_ID)) {
-            name.setTitle(getString(R.string.bilateral));
-        } else if (GlobalContext.getInstance().getGroup() != null) {
-            for (GroupBean b : GlobalContext.getInstance().getGroup().getLists()) {
-                if (b.getIdstr().equals(currentGroupId)) {
-                    name.setTitle(b.getName());
-                    return;
-                }
-            }
-        }
-
     }
 
     @Override
@@ -449,6 +415,43 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         MessageListBean result = dao.getGSONMsgList();
 
         return result;
+    }
+
+
+    @Override
+    protected void newMsgOnPostExecute(MessageListBean newValue) {
+        if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 0) {
+            showNewMsgToastMessage(newValue);
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
+
+            if (getList() != null) {
+                if (currentGroupId.equals(ALL_GROUP_ID)) {
+                    SaveToDBService.save(getActivity(), SaveToDBService.TYPE_STATUS, getList(), accountBean.getUid());
+                } else {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            HomeOtherGroupTimeLineDBTask.replace(getList(), accountBean.getUid(), currentGroupId);
+                        }
+                    }).start();
+                }
+            }
+            putToGroupDataMemoryCache(currentGroupId, getList());
+
+        }
+
+    }
+
+    @Override
+    protected void oldMsgOnPostExecute(MessageListBean oldValue) {
+        if (Utility.isAllNotNull(getActivity(), oldValue) && oldValue.getSize() > 1) {
+            getList().addOldData(oldValue);
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     public void switchGroup() {
