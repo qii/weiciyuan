@@ -348,8 +348,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         if (getList().getItemList().size() > 0) {
             dao.setSince_id(getList().getItemList().get(0).getId());
         }
-        MessageListBean result = dao.getGSONMsgList();
-        return result;
+        return dao.getGSONMsgList();
     }
 
     @Override
@@ -365,9 +364,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         if (getList().getItemList().size() > 0) {
             dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
         }
-        MessageListBean result = dao.getGSONMsgList();
-
-        return result;
+        return dao.getGSONMsgList();
     }
 
     @Override
@@ -375,10 +372,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(token);
         dao.setMax_id(beginId);
         dao.setSince_id(endId);
-
-        MessageListBean result = dao.getGSONMsgList();
-
-        return result;
+        return dao.getGSONMsgList();
     }
 
 
