@@ -17,7 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
@@ -336,16 +336,52 @@ public class JavaHttpUtility {
         return _sb.toString();
     }
 
+    private String getBoundaryMessage(String boundary, Map params, String fileField, String fileName, String fileType) {
+        StringBuffer res = new StringBuffer("--").append(boundary).append("\r\n");
+
+        Iterator keys = params.keySet().iterator();
+
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            String value = (String) params.get(key);
+            res.append("Content-Disposition: form-data; name=\"")
+                    .append(key).append("\"\r\n").append("\r\n")
+                    .append(value).append("\r\n").append("--")
+                    .append(boundary).append("\r\n");
+        }
+        res.append("Content-Disposition: form-data; name=\"").append(fileField)
+                .append("\"; filename=\"").append(fileName)
+                .append("\"\r\n").append("Content-Type: ")
+                .append(fileType).append("\r\n\r\n");
+
+        return res.toString();
+    }
+
     public boolean doUploadFile(String urlStr, Map<String, String> param, String path, final FileUploaderHttpHelper.ProgressListener listener) throws WeiboException {
         String BOUNDARYSTR = getBoundry();
-        String BOUNDARY = "--" + BOUNDARYSTR + "\r\n";
+
+        File targetFile = new File(path);
+
+        byte[] barry = null;
+        int contentLength = 0;
+        String sendStr = "";
+        try {
+            barry = ("--" + BOUNDARYSTR + "--\r\n").getBytes("UTF-8");
+
+            sendStr = getBoundaryMessage(BOUNDARYSTR, param, "pic", new File(path).getName(), "image/png");
+            contentLength = sendStr.getBytes("UTF-8").length + (int) targetFile.length() + 2 * barry.length;
+        } catch (UnsupportedEncodingException e) {
+
+        }
+        int totalSent = 0;
+        String lenstr = Integer.toString(contentLength);
+
         HttpURLConnection urlConnection = null;
         BufferedOutputStream out = null;
         FileInputStream fis = null;
         GlobalContext globalContext = GlobalContext.getInstance();
         String errorStr = globalContext.getString(R.string.timeout);
         globalContext = null;
-        InputStream is = null;
         try {
             URL url = null;
 
@@ -366,40 +402,16 @@ public class JavaHttpUtility {
             urlConnection.setRequestProperty("Connection", "Keep-Alive");
             urlConnection.setRequestProperty("Charset", "UTF-8");
             urlConnection.setRequestProperty("Content-type", "multipart/form-data;boundary=" + BOUNDARYSTR);
+            urlConnection.setRequestProperty("Content-Length", lenstr);
+            ((HttpURLConnection) urlConnection).setFixedLengthStreamingMode(contentLength);
             urlConnection.connect();
 
             out = new BufferedOutputStream(urlConnection.getOutputStream());
+            out.write(sendStr.getBytes("UTF-8"));
+            totalSent += sendStr.getBytes("UTF-8").length;
 
-            StringBuilder sb = new StringBuilder();
 
-            Map<String, String> paramMap = new HashMap<String, String>();
-
-            for (String key : param.keySet()) {
-                if (param.get(key) != null) {
-                    paramMap.put(key, param.get(key));
-                }
-            }
-
-            for (String str : paramMap.keySet()) {
-                sb.append(BOUNDARY);
-                sb.append("Content-Disposition:form-data;name=\"");
-                sb.append(str);
-                sb.append("\"\r\n\r\n");
-                sb.append(param.get(str));
-                sb.append("\r\n");
-            }
-
-            out.write(sb.toString().getBytes());
-
-            File file = new File(path);
-            out.write(BOUNDARY.getBytes());
-            StringBuilder filenamesb = new StringBuilder();
-            filenamesb.append("Content-Disposition:form-data;Content-Type:application/octet-stream;name=\"pic");
-            filenamesb.append("\";filename=\"");
-            filenamesb.append(file.getName() + "\"\r\n\r\n");
-            out.write(filenamesb.toString().getBytes());
-
-            fis = new FileInputStream(file);
+            fis = new FileInputStream(targetFile);
 
             int bytesRead;
             int bytesAvailable;
@@ -416,7 +428,7 @@ public class JavaHttpUtility {
             while (bytesRead > 0) {
 
                 if (thread.isInterrupted()) {
-                    file.delete();
+                    targetFile.delete();
                     throw new InterruptedIOException();
                 }
                 out.write(buffer, 0, bufferSize);
@@ -431,10 +443,11 @@ public class JavaHttpUtility {
 
             }
 
-            out.write("\r\n\r\n".getBytes());
-            fis.close();
 
-            out.write(("--" + BOUNDARYSTR + "--\r\n").getBytes());
+            out.write(barry);
+            totalSent += barry.length;
+            out.write(barry);
+            totalSent += barry.length;
             out.flush();
             out.close();
             if (listener != null) {
