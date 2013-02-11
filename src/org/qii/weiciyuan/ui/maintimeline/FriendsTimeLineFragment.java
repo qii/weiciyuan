@@ -265,7 +265,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         });
     }
 
-    private class DBCacheTask extends MyAsyncTask<Void, Map<String, MessageListBean>, Map<String, MessageListBean>> {
+    private class DBCacheTask extends MyAsyncTask<Void, MessageListBean, Map<String, MessageListBean>> {
 
         @Override
         protected void onPreExecute() {
@@ -277,8 +277,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         protected Map<String, MessageListBean> doInBackground(Void... params) {
 
             MessageListBean allGroup = FriendsTimeLineDBTask.getHomeLineMsgList(accountBean.getUid());
+            publishProgress(allGroup);
+
             Map<String, MessageListBean> map = new HashMap<String, MessageListBean>();
-            map.put(ALL_GROUP_ID, allGroup);
             MessageListBean biGroup = HomeOtherGroupTimeLineDBTask.get(accountBean.getUid(), BILATERAL_GROUP_ID);
             map.put(BILATERAL_GROUP_ID, biGroup);
             GroupListBean groupListBean = GlobalContext.getInstance().getGroup();
@@ -295,16 +296,23 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         @Override
         protected void onPostExecute(Map<String, MessageListBean> result) {
             super.onPostExecute(result);
-
             if (result != null) {
-                getList().replaceData(result.get(ALL_GROUP_ID));
                 putToGroupDataMemoryCache(BILATERAL_GROUP_ID, result.get(BILATERAL_GROUP_ID));
                 Set<String> keys = result.keySet();
                 for (String key : keys) {
                     putToGroupDataMemoryCache(key, result.get(key));
                 }
             }
+        }
 
+        @Override
+        protected void onProgressUpdate(MessageListBean... result) {
+            super.onProgressUpdate(result);
+            if (result != null && result.length > 0) {
+                MessageListBean homeMsg = result[0];
+                getList().replaceData(homeMsg);
+                putToGroupDataMemoryCache(ALL_GROUP_ID, homeMsg);
+            }
             getPullToRefreshListView().setVisibility(View.VISIBLE);
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
