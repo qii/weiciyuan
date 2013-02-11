@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckedTextView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -40,21 +39,44 @@ public class FriendsTimeLineListNavAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = activity.getLayoutInflater();
-        View view = inflater.inflate(R.layout.spinner_selector_text_view, parent, false);
-        if (position != 0) {
-            ((TextView) view).setText(valueArray[position]);
+        ViewHolder holder;
+
+        if (convertView == null || convertView.getTag() == null) {
+            LayoutInflater inflater = activity.getLayoutInflater();
+            convertView = inflater.inflate(R.layout.spinner_selector_text_view, parent, false);
+            holder = new ViewHolder();
+            holder.textView = (TextView) convertView;
         } else {
-            ((TextView) view).setText(GlobalContext.getInstance().getCurrentAccountName());
+            holder = (ViewHolder) convertView.getTag();
         }
-        return view;
+
+        if (position != 0) {
+            holder.textView.setText(valueArray[position]);
+        } else {
+            holder.textView.setText(GlobalContext.getInstance().getCurrentAccountName());
+        }
+        return convertView;
     }
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = activity.getLayoutInflater();
-        View view = inflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
-        ((CheckedTextView) view).setText(valueArray[position]);
-        return view;
+        ViewHolder holder;
+
+        if (convertView == null || convertView.getTag() == null) {
+            LayoutInflater inflater = activity.getLayoutInflater();
+            convertView = inflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+            holder = new ViewHolder();
+            holder.textView = (TextView) convertView;
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        holder.textView.setText(valueArray[position]);
+        return convertView;
+
+    }
+
+    private static class ViewHolder {
+        TextView textView;
     }
 };
