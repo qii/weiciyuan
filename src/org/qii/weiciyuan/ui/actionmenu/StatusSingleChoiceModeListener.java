@@ -23,6 +23,7 @@ import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.WriteCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteRepostActivity;
 import org.qii.weiciyuan.ui.task.FavAsyncTask;
+import org.qii.weiciyuan.ui.task.UnFavAsyncTask;
 
 /**
  * User: qii
@@ -38,7 +39,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
     private ShareActionProvider mShareActionProvider;
 
     private FavAsyncTask favTask = null;
-
+    private UnFavAsyncTask unFavTask = null;
 
     public void finish() {
         if (mode != null)
@@ -126,9 +127,18 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
                 break;
             case R.id.menu_fav:
-                if (Utility.isTaskStopped(favTask)) {
+                if (Utility.isTaskStopped(favTask) && Utility.isTaskStopped(unFavTask)) {
                     favTask = new FavAsyncTask(GlobalContext.getInstance().getSpecialToken(), bean.getId());
                     favTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
+                listView.clearChoices();
+                listView.clearChoices();
+                mode.finish();
+                break;
+            case R.id.menu_unfav:
+                if (Utility.isTaskStopped(favTask) && Utility.isTaskStopped(unFavTask)) {
+                    unFavTask = new UnFavAsyncTask(GlobalContext.getInstance().getSpecialToken(), bean.getId());
+                    unFavTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 listView.clearChoices();
                 listView.clearChoices();
