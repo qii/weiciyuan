@@ -98,25 +98,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         this.token = token;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("account", accountBean);
-        outState.putSerializable("bean", getList());
-        outState.putSerializable("userBean", userBean);
-        outState.putString("token", token);
-
-        outState.putSerializable("hashmap", groupDataCache);
-        outState.putString("currentGroupId", currentGroupId);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-    }
-
 
     @Override
     public void onPause() {
@@ -137,6 +118,17 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         Utility.cancelTasks(dbTask);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("account", accountBean);
+        outState.putSerializable("bean", getList());
+        outState.putSerializable("userBean", userBean);
+        outState.putString("token", token);
+
+        outState.putSerializable("groupDataCache", groupDataCache);
+        outState.putString("currentGroupId", currentGroupId);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -169,7 +161,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 accountBean = (AccountBean) savedInstanceState.getSerializable("account");
                 token = savedInstanceState.getString("token");
 
-                groupDataCache = (HashMap) savedInstanceState.getSerializable("hashmap");
+                groupDataCache = (HashMap) savedInstanceState.getSerializable("groupDataCache");
                 currentGroupId = savedInstanceState.getString("currentGroupId");
 
                 getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
