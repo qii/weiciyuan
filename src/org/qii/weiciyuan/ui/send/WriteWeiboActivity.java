@@ -394,8 +394,6 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             }
         });
 
-        CheatSheet.setup(WriteWeiboActivity.this, haveGPS, location);
-
         popupMenu.setOnMenuItemClickListener(
                 new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -870,6 +868,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
     private void enableGeo() {
         haveGPS.setVisibility(View.VISIBLE);
+        CheatSheet.setup(WriteWeiboActivity.this, haveGPS, location);
     }
 
     private void disableGeo() {
