@@ -313,14 +313,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 if (allowRefresh())
                     getPullToRefreshListView().startRefreshNow();
                 break;
-            case R.id.group_name:
-
-                if (canSwitchGroup()) {
-                    FriendsGroupDialog dialog = new FriendsGroupDialog(GlobalContext.getInstance().getGroup(), currentGroupId);
-                    dialog.setTargetFragment(this, 1);
-                    dialog.show(getFragmentManager(), "");
-                }
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -428,7 +420,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getList().replaceData(groupDataCache.get(currentGroupId));
             getAdapter().notifyDataSetChanged();
         }
-        getActivity().invalidateOptionsMenu();
     }
 
     private void putToGroupDataMemoryCache(String groupId, MessageListBean value) {
