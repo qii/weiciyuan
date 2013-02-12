@@ -8,10 +8,9 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.webkit.WebView;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
@@ -69,6 +68,61 @@ public class BrowserBigPicActivity extends AbstractAppActivity {
 
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
+        webView.setOnTouchListener(new View.OnTouchListener() {
+            boolean mPressed;
+            boolean mClose;
+            CheckForSinglePress mPendingCheckForSinglePress = new CheckForSinglePress();
+            long lastTime = 0;
+            float[] location = new float[2];
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mPressed = true;
+                        if (System.currentTimeMillis() - lastTime > ViewConfiguration.getDoubleTapTimeout()) {
+                            mClose = true;
+                            new Handler().postDelayed(mPendingCheckForSinglePress,
+                                    ViewConfiguration.getDoubleTapTimeout());
+                        } else {
+                            mClose = false;
+                        }
+                        lastTime = System.currentTimeMillis();
+
+                        location[0] = event.getRawX();
+                        location[1] = event.getRawY();
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mPressed = false;
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        mPressed = false;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float x = event.getRawX();
+                        float y = event.getRawY();
+                        if (Math.abs(location[0] - x) > 5.0f && Math.abs(location[1] - y) > 5.0f) {
+                            mClose = false;
+                        }
+                        break;
+                }
+
+                return false;
+            }
+
+
+            class CheckForSinglePress implements Runnable {
+
+                public void run() {
+
+                    if (!mPressed && mClose)
+                        finish();
+
+                }
+
+            }
+        });
 
         msg = (MessageBean) getIntent().getSerializableExtra("msg");
         if (Utility.isTaskStopped(task)) {
