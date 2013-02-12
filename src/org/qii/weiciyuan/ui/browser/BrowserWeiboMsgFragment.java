@@ -131,7 +131,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     @Override
     public void onResume() {
         super.onResume();
-        buildViewData(false);
+//        buildViewData(false);
         layout.mapView.onResume();
     }
 
@@ -315,10 +315,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             }
         }
 
-
-        getActivity().getActionBar().getTabAt(1).setText(getString(R.string.comments) + "(" + msg.getComments_count() + ")");
-        getActivity().getActionBar().getTabAt(2).setText(getString(R.string.repost) + "(" + msg.getReposts_count() + ")");
-
+        Utility.buildTabCount(getActivity().getActionBar().getTabAt(1), getString(R.string.comments), msg.getComments_count());
+        Utility.buildTabCount(getActivity().getActionBar().getTabAt(2), getString(R.string.repost), msg.getReposts_count());
     }
 
     private void buildRepostCount() {

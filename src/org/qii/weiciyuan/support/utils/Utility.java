@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.support.utils;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Notification;
 import android.content.Context;
@@ -413,6 +414,21 @@ public class Utility {
             if (Utility.isIntentSafe(activity, shareIntent) && mShareActionProvider != null) {
                 mShareActionProvider.setShareIntent(shareIntent);
             }
+        }
+    }
+
+
+    public static void buildTabCount(ActionBar.Tab tab, String tabStrRes, int count) {
+        String content = tab.getText().toString();
+        int value = 0;
+        int start = content.indexOf("(");
+        int end = content.lastIndexOf(")");
+        if (start > 0) {
+            String result = content.substring(start + 1, end);
+            value = Integer.valueOf(result);
+        }
+        if (value < count) {
+            tab.setText(tabStrRes + "(" + count + ")");
         }
     }
 }
