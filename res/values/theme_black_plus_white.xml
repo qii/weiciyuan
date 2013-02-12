@@ -37,6 +37,9 @@
         <item name="clickable_flag">@drawable/clickable_flag_dark</item>
         <item name="timeline_reply_to_comment">@drawable/reply_to_comment_black</item>
 
+        <item name="timeline_gps_icon">@drawable/timeline_gps_black</item>
+        <item name="timeline_pic_icon">@drawable/timeline_pic_black</item>
+        <item name="timeline_load_more_background">@drawable/timeline_load_more_light</item>
 
         <item name="listview_item_background_selector">@drawable/listview_item_background_selector</item>
         <item name="listview_item_refresh_animation">@drawable/refresh_black</item>

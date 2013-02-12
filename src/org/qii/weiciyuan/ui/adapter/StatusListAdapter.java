@@ -137,19 +137,39 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         holder.time.setTime(msg.getMills());
 
         if (showOriStatus) {
-            if (msg.getReposts_count() == 0 && msg.getComments_count() == 0) {
+            boolean checkRepostsCount = (msg.getReposts_count() != 0);
+            boolean checkCommentsCount = (msg.getComments_count() != 0);
+            boolean checkPic = (!TextUtils.isEmpty(msg.getThumbnail_pic())
+                    || (msg.getRetweeted_status() != null
+                    && !TextUtils.isEmpty(msg.getRetweeted_status().getThumbnail_pic())));
+            checkPic = (checkPic && !SettingUtility.isEnablePic());
+            boolean checkGps = (msg.getGeo() != null);
+
+            if (!checkRepostsCount && !checkCommentsCount && !checkPic && !checkGps) {
                 holder.count_layout.setVisibility(View.GONE);
             } else {
                 holder.count_layout.setVisibility(View.VISIBLE);
 
-                if (msg.getReposts_count() > 0) {
+                if (checkPic) {
+                    holder.timeline_pic.setVisibility(View.VISIBLE);
+                } else {
+                    holder.timeline_pic.setVisibility(View.GONE);
+                }
+
+                if (checkGps) {
+                    holder.timeline_gps.setVisibility(View.VISIBLE);
+                } else {
+                    holder.timeline_gps.setVisibility(View.GONE);
+                }
+
+                if (checkRepostsCount) {
                     holder.repost_count.setText(String.valueOf(msg.getReposts_count()));
                     holder.repost_count.setVisibility(View.VISIBLE);
                 } else {
                     holder.repost_count.setVisibility(View.GONE);
                 }
 
-                if (msg.getComments_count() > 0) {
+                if (checkCommentsCount) {
                     holder.comment_count.setText(String.valueOf(msg.getComments_count()));
                     holder.comment_count.setVisibility(View.VISIBLE);
                 } else {

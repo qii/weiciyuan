@@ -25,12 +25,29 @@
         android:visibility="gone"
         android:id="@+id/count_layout">
 
+        <ImageView
+            android:id="@+id/timeline_gps_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="?timeline_gps_icon"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/timeline_pic_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:visibility="gone"
+            android:src="?timeline_pic_icon"/>
+
         <TextView
             android:id="@+id/repost_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="?android:textColorTertiary"
             android:drawablePadding="4dp"
+            android:layout_marginLeft="8dp"
             android:fontFamily="monospace"
             android:drawableLeft="?timeline_repost_flag"/>
 

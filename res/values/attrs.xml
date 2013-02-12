@@ -36,6 +36,10 @@
     <attr name="clickable_flag" format="reference"/>
     <attr name="timeline_reply_to_comment" format="reference"/>
 
+    <attr name="timeline_gps_icon" format="reference"/>
+    <attr name="timeline_pic_icon" format="reference"/>
+
+    <attr name="timeline_load_more_background" format="reference"/>
 
     <attr name="listview_item_background_selector" format="reference"/>
     <attr name="listview_item_refresh_animation" format="reference"/>

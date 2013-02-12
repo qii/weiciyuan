@@ -38,6 +38,11 @@
         <item name="timeline_reply_to_comment">@drawable/reply_to_comment_light</item>
 
 
+        <item name="timeline_gps_icon">@drawable/timeline_gps_light</item>
+        <item name="timeline_pic_icon">@drawable/timeline_pic_light</item>
+        <item name="timeline_load_more_background">@drawable/timeline_load_more_black</item>
+
+
         <item name="listview_item_background_selector">@null</item>
         <item name="listview_item_refresh_animation">@drawable/refresh_light</item>
         <item name="link_color">@color/steelblue</item>
