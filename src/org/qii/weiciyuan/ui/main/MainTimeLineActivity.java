@@ -48,6 +48,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
     private ScheduledExecutorService newMsgScheduledExecutorService;
 
+    private MusicReceiver musicReceiver;
+
     public String getToken() {
         return accountBean.getAccess_token();
     }
@@ -110,13 +112,13 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 musicFilter.addAction("com.rdio.android.metachanged");
                 musicFilter.addAction("com.samsung.sec.android.MusicPlayer.metachanged");
                 musicFilter.addAction("com.andrew.apollo.metachanged");
-
+                musicReceiver = new MusicReceiver();
                 registerReceiver(musicReceiver, musicFilter);
             }
         }, 3000);
     }
 
-    private BroadcastReceiver musicReceiver = new BroadcastReceiver() {
+    private class MusicReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String artist = intent.getStringExtra("artist");
@@ -131,7 +133,9 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 GlobalContext.getInstance().updateMusicInfo(musicInfo);
             }
         }
-    };
+    }
+
+    ;
 
     public static class MusicInfo {
         String artist;
