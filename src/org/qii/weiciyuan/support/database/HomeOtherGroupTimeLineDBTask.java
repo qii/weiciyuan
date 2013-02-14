@@ -98,7 +98,7 @@ public class HomeOtherGroupTimeLineDBTask {
                     + " in " + "(" + accountId + ") "
                     + " and " + HomeOtherGroupTable.GROUPID
                     + " = " + groupId
-                    + "order by " + HomeOtherGroupTable.ID + " desc limit " + needDeletedNumber + " ) ";
+                    + " order by " + HomeOtherGroupTable.ID + " desc limit " + needDeletedNumber + " ) ";
 
             getWsd().execSQL(sql);
         }

@@ -422,6 +422,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         } else {
             getList().replaceData(groupDataCache.get(currentGroupId));
             getAdapter().notifyDataSetChanged();
+            new RefreshReCmtCountTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -567,7 +568,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             msgIds = new ArrayList<String>();
             List<MessageBean> msgList = getList().getItemList();
             for (MessageBean msg : msgList) {
-                msgIds.add(msg.getId());
+                if (msg != null) {
+                    msgIds.add(msg.getId());
+                }
             }
         }
 
@@ -590,7 +593,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             for (int i = 0; i < value.size(); i++) {
                 MessageBean msg = getList().getItem(i);
                 MessageReCmtCountBean count = value.get(i);
-                if (msg.getId().equals(count.getId())) {
+                if (msg != null && msg.getId().equals(count.getId())) {
                     msg.setReposts_count(count.getReposts());
                     msg.setComments_count(count.getComments());
                 }
