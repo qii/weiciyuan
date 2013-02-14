@@ -227,8 +227,8 @@ public class SettingUtility {
 
     }
 
-    public static boolean enableHardwareAccelerated() {
-        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.HARDWARE_ACCELERATED, false);
+    public static boolean disableHardwareAccelerated() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.DISABLE_HARDWARE_ACCELERATED, false);
 
     }
 

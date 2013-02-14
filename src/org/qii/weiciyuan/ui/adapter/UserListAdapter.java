@@ -124,15 +124,17 @@ public class UserListAdapter extends BaseAdapter {
 
     private void configLayerType(ViewHolder holder) {
 
-        boolean hardAccelerated = SettingUtility.enableHardwareAccelerated();
+        boolean disableHardAccelerated = SettingUtility.disableHardwareAccelerated();
+        if (!disableHardAccelerated)
+            return;
 
-        int prefLayerType = hardAccelerated ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_SOFTWARE;
         int currentWidgetLayerType = holder.username.getLayerType();
 
-        if (prefLayerType != currentWidgetLayerType) {
-            holder.username.setLayerType(prefLayerType, null);
+        if (View.LAYER_TYPE_SOFTWARE != currentWidgetLayerType) {
+            holder.username.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             if (holder.content != null)
-                holder.content.setLayerType(prefLayerType, null);
+                holder.content.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
         }
 
     }

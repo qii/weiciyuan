@@ -199,7 +199,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
 
         if (getItemViewType(position) != TYPE_MIDDLE) {
-//            configLayerType(holder);
+            configLayerType(holder);
             configViewFont(holder);
             bindViewData(holder, position);
         }
@@ -265,28 +265,29 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         return holder;
     }
 
-//    private void configLayerType(ViewHolder holder) {
-//
-//        boolean hardAccelerated = SettingUtility.enableHardwareAccelerated();
-//
-//        int prefLayerType = hardAccelerated ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_SOFTWARE;
-//        int currentWidgetLayerType = holder.username.getLayerType();
-//
-//        if (prefLayerType != currentWidgetLayerType) {
-//            holder.username.setLayerType(prefLayerType, null);
-//            if (holder.content != null)
-//                holder.content.setLayerType(prefLayerType, null);
-//            if (holder.repost_content != null)
-//                holder.repost_content.setLayerType(prefLayerType, null);
-//            if (holder.time != null)
-//                holder.time.setLayerType(prefLayerType, null);
-//            if (holder.repost_count != null)
-//                holder.repost_count.setLayerType(prefLayerType, null);
-//            if (holder.comment_count != null)
-//                holder.comment_count.setLayerType(prefLayerType, null);
-//        }
-//
-//    }
+    private void configLayerType(ViewHolder holder) {
+
+        boolean disableHardAccelerated = SettingUtility.disableHardwareAccelerated();
+        if (!disableHardAccelerated)
+            return;
+
+        int currentWidgetLayerType = holder.username.getLayerType();
+
+        if (View.LAYER_TYPE_SOFTWARE != currentWidgetLayerType) {
+            holder.username.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            if (holder.content != null)
+                holder.content.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            if (holder.repost_content != null)
+                holder.repost_content.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            if (holder.time != null)
+                holder.time.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            if (holder.repost_count != null)
+                holder.repost_count.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            if (holder.comment_count != null)
+                holder.comment_count.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
+    }
 
     private void configViewFont(ViewHolder holder) {
         int prefFontSizeSp = SettingUtility.getFontSize();
