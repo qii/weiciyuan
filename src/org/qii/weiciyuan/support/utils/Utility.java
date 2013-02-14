@@ -427,7 +427,7 @@ public class Utility {
             String result = content.substring(start + 1, end);
             value = Integer.valueOf(result);
         }
-        if (value < count) {
+        if (value <= count) {
             tab.setText(tabStrRes + "(" + count + ")");
         }
     }
