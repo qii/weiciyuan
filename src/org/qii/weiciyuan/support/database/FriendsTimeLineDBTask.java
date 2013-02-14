@@ -95,7 +95,7 @@ public class FriendsTimeLineDBTask {
         }
     }
 
-    public static void replaceHomeLineMsg(MessageListBean list, String accountId) {
+    public static void replace(MessageListBean list, String accountId) {
 
         deleteAllHomes(accountId);
         addHomeLineMsg(list, accountId);

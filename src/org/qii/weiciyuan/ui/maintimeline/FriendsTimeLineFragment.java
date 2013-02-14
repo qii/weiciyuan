@@ -386,7 +386,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 dbRunnable = new Runnable() {
                     @Override
                     public void run() {
-                        FriendsTimeLineDBTask.replaceHomeLineMsg(getList(), accountBean.getUid());
+                        FriendsTimeLineDBTask.replace(getList(), accountBean.getUid());
                     }
                 };
             } else {
@@ -596,12 +596,22 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 }
             }
             getAdapter().notifyDataSetChanged();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    FriendsTimeLineDBTask.replaceHomeLineMsg(getList(), GlobalContext.getInstance().getCurrentAccountId());
-                }
-            }).start();
+            if (currentGroupId.equals(ALL_GROUP_ID)) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        FriendsTimeLineDBTask.replace(getList(), GlobalContext.getInstance().getCurrentAccountId());
+                    }
+                }).start();
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        HomeOtherGroupTimeLineDBTask.replace(getList(), GlobalContext.getInstance().getCurrentAccountId(), currentGroupId);
+                    }
+                }).start();
+            }
+
         }
     }
 

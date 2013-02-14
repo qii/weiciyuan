@@ -29,7 +29,7 @@ public class SaveToDBService extends IntentService {
             case TYPE_STATUS:
                 AppLogger.e("start db");
                 MessageListBean value = (MessageListBean) intent.getSerializableExtra("value");
-                FriendsTimeLineDBTask.replaceHomeLineMsg(value, accountId);
+                FriendsTimeLineDBTask.replace(value, accountId);
                 AppLogger.e("end db");
                 break;
         }
