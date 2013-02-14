@@ -23,6 +23,8 @@ public class URLHelper {
     public static final String COMMENTS_TO_ME_TIMELINE = URL_SINA_WEIBO + "comments/to_me.json";
     public static final String COMMENTS_BY_ME_TIMELINE = URL_SINA_WEIBO + "comments/by_me.json";
     public static final String BILATERAL_TIMELINE = URL_SINA_WEIBO + "statuses/bilateral_timeline.json";
+    public static final String TIMELINE_RE_CMT_COUNT = URL_SINA_WEIBO + "statuses/count.json";
+
 
     //group timeline
     public static final String FRIENDSGROUP_INFO = URL_SINA_WEIBO + "friendships/groups.json";

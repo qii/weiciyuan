@@ -14,6 +14,7 @@ import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.FriendGroupTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
+import org.qii.weiciyuan.dao.maintimeline.TimeLineReCmtCountDao;
 import org.qii.weiciyuan.othercomponent.SaveToDBService;
 import org.qii.weiciyuan.support.database.FriendsTimeLineDBTask;
 import org.qii.weiciyuan.support.database.HomeOtherGroupTimeLineDBTask;
@@ -286,6 +287,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
              */
             if (getList().getSize() == 0) {
                 getPullToRefreshListView().startRefreshNow();
+            } else {
+                new RefreshReCmtCountTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
     }
@@ -552,5 +555,54 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
     }
 
+    /**
+     * refresh timline messages' repost and comment count
+     */
+    private class RefreshReCmtCountTask extends MyAsyncTask<Void, List<MessageReCmtCountBean>, List<MessageReCmtCountBean>> {
+        List<String> msgIds;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            msgIds = new ArrayList<String>();
+            List<MessageBean> msgList = getList().getItemList();
+            for (MessageBean msg : msgList) {
+                msgIds.add(msg.getId());
+            }
+        }
+
+        @Override
+        protected List<MessageReCmtCountBean> doInBackground(Void... params) {
+            try {
+                return new TimeLineReCmtCountDao(GlobalContext.getInstance().getSpecialToken(), msgIds).get();
+            } catch (WeiboException e) {
+                cancel(true);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<MessageReCmtCountBean> value) {
+            super.onPostExecute(value);
+            if (getActivity() == null || value == null)
+                return;
+
+            for (int i = 0; i < value.size(); i++) {
+                MessageBean msg = getList().getItem(i);
+                MessageReCmtCountBean count = value.get(i);
+                if (msg.getId().equals(count.getId())) {
+                    msg.setReposts_count(count.getReposts());
+                    msg.setComments_count(count.getComments());
+                }
+            }
+            getAdapter().notifyDataSetChanged();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FriendsTimeLineDBTask.replaceHomeLineMsg(getList(), GlobalContext.getInstance().getCurrentAccountId());
+                }
+            }).start();
+        }
+    }
 
 }
