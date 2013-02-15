@@ -3,7 +3,9 @@ package org.qii.weiciyuan.ui.preference;
 import android.app.ListFragment;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.*;
+import android.view.animation.Animation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -12,11 +14,9 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.database.FilterDBTask;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.animation.CollapseAnimation;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: qii
@@ -121,11 +121,9 @@ public class FilterFragment extends ListFragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_remove:
-                    if (Utility.isTaskStopped(removeTask)) {
-                        removeTask = new RemoveFilterDBTask();
-                        removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                    }
-                    mode.finish();
+                    SparseBooleanArray positions = getListView().getCheckedItemPositions();
+                    long[] ids = getListView().getCheckedItemIds();
+                    removeItem(positions, ids, mode);
                     return true;
             }
             return false;
@@ -144,17 +142,90 @@ public class FilterFragment extends ListFragment {
         }
     }
 
+    public void removeItem(SparseBooleanArray positions, final long[] ids, final ActionMode mode) {
+        int size = positions.size();
+        final List<Integer> positionList = new ArrayList<Integer>();
+        for (int i = 0; i < size; i++) {
+            if (positions.get(positions.keyAt(i))) {
+                positionList.add(positions.keyAt(i));
+            }
+        }
+        List<View> views = new ArrayList<View>();
+        int start = getListView().getFirstVisiblePosition();
+        int end = getListView().getLastVisiblePosition();
+
+        for (Integer position : positionList) {
+            if (position >= start && position <= end) {
+                views.add(getListView().getChildAt((position - start)).findViewById(R.id.text1));
+            }
+        }
+        List<Animation> animations = new ArrayList<Animation>();
+
+        Animation.AnimationListener listener = new Animation.AnimationListener() {
+
+            boolean finished = false;
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (finished) {
+                    return;
+                }
+                finished = true;
+                Set<String> set = new HashSet<String>();
+                for (long id : ids) {
+                    set.add(list.get((int) id));
+                }
+
+                for (String name : set) {
+                    Iterator<String> iterator = list.iterator();
+                    while (iterator.hasNext()) {
+                        String s = iterator.next();
+                        if (s.equals(name)) {
+                            iterator.remove();
+                        }
+                    }
+                }
+
+
+                mode.finish();
+
+                if (Utility.isTaskStopped(removeTask)) {
+                    removeTask = new RemoveFilterDBTask(set);
+                    removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        };
+
+        for (View view : views) {
+            CollapseAnimation animation = new CollapseAnimation(view, 300);
+            animation.setAnimationListener(listener);
+            animations.add(animation);
+            view.setAnimation(animation);
+        }
+
+        for (int i = 0; i < views.size(); i++) {
+            views.get(i).startAnimation(animations.get(i));
+        }
+
+
+    }
+
     private class RemoveFilterDBTask extends MyAsyncTask<Void, List<String>, List<String>> {
 
         Set<String> set = new HashSet<String>();
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            long[] ids = getListView().getCheckedItemIds();
-            for (long id : ids) {
-                set.add(list.get((int) id));
-            }
+        public RemoveFilterDBTask(Set<String> set) {
+            this.set = set;
         }
 
         @Override
@@ -222,8 +293,8 @@ public class FilterFragment extends ListFragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            View view = getActivity().getLayoutInflater().inflate(android.R.layout.simple_list_item_1, parent, false);
-            TextView tv = (TextView) view;
+            View view = getActivity().getLayoutInflater().inflate(R.layout.simple_listview_item, parent, false);
+            TextView tv = (TextView) view.findViewById(R.id.text1);
             tv.setBackgroundColor(defaultBG);
             if (getListView().getCheckedItemPositions().get(position)) {
                 tv.setBackgroundColor(checkedBG);
