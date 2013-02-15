@@ -11,6 +11,7 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.database.FilterDBTask;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -120,7 +121,7 @@ public class FilterFragment extends ListFragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_remove:
-                    if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    if (Utility.isTaskStopped(removeTask)) {
                         removeTask = new RemoveFilterDBTask();
                         removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     }
