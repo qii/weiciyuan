@@ -209,7 +209,7 @@ public class ManageGroupActivity extends AbstractAppActivity {
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 SparseBooleanArray positions = null;
-                List<String> checkedIdstrs = null;
+                ArrayList<String> checkedIdstrs = null;
                 switch (item.getItemId()) {
                     case R.id.menu_modify_group_name:
                         positions = getListView().getCheckedItemPositions();

@@ -7,25 +7,34 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import org.qii.weiciyuan.R;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * User: qii
  * Date: 13-2-15
  */
 public class RemoveGroupDialog extends DialogFragment {
-    private List<String> checkedNames;
+    private ArrayList<String> checkedNames;
 
     public RemoveGroupDialog() {
 
     }
 
-    public RemoveGroupDialog(List<String> checkedNames) {
+    public RemoveGroupDialog(ArrayList<String> checkedNames) {
         this.checkedNames = checkedNames;
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList("checkedNames", checkedNames);
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            checkedNames = savedInstanceState.getStringArrayList("checkedNames");
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.remove_group))
                 .setMessage(getString(R.string.remove_group_content))
