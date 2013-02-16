@@ -216,12 +216,14 @@ class ManageGroupFragment extends ListFragment {
                 case R.id.menu_modify_group_name:
                     positions = getListView().getCheckedItemPositions();
                     checkedIdstrs = new ArrayList<String>();
+                    String oriName = null;
                     for (int i = 0; i < positions.size(); i++) {
                         if (positions.get(positions.keyAt(i))) {
+                            oriName = group.getLists().get(positions.keyAt(i)).getName();
                             checkedIdstrs.add(group.getLists().get(positions.keyAt(i)).getIdstr());
                         }
                     }
-                    ModifyGroupDialog modifyGroupDialog = new ModifyGroupDialog(checkedIdstrs.get(0));
+                    ModifyGroupDialog modifyGroupDialog = new ModifyGroupDialog(oriName, checkedIdstrs.get(0));
                     modifyGroupDialog.setTargetFragment(ManageGroupFragment.this, 0);
                     modifyGroupDialog.show(getFragmentManager(), "");
                     mode.finish();

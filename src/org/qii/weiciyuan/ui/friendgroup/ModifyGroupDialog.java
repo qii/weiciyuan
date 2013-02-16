@@ -17,19 +17,22 @@ import org.qii.weiciyuan.R;
 public class ModifyGroupDialog extends DialogFragment {
 
     private String idstr;
+    private String oriName;
 
     public ModifyGroupDialog() {
 
     }
 
-    public ModifyGroupDialog(String idstr) {
+    public ModifyGroupDialog(String oriName, String idstr) {
         this.idstr = idstr;
+        this.oriName = oriName;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final EditText et = new EditText(getActivity());
+        et.setHint(oriName);
         builder.setView(et)
                 .setTitle(getString(R.string.modify_group_name))
                 .setPositiveButton(getString(R.string.modify), new DialogInterface.OnClickListener() {
