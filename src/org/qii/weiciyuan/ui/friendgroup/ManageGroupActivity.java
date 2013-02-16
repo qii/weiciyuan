@@ -225,7 +225,7 @@ class ManageGroupFragment extends ListFragment {
                     modifyGroupDialog.setTargetFragment(ManageGroupFragment.this, 0);
                     modifyGroupDialog.show(getFragmentManager(), "");
                     mode.finish();
-                    break;
+                    return true;
                 case R.id.menu_remove:
                     positions = getListView().getCheckedItemPositions();
                     checkedIdstrs = new ArrayList<String>();
