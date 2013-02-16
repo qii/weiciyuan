@@ -99,6 +99,10 @@ public class URLHelper {
     public static final String GROUP_MEMBER_ADD = URL_SINA_WEIBO + "friendships/groups/members/add.json";
     public static final String GROUP_MEMBER_DESTROY = URL_SINA_WEIBO + "friendships/groups/members/destroy.json";
 
+    public static final String GROUP_CREATE = URL_SINA_WEIBO + "friendships/groups/create.json";
+    public static final String GROUP_DESTROY = URL_SINA_WEIBO + "friendships/groups/destroy.json";
+    public static final String GROUP_UPDATE = URL_SINA_WEIBO + "friendships/groups/update.json";
+
 
     /**
      * black magic

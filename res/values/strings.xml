@@ -247,6 +247,14 @@
     <string name="following_each_other">互相关注</string>
     <string name="stranger_each_other">彼此是陌生人</string>
 
+    <!--friend group-->
+    <string name="friend_group">好友分组</string>
+    <string name="add_group">添加分组</string>
+    <string name="input_group_name">输入分组名</string>
+    <string name="modify_group_name">修改分组名称</string>
+    <string name="remove_group">删除分组</string>
+    <string name="remove_group_content">删除分组（不会取消关注）</string>
+
     <!--fav-->
     <string name="favourite">收藏</string>
     <string name="un_favourite">取消收藏</string>

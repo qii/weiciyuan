@@ -153,6 +153,8 @@
         </activity>
         <activity android:name=".ui.search.AtUserActivity"/>
 
+        <!--friend group-->
+        <activity android:name=".ui.friendgroup.ManageGroupActivity"/>
 
         <!--preference activity -->
         <activity android:name=".ui.preference.SettingActivity"/>

@@ -53,6 +53,14 @@
                 />
         </Preference>
         <Preference
+            android:title="@string/friend_group"
+            >
+            <intent
+                android:targetPackage="org.qii.weiciyuan"
+                android:targetClass="org.qii.weiciyuan.ui.friendgroup.ManageGroupActivity"
+                />
+        </Preference>
+        <Preference
             android:title="@string/pref_performance_title"
             >
             <intent
