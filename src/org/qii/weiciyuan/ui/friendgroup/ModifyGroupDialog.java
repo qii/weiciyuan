@@ -42,7 +42,7 @@ public class ModifyGroupDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         String name = et.getText().toString().trim();
                         if (!TextUtils.isEmpty(name)) {
-                            ManageGroupFragment fragment = (ManageGroupFragment) getTargetFragment();
+                            ManageGroupActivity.ManageGroupFragment fragment = (ManageGroupActivity.ManageGroupFragment) getTargetFragment();
                             fragment.modifyGroupName(idstr, name);
                         }
                     }

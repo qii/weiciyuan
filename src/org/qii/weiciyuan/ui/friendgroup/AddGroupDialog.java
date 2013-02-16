@@ -35,7 +35,7 @@ public class AddGroupDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         String word = et.getText().toString().trim();
                         if (!TextUtils.isEmpty(word)) {
-                            ManageGroupFragment fragment = (ManageGroupFragment) getTargetFragment();
+                            ManageGroupActivity.ManageGroupFragment fragment = (ManageGroupActivity.ManageGroupFragment) getTargetFragment();
                             fragment.addGroup(word);
                         }
                     }

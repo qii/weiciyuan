@@ -33,7 +33,7 @@ public class RemoveGroupDialog extends DialogFragment {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ManageGroupFragment fragment = (ManageGroupFragment) getTargetFragment();
+                        ManageGroupActivity.ManageGroupFragment fragment = (ManageGroupActivity.ManageGroupFragment) getTargetFragment();
                         fragment.removeGroup(checkedNames);
                     }
                 })
