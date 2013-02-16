@@ -15,25 +15,33 @@ import org.qii.weiciyuan.R;
  * Date: 13-2-15
  */
 public class AddGroupDialog extends DialogFragment {
-
+    private EditText name;
 
     public AddGroupDialog() {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("name", name.getText().toString());
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final EditText et = new EditText(getActivity());
-        et.addTextChangedListener(new WordLengthLimitWatcher(et));
-        builder.setView(et)
+        name = new EditText(getActivity());
+        name.addTextChangedListener(new WordLengthLimitWatcher(name));
+        if (savedInstanceState != null) {
+            name.append(savedInstanceState.getString("name"));
+        }
+        builder.setView(name)
                 .setTitle(getString(R.string.input_group_name))
                 .setPositiveButton(getString(R.string.add), new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String word = et.getText().toString().trim();
+                        String word = name.getText().toString().trim();
                         if (!TextUtils.isEmpty(word)) {
                             ManageGroupActivity.ManageGroupFragment fragment = (ManageGroupActivity.ManageGroupFragment) getTargetFragment();
                             fragment.addGroup(word);
