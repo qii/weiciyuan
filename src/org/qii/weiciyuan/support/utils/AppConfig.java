@@ -31,4 +31,6 @@ public class AppConfig {
 
 
     public static final int REFRESH_DELAYED_MILL_SECOND_TIME = 600;
+
+    public static final int CREATE_MODIFY_FRIEND_GROUP_NAME_LENGTH_LIMIT = 10;
 }

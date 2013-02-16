@@ -254,6 +254,7 @@
     <string name="modify_group_name">修改分组名称</string>
     <string name="remove_group">删除分组</string>
     <string name="remove_group_content">删除分组（不会取消关注）</string>
+    <string name="group_name_must_less_than_ten_chinese_words">分组名限制在10个汉字内</string>
 
     <!--fav-->
     <string name="favourite">收藏</string>

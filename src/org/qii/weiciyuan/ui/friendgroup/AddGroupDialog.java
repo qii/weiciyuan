@@ -26,6 +26,7 @@ public class AddGroupDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final EditText et = new EditText(getActivity());
+        et.addTextChangedListener(new WordLengthLimitWatcher(et));
         builder.setView(et)
                 .setTitle(getString(R.string.input_group_name))
                 .setPositiveButton(getString(R.string.add), new DialogInterface.OnClickListener() {

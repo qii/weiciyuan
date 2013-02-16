@@ -33,6 +33,7 @@ public class ModifyGroupDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final EditText et = new EditText(getActivity());
         et.setHint(oriName);
+        et.addTextChangedListener(new WordLengthLimitWatcher(et));
         builder.setView(et)
                 .setTitle(getString(R.string.modify_group_name))
                 .setPositiveButton(getString(R.string.modify), new DialogInterface.OnClickListener() {
