@@ -304,6 +304,9 @@
     <string name="filter_successfully">你以后都不会再见到这家伙了</string>
     <string name="ten_thousand">万</string>
 
+    <!--browser web-->
+    <string name="web">网页</string>
+
     <!---Setting  -->
     <string name="setting">设置</string>
     <string name="pref_normal_title">常规</string>

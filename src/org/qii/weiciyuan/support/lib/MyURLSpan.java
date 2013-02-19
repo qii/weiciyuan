@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.browser.BrowserWebActivity;
 
 /**
  * User: qii
@@ -52,9 +53,15 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
     public void onClick(View widget) {
         Uri uri = Uri.parse(getURL());
         Context context = widget.getContext();
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
-        context.startActivity(intent);
+        if (uri.getScheme().startsWith("http")) {
+            Intent intent = new Intent(context, BrowserWebActivity.class);
+            intent.putExtra("url", uri.toString());
+            context.startActivity(intent);
+        } else {
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+            context.startActivity(intent);
+        }
     }
 
     public void onLongClick(View widget) {
