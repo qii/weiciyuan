@@ -160,7 +160,7 @@ public class ManageGroupActivity extends AbstractAppActivity {
             }
 
             @Override
-            public Object getItem(int position) {
+            public String getItem(int position) {
                 return name.get(position);
             }
 
