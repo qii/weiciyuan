@@ -2,6 +2,8 @@ package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.webkit.*;
 import android.widget.ImageView;
 import android.widget.ShareActionProvider;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -153,11 +156,26 @@ public class BrowserWebFragment extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
                 getActivity().startActivity(intent);
                 break;
+            case R.id.menu_copy:
+                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", buildShareCopyContent()));
+                Toast.makeText(getActivity(), getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
+                break;
             case R.id.menu_share:
-                Utility.setShareIntent(getActivity(), mShareActionProvider, mUrl);
+                Utility.setShareIntent(getActivity(), mShareActionProvider, buildShareCopyContent());
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private String buildShareCopyContent() {
+        String title = mWebView.getTitle();
+        String url = mWebView.getUrl();
+        if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(url)) {
+            return title + " " + url;
+        } else {
+            return mUrl;
+        }
     }
 
     private void startRefreshAnimation() {

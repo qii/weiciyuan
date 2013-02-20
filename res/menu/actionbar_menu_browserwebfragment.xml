@@ -17,10 +17,14 @@
         android:icon="?web"
         android:title="@string/open_with_other_app"
         android:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_copy"
+        android:title="@string/copy_link_to_clipboard"
+        android:showAsAction="never"/>
 
     <item
         android:id="@+id/menu_share"
-        android:title="@string/share"
+        android:title="@string/share_link"
         android:actionProviderClass="android.widget.ShareActionProvider"
         android:showAsAction="never"/>
 
