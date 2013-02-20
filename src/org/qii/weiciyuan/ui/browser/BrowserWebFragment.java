@@ -183,6 +183,7 @@ public class BrowserWebFragment extends Fragment {
         ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
         Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh);
         iv.startAnimation(rotation);
+        finishRefreshAnimation();
         refreshItem.setActionView(iv);
     }
 
