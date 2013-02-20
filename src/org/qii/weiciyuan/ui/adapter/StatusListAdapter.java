@@ -108,31 +108,37 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             }
         });
 
-        if (holder.content.getMovementMethod() != MyLinkMovementMethod.getInstance())
-            holder.content.setMovementMethod(MyLinkMovementMethod.getInstance());
-        if (holder.repost_content.getMovementMethod() != MyLinkMovementMethod.getInstance())
-            holder.repost_content.setMovementMethod(MyLinkMovementMethod.getInstance());
-
         //onTouchListener has some strange problem, when user click link, holder.listview_root may also receive a MotionEvent.ACTION_DOWN event
         //the background then changed
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+        View.OnTouchListener onTouchListener = new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onTouch(View v, MotionEvent event) {
                 TextView tv = (TextView) v;
                 int start = tv.getSelectionStart();
                 int end = tv.getSelectionEnd();
                 SpannableString completeText = (SpannableString) ((TextView) v).getText();
                 boolean isNotLink = start == -1 || end == -1;
-                if (isNotLink && completeText.getSpanStart(this) == -1) {
-                    holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
-                    holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
 
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_UP:
+                        if (isNotLink && completeText.getSpanStart(this) == -1) {
+                            holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
+                            holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
+                        }
+                        break;
                 }
+                return false;
             }
         };
 
-        holder.content.setOnClickListener(onClickListener);
-        holder.repost_content.setOnClickListener(onClickListener);
+        holder.content.setOnTouchListener(onTouchListener);
+        holder.repost_content.setOnTouchListener(onTouchListener);
+
+        if (holder.content.getMovementMethod() != MyLinkMovementMethod.getInstance())
+            holder.content.setMovementMethod(MyLinkMovementMethod.getInstance());
+        if (holder.repost_content.getMovementMethod() != MyLinkMovementMethod.getInstance())
+            holder.repost_content.setMovementMethod(MyLinkMovementMethod.getInstance());
+
 
         holder.time.setTime(msg.getMills());
 
