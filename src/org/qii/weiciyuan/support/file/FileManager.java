@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.support.file;
 
 import android.os.Environment;
+import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
@@ -21,7 +22,7 @@ public class FileManager {
     private static final String PICTURE_LARGE = "picture_large";
     private static final String EMOTION = "emotion";
     private static final String TXT2PIC = "txt2pic";
-
+    private static final String WEBVIEW_FAVICON = "favicon";
 
     private static String getSdCardPath() {
         if (isExternalStorageMounted()) {
@@ -143,6 +144,18 @@ public class FileManager {
         }
         return null;
 
+    }
+
+    public static String getWebViewFaviconDirPath() {
+        if (!TextUtils.isEmpty(getSdCardPath())) {
+            String path = getSdCardPath() + File.separator + WEBVIEW_FAVICON + File.separator;
+            File file = new File(path);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            return path;
+        }
+        return "";
     }
 
     public static String getCacheSize() {

@@ -2,17 +2,22 @@ package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.webkit.*;
+import android.widget.ImageView;
 import android.widget.ShareActionProvider;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.utils.Utility;
 
 /**
@@ -25,6 +30,7 @@ public class BrowserWebFragment extends Fragment {
     private boolean mIsWebViewAvailable;
     private String mUrl = null;
     private ShareActionProvider mShareActionProvider;
+    private MenuItem refreshItem;
 
 
     public BrowserWebFragment(String url) {
@@ -36,6 +42,14 @@ public class BrowserWebFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
+        /**
+         *some devices for example Nexus 7 4.2.2 version will receive website favicon, but some
+         * devices may cant, Galaxy Nexus 4.2.2 version
+         */
+        String path = FileManager.getWebViewFaviconDirPath();
+        if (!TextUtils.isEmpty(path))
+            WebIconDatabase.getInstance().open(FileManager.getWebViewFaviconDirPath());
     }
 
     @Override
@@ -67,7 +81,6 @@ public class BrowserWebFragment extends Fragment {
         });
         mWebView.setWebViewClient(new InnerWebViewClient());
         mWebView.setWebChromeClient(new InnerWebChromeClient());
-        mWebView.loadUrl(mUrl);
         mIsWebViewAvailable = true;
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -122,7 +135,9 @@ public class BrowserWebFragment extends Fragment {
         inflater.inflate(R.menu.actionbar_menu_browserwebfragment, menu);
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+        refreshItem = menu.findItem(R.id.menu_refresh);
         super.onCreateOptionsMenu(menu, inflater);
+        mWebView.loadUrl(mUrl);
     }
 
     @Override
@@ -132,9 +147,7 @@ public class BrowserWebFragment extends Fragment {
                 getActivity().finish();
                 break;
             case R.id.menu_refresh:
-                getWebView().clearView();
-                getWebView().loadUrl("about:blank");
-                getWebView().loadUrl(mUrl);
+                getWebView().reload();
                 break;
             case R.id.menu_open_with_other_app:
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
@@ -147,6 +160,21 @@ public class BrowserWebFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private void startRefreshAnimation() {
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
+        Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh);
+        iv.startAnimation(rotation);
+        refreshItem.setActionView(iv);
+    }
+
+    private void finishRefreshAnimation() {
+        if (refreshItem.getActionView() != null) {
+            refreshItem.getActionView().clearAnimation();
+            refreshItem.setActionView(null);
+        }
+    }
+
     private class InnerWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -154,6 +182,11 @@ public class BrowserWebFragment extends Fragment {
             return true;
         }
 
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            startRefreshAnimation();
+        }
 
         @Override
         public void onPageFinished(WebView view, String url) {
@@ -163,6 +196,7 @@ public class BrowserWebFragment extends Fragment {
             if (actionBar == null)
                 return;
             actionBar.setTitle(view.getTitle());
+            finishRefreshAnimation();
         }
     }
 
@@ -179,6 +213,15 @@ public class BrowserWebFragment extends Fragment {
                 actionBar.setTitle(view.getTitle());
             }
         }
+
+        @Override
+        public void onReceivedIcon(WebView view, Bitmap icon) {
+            super.onReceivedIcon(view, icon);
+            if (getActivity() == null)
+                return;
+            getActivity().getActionBar().setIcon(new BitmapDrawable(getActivity().getResources(), icon));
+        }
+
 
         public void onProgressChanged(WebView view, int progress) {
             if (getActivity() == null)

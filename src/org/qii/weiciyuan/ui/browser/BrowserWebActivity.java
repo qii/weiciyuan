@@ -17,6 +17,8 @@ public class BrowserWebActivity extends AbstractAppActivity {
         super.onCreate(savedInstanceState);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(true);
         String url = getIntent().getStringExtra("url");
         getActionBar().setTitle(url);
         if (savedInstanceState == null) {
