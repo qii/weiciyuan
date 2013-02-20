@@ -143,7 +143,6 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
                     favTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 listView.clearChoices();
-                listView.clearChoices();
                 mode.finish();
                 break;
             case R.id.menu_unfav:
@@ -151,7 +150,6 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
                     unFavTask = new UnFavAsyncTask(GlobalContext.getInstance().getSpecialToken(), bean.getId());
                     unFavTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
-                listView.clearChoices();
                 listView.clearChoices();
                 mode.finish();
                 break;
