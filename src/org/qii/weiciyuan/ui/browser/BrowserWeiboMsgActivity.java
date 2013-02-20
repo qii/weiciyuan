@@ -28,6 +28,7 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteRepostActivity;
 import org.qii.weiciyuan.ui.task.FavAsyncTask;
+import org.qii.weiciyuan.ui.task.UnFavAsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,8 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     private ViewPager mViewPager = null;
 
     private FavAsyncTask favTask = null;
+
+    private UnFavAsyncTask unFavTask = null;
 
     private ShareActionProvider mShareActionProvider;
 
@@ -259,11 +262,16 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
                 Toast.makeText(this, getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_fav:
-                if (Utility.isTaskStopped(favTask)) {
+                if (Utility.isTaskStopped(favTask) && Utility.isTaskStopped(unFavTask)) {
                     favTask = new FavAsyncTask(getToken(), msg.getId());
                     favTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
-
+                return true;
+            case R.id.menu_unfav:
+                if (Utility.isTaskStopped(favTask) && Utility.isTaskStopped(unFavTask)) {
+                    unFavTask = new UnFavAsyncTask(getToken(), msg.getId());
+                    unFavTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
                 return true;
             case R.id.menu_delete:
                 RemoveWeiboMsgDialog dialog = new RemoveWeiboMsgDialog(msg.getId());
