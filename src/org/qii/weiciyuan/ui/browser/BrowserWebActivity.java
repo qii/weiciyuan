@@ -3,7 +3,6 @@ package org.qii.weiciyuan.ui.browser;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -18,8 +17,8 @@ public class BrowserWebActivity extends AbstractAppActivity {
         super.onCreate(savedInstanceState);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(getString(R.string.web));
         String url = getIntent().getStringExtra("url");
+        getActionBar().setTitle(url);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .replace(android.R.id.content, new BrowserWebFragment(url)).commit();
