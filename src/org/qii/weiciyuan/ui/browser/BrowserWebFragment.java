@@ -128,6 +128,9 @@ public class BrowserWebFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_close:
+                getActivity().finish();
+                break;
             case R.id.menu_refresh:
                 getWebView().clearView();
                 getWebView().loadUrl("about:blank");
