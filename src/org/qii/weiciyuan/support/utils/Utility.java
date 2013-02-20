@@ -417,6 +417,15 @@ public class Utility {
         }
     }
 
+    public static void setShareIntent(Activity activity, ShareActionProvider mShareActionProvider, String content) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, content);
+        if (Utility.isIntentSafe(activity, shareIntent) && mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
+
+    }
 
     public static void buildTabCount(ActionBar.Tab tab, String tabStrRes, int count) {
         String content = tab.getText().toString();

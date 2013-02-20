@@ -33,6 +33,11 @@
     <attr name="timeline_comment_flag" format="reference"/>
     <attr name="timeline_reply_flag" format="reference"/>
     <attr name="save" format="reference"/>
+
+    <attr name="close" format="reference"/>
+    <attr name="web" format="reference"/>
+
+
     <attr name="clickable_flag" format="reference"/>
     <attr name="timeline_reply_to_comment" format="reference"/>
 

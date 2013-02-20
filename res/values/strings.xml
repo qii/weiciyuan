@@ -306,6 +306,8 @@
 
     <!--browser web-->
     <string name="web">网页</string>
+    <string name="close">关闭</string>
+    <string name="open_with_other_app">用外部应用打开</string>
 
     <!---Setting  -->
     <string name="setting">设置</string>

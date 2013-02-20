@@ -2,16 +2,18 @@ package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ShareActionProvider;
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
@@ -22,6 +24,7 @@ public class BrowserWebFragment extends Fragment {
     private WebView mWebView;
     private boolean mIsWebViewAvailable;
     private String mUrl = null;
+    private ShareActionProvider mShareActionProvider;
 
 
     public BrowserWebFragment(String url) {
@@ -29,6 +32,17 @@ public class BrowserWebFragment extends Fragment {
         mUrl = url;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,6 +115,33 @@ public class BrowserWebFragment extends Fragment {
 
     public WebView getWebView() {
         return mIsWebViewAvailable ? mWebView : null;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.actionbar_menu_browserwebfragment, menu);
+        MenuItem item = menu.findItem(R.id.menu_share);
+        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_refresh:
+                getWebView().clearView();
+                getWebView().loadUrl("about:blank");
+                getWebView().loadUrl(mUrl);
+                break;
+            case R.id.menu_open_with_other_app:
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
+                getActivity().startActivity(intent);
+                break;
+            case R.id.menu_share:
+                Utility.setShareIntent(getActivity(), mShareActionProvider, mUrl);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class InnerWebViewClient extends WebViewClient {

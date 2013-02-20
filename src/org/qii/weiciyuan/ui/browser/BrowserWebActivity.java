@@ -1,8 +1,13 @@
 package org.qii.weiciyuan.ui.browser;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.lib.CheatSheet;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -24,6 +29,17 @@ public class BrowserWebActivity extends AbstractAppActivity {
                     .replace(android.R.id.content, new BrowserWebFragment(url)).commit();
         }
 
+        ActionBar actionBar = getActionBar();
+        View title = getLayoutInflater().inflate(R.layout.browserwebactivity_title_layout, null);
+        CheatSheet.setup(BrowserWebActivity.this, title.findViewById(R.id.close), R.string.close);
+        title.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
+        actionBar.setDisplayShowCustomEnabled(true);
     }
 
 

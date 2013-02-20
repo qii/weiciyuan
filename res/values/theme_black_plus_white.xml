@@ -34,6 +34,8 @@
         <item name="timeline_repost_flag">@drawable/timeline_repost_black</item>
         <item name="timeline_comment_flag">@drawable/timeline_comment_black</item>
         <item name="save">@drawable/save_light</item>
+        <item name="web">@drawable/web_light</item>
+        <item name="close">@drawable/close_light</item>
         <item name="clickable_flag">@drawable/clickable_flag_dark</item>
         <item name="timeline_reply_to_comment">@drawable/reply_to_comment_black</item>
 
