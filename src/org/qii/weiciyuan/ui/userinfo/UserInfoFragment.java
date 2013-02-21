@@ -200,7 +200,6 @@ public class UserInfoFragment extends AbstractAppFragment {
             @Override
             public void onClick(View v) {
                 String path = FileManager.getFilePathFromUrl(bean.getAvatar_large(), FileLocationMethod.avatar_large);
-                path = path + ".jpg";
                 if (new File(path).exists()) {
                     UserAvatarDialog dialog = new UserAvatarDialog(path);
                     dialog.show(getFragmentManager(), "");
