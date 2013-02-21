@@ -310,6 +310,7 @@
     <string name="open_with_other_app">用外部应用打开</string>
     <string name="copy_link_to_clipboard">复制链接</string>
     <string name="share_link">分享链接</string>
+    <string name="share_sum">微博统计的分享次数</string>
 
 
     <!---Setting  -->
