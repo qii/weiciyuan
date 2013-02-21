@@ -33,4 +33,9 @@
         <item name="android:background">@color/transparent</item>
     </style>
 
+    <style name="progressBarStyleHorizontal" parent="@android:style/Widget.Holo.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal</item>
+        <item name="android:minHeight">16dip</item>
+        <item name="android:maxHeight">16dip</item>
+    </style>
 </resources>

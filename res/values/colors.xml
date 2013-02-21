@@ -306,4 +306,5 @@
     <color name="listview_checked_color_holo_dark">#002E3E</color>
     <color name="listview_checked_color_holo_light">#33add6</color>
 
+    <color name="progress_horizontal_progress">#0099CC</color>
 </resources>  

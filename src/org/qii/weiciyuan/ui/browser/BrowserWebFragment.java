@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.*;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
@@ -30,6 +31,7 @@ import org.qii.weiciyuan.support.utils.Utility;
 public class BrowserWebFragment extends Fragment {
 
     private WebView mWebView;
+    private ProgressBar mProgressBar;
     private boolean mIsWebViewAvailable;
     private String mUrl = null;
     private ShareActionProvider mShareActionProvider;
@@ -64,11 +66,12 @@ public class BrowserWebFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        View view = inflater.inflate(R.layout.browserwebfragment_layout, container, false);
         if (mWebView != null) {
             mWebView.destroy();
         }
-        mWebView = new WebView(getActivity());
+        mWebView = (WebView) view.findViewById(R.id.webView);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         mWebView.setOnKeyListener(new View.OnKeyListener() {
 
 
@@ -89,7 +92,7 @@ public class BrowserWebFragment extends Fragment {
         settings.setJavaScriptEnabled(true);
         settings.setBuiltInZoomControls(true);
         settings.setDisplayZoomControls(false);
-        return mWebView;
+        return view;
     }
 
 
@@ -245,7 +248,11 @@ public class BrowserWebFragment extends Fragment {
         public void onProgressChanged(WebView view, int progress) {
             if (getActivity() == null)
                 return;
-
+            if (!mProgressBar.isShown())
+                mProgressBar.setVisibility(View.VISIBLE);
+            mProgressBar.setProgress(progress);
+            if (progress == 100)
+                mProgressBar.setVisibility(View.INVISIBLE);
         }
     }
 
