@@ -34,6 +34,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
     private MessageBean msg;
 
+    private View mRootview;
     private BrowserWeiboMsgLayout layout;
 
     private UpdateMessageTask updateMsgTask;
@@ -110,16 +111,17 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                         }
                     }, 2000);
                 }
+                buildViewData(true);
                 break;
             case SCREEN_ROTATE:
                 //nothing
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 msg = (MessageBean) savedInstanceState.getSerializable("msg");
+                buildViewData(true);
                 break;
         }
 
-        buildViewData(true);
     }
 
 
@@ -147,7 +149,20 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.browserweibomsgactivity_layout, container, false);
+
+        if (mRootview == null) {
+            mRootview = inflater.inflate(R.layout.browserweibomsgactivity_layout, container, false);
+            initView(mRootview, savedInstanceState);
+        } else {
+            View oldParent = (View) mRootview.getParent();
+            if (oldParent != container && oldParent != null) {
+                ((ViewGroup) oldParent).removeView(mRootview);
+            }
+        }
+        return mRootview;
+    }
+
+    private void initView(View view, Bundle savedInstanceState) {
         layout = new BrowserWeiboMsgLayout();
         layout.username = (TextView) view.findViewById(R.id.username);
         layout.content = (TextView) view.findViewById(R.id.content);
@@ -237,7 +252,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             }
         });
         layout.repost_pic_layout = (FrameLayout) view.findViewById(R.id.repost_pic_layout);
-        return view;
     }
 
     public void buildViewData(final boolean refreshPic) {
