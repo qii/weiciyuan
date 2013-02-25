@@ -109,20 +109,19 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                             updateMsgTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }, 2000);
-                    buildViewData(true);
                 }
                 break;
             case SCREEN_ROTATE:
                 //nothing
-
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 msg = (MessageBean) savedInstanceState.getSerializable("msg");
                 break;
         }
 
-
+        buildViewData(true);
     }
+
 
     //android has a bug,I am tired. I use another color and disable underline for link,but when I open "dont save activity" in
     //developer option,click the link to open another activity, then press back,this fragment is restored,
