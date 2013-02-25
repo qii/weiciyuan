@@ -3,7 +3,9 @@ package org.qii.weiciyuan.support.utils;
 /**
  * User: Jiang Qi
  * Date: 12-7-31
-  */
+ */
+
+import org.qii.weiciyuan.BuildConfig;
 
 /**
  * Wrapper API for sending log output.
@@ -20,7 +22,8 @@ public class AppLogger {
      * @param msg The message you would like logged.
      */
     public static void v(String msg) {
-        android.util.Log.v(TAG, buildMessage(msg));
+        if (BuildConfig.DEBUG)
+            android.util.Log.v(TAG, buildMessage(msg));
     }
 
     /**
@@ -30,7 +33,8 @@ public class AppLogger {
      * @param thr An exception to log
      */
     public static void v(String msg, Throwable thr) {
-        android.util.Log.v(TAG, buildMessage(msg), thr);
+        if (BuildConfig.DEBUG)
+            android.util.Log.v(TAG, buildMessage(msg), thr);
     }
 
     /**
@@ -39,17 +43,19 @@ public class AppLogger {
      * @param msg
      */
     public static void d(String msg) {
-        android.util.Log.d(TAG, buildMessage(msg));
+        if (BuildConfig.DEBUG)
+            android.util.Log.d(TAG, buildMessage(msg));
     }
 
     /**
      * Send a DEBUG log message and log the exception.
      *
      * @param msg The message you would like logged.
-     * @param thr  An exception to log
+     * @param thr An exception to log
      */
     public static void d(String msg, Throwable thr) {
-        android.util.Log.d(TAG, buildMessage(msg), thr);
+        if (BuildConfig.DEBUG)
+            android.util.Log.d(TAG, buildMessage(msg), thr);
     }
 
     /**
@@ -58,7 +64,8 @@ public class AppLogger {
      * @param msg The message you would like logged.
      */
     public static void i(String msg) {
-        android.util.Log.i(TAG, buildMessage(msg));
+        if (BuildConfig.DEBUG)
+            android.util.Log.i(TAG, buildMessage(msg));
     }
 
     /**
@@ -68,7 +75,8 @@ public class AppLogger {
      * @param thr An exception to log
      */
     public static void i(String msg, Throwable thr) {
-        android.util.Log.i(TAG, buildMessage(msg), thr);
+        if (BuildConfig.DEBUG)
+            android.util.Log.i(TAG, buildMessage(msg), thr);
     }
 
     /**
@@ -77,7 +85,8 @@ public class AppLogger {
      * @param msg The message you would like logged.
      */
     public static void e(String msg) {
-        android.util.Log.e(TAG, buildMessage(msg));
+        if (BuildConfig.DEBUG)
+            android.util.Log.e(TAG, buildMessage(msg));
     }
 
     /**
@@ -86,7 +95,8 @@ public class AppLogger {
      * @param msg The message you would like logged.
      */
     public static void w(String msg) {
-        android.util.Log.w(TAG, buildMessage(msg));
+        if (BuildConfig.DEBUG)
+            android.util.Log.w(TAG, buildMessage(msg));
     }
 
     /**
@@ -96,7 +106,8 @@ public class AppLogger {
      * @param thr An exception to log
      */
     public static void w(String msg, Throwable thr) {
-        android.util.Log.w(TAG, buildMessage(msg), thr);
+        if (BuildConfig.DEBUG)
+            android.util.Log.w(TAG, buildMessage(msg), thr);
     }
 
     /**
@@ -105,7 +116,8 @@ public class AppLogger {
      * @param thr An exception to log
      */
     public static void w(Throwable thr) {
-        android.util.Log.w(TAG, buildMessage(""), thr);
+        if (BuildConfig.DEBUG)
+            android.util.Log.w(TAG, buildMessage(""), thr);
     }
 
     /**
@@ -115,7 +127,8 @@ public class AppLogger {
      * @param thr An exception to log
      */
     public static void e(String msg, Throwable thr) {
-        android.util.Log.e(TAG, buildMessage(msg), thr);
+        if (BuildConfig.DEBUG)
+            android.util.Log.e(TAG, buildMessage(msg), thr);
     }
 
     /**
