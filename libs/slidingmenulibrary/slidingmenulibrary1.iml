@@ -44,7 +44,18 @@
           <root url="jar://$MODULE_DIR$/../android-support-v4.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/eclair" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/froyo" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/gingerbread" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/honeycomb" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/honeycomb_mr2" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/ics" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/ics-mr1" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/java" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/jellybean" />
+          <root url="file://D:/android-sdk-windows/extras/android/compatibility/v4/src/jellybean-mr1" />
+        </SOURCES>
       </library>
     </orderEntry>
   </component>

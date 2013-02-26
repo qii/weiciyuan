@@ -12,7 +12,10 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.*;
+import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -26,7 +29,8 @@ import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.lib.MyViewPager;
+import org.qii.weiciyuan.support.lib.SwipeRightToCloseOnGestureListener;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -48,7 +52,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
     private UserBean bean;
 
-    private ViewPager mViewPager = null;
+    private MyViewPager mViewPager = null;
 
     private MyAsyncTask<Void, UserBean, UserBean> followOrUnfollowTask;
 
@@ -114,19 +118,15 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         getActionBar().setTitle(getString(R.string.personal_info));
         setContentView(R.layout.viewpager_layout);
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = (MyViewPager) findViewById(R.id.viewpager);
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
-        gestureDetector = new GestureDetector(UserInfoActivity.this, new MyOnGestureListener());
-        mViewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
-            }
-        });
+        gestureDetector = new GestureDetector(UserInfoActivity.this
+                , new SwipeRightToCloseOnGestureListener(UserInfoActivity.this, mViewPager));
+        mViewPager.setGestureDetector(gestureDetector);
 
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -543,16 +543,5 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         }
     }
 
-    class MyOnGestureListener extends GestureDetector.SimpleOnGestureListener {
 
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
-            if (velocityX > AppConfig.SWIPE_MIN_DISTANCE && mViewPager.getCurrentItem() == 0) {
-                finish();
-                return true;
-            }
-            return false;
-        }
-    }
 }

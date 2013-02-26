@@ -26,8 +26,8 @@ public class AppConfig {
     //pic cache saved days
     public static final int SAVED_DAYS = 2;
 
-    //swipe to close
-    public static final int SWIPE_MIN_DISTANCE = 30;
+    //swipe to close,300px
+    public static final int SWIPE_MIN_DISTANCE = 300;
 
 
     public static final int REFRESH_DELAYED_MILL_SECOND_TIME = 600;

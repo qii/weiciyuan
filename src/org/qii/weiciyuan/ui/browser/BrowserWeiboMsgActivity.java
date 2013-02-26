@@ -19,7 +19,8 @@ import org.qii.weiciyuan.dao.destroy.DestroyStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.lib.MyViewPager;
+import org.qii.weiciyuan.support.lib.SwipeRightToCloseOnGestureListener;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -46,7 +47,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     private String comment_sum = "";
     private String retweet_sum = "";
 
-    private ViewPager mViewPager = null;
+    private MyViewPager mViewPager = null;
 
     private FavAsyncTask favTask = null;
 
@@ -89,20 +90,17 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     }
 
     private void buildViewPager() {
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = (MyViewPager) findViewById(R.id.viewpager);
         TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
-        gestureDetector = new GestureDetector(BrowserWeiboMsgActivity.this, new MyOnGestureListener());
-        mViewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
-            }
-        });
+        gestureDetector = new GestureDetector(BrowserWeiboMsgActivity.this
+                , new SwipeRightToCloseOnGestureListener(BrowserWeiboMsgActivity.this, mViewPager));
+        mViewPager.setGestureDetector(gestureDetector);
     }
+
 
     private void buildActionBarAndViewPagerTitles() {
         ActionBar actionBar = getActionBar();
@@ -347,18 +345,12 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
         return msg;
     }
 
-
-    class MyOnGestureListener extends GestureDetector.SimpleOnGestureListener {
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
-            if (velocityX > AppConfig.SWIPE_MIN_DISTANCE && mViewPager.getCurrentItem() == 0) {
-                finish();
-                return true;
-            }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (gestureDetector.onTouchEvent(event))
+            return true;
+        else
             return false;
-        }
     }
 
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
