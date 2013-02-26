@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v4.view.ViewPager;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 import org.qii.weiciyuan.support.utils.AppConfig;
 
 /**
@@ -14,10 +15,12 @@ public class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOn
     private Activity activity;
     private ViewPager viewPager;
     protected MotionEvent mLastOnDownEvent = null;
+    private int scaledMinimumFlingVelocity;
 
     public SwipeRightToCloseOnGestureListener(Activity activity, ViewPager viewPager) {
         this.activity = activity;
         this.viewPager = viewPager;
+        this.scaledMinimumFlingVelocity = ViewConfiguration.get(activity).getScaledMinimumFlingVelocity();
     }
 
     @Override
@@ -33,7 +36,7 @@ public class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOn
         if (e1 == null || e2 == null)
             return false;
         if (Math.abs(e1.getRawX() - e2.getRawX()) > AppConfig.SWIPE_MIN_DISTANCE
-                && this.viewPager.getCurrentItem() == 0) {
+                && this.viewPager.getCurrentItem() == 0 && Math.abs(velocityX) > scaledMinimumFlingVelocity) {
             this.activity.finish();
             return true;
         }
