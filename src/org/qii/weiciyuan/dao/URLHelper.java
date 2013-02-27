@@ -44,6 +44,7 @@ public class URLHelper {
 
     //short url
     public static final String SHORT_URL_SHARE_COUNT = URL_SINA_WEIBO + "short_url/share/counts.json";
+    public static final String SHORT_URL_SHARE_TIMELINE = URL_SINA_WEIBO + "short_url/share/statuses.json";
 
     //send weibo
     public static final String STATUSES_UPDATE = URL_SINA_WEIBO + "statuses/update.json";

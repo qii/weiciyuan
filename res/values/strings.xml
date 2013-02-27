@@ -311,6 +311,7 @@
     <string name="copy_link_to_clipboard">复制链接</string>
     <string name="share_link">分享链接</string>
     <string name="share_sum">微博统计的分享次数</string>
+    <string name="total_share_count">累计分享了%s次</string>
 
 
     <!---Setting  -->

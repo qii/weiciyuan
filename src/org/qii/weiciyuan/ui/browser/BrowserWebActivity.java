@@ -49,6 +49,7 @@ public class BrowserWebActivity extends AbstractAppActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(BrowserWebActivity.this, BrowserShareTimeLineActivity.class);
                 intent.putExtra("url", url);
+                intent.putExtra("count", shareCountInt);
                 startActivity(intent);
             }
         });
