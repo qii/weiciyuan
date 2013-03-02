@@ -37,25 +37,7 @@ public class MyInfoFragment extends AbstractAppFragment {
 
     private UserBean bean;
 
-    private ImageView avatar;
-
-    private TextView username;
-    private TextView verified_reason;
-    private TextView isVerified;
-    private TextView info;
-    private TextView blog_url;
-    private TextView location;
-    private TextView sex;
-
-    private TextView following_number;
-    private TextView fans_number;
-    private TextView fav_number;
-    private TextView topic_number;
-
-    private View verified_layout;
-    private View intro_layout;
-    private View location_layout;
-    private View blog_url_layout;
+    private Layout layout;
 
     protected TimeLineBitmapDownloader commander;
 
@@ -113,58 +95,58 @@ public class MyInfoFragment extends AbstractAppFragment {
     }
 
     private void setValue() {
-        username.setText(bean.getScreen_name());
+        layout.username.setText(bean.getScreen_name());
 
         if (bean.isVerified()) {
-            isVerified.setVisibility(View.VISIBLE);
-            isVerified.setText(getString(R.string.verified_user));
-            verified_reason.setText(bean.getVerified_reason());
-            verified_layout.setVisibility(View.VISIBLE);
+            layout.isVerified.setVisibility(View.VISIBLE);
+            layout.isVerified.setText(getString(R.string.verified_user));
+            layout.verified_reason.setText(bean.getVerified_reason());
+            layout.verified_layout.setVisibility(View.VISIBLE);
         } else {
-            verified_layout.setVisibility(View.GONE);
+            layout.verified_layout.setVisibility(View.GONE);
         }
 
         if (!TextUtils.isEmpty(bean.getDescription())) {
-            intro_layout.setVisibility(View.VISIBLE);
-            info.setText(bean.getDescription());
+            layout.intro_layout.setVisibility(View.VISIBLE);
+            layout.info.setText(bean.getDescription());
         } else {
-            intro_layout.setVisibility(View.GONE);
+            layout.intro_layout.setVisibility(View.GONE);
         }
 
         String avatarUrl = bean.getAvatar_large();
         if (!TextUtils.isEmpty(avatarUrl)) {
-            avatarTask = new ProfileAvatarReadWorker(avatar, avatarUrl);
+            avatarTask = new ProfileAvatarReadWorker(layout.avatar, avatarUrl);
             avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
         if (!TextUtils.isEmpty(bean.getUrl())) {
-            blog_url_layout.setVisibility(View.VISIBLE);
-            blog_url.setVisibility(View.VISIBLE);
-            blog_url.setText(bean.getUrl());
-            ListViewTool.addLinks(blog_url);
+            layout.blog_url_layout.setVisibility(View.VISIBLE);
+            layout.blog_url.setVisibility(View.VISIBLE);
+            layout.blog_url.setText(bean.getUrl());
+            ListViewTool.addLinks(layout.blog_url);
         } else {
-            blog_url_layout.setVisibility(View.GONE);
-            blog_url.setVisibility(View.GONE);
+            layout.blog_url_layout.setVisibility(View.GONE);
+            layout.blog_url.setVisibility(View.GONE);
         }
 
         if (!TextUtils.isEmpty(bean.getLocation())) {
-            location_layout.setVisibility(View.VISIBLE);
-            location.setText(bean.getLocation());
+            layout.location_layout.setVisibility(View.VISIBLE);
+            layout.location.setText(bean.getLocation());
         } else {
-            location_layout.setVisibility(View.GONE);
+            layout.location_layout.setVisibility(View.GONE);
         }
         String s = bean.getGender();
         if (!TextUtils.isEmpty(s)) {
             if (s.equals("m"))
-                sex.setText(getString(R.string.m));
+                layout.sex.setText(getString(R.string.m));
             else if (s.equals("f"))
-                sex.setText(getString(R.string.f));
+                layout.sex.setText(getString(R.string.f));
             else
-                sex.setVisibility(View.GONE);
+                layout.sex.setVisibility(View.GONE);
         }
 
-        setTextViewNum(fans_number, bean.getFollowers_count());
-        setTextViewNum(following_number, bean.getFriends_count());
-        setTextViewNum(fav_number, bean.getFavourites_count());
+        setTextViewNum(layout.fans_number, bean.getFollowers_count());
+        setTextViewNum(layout.following_number, bean.getFriends_count());
+        setTextViewNum(layout.fav_number, bean.getFavourites_count());
         getActivity().getActionBar().getTabAt(1).setText(getString(R.string.weibo) + "(" + bean.getStatuses_count() + ")");
 
     }
@@ -174,9 +156,10 @@ public class MyInfoFragment extends AbstractAppFragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.myinfofragment_layout, container, false);
-        avatar = (ImageView) view.findViewById(R.id.avatar);
+        layout = new Layout();
+        layout.avatar = (ImageView) view.findViewById(R.id.avatar);
 
-        avatar.setOnClickListener(new View.OnClickListener() {
+        layout.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String path = FileManager.getFilePathFromUrl(bean.getAvatar_large(), FileLocationMethod.avatar_large);
@@ -187,22 +170,22 @@ public class MyInfoFragment extends AbstractAppFragment {
             }
         });
 
-        username = (TextView) view.findViewById(R.id.username);
-        isVerified = (TextView) view.findViewById(R.id.isVerified);
-        verified_reason = (TextView) view.findViewById(R.id.verified_info);
-        info = (TextView) view.findViewById(R.id.textView_info);
-        blog_url = (TextView) view.findViewById(R.id.blog_url);
-        location = (TextView) view.findViewById(R.id.location);
-        sex = (TextView) view.findViewById(R.id.sex);
-        following_number = (TextView) view.findViewById(R.id.following_number);
-        fans_number = (TextView) view.findViewById(R.id.fans_number);
-        fav_number = (TextView) view.findViewById(R.id.fav_number);
-        topic_number = (TextView) view.findViewById(R.id.topic_number);
+        layout.username = (TextView) view.findViewById(R.id.username);
+        layout.isVerified = (TextView) view.findViewById(R.id.isVerified);
+        layout.verified_reason = (TextView) view.findViewById(R.id.verified_info);
+        layout.info = (TextView) view.findViewById(R.id.textView_info);
+        layout.blog_url = (TextView) view.findViewById(R.id.blog_url);
+        layout.location = (TextView) view.findViewById(R.id.location);
+        layout.sex = (TextView) view.findViewById(R.id.sex);
+        layout.following_number = (TextView) view.findViewById(R.id.following_number);
+        layout.fans_number = (TextView) view.findViewById(R.id.fans_number);
+        layout.fav_number = (TextView) view.findViewById(R.id.fav_number);
+        layout.topic_number = (TextView) view.findViewById(R.id.topic_number);
 
-        blog_url_layout = view.findViewById(R.id.blog_url_layout);
-        intro_layout = view.findViewById(R.id.intro_layout);
-        location_layout = view.findViewById(R.id.location_layout);
-        verified_layout = view.findViewById(R.id.verified_layout);
+        layout.blog_url_layout = view.findViewById(R.id.blog_url_layout);
+        layout.intro_layout = view.findViewById(R.id.intro_layout);
+        layout.location_layout = view.findViewById(R.id.location_layout);
+        layout.verified_layout = view.findViewById(R.id.verified_layout);
 
         View fan_layout = view.findViewById(R.id.fan_layout);
         View following_layout = view.findViewById(R.id.following_layout);
@@ -352,7 +335,7 @@ public class MyInfoFragment extends AbstractAppFragment {
                 return;
             }
             topicList = result;
-            setTextViewNum(topic_number, String.valueOf(result.size()));
+            setTextViewNum(layout.topic_number, String.valueOf(result.size()));
 
 
         }
@@ -370,5 +353,27 @@ public class MyInfoFragment extends AbstractAppFragment {
         }
         tv.setText(value);
 
+    }
+
+    private class Layout {
+        ImageView avatar;
+
+        TextView username;
+        TextView verified_reason;
+        TextView isVerified;
+        TextView info;
+        TextView blog_url;
+        TextView location;
+        TextView sex;
+
+        TextView following_number;
+        TextView fans_number;
+        TextView fav_number;
+        TextView topic_number;
+
+        View verified_layout;
+        View intro_layout;
+        View location_layout;
+        View blog_url_layout;
     }
 }

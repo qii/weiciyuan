@@ -36,27 +36,9 @@ public class UserInfoFragment extends AbstractAppFragment {
 
     private UserBean bean;
 
-    private ImageView avatar;
-    private TextView username;
-    private TextView verified_reason;
-    private TextView isVerified;
-    private TextView info;
-    private TextView blog_url;
-    private TextView location;
-    private TextView relationship;
-    private TextView sex;
-    private TextView following_number;
-    private TextView fans_number;
-    private TextView topic_number;
-
-
-    private View verified_layout;
-    private View intro_layout;
-    private View location_layout;
-    private View blog_url_layout;
-
-
     protected TimeLineBitmapDownloader commander;
+
+    private Layout layout;
 
     private RefreshTask task;
     private ProfileAvatarReadWorker avatarTask;
@@ -122,72 +104,72 @@ public class UserInfoFragment extends AbstractAppFragment {
     private void setValue() {
         getActivity().getActionBar().setTitle(bean.getScreen_name());
         if (TextUtils.isEmpty(bean.getRemark())) {
-            username.setText(bean.getScreen_name());
+            layout.username.setText(bean.getScreen_name());
         } else {
-            username.setText(bean.getScreen_name() + "(" + bean.getRemark() + ")");
+            layout.username.setText(bean.getScreen_name() + "(" + bean.getRemark() + ")");
         }
 
         if (bean.isVerified()) {
-            isVerified.setVisibility(View.VISIBLE);
-            isVerified.setText(getString(R.string.verified_user));
-            verified_reason.setText(bean.getVerified_reason());
-            verified_layout.setVisibility(View.VISIBLE);
+            layout.isVerified.setVisibility(View.VISIBLE);
+            layout.isVerified.setText(getString(R.string.verified_user));
+            layout.verified_reason.setText(bean.getVerified_reason());
+            layout.verified_layout.setVisibility(View.VISIBLE);
         } else {
-            verified_layout.setVisibility(View.GONE);
+            layout.verified_layout.setVisibility(View.GONE);
         }
 
         if (!TextUtils.isEmpty(bean.getDescription())) {
-            info.setText(bean.getDescription());
-            intro_layout.setVisibility(View.VISIBLE);
+            layout.info.setText(bean.getDescription());
+            layout.intro_layout.setVisibility(View.VISIBLE);
         } else {
-            intro_layout.setVisibility(View.GONE);
+            layout.intro_layout.setVisibility(View.GONE);
         }
 
         String avatarUrl = bean.getAvatar_large();
         if (!TextUtils.isEmpty(avatarUrl)) {
-            avatarTask = new ProfileAvatarReadWorker(avatar, avatarUrl);
+            avatarTask = new ProfileAvatarReadWorker(layout.avatar, avatarUrl);
             avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
         if (!TextUtils.isEmpty(bean.getUrl())) {
 
-            blog_url.setText(bean.getUrl());
-            ListViewTool.addLinks(blog_url);
-            blog_url_layout.setVisibility(View.VISIBLE);
-            blog_url.setVisibility(View.VISIBLE);
+            layout.blog_url.setText(bean.getUrl());
+            ListViewTool.addLinks(layout.blog_url);
+            layout.blog_url_layout.setVisibility(View.VISIBLE);
+            layout.blog_url.setVisibility(View.VISIBLE);
         } else {
-            blog_url_layout.setVisibility(View.GONE);
-            blog_url.setVisibility(View.GONE);
+            layout.blog_url_layout.setVisibility(View.GONE);
+            layout.blog_url.setVisibility(View.GONE);
         }
 
         if (!TextUtils.isEmpty(bean.getLocation())) {
-            location.setText(bean.getLocation());
-            location_layout.setVisibility(View.VISIBLE);
+            layout.location.setText(bean.getLocation());
+            layout.location_layout.setVisibility(View.VISIBLE);
         } else {
-            location_layout.setVisibility(View.GONE);
+            layout.location_layout.setVisibility(View.GONE);
         }
         String s = bean.getGender();
         if (!TextUtils.isEmpty(s)) {
             if (s.equals("m"))
-                sex.setText(getString(R.string.m));
+                layout.sex.setText(getString(R.string.m));
             else if (s.equals("f"))
-                sex.setText(getString(R.string.f));
+                layout.sex.setText(getString(R.string.f));
             else
-                sex.setVisibility(View.GONE);
+                layout.sex.setVisibility(View.GONE);
         }
-        setTextViewNum(fans_number, bean.getFollowers_count());
-        setTextViewNum(following_number, bean.getFriends_count());
+        setTextViewNum(layout.fans_number, bean.getFollowers_count());
+        setTextViewNum(layout.following_number, bean.getFriends_count());
 
         boolean he = bean.isFollow_me();
         boolean me = bean.isFollowing();
 
         if (he && me) {
-            relationship.setText(getString(R.string.following_each_other));
+            layout.relationship.setText(getString(R.string.following_each_other));
         } else if (he && !me) {
-            relationship.setText(getString(R.string.he_is_following_you));
+            layout.relationship.setText(getString(R.string.he_is_following_you));
         } else if (!he && me) {
-            relationship.setText(getString(R.string.you_is_following_he));
+            layout.relationship.setText(getString(R.string.you_is_following_he));
         } else {
-            relationship.setText(getString(R.string.stranger_each_other));
+            layout.relationship.setText(getString(R.string.stranger_each_other));
         }
 
 
@@ -199,9 +181,10 @@ public class UserInfoFragment extends AbstractAppFragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.userinfofragment_layout, container, false);
-        avatar = (ImageView) view.findViewById(R.id.avatar);
+        layout = new Layout();
+        layout.avatar = (ImageView) view.findViewById(R.id.avatar);
 
-        avatar.setOnClickListener(new View.OnClickListener() {
+        layout.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String path = FileManager.getFilePathFromUrl(bean.getAvatar_large(), FileLocationMethod.avatar_large);
@@ -212,22 +195,22 @@ public class UserInfoFragment extends AbstractAppFragment {
             }
         });
 
-        username = (TextView) view.findViewById(R.id.username);
-        isVerified = (TextView) view.findViewById(R.id.isVerified);
-        verified_reason = (TextView) view.findViewById(R.id.verified_info);
-        info = (TextView) view.findViewById(R.id.textView_info);
-        blog_url = (TextView) view.findViewById(R.id.blog_url);
-        location = (TextView) view.findViewById(R.id.location);
-        sex = (TextView) view.findViewById(R.id.sex);
-        relationship = (TextView) view.findViewById(R.id.relationship);
-        following_number = (TextView) view.findViewById(R.id.following_number);
-        fans_number = (TextView) view.findViewById(R.id.fans_number);
-        topic_number = (TextView) view.findViewById(R.id.topic_number);
+        layout.username = (TextView) view.findViewById(R.id.username);
+        layout.isVerified = (TextView) view.findViewById(R.id.isVerified);
+        layout.verified_reason = (TextView) view.findViewById(R.id.verified_info);
+        layout.info = (TextView) view.findViewById(R.id.textView_info);
+        layout.blog_url = (TextView) view.findViewById(R.id.blog_url);
+        layout.location = (TextView) view.findViewById(R.id.location);
+        layout.sex = (TextView) view.findViewById(R.id.sex);
+        layout.relationship = (TextView) view.findViewById(R.id.relationship);
+        layout.following_number = (TextView) view.findViewById(R.id.following_number);
+        layout.fans_number = (TextView) view.findViewById(R.id.fans_number);
+        layout.topic_number = (TextView) view.findViewById(R.id.topic_number);
 
-        blog_url_layout = view.findViewById(R.id.blog_url_layout);
-        intro_layout = view.findViewById(R.id.intro_layout);
-        location_layout = view.findViewById(R.id.location_layout);
-        verified_layout = view.findViewById(R.id.verified_layout);
+        layout.blog_url_layout = view.findViewById(R.id.blog_url_layout);
+        layout.intro_layout = view.findViewById(R.id.intro_layout);
+        layout.location_layout = view.findViewById(R.id.location_layout);
+        layout.verified_layout = view.findViewById(R.id.verified_layout);
 
         View fan_layout = view.findViewById(R.id.fan_layout);
         View following_layout = view.findViewById(R.id.following_layout);
@@ -384,7 +367,7 @@ public class UserInfoFragment extends AbstractAppFragment {
                 return;
             }
             topicList = result;
-            setTextViewNum(topic_number, String.valueOf(result.size()));
+            setTextViewNum(layout.topic_number, String.valueOf(result.size()));
 
 
         }
@@ -402,5 +385,26 @@ public class UserInfoFragment extends AbstractAppFragment {
         }
         tv.setText(value);
 
+    }
+
+    private class Layout {
+        ImageView avatar;
+        TextView username;
+        TextView verified_reason;
+        TextView isVerified;
+        TextView info;
+        TextView blog_url;
+        TextView location;
+        TextView relationship;
+        TextView sex;
+        TextView following_number;
+        TextView fans_number;
+        TextView topic_number;
+
+
+        View verified_layout;
+        View intro_layout;
+        View location_layout;
+        View blog_url_layout;
     }
 }
