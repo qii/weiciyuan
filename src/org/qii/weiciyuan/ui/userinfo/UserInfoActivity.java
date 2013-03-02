@@ -609,6 +609,10 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
                         UserNotExistsDialog userNotExistsDialog = new UserNotExistsDialog();
                         userNotExistsDialog.show(getFragmentManager(), "");
                         break;
+                    default:
+                        OtherErrorDialog otherErrorDialog = new OtherErrorDialog(this.e.getError());
+                        otherErrorDialog.show(getFragmentManager(), "");
+                        break;
                 }
 
             }
@@ -632,6 +636,50 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                     .setTitle(getString(R.string.something_wrong))
                     .setMessage(getString(R.string.user_not_exists))
+                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getActivity().finish();
+                        }
+                    });
+            return builder.create();
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            super.onCancel(dialog);
+            getActivity().finish();
+        }
+    }
+
+    public static class OtherErrorDialog extends DialogFragment {
+
+        private String error;
+
+        public OtherErrorDialog() {
+
+        }
+
+        public OtherErrorDialog(String error) {
+            this.error = error;
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putString("error", error);
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            if (savedInstanceState != null) {
+                this.error = savedInstanceState.getString("error");
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                    .setTitle(getString(R.string.something_wrong))
+                    .setMessage(this.error)
                     .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
