@@ -234,6 +234,7 @@
     <string name="edit">编辑</string>
     <string name="edit_my_profile">编辑个人资料</string>
     <string name="edit_successfully">编辑资料成功</string>
+    <string name="nickname_cant_be_empty">昵称不能为空</string>
 
 
     <!-- serach -->

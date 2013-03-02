@@ -140,11 +140,21 @@
                 <data android:mimeType="application/org.qii.weiciyuan.beam"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.userinfo.MyInfoActivity"/>
-        <activity android:name=".ui.userinfo.EditMyProfileActivity"/>
-        <activity android:name=".ui.userinfo.FriendListActivity"/>
-        <activity android:name=".ui.userinfo.FanListActivity"/>
-        <activity android:name=".ui.userinfo.MyFavActivity"/>
+        <activity
+            android:name=".ui.userinfo.MyInfoActivity"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".ui.userinfo.EditMyProfileActivity"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".ui.userinfo.FriendListActivity"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".ui.userinfo.FanListActivity"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".ui.userinfo.MyFavActivity"
+            android:launchMode="singleTop"/>
 
 
         <!--search activity -->

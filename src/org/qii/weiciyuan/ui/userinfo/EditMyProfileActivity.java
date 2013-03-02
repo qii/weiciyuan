@@ -9,7 +9,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -96,12 +98,36 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
         }
         layout.nickname.setText(userBean.getScreen_name());
         layout.nickname.setSelection(layout.nickname.getText().toString().length());
+        layout.nickname.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                isNicknameEmpty();
+            }
+        });
         layout.website.setText(userBean.getUrl());
         layout.info.setText(userBean.getDescription());
     }
 
+    private boolean isNicknameEmpty() {
+        int sum = Utility.length(layout.nickname.getText().toString());
+        if (sum == 0) {
+            layout.nickname.setError(getString(R.string.nickname_cant_be_empty));
+        }
+        return sum == 0;
+    }
+
     private void save() {
-        if (Utility.isTaskStopped(saveAsyncTask)) {
+        if (Utility.isTaskStopped(saveAsyncTask) && !isNicknameEmpty()) {
             saveAsyncTask = new SaveAsyncTask();
             saveAsyncTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
