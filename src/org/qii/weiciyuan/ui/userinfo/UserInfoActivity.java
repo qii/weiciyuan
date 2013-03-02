@@ -1,9 +1,7 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.*;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.nfc.NdefMessage;
@@ -23,6 +21,7 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.group.ModifyGroupMemberDao;
 import org.qii.weiciyuan.dao.relationship.FanDao;
 import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
+import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.user.RemarkDao;
 import org.qii.weiciyuan.support.database.FilterDBTask;
 import org.qii.weiciyuan.support.error.ErrorCode;
@@ -60,6 +59,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
     private GestureDetector gestureDetector;
 
+    private RefreshTask refreshTask;
+
 
     public String getToken() {
         if (TextUtils.isEmpty(token))
@@ -95,6 +96,9 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             } else if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
                 processIntent(getIntent());
             }
+            fetchUserInfoFromServer();
+        } else {
+            initLayout();
         }
 
         if (bean.getScreen_name().equals(GlobalContext.getInstance().getCurrentAccountName())
@@ -114,19 +118,20 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             finish();
         }
 
+
+    }
+
+    private void fetchUserInfoFromServer() {
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle(bean.getScreen_name());
+        refreshTask = new RefreshTask();
+        refreshTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void initLayout() {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.personal_info));
         setContentView(R.layout.viewpager_layout);
-
-        mViewPager = (MyViewPager) findViewById(R.id.viewpager);
-        mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
-        mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setAdapter(adapter);
-        mViewPager.setOnPageChangeListener(onPageChangeListener);
-        gestureDetector = new GestureDetector(UserInfoActivity.this
-                , new SwipeRightToCloseOnGestureListener(UserInfoActivity.this, mViewPager));
-        mViewPager.setGestureDetector(gestureDetector);
 
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -138,9 +143,18 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
                 .setText(getString(R.string.weibo))
                 .setTabListener(tabListener));
 
+        mViewPager = (MyViewPager) findViewById(R.id.viewpager);
+        mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
+        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setAdapter(adapter);
+        mViewPager.setOnPageChangeListener(onPageChangeListener);
+        gestureDetector = new GestureDetector(UserInfoActivity.this
+                , new SwipeRightToCloseOnGestureListener(UserInfoActivity.this, mViewPager));
+        mViewPager.setGestureDetector(gestureDetector);
+
 
     }
-
 
     private void processIntent(Intent intent) {
         Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
@@ -157,7 +171,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
         public void onTabSelected(ActionBar.Tab tab,
                                   FragmentTransaction ft) {
-            if (mViewPager.getCurrentItem() != tab.getPosition())
+            if (mViewPager != null && mViewPager.getCurrentItem() != tab.getPosition())
                 mViewPager.setCurrentItem(tab.getPosition());
 
             switch (tab.getPosition()) {
@@ -543,5 +557,95 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         }
     }
 
+
+    private class RefreshTask extends MyAsyncTask<Object, UserBean, UserBean> {
+        WeiboException e;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected UserBean doInBackground(Object... params) {
+            if (!isCancelled()) {
+                ShowUserDao dao = new ShowUserDao(GlobalContext.getInstance().getSpecialToken());
+                boolean haveId = !TextUtils.isEmpty(bean.getId());
+                boolean haveName = !TextUtils.isEmpty(bean.getScreen_name());
+                if (haveId) {
+                    dao.setUid(bean.getId());
+                } else if (haveName) {
+                    dao.setScreen_name(bean.getScreen_name());
+                } else {
+                    cancel(true);
+                    return null;
+                }
+
+                UserBean user = null;
+                try {
+                    user = dao.getUserInfo();
+                } catch (WeiboException e) {
+                    this.e = e;
+                    cancel(true);
+                }
+                if (user != null) {
+                    bean = user;
+                } else {
+                    cancel(true);
+                }
+                return user;
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onCancelled(UserBean userBean) {
+            super.onCancelled(userBean);
+            if (this.e != null) {
+                int errorCode = this.e.getError_code();
+                switch (errorCode) {
+                    case ErrorCode.USER_NOT_EXISTS:
+                        UserNotExistsDialog userNotExistsDialog = new UserNotExistsDialog();
+                        userNotExistsDialog.show(getFragmentManager(), "");
+                        break;
+                }
+
+            }
+        }
+
+        @Override
+        protected void onPostExecute(UserBean o) {
+            if (o != null) {
+                bean = o;
+                initLayout();
+            }
+            super.onPostExecute(o);
+        }
+
+    }
+
+    public static class UserNotExistsDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                    .setTitle(getString(R.string.something_wrong))
+                    .setMessage(getString(R.string.user_not_exists))
+                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getActivity().finish();
+                        }
+                    });
+            return builder.create();
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            super.onCancel(dialog);
+            getActivity().finish();
+        }
+    }
 
 }

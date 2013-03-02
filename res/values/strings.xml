@@ -235,6 +235,7 @@
     <string name="edit_my_profile">编辑个人资料</string>
     <string name="edit_successfully">编辑资料成功</string>
     <string name="nickname_cant_be_empty">昵称不能为空</string>
+    <string name="user_not_exists">用户不存在</string>
 
 
     <!-- serach -->
@@ -418,5 +419,6 @@
     <string name="cancel_draft">不用</string>
     <string name="askdeletemessage">永久删除这条消息?</string>
 
-
+    <!--dialog-->
+    <string name="something_wrong">出错了！</string>
 </resources>
