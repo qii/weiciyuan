@@ -10,6 +10,7 @@ import java.util.Map;
 /**
  * User: qii
  * Date: 13-3-2
+ * http://open.weibo.com/wiki/2/account/avatar/upload
  */
 public class UploadAvatarDao {
 
