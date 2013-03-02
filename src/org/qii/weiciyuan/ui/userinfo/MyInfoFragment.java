@@ -182,10 +182,10 @@ public class MyInfoFragment extends AbstractAppFragment {
         layout.fav_number = (TextView) view.findViewById(R.id.fav_number);
         layout.topic_number = (TextView) view.findViewById(R.id.topic_number);
 
-        layout.blog_url_layout = view.findViewById(R.id.blog_url_layout);
-        layout.intro_layout = view.findViewById(R.id.intro_layout);
-        layout.location_layout = view.findViewById(R.id.location_layout);
-        layout.verified_layout = view.findViewById(R.id.verified_layout);
+        layout.blog_url_layout = (ViewGroup) view.findViewById(R.id.blog_url_layout);
+        layout.intro_layout = (ViewGroup) view.findViewById(R.id.intro_layout);
+        layout.location_layout = (ViewGroup) view.findViewById(R.id.location_layout);
+        layout.verified_layout = (ViewGroup) view.findViewById(R.id.verified_layout);
 
         View fan_layout = view.findViewById(R.id.fan_layout);
         View following_layout = view.findViewById(R.id.following_layout);
@@ -371,9 +371,9 @@ public class MyInfoFragment extends AbstractAppFragment {
         TextView fav_number;
         TextView topic_number;
 
-        View verified_layout;
-        View intro_layout;
-        View location_layout;
-        View blog_url_layout;
+        ViewGroup verified_layout;
+        ViewGroup intro_layout;
+        ViewGroup location_layout;
+        ViewGroup blog_url_layout;
     }
 }
