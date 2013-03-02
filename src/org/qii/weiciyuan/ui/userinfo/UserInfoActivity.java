@@ -603,18 +603,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
             if (this.e != null) {
-                int errorCode = this.e.getError_code();
-                switch (errorCode) {
-                    case ErrorCode.USER_NOT_EXISTS:
-                        UserNotExistsDialog userNotExistsDialog = new UserNotExistsDialog();
-                        userNotExistsDialog.show(getFragmentManager(), "");
-                        break;
-                    default:
-                        OtherErrorDialog otherErrorDialog = new OtherErrorDialog(this.e.getError());
-                        otherErrorDialog.show(getFragmentManager(), "");
-                        break;
-                }
-
+                UserInfoActivityErrorDialog userInfoActivityErrorDialog = new UserInfoActivityErrorDialog(this.e.getError());
+                userInfoActivityErrorDialog.show(getFragmentManager(), "");
             }
         }
 
@@ -629,38 +619,15 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
     }
 
-    public static class UserNotExistsDialog extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                    .setTitle(getString(R.string.something_wrong))
-                    .setMessage(getString(R.string.user_not_exists))
-                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            getActivity().finish();
-                        }
-                    });
-            return builder.create();
-        }
-
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            super.onCancel(dialog);
-            getActivity().finish();
-        }
-    }
-
-    public static class OtherErrorDialog extends DialogFragment {
+    public static class UserInfoActivityErrorDialog extends DialogFragment {
 
         private String error;
 
-        public OtherErrorDialog() {
+        public UserInfoActivityErrorDialog() {
 
         }
 
-        public OtherErrorDialog(String error) {
+        public UserInfoActivityErrorDialog(String error) {
             this.error = error;
         }
 
