@@ -141,6 +141,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.userinfo.MyInfoActivity"/>
+        <activity android:name=".ui.userinfo.EditMyProfileActivity"/>
         <activity android:name=".ui.userinfo.FriendListActivity"/>
         <activity android:name=".ui.userinfo.FanListActivity"/>
         <activity android:name=".ui.userinfo.MyFavActivity"/>

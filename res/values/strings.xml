@@ -76,11 +76,6 @@
     <string name="more">载入更多</string>
     <string name="message_list">消息列表</string>
     <string name="message_number">微博消息</string>
-    <string name="following_number">关注数</string>
-    <string name="fan_number">粉丝数</string>
-    <string name="neighbor">友邻</string>
-    <string name="address">地址</string>
-    <string name="blog_url">博客</string>
     <string name="following_list">关注列表</string>
     <string name="fan_list">粉丝列表</string>
     <string name="topic_number">话题数</string>
@@ -224,12 +219,21 @@
     <string name="quick_repost">快速转发原创微博</string>
 
     <!--info -->
+    <string name="following_number">关注数</string>
+    <string name="fan_number">粉丝数</string>
+    <string name="neighbor">友邻</string>
+    <string name="address">地址</string>
+    <string name="blog_url">博客</string>
     <string name="personal_info">个人资料</string>
     <string name="my_info">我的资料</string>
     <string name="my_fav_list">我的收藏列表</string>
     <string name="intro">简介</string>
+    <string name="nickname">昵称</string>
     <string name="at">"@TA"</string>
     <string name="sum">统计</string>
+    <string name="edit">编辑</string>
+    <string name="edit_my_profile">编辑个人资料</string>
+    <string name="edit_successfully">编辑资料成功</string>
 
 
     <!-- serach -->

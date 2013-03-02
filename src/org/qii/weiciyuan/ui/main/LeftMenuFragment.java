@@ -39,7 +39,7 @@ public class LeftMenuFragment extends PreferenceFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);    //To change body of overridden methods use File | Settings | File Templates.
+        super.onActivityCreated(savedInstanceState);
         final ViewPager mentionVP = (ViewPager) getActivity().findViewById(R.id.menu_right_vp_mention);
         final ViewPager commentVP = (ViewPager) getActivity().findViewById(R.id.menu_right_vp_comment);
 

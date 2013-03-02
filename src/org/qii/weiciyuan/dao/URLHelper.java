@@ -127,4 +127,7 @@ public class URLHelper {
     public static final String DM_CREATE = URL_SINA_WEIBO + "direct_messages/new.json";
     public static final String DM_DESTROY = URL_SINA_WEIBO + "direct_messages/destroy.json";
     public static final String DM_BATH_DESTROY = URL_SINA_WEIBO + "direct_messages/destroy_batch";
+
+    //edit my profile
+    public static final String MYPROFILE_EDIT = URL_SINA_WEIBO + "account/profile/basic_update.json";
 }

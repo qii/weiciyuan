@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.GestureDetector;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import org.qii.weiciyuan.R;
@@ -134,12 +135,23 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo, IA
     };
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.actionbar_menu_myinfoactivity, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 intent = new Intent(this, MainTimeLineActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                return true;
+            case R.id.menu_edit:
+                intent = new Intent(this, EditMyProfileActivity.class);
+                intent.putExtra("userBean", GlobalContext.getInstance().getAccountBean().getInfo());
                 startActivity(intent);
                 return true;
         }
