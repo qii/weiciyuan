@@ -27,8 +27,8 @@ public class HttpUtility {
         return !Thread.currentThread().isInterrupted() && new JavaHttpUtility().doGetSaveFile(url, path, downloadListener);
     }
 
-    public boolean executeUploadTask(String url, Map<String, String> param, String path, FileUploaderHttpHelper.ProgressListener listener) throws WeiboException {
-        return !Thread.currentThread().isInterrupted() && new JavaHttpUtility().doUploadFile(url, param, path, listener);
+    public boolean executeUploadTask(String url, Map<String, String> param, String path, String imageParamName, FileUploaderHttpHelper.ProgressListener listener) throws WeiboException {
+        return !Thread.currentThread().isInterrupted() && new JavaHttpUtility().doUploadFile(url, param, path, imageParamName, listener);
     }
 }
 

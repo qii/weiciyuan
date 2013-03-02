@@ -170,6 +170,9 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
                 dao.setUrl(url);
             if (!TextUtils.isEmpty(description) && !description.equals(userBean.getDescription()))
                 dao.setDescription(description);
+
+            dao.setAvatar(picPath);
+
             try {
                 return dao.update();
             } catch (WeiboException e) {

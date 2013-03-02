@@ -357,7 +357,7 @@ public class JavaHttpUtility {
         return res.toString();
     }
 
-    public boolean doUploadFile(String urlStr, Map<String, String> param, String path, final FileUploaderHttpHelper.ProgressListener listener) throws WeiboException {
+    public boolean doUploadFile(String urlStr, Map<String, String> param, String path, String imageParamName, final FileUploaderHttpHelper.ProgressListener listener) throws WeiboException {
         String BOUNDARYSTR = getBoundry();
 
         File targetFile = new File(path);
@@ -368,7 +368,7 @@ public class JavaHttpUtility {
         try {
             barry = ("--" + BOUNDARYSTR + "--\r\n").getBytes("UTF-8");
 
-            sendStr = getBoundaryMessage(BOUNDARYSTR, param, "pic", new File(path).getName(), "image/png");
+            sendStr = getBoundaryMessage(BOUNDARYSTR, param, imageParamName, new File(path).getName(), "image/png");
             contentLength = sendStr.getBytes("UTF-8").length + (int) targetFile.length() + 2 * barry.length;
         } catch (UnsupportedEncodingException e) {
 

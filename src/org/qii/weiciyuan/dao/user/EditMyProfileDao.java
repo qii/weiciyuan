@@ -40,6 +40,11 @@ public class EditMyProfileDao {
             AppLogger.e(e.getMessage());
         }
 
+        if (this.avatar != null) {
+            UploadAvatarDao uploadAvatarDao = new UploadAvatarDao(access_token, avatar);
+            uploadAvatarDao.upload();
+        }
+
         return value;
 
     }
@@ -53,6 +58,10 @@ public class EditMyProfileDao {
         this.description = description;
     }
 
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public EditMyProfileDao(String token, String screen_name) {
         this.access_token = token;
         this.screen_name = screen_name;
@@ -62,4 +71,5 @@ public class EditMyProfileDao {
     private String screen_name;
     private String url;
     private String description;
+    private String avatar;
 }

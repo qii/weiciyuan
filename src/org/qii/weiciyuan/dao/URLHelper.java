@@ -130,4 +130,5 @@ public class URLHelper {
 
     //edit my profile
     public static final String MYPROFILE_EDIT = URL_SINA_WEIBO + "account/profile/basic_update.json";
+    public static final String AVATAR_UPLOAD = URL_SINA_WEIBO + "account/avatar/upload.json";
 }
