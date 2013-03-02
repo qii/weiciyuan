@@ -131,12 +131,14 @@ public class UserInfoFragment extends AbstractAppFragment {
             isVerified.setVisibility(View.VISIBLE);
             isVerified.setText(getString(R.string.verified_user));
             verified_reason.setText(bean.getVerified_reason());
+            verified_layout.setVisibility(View.VISIBLE);
         } else {
             verified_layout.setVisibility(View.GONE);
         }
 
         if (!TextUtils.isEmpty(bean.getDescription())) {
             info.setText(bean.getDescription());
+            intro_layout.setVisibility(View.VISIBLE);
         } else {
             intro_layout.setVisibility(View.GONE);
         }
@@ -150,6 +152,8 @@ public class UserInfoFragment extends AbstractAppFragment {
 
             blog_url.setText(bean.getUrl());
             ListViewTool.addLinks(blog_url);
+            blog_url_layout.setVisibility(View.VISIBLE);
+            blog_url.setVisibility(View.VISIBLE);
         } else {
             blog_url_layout.setVisibility(View.GONE);
             blog_url.setVisibility(View.GONE);
@@ -157,6 +161,7 @@ public class UserInfoFragment extends AbstractAppFragment {
 
         if (!TextUtils.isEmpty(bean.getLocation())) {
             location.setText(bean.getLocation());
+            location_layout.setVisibility(View.VISIBLE);
         } else {
             location_layout.setVisibility(View.GONE);
         }
