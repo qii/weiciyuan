@@ -225,6 +225,7 @@
         <!-- dm -->
         <activity android:name=".ui.dm.DMActivity"/>
         <activity android:name=".ui.dm.DMUserListActivity"/>
+        <activity android:name=".ui.dm.DMSelectUserActivity"/>
 
     </application>
 

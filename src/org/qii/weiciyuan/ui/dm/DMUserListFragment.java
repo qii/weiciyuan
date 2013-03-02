@@ -2,8 +2,12 @@ package org.qii.weiciyuan.ui.dm;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMUserListBean;
 import org.qii.weiciyuan.dao.dm.DMDao;
 import org.qii.weiciyuan.support.database.DMDBTask;
@@ -41,6 +45,7 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 if (Utility.isTaskStopped(dbTask)) {
@@ -65,6 +70,24 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
     public void onDestroy() {
         super.onDestroy();
         Utility.cancelTasks(dbTask);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.actionbar_menu_dmuserlistfragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_write_dm:
+                Intent intent = new Intent(getActivity(), DMSelectUserActivity.class);
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
