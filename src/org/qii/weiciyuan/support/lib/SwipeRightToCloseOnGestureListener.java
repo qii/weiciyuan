@@ -35,7 +35,7 @@ public class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOn
             e1 = mLastOnDownEvent;
         if (e1 == null || e2 == null)
             return false;
-        if (Math.abs(e1.getRawX() - e2.getRawX()) > AppConfig.SWIPE_MIN_DISTANCE
+        if (e2.getRawX() - e1.getRawX() > AppConfig.SWIPE_MIN_DISTANCE
                 && this.viewPager.getCurrentItem() == 0 && Math.abs(velocityX) > scaledMinimumFlingVelocity) {
             this.activity.finish();
             return true;
