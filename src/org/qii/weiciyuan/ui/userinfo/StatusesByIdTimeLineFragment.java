@@ -37,6 +37,8 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null)
+            return;
         MessageBean msg = (MessageBean) data.getSerializableExtra("msg");
         if (msg != null) {
             for (int i = 0; i < getList().getSize(); i++) {
