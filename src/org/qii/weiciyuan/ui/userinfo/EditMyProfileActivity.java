@@ -11,6 +11,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.user.EditMyProfileDao;
+import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarReadWorker;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -27,6 +28,7 @@ public class EditMyProfileActivity extends AbstractAppActivity {
     private UserBean userBean;
     private Layout layout;
 
+    private ProfileAvatarReadWorker avatarTask;
     private SaveAsyncTask saveAsyncTask;
 
     @Override
@@ -53,7 +55,13 @@ public class EditMyProfileActivity extends AbstractAppActivity {
     }
 
     private void initValue() {
+        String avatarUrl = userBean.getAvatar_large();
+        if (!TextUtils.isEmpty(avatarUrl)) {
+            avatarTask = new ProfileAvatarReadWorker(layout.avatar, avatarUrl);
+            avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
         layout.nickname.setText(userBean.getScreen_name());
+        layout.nickname.setSelection(layout.nickname.getText().toString().length());
         layout.website.setText(userBean.getUrl());
         layout.info.setText(userBean.getDescription());
     }
