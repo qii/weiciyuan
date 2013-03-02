@@ -136,6 +136,10 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     if (!TextUtils.isEmpty(path)) {
                         picPath = path;
                         enablePicture();
+                        if (TextUtils.isEmpty(content.getText().toString())) {
+                            content.setText(getString(R.string.share_pic));
+                            content.setSelection(content.getText().toString().length());
+                        }
                         break;
                     }
                 }
