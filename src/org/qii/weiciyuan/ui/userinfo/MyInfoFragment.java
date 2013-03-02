@@ -119,11 +119,13 @@ public class MyInfoFragment extends AbstractAppFragment {
             isVerified.setVisibility(View.VISIBLE);
             isVerified.setText(getString(R.string.verified_user));
             verified_reason.setText(bean.getVerified_reason());
+            verified_layout.setVisibility(View.VISIBLE);
         } else {
             verified_layout.setVisibility(View.GONE);
         }
 
         if (!TextUtils.isEmpty(bean.getDescription())) {
+            intro_layout.setVisibility(View.VISIBLE);
             info.setText(bean.getDescription());
         } else {
             intro_layout.setVisibility(View.GONE);
@@ -135,7 +137,8 @@ public class MyInfoFragment extends AbstractAppFragment {
             avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
         if (!TextUtils.isEmpty(bean.getUrl())) {
-
+            blog_url_layout.setVisibility(View.VISIBLE);
+            blog_url.setVisibility(View.VISIBLE);
             blog_url.setText(bean.getUrl());
             ListViewTool.addLinks(blog_url);
         } else {
@@ -144,6 +147,7 @@ public class MyInfoFragment extends AbstractAppFragment {
         }
 
         if (!TextUtils.isEmpty(bean.getLocation())) {
+            location_layout.setVisibility(View.VISIBLE);
             location.setText(bean.getLocation());
         } else {
             location_layout.setVisibility(View.GONE);

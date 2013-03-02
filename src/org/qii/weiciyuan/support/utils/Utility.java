@@ -64,7 +64,8 @@ public class Utility {
 
         for (String key : keys) {
             String value = param.get(key);
-            if (!TextUtils.isEmpty(value)) {
+            //pain...EditMyProfileDao params' values can be empty
+            if (!TextUtils.isEmpty(value) || key.equals("description") || key.equals("url")) {
                 if (first)
                     first = false;
                 else

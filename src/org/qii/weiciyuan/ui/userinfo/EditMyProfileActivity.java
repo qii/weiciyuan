@@ -166,11 +166,8 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
         @Override
         protected UserBean doInBackground(Void... params) {
             EditMyProfileDao dao = new EditMyProfileDao(GlobalContext.getInstance().getSpecialToken(), screenName);
-            if (!TextUtils.isEmpty(url) && !url.equals(userBean.getUrl()))
-                dao.setUrl(url);
-            if (!TextUtils.isEmpty(description) && !description.equals(userBean.getDescription()))
-                dao.setDescription(description);
-
+            dao.setUrl(url);
+            dao.setDescription(description);
             dao.setAvatar(picPath);
 
             try {
