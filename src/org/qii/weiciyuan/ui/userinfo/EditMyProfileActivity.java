@@ -48,6 +48,12 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
     private String picPath;
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("picPath", picPath);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayShowHomeEnabled(false);
@@ -57,7 +63,7 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
         setContentView(R.layout.editmyprofileactivity_layout);
         initLayout();
         userBean = (UserBean) getIntent().getSerializableExtra("userBean");
-        initValue();
+        initValue(savedInstanceState);
 
     }
 
@@ -77,11 +83,16 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
 
     }
 
-    private void initValue() {
-        String avatarUrl = userBean.getAvatar_large();
-        if (!TextUtils.isEmpty(avatarUrl)) {
-            avatarTask = new ProfileAvatarReadWorker(layout.avatar, avatarUrl);
-            avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+    private void initValue(Bundle savedInstanceState) {
+
+        if (savedInstanceState == null || TextUtils.isEmpty(savedInstanceState.getString("picPath"))) {
+            String avatarUrl = userBean.getAvatar_large();
+            if (!TextUtils.isEmpty(avatarUrl)) {
+                avatarTask = new ProfileAvatarReadWorker(layout.avatar, avatarUrl);
+                avatarTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        } else if (!TextUtils.isEmpty(savedInstanceState.getString("picPath"))) {
+            displayPic();
         }
         layout.nickname.setText(userBean.getScreen_name());
         layout.nickname.setSelection(layout.nickname.getText().toString().length());
