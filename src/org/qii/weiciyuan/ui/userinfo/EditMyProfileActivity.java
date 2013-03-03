@@ -212,6 +212,7 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
             } catch (WeiboException e) {
                 this.e = e;
                 e.printStackTrace();
+                cancel(true);
             }
             return null;
         }
@@ -228,9 +229,9 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
         @Override
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
-            if (this.e != null)
+            if (this.e != null) {
                 Toast.makeText(EditMyProfileActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
-
+            }
         }
     }
 
