@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.userinfo;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,11 +13,13 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
@@ -41,6 +44,7 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
 
     private UserBean userBean;
     private Layout layout;
+    private MenuItem save;
 
     private ProfileAvatarReadWorker avatarTask;
     private SaveAsyncTask saveAsyncTask;
@@ -72,18 +76,21 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
     private void initLayout() {
         layout = new Layout();
         layout.avatar = (ImageView) findViewById(R.id.avatar);
-        layout.avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SelectProfilePictureDialog dialog = new SelectProfilePictureDialog();
-                dialog.show(getFragmentManager(), "");
-            }
-        });
+        layout.avatar.setOnClickListener(avatarOnClickListener);
         layout.nickname = (EditText) findViewById(R.id.nickname);
         layout.website = (EditText) findViewById(R.id.website);
         layout.info = (EditText) findViewById(R.id.info);
 
     }
+
+    private View.OnClickListener avatarOnClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            SelectProfilePictureDialog dialog = new SelectProfilePictureDialog();
+            dialog.show(getFragmentManager(), "");
+        }
+    };
 
     private void initValue(Bundle savedInstanceState) {
 
@@ -185,6 +192,30 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
         }
     }
 
+    private void startSaveAnimation() {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ProgressBar pb = (ProgressBar) inflater.inflate(R.layout.editmyprofileactivity_refresh_actionbar_view_layout, null);
+        save.setActionView(pb);
+        layout.nickname.setEnabled(false);
+        layout.website.setEnabled(false);
+        layout.info.setEnabled(false);
+        layout.avatar.setOnClickListener(null);
+    }
+
+    private void stopSaveAnimation() {
+        if (save.getActionView() != null) {
+            save.getActionView().clearAnimation();
+            save.setActionView(null);
+        }
+
+        layout.nickname.setEnabled(true);
+        layout.website.setEnabled(true);
+        layout.info.setEnabled(true);
+        layout.avatar.setOnClickListener(avatarOnClickListener);
+
+    }
+
+
     private class SaveAsyncTask extends MyAsyncTask<Void, UserBean, UserBean> {
         String screenName;
         String url;
@@ -198,6 +229,7 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
             screenName = layout.nickname.getText().toString();
             url = layout.website.getText().toString();
             description = layout.info.getText().toString();
+            startSaveAnimation();
         }
 
         @Override
@@ -224,6 +256,7 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
                 Toast.makeText(EditMyProfileActivity.this, R.string.edit_successfully, Toast.LENGTH_SHORT).show();
                 finish();
             }
+            stopSaveAnimation();
         }
 
         @Override
@@ -232,12 +265,15 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
             if (this.e != null) {
                 Toast.makeText(EditMyProfileActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
             }
+            stopSaveAnimation();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu_editmyprofileactivity, menu);
+        save = menu.findItem(R.id.menu_save);
         return super.onCreateOptionsMenu(menu);
     }
 
