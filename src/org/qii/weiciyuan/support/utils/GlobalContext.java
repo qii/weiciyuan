@@ -21,10 +21,7 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: Jiang Qi
@@ -47,10 +44,7 @@ public final class GlobalContext extends Application {
 
     public boolean startedApp = false;
 
-
-    private Map<String, String> emotions = null;
-
-    private Map<String, Bitmap> emotionsPic = new HashMap<String, Bitmap>();
+    private Map<String, Bitmap> emotionsPic = new LinkedHashMap<String, Bitmap>();
 
     private GroupListBean group = null;
 
@@ -192,7 +186,7 @@ public final class GlobalContext extends Application {
                 inputStream = assetManager.open(name);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 if (bitmap != null) {
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, Utility.dip2px(20), Utility.dip2px(20), true);
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, Utility.dip2px(25), Utility.dip2px(25), true);
                     if (bitmap != scaledBitmap) {
                         bitmap.recycle();
                         bitmap = scaledBitmap;
