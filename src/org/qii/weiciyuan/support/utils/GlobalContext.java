@@ -11,19 +11,16 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.Display;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.GroupDBTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.smileypicker.SmileyMap;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,17 +78,6 @@ public final class GlobalContext extends Application {
     public void setGroup(GroupListBean group) {
         this.group = group;
     }
-
-    private Map<String, String> getEmotions() {
-        if (emotions == null) {
-            InputStream inputStream = getResources().openRawResource(R.raw.emotions);
-            emotions = new Gson().fromJson(new InputStreamReader(inputStream), new TypeToken<Map<String, String>>() {
-            }.getType());
-        }
-
-        return emotions;
-    }
-
 
     public DisplayMetrics getDisplayMetrics() {
         if (displayMetrics != null) {
@@ -195,13 +181,11 @@ public final class GlobalContext extends Application {
 
 
     private void getEmotionsTask() {
-        Map<String, String> emotions = GlobalContext.getInstance().getEmotions();
+        Map<String, String> emotions = SmileyMap.getInstance().get();
         List<String> index = new ArrayList<String>();
         index.addAll(emotions.keySet());
         for (String str : index) {
-            String url = emotions.get(str);
-            int position = url.lastIndexOf("/");
-            String name = url.substring(position + 1);
+            String name = emotions.get(str);
             AssetManager assetManager = GlobalContext.getInstance().getAssets();
             InputStream inputStream;
             try {
