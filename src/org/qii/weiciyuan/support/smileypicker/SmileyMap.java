@@ -13,7 +13,8 @@ public class SmileyMap {
     private Map<String, String> map = new HashMap<String, String>();
 
     private SmileyMap() {
-        map.put("[[泪]]", "sada_org.png");
+        map.put("[挖鼻屎]", "kbsa_org.png");
+        map.put("[泪]", "sada_org.png");
         map.put("[赞]", "z2_org.png");
         map.put("[亲亲]", "qq_org.png");
         map.put("[蛋糕]", "cake.png");
@@ -38,7 +39,7 @@ public class SmileyMap {
         map.put("[蜡烛]", "lazu_org.png");
         map.put("[怒]", "angrya_org.png");
         map.put("[闭嘴]", "bz_org.png");
-        map.put("[挖鼻屎]", "kbsa_org.png");
+
         map.put("[钱]", "money_org.png");
         map.put("[嘻嘻]", "tootha_org.png");
         map.put("[左哼哼]", "zhh_org.png");
