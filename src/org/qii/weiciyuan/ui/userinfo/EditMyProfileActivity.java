@@ -23,8 +23,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.user.EditMyProfileDao;
 import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarReadWorker;
+import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -249,14 +251,18 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
             return null;
         }
 
+        /**
+         * sina weibo have a bug, after modify your profile, the return UserBean object dont have large avatar url
+         * so must refresh to get actual data;
+         */
         @Override
         protected void onPostExecute(UserBean userBean) {
             super.onPostExecute(userBean);
             if (userBean != null) {
                 Toast.makeText(EditMyProfileActivity.this, R.string.edit_successfully, Toast.LENGTH_SHORT).show();
-                finish();
+                GlobalContext.getInstance().updateUserInfo(userBean);
+                new RefreshTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
-            stopSaveAnimation();
         }
 
         @Override
@@ -331,4 +337,43 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
         }
     }
 
+
+    private class RefreshTask extends MyAsyncTask<Object, UserBean, UserBean> {
+        WeiboException e;
+
+        @Override
+        protected UserBean doInBackground(Object... params) {
+            UserBean user = null;
+            try {
+                ShowUserDao dao = new ShowUserDao(GlobalContext.getInstance().getSpecialToken());
+                dao.setUid(GlobalContext.getInstance().getAccountBean().getUid());
+                user = dao.getUserInfo();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+            }
+            if (user != null) {
+                AccountDBTask.updateMyProfile(GlobalContext.getInstance().getAccountBean(), user);
+            } else {
+                cancel(true);
+            }
+            return user;
+        }
+
+        @Override
+        protected void onCancelled(UserBean userBean) {
+            super.onCancelled(userBean);
+            Toast.makeText(EditMyProfileActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
+            stopSaveAnimation();
+
+        }
+
+        @Override
+        protected void onPostExecute(UserBean userBean) {
+            super.onPostExecute(userBean);
+            stopSaveAnimation();
+            GlobalContext.getInstance().updateUserInfo(userBean);
+            finish();
+        }
+    }
 }

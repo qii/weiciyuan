@@ -216,12 +216,8 @@ public class OAuthActivity extends AbstractAppActivity {
                 UserBean user = new OAuthDao(token).getOAuthUserInfo();
                 AccountBean account = new AccountBean();
                 account.setAccess_token(token);
-                account.setUsername(user.getName());
-                account.setUid(user.getId());
-                account.setUsernick(user.getScreen_name());
-                account.setAvatar_url(user.getProfile_image_url());
                 account.setInfo(user);
-                return AccountDBTask.addOrUpdateAccount(account);
+                return AccountDBTask.addOrUpdateAccount(account, false);
             } catch (WeiboException e) {
                 AppLogger.e(e.getError());
                 this.e = e;

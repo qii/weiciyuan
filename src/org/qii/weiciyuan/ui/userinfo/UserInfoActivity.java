@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.group.ModifyGroupMemberDao;
 import org.qii.weiciyuan.dao.relationship.FanDao;
@@ -106,14 +105,10 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             Intent intent = new Intent(this, MyInfoActivity.class);
             intent.putExtra("token", getToken());
 
-            AccountBean accountBean = new AccountBean();
-            accountBean.setAccess_token(token);
-            accountBean.setUsernick(GlobalContext.getInstance().getCurrentAccountName());
-            accountBean.setUid(GlobalContext.getInstance().getCurrentAccountId());
             UserBean userBean = new UserBean();
             userBean.setId(GlobalContext.getInstance().getCurrentAccountId());
             intent.putExtra("user", bean);
-            intent.putExtra("account", accountBean);
+            intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
             startActivity(intent);
             finish();
         }

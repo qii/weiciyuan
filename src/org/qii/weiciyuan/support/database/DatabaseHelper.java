@@ -15,17 +15,14 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 19;
+    private static final int DATABASE_VERSION = 20;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
             + AccountTable.UID + " integer primary key autoincrement,"
             + AccountTable.OAUTH_TOKEN + " text,"
             + AccountTable.OAUTH_TOKEN_SECRET + " text,"
-            + AccountTable.PORTRAIT + " text,"
-            + AccountTable.USERNAME + " text,"
-            + AccountTable.USERNICK + " text,"
-            + AccountTable.AVATAR_URL + " text,"
+            + AccountTable.BLACK_MAGIC + " boolean,"
             + AccountTable.INFOJSON + " text"
             + ");";
 
@@ -214,6 +211,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
+            case 19:
+                deleteAllTable(db);
+                onCreate(db);
             default:
                 deleteAllTableExceptAccount(db);
                 createOtherTable(db);
@@ -257,6 +257,24 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     private void deleteAllTableExceptAccount(SQLiteDatabase db) {
 
+        db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + HomeOtherGroupTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MentionCommentsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CommentByMeTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EmotionsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DraftTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DMTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MyStatusTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + AtUsersTable.TABLE_NAME);
+
+    }
+
+    private void deleteAllTable(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + AccountTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + HomeOtherGroupTable.TABLE_NAME);

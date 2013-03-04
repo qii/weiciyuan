@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
@@ -23,7 +24,6 @@ import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
-import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
 
 import java.io.File;
@@ -56,7 +56,6 @@ public class MyInfoFragment extends AbstractAppFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putStringArrayList("topicList", topicList);
-        outState.putSerializable("bean", bean);
     }
 
     @Override
@@ -70,9 +69,11 @@ public class MyInfoFragment extends AbstractAppFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        AccountBean accountBean;
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                bean = ((IUserInfo) getActivity()).getUser();
+                accountBean = GlobalContext.getInstance().getAccountBean();
+                bean = accountBean.getInfo();
                 refresh();
                 break;
             case SCREEN_ROTATE:
@@ -81,13 +82,38 @@ public class MyInfoFragment extends AbstractAppFragment {
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 topicList = savedInstanceState.getStringArrayList("topicList");
-                bean = (UserBean) savedInstanceState.getSerializable("bean");
+                accountBean = GlobalContext.getInstance().getAccountBean();
+                bean = accountBean.getInfo();
                 break;
         }
 
         commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
         setValue();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        GlobalContext.getInstance().registerForAccountChangeListener(listener);
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Utility.cancelTasks(refreshTask, avatarTask, topicListTask);
+        GlobalContext.getInstance().unRegisterForAccountChangeListener(listener);
+
+    }
+
+
+    private GlobalContext.MyProfileInfoChangeListener listener = new GlobalContext.MyProfileInfoChangeListener() {
+        @Override
+        public void onChange(UserBean newUserBean) {
+            bean = newUserBean;
+            setValue();
+        }
+    };
 
     @Override
     public void onStart() {
@@ -113,6 +139,7 @@ public class MyInfoFragment extends AbstractAppFragment {
             layout.intro_layout.setVisibility(View.GONE);
         }
 
+        //sina weibo have a bug, after modify your profile, the return UserBean object don't have large avatar url
         String avatarUrl = bean.getAvatar_large();
         if (!TextUtils.isEmpty(avatarUrl)) {
             avatarTask = new ProfileAvatarReadWorker(layout.avatar, avatarUrl);
@@ -241,12 +268,6 @@ public class MyInfoFragment extends AbstractAppFragment {
 
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Utility.cancelTasks(refreshTask, avatarTask, topicListTask);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
@@ -285,7 +306,7 @@ public class MyInfoFragment extends AbstractAppFragment {
             }
             if (user != null) {
                 bean = user;
-                AccountDBTask.updateAccountMyInfo(GlobalContext.getInstance().getAccountBean(), bean);
+                AccountDBTask.updateMyProfile(GlobalContext.getInstance().getAccountBean(), bean);
             } else {
                 cancel(true);
             }
@@ -301,12 +322,12 @@ public class MyInfoFragment extends AbstractAppFragment {
         }
 
         @Override
-        protected void onPostExecute(UserBean o) {
-
+        protected void onPostExecute(UserBean userBean) {
+            super.onPostExecute(userBean);
             setValue();
+            GlobalContext.getInstance().updateUserInfo(userBean);
             topicListTask = new TopicListTask();
             topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            super.onPostExecute(o);
         }
     }
 

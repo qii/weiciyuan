@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
  * User: qii
  * Date: 12-7-29
  */
-public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<MessageListBean> {
+public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<MessageListBean> implements GlobalContext.MyProfileInfoChangeListener {
 
     private AccountBean accountBean;
     private UserBean userBean;
@@ -111,12 +111,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     public void onResume() {
         super.onResume();
         addRefresh();
+        GlobalContext.getInstance().registerForAccountChangeListener(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Utility.cancelTasks(dbTask);
+        GlobalContext.getInstance().unRegisterForAccountChangeListener(this);
     }
 
     @Override
@@ -186,6 +188,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
     }
 
+    private BaseAdapter navAdapter;
+
     private void buildActionBarNav() {
         getActivity().getActionBar().setDisplayShowTitleEnabled(false);
         getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -207,9 +211,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         final String[] valueArray = name.toArray(new String[0]);
 
-        BaseAdapter adapter = new FriendsTimeLineListNavAdapter(getActivity(), valueArray);
+        navAdapter = new FriendsTimeLineListNavAdapter(getActivity(), valueArray);
         final List<GroupBean> finalList = list;
-        getActivity().getActionBar().setListNavigationCallbacks(adapter, new ActionBar.OnNavigationListener() {
+        getActivity().getActionBar().setListNavigationCallbacks(navAdapter, new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int which, long itemId) {
                 String selectedItemId;
@@ -228,6 +232,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onChange(UserBean newUserBean) {
+        if (navAdapter != null)
+            navAdapter.notifyDataSetChanged();
     }
 
     private class DBCacheTask extends MyAsyncTask<Void, MessageListBean, Map<String, MessageListBean>> {

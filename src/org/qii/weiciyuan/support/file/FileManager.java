@@ -67,6 +67,9 @@ public class FileManager {
         if (!isExternalStorageMounted())
             return "";
 
+        if (TextUtils.isEmpty(url))
+            return "";
+
         int index = url.indexOf("//");
 
         String s = url.substring(index + 2);

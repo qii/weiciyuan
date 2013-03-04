@@ -33,15 +33,12 @@ import java.util.List;
  * Date: 12-8-15
  */
 public class MyInfoActivity extends AbstractAppActivity implements IUserInfo, IAccountInfo {
-    private String token;
 
     private UserBean bean;
 
     private AccountBean account;
 
     private MyViewPager mViewPager = null;
-
-    private GestureDetector gestureDetector;
 
 
     @Override
@@ -54,7 +51,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo, IA
 
         super.onCreate(savedInstanceState);
 
-        token = getIntent().getStringExtra("token");
+        String token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
         account = (AccountBean) getIntent().getSerializableExtra("account");
 
@@ -67,7 +64,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo, IA
         mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
-        gestureDetector = new GestureDetector(MyInfoActivity.this
+        GestureDetector gestureDetector = new GestureDetector(MyInfoActivity.this
                 , new SwipeRightToCloseOnGestureListener(MyInfoActivity.this, mViewPager));
         mViewPager.setGestureDetector(gestureDetector);
 
@@ -137,6 +134,8 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo, IA
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu_myinfoactivity, menu);
+        MenuItem edit = menu.findItem(R.id.menu_edit);
+        edit.setVisible(GlobalContext.getInstance().getAccountBean().isBlack_magic());
         return super.onCreateOptionsMenu(menu);
     }
 

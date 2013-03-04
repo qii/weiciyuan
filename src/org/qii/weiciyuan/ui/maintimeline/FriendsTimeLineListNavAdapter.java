@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 /**
@@ -39,7 +40,7 @@ public class FriendsTimeLineListNavAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
 
         if (convertView == null || convertView.getTag() == null) {
             LayoutInflater inflater = activity.getLayoutInflater();
@@ -53,7 +54,8 @@ public class FriendsTimeLineListNavAdapter extends BaseAdapter {
         if (position != 0) {
             holder.textView.setText(valueArray[position]);
         } else {
-            holder.textView.setText(GlobalContext.getInstance().getCurrentAccountName());
+            AccountBean accountBean = GlobalContext.getInstance().getAccountBean();
+            holder.textView.setText(accountBean.getUsernick());
         }
         return convertView;
     }

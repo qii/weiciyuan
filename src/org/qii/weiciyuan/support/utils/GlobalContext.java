@@ -7,12 +7,14 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.Display;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.GroupDBTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -49,6 +51,8 @@ public final class GlobalContext extends Application {
     private GroupListBean group = null;
 
     private MainTimeLineActivity.MusicInfo musicInfo = new MainTimeLineActivity.MusicInfo();
+
+    private Handler handler = new Handler();
 
     @Override
     public void onCreate() {
@@ -94,8 +98,20 @@ public final class GlobalContext extends Application {
         }
     }
 
-    public void setAccountBean(AccountBean accountBean) {
+    public void setAccountBean(final AccountBean accountBean) {
         this.accountBean = accountBean;
+    }
+
+    public void updateUserInfo(final UserBean userBean) {
+        this.accountBean.setInfo(userBean);
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (MyProfileInfoChangeListener listener : profileListenerSet) {
+                    listener.onChange(userBean);
+                }
+            }
+        });
     }
 
     public AccountBean getAccountBean() {
@@ -112,6 +128,21 @@ public final class GlobalContext extends Application {
         }
 
         return accountBean;
+    }
+
+    private Set<MyProfileInfoChangeListener> profileListenerSet = new HashSet<MyProfileInfoChangeListener>();
+
+    public void registerForAccountChangeListener(MyProfileInfoChangeListener listener) {
+        if (listener != null)
+            profileListenerSet.add(listener);
+    }
+
+    public void unRegisterForAccountChangeListener(MyProfileInfoChangeListener listener) {
+        profileListenerSet.remove(listener);
+    }
+
+    public static interface MyProfileInfoChangeListener {
+        public void onChange(UserBean newUserBean);
     }
 
     public String getCurrentAccountId() {

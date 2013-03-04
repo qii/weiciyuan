@@ -15,6 +15,7 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 
@@ -28,6 +29,10 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     protected UserBean userBean;
     protected String token;
     private MessageListBean bean = new MessageListBean();
+
+    public StatusesByIdTimeLineFragment() {
+
+    }
 
 
     @Override
@@ -52,9 +57,30 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         }
     }
 
-    public StatusesByIdTimeLineFragment() {
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (userBean.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+            GlobalContext.getInstance().registerForAccountChangeListener(myProfileInfoChangeListener);
+        }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        GlobalContext.getInstance().unRegisterForAccountChangeListener(myProfileInfoChangeListener);
+    }
+
+    private GlobalContext.MyProfileInfoChangeListener myProfileInfoChangeListener = new GlobalContext.MyProfileInfoChangeListener() {
+        @Override
+        public void onChange(UserBean newUserBean) {
+            for (MessageBean msg : getList().getItemList()) {
+                msg.setUser(newUserBean);
+            }
+            getAdapter().notifyDataSetChanged();
+        }
+    };
 
     public StatusesByIdTimeLineFragment(UserBean userBean, String token) {
         this.userBean = userBean;

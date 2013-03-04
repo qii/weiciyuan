@@ -127,12 +127,8 @@ public class BlackMagicActivity extends AbstractAppActivity {
                 UserBean user = new OAuthDao(token).getOAuthUserInfo();
                 AccountBean account = new AccountBean();
                 account.setAccess_token(token);
-                account.setUsername(user.getName());
-                account.setUid(user.getId());
-                account.setUsernick(user.getScreen_name());
-                account.setAvatar_url(user.getProfile_image_url());
                 account.setInfo(user);
-                AccountDBTask.addOrUpdateAccount(account);
+                AccountDBTask.addOrUpdateAccount(account, true);
                 return token;
             } catch (WeiboException e) {
                 this.e = e;
