@@ -37,7 +37,7 @@ public class SmileyMap {
         map.put("[嘻嘻]", "tootha_org.png");
         map.put("[左哼哼]", "zhh_org.png");
         map.put("[委屈]", "wq_org.png");
-        map.put("[鄙视]", "bs2_orgx.png");
+        map.put("[鄙视]", "bs2_org.png");
         map.put("[吃惊]", "cj_org.png");
         map.put("[吐]", "t_org.png");
         map.put("[懒得理你]", "ldln_org.png");
@@ -55,6 +55,12 @@ public class SmileyMap {
         map.put("[黑线]", "hx.png");
         map.put("[愤怒]", "face335.png");
         map.put("[失望]", "face032.png");
+        map.put("[做鬼脸]", "face290.png");
+        map.put("[阴险]", "face105.png");
+        map.put("[困]", "face059.png");
+        map.put("[拜拜]", "face062.png");
+        map.put("[疑问]", "face055.png");
+
 
         map.put("[赞]", "face329.png");
         map.put("[心]", "hearta_org.png");
@@ -72,6 +78,12 @@ public class SmileyMap {
         map.put("[咖啡]", "face74.png");
         map.put("[爱心传递]", "face221.png");
         map.put("[来]", "face277.png");
+
+
+        map.put("[熊猫]", "face002.png");
+        map.put("[帅]", "face94.png");
+        map.put("[不要]", "face274.png");
+        map.put("[熊猫]", "face002.png");
     }
 
     public static SmileyMap getInstance() {
