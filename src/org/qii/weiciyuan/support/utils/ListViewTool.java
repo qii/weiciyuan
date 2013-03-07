@@ -6,9 +6,11 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.widget.TextView;
 import org.qii.weiciyuan.bean.*;
-import org.qii.weiciyuan.support.lib.MyLinkify;
+import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.lib.WeiboPatterns;
 
 import java.util.List;
@@ -26,13 +28,13 @@ public class ListViewTool {
 
     public static void addLinks(TextView view) {
         CharSequence content = view.getText();
-        view.setText(getJustHighLightLinks(content.toString()));
+        view.setText(convertNormalStringToSpannableString(content.toString()));
         if (view.getLinksClickable()) {
             view.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 
-    public static SpannableString getJustHighLightLinks(String txt) {
+    private static SpannableString convertNormalStringToSpannableString(String txt) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
         String hackTxt;
@@ -41,17 +43,28 @@ public class ListViewTool {
         } else {
             hackTxt = txt;
         }
-        SpannableString value;
-        value = MyLinkify.getJustHighLightLinks(hackTxt, WeiboPatterns.MENTION_URL, WeiboPatterns.MENTION_SCHEME);
-        value = MyLinkify.getJustHighLightLinks(value, WeiboPatterns.WEB_URL, WeiboPatterns.WEB_SCHEME);
-        value = MyLinkify.getJustHighLightLinks(value, WeiboPatterns.TOPIC_URL, WeiboPatterns.TOPIC_SCHEME);
+        SpannableString value = SpannableString.valueOf(hackTxt);
+        Linkify.addLinks(value, WeiboPatterns.MENTION_URL, WeiboPatterns.MENTION_SCHEME);
+        Linkify.addLinks(value, WeiboPatterns.WEB_URL, WeiboPatterns.WEB_SCHEME);
+        Linkify.addLinks(value, WeiboPatterns.TOPIC_URL, WeiboPatterns.TOPIC_SCHEME);
+
+        URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
+        MyURLSpan weiboSpan = null;
+        for (URLSpan urlSpan : urlSpans) {
+            weiboSpan = new MyURLSpan(urlSpan.getURL());
+            int start = value.getSpanStart(urlSpan);
+            int end = value.getSpanEnd(urlSpan);
+            value.removeSpan(urlSpan);
+            value.setSpan(weiboSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
         ListViewTool.addEmotions(value);
         return value;
     }
 
     public static void addJustHighLightLinks(MessageBean bean) {
 
-        bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
+        bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
         if (bean.getRetweeted_status() != null) {
             String name = "";
             UserBean reUser = bean.getRetweeted_status().getUser();
@@ -62,9 +75,9 @@ public class ListViewTool {
             SpannableString value;
 
             if (!TextUtils.isEmpty(name)) {
-                value = ListViewTool.getJustHighLightLinks("@" + name + "：" + bean.getRetweeted_status().getText());
+                value = ListViewTool.convertNormalStringToSpannableString("@" + name + "：" + bean.getRetweeted_status().getText());
             } else {
-                value = ListViewTool.getJustHighLightLinks(bean.getRetweeted_status().getText());
+                value = ListViewTool.convertNormalStringToSpannableString(bean.getRetweeted_status().getText());
             }
 
             bean.getRetweeted_status().setListViewSpannableString(value);
@@ -73,7 +86,7 @@ public class ListViewTool {
 
     public static void addJustHighLightLinks(CommentBean bean) {
 
-        bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
+        bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
         if (bean.getStatus() != null) {
             String name = "";
             UserBean reUser = bean.getStatus().getUser();
@@ -84,9 +97,9 @@ public class ListViewTool {
             SpannableString value;
 
             if (!TextUtils.isEmpty(name)) {
-                value = ListViewTool.getJustHighLightLinks("@" + name + "：" + bean.getStatus().getText());
+                value = ListViewTool.convertNormalStringToSpannableString("@" + name + "：" + bean.getStatus().getText());
             } else {
-                value = ListViewTool.getJustHighLightLinks(bean.getStatus().getText());
+                value = ListViewTool.convertNormalStringToSpannableString(bean.getStatus().getText());
             }
 
             bean.getStatus().setListViewSpannableString(value);
@@ -105,20 +118,20 @@ public class ListViewTool {
         SpannableString value;
 
         if (!TextUtils.isEmpty(name)) {
-            value = ListViewTool.getJustHighLightLinks("@" + name + "：" + bean.getText());
+            value = ListViewTool.convertNormalStringToSpannableString("@" + name + "：" + bean.getText());
         } else {
-            value = ListViewTool.getJustHighLightLinks(bean.getText());
+            value = ListViewTool.convertNormalStringToSpannableString(bean.getText());
         }
 
         bean.setListViewReplySpannableString(value);
     }
 
     public static void addJustHighLightLinks(DMUserBean bean) {
-        bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
+        bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
     }
 
     public static void addJustHighLightLinks(DMBean bean) {
-        bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
+        bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
     }
 
 
