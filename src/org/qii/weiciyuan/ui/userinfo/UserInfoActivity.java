@@ -88,7 +88,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             Uri data = getIntent().getData();
             if (data != null) {
                 String d = data.toString();
-                int index = d.lastIndexOf("/");
+                int index = d.lastIndexOf("@");
                 String newValue = d.substring(index + 1);
                 bean = new UserBean();
                 bean.setScreen_name(newValue);

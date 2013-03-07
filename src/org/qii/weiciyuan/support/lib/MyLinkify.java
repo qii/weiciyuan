@@ -374,6 +374,16 @@ public class MyLinkify {
         return new SpannableString(s);
     }
 
+    public static final SpannableString getJustHighLightLinks(CharSequence s, Pattern p, String scheme) {
+        SpannableString value = SpannableString.valueOf(s);
+
+        if (addLinks(value, p, scheme, null, null)) {
+            return value;
+        }
+
+        return new SpannableString(s);
+    }
+
     /**
      * Applies a regex to a Spannable turning the matches into
      * links.

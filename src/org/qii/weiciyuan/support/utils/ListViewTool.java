@@ -22,6 +22,20 @@ public class ListViewTool {
     private ListViewTool() {
     }
 
+
+    public static void addLinks(TextView view) {
+
+        MyLinkify.addLinks(view, WeiboPatterns.MENTION_URL, WeiboPatterns.MENTION_SCHEME);
+        MyLinkify.addLinks(view, WeiboPatterns.TOPIC_URL, WeiboPatterns.TOPIC_SCHEME);
+        MyLinkify.addLinks(view, WeiboPatterns.WEB_URL, WeiboPatterns.WEB_SCHEME);
+
+        CharSequence content = view.getText();
+        SpannableString value = SpannableString.valueOf(content);
+        ListViewTool.addEmotions(value);
+        view.setText(value);
+
+    }
+
     public static SpannableString getJustHighLightLinks(String txt) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
@@ -32,23 +46,10 @@ public class ListViewTool {
             hackTxt = txt;
         }
         SpannableString value;
-        MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
-            public final String transformUrl(final Matcher match, String url) {
-                return match.group(1);
-            }
-        };
-
-        // Match @mentions and capture just the username portion of the text.
-        String scheme = "org.qii.weiciyuan://";
-        value = MyLinkify.getJustHighLightLinks(hackTxt, WeiboPatterns.MENTION_URL, scheme, null, mentionFilter);
-
+        value = MyLinkify.getJustHighLightLinks(hackTxt, WeiboPatterns.MENTION_URL, WeiboPatterns.MENTION_SCHEME);
         value = MyLinkify.addJUstHighLightLinks(value, MyLinkify.WEB_URLS);
-
-        scheme = "org.qii.weiciyuan.topic://";
-        value = MyLinkify.getJustHighLightLinks(value, WeiboPatterns.TOPIC_URL, scheme, null, mentionFilter);
-
+        value = MyLinkify.getJustHighLightLinks(value, WeiboPatterns.TOPIC_URL, WeiboPatterns.TOPIC_SCHEME);
         ListViewTool.addEmotions(value);
-
         return value;
     }
 
@@ -122,31 +123,6 @@ public class ListViewTool {
 
     public static void addJustHighLightLinks(DMBean bean) {
         bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
-    }
-
-
-    public static void addLinks(TextView view) {
-        MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
-            public final String transformUrl(final Matcher match, String url) {
-                return match.group(1);
-            }
-        };
-
-
-//
-//        // Match @mentions and capture just the username portion of the text.
-        String scheme = "org.qii.weiciyuan://";
-        MyLinkify.addLinks(view, WeiboPatterns.MENTION_URL, scheme, null, mentionFilter);
-
-        scheme = "org.qii.weiciyuan.topic://";
-        MyLinkify.addLinks(view, WeiboPatterns.TOPIC_URL, scheme, null, mentionFilter);
-
-        MyLinkify.addLinks(view, MyLinkify.WEB_URLS);
-        CharSequence content = view.getText();
-        SpannableString value = SpannableString.valueOf(content);
-        ListViewTool.addEmotions(value);
-        view.setText(value);
-
     }
 
 
