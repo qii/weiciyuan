@@ -8,10 +8,10 @@ import android.text.style.ImageSpan;
 import android.widget.TextView;
 import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.support.lib.MyLinkify;
+import org.qii.weiciyuan.support.lib.WeiboPatterns;
 
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * User: qii
@@ -20,27 +20,7 @@ import java.util.regex.Pattern;
 public class ListViewTool {
 
     private ListViewTool() {
-        // Forbidden being instantiated.
     }
-
-    public static void addJustHighLightLinks(TextView view) {
-        MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
-            public final String transformUrl(final Matcher match, String url) {
-                return match.group(1);
-            }
-        };
-
-        // Match @mentions and capture just the username portion of the text.
-        Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)");
-        String scheme = "org.qii.weiciyuan://";
-        MyLinkify.addJustHighLightLinks(view, pattern, scheme, null, mentionFilter);
-
-        MyLinkify.addJUstHighLightLinks(view, MyLinkify.WEB_URLS);
-
-        Pattern dd = Pattern.compile("#([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)#");
-        MyLinkify.addJustHighLightLinks(view, dd, scheme, null, mentionFilter);
-    }
-
 
     public static SpannableString getJustHighLightLinks(String txt) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
@@ -59,15 +39,13 @@ public class ListViewTool {
         };
 
         // Match @mentions and capture just the username portion of the text.
-        Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)");
         String scheme = "org.qii.weiciyuan://";
-        value = MyLinkify.getJustHighLightLinks(hackTxt, pattern, scheme, null, mentionFilter);
+        value = MyLinkify.getJustHighLightLinks(hackTxt, WeiboPatterns.MENTION_URL, scheme, null, mentionFilter);
 
         value = MyLinkify.addJUstHighLightLinks(value, MyLinkify.WEB_URLS);
 
         scheme = "org.qii.weiciyuan.topic://";
-        Pattern dd = Pattern.compile("#([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)#");
-        value = MyLinkify.getJustHighLightLinks(value, dd, scheme, null, mentionFilter);
+        value = MyLinkify.getJustHighLightLinks(value, WeiboPatterns.TOPIC_URL, scheme, null, mentionFilter);
 
         ListViewTool.addEmotions(value);
 
@@ -157,19 +135,16 @@ public class ListViewTool {
 
 //
 //        // Match @mentions and capture just the username portion of the text.
-        Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)");
         String scheme = "org.qii.weiciyuan://";
-        MyLinkify.addLinks(view, pattern, scheme, null, mentionFilter);
+        MyLinkify.addLinks(view, WeiboPatterns.MENTION_URL, scheme, null, mentionFilter);
 
-
-        pattern = Pattern.compile("#([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)#");
         scheme = "org.qii.weiciyuan.topic://";
-        MyLinkify.addLinks(view, pattern, scheme, null, mentionFilter);
+        MyLinkify.addLinks(view, WeiboPatterns.TOPIC_URL, scheme, null, mentionFilter);
 
         MyLinkify.addLinks(view, MyLinkify.WEB_URLS);
         CharSequence content = view.getText();
         SpannableString value = SpannableString.valueOf(content);
-        ListViewTool.addEmotions(value, view.getTextSize());
+        ListViewTool.addEmotions(value);
         view.setText(value);
 
     }
@@ -205,14 +180,12 @@ public class ListViewTool {
 
 
     public static void addEmotions(SpannableString value) {
-        Matcher localMatcher = Pattern.compile("\\[(\\S+?)\\]").matcher(value);
+        Matcher localMatcher = WeiboPatterns.EMOTION_URL.matcher(value);
         while (localMatcher.find()) {
             String str2 = localMatcher.group(0);
-
             int k = localMatcher.start();
             int m = localMatcher.end();
             if (m - k < 8) {
-
                 Bitmap bitmap = GlobalContext.getInstance().getEmotionsPics().get(str2);
                 if (bitmap != null) {
                     ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), bitmap, ImageSpan.ALIGN_BASELINE);
@@ -222,25 +195,4 @@ public class ListViewTool {
             }
         }
     }
-
-    public static void addEmotions(SpannableString value, float height) {
-        Matcher localMatcher = Pattern.compile("\\[(\\S+?)\\]").matcher(value);
-        while (localMatcher.find()) {
-            String str2 = localMatcher.group(0);
-
-            int k = localMatcher.start();
-            int m = localMatcher.end();
-            if (m - k < 8) {
-
-                Bitmap bitmap = GlobalContext.getInstance().getEmotionsPics().get(str2);
-                if (bitmap != null) {
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) (height * 1.5), (int) (height * 1.5), true);
-                    ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), scaledBitmap, ImageSpan.ALIGN_BASELINE);
-                    value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-            }
-        }
-    }
-
-
 }
