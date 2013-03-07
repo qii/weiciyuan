@@ -8,6 +8,7 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -32,6 +34,12 @@ import java.util.WeakHashMap;
 public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
     private Map<ViewHolder, Drawable> bg = new WeakHashMap<ViewHolder, Drawable>();
+
+    private Map<String, Integer> msgHeights = new HashMap<String, Integer>();
+    private Map<String, Integer> msgWidths = new HashMap<String, Integer>();
+
+    private Map<String, Integer> oriMsgHeights = new HashMap<String, Integer>();
+    private Map<String, Integer> oriMsgWidths = new HashMap<String, Integer>();
 
     public StatusListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
         super(fragment, commander, bean, listView, showOriStatus);
@@ -74,7 +82,30 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         }
 
         if (!TextUtils.isEmpty(msg.getListViewSpannableString())) {
+            boolean d = msgHeights.containsKey(msg.getId());
+            ViewGroup.LayoutParams layoutParams = holder.content.getLayoutParams();
+            if (d) {
+                layoutParams.height = msgHeights.get(msg.getId());
+            } else {
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
+
+            boolean c = msgWidths.containsKey(msg.getId());
+            if (c) {
+                layoutParams.width = msgWidths.get(msg.getId());
+            } else {
+                layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
+
+            holder.content.requestLayout();
             holder.content.setText(msg.getListViewSpannableString());
+            if (!d) {
+                msgHeights.put(msg.getId(), layoutParams.height);
+            }
+
+            if (!c) {
+                msgWidths.put(msg.getId(), layoutParams.width);
+            }
         } else {
             ListViewTool.addJustHighLightLinks(msg);
             holder.content.setText(msg.getListViewSpannableString());
@@ -203,7 +234,9 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             //sina weibo official account can send repost message with picture, fuck sina weibo
             if (holder.content_pic.getVisibility() != View.GONE)
                 holder.content_pic.setVisibility(View.GONE);
-            buildRepostContent(repost_msg, holder, position);
+            buildRepostContent(msg, repost_msg, holder, position);
+
+
         } else {
             if (holder.repost_layout != null)
                 holder.repost_layout.setVisibility(View.GONE);
@@ -211,5 +244,44 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         }
     }
 
+
+    private void buildRepostContent(MessageBean msg, final MessageBean repost_msg, ViewHolder holder, int position) {
+        holder.repost_content.setVisibility(View.VISIBLE);
+        if (!repost_msg.getId().equals((String) holder.repost_content.getTag())) {
+            boolean d = oriMsgHeights.containsKey(msg.getId());
+            ViewGroup.LayoutParams layoutParams = holder.repost_content.getLayoutParams();
+            if (d) {
+                layoutParams.height = oriMsgHeights.get(msg.getId());
+            } else {
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
+
+            boolean c = oriMsgWidths.containsKey(msg.getId());
+            if (c) {
+                layoutParams.width = oriMsgWidths.get(msg.getId());
+            } else {
+                layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
+
+            holder.repost_content.requestLayout();
+            holder.repost_content.setText(repost_msg.getListViewSpannableString());
+
+            if (!d) {
+                oriMsgHeights.put(msg.getId(), layoutParams.height);
+            }
+
+            if (!c) {
+                oriMsgWidths.put(msg.getId(), layoutParams.width);
+            }
+
+            holder.repost_content.setText(repost_msg.getListViewSpannableString());
+            holder.repost_content.setTag(repost_msg.getId());
+        }
+
+        if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {
+            holder.repost_content_pic.setVisibility(View.VISIBLE);
+            buildPic(repost_msg, holder.repost_content_pic, position);
+        }
+    }
 
 }
