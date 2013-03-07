@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.widget.TextView;
 import org.qii.weiciyuan.bean.*;
@@ -24,16 +25,11 @@ public class ListViewTool {
 
 
     public static void addLinks(TextView view) {
-
-        MyLinkify.addLinks(view, WeiboPatterns.MENTION_URL, WeiboPatterns.MENTION_SCHEME);
-        MyLinkify.addLinks(view, WeiboPatterns.TOPIC_URL, WeiboPatterns.TOPIC_SCHEME);
-        MyLinkify.addLinks(view, WeiboPatterns.WEB_URL, WeiboPatterns.WEB_SCHEME);
-
         CharSequence content = view.getText();
-        SpannableString value = SpannableString.valueOf(content);
-        ListViewTool.addEmotions(value);
-        view.setText(value);
-
+        view.setText(getJustHighLightLinks(content.toString()));
+        if (view.getLinksClickable()) {
+            view.setMovementMethod(LinkMovementMethod.getInstance());
+        }
     }
 
     public static SpannableString getJustHighLightLinks(String txt) {
@@ -47,7 +43,7 @@ public class ListViewTool {
         }
         SpannableString value;
         value = MyLinkify.getJustHighLightLinks(hackTxt, WeiboPatterns.MENTION_URL, WeiboPatterns.MENTION_SCHEME);
-        value = MyLinkify.addJUstHighLightLinks(value, MyLinkify.WEB_URLS);
+        value = MyLinkify.getJustHighLightLinks(value, WeiboPatterns.WEB_URL, WeiboPatterns.WEB_SCHEME);
         value = MyLinkify.getJustHighLightLinks(value, WeiboPatterns.TOPIC_URL, WeiboPatterns.TOPIC_SCHEME);
         ListViewTool.addEmotions(value);
         return value;
