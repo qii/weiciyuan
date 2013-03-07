@@ -63,46 +63,37 @@ public class ListViewTool {
     }
 
     public static void addJustHighLightLinks(MessageBean bean) {
-
-        bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
+        bean.setListViewSpannableString(convertNormalStringToSpannableString(bean.getText()));
         if (bean.getRetweeted_status() != null) {
-            String name = "";
-            UserBean reUser = bean.getRetweeted_status().getUser();
-            if (reUser != null) {
-                name = reUser.getScreen_name();
-            }
-
-            SpannableString value;
-
-            if (!TextUtils.isEmpty(name)) {
-                value = ListViewTool.convertNormalStringToSpannableString("@" + name + "：" + bean.getRetweeted_status().getText());
-            } else {
-                value = ListViewTool.convertNormalStringToSpannableString(bean.getRetweeted_status().getText());
-            }
-
-            bean.getRetweeted_status().setListViewSpannableString(value);
+            bean.getRetweeted_status().setListViewSpannableString(buildOriWeiboSpannalString(bean.getRetweeted_status()));
         }
+    }
+
+    private static SpannableString buildOriWeiboSpannalString(MessageBean oriMsg) {
+        String name = "";
+        UserBean oriUser = oriMsg.getUser();
+        if (oriUser != null) {
+            name = oriUser.getScreen_name();
+            if (TextUtils.isEmpty(name)) {
+                name = oriUser.getId();
+            }
+        }
+
+        SpannableString value;
+
+        if (!TextUtils.isEmpty(name)) {
+            value = ListViewTool.convertNormalStringToSpannableString("@" + name + "：" + oriMsg.getText());
+        } else {
+            value = ListViewTool.convertNormalStringToSpannableString(oriMsg.getText());
+        }
+        return value;
     }
 
     public static void addJustHighLightLinks(CommentBean bean) {
 
         bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
         if (bean.getStatus() != null) {
-            String name = "";
-            UserBean reUser = bean.getStatus().getUser();
-            if (reUser != null) {
-                name = reUser.getScreen_name();
-            }
-
-            SpannableString value;
-
-            if (!TextUtils.isEmpty(name)) {
-                value = ListViewTool.convertNormalStringToSpannableString("@" + name + "：" + bean.getStatus().getText());
-            } else {
-                value = ListViewTool.convertNormalStringToSpannableString(bean.getStatus().getText());
-            }
-
-            bean.getStatus().setListViewSpannableString(value);
+            bean.getStatus().setListViewSpannableString(buildOriWeiboSpannalString(bean.getStatus()));
         }
     }
 
@@ -164,7 +155,7 @@ public class ListViewTool {
     }
 
 
-    public static void addEmotions(SpannableString value) {
+    private static void addEmotions(SpannableString value) {
         Matcher localMatcher = WeiboPatterns.EMOTION_URL.matcher(value);
         while (localMatcher.find()) {
             String str2 = localMatcher.group(0);
