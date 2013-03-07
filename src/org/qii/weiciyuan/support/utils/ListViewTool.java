@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 /**
  * User: qii
  * Date: 12-8-29
+ * build emotions and clickable string in other threads except UI thread, improve listview scroll performance
  */
 public class ListViewTool {
 
