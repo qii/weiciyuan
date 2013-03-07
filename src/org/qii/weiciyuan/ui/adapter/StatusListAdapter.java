@@ -82,16 +82,16 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         }
 
         if (!TextUtils.isEmpty(msg.getListViewSpannableString())) {
-            boolean d = msgHeights.containsKey(msg.getId());
+            boolean haveCachedHeight = msgHeights.containsKey(msg.getId());
             ViewGroup.LayoutParams layoutParams = holder.content.getLayoutParams();
-            if (d) {
+            if (haveCachedHeight) {
                 layoutParams.height = msgHeights.get(msg.getId());
             } else {
                 layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             }
 
-            boolean c = msgWidths.containsKey(msg.getId());
-            if (c) {
+            boolean haveCachedWidth = msgWidths.containsKey(msg.getId());
+            if (haveCachedWidth) {
                 layoutParams.width = msgWidths.get(msg.getId());
             } else {
                 layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -99,11 +99,11 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
             holder.content.requestLayout();
             holder.content.setText(msg.getListViewSpannableString());
-            if (!d) {
+            if (!haveCachedHeight) {
                 msgHeights.put(msg.getId(), layoutParams.height);
             }
 
-            if (!c) {
+            if (!haveCachedWidth) {
                 msgWidths.put(msg.getId(), layoutParams.width);
             }
         } else {
@@ -248,16 +248,16 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     private void buildRepostContent(MessageBean msg, final MessageBean repost_msg, ViewHolder holder, int position) {
         holder.repost_content.setVisibility(View.VISIBLE);
         if (!repost_msg.getId().equals((String) holder.repost_content.getTag())) {
-            boolean d = oriMsgHeights.containsKey(msg.getId());
+            boolean haveCachedHeight = oriMsgHeights.containsKey(msg.getId());
             ViewGroup.LayoutParams layoutParams = holder.repost_content.getLayoutParams();
-            if (d) {
+            if (haveCachedHeight) {
                 layoutParams.height = oriMsgHeights.get(msg.getId());
             } else {
                 layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             }
 
-            boolean c = oriMsgWidths.containsKey(msg.getId());
-            if (c) {
+            boolean haveCachedWidth = oriMsgWidths.containsKey(msg.getId());
+            if (haveCachedWidth) {
                 layoutParams.width = oriMsgWidths.get(msg.getId());
             } else {
                 layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -266,11 +266,11 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.repost_content.requestLayout();
             holder.repost_content.setText(repost_msg.getListViewSpannableString());
 
-            if (!d) {
+            if (!haveCachedHeight) {
                 oriMsgHeights.put(msg.getId(), layoutParams.height);
             }
 
-            if (!c) {
+            if (!haveCachedWidth) {
                 oriMsgWidths.put(msg.getId(), layoutParams.width);
             }
 
