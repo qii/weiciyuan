@@ -3,7 +3,6 @@ package org.qii.weiciyuan.ui.adapter;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +34,9 @@ public class DMConversationAdapter extends BaseAdapter {
     private ListView listView;
     private TimeLineBitmapDownloader commander;
 
+    private final int TYPE_NORMAL = 0;
+    private final int TYPE_MYSELF = 1;
+
 
     public DMConversationAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<DMBean> bean, ListView listView) {
         this.bean = bean;
@@ -49,44 +51,68 @@ public class DMConversationAdapter extends BaseAdapter {
         return fragment.getActivity();
     }
 
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        DMBean dmBean = bean.get(position);
+        if (dmBean.getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+            return TYPE_MYSELF;
+        } else {
+            return TYPE_NORMAL;
+        }
+    }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         DMViewHolder holder = null;
 
 
-        if (convertView == null || convertView.getTag() == null) {
-
-            convertView = initSimpleLayout(parent);
+        if (convertView == null || convertView.getTag(R.drawable.ic_launcher + getItemViewType(position)) == null) {
+            switch (getItemViewType(position)) {
+                case TYPE_NORMAL:
+                    convertView = initNormalSimpleLayout(parent);
+                    break;
+                case TYPE_MYSELF:
+                    convertView = initMySimpleLayout(parent);
+                    break;
+                default:
+                    throw new IllegalArgumentException("dm user type is wrong");
+            }
             holder = buildHolder(convertView);
             convertView.setTag(R.drawable.ic_launcher + getItemViewType(position), holder);
-
+            convertView.setTag(R.string.listview_index_tag, R.drawable.ic_launcher + getItemViewType(position));
 
         } else {
-            holder = (DMViewHolder) convertView.getTag();
+            holder = (DMViewHolder) convertView.getTag(R.drawable.ic_launcher + getItemViewType(position));
         }
-
 
         configViewFont(holder);
         bindViewData(holder, position);
-
         return convertView;
     }
 
 
-    private View initSimpleLayout(ViewGroup parent) {
+    private View initNormalSimpleLayout(ViewGroup parent) {
         View convertView;
-        convertView = inflater.inflate(R.layout.dm_conversation_list_listview_item_layout, parent, false);
+        convertView = inflater.inflate(R.layout.dmconversationadapter_item_normal_layout, parent, false);
 
+        return convertView;
+    }
+
+    private View initMySimpleLayout(ViewGroup parent) {
+        View convertView;
+        convertView = inflater.inflate(R.layout.dmconversationadapter_item_myself_layout, parent, false);
         return convertView;
     }
 
 
     private DMViewHolder buildHolder(View convertView) {
         DMViewHolder holder = new DMViewHolder();
-        holder.username = (TextView) convertView.findViewById(R.id.username);
-        TextPaint tp = holder.username.getPaint();
-        tp.setFakeBoldText(true);
         holder.content = (TextView) convertView.findViewById(R.id.content);
         holder.time = (TextView) convertView.findViewById(R.id.time);
         holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
@@ -96,8 +122,6 @@ public class DMConversationAdapter extends BaseAdapter {
     private void configViewFont(DMViewHolder holder) {
         holder.time.setTextSize(SettingUtility.getFontSize() - 3);
         holder.content.setTextSize(SettingUtility.getFontSize());
-        holder.username.setTextSize(SettingUtility.getFontSize());
-
     }
 
     protected void bindViewData(DMViewHolder holder, int position) {
@@ -105,13 +129,8 @@ public class DMConversationAdapter extends BaseAdapter {
         final DMBean msg = bean.get(position);
         UserBean user = msg.getUser();
         if (user != null) {
-            holder.username.setVisibility(View.VISIBLE);
-            buildUsername(holder, user);
-
             buildAvatar(holder.avatar, position, user);
-
         } else {
-            holder.username.setVisibility(View.INVISIBLE);
             holder.avatar.setVisibility(View.INVISIBLE);
         }
 
@@ -128,15 +147,6 @@ public class DMConversationAdapter extends BaseAdapter {
         }
         holder.time.setTag(msg.getId());
 
-    }
-
-    private void buildUsername(DMViewHolder holder, UserBean user) {
-
-        if (!TextUtils.isEmpty(user.getRemark())) {
-            holder.username.setText(new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark()).append(")").toString());
-        } else {
-            holder.username.setText(user.getScreen_name());
-        }
     }
 
 
@@ -195,7 +205,6 @@ public class DMConversationAdapter extends BaseAdapter {
 
 
     private static class DMViewHolder {
-        TextView username;
         TextView content;
         TextView time;
         ImageView avatar;
