@@ -9,10 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
@@ -28,7 +25,7 @@ import java.util.Set;
 public class SmileyPicker extends LinearLayout {
 
     private int mPickerHeight;
-    private KeyboardControlEditText mEditText;
+    private EditText mEditText;
     private LayoutInflater mInflater;
     private List<String> keys;
     private Activity activity;
@@ -47,10 +44,10 @@ public class SmileyPicker extends LinearLayout {
         gridView.setAdapter(new SmileyAdapter(paramContext));
     }
 
-    public void setEditText(Activity activity, KeyboardControlEditText paramEditText) {
+    public void setEditText(Activity activity, ViewGroup rootLayout, EditText paramEditText) {
         this.mEditText = paramEditText;
         this.activity = activity;
-        ((LinearLayout) activity.findViewById(R.id.root_layout)).setLayoutTransition(transitioner);
+        rootLayout.setLayoutTransition(transitioner);
         setupAnimations(transitioner);
 
     }

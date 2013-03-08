@@ -15,10 +15,12 @@ import org.qii.weiciyuan.dao.dm.DMConversationDao;
 import org.qii.weiciyuan.dao.dm.SendDMDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.SmileyPicker;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.ui.adapter.DMConversationAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -37,6 +39,10 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
     private DMListBean bean = new DMListBean();
 
     private EditText et;
+
+    private SmileyPicker smiley;
+
+    private LinearLayout mContainer;
 
     @Override
     public DMListBean getList() {
@@ -127,12 +133,71 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         emoticon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (smiley.isShown()) {
+                    hideSmileyPicker(true);
+                } else {
+                    showSmileyPicker(SmileyPickerUtility.isKeyBoardShow(getActivity()));
+                }
             }
         });
+
+        smiley = (SmileyPicker) view.findViewById(R.id.smiley_picker);
+        smiley.setEditText(getActivity(), (ViewGroup) view.findViewById(R.id.root_layout), et);
+        mContainer = (LinearLayout) view.findViewById(R.id.container);
+        et.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSmileyPicker(true);
+            }
+        });
+
         buildListAdapter();
         return view;
     }
+
+    private void showSmileyPicker(boolean showAnimation) {
+        this.smiley.show(getActivity(), showAnimation);
+        lockContainerHeight(SmileyPickerUtility.getAppContentHeight(getActivity()));
+
+    }
+
+
+    public void hideSmileyPicker(boolean showKeyBoard) {
+        if (this.smiley.isShown()) {
+            if (showKeyBoard) {
+                //this time softkeyboard is hidden
+                LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
+                localLayoutParams.height = smiley.getTop();
+                localLayoutParams.weight = 0.0F;
+                this.smiley.hide(getActivity());
+
+                SmileyPickerUtility.showKeyBoard(et);
+                et.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        unlockContainerHeightDelayed();
+                    }
+                }, 200L);
+            } else {
+                this.smiley.hide(getActivity());
+                unlockContainerHeightDelayed();
+            }
+        }
+
+    }
+
+    private void lockContainerHeight(int paramInt) {
+        LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
+        localLayoutParams.height = paramInt;
+        localLayoutParams.weight = 0.0F;
+    }
+
+    public void unlockContainerHeightDelayed() {
+
+        ((LinearLayout.LayoutParams) mContainer.getLayoutParams()).weight = 1.0F;
+
+    }
+
 
     private void send() {
         new QuickCommentTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);

@@ -2,85 +2,100 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:id="@+id/root_layout"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
 
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:visibility="gone"
-            android:gravity="center"
-            android:id="@+id/empty"
-            android:text="@string/empty"/>
-
-        <!-- requiresFadingEdge may have performance problem in some low price phones, but I like it.
-           use overScrollMode to disable blue boundaries at the top and the bottom of listview
-           because it is pull to refresh listview-->
-
-        <org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:fastScrollEnabled="false"
-            android:id="@+id/listView"
-            android:layout_gravity="center"
-            android:scrollingCache="true"
-            android:smoothScrollbar="true"
-            android:visibility="visible"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            android:transcriptMode="normal"
-            android:overScrollMode="never"/>
-
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:id="@+id/progressbar"
-            android:visibility="visible"/>
-
-    </FrameLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:id="@+id/line"
-        android:background="?line_drawable"/>
-
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="5dp"
-        android:id="@+id/quick_repost">
+        android:orientation="vertical"
+        android:id="@+id/container"
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0">
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:src="?emoticon"
-            android:id="@+id/emoticon"
-            android:layout_height="match_parent"/>
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <EditText
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:id="@+id/content"
-            />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="gone"
+                android:gravity="center"
+                android:id="@+id/empty"
+                android:text="@string/empty"/>
+
+            <!-- requiresFadingEdge may have performance problem in some low price phones, but I like it.
+               use overScrollMode to disable blue boundaries at the top and the bottom of listview
+               because it is pull to refresh listview-->
+
+            <org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:fastScrollEnabled="false"
+                android:id="@+id/listView"
+                android:layout_gravity="center"
+                android:scrollingCache="true"
+                android:smoothScrollbar="true"
+                android:visibility="visible"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:transcriptMode="normal"
+                android:overScrollMode="never"/>
+
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/progressbar"
+                android:visibility="visible"/>
+
+        </FrameLayout>
 
         <ImageView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:clickable="true"
-            android:id="@+id/send"
-            android:src="?send"
-            android:layout_gravity="center_vertical"
-            android:background="?android:selectableItemBackground"
-            android:padding="3dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:id="@+id/line"
+            android:background="?line_drawable"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:id="@+id/quick_repost">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:src="?emoticon"
+                android:id="@+id/emoticon"
+                android:layout_height="match_parent"/>
+
+            <EditText
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/content"
+                />
+
+            <ImageView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:clickable="true"
+                android:id="@+id/send"
+                android:src="?send"
+                android:layout_gravity="center_vertical"
+                android:background="?android:selectableItemBackground"
+                android:padding="3dp"/>
+
+        </LinearLayout>
     </LinearLayout>
+
+    <org.qii.weiciyuan.support.lib.SmileyPicker
+        android:id="@+id/smiley_picker"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
 </LinearLayout>

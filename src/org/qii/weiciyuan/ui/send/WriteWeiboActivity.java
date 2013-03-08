@@ -452,7 +452,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         CheatSheet.setup(WriteWeiboActivity.this, findViewById(R.id.menu_send), R.string.send);
 
         smiley = (SmileyPicker) findViewById(R.id.smiley_picker);
-        smiley.setEditText(WriteWeiboActivity.this, content);
+        smiley.setEditText(WriteWeiboActivity.this, ((LinearLayout) findViewById(R.id.root_layout)), content);
         mContainer = (LinearLayout) findViewById(R.id.container);
         content.setOnClickListener(new View.OnClickListener() {
             @Override
