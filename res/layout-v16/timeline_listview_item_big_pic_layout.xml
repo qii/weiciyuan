@@ -3,7 +3,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
                 android:clickable="true"
                 android:background="@drawable/listview_item_background_selector"
                 android:id="@+id/listview_root">
@@ -84,6 +87,15 @@
         android:layout_toRightOf="@id/avatar"
         />
 
+    <TextView
+        android:id="@+id/source"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/time"
+        android:textColor="?android:textColorTertiary"
+        android:layout_marginLeft="5dp"
+        android:layout_alignTop="@+id/time"
+        />
 
     <TextView
         android:layout_marginTop="3dp"

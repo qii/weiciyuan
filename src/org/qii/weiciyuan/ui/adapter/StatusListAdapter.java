@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -172,6 +173,8 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
 
         holder.time.setTime(msg.getMills());
+        if (holder.source != null)
+            holder.source.setText(Html.fromHtml(msg.getSource()).toString());
 
         if (showOriStatus) {
             boolean checkRepostsCount = (msg.getReposts_count() != 0);

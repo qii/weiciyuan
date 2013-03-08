@@ -261,7 +261,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.timeline_gps = (ImageView) convertView.findViewById(R.id.timeline_gps_iv);
         holder.timeline_pic = (ImageView) convertView.findViewById(R.id.timeline_pic_iv);
         holder.replyIV = (ImageView) convertView.findViewById(R.id.replyIV);
-
+        holder.source = (TextView) convertView.findViewById(R.id.source);
         return holder;
     }
 
@@ -297,6 +297,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
         if (Utility.sp2px(prefFontSizeSp - 3) != currentWidgetTextSizePx) {
             holder.time.setTextSize(prefFontSizeSp - 3);
+            holder.source.setTextSize(prefFontSizeSp - 3);
         }
 
         currentWidgetTextSizePx = holder.content.getTextSize();
@@ -438,6 +439,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         LinearLayout count_layout;
         TextView repost_count;
         TextView comment_count;
+        TextView source;
         ImageView timeline_gps;
         ImageView timeline_pic;
         ImageView replyIV;

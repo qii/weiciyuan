@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -90,6 +91,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         holder.content.setText(comment.getListViewSpannableString());
 
         holder.time.setTime(comment.getMills());
+        if (holder.source != null)
+            holder.source.setText(Html.fromHtml(comment.getSource()).toString());
 
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);
