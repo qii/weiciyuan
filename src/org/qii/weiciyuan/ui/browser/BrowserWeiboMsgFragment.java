@@ -279,15 +279,11 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             if (Utility.isTaskStopped(picTask)) {
                 layout.pic_layout.setVisibility(View.VISIBLE);
                 layout.content_pic.setVisibility(View.VISIBLE);
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (refreshPic) {
-                            picTask = new MsgDetailReadWorker(layout.content_pic, layout.content_pic_pb, msg);
-                            picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                        }
-                    }
-                }, 1000);
+
+                if (refreshPic) {
+                    picTask = new MsgDetailReadWorker(layout.content_pic, layout.content_pic_pb, msg);
+                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
 
             }
         }
@@ -314,15 +310,12 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 layout.repost_pic_layout.setVisibility(View.VISIBLE);
                 layout.repost_pic.setVisibility(View.VISIBLE);
                 if (Utility.isTaskStopped(picTask)) {
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (refreshPic) {
-                                picTask = new MsgDetailReadWorker(layout.repost_pic, layout.repost_pic_pb, msg.getRetweeted_status());
-                                picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                            }
-                        }
-                    }, 1000);
+
+                    if (refreshPic) {
+                        picTask = new MsgDetailReadWorker(layout.repost_pic, layout.repost_pic_pb, msg.getRetweeted_status());
+                        picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+
 
                 }
             }
