@@ -173,6 +173,9 @@
         <!--friend group-->
         <activity android:name=".ui.friendgroup.ManageGroupActivity"/>
 
+        <!-- nearby-->
+        <activity android:name=".ui.nearby.NearbyTimeLineActivity"/>
+
         <!--preference activity -->
         <activity android:name=".ui.preference.SettingActivity"/>
         <activity android:name=".ui.preference.ControlActivity"/>

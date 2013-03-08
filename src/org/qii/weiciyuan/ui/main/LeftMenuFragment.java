@@ -16,6 +16,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.dm.DMUserListActivity;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
+import org.qii.weiciyuan.ui.nearby.NearbyTimeLineActivity;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 import org.qii.weiciyuan.ui.search.SearchMainActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
@@ -115,6 +116,13 @@ public class LeftMenuFragment extends PreferenceFragment {
             }
         });
 
+        findPreference("j").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(getActivity(), NearbyTimeLineActivity.class));
+                return true;
+            }
+        });
     }
 
     private void openMyProfile() {

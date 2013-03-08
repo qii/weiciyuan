@@ -48,5 +48,10 @@
         android:title="个人资料"
         />
 
+    <Preference
+        android:key="j"
+        android:title="周边"
+        />
+
 
 </PreferenceScreen>

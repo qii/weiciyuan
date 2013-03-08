@@ -196,6 +196,7 @@
 
     <!--map-->
     <string name="browser_map">查看地图</string>
+    <string name="nearby">周边2000米的微博</string>
 
     <!--friends-->
     <string name="bilateral">互相关注</string>

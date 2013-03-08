@@ -108,6 +108,10 @@ public class URLHelper {
     public static final String GROUP_UPDATE = URL_SINA_WEIBO + "friendships/groups/update.json";
 
 
+    //nearby
+    public static final String NEARBY_USER = URL_SINA_WEIBO + "place/nearby/users.json";
+    public static final String NEARBY_STATUS = URL_SINA_WEIBO + "place/nearby_timeline.json";
+
     /**
      * black magic
      */
