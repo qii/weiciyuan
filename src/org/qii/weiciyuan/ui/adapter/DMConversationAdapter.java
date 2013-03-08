@@ -69,11 +69,12 @@ public class DMConversationAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        int showPosition = bean.size() - 1 - position;
+
         DMViewHolder holder = null;
-
-
-        if (convertView == null || convertView.getTag(R.drawable.ic_launcher + getItemViewType(position)) == null) {
-            switch (getItemViewType(position)) {
+        if (convertView == null || convertView.getTag(R.drawable.ic_launcher + getItemViewType(showPosition)) == null) {
+            switch (getItemViewType(showPosition)) {
                 case TYPE_NORMAL:
                     convertView = initNormalSimpleLayout(parent);
                     break;
@@ -84,16 +85,16 @@ public class DMConversationAdapter extends BaseAdapter {
                     throw new IllegalArgumentException("dm user type is wrong");
             }
             holder = buildHolder(convertView);
-            convertView.setTag(R.drawable.ic_launcher + getItemViewType(position), holder);
-            convertView.setTag(R.string.listview_index_tag, R.drawable.ic_launcher + getItemViewType(position));
+            convertView.setTag(R.drawable.ic_launcher + getItemViewType(showPosition), holder);
+            convertView.setTag(R.string.listview_index_tag, R.drawable.ic_launcher + getItemViewType(showPosition));
 
         } else {
-            holder = (DMViewHolder) convertView.getTag(R.drawable.ic_launcher + getItemViewType(position));
+            holder = (DMViewHolder) convertView.getTag(R.drawable.ic_launcher + getItemViewType(showPosition));
         }
 
         configViewFont(holder);
         configLayerType(holder);
-        bindViewData(holder, position);
+        bindViewData(holder, showPosition);
         return convertView;
     }
 

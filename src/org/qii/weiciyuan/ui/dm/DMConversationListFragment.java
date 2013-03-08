@@ -106,37 +106,14 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
 
             }
         });
-        pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
-            @Override
-            public void onLastItemVisible() {
-                listViewFooterViewClick(null);
-            }
-        });
-        getListView().setScrollingCacheEnabled(false);
 
+        getListView().setScrollingCacheEnabled(false);
         getListView().setHeaderDividersEnabled(false);
+        getListView().setStackFromBottom(true);
 
         footerView = inflater.inflate(R.layout.listview_footer_layout, null);
         getListView().addFooterView(footerView);
         dismissFooterView();
-
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mActionMode != null) {
-                    getListView().clearChoices();
-                    mActionMode.finish();
-                    mActionMode = null;
-                    return;
-                }
-                getListView().clearChoices();
-                if (position - 1 < getList().getItemList().size() && position - 1 >= 0) {
-                    listViewItemClick(parent, view, position - 1, id);
-                } else if (position - 1 >= getList().getItemList().size()) {
-                    listViewFooterViewClick(view);
-                }
-            }
-        });
 
         et = (EditText) view.findViewById(R.id.content);
         view.findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
@@ -158,7 +135,6 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
     }
 
     private void send() {
-        String content = et.getText().toString();
         new QuickCommentTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -174,7 +150,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         if (newValue != null && newValue.getSize() > 0 && getActivity() != null) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();
-            getListView().setSelectionAfterHeaderView();
+            getListView().setSelection(bean.getSize() - 1);
         }
 
     }

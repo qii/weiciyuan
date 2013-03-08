@@ -33,6 +33,7 @@
             android:visibility="visible"
             android:divider="@null"
             android:dividerHeight="0dp"
+            android:transcriptMode="normal"
             android:overScrollMode="never"/>
 
 
