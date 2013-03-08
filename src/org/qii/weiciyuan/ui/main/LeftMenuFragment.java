@@ -224,13 +224,12 @@ public class LeftMenuFragment extends PreferenceFragment {
     }
 
     private boolean showHomePage(View fl, ViewPager mentionVP, ViewPager commentVP) {
-        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-
         if (currentIndex == 0) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
         }
 
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
         currentIndex = 0;
 
         getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -264,12 +263,14 @@ public class LeftMenuFragment extends PreferenceFragment {
     }
 
     private boolean showMentionPage(View fl, final ViewPager mentionVP, ViewPager commentVP) {
-        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
-        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
         if (currentIndex == 1) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
         }
+
+        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
 
