@@ -297,7 +297,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
         if (Utility.sp2px(prefFontSizeSp - 3) != currentWidgetTextSizePx) {
             holder.time.setTextSize(prefFontSizeSp - 3);
-            holder.source.setTextSize(prefFontSizeSp - 3);
+            if (holder.source != null)
+                holder.source.setTextSize(prefFontSizeSp - 3);
         }
 
         currentWidgetTextSizePx = holder.content.getTextSize();
