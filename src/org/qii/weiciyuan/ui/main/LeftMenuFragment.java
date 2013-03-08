@@ -2,7 +2,6 @@ package org.qii.weiciyuan.ui.main;
 
 import android.app.ActionBar;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,11 +12,10 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.dm.DMUserListActivity;
 import org.qii.weiciyuan.ui.login.AccountActivity;
-import org.qii.weiciyuan.ui.maintimeline.*;
+import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 import org.qii.weiciyuan.ui.search.SearchMainActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
@@ -32,10 +30,9 @@ import java.util.List;
  */
 public class LeftMenuFragment extends PreferenceFragment {
 
-    List<Fragment> commentFragments = new ArrayList<Fragment>();
-    List<Fragment> mentionFragments = new ArrayList<Fragment>();
-
-    int index = 0;
+    private List<Fragment> commentFragments = new ArrayList<Fragment>();
+    private List<Fragment> mentionFragments = new ArrayList<Fragment>();
+    private int currentIndex = 0;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -49,42 +46,7 @@ public class LeftMenuFragment extends PreferenceFragment {
         findPreference("a").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-
-                if (index == 0) {
-                    ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
-                    return true;
-                }
-
-                index = 0;
-
-                getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-                getActivity().getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-
-                for (Fragment f : commentFragments) {
-                    ft.hide(f);
-                }
-
-                for (Fragment f : mentionFragments) {
-                    ft.hide(f);
-                }
-
-                Fragment fragment = ((MainTimeLineActivity) getActivity()).getOrNewFriendsTimeLineFragment();
-
-                if (fragment.isAdded() && fragment.isHidden()) {
-                    ft.show(fragment);
-                } else if (!fragment.isAdded()) {
-                    ft.add(R.id.menu_right_fl, fragment, FriendsTimeLineFragment.class.getName());
-                }
-                fragment.setUserVisibleHint(true);
-                fl.setVisibility(View.VISIBLE);
-                mentionVP.setVisibility(View.GONE);
-                commentVP.setVisibility(View.GONE);
-
-                ft.commit();
-
-                ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+                if (showHomePage(fl, mentionVP, commentVP)) return true;
                 return true;
             }
         });
@@ -92,75 +54,7 @@ public class LeftMenuFragment extends PreferenceFragment {
         findPreference("b").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                getActivity().getActionBar().setDisplayShowTitleEnabled(true);
-                getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-                if (index == 1) {
-                    ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
-                    return true;
-                }
-
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-
-                Fragment fragment = ((MainTimeLineActivity) getActivity()).getOrNewFriendsTimeLineFragment();
-
-                ft.hide(fragment);
-
-                for (Fragment f : commentFragments) {
-                    ft.hide(f);
-                }
-                for (Fragment f : mentionFragments) {
-                    ft.show(f);
-                }
-
-
-                ft.commit();
-
-                ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
-                fl.setVisibility(View.GONE);
-                mentionVP.setVisibility(View.VISIBLE);
-                commentVP.setVisibility(View.GONE);
-                index = 1;
-
-                ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-                    @Override
-                    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                        if (mentionVP.getCurrentItem() != tab.getPosition())
-                            mentionVP.setCurrentItem(tab.getPosition());
-                    }
-
-                    @Override
-                    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-                    }
-
-                    @Override
-                    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-                    }
-                };
-
-                ActionBar actionBar = getActivity().getActionBar();
-                getActivity().getActionBar().setTitle(getString(R.string.mentions));
-                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-                actionBar.removeAllTabs();
-                actionBar.addTab(actionBar.newTab()
-                        .setText("@的微博")
-                        .setTabListener(tabListener));
-
-                actionBar.addTab(actionBar.newTab()
-                        .setText("@的评论")
-                        .setTabListener(tabListener));
-                mentionVP.setOnPageChangeListener(onPageChangeListener);
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mentionVP.getAdapter() == null)
-                            mentionVP.setAdapter(new MentionsTimeLinePagerAdapter(getFragmentManager()));
-
-
-                    }
-                }, 500);
+                if (showMentionPage(fl, mentionVP, commentVP)) return true;
 
                 return true;
             }
@@ -169,74 +63,7 @@ public class LeftMenuFragment extends PreferenceFragment {
         findPreference("c").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                getActivity().getActionBar().setDisplayShowTitleEnabled(true);
-                if (index == 2) {
-                    ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
-                    return true;
-                }
-                index = 2;
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Fragment fragment = ((MainTimeLineActivity) getActivity()).getOrNewFriendsTimeLineFragment();
-
-                ft.hide(fragment);
-
-                for (Fragment f : commentFragments) {
-                    ft.show(f);
-                }
-                for (Fragment f : mentionFragments) {
-                    ft.hide(f);
-                }
-
-                ft.commit();
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (commentVP.getAdapter() == null)
-                            commentVP.setAdapter(new CommentsTimeLinePagerAdapter(getFragmentManager()));
-
-
-                    }
-                }, 500);
-
-
-                ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-                    @Override
-                    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                        if (commentVP.getCurrentItem() != tab.getPosition())
-                            commentVP.setCurrentItem(tab.getPosition());
-                    }
-
-                    @Override
-                    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-                    }
-
-                    @Override
-                    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-                    }
-                };
-
-                ActionBar actionBar = getActivity().getActionBar();
-                getActivity().getActionBar().setTitle(getString(R.string.comments));
-
-                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-                actionBar.removeAllTabs();
-                actionBar.addTab(actionBar.newTab()
-                        .setText("收到的评论")
-                        .setTabListener(tabListener));
-
-                actionBar.addTab(actionBar.newTab()
-                        .setText("发出的评论")
-                        .setTabListener(tabListener));
-                commentVP.setOnPageChangeListener(onPageChangeListener);
-
-
-                ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
-                fl.setVisibility(View.GONE);
-                mentionVP.setVisibility(View.GONE);
-                commentVP.setVisibility(View.VISIBLE);
+                if (showCommentPage(commentVP, fl, mentionVP)) return true;
                 return true;
             }
         });
@@ -244,7 +71,7 @@ public class LeftMenuFragment extends PreferenceFragment {
         findPreference("d").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(getActivity(), DMUserListActivity.class));
+                showDMPage();
                 return true;
             }
         });
@@ -252,7 +79,7 @@ public class LeftMenuFragment extends PreferenceFragment {
         findPreference("e").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(getActivity(), SearchMainActivity.class));
+                showSearchPage();
                 return true;
             }
         });
@@ -260,7 +87,7 @@ public class LeftMenuFragment extends PreferenceFragment {
         findPreference("f").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(getActivity(), SettingActivity.class));
+                showSettingPage();
                 return true;
             }
         });
@@ -268,20 +95,14 @@ public class LeftMenuFragment extends PreferenceFragment {
         findPreference("g").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(getActivity(), AccountActivity.class);
-                intent.putExtra("launcher", false);
-                startActivity(intent);
-                getActivity().finish();
+                showAccountSwitchPage();
                 return true;
             }
         });
         findPreference("h").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
-                startActivity(intent);
+                openWriteWeibo();
                 return true;
             }
         });
@@ -289,15 +110,230 @@ public class LeftMenuFragment extends PreferenceFragment {
         findPreference("i").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(getActivity(), MyInfoActivity.class);
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                intent.putExtra("user", GlobalContext.getInstance().getAccountBean().getInfo());
-                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
-                startActivity(intent);
+                openMyProfile();
                 return true;
             }
         });
 
+    }
+
+    private void openMyProfile() {
+        Intent intent = new Intent(getActivity(), MyInfoActivity.class);
+        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+        intent.putExtra("user", GlobalContext.getInstance().getAccountBean().getInfo());
+        intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
+        startActivity(intent);
+    }
+
+    private void openWriteWeibo() {
+        Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
+        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+        intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
+        startActivity(intent);
+    }
+
+    private void showAccountSwitchPage() {
+        Intent intent = new Intent(getActivity(), AccountActivity.class);
+        intent.putExtra("launcher", false);
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    private void showSettingPage() {
+        startActivity(new Intent(getActivity(), SettingActivity.class));
+    }
+
+    private void showSearchPage() {
+        startActivity(new Intent(getActivity(), SearchMainActivity.class));
+    }
+
+    private void showDMPage() {
+        startActivity(new Intent(getActivity(), DMUserListActivity.class));
+    }
+
+    private boolean showCommentPage(final ViewPager commentVP, View fl, ViewPager mentionVP) {
+        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+        if (currentIndex == 2) {
+            ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+            return true;
+        }
+        currentIndex = 2;
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment fragment = ((MainTimeLineActivity) getActivity()).getOrNewFriendsTimeLineFragment();
+
+        ft.hide(fragment);
+
+        for (Fragment f : commentFragments) {
+            ft.show(f);
+        }
+        for (Fragment f : mentionFragments) {
+            ft.hide(f);
+        }
+
+        ft.commit();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (commentVP.getAdapter() == null)
+                    commentVP.setAdapter(new CommentsTimeLinePagerAdapter(getFragmentManager(), (MainTimeLineActivity) getActivity(), commentFragments));
+
+
+            }
+        }, 500);
+
+
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                if (commentVP.getCurrentItem() != tab.getPosition())
+                    commentVP.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+            }
+        };
+
+        ActionBar actionBar = getActivity().getActionBar();
+        getActivity().getActionBar().setTitle(getString(R.string.comments));
+
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.removeAllTabs();
+        actionBar.addTab(actionBar.newTab()
+                .setText("收到的评论")
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText("发出的评论")
+                .setTabListener(tabListener));
+        commentVP.setOnPageChangeListener(onPageChangeListener);
+
+
+        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+        fl.setVisibility(View.GONE);
+        mentionVP.setVisibility(View.GONE);
+        commentVP.setVisibility(View.VISIBLE);
+        return false;
+    }
+
+    private boolean showHomePage(View fl, ViewPager mentionVP, ViewPager commentVP) {
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+
+        if (currentIndex == 0) {
+            ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+            return true;
+        }
+
+        currentIndex = 0;
+
+        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        getActivity().getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+        for (Fragment f : commentFragments) {
+            ft.hide(f);
+        }
+
+        for (Fragment f : mentionFragments) {
+            ft.hide(f);
+        }
+
+        Fragment fragment = ((MainTimeLineActivity) getActivity()).getOrNewFriendsTimeLineFragment();
+
+        if (fragment.isAdded() && fragment.isHidden()) {
+            ft.show(fragment);
+        } else if (!fragment.isAdded()) {
+            ft.add(R.id.menu_right_fl, fragment, FriendsTimeLineFragment.class.getName());
+        }
+        fragment.setUserVisibleHint(true);
+        fl.setVisibility(View.VISIBLE);
+        mentionVP.setVisibility(View.GONE);
+        commentVP.setVisibility(View.GONE);
+
+        ft.commit();
+
+        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+        return false;
+    }
+
+    private boolean showMentionPage(View fl, final ViewPager mentionVP, ViewPager commentVP) {
+        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+        if (currentIndex == 1) {
+            ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+            return true;
+        }
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+        Fragment fragment = ((MainTimeLineActivity) getActivity()).getOrNewFriendsTimeLineFragment();
+
+        ft.hide(fragment);
+
+        for (Fragment f : commentFragments) {
+            ft.hide(f);
+        }
+        for (Fragment f : mentionFragments) {
+            ft.show(f);
+        }
+
+
+        ft.commit();
+
+        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+        fl.setVisibility(View.GONE);
+        mentionVP.setVisibility(View.VISIBLE);
+        commentVP.setVisibility(View.GONE);
+        currentIndex = 1;
+
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                if (mentionVP.getCurrentItem() != tab.getPosition())
+                    mentionVP.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+            }
+        };
+
+        ActionBar actionBar = getActivity().getActionBar();
+        getActivity().getActionBar().setTitle(getString(R.string.mentions));
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.removeAllTabs();
+        actionBar.addTab(actionBar.newTab()
+                .setText("@的微博")
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText("@的评论")
+                .setTabListener(tabListener));
+        mentionVP.setOnPageChangeListener(onPageChangeListener);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mentionVP.getAdapter() == null)
+                    mentionVP.setAdapter(new MentionsTimeLinePagerAdapter(getFragmentManager(), (MainTimeLineActivity) getActivity(), mentionFragments));
+
+
+            }
+        }, 500);
+        return false;
     }
 
     @Override
@@ -310,75 +346,6 @@ public class LeftMenuFragment extends PreferenceFragment {
 
     }
 
-    private class CommentsTimeLinePagerAdapter extends AppFragmentPagerAdapter {
-
-
-        public CommentsTimeLinePagerAdapter(FragmentManager fm) {
-            super(fm);
-
-            commentFragments.add(0, ((MainTimeLineActivity) getActivity()).newCommentsTimeLineFragment());
-            commentFragments.add(1, ((MainTimeLineActivity) getActivity()).newCommentsByMeTimeLineFragment());
-
-
-        }
-
-
-        public Fragment getItem(int position) {
-            return commentFragments.get(position);
-        }
-
-        @Override
-        protected String getTag(int position) {
-            List<String> tagList = new ArrayList<String>();
-            tagList.add(CommentsToMeTimeLineFragment.class.getName());
-            tagList.add(CommentsByMeTimeLineFragment.class.getName());
-
-            return tagList.get(position);
-        }
-
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-
-    }
-
-    private class MentionsTimeLinePagerAdapter extends AppFragmentPagerAdapter {
-
-
-        public MentionsTimeLinePagerAdapter(FragmentManager fm) {
-            super(fm);
-
-            mentionFragments.add(0, ((MainTimeLineActivity) getActivity()).newMentionsTimeLineFragment());
-            mentionFragments.add(1, ((MainTimeLineActivity) getActivity()).newMentionsCommentTimeLineFragment());
-
-
-        }
-
-
-        public Fragment getItem(int position) {
-            return mentionFragments.get(position);
-        }
-
-        @Override
-        protected String getTag(int position) {
-            List<String> tagList = new ArrayList<String>();
-            tagList.add(MentionsWeiboTimeLineFragment.class.getName());
-            tagList.add(MentionsCommentTimeLineFragment.class.getName());
-
-            return tagList.get(position);
-        }
-
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-
-    }
 
     ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
         @Override
