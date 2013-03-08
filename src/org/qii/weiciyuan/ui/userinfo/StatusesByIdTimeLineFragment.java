@@ -61,7 +61,9 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     @Override
     public void onResume() {
         super.onResume();
-        if (userBean.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+        if (userBean != null
+                && userBean.getId() != null
+                && userBean.getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
             GlobalContext.getInstance().registerForAccountChangeListener(myProfileInfoChangeListener);
         }
     }

@@ -37,9 +37,9 @@ public class BrowserWebActivity extends AbstractAppActivity {
         super.onCreate(savedInstanceState);
         url = getIntent().getStringExtra("url");
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setDisplayShowHomeEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setDisplayShowTitleEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         View title = getLayoutInflater().inflate(R.layout.browserwebactivity_title_layout, null);
         shareCountBtn = (Button) title.findViewById(R.id.share_count);

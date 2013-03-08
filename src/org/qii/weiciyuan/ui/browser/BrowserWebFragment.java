@@ -7,7 +7,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -236,12 +235,13 @@ public class BrowserWebFragment extends Fragment {
             }
         }
 
+        //website icon is too small
         @Override
         public void onReceivedIcon(WebView view, Bitmap icon) {
             super.onReceivedIcon(view, icon);
             if (getActivity() == null)
                 return;
-            getActivity().getActionBar().setIcon(new BitmapDrawable(getActivity().getResources(), icon));
+//            getActivity().getActionBar().setIcon(new BitmapDrawable(getActivity().getResources(), icon));
         }
 
 
