@@ -8,12 +8,15 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.CheatSheet;
+import org.qii.weiciyuan.support.lib.SmileyPicker;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
@@ -31,6 +34,8 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
     protected abstract boolean canSend();
 
     private EditText et;
+    private SmileyPicker smiley = null;
+    private LinearLayout mContainer = null;
 
     public static final int AT_USER = 3;
 
@@ -109,15 +114,68 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_topic), R.string.add_topic);
         CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_send), R.string.send);
 
+        smiley = (SmileyPicker) findViewById(R.id.smiley_picker);
+        smiley.setEditText(AbstractWriteActivity.this, ((LinearLayout) findViewById(R.id.root_layout)), et);
+        mContainer = (LinearLayout) findViewById(R.id.container);
+        et.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSmileyPicker(true);
+            }
+        });
     }
 
+    private void showSmileyPicker(boolean showAnimation) {
+        this.smiley.show(AbstractWriteActivity.this, showAnimation);
+        lockContainerHeight(SmileyPickerUtility.getAppContentHeight(AbstractWriteActivity.this));
+
+    }
+
+    public void hideSmileyPicker(boolean showKeyBoard) {
+        if (this.smiley.isShown()) {
+            if (showKeyBoard) {
+                //this time softkeyboard is hidden
+                LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
+                localLayoutParams.height = smiley.getTop();
+                localLayoutParams.weight = 0.0F;
+                this.smiley.hide(AbstractWriteActivity.this);
+
+                SmileyPickerUtility.showKeyBoard(et);
+                et.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        unlockContainerHeightDelayed();
+                    }
+                }, 200L);
+            } else {
+                this.smiley.hide(AbstractWriteActivity.this);
+                unlockContainerHeightDelayed();
+            }
+        }
+
+    }
+
+    private void lockContainerHeight(int paramInt) {
+        LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
+        localLayoutParams.height = paramInt;
+        localLayoutParams.weight = 0.0F;
+    }
+
+    public void unlockContainerHeightDelayed() {
+
+        ((LinearLayout.LayoutParams) AbstractWriteActivity.this.mContainer.getLayoutParams()).weight = 1.0F;
+
+    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.menu_emoticon:
-                EmotionsGridDialog dialog = new EmotionsGridDialog();
-                dialog.show(getFragmentManager(), "");
+                if (smiley.isShown()) {
+                    hideSmileyPicker(true);
+                } else {
+                    showSmileyPicker(SmileyPickerUtility.isKeyBoardShow(AbstractWriteActivity.this));
+                }
                 break;
 
             case R.id.menu_send:
@@ -148,7 +206,9 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
 
     @Override
     public void onBackPressed() {
-        if (!TextUtils.isEmpty(et.getText().toString()) && canShowSaveDraftDialog()) {
+        if (smiley.isShown()) {
+            hideSmileyPicker(false);
+        } else if (!TextUtils.isEmpty(et.getText().toString()) && canShowSaveDraftDialog()) {
             SaveDraftDialog dialog = new SaveDraftDialog();
             dialog.show(getFragmentManager(), "");
         } else {
