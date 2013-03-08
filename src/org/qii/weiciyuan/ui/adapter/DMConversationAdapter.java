@@ -92,8 +92,27 @@ public class DMConversationAdapter extends BaseAdapter {
         }
 
         configViewFont(holder);
+        configLayerType(holder);
         bindViewData(holder, position);
         return convertView;
+    }
+
+    private void configLayerType(DMViewHolder holder) {
+
+        boolean disableHardAccelerated = SettingUtility.disableHardwareAccelerated();
+        if (!disableHardAccelerated)
+            return;
+
+        int currentWidgetLayerType = holder.content.getLayerType();
+
+        if (View.LAYER_TYPE_SOFTWARE != currentWidgetLayerType) {
+            if (holder.content != null)
+                holder.content.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
+            if (holder.time != null)
+                holder.time.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
     }
 
 
