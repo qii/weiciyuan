@@ -121,7 +121,7 @@ public class URLHelper {
 
     //direct message
     public static final String DM_RECEIVED = URL_SINA_WEIBO + "direct_messages.json";
-    public static final String DM_SENT = URL_SINA_WEIBO + "direct_messages/sent.json";
+    public static final String DM_SENT = URL_SINA_WEIBO + "direct_messages/new.json";
     public static final String DM_USERLIST = URL_SINA_WEIBO + "direct_messages/user_list.json";
     public static final String DM_CONVERSATION = URL_SINA_WEIBO + "direct_messages/conversation.json";
     public static final String DM_CREATE = URL_SINA_WEIBO + "direct_messages/new.json";

@@ -12,6 +12,7 @@ import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
@@ -62,11 +63,11 @@ public class JavaHttpUtility {
         try {
             URL url = new URL(urlAddress);
             Proxy proxy = getProxy();
-            HttpURLConnection uRLConnection;
+            HttpsURLConnection uRLConnection;
             if (proxy != null)
-                uRLConnection = (HttpURLConnection) url.openConnection(proxy);
+                uRLConnection = (HttpsURLConnection) url.openConnection(proxy);
             else
-                uRLConnection = (HttpURLConnection) url.openConnection();
+                uRLConnection = (HttpsURLConnection) url.openConnection();
 
             uRLConnection.setDoInput(true);
             uRLConnection.setDoOutput(true);
