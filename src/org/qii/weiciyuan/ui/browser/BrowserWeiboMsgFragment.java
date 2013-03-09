@@ -19,8 +19,8 @@ import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.asyncdrawable.MsgDetailReadWorker;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.MyLinkMovementMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
@@ -259,8 +259,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             layout.username.setText(msg.getUser().getScreen_name());
             ((AbstractAppActivity) getActivity()).getBitmapDownloader().downloadAvatar(layout.avatar, msg.getUser());
         }
-        layout.content.setText(msg.getText());
-        ListViewTool.addLinks(layout.content);
+        layout.content.setText(msg.getListViewSpannableString());
+        layout.content.setMovementMethod(MyLinkMovementMethod.getInstance());
 
         layout.time.setText(msg.getTimeInFormat());
 
@@ -297,14 +297,12 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
             layout.repost_layout.setVisibility(View.VISIBLE);
             layout.recontent.setVisibility(View.VISIBLE);
+            layout.recontent.setMovementMethod(MyLinkMovementMethod.getInstance());
             if (repostMsg.getUser() != null) {
-                layout.recontent.setText("@" + repostMsg.getUser().getScreen_name() + "：" + repostMsg.getText());
-                ListViewTool.addLinks(layout.recontent);
+                layout.recontent.setText(repostMsg.getListViewSpannableString());
                 buildRepostCount();
             } else {
-                layout.recontent.setText(repostMsg.getText());
-                ListViewTool.addLinks(layout.recontent);
-
+                layout.recontent.setText(repostMsg.getListViewSpannableString());
             }
             if (!TextUtils.isEmpty(repostMsg.getBmiddle_pic())) {
                 layout.repost_pic_layout.setVisibility(View.VISIBLE);
