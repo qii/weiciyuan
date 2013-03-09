@@ -30,6 +30,7 @@ import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserBigPicActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
+import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -62,6 +63,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     private Set<Integer> tagIndexList = new HashSet<Integer>();
 
+    private ArrayDeque<View> prefViews = new ArrayDeque<View>(6);
+
 
     public AbstractAppListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<T> bean, ListView listView, boolean showOriStatus) {
         this.bean = bean;
@@ -77,6 +80,10 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         int[] attrs = new int[]{R.attr.listview_checked_color};
         TypedArray ta = fragment.getActivity().obtainStyledAttributes(attrs);
         checkedBG = ta.getColor(0, 430);
+
+        for (int i = 0; i < 5; i++) {
+            prefViews.add(initNormallayout(null));
+        }
 
         listView.setRecyclerListener(new AbsListView.RecyclerListener() {
             @Override
@@ -177,10 +184,16 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 //                    convertView = initMylayout(parent);
 //                    break;
                 case TYPE_NORMAL:
-                    convertView = initNormallayout(parent);
+                    convertView = prefViews.poll();
+                    if (convertView == null) {
+                        convertView = initNormallayout(parent);
+                    }
                     break;
                 case TYPE_NORMAL_BIG_PIC:
-                    convertView = initNormallayout(parent);
+                    convertView = prefViews.poll();
+                    if (convertView == null) {
+                        convertView = initNormallayout(parent);
+                    }
                     break;
                 default:
                     convertView = initNormallayout(parent);
