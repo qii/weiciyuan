@@ -114,7 +114,7 @@ public class TimeLineBitmapDownloader {
 
 
                 }
-            }, 800);
+            }, 400);
 
 
         }

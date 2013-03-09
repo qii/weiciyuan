@@ -120,7 +120,7 @@
 
     <TextView
         android:layout_below="@id/content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="14dp"
         android:layout_marginTop="3dp"
         android:includeFontPadding="true"
         android:id="@+id/repost_content"
@@ -135,7 +135,7 @@
 
     <org.qii.weiciyuan.support.lib.TimeLineImageView
         android:layout_below="@id/repost_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="14dp"
         android:layout_marginTop="5dp"
         android:id="@+id/repost_content_pic"
         android:layout_width="match_parent"
