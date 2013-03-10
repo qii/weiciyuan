@@ -63,7 +63,14 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     private Set<Integer> tagIndexList = new HashSet<Integer>();
 
-    private ArrayDeque<View> prefViews = new ArrayDeque<View>(6);
+    private ArrayDeque<PrefView> prefNormalViews = new ArrayDeque<PrefView>(6);
+    private ArrayDeque<PrefView> prefBigPicViews = new ArrayDeque<PrefView>(6);
+
+
+    private class PrefView {
+        View view;
+        ViewHolder holder;
+    }
 
 
     public AbstractAppListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<T> bean, ListView listView, boolean showOriStatus) {
@@ -82,7 +89,17 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         checkedBG = ta.getColor(0, 430);
 
         for (int i = 0; i < 5; i++) {
-            prefViews.add(initNormallayout(null));
+            PrefView prefView = new PrefView();
+            prefView.view = initNormalLayout(null);
+            prefView.holder = buildHolder(prefView.view);
+            prefNormalViews.add(prefView);
+        }
+
+        for (int i = 0; i < 5; i++) {
+            PrefView prefView = new PrefView();
+            prefView.view = initBigPicLayout(null);
+            prefView.holder = buildHolder(prefView.view);
+            prefBigPicViews.add(prefView);
         }
 
         listView.setRecyclerListener(new AbsListView.RecyclerListener() {
@@ -166,7 +183,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-
+        PrefView prefView = null;
 
         if (convertView == null || convertView.getTag(R.drawable.ic_launcher + getItemViewType(position)) == null) {
 
@@ -184,23 +201,33 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 //                    convertView = initMylayout(parent);
 //                    break;
                 case TYPE_NORMAL:
-                    convertView = prefViews.poll();
+                    prefView = prefNormalViews.poll();
+                    if (prefView != null) {
+                        convertView = prefView.view;
+                    }
                     if (convertView == null) {
-                        convertView = initNormallayout(parent);
+                        convertView = initNormalLayout(parent);
                     }
                     break;
                 case TYPE_NORMAL_BIG_PIC:
-                    convertView = prefViews.poll();
+                    prefView = prefBigPicViews.poll();
+                    if (prefView != null) {
+                        convertView = prefView.view;
+                    }
                     if (convertView == null) {
-                        convertView = initNormallayout(parent);
+                        convertView = initBigPicLayout(parent);
                     }
                     break;
                 default:
-                    convertView = initNormallayout(parent);
+                    convertView = initNormalLayout(parent);
                     break;
             }
             if (getItemViewType(position) != TYPE_MIDDLE) {
-                holder = buildHolder(convertView);
+                if (prefView == null) {
+                    holder = buildHolder(convertView);
+                } else {
+                    holder = prefView.holder;
+                }
                 convertView.setTag(R.drawable.ic_launcher + getItemViewType(position), holder);
                 convertView.setTag(R.string.listview_index_tag, R.drawable.ic_launcher + getItemViewType(position));
                 tagIndexList.add(R.drawable.ic_launcher + getItemViewType(position));
@@ -243,14 +270,12 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         return convertView;
     }
 
-    private View initNormallayout(ViewGroup parent) {
-        View convertView;
-        if (SettingUtility.getEnableBigPic()) {
-            convertView = inflater.inflate(R.layout.timeline_listview_item_big_pic_layout, parent, false);
-        } else {
-            convertView = inflater.inflate(R.layout.timeline_listview_item_layout, parent, false);
-        }
-        return convertView;
+    private View initNormalLayout(ViewGroup parent) {
+        return inflater.inflate(R.layout.timeline_listview_item_layout, parent, false);
+    }
+
+    private View initBigPicLayout(ViewGroup parent) {
+        return inflater.inflate(R.layout.timeline_listview_item_big_pic_layout, parent, false);
     }
 
 

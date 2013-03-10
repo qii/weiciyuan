@@ -4,9 +4,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMListBean;
@@ -161,6 +159,21 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.actionbar_menu_dmconversationlistfragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_clear:
+
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public void hideSmileyPicker(boolean showKeyBoard) {
         if (this.smiley.isShown()) {
