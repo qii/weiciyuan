@@ -70,6 +70,20 @@ public class ManageGroupDialog extends DialogFragment {
         this.uid = uid;
     }
 
+    /**
+     * alertdialog use string arry to store data, so you cant add or delete data
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        GroupListBean current = GlobalContext.getInstance().getGroup();
+        if (current != this.group) {
+            dismissAllowingStateLoss();
+            ManageGroupDialog dialog = new ManageGroupDialog(current, uid);
+            dialog.show(getFragmentManager(), "");
+        }
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
