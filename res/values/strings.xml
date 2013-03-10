@@ -80,9 +80,9 @@
     <string name="fan_list">粉丝列表</string>
     <string name="topic_number">话题数</string>
     <string name="topic_list">话题列表</string>
-    <string name="follow_he">关注</string>
+    <string name="follow_him">关注</string>
     <string name="manage_group">管理分组</string>
-    <string name="unfollow_he">取消关注</string>
+    <string name="unfollow_him">取消关注</string>
     <string name="follow_successfully">关注成功</string>
     <string name="unfollow_successfully">已经取消关注</string>
     <string name="modify_successfully">修改完成</string>
@@ -324,6 +324,9 @@
     <string name="share_sum">微博统计的分享次数</string>
     <string name="total_share_count">累计分享了%s次</string>
 
+
+    <!-- user dialog-->
+    <string name="at_him">"@他"</string>
 
     <!---Setting  -->
     <string name="setting">设置</string>
