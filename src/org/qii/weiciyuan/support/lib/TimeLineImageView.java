@@ -79,6 +79,11 @@ public class TimeLineImageView extends FrameLayout {
         mImageView.setOnClickListener(onClicker);
         mCover.setClickable(true);
     }
+
+    @Override
+    public void setOnLongClickListener(OnLongClickListener onLongClickListener) {
+        mImageView.setOnLongClickListener(onLongClickListener);
+    }
 }
 
 

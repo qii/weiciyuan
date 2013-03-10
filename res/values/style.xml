@@ -38,4 +38,11 @@
         <item name="android:minHeight">16dip</item>
         <item name="android:maxHeight">16dip</item>
     </style>
+
+    <style name="dialogTitleStyle">
+        <item name="android:maxLines">1</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:textAppearance">@style/android:TextAppearance.Holo.DialogWindowTitle</item>
+    </style>
+
 </resources>

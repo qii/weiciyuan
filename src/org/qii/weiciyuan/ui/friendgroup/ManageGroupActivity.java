@@ -38,7 +38,7 @@ public class ManageGroupActivity extends AbstractAppActivity {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setDisplayShowTitleEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(false);
         getActionBar().setTitle(getString(R.string.friend_group));
 
         if (savedInstanceState == null) {

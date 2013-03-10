@@ -410,6 +410,14 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 getActivity().startActivity(intent);
             }
         });
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                UserDialog dialog = new UserDialog(user);
+                dialog.show(fragment.getFragmentManager(), "");
+                return true;
+            }
+        });
         if (user.isVerified()) {
             view.isVerified();
         } else {
