@@ -24,10 +24,12 @@ import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView> {
 
@@ -93,6 +95,8 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
         final ListView lv;
         if (VERSION.SDK_INT >= VERSION_CODES.GINGERBREAD) {
             lv = new InternalListViewSDK9(context, attrs);
+            lv.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(
+                    GlobalContext.getInstance(), R.anim.list_layout_controller));
         } else {
             lv = new InternalListView(context, attrs);
         }
@@ -120,7 +124,7 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 //                FrameLayout.LayoutParams.WRAP_CONTENT);
 //        mFooterLoadingView.setVisibility(View.GONE);
 
-         //to disable blue line
+        //to disable blue line
 
         a.recycle();
 
