@@ -1,12 +1,12 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
@@ -30,6 +30,7 @@ public class ReadWorker extends MyAsyncTask<String, Void, Bitmap> implements IPi
     private GlobalContext globalContext;
     private FileLocationMethod method;
     private FailedResult failedResult;
+    private int mShortAnimationDuration;
 
     public String getUrl() {
         return data;
@@ -42,7 +43,8 @@ public class ReadWorker extends MyAsyncTask<String, Void, Bitmap> implements IPi
         this.viewWeakReference = new WeakReference<ImageView>(view);
         this.data = url;
         this.method = method;
-
+        this.mShortAnimationDuration = GlobalContext.getInstance().getResources().getInteger(
+                android.R.integer.config_shortAnimTime);
     }
 
 
@@ -158,49 +160,17 @@ public class ReadWorker extends MyAsyncTask<String, Void, Bitmap> implements IPi
     }
 
     private void playImageViewAnimation(final ImageView view, final Bitmap bitmap) {
-        final Animation anim_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_out);
-        final Animation anim_in = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_in);
-
-        anim_out.setAnimationListener(new Animation.AnimationListener() {
-
+        view.animate().alpha(0.5f).setDuration(this.mShortAnimationDuration).setListener(new AnimatorListenerAdapter() {
             @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-                anim_in.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-
-                    //clear animation avoid memory leak
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        if (view.getAnimation() != null && view.getAnimation().hasEnded()) {
-                            view.clearAnimation();
-                        }
-                    }
-                });
-
-                if (canDisplay(view)) {
-                    view.setImageBitmap(bitmap);
-                    view.startAnimation(anim_in);
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if (!canDisplay(view)) {
+                    return;
                 }
+                view.setImageBitmap(bitmap);
+                view.animate().alpha(1.0f).setDuration(mShortAnimationDuration).setListener(null);
             }
         });
-        if (view.getAnimation() == null || view.getAnimation().hasEnded())
-            view.startAnimation(anim_out);
     }
 
 }
