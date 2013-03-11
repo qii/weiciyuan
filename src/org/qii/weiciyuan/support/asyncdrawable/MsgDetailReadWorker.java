@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -113,15 +115,25 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-        if (pb != null)
-            pb.setVisibility(View.INVISIBLE);
 
         if (bitmap != null) {
             view.setTag(true);
             view.setVisibility(View.VISIBLE);
             view.setImageBitmap(bitmap);
+            view.setAlpha(0.0f);
+            view.animate().alpha(1.0f).setDuration(200);
         } else {
             view.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
+        if (pb != null) {
+            pb.animate().alpha(0f).setDuration(200).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    pb.setVisibility(View.INVISIBLE);
+                }
+            });
         }
 
     }
