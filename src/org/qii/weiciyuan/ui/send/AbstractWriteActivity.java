@@ -81,7 +81,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         setContentView(R.layout.abstractwriteactivity_layout);
 
         ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);

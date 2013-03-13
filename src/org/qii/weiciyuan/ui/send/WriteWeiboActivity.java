@@ -367,7 +367,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         setContentView(R.layout.writeweiboactivity_layout);
 
         ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle(R.string.write_weibo);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);

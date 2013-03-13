@@ -40,7 +40,7 @@ public class BlackMagicActivity extends AbstractAppActivity {
         setContentView(R.layout.blackmagicactivity_layout);
 
         ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle(getString(R.string.hack_login));
 
         username = (EditText) findViewById(R.id.username);
