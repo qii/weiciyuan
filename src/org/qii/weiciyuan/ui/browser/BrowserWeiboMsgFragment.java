@@ -6,10 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.MapView;
@@ -177,7 +174,11 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         layout.time = (TextView) view.findViewById(R.id.time);
         layout.location = (TextView) view.findViewById(R.id.location);
         layout.source = (TextView) view.findViewById(R.id.source);
-        layout.mapView = (MapView) view.findViewById(R.id.location_mv);
+        if (hasGpsInfo()) {
+            ViewStub stub = (ViewStub) view.findViewById(R.id.stub);
+            View inflated = stub.inflate();
+            layout.mapView = (MapView) inflated.findViewById(R.id.location_mv);
+        }
         if (savedInstanceState != null && hasGpsInfo()) {
             MessageBean msg = (MessageBean) savedInstanceState.get("msg");
             savedInstanceState.remove("msg");
