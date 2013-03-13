@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.AppConfig;
 
 /**
@@ -38,6 +39,7 @@ public class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOn
         if (e2.getRawX() - e1.getRawX() > AppConfig.SWIPE_MIN_DISTANCE
                 && this.viewPager.getCurrentItem() == 0 && Math.abs(velocityX) > scaledMinimumFlingVelocity) {
             this.activity.finish();
+            this.activity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             return true;
         }
         return false;
