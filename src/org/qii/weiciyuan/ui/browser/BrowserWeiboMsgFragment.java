@@ -77,10 +77,15 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         this.msg = msg;
     }
 
+    private boolean hasGpsInfo() {
+        return (this.msg != null) && (this.msg.getGeo() != null);
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        layout.mapView.onSaveInstanceState(outState);
+        if (hasGpsInfo())
+            layout.mapView.onSaveInstanceState(outState);
         outState.putSerializable("msg", msg);
     }
 
@@ -88,7 +93,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            MapsInitializer.initialize(getActivity());
+            if (hasGpsInfo())
+                MapsInitializer.initialize(getActivity());
         } catch (GooglePlayServicesNotAvailableException impossible) {
                       /* Impossible */
         }
@@ -133,7 +139,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     public void onResume() {
         super.onResume();
 //        buildViewData(false);
-        layout.mapView.onResume();
+        if (hasGpsInfo())
+            layout.mapView.onResume();
     }
 
     @Override
@@ -171,12 +178,12 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         layout.location = (TextView) view.findViewById(R.id.location);
         layout.source = (TextView) view.findViewById(R.id.source);
         layout.mapView = (MapView) view.findViewById(R.id.location_mv);
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null && hasGpsInfo()) {
             MessageBean msg = (MessageBean) savedInstanceState.get("msg");
             savedInstanceState.remove("msg");
             layout.mapView.onCreate(savedInstanceState);
             savedInstanceState.putSerializable("msg", msg);
-        } else {
+        } else if (hasGpsInfo()) {
             layout.mapView.onCreate(savedInstanceState);
         }
         layout.comment_count = (TextView) view.findViewById(R.id.comment_count);
