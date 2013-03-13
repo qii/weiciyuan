@@ -1,7 +1,7 @@
 package org.qii.weiciyuan.ui.login;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.app.LoaderManager;
+import android.content.*;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,7 +11,6 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.support.database.AccountDBTask;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.changelogdialog.ChangeLogDialog;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -24,19 +23,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AccountActivity extends AbstractAppActivity {
+public class AccountActivity extends AbstractAppActivity implements LoaderManager.LoaderCallbacks<List<AccountBean>> {
 
     private ListView listView = null;
-
     private AccountAdapter listAdapter = null;
-
     private List<AccountBean> accountList = new ArrayList<AccountBean>();
-
-    private GetAccountListDBTask getTask = null;
-    private RemoveAccountDBTask removeTask = null;
-
     private final int ADD_ACCOUNT_REQUEST_CODE = 0;
-
+    private final int LOADER_ID = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,9 +46,7 @@ public class AccountActivity extends AbstractAppActivity {
         listView.setAdapter(listAdapter);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         listView.setMultiChoiceModeListener(new AccountMultiChoiceModeListener());
-
-        getTask = new GetAccountListDBTask();
-        getTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
 
         if (SettingUtility.firstStart())
             showChangeLogDialog();
@@ -66,20 +57,6 @@ public class AccountActivity extends AbstractAppActivity {
     public void onBackPressed() {
         GlobalContext.getInstance().startedApp = false;
         super.onBackPressed();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        cancelAllTask();
-    }
-
-    private void cancelAllTask() {
-        if (getTask != null)
-            getTask.cancel(true);
-
-        if (removeTask != null)
-            removeTask.cancel(true);
     }
 
     private void showChangeLogDialog() {
@@ -119,23 +96,20 @@ public class AccountActivity extends AbstractAppActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_add_account:
-                addAccount();
+                intent = new Intent(this, OAuthActivity.class);
+                startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
                 break;
             case R.id.menu_hack_login:
-                Intent intent = new Intent(this, BlackMagicActivity.class);
+                intent = new Intent(this, BlackMagicActivity.class);
                 startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
                 break;
         }
         return true;
     }
 
-    public void addAccount() {
-
-        Intent intent = new Intent(this, OAuthActivity.class);
-        startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -145,10 +119,24 @@ public class AccountActivity extends AbstractAppActivity {
     }
 
     private void refresh() {
-        if (getTask == null || getTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            getTask = new GetAccountListDBTask();
-            getTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        }
+        getLoaderManager().getLoader(LOADER_ID).forceLoad();
+    }
+
+    @Override
+    public Loader<List<AccountBean>> onCreateLoader(int id, Bundle args) {
+        return new AccountDataLoader(AccountActivity.this, args);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<AccountBean>> loader, List<AccountBean> data) {
+        accountList = data;
+        listAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<AccountBean>> loader) {
+        accountList = new ArrayList<AccountBean>();
+        listAdapter.notifyDataSetChanged();
     }
 
     private class AccountListItemClickListener implements AdapterView.OnItemClickListener {
@@ -181,10 +169,7 @@ public class AccountActivity extends AbstractAppActivity {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_remove_account:
-                    if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-                        removeTask = new RemoveAccountDBTask();
-                        removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                    }
+                    remove();
                     mode.finish();
                     return true;
             }
@@ -264,43 +249,32 @@ public class AccountActivity extends AbstractAppActivity {
         }
     }
 
-    private class GetAccountListDBTask extends MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
+    private static class AccountDataLoader extends AsyncTaskLoader<List<AccountBean>> {
+        public AccountDataLoader(Context context, Bundle args) {
+            super(context);
+        }
 
         @Override
-        protected List<AccountBean> doInBackground(Void... params) {
+        protected void onStartLoading() {
+            super.onStartLoading();
+            forceLoad();
+        }
+
+        public List<AccountBean> loadInBackground() {
             return AccountDBTask.getAccountList();
         }
-
-        @Override
-        protected void onPostExecute(List<AccountBean> accounts) {
-            accountList = accounts;
-            listAdapter.notifyDataSetChanged();
-
-        }
     }
 
-    private class RemoveAccountDBTask extends MyAsyncTask<Void, List<AccountBean>, List<AccountBean>> {
 
+    private void remove() {
         Set<String> set = new HashSet<String>();
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            long[] ids = listView.getCheckedItemIds();
-            for (long id : ids) {
-                set.add(String.valueOf(id));
-            }
+        long[] ids = listView.getCheckedItemIds();
+        for (long id : ids) {
+            set.add(String.valueOf(id));
         }
-
-        @Override
-        protected List<AccountBean> doInBackground(Void... params) {
-            return AccountDBTask.removeAndGetNewAccountList(set);
-        }
-
-        @Override
-        protected void onPostExecute(List<AccountBean> accounts) {
-            accountList = accounts;
-            listAdapter.notifyDataSetChanged();
-        }
+        accountList = AccountDBTask.removeAndGetNewAccountList(set);
+        listAdapter.notifyDataSetChanged();
     }
+
+
 }
