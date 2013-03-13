@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.userinfo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.ImageView;
@@ -47,6 +48,8 @@ public class UserInfoFragment extends AbstractAppFragment {
 
     private ArrayList<String> topicList;
 
+    private Handler handler = new Handler();
+
     public UserInfoFragment() {
         super();
     }
@@ -78,7 +81,12 @@ public class UserInfoFragment extends AbstractAppFragment {
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 bean = ((IUserInfo) getActivity()).getUser();
-                refresh();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refresh();
+                    }
+                }, 1000);
                 break;
             case SCREEN_ROTATE:
                 //nothing
