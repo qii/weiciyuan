@@ -72,8 +72,11 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         ViewHolder holder;
     }
 
-
     public AbstractAppListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<T> bean, ListView listView, boolean showOriStatus) {
+        this(fragment, commander, bean, listView, showOriStatus, false);
+    }
+
+    public AbstractAppListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<T> bean, ListView listView, boolean showOriStatus, boolean pre) {
         this.bean = bean;
         this.commander = commander;
         this.inflater = fragment.getActivity().getLayoutInflater();
@@ -88,18 +91,20 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         TypedArray ta = fragment.getActivity().obtainStyledAttributes(attrs);
         checkedBG = ta.getColor(0, 430);
 
-        for (int i = 0; i < 5; i++) {
-            PrefView prefView = new PrefView();
-            prefView.view = initNormalLayout(null);
-            prefView.holder = buildHolder(prefView.view);
-            prefNormalViews.add(prefView);
-        }
+        if (pre) {
+            for (int i = 0; i < 5; i++) {
+                PrefView prefView = new PrefView();
+                prefView.view = initNormalLayout(null);
+                prefView.holder = buildHolder(prefView.view);
+                prefNormalViews.add(prefView);
+            }
 
-        for (int i = 0; i < 5; i++) {
-            PrefView prefView = new PrefView();
-            prefView.view = initBigPicLayout(null);
-            prefView.holder = buildHolder(prefView.view);
-            prefBigPicViews.add(prefView);
+            for (int i = 0; i < 5; i++) {
+                PrefView prefView = new PrefView();
+                prefView.view = initBigPicLayout(null);
+                prefView.holder = buildHolder(prefView.view);
+                prefBigPicViews.add(prefView);
+            }
         }
 
         listView.setRecyclerListener(new AbsListView.RecyclerListener() {
@@ -144,6 +149,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             }
         });
     }
+
 
     protected Activity getActivity() {
         return fragment.getActivity();

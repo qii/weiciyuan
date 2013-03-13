@@ -46,6 +46,10 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         super(fragment, commander, bean, listView, showOriStatus);
     }
 
+    public StatusListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<MessageBean> bean, ListView listView, boolean showOriStatus, boolean pre) {
+        super(fragment, commander, bean, listView, showOriStatus, pre);
+    }
+
 
     @Override
     protected void bindViewData(final ViewHolder holder, int position) {
