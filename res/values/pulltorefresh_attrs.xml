@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PullToRefreshListView">
+        <attr name="ptrAdapterViewBackground" format="reference|color"/>
+        <attr name="ptrHeaderBackground" format="reference|color"/>
+        <attr name="ptrHeaderTextColor" format="reference|color"/>
+        <attr name="ptrHeaderSubTextColor" format="reference|color"/>
+        <attr name="ptrMode">
+            <flag name="disabled" value="0x0"/>
+            <flag name="pullDownFromTop" value="0x1"/>
+            <flag name="pullUpFromBottom" value="0x2"/>
+            <flag name="both" value="0x3"/>
+        </attr>
+        <attr name="ptrShowIndicator" format="reference|boolean"/>
+        <attr name="ptrDrawable" format="reference"/>
+        <attr name="ptrOverScroll" format="reference|boolean"/>
+    </declare-styleable>
+
+</resources>
