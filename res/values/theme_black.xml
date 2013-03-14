@@ -42,7 +42,7 @@
 
         <item name="timeline_gps_icon">@drawable/timeline_gps_light</item>
         <item name="timeline_pic_icon">@drawable/timeline_pic_light</item>
-        <item name="timeline_load_more_background">@drawable/timeline_load_more_black</item>
+        <item name="timeline_load_more_background">@drawable/timeline_load_more_dark</item>
 
 
         <item name="listview_item_background_selector">@null</item>

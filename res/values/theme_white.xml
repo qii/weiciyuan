@@ -4,40 +4,40 @@
 
     <style name="AppTheme_White" parent="@android:style/Theme.Holo.Light">
 
-        <item name="account">@drawable/account_black</item>
-        <item name="account_management">@drawable/account_management_black</item>
-        <item name="add">@drawable/accountactivity_new_black</item>
-        <item name="remove">@drawable/accountactivity_remove_black</item>
-        <item name="comment">@drawable/comment_black</item>
-        <item name="reply_to_comment">@drawable/reply_to_comment_black</item>
-        <item name="edit">@drawable/edit_black</item>
-        <item name="fav_en">@drawable/fav_en_black</item>
-        <item name="fav_un">@drawable/fav_un_black</item>
-        <item name="write_weibo">@drawable/friendstimelinefragment_write_black</item>
-        <item name="location_place">@drawable/location_place_black</item>
-        <item name="settings">@drawable/maintimelineactivity_settings_black</item>
-        <item name="picture">@drawable/picture_black</item>
-        <item name="refresh">@drawable/refresh_black</item>
-        <item name="copy">@drawable/copy_black</item>
-        <item name="repost">@drawable/repost_black</item>
-        <item name="search">@drawable/search_black</item>
-        <item name="share">@drawable/share_black</item>
-        <item name="send">@drawable/send_black</item>
-        <item name="statusnewactivity_camera">@drawable/camera_black</item>
-        <item name="statusnewactivity_gps">@drawable/statusnewactivity_gps_black</item>
-        <item name="statusnewactivity_send">@drawable/statusnewactivity_send_black</item>
-        <item name="statusnewactivity_pic">@drawable/picture_black</item>
+        <item name="account">@drawable/account_dark</item>
+        <item name="account_management">@drawable/account_management_dark</item>
+        <item name="add">@drawable/accountactivity_new_dark</item>
+        <item name="remove">@drawable/accountactivity_remove_dark</item>
+        <item name="comment">@drawable/comment_dark</item>
+        <item name="reply_to_comment">@drawable/reply_to_comment_dark</item>
+        <item name="edit">@drawable/edit_dark</item>
+        <item name="fav_en">@drawable/fav_en_dark</item>
+        <item name="fav_un">@drawable/fav_un_dark</item>
+        <item name="write_weibo">@drawable/friendstimelinefragment_write_dark</item>
+        <item name="location_place">@drawable/location_place_dark</item>
+        <item name="settings">@drawable/maintimelineactivity_settings_dark</item>
+        <item name="picture">@drawable/picture_dark</item>
+        <item name="refresh">@drawable/refresh_dark</item>
+        <item name="copy">@drawable/copy_dark</item>
+        <item name="repost">@drawable/repost_dark</item>
+        <item name="search">@drawable/search_dark</item>
+        <item name="share">@drawable/share_dark</item>
+        <item name="send">@drawable/send_dark</item>
+        <item name="statusnewactivity_camera">@drawable/camera_dark</item>
+        <item name="statusnewactivity_gps">@drawable/statusnewactivity_gps_dark</item>
+        <item name="statusnewactivity_send">@drawable/statusnewactivity_send_dark</item>
+        <item name="statusnewactivity_pic">@drawable/picture_dark</item>
 
-        <item name="error">@drawable/error_black</item>
-        <item name="location_map">@drawable/location_map_black</item>
-        <item name="timeline_repost_flag">@drawable/timeline_repost_black</item>
-        <item name="timeline_comment_flag">@drawable/timeline_comment_black</item>
+        <item name="error">@drawable/error_dark</item>
+        <item name="location_map">@drawable/location_map_dark</item>
+        <item name="timeline_repost_flag">@drawable/timeline_repost_dark</item>
+        <item name="timeline_comment_flag">@drawable/timeline_comment_dark</item>
         <item name="save">@drawable/save_dark</item>
         <item name="clickable_flag">@drawable/clickable_flag_dark</item>
 
 
         <item name="listview_item_background_selector">@drawable/listview_item_background_selector</item>
-        <item name="listview_item_refresh_animation">@drawable/refresh_black</item>
+        <item name="listview_item_refresh_animation">@drawable/refresh_dark</item>
         <item name="link_color">@color/dark_blue</item>
         <item name="line_drawable">@drawable/list_divider_holo_light</item>
         <item name="listview_checked_color">@color/listview_checked_color_holo_light</item>

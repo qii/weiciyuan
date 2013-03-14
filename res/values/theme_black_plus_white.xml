@@ -3,7 +3,7 @@
 
     <style name="AppTheme_Black_White" parent="@android:style/Theme.Holo.Light.DarkActionBar">
 
-        <item name="account">@drawable/account_black</item>
+        <item name="account">@drawable/account_dark</item>
         <item name="account_management">@drawable/account_management_light</item>
         <item name="add">@drawable/accountactivity_new_light</item>
         <item name="remove">@drawable/accountactivity_remove_light</item>
@@ -17,34 +17,34 @@
         <item name="at">@drawable/at_light</item>
         <item name="emoticon">@drawable/emoticon_light</item>
         <item name="topic">@drawable/topic_light</item>
-        <item name="settings">@drawable/maintimelineactivity_settings_black</item>
-        <item name="picture">@drawable/picture_black</item>
+        <item name="settings">@drawable/maintimelineactivity_settings_dark</item>
+        <item name="picture">@drawable/picture_dark</item>
         <item name="refresh">@drawable/refresh_light</item>
         <item name="copy">@drawable/copy_light</item>
         <item name="repost">@drawable/repost_light</item>
         <item name="search">@drawable/search_light</item>
         <item name="share">@drawable/share_light</item>
-        <item name="send">@drawable/send_black</item>
+        <item name="send">@drawable/send_dark</item>
         <item name="statusnewactivity_camera">@drawable/camera_light</item>
         <item name="statusnewactivity_gps">@drawable/statusnewactivity_gps_light</item>
         <item name="statusnewactivity_send">@drawable/statusnewactivity_send_light</item>
         <item name="statusnewactivity_pic">@drawable/picture_light</item>
-        <item name="error">@drawable/error_black</item>
+        <item name="error">@drawable/error_dark</item>
         <item name="location_map">@drawable/location_map_light</item>
-        <item name="timeline_repost_flag">@drawable/timeline_repost_black</item>
-        <item name="timeline_comment_flag">@drawable/timeline_comment_black</item>
+        <item name="timeline_repost_flag">@drawable/timeline_repost_dark</item>
+        <item name="timeline_comment_flag">@drawable/timeline_comment_dark</item>
         <item name="save">@drawable/save_light</item>
         <item name="web">@drawable/web_light</item>
         <item name="close">@drawable/close_light</item>
         <item name="clickable_flag">@drawable/clickable_flag_dark</item>
-        <item name="timeline_reply_to_comment">@drawable/reply_to_comment_black</item>
+        <item name="timeline_reply_to_comment">@drawable/reply_to_comment_dark</item>
 
-        <item name="timeline_gps_icon">@drawable/timeline_gps_black</item>
-        <item name="timeline_pic_icon">@drawable/timeline_pic_black</item>
+        <item name="timeline_gps_icon">@drawable/timeline_gps_dark</item>
+        <item name="timeline_pic_icon">@drawable/timeline_pic_dark</item>
         <item name="timeline_load_more_background">@drawable/timeline_load_more_light</item>
 
         <item name="listview_item_background_selector">@drawable/listview_item_background_selector</item>
-        <item name="listview_item_refresh_animation">@drawable/refresh_black</item>
+        <item name="listview_item_refresh_animation">@drawable/refresh_dark</item>
         <item name="link_color">@color/dark_blue</item>
         <item name="line_drawable">@drawable/list_divider_holo_light</item>
         <item name="listview_checked_color">@color/listview_checked_color_holo_light</item>
