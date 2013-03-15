@@ -110,7 +110,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
                 holder.repost_layout.setVisibility(View.VISIBLE);
             holder.repost_flag.setVisibility(View.VISIBLE);
             holder.repost_content.setVisibility(View.VISIBLE);
-            holder.repost_content.setText(reply.getListViewReplySpannableString());
+            holder.repost_content.setText(reply.getListViewSpannableString());
         } else {
 
             MessageBean repost_msg = comment.getStatus();

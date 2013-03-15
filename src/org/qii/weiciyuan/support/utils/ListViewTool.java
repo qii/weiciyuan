@@ -96,6 +96,10 @@ public class ListViewTool {
         if (bean.getStatus() != null) {
             bean.getStatus().setListViewSpannableString(buildOriWeiboSpannalString(bean.getStatus()));
         }
+
+        if (bean.getReply_comment() != null) {
+            addJustHighLightLinksOnlyReplyComment(bean.getReply_comment());
+        }
     }
 
     public static void addJustHighLightLinksOnlyReplyComment(CommentBean bean) {
@@ -115,7 +119,7 @@ public class ListViewTool {
             value = ListViewTool.convertNormalStringToSpannableString(bean.getText());
         }
 
-        bean.setListViewReplySpannableString(value);
+        bean.setListViewSpannableString(value);
     }
 
     public static void addJustHighLightLinks(DMUserBean bean) {
