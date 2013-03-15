@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import com.google.gson.Gson;
@@ -45,27 +46,32 @@ public class FriendsTimeLineDBTask {
 
         Gson gson = new Gson();
         List<MessageBean> msgList = list.getItemList();
-
-        for (int i = 0; i < msgList.size(); i++) {
-            MessageBean msg = msgList.get(i);
-            if (msg != null) {
-                ContentValues cv = new ContentValues();
-                cv.put(HomeTable.MBLOGID, msg.getId());
-                cv.put(HomeTable.ACCOUNTID, accountId);
-                String json = gson.toJson(msg);
-                cv.put(HomeTable.JSONDATA, json);
-                getWsd().insert(HomeTable.TABLE_NAME,
-                        HomeTable.ID, cv);
-            } else {
-                ContentValues cv = new ContentValues();
-                cv.put(HomeTable.MBLOGID, "-1");
-                cv.put(HomeTable.ACCOUNTID, accountId);
-                cv.put(HomeTable.JSONDATA, "");
-                getWsd().insert(HomeTable.TABLE_NAME,
-                        HomeTable.ID, cv);
+        try {
+            getWsd().beginTransaction();
+            for (int i = 0; i < msgList.size(); i++) {
+                MessageBean msg = msgList.get(i);
+                if (msg != null) {
+                    ContentValues cv = new ContentValues();
+                    cv.put(HomeTable.MBLOGID, msg.getId());
+                    cv.put(HomeTable.ACCOUNTID, accountId);
+                    String json = gson.toJson(msg);
+                    cv.put(HomeTable.JSONDATA, json);
+                    getWsd().insert(HomeTable.TABLE_NAME,
+                            HomeTable.ID, cv);
+                } else {
+                    ContentValues cv = new ContentValues();
+                    cv.put(HomeTable.MBLOGID, "-1");
+                    cv.put(HomeTable.ACCOUNTID, accountId);
+                    cv.put(HomeTable.JSONDATA, "");
+                    getWsd().insert(HomeTable.TABLE_NAME,
+                            HomeTable.ID, cv);
+                }
             }
+            getWsd().setTransactionSuccessful();
+        } catch (SQLException e) {
+        } finally {
+            getWsd().endTransaction();
         }
-
         reduceHomeTable(accountId);
     }
 
