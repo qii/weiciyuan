@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -39,14 +40,21 @@ public class MentionCommentsTimeLineDBTask {
     public static void addCommentLineMsg(CommentListBean list, String accountId) {
         Gson gson = new Gson();
         List<CommentBean> msgList = list.getItemList();
-        for (CommentBean msg : msgList) {
-            ContentValues cv = new ContentValues();
-            cv.put(MentionCommentsTable.MBLOGID, msg.getId());
-            cv.put(MentionCommentsTable.ACCOUNTID, accountId);
-            String json = gson.toJson(msg);
-            cv.put(MentionCommentsTable.JSONDATA, json);
-            getWsd().insert(MentionCommentsTable.TABLE_NAME,
-                    MentionCommentsTable.ID, cv);
+        try {
+            getWsd().beginTransaction();
+            for (CommentBean msg : msgList) {
+                ContentValues cv = new ContentValues();
+                cv.put(MentionCommentsTable.MBLOGID, msg.getId());
+                cv.put(MentionCommentsTable.ACCOUNTID, accountId);
+                String json = gson.toJson(msg);
+                cv.put(MentionCommentsTable.JSONDATA, json);
+                getWsd().insert(MentionCommentsTable.TABLE_NAME,
+                        MentionCommentsTable.ID, cv);
+            }
+            getWsd().setTransactionSuccessful();
+        } catch (SQLException e) {
+        } finally {
+            getWsd().endTransaction();
         }
         reduceCommentTable(accountId);
     }

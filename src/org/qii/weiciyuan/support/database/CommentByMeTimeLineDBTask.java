@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -39,14 +40,21 @@ public class CommentByMeTimeLineDBTask {
     public static void addCommentLineMsg(CommentListBean list, String accountId) {
         Gson gson = new Gson();
         List<CommentBean> msgList = list.getItemList();
-        for (CommentBean msg : msgList) {
-            ContentValues cv = new ContentValues();
-            cv.put(CommentByMeTable.MBLOGID, msg.getId());
-            cv.put(CommentByMeTable.ACCOUNTID, accountId);
-            String json = gson.toJson(msg);
-            cv.put(CommentByMeTable.JSONDATA, json);
-            getWsd().insert(CommentByMeTable.TABLE_NAME,
-                    CommentByMeTable.ID, cv);
+        try {
+            getWsd().beginTransaction();
+            for (CommentBean msg : msgList) {
+                ContentValues cv = new ContentValues();
+                cv.put(CommentByMeTable.MBLOGID, msg.getId());
+                cv.put(CommentByMeTable.ACCOUNTID, accountId);
+                String json = gson.toJson(msg);
+                cv.put(CommentByMeTable.JSONDATA, json);
+                getWsd().insert(CommentByMeTable.TABLE_NAME,
+                        CommentByMeTable.ID, cv);
+            }
+            getWsd().setTransactionSuccessful();
+        } catch (SQLException e) {
+        } finally {
+            getWsd().endTransaction();
         }
         reduceCommentTable(accountId);
     }

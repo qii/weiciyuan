@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import com.google.gson.Gson;
@@ -45,29 +46,34 @@ public class HomeOtherGroupTimeLineDBTask {
 
         Gson gson = new Gson();
         List<MessageBean> msgList = list.getItemList();
-
-        for (int i = 0; i < msgList.size(); i++) {
-            MessageBean msg = msgList.get(i);
-            if (msg != null) {
-                ContentValues cv = new ContentValues();
-                cv.put(HomeOtherGroupTable.MBLOGID, msg.getId());
-                cv.put(HomeOtherGroupTable.ACCOUNTID, accountId);
-                String json = gson.toJson(msg);
-                cv.put(HomeOtherGroupTable.JSONDATA, json);
-                cv.put(HomeOtherGroupTable.GROUPID, groupId);
-                getWsd().insert(HomeOtherGroupTable.TABLE_NAME,
-                        HomeOtherGroupTable.ID, cv);
-            } else {
-                ContentValues cv = new ContentValues();
-                cv.put(HomeOtherGroupTable.MBLOGID, "-1");
-                cv.put(HomeOtherGroupTable.ACCOUNTID, accountId);
-                cv.put(HomeOtherGroupTable.JSONDATA, "");
-                cv.put(HomeOtherGroupTable.GROUPID, groupId);
-                getWsd().insert(HomeOtherGroupTable.TABLE_NAME,
-                        HomeOtherGroupTable.ID, cv);
+        try {
+            getWsd().beginTransaction();
+            for (int i = 0; i < msgList.size(); i++) {
+                MessageBean msg = msgList.get(i);
+                if (msg != null) {
+                    ContentValues cv = new ContentValues();
+                    cv.put(HomeOtherGroupTable.MBLOGID, msg.getId());
+                    cv.put(HomeOtherGroupTable.ACCOUNTID, accountId);
+                    String json = gson.toJson(msg);
+                    cv.put(HomeOtherGroupTable.JSONDATA, json);
+                    cv.put(HomeOtherGroupTable.GROUPID, groupId);
+                    getWsd().insert(HomeOtherGroupTable.TABLE_NAME,
+                            HomeOtherGroupTable.ID, cv);
+                } else {
+                    ContentValues cv = new ContentValues();
+                    cv.put(HomeOtherGroupTable.MBLOGID, "-1");
+                    cv.put(HomeOtherGroupTable.ACCOUNTID, accountId);
+                    cv.put(HomeOtherGroupTable.JSONDATA, "");
+                    cv.put(HomeOtherGroupTable.GROUPID, groupId);
+                    getWsd().insert(HomeOtherGroupTable.TABLE_NAME,
+                            HomeOtherGroupTable.ID, cv);
+                }
             }
+            getWsd().setTransactionSuccessful();
+        } catch (SQLException e) {
+        } finally {
+            getWsd().endTransaction();
         }
-
         reduceHomeOtherGroupTable(accountId, groupId);
     }
 

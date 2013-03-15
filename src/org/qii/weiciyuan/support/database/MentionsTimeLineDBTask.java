@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -66,17 +67,23 @@ public class MentionsTimeLineDBTask {
         Gson gson = new Gson();
         List<MessageBean> msgList = list.getItemList();
         int size = msgList.size();
-        for (int i = 0; i < size; i++) {
-            MessageBean msg = msgList.get(i);
-            ContentValues cv = new ContentValues();
-            cv.put(RepostsTable.MBLOGID, msg.getId());
-            cv.put(RepostsTable.ACCOUNTID, accountId);
-            String json = gson.toJson(msg);
-            cv.put(RepostsTable.JSONDATA, json);
-            getWsd().insert(RepostsTable.TABLE_NAME,
-                    RepostsTable.ID, cv);
+        try {
+            getWsd().beginTransaction();
+            for (int i = 0; i < size; i++) {
+                MessageBean msg = msgList.get(i);
+                ContentValues cv = new ContentValues();
+                cv.put(RepostsTable.MBLOGID, msg.getId());
+                cv.put(RepostsTable.ACCOUNTID, accountId);
+                String json = gson.toJson(msg);
+                cv.put(RepostsTable.JSONDATA, json);
+                getWsd().insert(RepostsTable.TABLE_NAME,
+                        RepostsTable.ID, cv);
+            }
+            getWsd().setTransactionSuccessful();
+        } catch (SQLException e) {
+        } finally {
+            getWsd().endTransaction();
         }
-
         reduceRepostTable(accountId);
     }
 

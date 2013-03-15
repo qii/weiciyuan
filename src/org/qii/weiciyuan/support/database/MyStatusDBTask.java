@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -43,17 +44,22 @@ public class MyStatusDBTask {
 
         Gson gson = new Gson();
         List<MessageBean> msgList = list.getItemList();
-
-        for (MessageBean msg : msgList) {
-            ContentValues cv = new ContentValues();
-            cv.put(MyStatusTable.MBLOGID, msg.getId());
-            cv.put(MyStatusTable.ACCOUNTID, accountId);
-            String json = gson.toJson(msg);
-            cv.put(MyStatusTable.JSONDATA, json);
-            getWsd().insert(MyStatusTable.TABLE_NAME,
-                    MyStatusTable.ID, cv);
+        try {
+            getWsd().beginTransaction();
+            for (MessageBean msg : msgList) {
+                ContentValues cv = new ContentValues();
+                cv.put(MyStatusTable.MBLOGID, msg.getId());
+                cv.put(MyStatusTable.ACCOUNTID, accountId);
+                String json = gson.toJson(msg);
+                cv.put(MyStatusTable.JSONDATA, json);
+                getWsd().insert(MyStatusTable.TABLE_NAME,
+                        MyStatusTable.ID, cv);
+            }
+            getWsd().setTransactionSuccessful();
+        } catch (SQLException e) {
+        } finally {
+            getWsd().endTransaction();
         }
-
         reduceTableSize(accountId);
 
     }
