@@ -102,9 +102,7 @@ public class ListViewTool {
         }
     }
 
-    public static void addJustHighLightLinksOnlyReplyComment(CommentBean bean) {
-
-
+    private static void addJustHighLightLinksOnlyReplyComment(CommentBean bean) {
         String name = "";
         UserBean reUser = bean.getUser();
         if (reUser != null) {
