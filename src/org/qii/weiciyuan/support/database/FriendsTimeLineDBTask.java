@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
@@ -46,31 +47,32 @@ public class FriendsTimeLineDBTask {
 
         Gson gson = new Gson();
         List<MessageBean> msgList = list.getItemList();
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), HomeTable.TABLE_NAME);
+        final int mblogidColumn = ih.getColumnIndex(HomeTable.MBLOGID);
+        final int accountidColumn = ih.getColumnIndex(HomeTable.ACCOUNTID);
+        final int jsondataColumn = ih.getColumnIndex(HomeTable.JSONDATA);
         try {
             getWsd().beginTransaction();
             for (int i = 0; i < msgList.size(); i++) {
                 MessageBean msg = msgList.get(i);
+                ih.prepareForInsert();
                 if (msg != null) {
-                    ContentValues cv = new ContentValues();
-                    cv.put(HomeTable.MBLOGID, msg.getId());
-                    cv.put(HomeTable.ACCOUNTID, accountId);
+                    ih.bind(mblogidColumn, msg.getId());
+                    ih.bind(accountidColumn, accountId);
                     String json = gson.toJson(msg);
-                    cv.put(HomeTable.JSONDATA, json);
-                    getWsd().insert(HomeTable.TABLE_NAME,
-                            HomeTable.ID, cv);
+                    ih.bind(jsondataColumn, json);
                 } else {
-                    ContentValues cv = new ContentValues();
-                    cv.put(HomeTable.MBLOGID, "-1");
-                    cv.put(HomeTable.ACCOUNTID, accountId);
-                    cv.put(HomeTable.JSONDATA, "");
-                    getWsd().insert(HomeTable.TABLE_NAME,
-                            HomeTable.ID, cv);
+                    ih.bind(mblogidColumn, "-1");
+                    ih.bind(accountidColumn, accountId);
+                    ih.bind(jsondataColumn, "");
                 }
+                ih.execute();
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
         } finally {
             getWsd().endTransaction();
+            ih.close();
         }
         reduceHomeTable(accountId);
     }
