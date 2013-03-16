@@ -26,7 +26,7 @@
         android:toXDelta="100%p"
         android:duration="300"/>
     <alpha
-
+        android:startOffset="100"
         android:fromAlpha="1.0"
         android:toAlpha="0.5"
         android:duration="300"/>

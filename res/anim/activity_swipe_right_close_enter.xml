@@ -9,5 +9,6 @@
         android:toYScale="1.0"
         android:pivotX="50%p"
         android:pivotY="50%p"
+        android:startOffset="300"
         android:duration="300"/>
 </set>
