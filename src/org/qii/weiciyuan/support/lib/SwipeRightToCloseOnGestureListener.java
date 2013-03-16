@@ -39,7 +39,7 @@ public class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOn
         if (e2.getRawX() - e1.getRawX() > AppConfig.SWIPE_MIN_DISTANCE
                 && this.viewPager.getCurrentItem() == 0 && Math.abs(velocityX) > scaledMinimumFlingVelocity) {
             this.activity.finish();
-            this.activity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            this.activity.overridePendingTransition(R.anim.activity_swipe_right_close_enter, R.anim.activity_swipe_right_close_exit);
             return true;
         }
         return false;
