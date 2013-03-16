@@ -21,7 +21,7 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     >
     <translate
-
+        android:interpolator="@android:interpolator/accelerate_cubic"
         android:fromXDelta="0"
         android:toXDelta="100%p"
         android:duration="300"/>
