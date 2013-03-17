@@ -27,8 +27,15 @@ public class MyViewPager extends ViewPager {
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
+    public boolean onTouchEvent(MotionEvent ev) {
         if (this.gestureDetector != null)
+            this.gestureDetector.onTouchEvent(ev);
+        return super.onTouchEvent(ev);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (this.gestureDetector != null && ev.getActionMasked() == MotionEvent.ACTION_DOWN)
             this.gestureDetector.onTouchEvent(ev);
         return super.dispatchTouchEvent(ev);
 
