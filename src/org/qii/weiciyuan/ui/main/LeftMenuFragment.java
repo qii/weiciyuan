@@ -6,14 +6,16 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.dm.DMUserListActivity;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.nearby.NearbyTimeLineActivity;
@@ -29,7 +31,9 @@ import java.util.List;
  * User: qii
  * Date: 13-1-22
  */
-public class LeftMenuFragment extends PreferenceFragment {
+public class LeftMenuFragment extends AbstractAppFragment {
+
+    private Layout layout;
 
     private List<Fragment> commentFragments = new ArrayList<Fragment>();
     private List<Fragment> mentionFragments = new ArrayList<Fragment>();
@@ -44,79 +48,71 @@ public class LeftMenuFragment extends PreferenceFragment {
         final View fl = getActivity().findViewById(R.id.menu_right_fl);
 
 
-        findPreference("a").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        layout.home.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
-                if (showHomePage(fl, mentionVP, commentVP)) return true;
-                return true;
+            public void onClick(View v) {
+                showHomePage(fl, mentionVP, commentVP);
             }
         });
 
-        findPreference("b").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        layout.mention.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
-                if (showMentionPage(fl, mentionVP, commentVP)) return true;
-
-                return true;
+            public void onClick(View v) {
+                showMentionPage(fl, mentionVP, commentVP);
             }
         });
 
-        findPreference("c").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        layout.comment.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
-                if (showCommentPage(commentVP, fl, mentionVP)) return true;
-                return true;
+            public void onClick(View v) {
+                showCommentPage(commentVP, fl, mentionVP);
             }
         });
 
-        findPreference("d").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        layout.dm.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
+            public void onClick(View v) {
                 showDMPage();
-                return true;
             }
         });
 
-        findPreference("e").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        layout.search.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
+            public void onClick(View v) {
                 showSearchPage();
-                return true;
             }
         });
 
-        findPreference("f").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        layout.setting.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
+            public void onClick(View v) {
                 showSettingPage();
-                return true;
             }
         });
 
-        findPreference("g").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        layout.logout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
+            public void onClick(View v) {
                 showAccountSwitchPage();
-                return true;
             }
         });
 
 
-        findPreference("i").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        layout.profile.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
+            public void onClick(View v) {
                 openMyProfile();
-                return true;
             }
         });
 
-        findPreference("j").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        layout.location.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
+            public void onClick(View v) {
                 startActivity(new Intent(getActivity(), NearbyTimeLineActivity.class));
-                return true;
+
             }
         });
+
     }
 
     private void openMyProfile() {
@@ -345,11 +341,23 @@ public class LeftMenuFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        addPreferencesFromResource(R.xml.slidingmenu_layout);
-
-
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.slidingdrawer_contents, container, false);
+        layout = new Layout();
+        layout.home = (Button) view.findViewById(R.id.btn_home);
+        layout.mention = (Button) view.findViewById(R.id.btn_mention);
+        layout.comment = (Button) view.findViewById(R.id.btn_comment);
+        layout.search = (Button) view.findViewById(R.id.btn_search);
+        layout.profile = (Button) view.findViewById(R.id.btn_profile);
+        layout.location = (Button) view.findViewById(R.id.btn_location);
+        layout.setting = (Button) view.findViewById(R.id.btn_setting);
+        layout.dm = (Button) view.findViewById(R.id.btn_dm);
+        layout.logout = (Button) view.findViewById(R.id.btn_logout);
+        return view;
+    }
 
     ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
         @Override
@@ -369,5 +377,17 @@ public class LeftMenuFragment extends PreferenceFragment {
 
     private SlidingMenu getSlidingMenu() {
         return ((MainTimeLineActivity) getActivity()).getSlidingMenu();
+    }
+
+    private class Layout {
+        Button home;
+        Button mention;
+        Button comment;
+        Button search;
+        Button location;
+        Button dm;
+        Button logout;
+        Button profile;
+        Button setting;
     }
 }

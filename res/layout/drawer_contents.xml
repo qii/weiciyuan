@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <View
+        android:background="#ff666666"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dip"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"/>
+
+    <Button
+        android:textSize="@dimen/drawerTextSize"
+        android:textColor="@android:color/white"
+        android:gravity="left|center"
+        android:id="@+id/btn_home"
+        android:tag="subreddits"
+        android:background="@drawable/btn_drawer_menu"
+        android:paddingLeft="8.0dip"
+        android:paddingRight="8.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:text="主页"
+        android:drawableLeft="@drawable/ic_menu_search"
+        android:drawablePadding="8.0dip"/>
+
+    <View
+        android:background="#ff4c4c4c"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"/>
+
+    <Button
+        android:textSize="@dimen/drawerTextSize"
+        android:textColor="@android:color/white"
+        android:gravity="left|center"
+        android:id="@+id/btn_mention"
+        android:tag="casual"
+        android:background="@drawable/btn_drawer_menu"
+        android:paddingLeft="8.0dip"
+        android:paddingRight="8.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:text="提及"
+        android:drawableLeft="@drawable/ic_menu_search"
+        android:drawablePadding="8.0dip"/>
+
+    <View
+        android:background="#ff4c4c4c"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"/>
+
+    <Button
+        android:textSize="@dimen/drawerTextSize"
+        android:textColor="@android:color/white"
+        android:gravity="left|center"
+        android:id="@+id/btn_comment"
+        android:tag="search"
+        android:background="@drawable/btn_drawer_menu"
+        android:paddingLeft="8.0dip"
+        android:paddingRight="8.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:text="评论"
+        android:drawableLeft="@drawable/ic_menu_search"
+        android:drawablePadding="8.0dip"/>
+
+    <View
+        android:background="#ff4c4c4c"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"/>
+
+    <Button
+        android:textSize="@dimen/drawerTextSize"
+        android:textColor="@android:color/white"
+        android:gravity="left|center"
+        android:id="@+id/btn_search"
+        android:tag="profile"
+        android:background="@drawable/btn_drawer_menu"
+        android:paddingLeft="8.0dip"
+        android:paddingRight="8.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:text="搜索"
+        android:drawableLeft="@drawable/ic_menu_profile"
+        android:drawablePadding="8.0dip"/>
+
+    <View
+        android:background="#ff4c4c4c"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"/>
+
+    <Button
+        android:textSize="@dimen/drawerTextSize"
+        android:textColor="@android:color/white"
+        android:gravity="left|center"
+        android:id="@+id/btn_dm"
+        android:tag="saved"
+        android:background="@drawable/btn_drawer_menu"
+        android:paddingLeft="8.0dip"
+        android:paddingRight="8.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:text="私信"
+        android:drawableLeft="@drawable/ic_menu_favourite"
+        android:drawablePadding="8.0dip"/>
+
+    <View
+        android:background="#ff4c4c4c"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"/>
+
+    <Button
+        android:textSize="@dimen/drawerTextSize"
+        android:textColor="@android:color/white"
+        android:gravity="left|center"
+        android:id="@+id/btn_location"
+        android:tag="messaging"
+        android:background="@drawable/btn_drawer_menu"
+        android:paddingLeft="8.0dip"
+        android:paddingRight="8.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:text="周边"
+        android:drawableLeft="@drawable/ic_menu_message"
+        android:drawablePadding="8.0dip"/>
+
+    <View
+        android:background="#ff4c4c4c"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"/>
+
+    <Button
+        android:textSize="@dimen/drawerTextSize"
+        android:textColor="@android:color/white"
+        android:gravity="left|center"
+        android:id="@+id/btn_profile"
+        android:tag="sync"
+        android:background="@drawable/btn_drawer_menu"
+        android:paddingLeft="8.0dip"
+        android:paddingRight="8.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:text="个人资料"
+        android:drawableLeft="@drawable/ic_menu_sync"
+        android:drawablePadding="8.0dip"/>
+
+    <View
+        android:background="#ff4c4c4c"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"/>
+
+    <Button
+        android:textSize="@dimen/drawerTextSize"
+        android:textColor="@android:color/white"
+        android:gravity="left|center"
+        android:id="@+id/btn_logout"
+        android:tag="log"
+        android:background="@drawable/btn_drawer_menu"
+        android:paddingLeft="8.0dip"
+        android:paddingRight="8.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:text="注销"
+        android:drawableLeft="@drawable/ic_menu_logout"
+        android:drawablePadding="8.0dip"/>
+
+    <View
+        android:background="#ff4c4c4c"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"/>
+
+    <Button
+        android:textSize="@dimen/drawerTextSize"
+        android:textColor="@android:color/white"
+        android:gravity="left|center"
+        android:id="@+id/btn_setting"
+        android:tag="settings"
+        android:background="@drawable/btn_drawer_menu"
+        android:paddingLeft="8.0dip"
+        android:paddingRight="8.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:text="设置"
+        android:drawableLeft="@drawable/ic_menu_settings"
+        android:drawablePadding="8.0dip"/>
+
+    <View
+        android:background="#ff4c4c4c"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"/>
+</merge>

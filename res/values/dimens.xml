@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<dimen name="none">10dp</dimen>
+    <dimen name="none">10dp</dimen>
     <dimen name="timeline_avatar_height">40dp</dimen>
     <dimen name="timeline_avatar_width">40dp</dimen>
 
@@ -12,4 +12,5 @@
     <dimen name="profile_avatar_height">70dp</dimen>
     <dimen name="profile_avatar_width">70dp</dimen>
 
+    <dimen name="drawerTextSize">16.0dip</dimen>
 </resources>
