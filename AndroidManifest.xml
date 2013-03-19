@@ -60,7 +60,7 @@
         <!--main activity -->
         <activity
             android:name=".ui.main.MainTimeLineActivity"
-
+            android:uiOptions="splitActionBarWhenNarrow"
             android:launchMode="singleTop"/>
 
         <!--send activity -->

@@ -8,7 +8,10 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -28,6 +31,7 @@ import org.qii.weiciyuan.ui.dm.DMUserListFragment;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.maintimeline.*;
+import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -182,6 +186,29 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         getWindow().setBackgroundDrawable(null);
         setContentView(R.layout.menu_right);
         setBehindContentView(R.layout.menu_frame);
+
+        View title = getLayoutInflater().inflate(R.layout.maintimelineactivity_title_layout, null);
+
+        View clickToTop = title.findViewById(R.id.tv_click_to_top);
+        clickToTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOrNewFriendsTimeLineFragment().getListView().smoothScrollToPositionFromTop(0, 0);
+            }
+        });
+        View write = title.findViewById(R.id.btn_write);
+        write.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainTimeLineActivity.this, WriteWeiboActivity.class);
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
+                startActivity(intent);
+            }
+        });
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.RIGHT);
+        actionBar.setCustomView(title, layoutParams);
+        actionBar.setDisplayShowCustomEnabled(true);
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
