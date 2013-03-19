@@ -100,13 +100,7 @@ public class LeftMenuFragment extends PreferenceFragment {
                 return true;
             }
         });
-        findPreference("h").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                openWriteWeibo();
-                return true;
-            }
-        });
+
 
         findPreference("i").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -210,7 +204,8 @@ public class LeftMenuFragment extends PreferenceFragment {
         };
 
         ActionBar actionBar = getActivity().getActionBar();
-        getActivity().getActionBar().setTitle(getString(R.string.comments));
+        actionBar.setTitle(getString(R.string.comments));
+        actionBar.setDisplayShowTitleEnabled(true);
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.removeAllTabs();

@@ -38,10 +38,6 @@
         android:title="登出"
         />
 
-    <Preference
-        android:key="h"
-        android:title="写微博"
-        />
 
     <Preference
         android:key="i"
