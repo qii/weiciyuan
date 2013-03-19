@@ -44,7 +44,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
         android:text="提及"
-        android:drawableLeft="@drawable/ic_menu_search"
+        android:drawableLeft="@drawable/repost_light"
         android:drawablePadding="8.0dip"/>
 
     <View
@@ -66,7 +66,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
         android:text="评论"
-        android:drawableLeft="@drawable/ic_menu_search"
+        android:drawableLeft="@drawable/comment_light"
         android:drawablePadding="8.0dip"/>
 
     <View
@@ -88,7 +88,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
         android:text="搜索"
-        android:drawableLeft="@drawable/ic_menu_profile"
+        android:drawableLeft="@drawable/ic_menu_search"
         android:drawablePadding="8.0dip"/>
 
     <View
@@ -110,7 +110,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
         android:text="私信"
-        android:drawableLeft="@drawable/ic_menu_favourite"
+        android:drawableLeft="@drawable/ic_menu_message"
         android:drawablePadding="8.0dip"/>
 
     <View
@@ -132,7 +132,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
         android:text="周边"
-        android:drawableLeft="@drawable/ic_menu_message"
+        android:drawableLeft="@drawable/ic_menu_location"
         android:drawablePadding="8.0dip"/>
 
     <View
@@ -154,7 +154,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
         android:text="个人资料"
-        android:drawableLeft="@drawable/ic_menu_sync"
+        android:drawableLeft="@drawable/ic_menu_profile"
         android:drawablePadding="8.0dip"/>
 
     <View
