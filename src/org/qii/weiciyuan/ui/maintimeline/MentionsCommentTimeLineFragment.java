@@ -106,11 +106,12 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisible() && isVisibleToUser) {
-//            if (getActivity().getActionBar().getTabAt(0).getText().toString().contains(")")) {
-//                getPullToRefreshListView().startRefreshNow();
-//            }
-//        }
+        if (isVisible() && isVisibleToUser) {
+            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+            if (getActivity().getActionBar().getTabAt(1).getText().toString().contains(")")) {
+                getPullToRefreshListView().startRefreshNow();
+            }
+        }
     }
 
     @Override

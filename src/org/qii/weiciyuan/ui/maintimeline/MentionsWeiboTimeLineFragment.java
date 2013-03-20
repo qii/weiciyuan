@@ -20,6 +20,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -107,6 +108,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisible() && isVisibleToUser) {
+            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
             if (getActivity().getActionBar().getTabAt(1).getText().toString().contains(")")) {
                 getPullToRefreshListView().startRefreshNow();
             }

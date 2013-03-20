@@ -140,6 +140,15 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     }
 
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisible() && isVisibleToUser) {
+            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+        }
+    }
+
     @Override
     public void removeItem(int position) {
         clearActionMode();

@@ -14,6 +14,7 @@ import android.widget.Button;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.dm.DMUserListActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.login.AccountActivity;
@@ -173,9 +174,18 @@ public class LeftMenuFragment extends AbstractAppFragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (commentVP.getAdapter() == null)
+                if (commentVP.getAdapter() == null) {
                     commentVP.setAdapter(new CommentsTimeLinePagerAdapter(getFragmentManager(), (MainTimeLineActivity) getActivity(), commentFragments));
+                }
 
+                int index = commentVP.getCurrentItem();
+                AbstractTimeLineFragment currentFragment;
+                if (index == 0) {
+                    currentFragment = ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment();
+                } else {
+                    currentFragment = ((MainTimeLineActivity) getActivity()).getCommentsByMeTimeLineFragment();
+                }
+                ((MainTimeLineActivity) getActivity()).setCurrentFragment(currentFragment);
 
             }
         }, 500);
@@ -326,12 +336,22 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 .setTabListener(tabListener));
         mentionVP.setOnPageChangeListener(onPageChangeListener);
 
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mentionVP.getAdapter() == null)
+                if (mentionVP.getAdapter() == null) {
                     mentionVP.setAdapter(new MentionsTimeLinePagerAdapter(getFragmentManager(), (MainTimeLineActivity) getActivity(), mentionFragments));
+                }
 
+                int index = mentionVP.getCurrentItem();
+                AbstractTimeLineFragment currentFragment;
+                if (index == 0) {
+                    currentFragment = ((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment();
+                } else {
+                    currentFragment = ((MainTimeLineActivity) getActivity()).getMentionsCommentTimeLineFragment();
+                }
+                ((MainTimeLineActivity) getActivity()).setCurrentFragment(currentFragment);
 
             }
         }, 500);

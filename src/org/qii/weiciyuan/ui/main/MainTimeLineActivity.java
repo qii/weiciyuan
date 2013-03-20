@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -27,6 +28,7 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.maintimeline.*;
@@ -192,7 +194,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         clickToTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFriendsTimeLineFragment().getListView().smoothScrollToPositionFromTop(0, 0);
+                scrollCurrentListViewToTop();
             }
         });
         View write = title.findViewById(R.id.btn_write);
@@ -232,6 +234,23 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         slidingMenu.setFadeDegree(0.35f);
 
 
+    }
+
+    private AbstractTimeLineFragment currentFragment;
+
+    private void scrollCurrentListViewToTop() {
+        ListView listView;
+        if (currentFragment == null) {
+            listView = getFriendsTimeLineFragment().getListView();
+        } else {
+            listView = currentFragment.getListView();
+        }
+        listView.smoothScrollToPositionFromTop(0, 0);
+
+    }
+
+    public void setCurrentFragment(AbstractTimeLineFragment fragment) {
+        this.currentFragment = fragment;
     }
 
     @Override

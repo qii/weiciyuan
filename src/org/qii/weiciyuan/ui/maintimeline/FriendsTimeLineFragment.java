@@ -187,6 +187,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             buildActionBarNav();
+            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
         }
     }
 
