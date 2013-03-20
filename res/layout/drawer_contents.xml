@@ -21,7 +21,7 @@
         android:paddingRight="8.0dip"
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
-        android:text="主页"
+        android:text="@string/home"
         android:drawableLeft="@drawable/ic_menu_home"
         android:drawablePadding="8.0dip"/>
 
@@ -43,7 +43,7 @@
         android:paddingRight="8.0dip"
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
-        android:text="提及"
+        android:text="@string/mentions"
         android:drawableLeft="@drawable/repost_light"
         android:drawablePadding="8.0dip"/>
 
@@ -65,7 +65,7 @@
         android:paddingRight="8.0dip"
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
-        android:text="评论"
+        android:text="@string/comments"
         android:drawableLeft="@drawable/comment_light"
         android:drawablePadding="8.0dip"/>
 
@@ -87,7 +87,7 @@
         android:paddingRight="8.0dip"
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
-        android:text="搜索"
+        android:text="@string/search"
         android:drawableLeft="@drawable/ic_menu_search"
         android:drawablePadding="8.0dip"/>
 
@@ -109,7 +109,7 @@
         android:paddingRight="8.0dip"
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
-        android:text="私信"
+        android:text="@string/dm"
         android:drawableLeft="@drawable/ic_menu_message"
         android:drawablePadding="8.0dip"/>
 
@@ -131,7 +131,7 @@
         android:paddingRight="8.0dip"
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
-        android:text="周边"
+        android:text="@string/nearby"
         android:drawableLeft="@drawable/ic_menu_location"
         android:drawablePadding="8.0dip"/>
 
@@ -153,7 +153,7 @@
         android:paddingRight="8.0dip"
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
-        android:text="个人资料"
+        android:text="@string/profile"
         android:drawableLeft="@drawable/ic_menu_profile"
         android:drawablePadding="8.0dip"/>
 
@@ -175,7 +175,7 @@
         android:paddingRight="8.0dip"
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
-        android:text="注销"
+        android:text="@string/logout"
         android:drawableLeft="@drawable/ic_menu_logout"
         android:drawablePadding="8.0dip"/>
 
@@ -197,7 +197,7 @@
         android:paddingRight="8.0dip"
         android:layout_width="fill_parent"
         android:layout_height="50.0dip"
-        android:text="设置"
+        android:text="@string/setting"
         android:drawableLeft="@drawable/ic_menu_settings"
         android:drawablePadding="8.0dip"/>
 

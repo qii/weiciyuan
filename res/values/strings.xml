@@ -2,7 +2,10 @@
 <resources>
     <string name="app_name">四次元</string>
 
-    <string name="homepage">首页</string>
+    <!--drawer menu-->
+    <string name="home">首页</string>
+    <string name="profile">个人资料</string>
+    <string name="logout">注销</string>
     <string name="detail">正文</string>
     <string name="weibo">微博</string>
 
@@ -196,7 +199,7 @@
 
     <!--map-->
     <string name="browser_map">查看地图</string>
-    <string name="nearby">周边2000米的微博</string>
+    <string name="nearby">周边</string>
 
     <!--friends-->
     <string name="bilateral">互相关注</string>
