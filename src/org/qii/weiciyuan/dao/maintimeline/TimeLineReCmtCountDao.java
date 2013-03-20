@@ -63,10 +63,9 @@ public class TimeLineReCmtCountDao {
     public TimeLineReCmtCountDao(String access_token, List<String> msgIds) {
         if (msgIds == null)
             throw new IllegalArgumentException("msgIds cant be null");
-        if (msgIds.size() > 100)
-            throw new IllegalArgumentException("msgIds size cant be more than 100");
+        int size = (msgIds.size() >= 100 ? 99 : msgIds.size());
         this.msgIds = new ArrayList<String>();
         this.access_token = access_token;
-        this.msgIds.addAll(msgIds);
+        this.msgIds.addAll(msgIds.subList(0, size));
     }
 }
