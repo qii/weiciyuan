@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -55,8 +56,23 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
     private MusicReceiver musicReceiver;
 
+    private AbstractTimeLineFragment currentFragment;
+
+    private TextView titleText;
+
+
     public String getToken() {
         return accountBean.getAccess_token();
+    }
+
+
+    public void setTitle(String title) {
+        if (TextUtils.isEmpty(title)) {
+            titleText.setVisibility(View.GONE);
+        } else {
+            titleText.setText(title);
+            titleText.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -179,7 +195,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         }
     }
 
-
     private void buildPhoneInterface(Bundle savedInstanceState) {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -189,7 +204,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         setBehindContentView(R.layout.menu_frame);
 
         View title = getLayoutInflater().inflate(R.layout.maintimelineactivity_title_layout, null);
-
+        titleText = (TextView) title.findViewById(R.id.tv_title);
         View clickToTop = title.findViewById(R.id.tv_click_to_top);
         clickToTop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,7 +251,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
     }
 
-    private AbstractTimeLineFragment currentFragment;
 
     private void scrollCurrentListViewToTop() {
         ListView listView;

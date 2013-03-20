@@ -210,9 +210,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         };
 
         ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setTitle(getString(R.string.comments));
-        actionBar.setDisplayShowTitleEnabled(true);
-
+        setTitle(getString(R.string.comments));
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.removeAllTabs();
         actionBar.addTab(actionBar.newTab()
@@ -267,7 +265,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         fl.setVisibility(View.VISIBLE);
         mentionVP.setVisibility(View.GONE);
         commentVP.setVisibility(View.GONE);
-
+        setTitle("");
 
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
         return false;
@@ -324,7 +322,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         };
 
         ActionBar actionBar = getActivity().getActionBar();
-        getActivity().getActionBar().setTitle(getString(R.string.mentions));
+        setTitle(getString(R.string.mentions));
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.removeAllTabs();
         actionBar.addTab(actionBar.newTab()
@@ -399,6 +397,10 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private SlidingMenu getSlidingMenu() {
         return ((MainTimeLineActivity) getActivity()).getSlidingMenu();
+    }
+
+    private void setTitle(String title) {
+        ((MainTimeLineActivity) getActivity()).setTitle(title);
     }
 
     private class Layout {
