@@ -206,11 +206,11 @@ public class LeftMenuFragment extends AbstractAppFragment {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.removeAllTabs();
         actionBar.addTab(actionBar.newTab()
-                .setText("收到的评论")
+                .setText(R.string.all_people_send_to_me)
                 .setTabListener(tabListener));
 
         actionBar.addTab(actionBar.newTab()
-                .setText("发出的评论")
+                .setText(R.string.my_comment)
                 .setTabListener(tabListener));
         commentVP.setOnPageChangeListener(onPageChangeListener);
 
@@ -318,11 +318,11 @@ public class LeftMenuFragment extends AbstractAppFragment {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.removeAllTabs();
         actionBar.addTab(actionBar.newTab()
-                .setText("@的微博")
+                .setText(R.string.mentions_weibo)
                 .setTabListener(tabListener));
 
         actionBar.addTab(actionBar.newTab()
-                .setText("@的评论")
+                .setText(R.string.mentions_to_me)
                 .setTabListener(tabListener));
         mentionVP.setOnPageChangeListener(onPageChangeListener);
 
