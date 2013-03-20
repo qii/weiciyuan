@@ -157,7 +157,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
         currentIndex = 2;
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment fragment = ((MainTimeLineActivity) getActivity()).getOrNewFriendsTimeLineFragment();
+        Fragment fragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
 
         ft.hide(fragment);
 
@@ -243,19 +243,21 @@ public class LeftMenuFragment extends AbstractAppFragment {
             ft.hide(f);
         }
 
-        Fragment fragment = ((MainTimeLineActivity) getActivity()).getOrNewFriendsTimeLineFragment();
+        Fragment fragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
 
         if (fragment.isAdded() && fragment.isHidden()) {
             ft.show(fragment);
         } else if (!fragment.isAdded()) {
             ft.add(R.id.menu_right_fl, fragment, FriendsTimeLineFragment.class.getName());
         }
+
+        ft.commit();
+
         fragment.setUserVisibleHint(true);
         fl.setVisibility(View.VISIBLE);
         mentionVP.setVisibility(View.GONE);
         commentVP.setVisibility(View.GONE);
 
-        ft.commit();
 
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
         return false;
@@ -273,7 +275,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
 
-        Fragment fragment = ((MainTimeLineActivity) getActivity()).getOrNewFriendsTimeLineFragment();
+        Fragment fragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
 
         ft.hide(fragment);
 

@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.main;
 
 import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,8 +27,6 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.dm.DMUserListFragment;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.maintimeline.*;
@@ -193,7 +192,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         clickToTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getOrNewFriendsTimeLineFragment().getListView().smoothScrollToPositionFromTop(0, 0);
+                getFriendsTimeLineFragment().getListView().smoothScrollToPositionFromTop(0, 0);
             }
         });
         View write = title.findViewById(R.id.btn_write);
@@ -211,13 +210,17 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         actionBar.setDisplayShowCustomEnabled(true);
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.menu_frame, newMenuFragment(), LeftMenuFragment.class.getName())
-                    .commit();
-
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.menu_right_fl, newFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName())
-                    .commit();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.menu_frame, getMenuFragment(), LeftMenuFragment.class.getName());
+            fragmentTransaction.replace(R.id.menu_right_fl, getFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName());
+            fragmentTransaction.commit();
+        } else {
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.remove(getMentionsTimeLineFragment());
+            fragmentTransaction.remove(getMentionsCommentTimeLineFragment());
+            fragmentTransaction.remove(getCommentsTimeLineFragment());
+            fragmentTransaction.remove(getCommentsByMeTimeLineFragment());
+            fragmentTransaction.commit();
         }
 
         SlidingMenu slidingMenu = getSlidingMenu();
@@ -315,90 +318,60 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             getUnreadCountTask.cancel(true);
     }
 
-    public FriendsTimeLineFragment getHomeFragment() {
-        return ((FriendsTimeLineFragment) getFragmentManager().findFragmentByTag(
-                FriendsTimeLineFragment.class.getName()));
-    }
 
-    private MentionsWeiboTimeLineFragment getMentionFragment() {
-        return ((MentionsWeiboTimeLineFragment) getFragmentManager().findFragmentByTag(
-                MentionsWeiboTimeLineFragment.class.getName()));
-    }
-
-    private CommentsToMeTimeLineFragment getCommentFragment() {
-        return ((CommentsToMeTimeLineFragment) getFragmentManager().findFragmentByTag(
-                CommentsToMeTimeLineFragment.class.getName()));
-    }
-
-    private AbstractTimeLineFragment getMyFragment() {
-        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
-                MyStatussTimeLineFragment.class.getName()));
-    }
-
-    private AbstractTimeLineFragment getDMFragment() {
-        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
-                DMUserListFragment.class.getName()));
-    }
-
-
-    private LeftMenuFragment getMenuFragment() {
-        return ((LeftMenuFragment) getFragmentManager().findFragmentByTag(
+    public LeftMenuFragment getMenuFragment() {
+        LeftMenuFragment fragment = ((LeftMenuFragment) getFragmentManager().findFragmentByTag(
                 LeftMenuFragment.class.getName()));
+        if (fragment == null) {
+            fragment = new LeftMenuFragment();
+        }
+        return fragment;
+    }
+
+    public MentionsCommentTimeLineFragment getMentionsCommentTimeLineFragment() {
+        MentionsCommentTimeLineFragment fragment = ((MentionsCommentTimeLineFragment) getFragmentManager().findFragmentByTag(
+                MentionsCommentTimeLineFragment.class.getName()));
+        if (fragment == null) {
+            fragment = new MentionsCommentTimeLineFragment(getAccount(), getUser(), getToken());
+        }
+        return fragment;
     }
 
 
-    public LeftMenuFragment newMenuFragment() {
+    public FriendsTimeLineFragment getFriendsTimeLineFragment() {
+        FriendsTimeLineFragment fragment = ((FriendsTimeLineFragment) getFragmentManager().findFragmentByTag(
+                FriendsTimeLineFragment.class.getName()));
+        if (fragment == null)
+            fragment = new FriendsTimeLineFragment(getAccount(), getUser(), getToken());
 
-        if (getHomeFragment() == null)
-            return new LeftMenuFragment();
-        else
-            return getMenuFragment();
+        return fragment;
     }
 
+    public MentionsWeiboTimeLineFragment getMentionsTimeLineFragment() {
+        MentionsWeiboTimeLineFragment fragment = ((MentionsWeiboTimeLineFragment) getFragmentManager().findFragmentByTag(
+                MentionsWeiboTimeLineFragment.class.getName()));
+        if (fragment == null)
+            fragment = new MentionsWeiboTimeLineFragment(getAccount(), getUser(), getToken());
 
-    public FriendsTimeLineFragment getOrNewFriendsTimeLineFragment() {
-        if (getHomeFragment() == null)
-            return new FriendsTimeLineFragment(getAccount(), getUser(), getToken());
-        else
-            return getHomeFragment();
+        return fragment;
     }
 
-    public FriendsTimeLineFragment newFriendsTimeLineFragment() {
+    public CommentsToMeTimeLineFragment getCommentsTimeLineFragment() {
+        CommentsToMeTimeLineFragment fragment = ((CommentsToMeTimeLineFragment) getFragmentManager().findFragmentByTag(
+                CommentsToMeTimeLineFragment.class.getName()));
+        if (fragment == null)
+            fragment = new CommentsToMeTimeLineFragment(getAccount(), getUser(), getToken());
 
-        if (getHomeFragment() == null)
-            return new FriendsTimeLineFragment(getAccount(), getUser(), getToken());
-        else
-            return getHomeFragment();
+        return fragment;
     }
 
-    public MentionsWeiboTimeLineFragment newMentionsTimeLineFragment() {
-        if (getMentionFragment() == null)
-            return new MentionsWeiboTimeLineFragment(getAccount(), getUser(), getToken());
-        else
-            return getMentionFragment();
-    }
-
-    public MentionsCommentTimeLineFragment newMentionsCommentTimeLineFragment() {
-
-        return new MentionsCommentTimeLineFragment(getAccount(), getUser(), getToken());
-
-    }
-
-    public CommentsToMeTimeLineFragment newCommentsTimeLineFragment() {
-
-        if (getCommentFragment() == null)
-            return new CommentsToMeTimeLineFragment(getAccount(), getUser(), getToken());
-        else
-            return getCommentFragment();
-    }
-
-    public CommentsByMeTimeLineFragment newCommentsByMeTimeLineFragment() {
+    public CommentsByMeTimeLineFragment getCommentsByMeTimeLineFragment() {
         CommentsByMeTimeLineFragment fragment = ((CommentsByMeTimeLineFragment) getFragmentManager().findFragmentByTag(
                 CommentsByMeTimeLineFragment.class.getName()));
         if (fragment == null)
-            return new CommentsByMeTimeLineFragment(getAccount(), getUser(), getToken());
-        else
-            return fragment;
+            fragment = new CommentsByMeTimeLineFragment(getAccount(), getUser(), getToken());
+
+        return fragment;
     }
 
 

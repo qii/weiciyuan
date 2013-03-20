@@ -20,8 +20,8 @@ public class CommentsTimeLinePagerAdapter extends AppFragmentPagerAdapter {
     public CommentsTimeLinePagerAdapter(FragmentManager fm, MainTimeLineActivity activity, List<Fragment> fragmentList) {
         super(fm);
         this.fragmentList = fragmentList;
-        fragmentList.add(0, activity.newCommentsTimeLineFragment());
-        fragmentList.add(1, activity.newCommentsByMeTimeLineFragment());
+        fragmentList.add(0, activity.getCommentsTimeLineFragment());
+        fragmentList.add(1, activity.getCommentsByMeTimeLineFragment());
     }
 
 

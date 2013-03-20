@@ -20,8 +20,8 @@ public class MentionsTimeLinePagerAdapter extends AppFragmentPagerAdapter {
     public MentionsTimeLinePagerAdapter(FragmentManager fm, MainTimeLineActivity activity, List<Fragment> fragmentList) {
         super(fm);
         this.fragmentList = fragmentList;
-        fragmentList.add(0, activity.newMentionsTimeLineFragment());
-        fragmentList.add(1, activity.newMentionsCommentTimeLineFragment());
+        fragmentList.add(0, activity.getMentionsTimeLineFragment());
+        fragmentList.add(1, activity.getMentionsCommentTimeLineFragment());
     }
 
 
