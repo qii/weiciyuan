@@ -130,7 +130,7 @@ public class BrowserBigPicActivity extends Activity {
 
         msg = (MessageBean) getIntent().getSerializableExtra("msg");
         if (Utility.isTaskStopped(task)) {
-            task = new PicSimpleBitmapWorkerTask();
+            task = new PicSimpleBitmapWorkerTask(hd);
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
 
@@ -138,7 +138,7 @@ public class BrowserBigPicActivity extends Activity {
 
         String largePath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
         if (new File(largePath).exists()) {
-            hd = true;
+            layout.hd.setVisibility(View.GONE);
         }
     }
 
@@ -168,11 +168,9 @@ public class BrowserBigPicActivity extends Activity {
                     if (!TextUtils.isEmpty(path)) {
                         new File(path).delete();
                     }
-                    if (!hd) {
-                        task = new PicSimpleBitmapWorkerTask();
-                    } else {
-                        task = new PicSimpleBitmapWorkerTask();
-                    }
+
+                    task = new PicSimpleBitmapWorkerTask(hd);
+
                     task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
                     break;
@@ -206,8 +204,8 @@ public class BrowserBigPicActivity extends Activity {
                     if (task != null) {
                         task.cancel(true);
                     }
-
-                    task = new PicSimpleBitmapWorkerTask();
+                    hd = true;
+                    task = new PicSimpleBitmapWorkerTask(hd);
                     task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     path = "";
                     break;
@@ -254,6 +252,11 @@ public class BrowserBigPicActivity extends Activity {
 
         };
 
+        boolean hd;
+
+        public PicSimpleBitmapWorkerTask(boolean hd) {
+            this.hd = hd;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -275,11 +278,11 @@ public class BrowserBigPicActivity extends Activity {
             String largePath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
             if (new File(largePath).exists()) {
                 return largePath;
-            } else if (new File(middlePath).exists()) {
+            } else if (!this.hd && new File(middlePath).exists()) {
                 return middlePath;
             } else {
-                String data = msg.getBmiddle_pic();
-                FileLocationMethod method = FileLocationMethod.picture_bmiddle;
+                String data = (this.hd ? msg.getOriginal_pic() : msg.getBmiddle_pic());
+                FileLocationMethod method = (this.hd ? FileLocationMethod.picture_large : FileLocationMethod.picture_bmiddle);
                 return ImageTool.getLargePictureWithoutRoundedCorner(data, downloadListener, method);
 
             }
@@ -320,7 +323,7 @@ public class BrowserBigPicActivity extends Activity {
                 layout.webView.loadDataWithBaseURL("file:///android_asset/", str2, "text/html", "utf-8", null);
                 layout.webView.setVisibility(View.VISIBLE);
                 layout.pb.setVisibility(View.INVISIBLE);
-                hd = true;
+
             } else {
                 layout.pb.setVisibility(View.GONE);
                 int[] attrs = new int[]{R.attr.error};
