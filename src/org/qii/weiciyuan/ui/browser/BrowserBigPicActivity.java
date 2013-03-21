@@ -5,8 +5,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -31,7 +29,6 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.Utility;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * User: qii
@@ -190,10 +187,7 @@ public class BrowserBigPicActivity extends Activity {
                     if (!TextUtils.isEmpty(path)) {
                         Uri uri = Uri.fromFile(new File(path));
                         sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                        PackageManager packageManager = getPackageManager();
-                        List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
-                        boolean isIntentSafe = activities.size() > 0;
-                        if (isIntentSafe) {
+                        if (Utility.isIntentSafe(BrowserBigPicActivity.this, sharingIntent)) {
                             startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
                         }
                     }
