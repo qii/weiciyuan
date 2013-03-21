@@ -84,10 +84,10 @@ public class BrowserBigPicActivity extends Activity {
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
                         mPressed = true;
-                        if (System.currentTimeMillis() - lastTime > ViewConfiguration.getDoubleTapTimeout()) {
+                        if (System.currentTimeMillis() - lastTime > ViewConfiguration.getDoubleTapTimeout() + 100) {
                             mClose = true;
                             new Handler().postDelayed(mPendingCheckForSinglePress,
-                                    ViewConfiguration.getDoubleTapTimeout());
+                                    ViewConfiguration.getDoubleTapTimeout() + 100);
                         } else {
                             mClose = false;
                         }
