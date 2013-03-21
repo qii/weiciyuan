@@ -23,6 +23,7 @@ public class FileManager {
     private static final String EMOTION = "emotion";
     private static final String TXT2PIC = "txt2pic";
     private static final String WEBVIEW_FAVICON = "favicon";
+    private static final String LOG = "log";
 
     private static String getSdCardPath() {
         if (isExternalStorageMounted()) {
@@ -60,6 +61,18 @@ public class FileManager {
             return "";
         else
             return getSdCardPath() + File.separator + "upload.jpg";
+    }
+
+    public static String getLogDir() {
+        if (!isExternalStorageMounted())
+            return "";
+        else {
+            String path = getSdCardPath() + File.separator + LOG;
+            if (!new File(path).exists()) {
+                new File(path).mkdirs();
+            }
+            return path;
+        }
     }
 
     public static String getFilePathFromUrl(String url, FileLocationMethod method) {

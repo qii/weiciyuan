@@ -15,6 +15,8 @@ import android.view.Display;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.crashmanager.CrashManager;
+import org.qii.weiciyuan.support.crashmanager.CrashManagerConstants;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.GroupDBTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -59,6 +61,8 @@ public final class GlobalContext extends Application {
         super.onCreate();
         globalContext = this;
         buildCache();
+        CrashManagerConstants.loadFromContext(this);
+        CrashManager.registerHandler();
     }
 
     public static GlobalContext getInstance() {
