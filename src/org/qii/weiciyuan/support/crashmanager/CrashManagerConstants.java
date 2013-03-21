@@ -9,11 +9,11 @@ import android.content.pm.PackageManager;
  * Date: 13-3-21
  */
 public class CrashManagerConstants {
-    public static String APP_VERSION = null;
-    public static String APP_PACKAGE = null;
-    public static String ANDROID_VERSION = null;
-    public static String PHONE_MODEL = null;
-    public static String PHONE_MANUFACTURER = null;
+    static String APP_VERSION = null;
+    static String APP_PACKAGE = null;
+    static String ANDROID_VERSION = null;
+    static String PHONE_MODEL = null;
+    static String PHONE_MANUFACTURER = null;
 
 
     public static void loadFromContext(Context context) {
