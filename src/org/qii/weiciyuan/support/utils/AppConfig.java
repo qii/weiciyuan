@@ -13,7 +13,7 @@ public class AppConfig {
     public static final int DEFAULT_MSG_COUNT_25 = 25;
     public static final int DEFAULT_MSG_COUNT_50 = 50;
 
-    public static final int DEFAULT_DB_CACHE_COUNT = 100;
+    public static final int DEFAULT_DB_CACHE_COUNT = 200;
 
     //friend timeline
     public static final long AUTO_REFRESH_INITIALDELAY = 9L;
