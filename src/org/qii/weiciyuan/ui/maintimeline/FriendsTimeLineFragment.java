@@ -268,6 +268,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         getActivity().getActionBar().setListNavigationCallbacks(navAdapter, new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int which, long itemId) {
+
+                if (dbTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+                    return true;
+                }
+
                 String selectedItemId;
 
                 if (which == 0) {
