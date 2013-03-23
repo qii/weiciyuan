@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.support.database.table.HomeTable;
 import org.qii.weiciyuan.support.database.table.MyStatusTable;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
@@ -103,7 +102,7 @@ public class MyStatusDBTask {
                 + accountId + " order by " + MyStatusTable.MBLOGID + " desc limit 50";
         Cursor c = getRsd().rawQuery(sql, null);
         while (c.moveToNext()) {
-            String json = c.getString(c.getColumnIndex(HomeTable.JSONDATA));
+            String json = c.getString(c.getColumnIndex(MyStatusTable.JSONDATA));
             try {
                 MessageBean value = gson.fromJson(json, MessageBean.class);
                 value.getListViewSpannableString();

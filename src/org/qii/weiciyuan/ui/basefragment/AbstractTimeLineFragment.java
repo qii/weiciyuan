@@ -137,7 +137,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                             enableRefreshTime = true;
                             getAdapter().notifyDataSetChanged();
                         }
-
+                        onListViewScrollStop();
                         break;
 
 
@@ -210,6 +210,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
     }
 
+
+    protected void onListViewScrollStop() {
+
+    }
 
     protected void dismissFooterView() {
         footerView.findViewById(R.id.refresh).setVisibility(View.GONE);

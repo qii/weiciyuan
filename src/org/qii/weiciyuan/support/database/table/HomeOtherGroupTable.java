@@ -18,4 +18,5 @@ public class HomeOtherGroupTable {
 
     public static final String JSONDATA = "json";
 
+
 }

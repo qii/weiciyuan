@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.android.MessageTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.FriendGroupTimeLineDao;
@@ -61,6 +62,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private MessageListBean bean = new MessageListBean();
 
+    private BaseAdapter navAdapter;
+
 
     @Override
     public MessageListBean getList() {
@@ -103,10 +106,48 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         this.token = token;
     }
 
+    @Override
+    protected void onListViewScrollStop() {
+        savePositionToPositionsCache();
+    }
+
+    private void savePositionToPositionsCache() {
+        timelinePositionsMap.put(currentGroupId, Utility.getCurrentPositionFromListView(getListView()));
+    }
+
+    private void setListViewPositionFromPositionsCache() {
+        TimeLinePosition p = timelinePositionsMap.get(currentGroupId);
+        if (p != null)
+            getListView().setSelectionFromTop(p.position + 1, p.top);
+        else
+            getListView().setSelectionFromTop(0, 0);
+    }
+
+    private void savePositionToDB() {
+        final TimeLinePosition position = timelinePositionsMap.get(currentGroupId);
+        Runnable runnable;
+        if (currentGroupId.equals(ALL_GROUP_ID)) {
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    FriendsTimeLineDBTask.updatePosition(position, GlobalContext.getInstance().getCurrentAccountId());
+                }
+            };
+        } else {
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            };
+        }
+        new Thread(runnable).start();
+    }
 
     @Override
     public void onPause() {
         super.onPause();
+        savePositionToDB();
         removeRefresh();
         Utility.cancelTasks(autoRefreshTask);
     }
@@ -199,7 +240,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         getListView().setAdapter(timeLineAdapter);
     }
 
-    private BaseAdapter navAdapter;
 
     private void buildActionBarNav() {
         getActivity().getActionBar().setDisplayShowTitleEnabled(false);
@@ -252,7 +292,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             navAdapter.notifyDataSetChanged();
     }
 
-    private class DBCacheTask extends MyAsyncTask<Void, MessageListBean, Map<String, MessageListBean>> {
+    private class DBCacheTask extends MyAsyncTask<Void, MessageTimeLineData, Map<String, MessageListBean>> {
 
         @Override
         protected void onPreExecute() {
@@ -263,7 +303,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         @Override
         protected Map<String, MessageListBean> doInBackground(Void... params) {
 
-            MessageListBean allGroup = FriendsTimeLineDBTask.getHomeLineMsgList(accountBean.getUid());
+            MessageTimeLineData allGroup = FriendsTimeLineDBTask.get(accountBean.getUid());
             publishProgress(allGroup);
 
             Map<String, MessageListBean> map = new HashMap<String, MessageListBean>();
@@ -293,16 +333,17 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
 
         @Override
-        protected void onProgressUpdate(MessageListBean... result) {
+        protected void onProgressUpdate(MessageTimeLineData... result) {
             super.onProgressUpdate(result);
             if (result != null && result.length > 0) {
-                MessageListBean homeMsg = result[0];
-                getList().replaceData(homeMsg);
-                putToGroupDataMemoryCache(ALL_GROUP_ID, homeMsg);
+                MessageTimeLineData homeMsg = result[0];
+                getList().replaceData(homeMsg.msgList);
+                putToGroupDataMemoryCache(ALL_GROUP_ID, homeMsg.msgList);
+                timelinePositionsMap.put(ALL_GROUP_ID, homeMsg.position);
             }
             getPullToRefreshListView().setVisibility(View.VISIBLE);
             getAdapter().notifyDataSetChanged();
-            getListView().setSelectionAfterHeaderView();
+            setListViewPositionFromPositionsCache();
             refreshLayout(getList());
             /**
              * when this account first open app,if he don't have any data in database,fetch data from server automally
@@ -465,14 +506,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         } else {
             getList().replaceData(groupDataCache.get(currentGroupId));
             getAdapter().notifyDataSetChanged();
-            TimeLinePosition p = timelinePositionsMap.get(currentGroupId);
-            if (p != null)
-                getListView().setSelectionFromTop(p.position + 1, p.top);
-            else
-                getListView().setSelectionFromTop(0, 0);
+            setListViewPositionFromPositionsCache();
             new RefreshReCmtCountTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
+
 
     private void putToGroupDataMemoryCache(String groupId, MessageListBean value) {
         MessageListBean copy = new MessageListBean();

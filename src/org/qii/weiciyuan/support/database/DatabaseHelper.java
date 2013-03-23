@@ -15,7 +15,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 20;
+    private static final int DATABASE_VERSION = 21;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -37,8 +37,15 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + "("
             + HomeTable.ID + " integer primary key autoincrement,"
             + HomeTable.ACCOUNTID + " text,"
-            + HomeTable.MBLOGID + " text,"
-            + HomeTable.JSONDATA + " text"
+            + HomeTable.TIMELINEDATA + " text"
+            + ");";
+
+    static final String CREATE_HOME_DATA_TABLE_SQL = "create table " + HomeTable.HomeDataTable.TABLE_NAME
+            + "("
+            + HomeTable.HomeDataTable.ID + " integer primary key autoincrement,"
+            + HomeTable.HomeDataTable.ACCOUNTID + " text,"
+            + HomeTable.HomeDataTable.MBLOGID + " text,"
+            + HomeTable.HomeDataTable.JSONDATA + " text"
             + ");";
 
     static final String CREATE_HOME_OTHER_GROUP_TABLE_SQL = "create table " + HomeOtherGroupTable.TABLE_NAME
@@ -132,11 +139,11 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + ");";
 
     private static final String CREATE_HOME_INDEX_SQL = "CREATE INDEX idx_"
-            + HomeTable.TABLE_NAME
+            + HomeTable.HomeDataTable.TABLE_NAME
             + " ON "
-            + HomeTable.TABLE_NAME
+            + HomeTable.HomeDataTable.TABLE_NAME
             + " ( "
-            + HomeTable.ACCOUNTID
+            + HomeTable.HomeDataTable.ACCOUNTID
             + " ) ";
 
     private static final String CREATE_HOME_OTHER_GROUP_INDEX_SQL = "CREATE INDEX idx_"
@@ -232,7 +239,10 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private void createOtherTable(SQLiteDatabase db) {
 
         db.execSQL(CREATE_GROUP_TABLE_SQL);
+
         db.execSQL(CREATE_HOME_TABLE_SQL);
+        db.execSQL(CREATE_HOME_DATA_TABLE_SQL);
+
         db.execSQL(CREATE_HOME_OTHER_GROUP_TABLE_SQL);
         db.execSQL(CREATE_COMMENTS_TABLE_SQL);
         db.execSQL(CREATE_REPOSTS_TABLE_SQL);
@@ -258,7 +268,10 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private void deleteAllTableExceptAccount(SQLiteDatabase db) {
 
         db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
+
         db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + HomeTable.HomeDataTable.TABLE_NAME);
+
         db.execSQL("DROP TABLE IF EXISTS " + HomeOtherGroupTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
@@ -275,8 +288,12 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     private void deleteAllTable(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + AccountTable.TABLE_NAME);
+
         db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
+
         db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + HomeTable.HomeDataTable.TABLE_NAME);
+
         db.execSQL("DROP TABLE IF EXISTS " + HomeOtherGroupTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);

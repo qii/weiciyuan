@@ -10,6 +10,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.android.MessageTimeLineData;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.table.HomeTable;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -47,10 +49,10 @@ public class FriendsTimeLineDBTask {
 
         Gson gson = new Gson();
         List<MessageBean> msgList = list.getItemList();
-        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), HomeTable.TABLE_NAME);
-        final int mblogidColumn = ih.getColumnIndex(HomeTable.MBLOGID);
-        final int accountidColumn = ih.getColumnIndex(HomeTable.ACCOUNTID);
-        final int jsondataColumn = ih.getColumnIndex(HomeTable.JSONDATA);
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), HomeTable.HomeDataTable.TABLE_NAME);
+        final int mblogidColumn = ih.getColumnIndex(HomeTable.HomeDataTable.MBLOGID);
+        final int accountidColumn = ih.getColumnIndex(HomeTable.HomeDataTable.ACCOUNTID);
+        final int jsondataColumn = ih.getColumnIndex(HomeTable.HomeDataTable.JSONDATA);
         try {
             getWsd().beginTransaction();
             for (int i = 0; i < msgList.size(); i++) {
@@ -78,7 +80,7 @@ public class FriendsTimeLineDBTask {
     }
 
     private static void reduceHomeTable(String accountId) {
-        String searchCount = "select count(" + HomeTable.ID + ") as total" + " from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID
+        String searchCount = "select count(" + HomeTable.HomeDataTable.ID + ") as total" + " from " + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.ACCOUNTID
                 + " = " + accountId;
         int total = 0;
         Cursor c = getWsd().rawQuery(searchCount, null);
@@ -94,10 +96,10 @@ public class FriendsTimeLineDBTask {
 
         if (needDeletedNumber > 0) {
             AppLogger.e("" + needDeletedNumber);
-            String sql = " delete from " + HomeTable.TABLE_NAME + " where " + HomeTable.ID + " in "
-                    + "( select " + HomeTable.ID + " from " + HomeTable.TABLE_NAME + " where "
-                    + HomeTable.ACCOUNTID
-                    + " in " + "(" + accountId + ") order by " + HomeTable.ID + " desc limit " + needDeletedNumber + " ) ";
+            String sql = " delete from " + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.ID + " in "
+                    + "( select " + HomeTable.HomeDataTable.ID + " from " + HomeTable.HomeDataTable.TABLE_NAME + " where "
+                    + HomeTable.HomeDataTable.ACCOUNTID
+                    + " in " + "(" + accountId + ") order by " + HomeTable.HomeDataTable.ID + " desc limit " + needDeletedNumber + " ) ";
 
             getWsd().execSQL(sql);
         }
@@ -109,21 +111,67 @@ public class FriendsTimeLineDBTask {
         addHomeLineMsg(list, accountId);
     }
 
+    public static void updatePosition(TimeLinePosition position, String accountId) {
+        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
+                + accountId;
+        Cursor c = getRsd().rawQuery(sql, null);
+        Gson gson = new Gson();
+        if (c.moveToNext()) {
+            try {
+                String[] args = {accountId};
+                ContentValues cv = new ContentValues();
+                cv.put(HomeTable.TIMELINEDATA, gson.toJson(position));
+                getWsd().update(HomeTable.TABLE_NAME, cv, HomeTable.ACCOUNTID + "=?", args);
+            } catch (JsonSyntaxException e) {
+
+            }
+        } else {
+
+            ContentValues cv = new ContentValues();
+            cv.put(HomeTable.ACCOUNTID, accountId);
+            cv.put(HomeTable.TIMELINEDATA, gson.toJson(position));
+            getWsd().insert(HomeTable.TABLE_NAME,
+                    HomeTable.ID, cv);
+        }
+    }
+
+    public static TimeLinePosition getPosition(String accountId) {
+        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
+                + accountId;
+        Cursor c = getRsd().rawQuery(sql, null);
+        Gson gson = new Gson();
+        while (c.moveToNext()) {
+            String json = c.getString(c.getColumnIndex(HomeTable.TIMELINEDATA));
+            if (!TextUtils.isEmpty(json)) {
+                try {
+                    TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
+                    return value;
+
+                } catch (JsonSyntaxException e) {
+
+                }
+            }
+
+        }
+        c.close();
+        return new TimeLinePosition(0, 0);
+    }
+
     static void deleteAllHomes(String accountId) {
-        String sql = "delete from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + " in " + "(" + accountId + ")";
+        String sql = "delete from " + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.ACCOUNTID + " in " + "(" + accountId + ")";
 
         getWsd().execSQL(sql);
     }
 
     public static void updateCount(String msgId, int commentCount, int repostCount) {
-        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.MBLOGID + "  = "
+        String sql = "select * from " + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.MBLOGID + "  = "
                 + msgId + " order by "
-                + HomeTable.ID + " asc limit 50";
+                + HomeTable.HomeDataTable.ID + " asc limit 50";
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
         while (c.moveToNext()) {
-            String id = c.getString(c.getColumnIndex(HomeTable.ID));
-            String json = c.getString(c.getColumnIndex(HomeTable.JSONDATA));
+            String id = c.getString(c.getColumnIndex(HomeTable.HomeDataTable.ID));
+            String json = c.getString(c.getColumnIndex(HomeTable.HomeDataTable.JSONDATA));
             if (!TextUtils.isEmpty(json)) {
                 try {
                     MessageBean value = gson.fromJson(json, MessageBean.class);
@@ -131,27 +179,33 @@ public class FriendsTimeLineDBTask {
                     value.setReposts_count(repostCount);
                     String[] args = {id};
                     ContentValues cv = new ContentValues();
-                    cv.put(HomeTable.JSONDATA, gson.toJson(value));
-                    getWsd().update(HomeTable.TABLE_NAME, cv, HomeTable.ID + "=?", args);
+                    cv.put(HomeTable.HomeDataTable.JSONDATA, gson.toJson(value));
+                    getWsd().update(HomeTable.HomeDataTable.TABLE_NAME, cv, HomeTable.HomeDataTable.ID + "=?", args);
                 } catch (JsonSyntaxException e) {
 
                 }
 
             }
         }
+        c.close();
     }
 
+    public static MessageTimeLineData get(String accountId) {
+        MessageListBean msgList = getHomeLineMsgList(accountId);
+        TimeLinePosition position = getPosition(accountId);
+        return new MessageTimeLineData(msgList, position);
+    }
 
     public static MessageListBean getHomeLineMsgList(String accountId) {
         Gson gson = new Gson();
         MessageListBean result = new MessageListBean();
 
         List<MessageBean> msgList = new ArrayList<MessageBean>();
-        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
-                + accountId + " order by " + HomeTable.ID + " asc";
+        String sql = "select * from " + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.ACCOUNTID + "  = "
+                + accountId + " order by " + HomeTable.HomeDataTable.ID + " asc";
         Cursor c = getRsd().rawQuery(sql, null);
         while (c.moveToNext()) {
-            String json = c.getString(c.getColumnIndex(HomeTable.JSONDATA));
+            String json = c.getString(c.getColumnIndex(HomeTable.HomeDataTable.JSONDATA));
             if (!TextUtils.isEmpty(json)) {
                 try {
                     MessageBean value = gson.fromJson(json, MessageBean.class);
