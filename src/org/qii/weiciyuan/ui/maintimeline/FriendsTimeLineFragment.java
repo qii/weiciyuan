@@ -125,8 +125,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private void savePositionToDB() {
         final TimeLinePosition position = timelinePositionsMap.get(currentGroupId);
+        final String groupId = currentGroupId;
         Runnable runnable;
-        if (currentGroupId.equals(ALL_GROUP_ID)) {
+        if (groupId.equals(ALL_GROUP_ID)) {
             runnable = new Runnable() {
                 @Override
                 public void run() {
@@ -137,7 +138,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             runnable = new Runnable() {
                 @Override
                 public void run() {
-
+                    HomeOtherGroupTimeLineDBTask.updatePosition(position, GlobalContext.getInstance().getCurrentAccountId(), groupId);
                 }
             };
         }
@@ -292,7 +293,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             navAdapter.notifyDataSetChanged();
     }
 
-    private class DBCacheTask extends MyAsyncTask<Void, MessageTimeLineData, Map<String, MessageListBean>> {
+    private class DBCacheTask extends MyAsyncTask<Void, MessageTimeLineData, Map<String, MessageTimeLineData>> {
 
         @Override
         protected void onPreExecute() {
@@ -301,19 +302,19 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
 
         @Override
-        protected Map<String, MessageListBean> doInBackground(Void... params) {
+        protected Map<String, MessageTimeLineData> doInBackground(Void... params) {
 
             MessageTimeLineData allGroup = FriendsTimeLineDBTask.get(accountBean.getUid());
             publishProgress(allGroup);
 
-            Map<String, MessageListBean> map = new HashMap<String, MessageListBean>();
-            MessageListBean biGroup = HomeOtherGroupTimeLineDBTask.get(accountBean.getUid(), BILATERAL_GROUP_ID);
+            Map<String, MessageTimeLineData> map = new HashMap<String, MessageTimeLineData>();
+            MessageTimeLineData biGroup = HomeOtherGroupTimeLineDBTask.getTimeLineData(accountBean.getUid(), BILATERAL_GROUP_ID);
             map.put(BILATERAL_GROUP_ID, biGroup);
             GroupListBean groupListBean = GlobalContext.getInstance().getGroup();
             if (groupListBean != null) {
                 List<GroupBean> lists = groupListBean.getLists();
                 for (GroupBean groupBean : lists) {
-                    MessageListBean dbMsg = HomeOtherGroupTimeLineDBTask.get(accountBean.getUid(), groupBean.getId());
+                    MessageTimeLineData dbMsg = HomeOtherGroupTimeLineDBTask.getTimeLineData(accountBean.getUid(), groupBean.getId());
                     map.put(groupBean.getId(), dbMsg);
                 }
             }
@@ -321,13 +322,16 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
 
         @Override
-        protected void onPostExecute(Map<String, MessageListBean> result) {
+        protected void onPostExecute(Map<String, MessageTimeLineData> result) {
             super.onPostExecute(result);
             if (result != null) {
-                putToGroupDataMemoryCache(BILATERAL_GROUP_ID, result.get(BILATERAL_GROUP_ID));
+                putToGroupDataMemoryCache(BILATERAL_GROUP_ID, result.get(BILATERAL_GROUP_ID).msgList);
+                timelinePositionsMap.put(BILATERAL_GROUP_ID, result.get(BILATERAL_GROUP_ID).position);
+
                 Set<String> keys = result.keySet();
                 for (String key : keys) {
-                    putToGroupDataMemoryCache(key, result.get(key));
+                    putToGroupDataMemoryCache(key, result.get(key).msgList);
+                    timelinePositionsMap.put(key, result.get(key).position);
                 }
             }
         }
