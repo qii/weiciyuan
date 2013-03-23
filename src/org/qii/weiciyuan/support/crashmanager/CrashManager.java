@@ -5,6 +5,8 @@ import org.qii.weiciyuan.support.file.FileManager;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -69,6 +71,15 @@ public class CrashManager {
         for (int i = 0; i < files.length; i++) {
             files[i] = path + File.separator + files[i];
         }
+        //desc sort arrays, then delete the longest file
+        Arrays.sort(files, new Comparator<String>() {
+            @Override
+            public int compare(String aFilePath, String bFilePath) {
+                long aDate = new File(aFilePath).lastModified();
+                long bDate = new File(bFilePath).lastModified();
+                return (aDate > bDate ? -1 : 1);
+            }
+        });
         return files;
     }
 }
