@@ -28,4 +28,15 @@
         <item name="android:textAppearance">@style/android:TextAppearance.Holo.DialogWindowTitle</item>
     </style>
 
+    <style name="drawerMenuButton">
+        <item name="android:textSize">@dimen/drawerTextSize</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">left|center</item>
+        <item name="android:background">@drawable/btn_drawer_menu</item>
+        <item name="android:paddingLeft">8.0dip</item>
+        <item name="android:paddingRight">8.0dip</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">50.0dip</item>
+        <item name="android:drawablePadding">8.0dip</item>
+    </style>
 </resources>
