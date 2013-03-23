@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.FriendGroupTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
@@ -56,6 +57,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private String currentGroupId = ALL_GROUP_ID;
 
     private HashMap<String, MessageListBean> groupDataCache = new HashMap<String, MessageListBean>();
+    private HashMap<String, TimeLinePosition> timelinePositionsMap = new HashMap<String, TimeLinePosition>();
 
     private MessageListBean bean = new MessageListBean();
 
@@ -235,6 +237,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     selectedItemId = finalList.get(which - 2).getIdstr();
                 }
                 if (!selectedItemId.equals(currentGroupId)) {
+                    timelinePositionsMap.put(currentGroupId, Utility.getCurrentPositionFromListView(getListView()));
                     setSelected(selectedItemId);
                     switchGroup();
                 }
@@ -441,6 +444,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         } else {
             getList().replaceData(groupDataCache.get(currentGroupId));
             getAdapter().notifyDataSetChanged();
+            TimeLinePosition p = timelinePositionsMap.get(currentGroupId);
+            if (p != null)
+                getListView().setSelectionFromTop(p.position + 1, p.top);
+            else
+                getListView().setSelectionFromTop(0, 0);
             new RefreshReCmtCountTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }

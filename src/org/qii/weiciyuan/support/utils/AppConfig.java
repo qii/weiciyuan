@@ -13,11 +13,11 @@ public class AppConfig {
     public static final int DEFAULT_MSG_COUNT_25 = 25;
     public static final int DEFAULT_MSG_COUNT_50 = 50;
 
-    public static final int DEFAULT_DB_CACHE_COUNT = 50;
+    public static final int DEFAULT_DB_CACHE_COUNT = 100;
 
     //friend timeline
-    public static final long AUTO_REFRESH_INITIALDELAY = 9l;
-    public static final long AUTO_REFRESH_PERIOD = 7l;
+    public static final long AUTO_REFRESH_INITIALDELAY = 9L;
+    public static final long AUTO_REFRESH_PERIOD = 7L;
 
 
     //if download pic failed,retry

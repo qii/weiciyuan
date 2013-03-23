@@ -28,6 +28,7 @@ import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -440,6 +441,12 @@ public class Utility {
         if (value <= count) {
             tab.setText(tabStrRes + "(" + count + ")");
         }
+    }
+
+    public static TimeLinePosition getCurrentPositionFromListView(ListView listView) {
+        View view = listView.getChildAt(1);
+        int top = (view != null ? view.getTop() : 0);
+        return new TimeLinePosition(listView.getFirstVisiblePosition(), top);
     }
 }
 
