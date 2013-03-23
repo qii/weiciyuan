@@ -430,6 +430,26 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         if (Utility.isAllNotNull(getActivity(), oldValue) && oldValue.getSize() > 1) {
             getList().addOldData(oldValue);
             putToGroupDataMemoryCache(currentGroupId, getList());
+
+            Runnable dbRunnable;
+            if (currentGroupId.equals(ALL_GROUP_ID)) {
+                dbRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        FriendsTimeLineDBTask.replace(getList(), accountBean.getUid());
+                    }
+                };
+            } else {
+                dbRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        HomeOtherGroupTimeLineDBTask.replace(getList(), accountBean.getUid(), currentGroupId);
+                    }
+                };
+            }
+
+            new Thread(dbRunnable).start();
+
         } else if (Utility.isAllNotNull(getActivity())) {
             Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
         }

@@ -148,7 +148,7 @@ public class FriendsTimeLineDBTask {
 
         List<MessageBean> msgList = new ArrayList<MessageBean>();
         String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
-                + accountId + " order by " + HomeTable.ID + " asc limit 50";
+                + accountId + " order by " + HomeTable.ID + " asc";
         Cursor c = getRsd().rawQuery(sql, null);
         while (c.moveToNext()) {
             String json = c.getString(c.getColumnIndex(HomeTable.JSONDATA));
