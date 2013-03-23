@@ -144,6 +144,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                             holder.listview_root = null;
                             view.setTag(tag, null);
                         }
+
+                        holder.listview_root.setOnClickListener(null);
                     }
                 }
             }

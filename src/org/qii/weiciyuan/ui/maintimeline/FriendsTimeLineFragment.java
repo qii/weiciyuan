@@ -238,7 +238,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     setSelected(selectedItemId);
                     switchGroup();
                 }
-                return false;
+                return true;
             }
         });
     }
