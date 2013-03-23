@@ -259,8 +259,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         } else {
             listView = currentFragment.getListView();
         }
-        listView.smoothScrollToPositionFromTop(0, 0);
-
+        Utility.stopListViewScrollingAndScrollToTop(listView);
     }
 
     public void setCurrentFragment(AbstractTimeLineFragment fragment) {
