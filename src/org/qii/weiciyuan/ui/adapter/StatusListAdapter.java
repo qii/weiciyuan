@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
@@ -119,43 +120,8 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         holder.listview_root.setOnClickListener(onClickListener);
 
 
-        holder.username.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                holder.listview_root.onTouchEvent(event);
-                return false;
-            }
-        });
-        holder.time.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                holder.listview_root.onTouchEvent(event);
-                return false;
-            }
-        });
-
-        //onTouchListener has some strange problem, when user click link, holder.listview_root may also receive a MotionEvent.ACTION_DOWN event
-        //the background then changed
-        View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                TextView tv = (TextView) v;
-                int start = tv.getSelectionStart();
-                int end = tv.getSelectionEnd();
-                SpannableString completeText = (SpannableString) ((TextView) v).getText();
-                boolean isNotLink = start == -1 || end == -1;
-
-                switch (event.getActionMasked()) {
-                    case MotionEvent.ACTION_UP:
-                        if (isNotLink && completeText.getSpanStart(this) == -1) {
-                            holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
-                            holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
-                        }
-                        break;
-                }
-                return false;
-            }
-        };
+        holder.username.setOnTouchListener(simpleOnTouchListener);
+        holder.time.setOnTouchListener(simpleOnTouchListener);
 
         holder.content.setOnTouchListener(onTouchListener);
         holder.repost_content.setOnTouchListener(onTouchListener);
@@ -297,4 +263,66 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             }
         }
     };
+
+    //onTouchListener has some strange problem, when user click link, holder.listview_root may also receive a MotionEvent.ACTION_DOWN event
+    //the background then changed
+    private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            ViewHolder holder = getViewHolderByView(v);
+
+            if (holder == null) {
+                return false;
+            }
+
+            TextView tv = (TextView) v;
+            int start = tv.getSelectionStart();
+            int end = tv.getSelectionEnd();
+            SpannableString completeText = (SpannableString) ((TextView) v).getText();
+            boolean isNotLink = start == -1 || end == -1;
+
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_UP:
+                    if (isNotLink && completeText.getSpanStart(this) == -1) {
+                        holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
+                        holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
+                    }
+                    break;
+            }
+
+            return false;
+        }
+    };
+
+    private View.OnTouchListener simpleOnTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            ViewHolder holder = getViewHolderByView(v);
+            if (holder == null) {
+                return false;
+            }
+            holder.listview_root.onTouchEvent(event);
+            return false;
+        }
+    };
+
+    private ViewHolder getViewHolderByView(View view) {
+        final int position = listView.getPositionForView(view);
+        if (position == ListView.INVALID_POSITION) {
+            return null;
+        }
+        int wantedPosition = position - 1;
+        int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
+        int wantedChild = wantedPosition - firstPosition;
+
+        if (wantedChild < 0 || wantedChild >= listView.getChildCount()) {
+            return null;
+        }
+
+        View wantedView = listView.getChildAt(wantedChild);
+        ViewHolder holder = (ViewHolder) wantedView.getTag(R.drawable.ic_launcher + getItemViewType(position));
+        return holder;
+    }
+
 }
