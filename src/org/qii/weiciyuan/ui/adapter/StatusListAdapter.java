@@ -116,17 +116,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.content.setText(msg.getListViewSpannableString());
         }
 
-        holder.listview_root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!((AbstractTimeLineFragment) fragment).clearActionModeIfOpen()) {
-                    Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-                    intent.putExtra("msg", msg);
-                    intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                    fragment.startActivityForResult(intent, 0);
-                }
-            }
-        });
+        holder.listview_root.setOnClickListener(onClickListener);
 
 
         holder.username.setOnTouchListener(new View.OnTouchListener() {
@@ -291,4 +281,20 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         }
     }
 
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final int position = listView.getPositionForView(v);
+            if (position == ListView.INVALID_POSITION) {
+                return;
+            }
+            MessageBean msg = getList().get(position - 1);
+            if (!((AbstractTimeLineFragment) fragment).clearActionModeIfOpen()) {
+                Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
+                intent.putExtra("msg", msg);
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                fragment.startActivityForResult(intent, 0);
+            }
+        }
+    };
 }
