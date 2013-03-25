@@ -17,6 +17,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.browser.BrowserWebActivity;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
  * User: qii
@@ -54,14 +55,35 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
         Uri uri = Uri.parse(getURL());
         Context context = widget.getContext();
         if (uri.getScheme().startsWith("http")) {
-            Intent intent = new Intent(context, BrowserWebActivity.class);
-            intent.putExtra("url", uri.toString());
-            context.startActivity(intent);
+            String url = uri.toString();
+            if (url.startsWith("http://weibo.com/u/")) {
+                String id = url.substring(19);
+                id = id.replace("/", "");
+                Intent intent = new Intent(context, UserInfoActivity.class);
+                intent.putExtra("id", id);
+                context.startActivity(intent);
+            } else if (isWeiboAccountLink(url)) {
+                String domain = url.substring(17);
+                domain = domain.replace("/", "");
+                Intent intent = new Intent(context, UserInfoActivity.class);
+                intent.putExtra("domain", domain);
+                context.startActivity(intent);
+            } else {
+                Intent intent = new Intent(context, BrowserWebActivity.class);
+                intent.putExtra("url", uri.toString());
+                context.startActivity(intent);
+            }
         } else {
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
             context.startActivity(intent);
         }
+    }
+
+    private boolean isWeiboAccountLink(String url) {
+        boolean a = url.startsWith("http://weibo.com/");
+        boolean b = !url.contains("?");
+        return a && b;
     }
 
     public void onLongClick(View widget) {

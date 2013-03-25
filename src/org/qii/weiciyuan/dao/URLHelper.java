@@ -37,6 +37,7 @@ public class URLHelper {
     //user profile
     public static final String STATUSES_TIMELINE_BY_ID = URL_SINA_WEIBO + "statuses/user_timeline.json";
     public static final String USER_SHOW = URL_SINA_WEIBO + "users/show.json";
+    public static final String USER_DOMAIN_SHOW = URL_SINA_WEIBO + "users/domain_show.json";
 
 
     //browser

@@ -85,23 +85,37 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
         if (bean == null) {
-            Uri data = getIntent().getData();
-            if (data != null) {
-                String d = data.toString();
-                int index = d.lastIndexOf("@");
-                String newValue = d.substring(index + 1);
+            String id = getIntent().getStringExtra("id");
+            if (!TextUtils.isEmpty(id)) {
                 bean = new UserBean();
-                bean.setScreen_name(newValue);
-            } else if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-                processIntent(getIntent());
+                bean.setId(id);
+            } else {
+                String domain = getIntent().getStringExtra("domain");
+                if (!TextUtils.isEmpty(domain)) {
+                    bean = new UserBean();
+                    bean.setDomain(domain);
+                } else {
+                    Uri data = getIntent().getData();
+                    if (data != null) {
+                        String d = data.toString();
+                        int index = d.lastIndexOf("@");
+                        String newValue = d.substring(index + 1);
+                        bean = new UserBean();
+                        bean.setScreen_name(newValue);
+                    } else if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+                        processIntent(getIntent());
+                    }
+                }
             }
             fetchUserInfoFromServer();
         } else {
             initLayout();
         }
 
-        if (bean.getScreen_name().equals(GlobalContext.getInstance().getCurrentAccountName())
-                || (bean.getId() != null && bean.getId().equals(GlobalContext.getInstance().getCurrentAccountId()))) {
+        boolean screenNameEqualCurrentAccount = bean.getScreen_name() != null
+                && bean.getScreen_name().equals(GlobalContext.getInstance().getCurrentAccountName());
+        boolean idEqualCurrentAccount = bean.getId() != null && bean.getId().equals(GlobalContext.getInstance().getCurrentAccountId());
+        if (screenNameEqualCurrentAccount || idEqualCurrentAccount) {
             Intent intent = new Intent(this, MyInfoActivity.class);
             intent.putExtra("token", getToken());
 
@@ -567,10 +581,14 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
                 ShowUserDao dao = new ShowUserDao(GlobalContext.getInstance().getSpecialToken());
                 boolean haveId = !TextUtils.isEmpty(bean.getId());
                 boolean haveName = !TextUtils.isEmpty(bean.getScreen_name());
+                boolean haveDomain = !TextUtils.isEmpty(bean.getDomain());
+
                 if (haveId) {
                     dao.setUid(bean.getId());
                 } else if (haveName) {
                     dao.setScreen_name(bean.getScreen_name());
+                } else if (haveDomain) {
+                    dao.setDomain(bean.getDomain());
                 } else {
                     cancel(true);
                     return null;
