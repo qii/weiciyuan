@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.browser.BrowserWebActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
@@ -56,17 +57,13 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
         Context context = widget.getContext();
         if (uri.getScheme().startsWith("http")) {
             String url = uri.toString();
-            if (url.startsWith("http://weibo.com/u/")) {
-                String id = url.substring(19);
-                id = id.replace("/", "");
+            if (Utility.isWeiboAccountIdLink(url)) {
                 Intent intent = new Intent(context, UserInfoActivity.class);
-                intent.putExtra("id", id);
+                intent.putExtra("id", Utility.getIdFromWeiboAccountLink(url));
                 context.startActivity(intent);
-            } else if (isWeiboAccountLink(url)) {
-                String domain = url.substring(17);
-                domain = domain.replace("/", "");
+            } else if (Utility.isWeiboAccountDomainLink(url)) {
                 Intent intent = new Intent(context, UserInfoActivity.class);
-                intent.putExtra("domain", domain);
+                intent.putExtra("domain", Utility.getDomainFromWeiboAccountLink(url));
                 context.startActivity(intent);
             } else {
                 Intent intent = new Intent(context, BrowserWebActivity.class);
@@ -80,11 +77,6 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
         }
     }
 
-    private boolean isWeiboAccountLink(String url) {
-        boolean a = url.startsWith("http://weibo.com/");
-        boolean b = !url.contains("?");
-        return a && b;
-    }
 
     public void onLongClick(View widget) {
         Uri data = Uri.parse(getURL());

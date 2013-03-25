@@ -448,5 +448,31 @@ public class Utility {
         int top = (view != null ? view.getTop() : 0);
         return new TimeLinePosition(listView.getFirstVisiblePosition(), top);
     }
+
+    public static String getIdFromWeiboAccountLink(String url) {
+        String id = url.substring(19);
+        id = id.replace("/", "");
+        return id;
+    }
+
+    public static String getDomainFromWeiboAccountLink(String url) {
+        String domain = url.substring(17);
+        domain = domain.replace("/", "");
+        return domain;
+    }
+
+    public static boolean isWeiboAccountIdLink(String url) {
+        return !TextUtils.isEmpty(url) && url.startsWith("http://weibo.com/u/");
+    }
+
+    public static boolean isWeiboAccountDomainLink(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return false;
+        } else {
+            boolean a = url.startsWith("http://weibo.com/");
+            boolean b = !url.contains("?");
+            return a && b;
+        }
+    }
 }
 

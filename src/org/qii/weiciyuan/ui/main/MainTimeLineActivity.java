@@ -1,11 +1,7 @@
 package org.qii.weiciyuan.ui.main;
 
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.app.*;
+import android.content.*;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -34,6 +30,7 @@ import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.maintimeline.*;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -339,6 +336,69 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             }
         }, 10, 50, TimeUnit.SECONDS);
 
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData cmContent = cm.getPrimaryClip();
+        ClipData.Item item = cmContent.getItemAt(0);
+        if (item != null) {
+            String url = item.coerceToText(this).toString();
+            boolean a = !TextUtils.isEmpty(url) && !url.equals(SettingUtility.getLastFoundWeiboAccountLink());
+            boolean b = Utility.isWeiboAccountIdLink(url) || Utility.isWeiboAccountDomainLink(url);
+            if (a && b) {
+                OpenWeiboAccountLinkDialog dialog = new OpenWeiboAccountLinkDialog(url);
+                dialog.show(getFragmentManager(), "");
+                SettingUtility.setLastFoundWeiboAccountLink(url);
+            }
+        }
+    }
+
+    public static class OpenWeiboAccountLinkDialog extends DialogFragment {
+
+        private String url;
+
+        public OpenWeiboAccountLinkDialog() {
+
+        }
+
+        public OpenWeiboAccountLinkDialog(String url) {
+            this.url = url;
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putString("url", url);
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            if (savedInstanceState != null) {
+                this.url = savedInstanceState.getString("url");
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.find_weibo_account_link)
+                    .setMessage(url)
+                    .setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (Utility.isWeiboAccountIdLink(url)) {
+                                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                                intent.putExtra("id", Utility.getIdFromWeiboAccountLink(url));
+                                startActivity(intent);
+                            } else if (Utility.isWeiboAccountDomainLink(url)) {
+                                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                                intent.putExtra("domain", Utility.getDomainFromWeiboAccountLink(url));
+                                startActivity(intent);
+                            }
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            return builder.create();
+        }
     }
 
     @Override
@@ -445,6 +505,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             }
 
         }
+
     }
 
     private void buildUnreadTabTxt(UnreadBean unreadBean) {

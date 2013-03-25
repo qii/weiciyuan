@@ -14,6 +14,7 @@ import org.qii.weiciyuan.ui.preference.SettingActivity;
 public class SettingUtility {
 
     private static final String FIRSTSTART = "firststart";
+    private static final String LAST_FOUND_WEIBO_ACCOUNT_LINK = "last_found_weibo_account_link";
 
     private SettingUtility() {
 
@@ -245,4 +246,11 @@ public class SettingUtility {
         return SettingHelper.getSharedPreferences(getContext(), "default_softkeyboard_height", 400);
     }
 
+    public static String getLastFoundWeiboAccountLink() {
+        return SettingHelper.getSharedPreferences(getContext(), LAST_FOUND_WEIBO_ACCOUNT_LINK, "");
+    }
+
+    public static void setLastFoundWeiboAccountLink(String url) {
+        SettingHelper.setEditor(getContext(), LAST_FOUND_WEIBO_ACCOUNT_LINK, url);
+    }
 }
