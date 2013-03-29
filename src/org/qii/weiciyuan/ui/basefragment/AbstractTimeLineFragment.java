@@ -503,13 +503,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         progressBar.setVisibility(View.INVISIBLE);
     }
 
-    protected void afterGetNewMsg() {
-
-    }
-
-    protected void afterGetOldMsg() {
-
-    }
 
     protected abstract T getDoInBackgroundNewData() throws WeiboException;
 
