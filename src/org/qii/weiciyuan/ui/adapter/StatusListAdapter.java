@@ -3,13 +3,13 @@ package org.qii.weiciyuan.ui.adapter;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.SystemClock;
+import android.os.Handler;
 import android.text.Html;
+import android.text.Layout;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,10 +17,13 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
-import org.qii.weiciyuan.support.lib.MyLinkMovementMethod;
+import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
+import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 
@@ -43,14 +46,27 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     private Map<String, Integer> oriMsgHeights = new HashMap<String, Integer>();
     private Map<String, Integer> oriMsgWidths = new HashMap<String, Integer>();
 
+    private ActionMode mActionMode;
+
+    private Handler handler = new Handler();
+
     public StatusListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
-        super(fragment, commander, bean, listView, showOriStatus);
+        this(fragment, commander, bean, listView, showOriStatus, false);
     }
 
     public StatusListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<MessageBean> bean, ListView listView, boolean showOriStatus, boolean pre) {
         super(fragment, commander, bean, listView, showOriStatus, pre);
     }
 
+    public void onListViewScroll() {
+        removeLongClick();
+        removeClick();
+        int state = ((AbstractTimeLineFragment) fragment).getListViewScrollState();
+        if (state != AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+            LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
+
+        }
+    }
 
     @Override
     protected void bindViewData(final ViewHolder holder, int position) {
@@ -118,7 +134,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         }
 
         holder.listview_root.setOnClickListener(onClickListener);
-
+//        holder.listview_root.setOnLongClickListener(onLongClickListener);
 
         holder.username.setOnTouchListener(simpleOnTouchListener);
         holder.time.setOnTouchListener(simpleOnTouchListener);
@@ -126,10 +142,10 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         holder.content.setOnTouchListener(onTouchListener);
         holder.repost_content.setOnTouchListener(onTouchListener);
 
-        if (holder.content.getMovementMethod() != MyLinkMovementMethod.getInstance())
-            holder.content.setMovementMethod(MyLinkMovementMethod.getInstance());
-        if (holder.repost_content.getMovementMethod() != MyLinkMovementMethod.getInstance())
-            holder.repost_content.setMovementMethod(MyLinkMovementMethod.getInstance());
+        if (holder.content.getMovementMethod() != LongClickableLinkMovementMethod.getInstance())
+            holder.content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
+        if (holder.repost_content.getMovementMethod() != LongClickableLinkMovementMethod.getInstance())
+            holder.repost_content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
 
 
         holder.time.setTime(msg.getMills());
@@ -254,6 +270,10 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             if (position == ListView.INVALID_POSITION) {
                 return;
             }
+            if (mActionMode != null) {
+                clearActionMode();
+                return;
+            }
             MessageBean msg = getList().get(position - 1);
             if (!((AbstractTimeLineFragment) fragment).clearActionModeIfOpen()) {
                 Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
@@ -276,22 +296,54 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                 return false;
             }
 
-            TextView tv = (TextView) v;
-            int start = tv.getSelectionStart();
-            int end = tv.getSelectionEnd();
-            SpannableString completeText = (SpannableString) ((TextView) v).getText();
-            boolean isNotLink = start == -1 || end == -1;
+            Layout layout = ((TextView) v).getLayout();
 
-            switch (event.getActionMasked()) {
-                case MotionEvent.ACTION_UP:
-                    if (isNotLink && completeText.getSpanStart(this) == -1) {
-                        holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
-                        holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
-                    }
-                    break;
+            int x = (int) event.getX();
+
+            int y = (int) event.getY();
+            int offset = 0;
+            if (layout != null) {
+
+                int line = layout.getLineForVertical(y);
+                offset = layout.getOffsetForHorizontal(line, x);
             }
 
-            return false;
+            TextView tv = (TextView) v;
+            SpannableString value = SpannableString.valueOf(tv.getText());
+            MyURLSpan[] urlSpans = value.getSpans(0, value.length(), MyURLSpan.class);
+            boolean result = false;
+            for (MyURLSpan urlSpan : urlSpans) {
+                int start = value.getSpanStart(urlSpan);
+                int end = value.getSpanEnd(urlSpan);
+                if (start <= offset && offset <= end) {
+                    result = true;
+                    break;
+                }
+            }
+
+            if (!result) {
+//                holder.listview_root.onTouchEvent(event);
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        holder.listview_root.setPressed(true);
+                        isPressed = true;
+                        checkForClick(holder.listview_root);
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        holder.listview_root.setPressed(false);
+                        removeLongClick();
+                        isPressed = false;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        holder.listview_root.setPressed(false);
+                        removeLongClick();
+                        isPressed = false;
+                        break;
+                }
+                return true;
+            } else {
+                return false;
+            }
         }
     };
 
@@ -302,27 +354,181 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             if (holder == null) {
                 return false;
             }
-            holder.listview_root.onTouchEvent(event);
-            return false;
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    holder.listview_root.setPressed(true);
+                    mHasPerformedLongPress = false;
+                    isPressed = true;
+                    checkForClick(holder.listview_root);
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    holder.listview_root.setPressed(false);
+                    removeLongClick();
+                    isPressed = false;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    holder.listview_root.setPressed(false);
+                    removeLongClick();
+                    isPressed = false;
+                    break;
+            }
+            return true;
         }
     };
 
-    private ViewHolder getViewHolderByView(View view) {
-        final int position = listView.getPositionForView(view);
+
+    private View.OnLongClickListener onLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            return longClick(v);
+        }
+    };
+
+    private boolean longClick(View v) {
+        final int position = listView.getPositionForView(v);
         if (position == ListView.INVALID_POSITION) {
-            return null;
-        }
-        int wantedPosition = position - 1;
-        int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
-        int wantedChild = wantedPosition - firstPosition;
-
-        if (wantedChild < 0 || wantedChild >= listView.getChildCount()) {
-            return null;
+            return false;
         }
 
-        View wantedView = listView.getChildAt(wantedChild);
-        ViewHolder holder = (ViewHolder) wantedView.getTag(R.drawable.ic_launcher + getItemViewType(position));
-        return holder;
+        int state = ((AbstractTimeLineFragment) fragment).getListViewScrollState();
+        if (state != AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+            return false;
+        }
+
+        MessageBean msg = getList().get(position - 1);
+        StatusSingleChoiceModeListener choiceModeListener = new StatusSingleChoiceModeListener(listView, StatusListAdapter.this, fragment, msg);
+        if (mActionMode != null) {
+            mActionMode.finish();
+            mActionMode = null;
+        }
+
+        listView.setItemChecked(position, true);
+        notifyDataSetChanged();
+        mActionMode = getActivity().startActionMode(choiceModeListener);
+        return true;
     }
 
+    private void click(View v) {
+        final int position = listView.getPositionForView(v);
+        if (position == ListView.INVALID_POSITION) {
+            return;
+        }
+        if (mActionMode != null) {
+            clearActionMode();
+            return;
+        }
+        MessageBean msg = getList().get(position - 1);
+        if (!((AbstractTimeLineFragment) fragment).clearActionModeIfOpen()) {
+            Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
+            intent.putExtra("msg", msg);
+            intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+            fragment.startActivityForResult(intent, 0);
+        }
+    }
+
+    //when view is recycled by listview, need to catch exception
+    private ViewHolder getViewHolderByView(View view) {
+        try {
+            final int position = listView.getPositionForView(view);
+            if (position == ListView.INVALID_POSITION) {
+                return null;
+            }
+            int wantedPosition = position - 1;
+            int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
+            int wantedChild = wantedPosition - firstPosition;
+
+            if (wantedChild < 0 || wantedChild >= listView.getChildCount()) {
+                return null;
+            }
+
+            View wantedView = listView.getChildAt(wantedChild);
+            ViewHolder holder = (ViewHolder) wantedView.getTag(R.drawable.ic_launcher + getItemViewType(position));
+            return holder;
+        } catch (NullPointerException e) {
+
+        }
+        return null;
+    }
+
+    public void clearActionMode() {
+        if (mActionMode != null) {
+
+            mActionMode.finish();
+            mActionMode = null;
+        }
+        if (listView.getCheckedItemCount() > 0) {
+            listView.clearChoices();
+            notifyDataSetChanged();
+        }
+    }
+
+    private CheckForLongPress mPendingCheckForLongPress;
+    private CheckForPress mPendingCheckForPress;
+
+    private boolean mHasPerformedLongPress;
+    private boolean isPressed = false;
+
+    private boolean isPressed() {
+        return isPressed;
+    }
+
+    private void checkForLongClick(View view, int offset) {
+        mHasPerformedLongPress = false;
+        mPendingCheckForLongPress = new CheckForLongPress(view);
+        handler.postDelayed(mPendingCheckForLongPress,
+                ViewConfiguration.getLongPressTimeout() - offset);
+    }
+
+    private void removeLongClick() {
+        if (mPendingCheckForLongPress != null)
+            handler.removeCallbacks(mPendingCheckForLongPress);
+    }
+
+    class CheckForLongPress implements Runnable {
+
+        View view;
+
+        public CheckForLongPress(View view) {
+            this.view = view;
+        }
+
+        public void run() {
+            if (isPressed()) {
+                longClick(view);
+                mHasPerformedLongPress = true;
+                Utility.vibrate(view.getContext());
+            }
+        }
+
+    }
+
+
+    private void checkForClick(View view) {
+        mPendingCheckForPress = new CheckForPress(view);
+        handler.postDelayed(mPendingCheckForPress,
+                ViewConfiguration.getTapTimeout());
+    }
+
+    private void removeClick() {
+        if (mPendingCheckForPress != null)
+            handler.removeCallbacks(mPendingCheckForPress);
+    }
+
+    class CheckForPress implements Runnable {
+
+        View view;
+
+        public CheckForPress(View view) {
+            this.view = view;
+        }
+
+        public void run() {
+            if (isPressed()) {
+                checkForLongClick(view, ViewConfiguration.getTapTimeout());
+            } else {
+                click(view);
+            }
+        }
+
+    }
 }

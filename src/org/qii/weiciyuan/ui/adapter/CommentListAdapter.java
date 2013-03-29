@@ -18,7 +18,7 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
-import org.qii.weiciyuan.support.lib.MyLinkMovementMethod;
+import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.actionmenu.CommentFloatingMenu;
@@ -97,10 +97,10 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);
 
-        if (holder.content.getMovementMethod() != MyLinkMovementMethod.getInstance())
-            holder.content.setMovementMethod(MyLinkMovementMethod.getInstance());
-        if (holder.repost_content.getMovementMethod() != MyLinkMovementMethod.getInstance())
-            holder.repost_content.setMovementMethod(MyLinkMovementMethod.getInstance());
+        if (holder.content.getMovementMethod() != LongClickableLinkMovementMethod.getInstance())
+            holder.content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
+        if (holder.repost_content.getMovementMethod() != LongClickableLinkMovementMethod.getInstance())
+            holder.repost_content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
 
         CommentBean reply = comment.getReply_comment();
         if (holder.replyIV != null)
@@ -164,8 +164,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
                 }
             });
 
-            holder.content.setMovementMethod(MyLinkMovementMethod.getInstance());
-            holder.repost_content.setMovementMethod(MyLinkMovementMethod.getInstance());
+            holder.content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
+            holder.repost_content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
 
             //onTouchListener has some strange problem, when user click link, holder.listview_root may also receive a MotionEvent.ACTION_DOWN event
             //the background then changed

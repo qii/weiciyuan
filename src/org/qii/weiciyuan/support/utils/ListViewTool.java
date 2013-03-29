@@ -9,7 +9,7 @@ import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.widget.TextView;
 import org.qii.weiciyuan.bean.*;
-import org.qii.weiciyuan.support.lib.MyLinkMovementMethod;
+import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.lib.WeiboPatterns;
 
@@ -31,7 +31,7 @@ public class ListViewTool {
         CharSequence content = view.getText();
         view.setText(convertNormalStringToSpannableString(content.toString()));
         if (view.getLinksClickable()) {
-            view.setMovementMethod(MyLinkMovementMethod.getInstance());
+            view.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
         }
     }
 

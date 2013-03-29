@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.support.lib;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -13,10 +12,10 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.view.View;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.adapter.LongClickLinkDialog;
 import org.qii.weiciyuan.ui.browser.BrowserWebActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
@@ -90,10 +89,12 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
                 newValue = d;
             }
             if (!TextUtils.isEmpty(newValue)) {
-                ClipboardManager cm = (ClipboardManager) widget.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", newValue));
-                Toast.makeText(widget.getContext(), String.format(widget.getContext().getString(R.string.have_copied), newValue), Toast.LENGTH_SHORT).show();
+                Utility.vibrate(widget.getContext());
+                LongClickLinkDialog dialog = new LongClickLinkDialog(data);
+                dialog.show(((Activity) widget.getContext()).getFragmentManager(), "");
+
             }
+
         }
     }
 

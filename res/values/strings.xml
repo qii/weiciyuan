@@ -58,6 +58,9 @@
     <string name="have_copied">已经复制 %s</string>
     <string name="open">打开</string>
 
+    <!--long click dialog-->
+    <string name="copy">复制</string>
+
     <!--system -->
     <string name="timeout">网络有问题，连不上</string>
     <string name="unknown_error_error_code">未知错误，错误代码</string>

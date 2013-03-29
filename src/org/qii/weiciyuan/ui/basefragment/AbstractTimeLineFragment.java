@@ -44,6 +44,12 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
     public abstract T getList();
 
+    private int listViewScrollState = -1;
+
+    public int getListViewScrollState() {
+        return listViewScrollState;
+    }
+
     public PullToRefreshListView getPullToRefreshListView() {
         return pullToRefreshListView;
     }
@@ -130,6 +136,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
+                listViewScrollState = scrollState;
                 switch (scrollState) {
 
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
@@ -157,10 +164,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+                onListViewScroll();
             }
         }
-
         );
 
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -212,6 +218,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
 
     protected void onListViewScrollStop() {
+
+    }
+
+    protected void onListViewScroll() {
 
     }
 

@@ -5,7 +5,6 @@ import android.text.Layout;
 import android.text.NoCopySpan;
 import android.text.Selection;
 import android.text.Spannable;
-import android.text.method.MovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -19,7 +18,7 @@ import android.widget.TextView;
  * A movement method that traverses links in the text buffer and scrolls if necessary.
  * Supports clicking on links with DPad Center or Enter.
  */
-public class MyLinkMovementMethod extends ScrollingMovementMethod {
+public class LongClickableLinkMovementMethod extends ScrollingMovementMethod {
 
     private static final int CLICK = 1;
     private static final int UP = 2;
@@ -29,6 +28,8 @@ public class MyLinkMovementMethod extends ScrollingMovementMethod {
     private CheckForLongPress mPendingCheckForLongPress;
 
     private boolean pressed;
+
+    private Handler handler = new Handler();
 
     @Override
     protected boolean handleMovementKey(TextView widget, Spannable buffer, int keyCode,
@@ -180,6 +181,8 @@ public class MyLinkMovementMethod extends ScrollingMovementMethod {
         return false;
     }
 
+    private float[] lastEvent = new float[2];
+
     @Override
     public boolean onTouchEvent(TextView widget, Spannable buffer,
                                 MotionEvent event) {
@@ -208,8 +211,11 @@ public class MyLinkMovementMethod extends ScrollingMovementMethod {
                         link[0].onClick(widget);
                     }
                     pressed = false;
+                    lastEvent = new float[2];
                 } else if (action == MotionEvent.ACTION_DOWN) {
                     pressed = true;
+                    lastEvent[0] = event.getX();
+                    lastEvent[1] = event.getY();
                     checkForLongClick(link, widget);
                     Selection.setSelection(buffer,
                             buffer.getSpanStart(link[0]),
@@ -220,22 +226,39 @@ public class MyLinkMovementMethod extends ScrollingMovementMethod {
             } else {
                 Selection.removeSelection(buffer);
             }
-        }
-
-        if (action == MotionEvent.ACTION_MOVE) {
+        } else if (action == MotionEvent.ACTION_MOVE) {
+            float[] position = {event.getX(), event.getY()};
+//            int slop = ViewConfiguration.get(widget.getContext()).getScaledTouchSlop();
+            int slop = 6;
+            float xInstance = Math.abs(lastEvent[0] - position[0]);
+            float yInstance = Math.abs(lastEvent[1] - position[1]);
+            double instance = Math.sqrt(Math.hypot(xInstance, yInstance));
+            if (instance > slop) {
+                pressed = false;
+            }
+        } else if (action == MotionEvent.ACTION_CANCEL) {
             pressed = false;
+            lastEvent = new float[2];
+        } else {
+            pressed = false;
+            lastEvent = new float[2];
         }
-
         return super.onTouchEvent(widget, buffer, event);
     }
 
     private void checkForLongClick(MyURLSpan[] spans, View widget) {
         mHasPerformedLongPress = false;
         mPendingCheckForLongPress = new CheckForLongPress(spans, widget);
-        new Handler().postDelayed(mPendingCheckForLongPress,
+        handler.postDelayed(mPendingCheckForLongPress,
                 ViewConfiguration.getLongPressTimeout());
     }
 
+    public void removeLongClickCallback() {
+        if (mPendingCheckForLongPress != null) {
+            handler.removeCallbacks(mPendingCheckForLongPress);
+            mPendingCheckForLongPress = null;
+        }
+    }
 
     class CheckForLongPress implements Runnable {
         MyURLSpan[] spans;
@@ -281,13 +304,13 @@ public class MyLinkMovementMethod extends ScrollingMovementMethod {
         }
     }
 
-    public static MovementMethod getInstance() {
+    public static LongClickableLinkMovementMethod getInstance() {
         if (sInstance == null)
-            sInstance = new MyLinkMovementMethod();
+            sInstance = new LongClickableLinkMovementMethod();
 
         return sInstance;
     }
 
-    private static MyLinkMovementMethod sInstance;
+    private static LongClickableLinkMovementMethod sInstance;
     private static Object FROM_BELOW = new NoCopySpan.Concrete();
 }

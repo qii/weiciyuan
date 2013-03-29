@@ -15,7 +15,6 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
@@ -53,20 +52,20 @@ public abstract class AbstractMessageTimeLineFragment<T extends ListBean<Message
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (position - 1 < getList().getSize() && position - 1 >= 0 && timeLineAdapter.getItem(position - 1) != null) {
-                    MessageBean msg = getList().getItemList().get(position - 1);
-                    StatusSingleChoiceModeListener choiceModeListener = new StatusSingleChoiceModeListener(getListView(), (StatusListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, msg);
-                    if (mActionMode != null) {
-                        mActionMode.finish();
-                        mActionMode = null;
-                    }
-
-                    getListView().setItemChecked(position, true);
-                    getAdapter().notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(choiceModeListener);
-                    return true;
-
-                }
+//                if (position - 1 < getList().getSize() && position - 1 >= 0 && timeLineAdapter.getItem(position - 1) != null) {
+//                    MessageBean msg = getList().getItemList().get(position - 1);
+//                    StatusSingleChoiceModeListener choiceModeListener = new StatusSingleChoiceModeListener(getListView(), (StatusListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, msg);
+//                    if (mActionMode != null) {
+//                        mActionMode.finish();
+//                        mActionMode = null;
+//                    }
+//
+//                    getListView().setItemChecked(position, true);
+//                    getAdapter().notifyDataSetChanged();
+//                    mActionMode = getActivity().startActionMode(choiceModeListener);
+//                    return true;
+//
+//                }
                 return false;
             }
         });
@@ -95,6 +94,14 @@ public abstract class AbstractMessageTimeLineFragment<T extends ListBean<Message
         getListView().setAdapter(timeLineAdapter);
     }
 
+    @Override
+    protected void onListViewScroll() {
+        ((StatusListAdapter) timeLineAdapter).onListViewScroll();
+    }
+
+    public void clearActionMode() {
+        ((StatusListAdapter) timeLineAdapter).clearActionMode();
+    }
 
     @Override
     public void removeItem(int position) {

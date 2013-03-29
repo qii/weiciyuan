@@ -15,8 +15,8 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.asyncdrawable.MsgDetailReadWorker;
+import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.MyLinkMovementMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -268,7 +268,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             ((AbstractAppActivity) getActivity()).getBitmapDownloader().downloadAvatar(layout.avatar, msg.getUser());
         }
         layout.content.setText(msg.getListViewSpannableString());
-        layout.content.setMovementMethod(MyLinkMovementMethod.getInstance());
+        layout.content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
 
         layout.time.setText(msg.getTimeInFormat());
 
@@ -305,7 +305,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
             layout.repost_layout.setVisibility(View.VISIBLE);
             layout.recontent.setVisibility(View.VISIBLE);
-            layout.recontent.setMovementMethod(MyLinkMovementMethod.getInstance());
+            layout.recontent.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
             if (repostMsg.getUser() != null) {
                 layout.recontent.setText(repostMsg.getListViewSpannableString());
                 buildRepostCount();
