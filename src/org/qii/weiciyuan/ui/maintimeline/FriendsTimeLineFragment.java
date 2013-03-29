@@ -58,7 +58,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private String currentGroupId = ALL_GROUP_ID;
 
     private HashMap<String, MessageListBean> groupDataCache = new HashMap<String, MessageListBean>();
-    private HashMap<String, TimeLinePosition> timelinePositionsMap = new HashMap<String, TimeLinePosition>();
+    private HashMap<String, TimeLinePosition> positionCache = new HashMap<String, TimeLinePosition>();
 
     private MessageListBean bean = new MessageListBean();
 
@@ -112,11 +112,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     private void savePositionToPositionsCache() {
-        timelinePositionsMap.put(currentGroupId, Utility.getCurrentPositionFromListView(getListView()));
+        positionCache.put(currentGroupId, Utility.getCurrentPositionFromListView(getListView()));
     }
 
     private void setListViewPositionFromPositionsCache() {
-        TimeLinePosition p = timelinePositionsMap.get(currentGroupId);
+        TimeLinePosition p = positionCache.get(currentGroupId);
         if (p != null)
             getListView().setSelectionFromTop(p.position + 1, p.top);
         else
@@ -124,7 +124,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     private void savePositionToDB() {
-        final TimeLinePosition position = timelinePositionsMap.get(currentGroupId);
+        final TimeLinePosition position = positionCache.get(currentGroupId);
         final String groupId = currentGroupId;
         Runnable runnable;
         if (groupId.equals(ALL_GROUP_ID)) {
@@ -283,7 +283,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     selectedItemId = finalList.get(which - 2).getIdstr();
                 }
                 if (!selectedItemId.equals(currentGroupId)) {
-                    timelinePositionsMap.put(currentGroupId, Utility.getCurrentPositionFromListView(getListView()));
+                    positionCache.put(currentGroupId, Utility.getCurrentPositionFromListView(getListView()));
                     setSelected(selectedItemId);
                     switchGroup();
                 }
@@ -331,12 +331,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             super.onPostExecute(result);
             if (result != null) {
                 putToGroupDataMemoryCache(BILATERAL_GROUP_ID, result.get(BILATERAL_GROUP_ID).msgList);
-                timelinePositionsMap.put(BILATERAL_GROUP_ID, result.get(BILATERAL_GROUP_ID).position);
+                positionCache.put(BILATERAL_GROUP_ID, result.get(BILATERAL_GROUP_ID).position);
 
                 Set<String> keys = result.keySet();
                 for (String key : keys) {
                     putToGroupDataMemoryCache(key, result.get(key).msgList);
-                    timelinePositionsMap.put(key, result.get(key).position);
+                    positionCache.put(key, result.get(key).position);
                 }
             }
         }
@@ -348,7 +348,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 MessageTimeLineData homeMsg = result[0];
                 getList().replaceData(homeMsg.msgList);
                 putToGroupDataMemoryCache(ALL_GROUP_ID, homeMsg.msgList);
-                timelinePositionsMap.put(ALL_GROUP_ID, homeMsg.position);
+                positionCache.put(ALL_GROUP_ID, homeMsg.position);
             }
             getPullToRefreshListView().setVisibility(View.VISIBLE);
             getAdapter().notifyDataSetChanged();
