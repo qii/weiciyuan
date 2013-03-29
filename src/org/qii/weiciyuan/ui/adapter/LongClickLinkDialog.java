@@ -41,7 +41,8 @@ public class LongClickLinkDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.uri = savedInstanceState.getParcelable("uri");
+        if (savedInstanceState != null)
+            this.uri = savedInstanceState.getParcelable("uri");
     }
 
     @Override

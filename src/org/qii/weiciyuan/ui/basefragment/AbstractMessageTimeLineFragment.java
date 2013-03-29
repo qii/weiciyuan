@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ListBean;
@@ -48,27 +47,6 @@ public abstract class AbstractMessageTimeLineFragment<T extends ListBean<Message
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-//                if (position - 1 < getList().getSize() && position - 1 >= 0 && timeLineAdapter.getItem(position - 1) != null) {
-//                    MessageBean msg = getList().getItemList().get(position - 1);
-//                    StatusSingleChoiceModeListener choiceModeListener = new StatusSingleChoiceModeListener(getListView(), (StatusListAdapter) timeLineAdapter, AbstractMessageTimeLineFragment.this, msg);
-//                    if (mActionMode != null) {
-//                        mActionMode.finish();
-//                        mActionMode = null;
-//                    }
-//
-//                    getListView().setItemChecked(position, true);
-//                    getAdapter().notifyDataSetChanged();
-//                    mActionMode = getActivity().startActionMode(choiceModeListener);
-//                    return true;
-//
-//                }
-                return false;
-            }
-        });
         return view;
     }
 
