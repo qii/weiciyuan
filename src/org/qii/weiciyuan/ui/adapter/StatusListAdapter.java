@@ -66,6 +66,12 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
 
         }
+        if (hasActionMode()) {
+            int position = listView.getCheckedItemPosition();
+            if (listView.getFirstVisiblePosition() > position || listView.getLastVisiblePosition() < position) {
+                clearActionMode();
+            }
+        }
     }
 
     @Override
@@ -133,6 +139,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.content.setText(msg.getListViewSpannableString());
         }
 
+        holder.listview_root.setOnTouchListener(simpleOnTouchListener);
 
         holder.username.setOnTouchListener(simpleOnTouchListener);
         holder.time.setOnTouchListener(simpleOnTouchListener);
@@ -277,7 +284,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             Layout layout = ((TextView) v).getLayout();
 
             int x = (int) event.getX();
-
             int y = (int) event.getY();
             int offset = 0;
             if (layout != null) {
@@ -300,12 +306,12 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             }
 
             if (!result) {
-//                holder.listview_root.onTouchEvent(event);
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
                         holder.listview_root.setPressed(true);
                         isPressed = true;
-                        checkForClick(holder.listview_root);
+                        int position = listView.pointToPosition((int) event.getRawX(), (int) event.getRawY());
+                        checkForClick(position);
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         holder.listview_root.setPressed(false);
@@ -337,7 +343,10 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                     holder.listview_root.setPressed(true);
                     mHasPerformedLongPress = false;
                     isPressed = true;
-                    checkForClick(holder.listview_root);
+                    int x = (int) event.getX();
+                    int y = (int) event.getY();
+                    int position = listView.pointToPosition((int) event.getRawX(), (int) event.getRawY());
+                    checkForClick(position);
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     holder.listview_root.setPressed(false);
@@ -355,15 +364,8 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     };
 
 
-    private View.OnLongClickListener onLongClickListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            return longClick(v);
-        }
-    };
+    private boolean longClick(int position) {
 
-    private boolean longClick(View v) {
-        final int position = listView.getPositionForView(v);
         if (position == ListView.INVALID_POSITION) {
             return false;
         }
@@ -386,8 +388,8 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         return true;
     }
 
-    private void click(View v) {
-        final int position = listView.getPositionForView(v);
+    private void click(int position) {
+
         if (position == ListView.INVALID_POSITION) {
             return;
         }
@@ -430,7 +432,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
     public void clearActionMode() {
         if (mActionMode != null) {
-
             mActionMode.finish();
             mActionMode = null;
         }
@@ -438,6 +439,10 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             listView.clearChoices();
             notifyDataSetChanged();
         }
+    }
+
+    private boolean hasActionMode() {
+        return mActionMode != null;
     }
 
     private CheckForLongPress mPendingCheckForLongPress;
@@ -450,9 +455,13 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         return isPressed;
     }
 
-    private void checkForLongClick(View view, int offset) {
+    private void checkForLongClick(int position, int offset) {
         mHasPerformedLongPress = false;
-        mPendingCheckForLongPress = new CheckForLongPress(view);
+        if (mPendingCheckForLongPress == null) {
+            mPendingCheckForLongPress = new CheckForLongPress(position);
+        } else {
+            mPendingCheckForLongPress.setPosition(position);
+        }
         handler.postDelayed(mPendingCheckForLongPress,
                 ViewConfiguration.getLongPressTimeout() - offset);
     }
@@ -464,25 +473,33 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
     class CheckForLongPress implements Runnable {
 
-        View view;
+        int position;
 
-        public CheckForLongPress(View view) {
-            this.view = view;
+        public void setPosition(int positon) {
+            this.position = positon;
+        }
+
+        public CheckForLongPress(int position) {
+            this.position = position;
         }
 
         public void run() {
             if (isPressed()) {
-                longClick(view);
+                longClick(position);
                 mHasPerformedLongPress = true;
-                Utility.vibrate(view.getContext());
+                Utility.vibrate(fragment.getActivity());
             }
         }
 
     }
 
 
-    private void checkForClick(View view) {
-        mPendingCheckForPress = new CheckForPress(view);
+    private void checkForClick(int position) {
+        if (mPendingCheckForPress == null)
+            mPendingCheckForPress = new CheckForPress(position);
+        else
+            mPendingCheckForPress.setPosition(position);
+
         handler.postDelayed(mPendingCheckForPress,
                 ViewConfiguration.getTapTimeout());
     }
@@ -494,17 +511,21 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
     class CheckForPress implements Runnable {
 
-        View view;
+        int position;
 
-        public CheckForPress(View view) {
-            this.view = view;
+        public void setPosition(int positon) {
+            this.position = positon;
+        }
+
+        public CheckForPress(int position) {
+            this.position = position;
         }
 
         public void run() {
             if (isPressed()) {
-                checkForLongClick(view, ViewConfiguration.getTapTimeout());
+                checkForLongClick(position, ViewConfiguration.getTapTimeout());
             } else {
-                click(view);
+                click(position);
             }
         }
 
