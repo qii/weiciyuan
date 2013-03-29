@@ -99,102 +99,23 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.listview_layout, container, false);
+
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         progressBar.setVisibility(View.GONE);
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
 
-        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
-
-            @Override
-            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-
-                refresh();
-            }
-        });
-
-        pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
-            @Override
-            public void onLastItemVisible() {
-                listViewFooterViewClick(null);
-            }
-        });
 
         getListView().setHeaderDividersEnabled(false);
         footerView = inflater.inflate(R.layout.listview_footer_layout, null);
         getListView().addFooterView(footerView);
         dismissFooterView();
 
-        pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                listViewScrollState = scrollState;
-                switch (scrollState) {
+        pullToRefreshListView.setOnRefreshListener(listViewOnRefreshListener);
+        pullToRefreshListView.setOnLastItemVisibleListener(listViewOnLastItemVisibleListener);
+        pullToRefreshListView.setOnScrollListener(listViewOnScrollListener);
+        pullToRefreshListView.setOnItemClickListener(listViewOnItemClickListener);
 
-                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        if (!enableRefreshTime) {
-                            enableRefreshTime = true;
-                            getAdapter().notifyDataSetChanged();
-                        }
-                        onListViewScrollStop();
-                        break;
-
-
-                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-
-                        enableRefreshTime = false;
-                        break;
-
-                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-
-                        enableRefreshTime = true;
-                        break;
-
-
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                onListViewScroll();
-            }
-        }
-        );
-
-        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                if (mActionMode != null) {
-                    getListView().clearChoices();
-                    mActionMode.finish();
-                    mActionMode = null;
-                    return;
-                }
-                getListView().clearChoices();
-                if (position - 1 < getList().getSize() && position - 1 >= 0) {
-                    int index = position - 1;
-                    ItemBean msg = getList().getItem(index);
-
-                    if (msg != null) {
-                        listViewItemClick(parent, view, index, id);
-
-                    } else {
-                        String beginId = getList().getItem(index - 1).getId();
-                        String endTag = getList().getItem(index + 1).getId();
-                        String endId = getList().getItem(index + 2).getId();
-
-                        loadMiddleMsg(beginId, endId, endTag, index);
-
-                        Toast.makeText(getActivity(), getString(R.string.loading_middle_msg), Toast.LENGTH_SHORT).show();
-                    }
-
-                } else if (position - 1 >= getList().getSize()) {
-
-                    listViewFooterViewClick(view);
-                }
-            }
-        });
         buildListAdapter();
         return view;
     }
@@ -208,6 +129,81 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
     }
 
+    private PullToRefreshBase.OnLastItemVisibleListener listViewOnLastItemVisibleListener = new PullToRefreshBase.OnLastItemVisibleListener() {
+        @Override
+        public void onLastItemVisible() {
+            listViewFooterViewClick(null);
+        }
+    };
+
+    private PullToRefreshBase.OnRefreshListener<ListView> listViewOnRefreshListener = new PullToRefreshBase.OnRefreshListener<ListView>() {
+        @Override
+        public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+            refresh();
+        }
+    };
+
+    private AdapterView.OnItemClickListener listViewOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            if (mActionMode != null) {
+                getListView().clearChoices();
+                mActionMode.finish();
+                mActionMode = null;
+                return;
+            }
+            getListView().clearChoices();
+            if (position - 1 < getList().getSize() && position - 1 >= 0) {
+                int index = position - 1;
+                ItemBean msg = getList().getItem(index);
+
+                if (msg != null) {
+                    listViewItemClick(parent, view, index, id);
+
+                } else {
+                    String beginId = getList().getItem(index - 1).getId();
+                    String endTag = getList().getItem(index + 1).getId();
+                    String endId = getList().getItem(index + 2).getId();
+
+                    loadMiddleMsg(beginId, endId, endTag, index);
+
+                    Toast.makeText(getActivity(), getString(R.string.loading_middle_msg), Toast.LENGTH_SHORT).show();
+                }
+
+            } else if (position - 1 >= getList().getSize()) {
+
+                listViewFooterViewClick(view);
+            }
+        }
+    };
+
+    private AbsListView.OnScrollListener listViewOnScrollListener = new AbsListView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            listViewScrollState = scrollState;
+            switch (scrollState) {
+                case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                    if (!enableRefreshTime) {
+                        enableRefreshTime = true;
+                        getAdapter().notifyDataSetChanged();
+                    }
+                    onListViewScrollStop();
+                    break;
+                case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                    enableRefreshTime = false;
+                    break;
+                case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                    enableRefreshTime = true;
+                    break;
+            }
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            onListViewScroll();
+        }
+    };
 
     protected void onListViewScrollStop() {
 
