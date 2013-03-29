@@ -3,6 +3,7 @@ package org.qii.weiciyuan.bean;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
 /**
@@ -172,4 +173,9 @@ public class DMBean extends ItemBean {
     private String source;
     private String status_id;
     private String geo;
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
+    }
 }

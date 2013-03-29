@@ -32,4 +32,9 @@ public class AtUserBean {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

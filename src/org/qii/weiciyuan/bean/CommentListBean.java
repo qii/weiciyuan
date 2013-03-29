@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.bean;
 
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,5 +74,10 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> {
     public void clear() {
         setTotal_number(0);
         getItemList().clear();
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

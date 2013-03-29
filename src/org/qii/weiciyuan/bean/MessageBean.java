@@ -3,6 +3,7 @@ package org.qii.weiciyuan.bean;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.text.SimpleDateFormat;
@@ -131,13 +132,6 @@ public class MessageBean extends ItemBean {
         this.comments_count = comments_count;
     }
 
-//    public String getAnnotations() {
-//        return annotations;
-//    }
-//
-//    public void setAnnotations(String annotations) {
-//        this.annotations = annotations;
-//    }
 
     public UserBean getUser() {
         return user;
@@ -157,10 +151,6 @@ public class MessageBean extends ItemBean {
 
     public String getListviewItemShowTime() {
         return TimeTool.getListTime(this);
-    }
-
-    public void setListviewItemShowTime(String listviewItemShowTime) {
-        this.listviewItemShowTime = listviewItemShowTime;
     }
 
     public String getIdstr() {
@@ -242,7 +232,6 @@ public class MessageBean extends ItemBean {
         this.original_pic = original_pic;
     }
 
-    private String listviewItemShowTime;
 
     @Override
     public boolean equals(Object otherObject) {
@@ -267,5 +256,8 @@ public class MessageBean extends ItemBean {
         return getIdstr().hashCode();
     }
 
-
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
+    }
 }

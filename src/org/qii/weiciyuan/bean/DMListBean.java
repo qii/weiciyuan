@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,5 +48,10 @@ public class DMListBean extends ListBean<DMBean, DMListBean> {
     public void addOldData(DMListBean oldValue) {
         setTotal_number(oldValue.getTotal_number());
         getItemList().addAll(oldValue.getItemList());
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

@@ -3,6 +3,7 @@ package org.qii.weiciyuan.bean;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
 /**
@@ -113,5 +114,10 @@ public class CommentBean extends ItemBean {
 
     public void setStatus(MessageBean status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }
