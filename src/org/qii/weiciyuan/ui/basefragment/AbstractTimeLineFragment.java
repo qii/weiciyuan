@@ -94,14 +94,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         }
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (this.isVisible() && isVisibleToUser) {
-//            getAdapter().notifyDataSetChanged();
-        }
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater,
