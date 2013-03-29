@@ -310,7 +310,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                     case MotionEvent.ACTION_DOWN:
                         holder.listview_root.setPressed(true);
                         isPressed = true;
-                        int position = listView.pointToPosition((int) event.getRawX(), (int) event.getRawY());
+                        final int position = listView.getPositionForView(v);
                         checkForClick(position);
                         break;
                     case MotionEvent.ACTION_CANCEL:
@@ -343,9 +343,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                     holder.listview_root.setPressed(true);
                     mHasPerformedLongPress = false;
                     isPressed = true;
-                    int x = (int) event.getX();
-                    int y = (int) event.getY();
-                    int position = listView.pointToPosition((int) event.getRawX(), (int) event.getRawY());
+                    final int position = listView.getPositionForView(v);
                     checkForClick(position);
                     break;
                 case MotionEvent.ACTION_CANCEL:
