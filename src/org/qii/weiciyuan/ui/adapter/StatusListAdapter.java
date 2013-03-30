@@ -341,7 +341,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     holder.listview_root.setPressed(true);
-                    mHasPerformedLongPress = false;
                     isPressed = true;
                     final int position = listView.getPositionForView(v);
                     checkForClick(position);
@@ -446,7 +445,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     private CheckForLongPress mPendingCheckForLongPress;
     private CheckForPress mPendingCheckForPress;
 
-    private boolean mHasPerformedLongPress;
     private boolean isPressed = false;
 
     private boolean isPressed() {
@@ -454,7 +452,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     }
 
     private void checkForLongClick(int position, int offset) {
-        mHasPerformedLongPress = false;
         if (mPendingCheckForLongPress == null) {
             mPendingCheckForLongPress = new CheckForLongPress(position);
         } else {
@@ -473,8 +470,8 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
         int position;
 
-        public void setPosition(int positon) {
-            this.position = positon;
+        public void setPosition(int position) {
+            this.position = position;
         }
 
         public CheckForLongPress(int position) {
@@ -484,7 +481,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         public void run() {
             if (isPressed()) {
                 onItemLongClick(position);
-                mHasPerformedLongPress = true;
                 Utility.vibrate(fragment.getActivity());
             }
         }
