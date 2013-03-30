@@ -362,7 +362,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     };
 
 
-    private boolean longClick(int position) {
+    private boolean onItemLongClick(int position) {
 
         if (position == ListView.INVALID_POSITION) {
             return false;
@@ -386,7 +386,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         return true;
     }
 
-    private void click(int position) {
+    private void onItemClick(int position) {
 
         if (position == ListView.INVALID_POSITION) {
             return;
@@ -483,7 +483,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
         public void run() {
             if (isPressed()) {
-                longClick(position);
+                onItemLongClick(position);
                 mHasPerformedLongPress = true;
                 Utility.vibrate(fragment.getActivity());
             }
@@ -523,7 +523,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             if (isPressed()) {
                 checkForLongClick(position, ViewConfiguration.getTapTimeout());
             } else {
-                click(position);
+                onItemClick(position);
             }
         }
 
