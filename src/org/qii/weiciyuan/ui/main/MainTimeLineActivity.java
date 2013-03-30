@@ -96,7 +96,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         GlobalContext.getInstance().setAccountBean(accountBean);
         SettingUtility.setDefaultAccountId(accountBean.getUid());
 
-        buildPhoneInterface(savedInstanceState);
+        buildInterface(savedInstanceState);
 
         Executors.newSingleThreadScheduledExecutor().schedule(new ClearCacheTask(), 8, TimeUnit.SECONDS);
 
@@ -193,14 +193,65 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         }
     }
 
-    private void buildPhoneInterface(Bundle savedInstanceState) {
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+    private void buildInterface(Bundle savedInstanceState) {
         getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
         getWindow().setBackgroundDrawable(null);
         setContentView(R.layout.menu_right);
-        setBehindContentView(R.layout.menu_frame);
+        boolean phone = findViewById(R.id.menu_frame) == null;
+        if (phone) {
+            buildPhoneInterface(savedInstanceState);
+        } else {
+            buildPadInterface(savedInstanceState);
+        }
 
+        buildCustomActionBarTitle(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.menu_frame, getMenuFragment(), LeftMenuFragment.class.getName());
+            fragmentTransaction.replace(R.id.menu_right_fl, getFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName());
+            getSlidingMenu().showContent();
+            fragmentTransaction.commit();
+        } else {
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.remove(getMentionsTimeLineFragment());
+            fragmentTransaction.remove(getMentionsCommentTimeLineFragment());
+            fragmentTransaction.remove(getCommentsTimeLineFragment());
+            fragmentTransaction.remove(getCommentsByMeTimeLineFragment());
+            fragmentTransaction.commit();
+        }
+
+
+        configSlidingMenu(phone);
+
+    }
+
+    private void configSlidingMenu(boolean phone) {
+        SlidingMenu slidingMenu = getSlidingMenu();
+        slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
+        slidingMenu.setShadowDrawable(R.drawable.shadow);
+        if (phone)
+            slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        else
+            slidingMenu.setBehindOffset(Utility.getScreenWidth());
+
+        slidingMenu.setFadeDegree(0.35f);
+        slidingMenu.setOnPageScrollListener(new SlidingMenu.OnPageScrollListener() {
+            @Override
+            public void onPageScroll() {
+                LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
+            }
+        });
+
+        slidingMenu.setOnClosedListener(new SlidingMenu.OnClosedListener() {
+            @Override
+            public void onClosed() {
+                LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
+            }
+        });
+    }
+
+    private void buildCustomActionBarTitle(Bundle savedInstanceState) {
         View title = getLayoutInflater().inflate(R.layout.maintimelineactivity_title_layout, null);
         titleText = (TextView) title.findViewById(R.id.tv_title);
         View clickToTop = title.findViewById(R.id.tv_click_to_top);
@@ -221,44 +272,24 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             }
         });
         ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.RIGHT);
-        actionBar.setCustomView(title, layoutParams);
-        actionBar.setDisplayShowCustomEnabled(true);
+        getActionBar().setCustomView(title, layoutParams);
+        getActionBar().setDisplayShowCustomEnabled(true);
+    }
 
-        if (savedInstanceState == null) {
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.menu_frame, getMenuFragment(), LeftMenuFragment.class.getName());
-            fragmentTransaction.replace(R.id.menu_right_fl, getFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName());
-            fragmentTransaction.commit();
-        } else {
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.remove(getMentionsTimeLineFragment());
-            fragmentTransaction.remove(getMentionsCommentTimeLineFragment());
-            fragmentTransaction.remove(getCommentsTimeLineFragment());
-            fragmentTransaction.remove(getCommentsByMeTimeLineFragment());
-            fragmentTransaction.commit();
-        }
+    private void buildPhoneInterface(Bundle savedInstanceState) {
+        setBehindContentView(R.layout.menu_frame);
+        getSlidingMenu().setSlidingEnabled(true);
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSlidingMenu().setMode(SlidingMenu.LEFT);
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+    }
 
-        SlidingMenu slidingMenu = getSlidingMenu();
-        slidingMenu.setMode(SlidingMenu.LEFT);
-        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-        slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
-        slidingMenu.setShadowDrawable(R.drawable.shadow);
-        slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        slidingMenu.setFadeDegree(0.35f);
-        slidingMenu.setOnPageScrollListener(new SlidingMenu.OnPageScrollListener() {
-            @Override
-            public void onPageScroll() {
-                LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
-            }
-        });
-
-        slidingMenu.setOnClosedListener(new SlidingMenu.OnClosedListener() {
-            @Override
-            public void onClosed() {
-                LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
-            }
-        });
-
+    private void buildPadInterface(Bundle savedInstanceState) {
+        View v = new View(this);
+        setBehindContentView(v);
+        getSlidingMenu().setSlidingEnabled(false);
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
     }
 
 
