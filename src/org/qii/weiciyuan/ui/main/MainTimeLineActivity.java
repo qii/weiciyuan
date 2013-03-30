@@ -20,6 +20,7 @@ import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
 import org.qii.weiciyuan.othercomponent.unreadnotification.UnreadMsgReceiver;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -244,7 +245,19 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         slidingMenu.setShadowDrawable(R.drawable.shadow);
         slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         slidingMenu.setFadeDegree(0.35f);
+        slidingMenu.setOnPageScrollListener(new SlidingMenu.OnPageScrollListener() {
+            @Override
+            public void onPageScroll() {
+                LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
+            }
+        });
 
+        slidingMenu.setOnClosedListener(new SlidingMenu.OnClosedListener() {
+            @Override
+            public void onClosed() {
+                LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
+            }
+        });
 
     }
 

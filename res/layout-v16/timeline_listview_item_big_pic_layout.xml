@@ -7,7 +7,7 @@
                 android:paddingRight="14dp"
                 android:paddingTop="14dp"
                 android:paddingBottom="14dp"
-                android:clickable="true"
+                android:clickable="false"
                 android:background="@drawable/listview_item_background_selector"
                 android:id="@+id/listview_root">
 
@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:singleLine="true"
         android:ellipsize="end"
-        android:clickable="true"
+        android:clickable="false"
         android:layout_toRightOf="@id/avatar"
         android:layout_toLeftOf="@id/count_layout"
         android:textStyle="bold"/>
@@ -105,7 +105,7 @@
         android:textSize="15sp"
         android:layout_below="@id/avatar"
         android:lineSpacingMultiplier="1.2"
-        android:clickable="true"
+        android:clickable="false"
         />
 
 
@@ -129,7 +129,7 @@
         android:textSize="15sp"
         android:lineSpacingMultiplier="1.2"
         android:visibility="gone"
-        android:clickable="true"
+        android:clickable="false"
         />
 
 

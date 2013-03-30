@@ -31,6 +31,12 @@ public class LongClickableLinkMovementMethod extends ScrollingMovementMethod {
 
     private Handler handler = new Handler();
 
+    private boolean longClickable = true;
+
+    public void setLongClickable(boolean value) {
+        this.longClickable = value;
+    }
+
     @Override
     protected boolean handleMovementKey(TextView widget, Spannable buffer, int keyCode,
                                         int movementMetaState, KeyEvent event) {
@@ -270,7 +276,7 @@ public class LongClickableLinkMovementMethod extends ScrollingMovementMethod {
         }
 
         public void run() {
-            if (isPressed()) {
+            if (isPressed() && longClickable) {
                 spans[0].onLongClick(widget);
                 mHasPerformedLongPress = true;
 

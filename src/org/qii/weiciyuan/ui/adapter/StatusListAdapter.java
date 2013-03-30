@@ -20,6 +20,7 @@ import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -146,6 +147,12 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
         holder.content.setOnTouchListener(onTouchListener);
         holder.repost_content.setOnTouchListener(onTouchListener);
+
+        holder.listview_root.setClickable(false);
+        holder.username.setClickable(false);
+        holder.time.setClickable(false);
+        holder.content.setClickable(false);
+        holder.repost_content.setClickable(false);
 
         if (holder.content.getMovementMethod() != LongClickableLinkMovementMethod.getInstance())
             holder.content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
@@ -306,30 +313,15 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             }
 
             if (!result) {
-                switch (event.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        holder.listview_root.setPressed(true);
-                        isPressed = true;
-                        final int position = listView.getPositionForView(v);
-                        checkForClick(position);
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                        holder.listview_root.setPressed(false);
-                        removeLongClick();
-                        isPressed = false;
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        holder.listview_root.setPressed(false);
-                        removeLongClick();
-                        isPressed = false;
-                        break;
-                }
-                return true;
+                return simpleOnTouchListener.onTouch(v, event);
             } else {
                 return false;
             }
         }
     };
+
+    private float[] lastEvent = new float[2];
+
 
     private View.OnTouchListener simpleOnTouchListener = new View.OnTouchListener() {
         @Override
@@ -344,16 +336,27 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                     isPressed = true;
                     final int position = listView.getPositionForView(v);
                     checkForClick(position);
+                    lastEvent[0] = event.getX();
+                    lastEvent[1] = event.getY();
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     holder.listview_root.setPressed(false);
                     removeLongClick();
+                    lastEvent = new float[2];
                     isPressed = false;
                     break;
                 case MotionEvent.ACTION_UP:
                     holder.listview_root.setPressed(false);
                     removeLongClick();
+                    lastEvent = new float[2];
                     isPressed = false;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float instance = Math.abs(lastEvent[0] - event.getX());
+                    if (instance > AppConfig.getScrollSlop()) {
+                        removeClick();
+                        LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
+                    }
                     break;
             }
             return true;
