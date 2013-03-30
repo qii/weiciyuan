@@ -20,7 +20,6 @@ import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -322,6 +321,9 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
     private float[] lastEvent = new float[2];
 
+    private PerformClick mPerformClick;
+
+    private UnsetPressedState mUnsetPressedState;
 
     private View.OnTouchListener simpleOnTouchListener = new View.OnTouchListener() {
         @Override
@@ -342,22 +344,37 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                 case MotionEvent.ACTION_CANCEL:
                     holder.listview_root.setPressed(false);
                     removeLongClick();
+                    removeClick();
                     lastEvent = new float[2];
                     isPressed = false;
                     break;
                 case MotionEvent.ACTION_UP:
-                    holder.listview_root.setPressed(false);
-                    removeLongClick();
+                    holder.listview_root.setPressed(true);
+                    if (!mHasPerformedLongPress) {
+                        removeLongClick();
+                        if (mPerformClick == null) {
+                            mPerformClick = new PerformClick(listView.getPositionForView(v));
+                        } else {
+                            mPerformClick.setPosition(listView.getPositionForView(v));
+                        }
+                        handler.post(mPerformClick);
+                    }
+
+                    if (mUnsetPressedState == null) {
+                        mUnsetPressedState = new UnsetPressedState(holder.listview_root);
+                    } else {
+                        mUnsetPressedState.setPosition(holder.listview_root);
+                    }
+                    handler.postDelayed(mUnsetPressedState,
+                            ViewConfiguration.getPressedStateDuration());
+
                     lastEvent = new float[2];
                     isPressed = false;
+                    removeClick();
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    float instanceX = Math.abs(lastEvent[0] - event.getX());
-                    float instanceY = Math.abs(lastEvent[1] - event.getY());
-                    if (Math.sqrt(Math.hypot(instanceX, instanceY)) > AppConfig.getScrollSlop()) {
-                        removeClick();
-                        LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
-                    }
+
+
                     break;
             }
             return true;
@@ -462,7 +479,43 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         return isPressed;
     }
 
+
+    private final class UnsetPressedState implements Runnable {
+        View root;
+
+        public UnsetPressedState(View root) {
+            this.root = root;
+        }
+
+        public void setPosition(View root) {
+            this.root = root;
+        }
+
+        public void run() {
+            root.setPressed(false);
+        }
+    }
+
+
+    private final class PerformClick implements Runnable {
+        int position;
+
+        public PerformClick(int position) {
+            this.position = position;
+        }
+
+        public void setPosition(int position) {
+            this.position = position;
+        }
+
+        public void run() {
+            onItemClick(position);
+        }
+    }
+
+
     private void checkForLongClick(int position, int offset) {
+        mHasPerformedLongPress = false;
         if (mPendingCheckForLongPress == null) {
             mPendingCheckForLongPress = new CheckForLongPress(position);
         } else {
@@ -491,8 +544,10 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
         public void run() {
             if (isPressed()) {
-                onItemLongClick(position);
-                Utility.vibrate(fragment.getActivity());
+                if (onItemLongClick(position)) {
+                    mHasPerformedLongPress = true;
+                    Utility.vibrate(fragment.getActivity());
+                }
             }
         }
 
@@ -531,8 +586,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.listview_root.setPressed(true);
             if (isPressed()) {
                 checkForLongClick(position, ViewConfiguration.getTapTimeout());
-            } else {
-                onItemClick(position);
             }
         }
 

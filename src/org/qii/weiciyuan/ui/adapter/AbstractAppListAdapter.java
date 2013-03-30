@@ -146,6 +146,10 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                         }
 
                         holder.listview_root.setOnClickListener(null);
+                        holder.username.setOnTouchListener(null);
+                        holder.content.setOnTouchListener(null);
+                        holder.repost_content.setOnTouchListener(null);
+                        holder.time.setOnTouchListener(null);
                     }
                 }
             }
