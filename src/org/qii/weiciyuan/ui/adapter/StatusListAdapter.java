@@ -352,8 +352,9 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                     isPressed = false;
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    float instance = Math.abs(lastEvent[0] - event.getX());
-                    if (instance > AppConfig.getScrollSlop()) {
+                    float instanceX = Math.abs(lastEvent[0] - event.getX());
+                    float instanceY = Math.abs(lastEvent[1] - event.getY());
+                    if (Math.sqrt(Math.hypot(instanceX, instanceY)) > AppConfig.getScrollSlop()) {
                         removeClick();
                         LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
                     }
