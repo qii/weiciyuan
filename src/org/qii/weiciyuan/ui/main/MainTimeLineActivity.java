@@ -336,8 +336,14 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             }
         }, 10, 50, TimeUnit.SECONDS);
 
+        readClipboard();
+    }
+
+    private void readClipboard() {
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData cmContent = cm.getPrimaryClip();
+        if (cmContent == null)
+            return;
         ClipData.Item item = cmContent.getItemAt(0);
         if (item != null) {
             String url = item.coerceToText(this).toString();
