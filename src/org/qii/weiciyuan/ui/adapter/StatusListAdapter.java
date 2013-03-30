@@ -345,6 +345,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                     holder.listview_root.setPressed(false);
                     removeLongClick();
                     removeClick();
+                    mHasPerformedLongPress = false;
                     lastEvent = new float[2];
                     isPressed = false;
                     break;
@@ -416,7 +417,12 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             return;
         }
 
-        Utility.getListViewItemViewFromPosition(listView, position).playSoundEffect(SoundEffectConstants.CLICK);
+        View view = Utility.getListViewItemViewFromPosition(listView, position);
+        if (view == null) {
+            return;
+        } else {
+            view.playSoundEffect(SoundEffectConstants.CLICK);
+        }
 
         MessageBean msg = getList().get(position - 1);
         if (!((AbstractTimeLineFragment) fragment).clearActionModeIfOpen()) {
@@ -549,7 +555,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             if (isPressed()) {
                 if (onItemLongClick(position)) {
                     mHasPerformedLongPress = true;
-                    Utility.vibrate(fragment.getActivity());
+                    Utility.vibrate(fragment.getActivity(), Utility.getListViewItemViewFromPosition(listView, position));
                 }
             }
         }
