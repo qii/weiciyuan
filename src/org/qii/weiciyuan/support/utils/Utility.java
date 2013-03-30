@@ -481,7 +481,7 @@ public class Utility {
         vibrator.vibrate(30);
     }
 
-    public static View getListViewFromPosition(ListView listView, int position) {
+    public static View getListViewItemViewFromPosition(ListView listView, int position) {
         return listView.getChildAt(position - listView.getFirstVisiblePosition());
     }
 }

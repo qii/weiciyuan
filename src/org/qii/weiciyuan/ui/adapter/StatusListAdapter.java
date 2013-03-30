@@ -357,7 +357,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                         } else {
                             mPerformClick.setPosition(listView.getPositionForView(v));
                         }
-                        handler.post(mPerformClick);
+                        handler.postDelayed(mPerformClick, ViewConfiguration.getPressedStateDuration());
                     }
 
                     if (mUnsetPressedState == null) {
@@ -415,6 +415,9 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             clearActionMode();
             return;
         }
+
+        Utility.getListViewItemViewFromPosition(listView, position).playSoundEffect(SoundEffectConstants.CLICK);
+
         MessageBean msg = getList().get(position - 1);
         if (!((AbstractTimeLineFragment) fragment).clearActionModeIfOpen()) {
             Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
