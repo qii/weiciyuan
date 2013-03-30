@@ -480,5 +480,9 @@ public class Utility {
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(30);
     }
+
+    public static View getListViewFromPosition(ListView listView, int position) {
+        return listView.getChildAt(position - listView.getFirstVisiblePosition());
+    }
 }
 

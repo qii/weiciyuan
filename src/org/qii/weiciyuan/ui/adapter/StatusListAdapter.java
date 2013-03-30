@@ -332,7 +332,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             }
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
-                    holder.listview_root.setPressed(true);
+                    mHasPerformedLongPress = false;
                     isPressed = true;
                     final int position = listView.getPositionForView(v);
                     checkForClick(position);
@@ -414,21 +414,27 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             if (position == ListView.INVALID_POSITION) {
                 return null;
             }
-            int wantedPosition = position - 1;
-            int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
-            int wantedChild = wantedPosition - firstPosition;
-
-            if (wantedChild < 0 || wantedChild >= listView.getChildCount()) {
-                return null;
-            }
-
-            View wantedView = listView.getChildAt(wantedChild);
-            ViewHolder holder = (ViewHolder) wantedView.getTag(R.drawable.ic_launcher + getItemViewType(position));
-            return holder;
+            return getViewHolderByView(position);
         } catch (NullPointerException e) {
 
         }
         return null;
+    }
+
+    private ViewHolder getViewHolderByView(int position) {
+
+        int wantedPosition = position - 1;
+        int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
+        int wantedChild = wantedPosition - firstPosition;
+
+        if (wantedChild < 0 || wantedChild >= listView.getChildCount()) {
+            return null;
+        }
+
+        View wantedView = listView.getChildAt(wantedChild);
+        ViewHolder holder = (ViewHolder) wantedView.getTag(R.drawable.ic_launcher + getItemViewType(position));
+        return holder;
+
     }
 
     public void clearActionMode() {
@@ -450,6 +456,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     private CheckForPress mPendingCheckForPress;
 
     private boolean isPressed = false;
+    private boolean mHasPerformedLongPress = false;
 
     private boolean isPressed() {
         return isPressed;
@@ -520,6 +527,8 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         }
 
         public void run() {
+            ViewHolder holder = getViewHolderByView(position);
+            holder.listview_root.setPressed(true);
             if (isPressed()) {
                 checkForLongClick(position, ViewConfiguration.getTapTimeout());
             } else {
