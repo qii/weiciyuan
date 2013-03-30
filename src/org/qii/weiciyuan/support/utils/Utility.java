@@ -485,5 +485,20 @@ public class Utility {
     public static View getListViewItemViewFromPosition(ListView listView, int position) {
         return listView.getChildAt(position - listView.getFirstVisiblePosition());
     }
+
+    public static String getMotionEventStringName(MotionEvent event) {
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                return "MotionEvent.ACTION_DOWN";
+            case MotionEvent.ACTION_UP:
+                return "MotionEvent.ACTION_UP";
+            case MotionEvent.ACTION_CANCEL:
+                return "MotionEvent.ACTION_CANCEL";
+            case MotionEvent.ACTION_MOVE:
+                return "MotionEvent.ACTION_MOVE";
+            default:
+                return "Other";
+        }
+    }
 }
 

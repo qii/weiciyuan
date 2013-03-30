@@ -20,6 +20,7 @@ import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -328,19 +329,25 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     private View.OnTouchListener simpleOnTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+
             ViewHolder holder = getViewHolderByView(v);
             if (holder == null) {
                 return false;
             }
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
-                    mHasPerformedLongPress = false;
-                    isPressed = true;
-                    final int position = listView.getPositionForView(v);
-                    checkForClick(position);
-                    lastEvent[0] = event.getX();
-                    lastEvent[1] = event.getY();
-                    break;
+                    int state = ((AbstractTimeLineFragment) fragment).getListViewScrollState();
+                    if (state == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
+                        return false;
+                    } else {
+                        mHasPerformedLongPress = false;
+                        isPressed = true;
+                        final int position = listView.getPositionForView(v);
+                        checkForClick(position);
+                        lastEvent[0] = event.getX();
+                        lastEvent[1] = event.getY();
+                        return true;
+                    }
                 case MotionEvent.ACTION_CANCEL:
                     holder.listview_root.setPressed(false);
                     removeLongClick();
@@ -348,7 +355,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                     mHasPerformedLongPress = false;
                     lastEvent = new float[2];
                     isPressed = false;
-                    break;
+                    return true;
                 case MotionEvent.ACTION_UP:
                     holder.listview_root.setPressed(true);
                     if (!mHasPerformedLongPress) {
@@ -372,7 +379,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                     lastEvent = new float[2];
                     isPressed = false;
                     removeClick();
-                    break;
+                    return true;
                 case MotionEvent.ACTION_MOVE:
 
 
