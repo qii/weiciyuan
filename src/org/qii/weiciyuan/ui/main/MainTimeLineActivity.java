@@ -240,6 +240,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             @Override
             public void onPageScroll() {
                 LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
+                (getFriendsTimeLineFragment()).clearActionMode();
             }
         });
 
