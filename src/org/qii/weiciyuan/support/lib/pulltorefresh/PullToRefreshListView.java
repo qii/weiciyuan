@@ -29,6 +29,7 @@ import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView> {
@@ -244,7 +245,7 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
         }
     }
 
-    protected class InternalListView extends ListView implements EmptyViewMethodAccessor {
+    protected class InternalListView extends AutoScrollListView implements EmptyViewMethodAccessor {
 
         private boolean mAddedLvFooter = false;
 
