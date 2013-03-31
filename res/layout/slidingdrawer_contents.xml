@@ -11,7 +11,9 @@
         android:layout_height="wrap_content"
         android:showDividers="middle"
         android:divider="@drawable/drawer_menu_divider"
-        android:dividerPadding="8dp"
+        android:dividerPadding="0dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:baselineAligned="false">
 
         <include layout="@layout/drawer_contents"/>
