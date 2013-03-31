@@ -29,7 +29,7 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(url);
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content, new BrowserShareTimeLineFragment(url))
                     .commit();
         }

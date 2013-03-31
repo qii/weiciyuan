@@ -1,9 +1,13 @@
 package org.qii.weiciyuan.ui.main;
 
-import android.app.*;
+import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.*;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -207,13 +211,13 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         buildCustomActionBarTitle(savedInstanceState);
 
         if (savedInstanceState == null) {
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.menu_frame, getMenuFragment(), LeftMenuFragment.class.getName());
             fragmentTransaction.replace(R.id.menu_right_fl, getFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName());
             getSlidingMenu().showContent();
             fragmentTransaction.commit();
         } else {
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.remove(getMentionsTimeLineFragment());
             fragmentTransaction.remove(getMentionsCommentTimeLineFragment());
             fragmentTransaction.remove(getCommentsTimeLineFragment());
@@ -396,7 +400,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             boolean b = Utility.isWeiboAccountIdLink(url) || Utility.isWeiboAccountDomainLink(url);
             if (a && b) {
                 OpenWeiboAccountLinkDialog dialog = new OpenWeiboAccountLinkDialog(url);
-                dialog.show(getFragmentManager(), "");
+                dialog.show(getSupportFragmentManager(), "");
                 SettingUtility.setLastFoundWeiboAccountLink(url);
             }
         }
@@ -463,7 +467,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
 
     public LeftMenuFragment getMenuFragment() {
-        LeftMenuFragment fragment = ((LeftMenuFragment) getFragmentManager().findFragmentByTag(
+        LeftMenuFragment fragment = ((LeftMenuFragment) getSupportFragmentManager().findFragmentByTag(
                 LeftMenuFragment.class.getName()));
         if (fragment == null) {
             fragment = new LeftMenuFragment();
@@ -472,7 +476,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     public MentionsCommentTimeLineFragment getMentionsCommentTimeLineFragment() {
-        MentionsCommentTimeLineFragment fragment = ((MentionsCommentTimeLineFragment) getFragmentManager().findFragmentByTag(
+        MentionsCommentTimeLineFragment fragment = ((MentionsCommentTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 MentionsCommentTimeLineFragment.class.getName()));
         if (fragment == null) {
             fragment = new MentionsCommentTimeLineFragment(getAccount(), getUser(), getToken());
@@ -482,7 +486,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
 
     public FriendsTimeLineFragment getFriendsTimeLineFragment() {
-        FriendsTimeLineFragment fragment = ((FriendsTimeLineFragment) getFragmentManager().findFragmentByTag(
+        FriendsTimeLineFragment fragment = ((FriendsTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 FriendsTimeLineFragment.class.getName()));
         if (fragment == null)
             fragment = new FriendsTimeLineFragment(getAccount(), getUser(), getToken());
@@ -491,7 +495,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     public MentionsWeiboTimeLineFragment getMentionsTimeLineFragment() {
-        MentionsWeiboTimeLineFragment fragment = ((MentionsWeiboTimeLineFragment) getFragmentManager().findFragmentByTag(
+        MentionsWeiboTimeLineFragment fragment = ((MentionsWeiboTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 MentionsWeiboTimeLineFragment.class.getName()));
         if (fragment == null)
             fragment = new MentionsWeiboTimeLineFragment(getAccount(), getUser(), getToken());
@@ -500,7 +504,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     public CommentsToMeTimeLineFragment getCommentsTimeLineFragment() {
-        CommentsToMeTimeLineFragment fragment = ((CommentsToMeTimeLineFragment) getFragmentManager().findFragmentByTag(
+        CommentsToMeTimeLineFragment fragment = ((CommentsToMeTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 CommentsToMeTimeLineFragment.class.getName()));
         if (fragment == null)
             fragment = new CommentsToMeTimeLineFragment(getAccount(), getUser(), getToken());
@@ -509,7 +513,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     public CommentsByMeTimeLineFragment getCommentsByMeTimeLineFragment() {
-        CommentsByMeTimeLineFragment fragment = ((CommentsByMeTimeLineFragment) getFragmentManager().findFragmentByTag(
+        CommentsByMeTimeLineFragment fragment = ((CommentsByMeTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 CommentsByMeTimeLineFragment.class.getName()));
         if (fragment == null)
             fragment = new CommentsByMeTimeLineFragment(getAccount(), getUser(), getToken());

@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.view.ViewConfiguration;
 import android.widget.Toast;
 import com.slidingmenu.lib.app.SlidingActivity;
+import com.slidingmenu.lib.app.SlidingFragmentActivity;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -23,7 +24,7 @@ import java.nio.charset.Charset;
  * User: qii
  * Date: 13-1-22
  */
-public class MainTimeLineParentActivity extends SlidingActivity implements ICommander {
+public class MainTimeLineParentActivity extends SlidingFragmentActivity implements ICommander {
 
     private int theme = 0;
 

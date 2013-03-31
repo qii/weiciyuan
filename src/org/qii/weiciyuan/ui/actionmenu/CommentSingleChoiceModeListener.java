@@ -1,13 +1,13 @@
 package org.qii.weiciyuan.ui.actionmenu;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.support.v4.app.Fragment;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -115,7 +115,7 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
             case R.id.menu_view:
                 intent = new Intent(getActivity(), BrowserCommentActivity.class);
                 intent.putExtra("comment", bean);
-                intent.putExtra("token",GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 getActivity().startActivity(intent);
                 listView.clearChoices();
                 mode.finish();
@@ -124,7 +124,7 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
 
             case R.id.menu_comment:
                 intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
-                intent.putExtra("token",GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("msg", bean);
                 getActivity().startActivity(intent);
                 listView.clearChoices();

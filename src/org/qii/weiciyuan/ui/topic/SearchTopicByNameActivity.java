@@ -26,7 +26,7 @@ public class SearchTopicByNameActivity extends AbstractAppActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle("#" + q + "#");
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content, new SearchTopicByNameFragment(q))
                     .commit();
         }

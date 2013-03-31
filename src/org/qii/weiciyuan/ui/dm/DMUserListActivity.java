@@ -21,7 +21,7 @@ public class DMUserListActivity extends AbstractAppActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.dm));
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content, new DMUserListFragment())
                     .commit();
         }

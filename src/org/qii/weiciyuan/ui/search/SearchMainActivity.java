@@ -1,10 +1,14 @@
 package org.qii.weiciyuan.ui.search;
 
-import android.app.*;
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -58,7 +62,7 @@ public class SearchMainActivity extends AbstractAppActivity {
 
     private void buildViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        SearchTabPagerAdapter adapter = new SearchTabPagerAdapter(getFragmentManager());
+        SearchTabPagerAdapter adapter = new SearchTabPagerAdapter(getSupportFragmentManager());
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
@@ -164,12 +168,12 @@ public class SearchMainActivity extends AbstractAppActivity {
     }
 
     private Fragment getSearchUserFragment() {
-        return getFragmentManager().findFragmentByTag(
+        return getSupportFragmentManager().findFragmentByTag(
                 SearchUserFragment.class.getName());
     }
 
     private AbstractMessageTimeLineFragment getSearchStatusFragment() {
-        return (AbstractMessageTimeLineFragment) getFragmentManager().findFragmentByTag(
+        return (AbstractMessageTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 SearchStatusFragment.class.getName());
     }
 

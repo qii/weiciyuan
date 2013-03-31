@@ -1,14 +1,14 @@
 package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.*;
 import android.widget.ShareActionProvider;
@@ -91,7 +91,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
 
     private void buildViewPager() {
         mViewPager = (MyViewPager) findViewById(R.id.viewpager);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
+        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(adapter);
@@ -138,17 +138,17 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
 
 
     private AbstractTimeLineFragment getRepostFragment() {
-        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
+        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 RepostsByIdTimeLineFragment.class.getName()));
     }
 
     private AbstractTimeLineFragment getCommentFragment() {
-        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
+        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 CommentsByIdTimeLineFragment.class.getName()));
     }
 
     private Fragment getBrowserWeiboMsgFragment() {
-        return getFragmentManager().findFragmentByTag(BrowserWeiboMsgFragment.class.getName());
+        return getSupportFragmentManager().findFragmentByTag(BrowserWeiboMsgFragment.class.getName());
     }
 
     ActionBar.TabListener tabListener = new ActionBar.TabListener() {

@@ -13,8 +13,7 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  * User: Jiang Qi
  * Date: 12-8-16
  */
-public class FanListActivity extends AbstractAppActivity implements IUserInfo
-         {
+public class FanListActivity extends AbstractAppActivity implements IUserInfo {
     private String token;
 
     private UserBean bean;
@@ -34,9 +33,9 @@ public class FanListActivity extends AbstractAppActivity implements IUserInfo
         bean = (UserBean) getIntent().getSerializableExtra("user");
 
 
-        if (getFragmentManager().findFragmentByTag(FanListFragment.class.getName()) == null) {
-            getFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new FanListFragment(bean.getId()),FanListFragment.class.getName())
+        if (getSupportFragmentManager().findFragmentByTag(FanListFragment.class.getName()) == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new FanListFragment(bean.getId()), FanListFragment.class.getName())
                     .commit();
         }
 

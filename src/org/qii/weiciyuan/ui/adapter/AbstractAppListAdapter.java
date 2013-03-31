@@ -1,10 +1,10 @@
 package org.qii.weiciyuan.ui.adapter;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.support.v4.app.Fragment;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;

@@ -1,6 +1,9 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.app.*;
+import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,6 +11,9 @@ import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.GestureDetector;
@@ -154,7 +160,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
         mViewPager = (MyViewPager) findViewById(R.id.viewpager);
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
+        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
@@ -289,19 +295,19 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     }
 
     private AbstractTimeLineFragment getStatusFragment() {
-        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
+        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 StatusesByIdTimeLineFragment.class.getName()));
     }
 
 
     private UserInfoFragment getInfoFragment() {
-        return ((UserInfoFragment) getFragmentManager().findFragmentByTag(
+        return ((UserInfoFragment) getSupportFragmentManager().findFragmentByTag(
                 UserInfoFragment.class.getName()));
     }
 
     private void manageGroup() {
         ManageGroupDialog dialog = new ManageGroupDialog(GlobalContext.getInstance().getGroup(), bean.getId());
-        dialog.show(getFragmentManager(), "");
+        dialog.show(getSupportFragmentManager(), "");
 
     }
 
@@ -617,7 +623,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             super.onCancelled(userBean);
             if (this.e != null) {
                 UserInfoActivityErrorDialog userInfoActivityErrorDialog = new UserInfoActivityErrorDialog(this.e.getError());
-                userInfoActivityErrorDialog.show(getFragmentManager(), "");
+                userInfoActivityErrorDialog.show(getSupportFragmentManager(), "");
             }
         }
 

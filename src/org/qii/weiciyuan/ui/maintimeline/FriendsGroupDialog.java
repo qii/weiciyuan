@@ -2,9 +2,9 @@ package org.qii.weiciyuan.ui.maintimeline;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GroupBean;
 import org.qii.weiciyuan.bean.GroupListBean;

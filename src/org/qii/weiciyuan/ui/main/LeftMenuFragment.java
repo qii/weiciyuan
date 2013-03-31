@@ -1,11 +1,11 @@
 package org.qii.weiciyuan.ui.main;
 
 import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -192,19 +192,20 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
 
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+
             @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+            public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
                 if (commentVP.getCurrentItem() != tab.getPosition())
                     commentVP.setCurrentItem(tab.getPosition());
             }
 
             @Override
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            public void onTabUnselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
 
             }
 
             @Override
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
 
             }
         };
@@ -304,19 +305,20 @@ public class LeftMenuFragment extends AbstractAppFragment {
         currentIndex = 1;
 
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+
             @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+            public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
                 if (mentionVP.getCurrentItem() != tab.getPosition())
                     mentionVP.setCurrentItem(tab.getPosition());
             }
 
             @Override
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            public void onTabUnselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
 
             }
 
             @Override
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
 
             }
         };

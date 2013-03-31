@@ -25,7 +25,7 @@ public class DMActivity extends AbstractAppActivity {
 
         setTitle(bean.getScreen_name());
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content, new DMConversationListFragment(bean))
                     .commit();
         }

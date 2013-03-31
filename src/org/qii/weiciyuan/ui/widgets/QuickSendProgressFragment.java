@@ -3,7 +3,7 @@ package org.qii.weiciyuan.ui.widgets;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import org.qii.weiciyuan.R;
 
 /**
