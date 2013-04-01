@@ -20,10 +20,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Display;
-import android.view.HapticFeedbackConstants;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import org.qii.weiciyuan.bean.GeoBean;
@@ -475,6 +472,10 @@ public class Utility {
 //        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 //        vibrator.vibrate(30);
         view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+    }
+
+    public static void playClickSound(View view) {
+        view.playSoundEffect(SoundEffectConstants.CLICK);
     }
 
     public static View getListViewItemViewFromPosition(ListView listView, int position) {
