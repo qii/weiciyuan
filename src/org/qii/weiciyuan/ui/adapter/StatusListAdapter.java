@@ -4,24 +4,16 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.text.Layout;
-import android.text.SpannableString;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
-import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
-import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.ListViewTool;
-import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 
 import java.util.HashMap;
 import java.util.List;
@@ -118,15 +110,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.content.setText(msg.getListViewSpannableString());
         }
 
-
-        holder.listview_root.setClickable(false);
-        holder.username.setClickable(false);
-        holder.time.setClickable(false);
-        holder.content.setClickable(false);
-        holder.repost_content.setClickable(false);
-
-        holder.content.setOnTouchListener(onTouchListener);
-        holder.repost_content.setOnTouchListener(onTouchListener);
 
         holder.time.setTime(msg.getMills());
         if (holder.source != null)
@@ -241,84 +224,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.repost_content_pic.setVisibility(View.VISIBLE);
             buildPic(repost_msg, holder.repost_content_pic, position);
         }
-    }
-
-
-    //onTouchListener has some strange problem, when user click link, holder.listview_root may also receive a MotionEvent.ACTION_DOWN event
-    //the background then changed
-    private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            ViewHolder holder = getViewHolderByView(v);
-
-            if (holder == null) {
-                return false;
-            }
-
-            Layout layout = ((TextView) v).getLayout();
-
-            int x = (int) event.getX();
-            int y = (int) event.getY();
-            int offset = 0;
-            if (layout != null) {
-
-                int line = layout.getLineForVertical(y);
-                offset = layout.getOffsetForHorizontal(line, x);
-            }
-
-            TextView tv = (TextView) v;
-            SpannableString value = SpannableString.valueOf(tv.getText());
-            MyURLSpan[] urlSpans = value.getSpans(0, value.length(), MyURLSpan.class);
-            boolean result = false;
-            for (MyURLSpan urlSpan : urlSpans) {
-                int start = value.getSpanStart(urlSpan);
-                int end = value.getSpanEnd(urlSpan);
-                if (start <= offset && offset <= end) {
-                    result = true;
-                    break;
-                }
-            }
-
-            boolean hasActionMode = ((AbstractMessageTimeLineFragment) fragment).hasActionMode();
-            if (result && !hasActionMode) {
-                return LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
-            } else {
-                return false;
-            }
-
-        }
-    };
-
-
-    //when view is recycled by listview, need to catch exception
-    private ViewHolder getViewHolderByView(View view) {
-        try {
-            final int position = listView.getPositionForView(view);
-            if (position == ListView.INVALID_POSITION) {
-                return null;
-            }
-            return getViewHolderByView(position);
-        } catch (NullPointerException e) {
-
-        }
-        return null;
-    }
-
-    private ViewHolder getViewHolderByView(int position) {
-
-        int wantedPosition = position - 1;
-        int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
-        int wantedChild = wantedPosition - firstPosition;
-
-        if (wantedChild < 0 || wantedChild >= listView.getChildCount()) {
-            return null;
-        }
-
-        View wantedView = listView.getChildAt(wantedChild);
-        ViewHolder holder = (ViewHolder) wantedView.getTag(R.drawable.ic_launcher + getItemViewType(position));
-        return holder;
-
     }
 
 

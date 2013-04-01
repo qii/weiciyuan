@@ -97,36 +97,6 @@ public abstract class AbstractMessageTimeLineFragment<T extends ListBean<Message
         getListView().setAdapter(timeLineAdapter);
     }
 
-    @Override
-    protected void onListViewScroll() {
-        int state = getListViewScrollState();
-        if (state != AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-            LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
-
-        }
-
-        if (hasActionMode()) {
-            int position = getListView().getCheckedItemPosition();
-            if (getListView().getFirstVisiblePosition() > position || getListView().getLastVisiblePosition() < position) {
-                clearActionMode();
-            }
-        }
-    }
-
-    public boolean hasActionMode() {
-        return mActionMode != null;
-    }
-
-    public void clearActionMode() {
-        if (mActionMode != null) {
-            mActionMode.finish();
-            mActionMode = null;
-        }
-        if (getListView().getCheckedItemCount() > 0) {
-            getListView().clearChoices();
-            getAdapter().notifyDataSetChanged();
-        }
-    }
 
     @Override
     public void removeItem(int position) {

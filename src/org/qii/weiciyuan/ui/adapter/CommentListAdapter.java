@@ -3,26 +3,19 @@ package org.qii.weiciyuan.ui.adapter;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.text.SpannableString;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
-import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.actionmenu.CommentFloatingMenu;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
 import java.util.List;
@@ -97,11 +90,6 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);
 
-        if (holder.content.getMovementMethod() != LongClickableLinkMovementMethod.getInstance())
-            holder.content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
-        if (holder.repost_content.getMovementMethod() != LongClickableLinkMovementMethod.getInstance())
-            holder.repost_content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
-
         CommentBean reply = comment.getReply_comment();
         if (holder.replyIV != null)
             holder.replyIV.setVisibility(View.GONE);
@@ -137,63 +125,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
         }
 
-        if (showOriStatus) {
-            holder.listview_root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!((AbstractTimeLineFragment) fragment).clearActionModeIfOpen()) {
-                        CommentFloatingMenu menu = new CommentFloatingMenu(comment);
-                        menu.show(fragment.getFragmentManager(), "");
-                    }
-                }
-            });
 
-
-            holder.username.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    holder.listview_root.onTouchEvent(event);
-                    return false;
-                }
-            });
-            holder.time.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    holder.listview_root.onTouchEvent(event);
-                    return false;
-                }
-            });
-
-            holder.content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
-            holder.repost_content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
-
-            //onTouchListener has some strange problem, when user click link, holder.listview_root may also receive a MotionEvent.ACTION_DOWN event
-            //the background then changed
-
-            View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    TextView tv = (TextView) v;
-                    int start = tv.getSelectionStart();
-                    int end = tv.getSelectionEnd();
-                    SpannableString completeText = (SpannableString) ((TextView) v).getText();
-                    boolean isNotLink = start == -1 || end == -1;
-
-                    switch (event.getActionMasked()) {
-                        case MotionEvent.ACTION_UP:
-                            if (isNotLink && completeText.getSpanStart(this) == -1) {
-                                holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
-                                holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
-                            }
-                            break;
-                    }
-                    return false;
-                }
-            };
-
-            holder.content.setOnTouchListener(onTouchListener);
-            holder.repost_content.setOnTouchListener(onTouchListener);
-        }
     }
 
 }

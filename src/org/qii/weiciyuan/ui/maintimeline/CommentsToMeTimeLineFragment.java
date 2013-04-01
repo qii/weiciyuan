@@ -287,8 +287,10 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-        CommentFloatingMenu menu = new CommentFloatingMenu(getList().getItem(position));
-        menu.show(getFragmentManager(), "");
+        if (!clearActionModeIfOpen()) {
+            CommentFloatingMenu menu = new CommentFloatingMenu(getList().getItem(position));
+            menu.show(getFragmentManager(), "");
+        }
     }
 
 

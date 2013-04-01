@@ -12,6 +12,7 @@ import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.ListBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
@@ -210,7 +211,18 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
     protected void onListViewScroll() {
+        int state = getListViewScrollState();
+        if (state != AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+            LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
 
+        }
+
+        if (hasActionMode()) {
+            int position = getListView().getCheckedItemPosition();
+            if (getListView().getFirstVisiblePosition() > position || getListView().getLastVisiblePosition() < position) {
+                clearActionMode();
+            }
+        }
     }
 
     protected void dismissFooterView() {
@@ -311,6 +323,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     public void setmActionMode(ActionMode mActionMode) {
         this.mActionMode = mActionMode;
     }
+
+    public boolean hasActionMode() {
+        return mActionMode != null;
+    }
+
 
     protected abstract void newMsgOnPostExecute(T newValue);
 
