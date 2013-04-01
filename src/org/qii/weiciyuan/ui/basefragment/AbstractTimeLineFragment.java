@@ -190,12 +190,15 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                         getAdapter().notifyDataSetChanged();
                     }
                     onListViewScrollStop();
+                    LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
                     break;
                 case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
                     enableRefreshTime = false;
+                    LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
                     break;
                 case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
                     enableRefreshTime = true;
+                    LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
                     break;
             }
         }
@@ -211,11 +214,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
     protected void onListViewScroll() {
-        int state = getListViewScrollState();
-        if (state != AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-            LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
 
-        }
+        LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
 
         if (hasActionMode()) {
             int position = getListView().getCheckedItemPosition();
