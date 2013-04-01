@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.adapter;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -8,8 +7,9 @@ import android.text.Html;
 import android.text.Layout;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.view.*;
-import android.widget.AbsListView;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,12 +20,8 @@ import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
+import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +42,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     private Map<String, Integer> oriMsgHeights = new HashMap<String, Integer>();
     private Map<String, Integer> oriMsgWidths = new HashMap<String, Integer>();
 
-    private ActionMode mActionMode;
 
     private Handler handler = new Handler();
 
@@ -56,22 +51,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
     public StatusListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<MessageBean> bean, ListView listView, boolean showOriStatus, boolean pre) {
         super(fragment, commander, bean, listView, showOriStatus, pre);
-    }
-
-    public void onListViewScroll() {
-        removeLongClick();
-        removeClick();
-        int state = ((AbstractTimeLineFragment) fragment).getListViewScrollState();
-        if (state != AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-            LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
-
-        }
-        if (hasActionMode()) {
-            int position = listView.getCheckedItemPosition();
-            if (listView.getFirstVisiblePosition() > position || listView.getLastVisiblePosition() < position) {
-                clearActionMode();
-            }
-        }
     }
 
     @Override
@@ -139,13 +118,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.content.setText(msg.getListViewSpannableString());
         }
 
-        holder.listview_root.setOnTouchListener(simpleOnTouchListener);
-
-        holder.username.setOnTouchListener(simpleOnTouchListener);
-        holder.time.setOnTouchListener(simpleOnTouchListener);
-
-        holder.content.setOnTouchListener(onTouchListener);
-        holder.repost_content.setOnTouchListener(onTouchListener);
 
         holder.listview_root.setClickable(false);
         holder.username.setClickable(false);
@@ -153,11 +125,8 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         holder.content.setClickable(false);
         holder.repost_content.setClickable(false);
 
-        if (holder.content.getMovementMethod() != LongClickableLinkMovementMethod.getInstance())
-            holder.content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
-        if (holder.repost_content.getMovementMethod() != LongClickableLinkMovementMethod.getInstance())
-            holder.repost_content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
-
+        holder.content.setOnTouchListener(onTouchListener);
+        holder.repost_content.setOnTouchListener(onTouchListener);
 
         holder.time.setTime(msg.getMills());
         if (holder.source != null)
@@ -311,133 +280,16 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                 }
             }
 
-            if (!result) {
-                return simpleOnTouchListener.onTouch(v, event);
+            boolean hasActionMode = ((AbstractMessageTimeLineFragment) fragment).hasActionMode();
+            if (result && !hasActionMode) {
+                return LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
             } else {
                 return false;
             }
+
         }
     };
 
-    private float[] lastEvent = new float[2];
-
-    private PerformClick mPerformClick;
-
-    private UnsetPressedState mUnsetPressedState;
-
-    private View.OnTouchListener simpleOnTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            ViewHolder holder = getViewHolderByView(v);
-            if (holder == null) {
-                return false;
-            }
-            switch (event.getActionMasked()) {
-                case MotionEvent.ACTION_DOWN:
-                    int state = ((AbstractTimeLineFragment) fragment).getListViewScrollState();
-                    if (state == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
-                        return false;
-                    } else {
-                        mHasPerformedLongPress = false;
-                        isPressed = true;
-                        final int position = listView.getPositionForView(v);
-                        checkForClick(position);
-                        lastEvent[0] = event.getX();
-                        lastEvent[1] = event.getY();
-                        return true;
-                    }
-                case MotionEvent.ACTION_CANCEL:
-                    holder.listview_root.setPressed(false);
-                    removeLongClick();
-                    removeClick();
-                    mHasPerformedLongPress = false;
-                    lastEvent = new float[2];
-                    isPressed = false;
-                    return true;
-                case MotionEvent.ACTION_UP:
-                    holder.listview_root.setPressed(true);
-                    if (!mHasPerformedLongPress) {
-                        removeLongClick();
-                        if (mPerformClick == null) {
-                            mPerformClick = new PerformClick(listView.getPositionForView(v));
-                        } else {
-                            mPerformClick.setPosition(listView.getPositionForView(v));
-                        }
-                        handler.postDelayed(mPerformClick, ViewConfiguration.getPressedStateDuration());
-                    }
-
-                    if (mUnsetPressedState == null) {
-                        mUnsetPressedState = new UnsetPressedState(holder.listview_root);
-                    } else {
-                        mUnsetPressedState.setPosition(holder.listview_root);
-                    }
-                    handler.postDelayed(mUnsetPressedState,
-                            ViewConfiguration.getPressedStateDuration());
-
-                    lastEvent = new float[2];
-                    isPressed = false;
-                    removeClick();
-                    return true;
-                case MotionEvent.ACTION_MOVE:
-
-
-                    break;
-            }
-            return true;
-        }
-    };
-
-
-    private boolean onItemLongClick(int position) {
-
-        if (position == ListView.INVALID_POSITION) {
-            return false;
-        }
-
-        int state = ((AbstractTimeLineFragment) fragment).getListViewScrollState();
-        if (state != AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-            return false;
-        }
-
-        MessageBean msg = getList().get(position - 1);
-        StatusSingleChoiceModeListener choiceModeListener = new StatusSingleChoiceModeListener(listView, StatusListAdapter.this, fragment, msg);
-        if (mActionMode != null) {
-            mActionMode.finish();
-            mActionMode = null;
-        }
-
-        listView.setItemChecked(position, true);
-        notifyDataSetChanged();
-        mActionMode = getActivity().startActionMode(choiceModeListener);
-        return true;
-    }
-
-    private void onItemClick(int position) {
-
-        if (position == ListView.INVALID_POSITION) {
-            return;
-        }
-        if (mActionMode != null) {
-            clearActionMode();
-            return;
-        }
-
-        View view = Utility.getListViewItemViewFromPosition(listView, position);
-        if (view == null) {
-            return;
-        } else {
-            view.playSoundEffect(SoundEffectConstants.CLICK);
-        }
-
-        MessageBean msg = getList().get(position - 1);
-        if (!((AbstractTimeLineFragment) fragment).clearActionModeIfOpen()) {
-            Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-            intent.putExtra("msg", msg);
-            intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-            fragment.startActivityForResult(intent, 0);
-        }
-    }
 
     //when view is recycled by listview, need to catch exception
     private ViewHolder getViewHolderByView(View view) {
@@ -469,140 +321,5 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
     }
 
-    public void clearActionMode() {
-        if (mActionMode != null) {
-            mActionMode.finish();
-            mActionMode = null;
-        }
-        if (listView.getCheckedItemCount() > 0) {
-            listView.clearChoices();
-            notifyDataSetChanged();
-        }
-    }
 
-    private boolean hasActionMode() {
-        return mActionMode != null;
-    }
-
-    private CheckForLongPress mPendingCheckForLongPress;
-    private CheckForPress mPendingCheckForPress;
-
-    private boolean isPressed = false;
-    private boolean mHasPerformedLongPress = false;
-
-    private boolean isPressed() {
-        return isPressed;
-    }
-
-
-    private final class UnsetPressedState implements Runnable {
-        View root;
-
-        public UnsetPressedState(View root) {
-            this.root = root;
-        }
-
-        public void setPosition(View root) {
-            this.root = root;
-        }
-
-        public void run() {
-            root.setPressed(false);
-        }
-    }
-
-
-    private final class PerformClick implements Runnable {
-        int position;
-
-        public PerformClick(int position) {
-            this.position = position;
-        }
-
-        public void setPosition(int position) {
-            this.position = position;
-        }
-
-        public void run() {
-            onItemClick(position);
-        }
-    }
-
-
-    private void checkForLongClick(int position, int offset) {
-        mHasPerformedLongPress = false;
-        if (mPendingCheckForLongPress == null) {
-            mPendingCheckForLongPress = new CheckForLongPress(position);
-        } else {
-            mPendingCheckForLongPress.setPosition(position);
-        }
-        handler.postDelayed(mPendingCheckForLongPress,
-                ViewConfiguration.getLongPressTimeout() - offset);
-    }
-
-    private void removeLongClick() {
-        if (mPendingCheckForLongPress != null)
-            handler.removeCallbacks(mPendingCheckForLongPress);
-    }
-
-    class CheckForLongPress implements Runnable {
-
-        int position;
-
-        public void setPosition(int position) {
-            this.position = position;
-        }
-
-        public CheckForLongPress(int position) {
-            this.position = position;
-        }
-
-        public void run() {
-            if (isPressed()) {
-                if (onItemLongClick(position)) {
-                    mHasPerformedLongPress = true;
-                    Utility.vibrate(fragment.getActivity(), Utility.getListViewItemViewFromPosition(listView, position));
-                }
-            }
-        }
-
-    }
-
-
-    private void checkForClick(int position) {
-        if (mPendingCheckForPress == null)
-            mPendingCheckForPress = new CheckForPress(position);
-        else
-            mPendingCheckForPress.setPosition(position);
-
-        handler.postDelayed(mPendingCheckForPress,
-                ViewConfiguration.getTapTimeout());
-    }
-
-    private void removeClick() {
-        if (mPendingCheckForPress != null)
-            handler.removeCallbacks(mPendingCheckForPress);
-    }
-
-    class CheckForPress implements Runnable {
-
-        int position;
-
-        public void setPosition(int positon) {
-            this.position = positon;
-        }
-
-        public CheckForPress(int position) {
-            this.position = position;
-        }
-
-        public void run() {
-            ViewHolder holder = getViewHolderByView(position);
-            holder.listview_root.setPressed(true);
-            if (isPressed()) {
-                checkForLongClick(position, ViewConfiguration.getTapTimeout());
-            }
-        }
-
-    }
 }
