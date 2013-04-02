@@ -24,7 +24,6 @@ import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.CommentsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -189,19 +188,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         quick_repost = (LinearLayout) view.findViewById(R.id.quick_repost);
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
-        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
-            @Override
-            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                refresh();
 
-            }
-        });
-        pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
-            @Override
-            public void onLastItemVisible() {
-                listViewFooterViewClick(null);
-            }
-        });
         getListView().setScrollingCacheEnabled(false);
 
         getListView().setHeaderDividersEnabled(false);
@@ -209,34 +196,20 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         footerView = inflater.inflate(R.layout.listview_footer_layout, null);
         getListView().addFooterView(footerView);
         dismissFooterView();
-
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mActionMode != null) {
-                    getListView().clearChoices();
-                    mActionMode.finish();
-                    mActionMode = null;
-                    return;
-                }
-                getListView().clearChoices();
-                if (position - 1 < getList().getItemList().size() && position - 1 >= 0) {
-                    listViewItemClick(parent, view, position - 1, id);
-                } else if (position - 1 >= getList().getItemList().size()) {
-                    listViewFooterViewClick(view);
-                }
-            }
-        });
-
         et = (EditText) view.findViewById(R.id.content);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendComment();
             }
         });
-        buildListAdapter();
-        return view;
+
     }
 
     @Override
