@@ -364,8 +364,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
 
-        CommentByIdFloatingMenu menu = new CommentByIdFloatingMenu(getList().getItem(position));
-        menu.show(getFragmentManager(), "");
+//        CommentByIdFloatingMenu menu = new CommentByIdFloatingMenu(getList().getItem(position));
+//        menu.show(getFragmentManager(), "");
     }
 
 
