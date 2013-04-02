@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.basefragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -292,10 +293,12 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
     public void refresh() {
         if (allowRefresh()) {
-
             newTask = new TimeLineGetNewMsgListTask();
             newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            ((ICommander) getActivity()).getBitmapDownloader().totalStopLoadPicture();
+            Activity activity = getActivity();
+            if (activity == null)
+                return;
+            ((ICommander) activity).getBitmapDownloader().totalStopLoadPicture();
 
         }
 
