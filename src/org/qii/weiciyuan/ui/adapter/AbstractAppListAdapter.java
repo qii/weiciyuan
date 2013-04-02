@@ -166,6 +166,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     @Override
     public int getItemViewType(int position) {
 
+        if (position >= bean.size())
+            return -1;
+
         if (bean.get(position) == null)
             return TYPE_MIDDLE;
 

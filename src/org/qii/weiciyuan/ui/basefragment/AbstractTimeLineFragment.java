@@ -107,19 +107,22 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         progressBar.setVisibility(View.GONE);
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
 
-
         getListView().setHeaderDividersEnabled(false);
         footerView = inflater.inflate(R.layout.listview_footer_layout, null);
         getListView().addFooterView(footerView);
         dismissFooterView();
 
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         pullToRefreshListView.setOnRefreshListener(listViewOnRefreshListener);
         pullToRefreshListView.setOnLastItemVisibleListener(listViewOnLastItemVisibleListener);
         pullToRefreshListView.setOnScrollListener(listViewOnScrollListener);
         pullToRefreshListView.setOnItemClickListener(listViewOnItemClickListener);
-
         buildListAdapter();
-        return view;
     }
 
     private void showFooterView() {
