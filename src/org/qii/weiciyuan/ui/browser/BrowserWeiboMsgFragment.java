@@ -191,6 +191,25 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         layout.repost_count = (TextView) view.findViewById(R.id.repost_count);
         layout.count_layout = view.findViewById(R.id.count_layout);
 
+        layout.avatar = (ImageView) view.findViewById(R.id.avatar);
+        layout.content_pic = (ImageView) view.findViewById(R.id.content_pic);
+        layout.repost_pic = (ImageView) view.findViewById(R.id.repost_content_pic);
+
+        layout.content_pic_pb = (ProgressBar) view.findViewById(R.id.content_pic_pb);
+        layout.repost_pic_pb = (ProgressBar) view.findViewById(R.id.repost_content_pic_pb);
+
+        layout.repost_layout = (RelativeLayout) view.findViewById(R.id.repost_layout);
+        layout.pic_layout = (FrameLayout) view.findViewById(R.id.pic_layout);
+        layout.repost_pic_layout = (FrameLayout) view.findViewById(R.id.repost_pic_layout);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        layout.content_pic.setOnClickListener(picOnClickListener);
+        layout.repost_pic.setOnClickListener(picOnClickListener);
+
         layout.location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -214,14 +233,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 }
             }
         });
-
-        layout.avatar = (ImageView) view.findViewById(R.id.avatar);
-        layout.content_pic = (ImageView) view.findViewById(R.id.content_pic);
-        layout.repost_pic = (ImageView) view.findViewById(R.id.repost_content_pic);
-
-        layout.content_pic_pb = (ProgressBar) view.findViewById(R.id.content_pic_pb);
-        layout.repost_pic_pb = (ProgressBar) view.findViewById(R.id.repost_content_pic_pb);
-
         view.findViewById(R.id.first).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -231,13 +242,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 startActivity(intent);
             }
         });
-
-        layout.content_pic.setOnClickListener(picOnClickListener);
-        layout.repost_pic.setOnClickListener(picOnClickListener);
-
-        layout.repost_layout = (RelativeLayout) view.findViewById(R.id.repost_layout);
-        layout.pic_layout = (FrameLayout) view.findViewById(R.id.pic_layout);
-
         layout.recontent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -248,7 +252,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 boolean isDeleted = msg.getRetweeted_status() == null || msg.getRetweeted_status().getUser() == null;
 
                 if (isNotLink && !isDeleted) {
-
                     Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
                     intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                     intent.putExtra("msg", msg.getRetweeted_status());
@@ -259,7 +262,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
             }
         });
-        layout.repost_pic_layout = (FrameLayout) view.findViewById(R.id.repost_pic_layout);
     }
 
     public void buildViewData(final boolean refreshPic) {
