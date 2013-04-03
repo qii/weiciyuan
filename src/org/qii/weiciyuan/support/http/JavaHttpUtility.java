@@ -63,7 +63,8 @@ public class JavaHttpUtility {
 
     public JavaHttpUtility() {
 
-        //when you debug app, you can use Fiddler http://fiddler2.com to logs all HTTPS traffic
+        //allow Android to use an untrusted certificate for SSL/HTTPS connection
+        //so that when you debug app, you can use Fiddler http://fiddler2.com to logs all HTTPS traffic
         try {
             if (BuildConfig.DEBUG) {
                 HttpsURLConnection.setDefaultHostnameVerifier(new NullHostNameVerifier());
