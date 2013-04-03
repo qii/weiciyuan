@@ -3,6 +3,7 @@ package org.qii.weiciyuan.support.http;
 import android.text.TextUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.qii.weiciyuan.BuildConfig;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
@@ -12,7 +13,7 @@ import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 
-import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
@@ -36,6 +37,45 @@ public class JavaHttpUtility {
 
     private static final int UPLOAD_CONNECT_TIMEOUT = 15 * 1000;
     private static final int UPLOAD_READ_TIMEOUT = 5 * 60 * 1000;
+
+    public class NullHostNameVerifier implements HostnameVerifier {
+
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
+    }
+
+    private TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+    };
+
+    public JavaHttpUtility() {
+
+        //when you debug app, you can use Fiddler http://fiddler2.com to logs all HTTPS traffic
+        try {
+            if (BuildConfig.DEBUG) {
+                HttpsURLConnection.setDefaultHostnameVerifier(new NullHostNameVerifier());
+                SSLContext sc = SSLContext.getInstance("SSL");
+                sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            }
+        } catch (Exception e) {
+        }
+
+    }
+
 
     public String executeNormalTask(HttpMethod httpMethod, String url, Map<String, String> param) throws WeiboException {
         switch (httpMethod) {
