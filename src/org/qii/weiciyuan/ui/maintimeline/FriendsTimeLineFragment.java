@@ -247,7 +247,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         getListView().setAdapter(timeLineAdapter);
     }
 
-    private int getIndexFromCurrentGroupId(String id, List<GroupBean> list) {
+    private int getIndexFromGroupId(String id, List<GroupBean> list) {
 
         if (list == null || list.size() == 0) {
             return 0;
@@ -330,7 +330,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             }
         });
 
-        getActivity().getActionBar().setSelectedNavigationItem(getIndexFromCurrentGroupId(currentGroupId, list));
+        getActivity().getActionBar().setSelectedNavigationItem(getIndexFromGroupId(currentGroupId, list));
 
     }
 
