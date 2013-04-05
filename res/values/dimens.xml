@@ -14,6 +14,9 @@
 
     <dimen name="drawerTextSize">16.0dip</dimen>
 
+    <!--browser weibo-->
+    <dimen name="browser_msg_bg_padding">8dp</dimen>
+
     <!--user info-->
     <dimen name="profile_bg_padding">8dp</dimen>
 </resources>

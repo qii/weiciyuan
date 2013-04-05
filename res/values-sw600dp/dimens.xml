@@ -12,6 +12,9 @@
     <dimen name="profile_avatar_height">90dp</dimen>
     <dimen name="profile_avatar_width">90dp</dimen>
 
+    <!--browser weibo-->
+    <dimen name="browser_msg_bg_padding">20dp</dimen>
+
     <!--user info-->
     <dimen name="profile_bg_padding">20dp</dimen>
 </resources>
