@@ -249,10 +249,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
 
     private void buildActionBarNav() {
-        getActivity().getActionBar().removeAllTabs();
-
-        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-
         getActivity().getActionBar().setDisplayShowTitleEnabled(false);
         getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
