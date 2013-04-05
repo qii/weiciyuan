@@ -247,6 +247,28 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         getListView().setAdapter(timeLineAdapter);
     }
 
+    private int getIndexFromGroupId(String id, List<GroupBean> list) {
+
+        if (list == null || list.size() == 0) {
+            return 0;
+        }
+
+        int index = 0;
+
+        if (currentGroupId.equals("0")) {
+            index = 0;
+        } else if (currentGroupId.equals("1")) {
+            index = 1;
+        }
+
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getIdstr().equals(currentGroupId)) {
+                index = i + 2;
+                break;
+            }
+        }
+        return index;
+    }
 
     private void buildActionBarNav() {
         getActivity().getActionBar().setDisplayShowTitleEnabled(false);
@@ -259,13 +281,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             list = new ArrayList<GroupBean>();
         }
         List<String> name = new ArrayList<String>();
-        int index = 0;
-
-        if (currentGroupId.equals("0")) {
-            index = 0;
-        } else if (currentGroupId.equals("1")) {
-            index = 1;
-        }
 
         name.add(getString(R.string.all_people));
         name.add(getString(R.string.bilateral));
@@ -274,12 +289,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             name.add(b.getName());
         }
 
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getIdstr().equals(currentGroupId)) {
-                index = i + 2;
-                break;
-            }
-        }
 
         final String[] valueArray = name.toArray(new String[0]);
 
@@ -313,7 +322,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             }
         });
 
-        getActivity().getActionBar().setSelectedNavigationItem(index);
+        getActivity().getActionBar().setSelectedNavigationItem(getIndexFromGroupId(currentGroupId, list));
 
     }
 
