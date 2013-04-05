@@ -1,12 +1,9 @@
 package org.qii.weiciyuan.ui.main;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +11,7 @@ import android.widget.Button;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.dm.DMUserListActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.login.AccountActivity;
@@ -22,11 +19,7 @@ import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.nearby.NearbyTimeLineActivity;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 import org.qii.weiciyuan.ui.search.SearchMainActivity;
-import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * User: qii
@@ -36,84 +29,23 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private Layout layout;
 
-    private List<Fragment> commentFragments = new ArrayList<Fragment>();
-    private List<Fragment> mentionFragments = new ArrayList<Fragment>();
     private int currentIndex = 0;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final ViewPager mentionVP = (ViewPager) getActivity().findViewById(R.id.menu_right_vp_mention);
-        final ViewPager commentVP = (ViewPager) getActivity().findViewById(R.id.menu_right_vp_comment);
 
-        final View fl = getActivity().findViewById(R.id.menu_right_fl);
-
-
-        layout.home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showHomePage(fl, mentionVP, commentVP);
-            }
-        });
-
-        layout.mention.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showMentionPage(fl, mentionVP, commentVP);
-            }
-        });
-
-        layout.comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCommentPage(commentVP, fl, mentionVP);
-            }
-        });
-
-        layout.dm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDMPage();
-            }
-        });
-
-        layout.search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSearchPage();
-            }
-        });
-
-        layout.setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSettingPage();
-            }
-        });
-
-        layout.logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAccountSwitchPage();
-            }
-        });
-
-
-        layout.profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openMyProfile();
-            }
-        });
-
-        layout.location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), NearbyTimeLineActivity.class));
-
-            }
-        });
-
+        switch (currentIndex) {
+            case 0:
+                showHomePage(true);
+                break;
+            case 1:
+                showMentionPage(true);
+                break;
+            case 2:
+                showCommentPage(true);
+                break;
+        }
     }
 
     private void openMyProfile() {
@@ -124,12 +56,6 @@ public class LeftMenuFragment extends AbstractAppFragment {
         startActivity(intent);
     }
 
-    private void openWriteWeibo() {
-        Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
-        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-        intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
-        startActivity(intent);
-    }
 
     private void showAccountSwitchPage() {
         Intent intent = new Intent(getActivity(), AccountActivity.class);
@@ -150,89 +76,9 @@ public class LeftMenuFragment extends AbstractAppFragment {
         startActivity(new Intent(getActivity(), DMUserListActivity.class));
     }
 
-    private boolean showCommentPage(final ViewPager commentVP, View fl, ViewPager mentionVP) {
-        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
-        if (currentIndex == 2) {
-            ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
-            return true;
-        }
-        currentIndex = 2;
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment fragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
 
-        ft.hide(fragment);
-
-        for (Fragment f : commentFragments) {
-            ft.show(f);
-        }
-        for (Fragment f : mentionFragments) {
-            ft.hide(f);
-        }
-
-        ft.commit();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (commentVP.getAdapter() == null) {
-                    commentVP.setAdapter(new CommentsTimeLinePagerAdapter(getFragmentManager(), (MainTimeLineActivity) getActivity(), commentFragments));
-                }
-
-                int index = commentVP.getCurrentItem();
-                AbstractTimeLineFragment currentFragment;
-                if (index == 0) {
-                    currentFragment = ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment();
-                } else {
-                    currentFragment = ((MainTimeLineActivity) getActivity()).getCommentsByMeTimeLineFragment();
-                }
-                ((MainTimeLineActivity) getActivity()).setCurrentFragment(currentFragment);
-
-            }
-        }, 500);
-
-
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
-                if (commentVP.getCurrentItem() != tab.getPosition())
-                    commentVP.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
-
-            }
-
-            @Override
-            public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
-
-            }
-        };
-
-        ActionBar actionBar = getActivity().getActionBar();
-        setTitle(getString(R.string.comments));
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.removeAllTabs();
-        actionBar.addTab(actionBar.newTab()
-                .setText(R.string.all_people_send_to_me)
-                .setTabListener(tabListener));
-
-        actionBar.addTab(actionBar.newTab()
-                .setText(R.string.my_comment)
-                .setTabListener(tabListener));
-        commentVP.setOnPageChangeListener(onPageChangeListener);
-
-
-        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
-        fl.setVisibility(View.GONE);
-        mentionVP.setVisibility(View.GONE);
-        commentVP.setVisibility(View.VISIBLE);
-        return false;
-    }
-
-    private boolean showHomePage(View fl, ViewPager mentionVP, ViewPager commentVP) {
-        if (currentIndex == 0) {
+    private boolean showHomePage(boolean reset) {
+        if (currentIndex == 0 && !reset) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
         }
@@ -240,19 +86,10 @@ public class LeftMenuFragment extends AbstractAppFragment {
         getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
         currentIndex = 0;
 
-        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        getActivity().getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-
-        for (Fragment f : commentFragments) {
-            ft.hide(f);
-        }
-
-        for (Fragment f : mentionFragments) {
-            ft.hide(f);
-        }
-
-        Fragment fragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
+        ft.hide(((MainTimeLineActivity) getActivity()).getMentionsAllTimeLineFragment());
+        ft.hide(((MainTimeLineActivity) getActivity()).getCommentsAllTimeLineFragment());
+        FriendsTimeLineFragment fragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
 
         if (fragment.isAdded() && fragment.isHidden()) {
             ft.show(fragment);
@@ -261,108 +98,86 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
 
         ft.commit();
-
-        fragment.setUserVisibleHint(true);
-        fl.setVisibility(View.VISIBLE);
-        mentionVP.setVisibility(View.GONE);
-        commentVP.setVisibility(View.GONE);
-        setTitle("");
-
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+        setTitle("");
         return false;
     }
 
-    private boolean showMentionPage(View fl, final ViewPager mentionVP, ViewPager commentVP) {
-        if (currentIndex == 1) {
+    private boolean showMentionPage(boolean reset) {
+        if (currentIndex == 1 && !reset) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
         }
 
-        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
         getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
 
         Fragment fragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
 
         ft.hide(fragment);
+        ft.hide(((MainTimeLineActivity) getActivity()).getCommentsAllTimeLineFragment());
 
-        for (Fragment f : commentFragments) {
-            ft.hide(f);
-        }
-        for (Fragment f : mentionFragments) {
-            ft.show(f);
-        }
-
-
-        ft.commit();
-
-        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
-        fl.setVisibility(View.GONE);
-        mentionVP.setVisibility(View.VISIBLE);
-        commentVP.setVisibility(View.GONE);
         currentIndex = 1;
 
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+        MentionsTimeLine m = ((MainTimeLineActivity) getActivity()).getMentionsAllTimeLineFragment();
 
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
-                if (mentionVP.getCurrentItem() != tab.getPosition())
-                    mentionVP.setCurrentItem(tab.getPosition());
-            }
+        if (m.isAdded() && m.isHidden()) {
+            ft.show(m);
+        } else if (!m.isAdded()) {
+            ft.attach(m);
+            ft.add(R.id.menu_right_fl, m, MentionsTimeLine.class.getName());
+        }
 
-            @Override
-            public void onTabUnselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
-
-            }
-
-            @Override
-            public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
-
-            }
-        };
-
-        ActionBar actionBar = getActivity().getActionBar();
-        setTitle(getString(R.string.mentions));
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.removeAllTabs();
-        actionBar.addTab(actionBar.newTab()
-                .setText(R.string.mentions_weibo)
-                .setTabListener(tabListener));
-
-        actionBar.addTab(actionBar.newTab()
-                .setText(R.string.mentions_to_me)
-                .setTabListener(tabListener));
-        mentionVP.setOnPageChangeListener(onPageChangeListener);
-
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mentionVP.getAdapter() == null) {
-                    mentionVP.setAdapter(new MentionsTimeLinePagerAdapter(getFragmentManager(), (MainTimeLineActivity) getActivity(), mentionFragments));
-                }
-
-                int index = mentionVP.getCurrentItem();
-                AbstractTimeLineFragment currentFragment;
-                if (index == 0) {
-                    currentFragment = ((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment();
-                } else {
-                    currentFragment = ((MainTimeLineActivity) getActivity()).getMentionsCommentTimeLineFragment();
-                }
-                ((MainTimeLineActivity) getActivity()).setCurrentFragment(currentFragment);
-
-            }
-        }, 500);
+        ft.commit();
+        m.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.mentions_weibo, R.string.mentions_to_me);
+        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+        if (Utility.isDevicePort()) {
+            setTitle(R.string.mentions);
+        }
         return false;
     }
+
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
+    private boolean showCommentPage(boolean reset) {
+        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+        if (currentIndex == 2 && !reset) {
+            ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+            return true;
+        }
+        currentIndex = 2;
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment friendsTimeLineFragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
+
+        ft.hide(friendsTimeLineFragment);
+        ft.hide(((MainTimeLineActivity) getActivity()).getMentionsAllTimeLineFragment());
+
+
+        CommentsTimeLine fragment = ((MainTimeLineActivity) getActivity()).getCommentsAllTimeLineFragment();
+
+        if (fragment.isAdded() && fragment.isHidden()) {
+            ft.show(fragment);
+        } else if (!fragment.isAdded()) {
+            ft.add(R.id.menu_right_fl, fragment, CommentsTimeLine.class.getName());
+        }
+
+        ft.commit();
+        fragment.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.all_people_send_to_me, R.string.my_comment);
+        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+        if (Utility.isDevicePort()) {
+            setTitle(R.string.comments);
+        }
+        return false;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
     }
 
     @Override
@@ -381,24 +196,61 @@ public class LeftMenuFragment extends AbstractAppFragment {
         return view;
     }
 
-    ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        layout.home.setOnClickListener(onClickListener);
+        layout.mention.setOnClickListener(onClickListener);
+        layout.comment.setOnClickListener(onClickListener);
+        layout.search.setOnClickListener(onClickListener);
+        layout.profile.setOnClickListener(onClickListener);
+        layout.location.setOnClickListener(onClickListener);
+        layout.setting.setOnClickListener(onClickListener);
+        layout.dm.setOnClickListener(onClickListener);
+        layout.logout.setOnClickListener(onClickListener);
+    }
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
-        public void onPageSelected(int position) {
-            getActivity().getActionBar().setSelectedNavigationItem(position);
-            switch (position) {
-                case 0:
-                    getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.btn_home:
+                    showHomePage(false);
                     break;
-                default:
-                    getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+                case R.id.btn_mention:
+                    showMentionPage(false);
+                    break;
+                case R.id.btn_comment:
+                    showCommentPage(false);
+                    break;
+                case R.id.btn_search:
+                    showSearchPage();
+                    break;
+                case R.id.btn_profile:
+                    openMyProfile();
+                    break;
+                case R.id.btn_location:
+                    startActivity(new Intent(getActivity(), NearbyTimeLineActivity.class));
+                    break;
+                case R.id.btn_dm:
+                    showDMPage();
+                    break;
+                case R.id.btn_setting:
+                    showSettingPage();
+                    break;
+                case R.id.btn_logout:
+                    showAccountSwitchPage();
                     break;
             }
         }
-
     };
 
     private SlidingMenu getSlidingMenu() {
         return ((MainTimeLineActivity) getActivity()).getSlidingMenu();
+    }
+
+    private void setTitle(int res) {
+        ((MainTimeLineActivity) getActivity()).setTitle(res);
     }
 
     private void setTitle(String title) {

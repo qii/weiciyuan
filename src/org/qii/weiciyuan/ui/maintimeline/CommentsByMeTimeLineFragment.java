@@ -248,7 +248,7 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setRetainInstance(true);
+        setRetainInstance(false);
     }
 
 

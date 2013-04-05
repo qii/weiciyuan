@@ -77,6 +77,10 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         }
     }
 
+    public void setTitle(int res) {
+        setTitle(getString(res));
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -213,16 +217,16 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         if (savedInstanceState == null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.menu_frame, getMenuFragment(), LeftMenuFragment.class.getName());
-            fragmentTransaction.replace(R.id.menu_right_fl, getFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName());
+//            fragmentTransaction.replace(R.id.menu_right_fl, getFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName());
             getSlidingMenu().showContent();
             fragmentTransaction.commit();
         } else {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.remove(getMentionsTimeLineFragment());
-            fragmentTransaction.remove(getMentionsCommentTimeLineFragment());
-            fragmentTransaction.remove(getCommentsTimeLineFragment());
-            fragmentTransaction.remove(getCommentsByMeTimeLineFragment());
-            fragmentTransaction.commit();
+//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.remove(getMentionsTimeLineFragment());
+//            fragmentTransaction.remove(getMentionsCommentTimeLineFragment());
+//            fragmentTransaction.remove(getCommentsTimeLineFragment());
+//            fragmentTransaction.remove(getCommentsByMeTimeLineFragment());
+//            fragmentTransaction.commit();
         }
 
 
@@ -493,6 +497,25 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
         return fragment;
     }
+
+    public MentionsTimeLine getMentionsAllTimeLineFragment() {
+        MentionsTimeLine fragment = ((MentionsTimeLine) getSupportFragmentManager().findFragmentByTag(
+                MentionsTimeLine.class.getName()));
+        if (fragment == null)
+            fragment = new MentionsTimeLine();
+
+        return fragment;
+    }
+
+    public CommentsTimeLine getCommentsAllTimeLineFragment() {
+        CommentsTimeLine fragment = ((CommentsTimeLine) getSupportFragmentManager().findFragmentByTag(
+                CommentsTimeLine.class.getName()));
+        if (fragment == null)
+            fragment = new CommentsTimeLine();
+
+        return fragment;
+    }
+
 
     public MentionsWeiboTimeLineFragment getMentionsTimeLineFragment() {
         MentionsWeiboTimeLineFragment fragment = ((MentionsWeiboTimeLineFragment) getSupportFragmentManager().findFragmentByTag(

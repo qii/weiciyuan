@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -495,6 +496,10 @@ public class Utility {
             default:
                 return "Other";
         }
+    }
+
+    public static boolean isDevicePort() {
+        return GlobalContext.getInstance().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 }
 

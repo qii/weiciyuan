@@ -70,6 +70,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        setRetainInstance(false);
+
     }
 
     @Override
@@ -109,7 +111,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisible() && isVisibleToUser) {
             ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
-            if (getActivity().getActionBar().getTabAt(1).getText().toString().contains(")")) {
+            if (getActivity().getActionBar().getTabAt(0).getText().toString().contains(")")) {
                 getPullToRefreshListView().startRefreshNow();
             }
         }

@@ -70,6 +70,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         return bean;
     }
 
+
     public FriendsTimeLineFragment() {
 
     }
@@ -200,6 +201,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 if (getList().getSize() > 0) {
                     groupDataCache.put(ALL_GROUP_ID, getList().copy());
                 }
+                buildActionBarNav();
+
                 break;
             case SCREEN_ROTATE:
                 //nothing
@@ -217,23 +220,26 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 timeLineAdapter.notifyDataSetChanged();
 
                 refreshLayout(getList());
+                buildActionBarNav();
+
                 break;
         }
 
         super.onActivityCreated(savedInstanceState);
 
-        buildActionBarNav();
 
     }
 
+
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
             buildActionBarNav();
             ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
         }
     }
+
 
     @Override
     protected void buildListAdapter() {
@@ -243,9 +249,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
 
     private void buildActionBarNav() {
+        getActivity().getActionBar().removeAllTabs();
+
+        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+
         getActivity().getActionBar().setDisplayShowTitleEnabled(false);
         getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
 
         List<GroupBean> list = new ArrayList<GroupBean>();
         if (GlobalContext.getInstance().getGroup() != null) {
@@ -254,6 +263,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             list = new ArrayList<GroupBean>();
         }
         List<String> name = new ArrayList<String>();
+        int index = 0;
+
+        if (currentGroupId.equals("0")) {
+            index = 0;
+        } else if (currentGroupId.equals("1")) {
+            index = 1;
+        }
+
         name.add(getString(R.string.all_people));
         name.add(getString(R.string.bilateral));
 
@@ -261,10 +278,19 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             name.add(b.getName());
         }
 
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getIdstr().equals(currentGroupId)) {
+                index = i + 2;
+                break;
+            }
+        }
+
         final String[] valueArray = name.toArray(new String[0]);
 
         navAdapter = new FriendsTimeLineListNavAdapter(getActivity(), valueArray);
         final List<GroupBean> finalList = list;
+
+
         getActivity().getActionBar().setListNavigationCallbacks(navAdapter, new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int which, long itemId) {
@@ -290,6 +316,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 return true;
             }
         });
+
+        getActivity().getActionBar().setSelectedNavigationItem(index);
+
     }
 
     @Override
