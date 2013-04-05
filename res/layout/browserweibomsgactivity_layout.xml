@@ -19,8 +19,8 @@
             android:clickable="true">
 
             <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/browser_msg_avatar_width"
+                android:layout_height="@dimen/browser_msg_avatar_height"
                 android:padding="1px"
                 android:background="@drawable/bg_border1"
                 android:id="@+id/avatar"

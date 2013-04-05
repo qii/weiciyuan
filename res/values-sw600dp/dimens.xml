@@ -14,6 +14,8 @@
 
     <!--browser weibo-->
     <dimen name="browser_msg_bg_padding">20dp</dimen>
+    <dimen name="browser_msg_avatar_height">68dp</dimen>
+    <dimen name="browser_msg_avatar_width">68dp</dimen>
 
     <!--user info-->
     <dimen name="profile_bg_padding">20dp</dimen>
