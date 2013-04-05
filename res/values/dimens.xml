@@ -13,4 +13,7 @@
     <dimen name="profile_avatar_width">70dp</dimen>
 
     <dimen name="drawerTextSize">16.0dip</dimen>
+
+    <!--user info-->
+    <dimen name="profile_bg_padding">8dp</dimen>
 </resources>
