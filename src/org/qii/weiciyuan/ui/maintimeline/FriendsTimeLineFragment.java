@@ -247,7 +247,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         getListView().setAdapter(timeLineAdapter);
     }
 
-    private int getIndexFromGroupId(String id, List<GroupBean> list) {
+    private int getIndexFromCurrentGroupId(String id, List<GroupBean> list) {
 
         if (list == null || list.size() == 0) {
             return 0;
@@ -255,14 +255,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         int index = 0;
 
-        if (currentGroupId.equals("0")) {
+        if (id.equals("0")) {
             index = 0;
-        } else if (currentGroupId.equals("1")) {
+        } else if (id.equals("1")) {
             index = 1;
         }
 
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getIdstr().equals(currentGroupId)) {
+            if (list.get(i).getIdstr().equals(id)) {
                 index = i + 2;
                 break;
             }
@@ -270,16 +270,21 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         return index;
     }
 
-    private void buildActionBarNav() {
-        getActivity().getActionBar().setDisplayShowTitleEnabled(false);
-        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+    private String getGroupIdFromIndex(int index, List<GroupBean> list) {
+        String selectedItemId;
 
-        List<GroupBean> list = new ArrayList<GroupBean>();
-        if (GlobalContext.getInstance().getGroup() != null) {
-            list = GlobalContext.getInstance().getGroup().getLists();
+        if (index == 0) {
+            selectedItemId = "0";
+        } else if (index == 1) {
+            selectedItemId = "1";
         } else {
-            list = new ArrayList<GroupBean>();
+            selectedItemId = list.get(index - 2).getIdstr();
         }
+        return selectedItemId;
+    }
+
+
+    private String[] buildListNavData(List<GroupBean> list) {
         List<String> name = new ArrayList<String>();
 
         name.add(getString(R.string.all_people));
@@ -289,13 +294,23 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             name.add(b.getName());
         }
 
+        String[] valueArray = name.toArray(new String[0]);
+        return valueArray;
+    }
 
-        final String[] valueArray = name.toArray(new String[0]);
 
-        navAdapter = new FriendsTimeLineListNavAdapter(getActivity(), valueArray);
+    private void buildActionBarNav() {
+        getActivity().getActionBar().setDisplayShowTitleEnabled(false);
+        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        List<GroupBean> list = new ArrayList<GroupBean>();
+        if (GlobalContext.getInstance().getGroup() != null) {
+            list = GlobalContext.getInstance().getGroup().getLists();
+        } else {
+            list = new ArrayList<GroupBean>();
+        }
+
+        navAdapter = new FriendsTimeLineListNavAdapter(getActivity(), buildListNavData(list));
         final List<GroupBean> finalList = list;
-
-
         getActivity().getActionBar().setListNavigationCallbacks(navAdapter, new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int which, long itemId) {
@@ -304,25 +319,18 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     return true;
                 }
 
-                String selectedItemId;
+                String groupId = getGroupIdFromIndex(which, finalList);
 
-                if (which == 0) {
-                    selectedItemId = "0";
-                } else if (which == 1) {
-                    selectedItemId = "1";
-                } else {
-                    selectedItemId = finalList.get(which - 2).getIdstr();
-                }
-                if (!selectedItemId.equals(currentGroupId)) {
+                if (!groupId.equals(currentGroupId)) {
                     positionCache.put(currentGroupId, Utility.getCurrentPositionFromListView(getListView()));
-                    setSelected(selectedItemId);
+                    setSelected(groupId);
                     switchGroup();
                 }
                 return true;
             }
         });
 
-        getActivity().getActionBar().setSelectedNavigationItem(getIndexFromGroupId(currentGroupId, list));
+        getActivity().getActionBar().setSelectedNavigationItem(getIndexFromCurrentGroupId(currentGroupId, list));
 
     }
 
