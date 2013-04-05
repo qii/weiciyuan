@@ -269,7 +269,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             @Override
             public boolean onNavigationItemSelected(int which, long itemId) {
 
-                if (dbTask.getStatus() != MyAsyncTask.Status.FINISHED) {
+                if (!Utility.isTaskStopped(dbTask)) {
                     return true;
                 }
 
