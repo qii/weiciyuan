@@ -17,7 +17,6 @@ import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.FriendGroupTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.TimeLineReCmtCountDao;
-import org.qii.weiciyuan.othercomponent.SaveToDBService;
 import org.qii.weiciyuan.support.database.FriendsTimeLineDBTask;
 import org.qii.weiciyuan.support.database.HomeOtherGroupTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -501,25 +500,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
             putToGroupDataMemoryCache(currentGroupId, getList());
-
-
-            Runnable dbRunnable;
-            if (currentGroupId.equals(ALL_GROUP_ID)) {
-                dbRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        FriendsTimeLineDBTask.replace(getList(), accountBean.getUid());
-                    }
-                };
-            } else {
-                dbRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        HomeOtherGroupTimeLineDBTask.replace(getList(), accountBean.getUid(), currentGroupId);
-                    }
-                };
-            }
-
+            final String groupId = currentGroupId;
+            Runnable dbRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    FriendsTimeLineDBTask.replace(getList(), accountBean.getUid(), groupId);
+                }
+            };
             new Thread(dbRunnable).start();
         }
 
@@ -531,23 +518,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getList().addOldData(oldValue);
             putToGroupDataMemoryCache(currentGroupId, getList());
 
-            Runnable dbRunnable;
-            if (currentGroupId.equals(ALL_GROUP_ID)) {
-                dbRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        FriendsTimeLineDBTask.replace(getList(), accountBean.getUid());
-                    }
-                };
-            } else {
-                dbRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        HomeOtherGroupTimeLineDBTask.replace(getList(), accountBean.getUid(), currentGroupId);
-                    }
-                };
-            }
-
+            final String groupId = currentGroupId;
+            Runnable dbRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    FriendsTimeLineDBTask.replace(getList(), accountBean.getUid(), groupId);
+                }
+            };
             new Thread(dbRunnable).start();
 
         } else if (Utility.isAllNotNull(getActivity())) {
@@ -671,7 +648,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 getList().addNewData(newValue);
 
                 if (getList() != null && currentGroupId.equals(ALL_GROUP_ID)) {
-                    SaveToDBService.save(getActivity(), SaveToDBService.TYPE_STATUS, getList(), accountBean.getUid());
+                    final String groupId = currentGroupId;
+                    Runnable dbRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            FriendsTimeLineDBTask.replace(getList(), accountBean.getUid(), groupId);
+                        }
+                    };
+                    new Thread(dbRunnable).start();
                 }
             }
 //            getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
@@ -745,21 +729,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 }
             }
             getAdapter().notifyDataSetChanged();
-            if (currentGroupId.equals(ALL_GROUP_ID)) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        FriendsTimeLineDBTask.replace(getList(), GlobalContext.getInstance().getCurrentAccountId());
-                    }
-                }).start();
-            } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        HomeOtherGroupTimeLineDBTask.replace(getList(), GlobalContext.getInstance().getCurrentAccountId(), currentGroupId);
-                    }
-                }).start();
-            }
+            final String groupId = currentGroupId;
+            Runnable dbRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    FriendsTimeLineDBTask.replace(getList(), accountBean.getUid(), groupId);
+                }
+            };
+            new Thread(dbRunnable).start();
 
         }
     }

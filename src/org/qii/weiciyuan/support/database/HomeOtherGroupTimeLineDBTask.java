@@ -112,7 +112,7 @@ public class HomeOtherGroupTimeLineDBTask {
         }
     }
 
-    public static void replace(MessageListBean list, String accountId, String groupId) {
+    static void replace(MessageListBean list, String accountId, String groupId) {
 
         deleteGroupTimeLine(accountId, groupId);
         addHomeLineMsg(list, accountId, groupId);

@@ -108,10 +108,13 @@ public class FriendsTimeLineDBTask {
         }
     }
 
-    public static void replace(MessageListBean list, String accountId) {
-
-        deleteAllHomes(accountId);
-        addHomeLineMsg(list, accountId);
+    public static void replace(MessageListBean list, String accountId, String groupId) {
+        if (groupId.equals("0")) {
+            deleteAllHomes(accountId);
+            addHomeLineMsg(list, accountId);
+        } else {
+            HomeOtherGroupTimeLineDBTask.replace(list, accountId, groupId);
+        }
     }
 
     public static void updatePosition(TimeLinePosition position, String accountId) {

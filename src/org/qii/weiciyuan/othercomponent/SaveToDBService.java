@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.support.database.FriendsTimeLineDBTask;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.io.Serializable;
@@ -29,7 +28,7 @@ public class SaveToDBService extends IntentService {
             case TYPE_STATUS:
                 AppLogger.e("start db");
                 MessageListBean value = (MessageListBean) intent.getSerializableExtra("value");
-                FriendsTimeLineDBTask.replace(value, accountId);
+//                FriendsTimeLineDBTask.replace(value, accountId);
                 AppLogger.e("end db");
                 break;
         }
