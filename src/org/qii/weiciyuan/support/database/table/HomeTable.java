@@ -14,6 +14,8 @@ public class HomeTable {
 
     public static final String TIMELINEDATA = "timelinedata";
 
+    public static final String RECENT_GROUP_ID = "recent_group_id";
+
 
     public static class HomeDataTable {
 

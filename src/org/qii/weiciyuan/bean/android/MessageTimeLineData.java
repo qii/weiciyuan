@@ -9,8 +9,10 @@ import org.qii.weiciyuan.bean.MessageListBean;
 public class MessageTimeLineData {
     public MessageListBean msgList;
     public TimeLinePosition position;
+    public String groupId;
 
-    public MessageTimeLineData(MessageListBean msgList, TimeLinePosition position) {
+    public MessageTimeLineData(String groupId, MessageListBean msgList, TimeLinePosition position) {
+        this.groupId = groupId;
         this.msgList = msgList;
         this.position = position;
     }

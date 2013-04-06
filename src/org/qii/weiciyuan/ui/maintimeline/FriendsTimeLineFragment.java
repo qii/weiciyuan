@@ -33,7 +33,9 @@ import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -146,10 +148,23 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         new Thread(runnable).start();
     }
 
+    private void saveGroupIdToDB() {
+        final String groupId = currentGroupId;
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                FriendsTimeLineDBTask.updateRecentGroupId(GlobalContext.getInstance().getCurrentAccountId(), groupId);
+            }
+        };
+
+        new Thread(runnable).start();
+    }
+
     @Override
     public void onPause() {
         super.onPause();
         savePositionToDB();
+        saveGroupIdToDB();
         removeRefresh();
         Utility.cancelTasks(autoRefreshTask);
     }
@@ -329,8 +344,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 return true;
             }
         });
-
-        getActivity().getActionBar().setSelectedNavigationItem(getIndexFromGroupId(currentGroupId, list));
+        currentGroupId = FriendsTimeLineDBTask.getRecentGroupId(GlobalContext.getInstance().getCurrentAccountId());
+        getActivity().getActionBar().setSelectedNavigationItem(getRecentNavIndex());
 
     }
 
@@ -340,7 +355,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             navAdapter.notifyDataSetChanged();
     }
 
-    private class DBCacheTask extends MyAsyncTask<Void, MessageTimeLineData, Map<String, MessageTimeLineData>> {
+    private class DBCacheTask extends MyAsyncTask<Void, MessageTimeLineData, List<MessageTimeLineData>> {
 
         @Override
         protected void onPreExecute() {
@@ -349,36 +364,19 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
 
         @Override
-        protected Map<String, MessageTimeLineData> doInBackground(Void... params) {
-
-            MessageTimeLineData allGroup = FriendsTimeLineDBTask.get(accountBean.getUid());
-            publishProgress(allGroup);
-
-            Map<String, MessageTimeLineData> map = new HashMap<String, MessageTimeLineData>();
-            MessageTimeLineData biGroup = HomeOtherGroupTimeLineDBTask.getTimeLineData(accountBean.getUid(), BILATERAL_GROUP_ID);
-            map.put(BILATERAL_GROUP_ID, biGroup);
-            GroupListBean groupListBean = GlobalContext.getInstance().getGroup();
-            if (groupListBean != null) {
-                List<GroupBean> lists = groupListBean.getLists();
-                for (GroupBean groupBean : lists) {
-                    MessageTimeLineData dbMsg = HomeOtherGroupTimeLineDBTask.getTimeLineData(accountBean.getUid(), groupBean.getId());
-                    map.put(groupBean.getId(), dbMsg);
-                }
-            }
-            return map;
+        protected List<MessageTimeLineData> doInBackground(Void... params) {
+            MessageTimeLineData recentGroupData = FriendsTimeLineDBTask.getRecentGroupData(accountBean.getUid());
+            publishProgress(recentGroupData);
+            return FriendsTimeLineDBTask.getOtherGroupData(accountBean.getUid(), recentGroupData.groupId);
         }
 
         @Override
-        protected void onPostExecute(Map<String, MessageTimeLineData> result) {
+        protected void onPostExecute(List<MessageTimeLineData> result) {
             super.onPostExecute(result);
             if (result != null) {
-                putToGroupDataMemoryCache(BILATERAL_GROUP_ID, result.get(BILATERAL_GROUP_ID).msgList);
-                positionCache.put(BILATERAL_GROUP_ID, result.get(BILATERAL_GROUP_ID).position);
-
-                Set<String> keys = result.keySet();
-                for (String key : keys) {
-                    putToGroupDataMemoryCache(key, result.get(key).msgList);
-                    positionCache.put(key, result.get(key).position);
+                for (MessageTimeLineData single : result) {
+                    putToGroupDataMemoryCache(single.groupId, single.msgList);
+                    positionCache.put(single.groupId, single.position);
                 }
             }
         }
@@ -387,14 +385,16 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         protected void onProgressUpdate(MessageTimeLineData... result) {
             super.onProgressUpdate(result);
             if (result != null && result.length > 0) {
-                MessageTimeLineData homeMsg = result[0];
-                getList().replaceData(homeMsg.msgList);
-                putToGroupDataMemoryCache(ALL_GROUP_ID, homeMsg.msgList);
-                positionCache.put(ALL_GROUP_ID, homeMsg.position);
+                MessageTimeLineData recentData = result[0];
+                getList().replaceData(recentData.msgList);
+                putToGroupDataMemoryCache(recentData.groupId, recentData.msgList);
+                positionCache.put(recentData.groupId, recentData.position);
+                currentGroupId = recentData.groupId;
             }
             getPullToRefreshListView().setVisibility(View.VISIBLE);
             getAdapter().notifyDataSetChanged();
             setListViewPositionFromPositionsCache();
+            getActivity().getActionBar().setSelectedNavigationItem(getRecentNavIndex());
             refreshLayout(getList());
             /**
              * when this account first open app,if he don't have any data in database,fetch data from server automally
@@ -407,6 +407,15 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
     }
 
+    private int getRecentNavIndex() {
+        List<GroupBean> list = new ArrayList<GroupBean>();
+        if (GlobalContext.getInstance().getGroup() != null) {
+            list = GlobalContext.getInstance().getGroup().getLists();
+        } else {
+            list = new ArrayList<GroupBean>();
+        }
+        return getIndexFromGroupId(currentGroupId, list);
+    }
 
     @Override
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
@@ -557,6 +566,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getList().replaceData(groupDataCache.get(currentGroupId));
             getAdapter().notifyDataSetChanged();
             setListViewPositionFromPositionsCache();
+            saveGroupIdToDB();
             new RefreshReCmtCountTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }

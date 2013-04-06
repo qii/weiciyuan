@@ -151,7 +151,7 @@ public class HomeOtherGroupTimeLineDBTask {
         }
     }
 
-    private static TimeLinePosition getPosition(String accountId, String groupId) {
+    static TimeLinePosition getPosition(String accountId, String groupId) {
         String sql = "select * from " + HomeOtherGroupTable.TABLE_NAME + " where " + HomeOtherGroupTable.ACCOUNTID + "  = "
                 + accountId + " and " + HomeOtherGroupTable.GROUPID + " = " + groupId;
         Cursor c = getRsd().rawQuery(sql, null);
@@ -173,13 +173,13 @@ public class HomeOtherGroupTimeLineDBTask {
         return new TimeLinePosition(0, 0);
     }
 
-    public static MessageTimeLineData getTimeLineData(String accountId, String groupId) {
+    static MessageTimeLineData getTimeLineData(String accountId, String groupId) {
         MessageListBean msgList = get(accountId, groupId);
         TimeLinePosition position = getPosition(accountId, groupId);
-        return new MessageTimeLineData(msgList, position);
+        return new MessageTimeLineData(groupId, msgList, position);
     }
 
-    public static MessageListBean get(String accountId, String groupId) {
+    static MessageListBean get(String accountId, String groupId) {
         Gson gson = new Gson();
         MessageListBean result = new MessageListBean();
 

@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import org.qii.weiciyuan.bean.GroupBean;
+import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.android.MessageTimeLineData;
@@ -17,6 +19,7 @@ import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -135,7 +138,7 @@ public class FriendsTimeLineDBTask {
         }
     }
 
-    public static TimeLinePosition getPosition(String accountId) {
+    private static TimeLinePosition getPosition(String accountId) {
         String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
@@ -155,6 +158,46 @@ public class FriendsTimeLineDBTask {
         }
         c.close();
         return new TimeLinePosition(0, 0);
+    }
+
+    public static String getRecentGroupId(String accountId) {
+        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
+                + accountId;
+        Cursor c = getRsd().rawQuery(sql, null);
+        Gson gson = new Gson();
+        while (c.moveToNext()) {
+            String id = c.getString(c.getColumnIndex(HomeTable.RECENT_GROUP_ID));
+            if (!TextUtils.isEmpty(id)) {
+                return id;
+            }
+
+        }
+        c.close();
+        return "0";
+    }
+
+    public static void updateRecentGroupId(String accountId, String groupId) {
+
+        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
+                + accountId;
+        Cursor c = getRsd().rawQuery(sql, null);
+        if (c.moveToNext()) {
+            try {
+                String[] args = {accountId};
+                ContentValues cv = new ContentValues();
+                cv.put(HomeTable.RECENT_GROUP_ID, groupId);
+                getWsd().update(HomeTable.TABLE_NAME, cv, HomeTable.ACCOUNTID + "=?", args);
+            } catch (JsonSyntaxException e) {
+
+            }
+        } else {
+
+            ContentValues cv = new ContentValues();
+            cv.put(HomeTable.ACCOUNTID, accountId);
+            cv.put(HomeTable.RECENT_GROUP_ID, groupId);
+            getWsd().insert(HomeTable.TABLE_NAME,
+                    HomeTable.ID, cv);
+        }
     }
 
     static void deleteAllHomes(String accountId) {
@@ -190,13 +233,54 @@ public class FriendsTimeLineDBTask {
         c.close();
     }
 
-    public static MessageTimeLineData get(String accountId) {
-        MessageListBean msgList = getHomeLineMsgList(accountId);
-        TimeLinePosition position = getPosition(accountId);
-        return new MessageTimeLineData(msgList, position);
+    public static MessageTimeLineData getRecentGroupData(String accountId) {
+        String groupId = getRecentGroupId(accountId);
+        MessageListBean msgList;
+        TimeLinePosition position;
+        if (groupId.equals("0")) {
+            msgList = getHomeLineMsgList(accountId);
+            position = getPosition(accountId);
+        } else {
+            msgList = HomeOtherGroupTimeLineDBTask.get(accountId, groupId);
+            position = HomeOtherGroupTimeLineDBTask.getPosition(accountId, groupId);
+        }
+
+        return new MessageTimeLineData(groupId, msgList, position);
     }
 
-    public static MessageListBean getHomeLineMsgList(String accountId) {
+    public static List<MessageTimeLineData> getOtherGroupData(String accountId, String exceptGroupId) {
+        List<MessageTimeLineData> data = new ArrayList<MessageTimeLineData>();
+
+        MessageListBean msgList = getHomeLineMsgList(accountId);
+        MessageTimeLineData home = new MessageTimeLineData("0", msgList, getPosition(accountId));
+        data.add(home);
+
+        MessageTimeLineData biGroup = HomeOtherGroupTimeLineDBTask.getTimeLineData(accountId, "1");
+        data.add(biGroup);
+
+        GroupListBean groupListBean = GroupDBTask.get(accountId);
+
+        if (groupListBean != null) {
+            List<GroupBean> lists = groupListBean.getLists();
+            for (GroupBean groupBean : lists) {
+                MessageTimeLineData dbMsg = HomeOtherGroupTimeLineDBTask.getTimeLineData(accountId, groupBean.getId());
+                data.add(dbMsg);
+            }
+        }
+
+        Iterator<MessageTimeLineData> iterator = data.iterator();
+        while (iterator.hasNext()) {
+            MessageTimeLineData single = iterator.next();
+            if (single.groupId.equals(exceptGroupId)) {
+                iterator.remove();
+                break;
+            }
+        }
+
+        return data;
+    }
+
+    private static MessageListBean getHomeLineMsgList(String accountId) {
         Gson gson = new Gson();
         MessageListBean result = new MessageListBean();
 
