@@ -17,6 +17,7 @@ import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.table.HomeTable;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -117,7 +118,27 @@ public class FriendsTimeLineDBTask {
         }
     }
 
-    public static void updatePosition(TimeLinePosition position, String accountId) {
+    public static void asyncUpdatePosition(final TimeLinePosition position, String accountId, final String groupId) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                FriendsTimeLineDBTask.updatePosition(position, GlobalContext.getInstance().getCurrentAccountId(), groupId);
+            }
+        };
+
+        new Thread(runnable).start();
+    }
+
+    private static void updatePosition(TimeLinePosition position, String accountId, String groupId) {
+        if (groupId.equals("0")) {
+            updatePosition(position, accountId);
+        } else {
+            HomeOtherGroupTimeLineDBTask.updatePosition(position, GlobalContext.getInstance().getCurrentAccountId(), groupId);
+        }
+    }
+
+
+    private static void updatePosition(TimeLinePosition position, String accountId) {
         String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);

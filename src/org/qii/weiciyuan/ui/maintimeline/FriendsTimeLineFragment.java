@@ -128,23 +128,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private void savePositionToDB() {
         final TimeLinePosition position = positionCache.get(currentGroupId);
         final String groupId = currentGroupId;
-        Runnable runnable;
-        if (groupId.equals(ALL_GROUP_ID)) {
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    FriendsTimeLineDBTask.updatePosition(position, GlobalContext.getInstance().getCurrentAccountId());
-                }
-            };
-        } else {
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    HomeOtherGroupTimeLineDBTask.updatePosition(position, GlobalContext.getInstance().getCurrentAccountId(), groupId);
-                }
-            };
-        }
-        new Thread(runnable).start();
+        FriendsTimeLineDBTask.asyncUpdatePosition(position, GlobalContext.getInstance().getCurrentAccountId(), groupId);
     }
 
     private void saveGroupIdToDB() {
