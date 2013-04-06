@@ -132,15 +132,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     private void saveGroupIdToDB() {
-        final String groupId = currentGroupId;
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                FriendsTimeLineDBTask.updateRecentGroupId(GlobalContext.getInstance().getCurrentAccountId(), groupId);
-            }
-        };
-
-        new Thread(runnable).start();
+        FriendsTimeLineDBTask.asyncUpdateRecentGroupId(GlobalContext.getInstance().getCurrentAccountId(), currentGroupId);
     }
 
     @Override

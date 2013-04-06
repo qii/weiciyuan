@@ -200,7 +200,18 @@ public class FriendsTimeLineDBTask {
         return "0";
     }
 
-    public static void updateRecentGroupId(String accountId, String groupId) {
+    public static void asyncUpdateRecentGroupId(String accountId, final String groupId) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                FriendsTimeLineDBTask.updateRecentGroupId(GlobalContext.getInstance().getCurrentAccountId(), groupId);
+            }
+        };
+
+        new Thread(runnable).start();
+    }
+
+    private static void updateRecentGroupId(String accountId, String groupId) {
 
         String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
                 + accountId;
