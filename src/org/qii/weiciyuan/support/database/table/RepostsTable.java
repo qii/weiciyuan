@@ -17,7 +17,7 @@ public class RepostsTable {
 
     public static class RepostDataTable {
 
-        public static final String TABLE_NAME = "repost_data_table";
+        public static final String TABLE_NAME = "reposts_data_table";
         //support multi user,so primary key can't be message id
         public static final String ID = "_id";
         //support mulit user
