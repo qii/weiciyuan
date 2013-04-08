@@ -32,8 +32,17 @@ public class LeftMenuFragment extends AbstractAppFragment {
     private int currentIndex = 0;
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("currentIndex", currentIndex);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            currentIndex = savedInstanceState.getInt("currentIndex");
+        }
 
         switch (currentIndex) {
             case 0:
