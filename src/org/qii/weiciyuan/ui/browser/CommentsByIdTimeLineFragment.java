@@ -428,7 +428,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             ActionBar.Tab tab = activity.getActionBar().getTabAt(1);
             String num = getString(R.string.comments) + "(" + bean.getTotal_number() + ")";
             tab.setText(num);
-
+            ((BrowserWeiboMsgActivity) activity).updateCommentCount(bean.getTotal_number());
         }
     }
 
