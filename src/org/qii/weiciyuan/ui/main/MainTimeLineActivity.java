@@ -479,23 +479,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         return fragment;
     }
 
-    public MentionsCommentTimeLineFragment getMentionsCommentTimeLineFragment() {
-        MentionsCommentTimeLineFragment fragment = ((MentionsCommentTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
-                MentionsCommentTimeLineFragment.class.getName()));
-        if (fragment == null) {
-            fragment = new MentionsCommentTimeLineFragment(getAccount(), getUser(), getToken());
-        }
-        return fragment;
-    }
-
-    public MentionsWeiboTimeLineFragment getMentionsWeiboTimeLineFragment() {
-        MentionsWeiboTimeLineFragment fragment = ((MentionsWeiboTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
-                MentionsWeiboTimeLineFragment.class.getName()));
-        if (fragment == null)
-            fragment = new MentionsWeiboTimeLineFragment(getAccount(), getUser(), getToken());
-
-        return fragment;
-    }
 
     public FriendsTimeLineFragment getFriendsTimeLineFragment() {
         FriendsTimeLineFragment fragment = ((FriendsTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
@@ -525,7 +508,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
 
-    public CommentsToMeTimeLineFragment getCommentsTimeLineFragment() {
+    public CommentsToMeTimeLineFragment getCommentsToMeTimeLineFragment() {
         CommentsToMeTimeLineFragment fragment = ((CommentsToMeTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 CommentsToMeTimeLineFragment.class.getName()));
         if (fragment == null)

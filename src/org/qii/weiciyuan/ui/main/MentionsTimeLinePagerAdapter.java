@@ -16,12 +16,13 @@ import java.util.List;
 public class MentionsTimeLinePagerAdapter extends AppFragmentPagerAdapter {
 
     private List<Fragment> fragmentList;
+    private MentionsTimeLine fragment;
 
-    public MentionsTimeLinePagerAdapter(FragmentManager fm, MainTimeLineActivity activity, List<Fragment> fragmentList) {
+    public MentionsTimeLinePagerAdapter(MentionsTimeLine fragment, FragmentManager fm, MainTimeLineActivity activity, List<Fragment> fragmentList) {
         super(fm);
         this.fragmentList = fragmentList;
-        fragmentList.add(0, activity.getMentionsWeiboTimeLineFragment());
-        fragmentList.add(1, activity.getMentionsCommentTimeLineFragment());
+        fragmentList.add(0, fragment.getMentionsWeiboTimeLineFragment());
+        fragmentList.add(1, fragment.getMentionsCommentTimeLineFragment());
     }
 
 

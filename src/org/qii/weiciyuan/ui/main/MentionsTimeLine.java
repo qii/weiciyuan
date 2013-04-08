@@ -8,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
+import org.qii.weiciyuan.ui.maintimeline.MentionsCommentTimeLineFragment;
+import org.qii.weiciyuan.ui.maintimeline.MentionsWeiboTimeLineFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +46,7 @@ public class MentionsTimeLine extends AbstractAppFragment {
         viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         viewPager.setOffscreenPageLimit(3);
         viewPager.setOnPageChangeListener(onPageChangeListener);
-        MentionsTimeLinePagerAdapter adapter = new MentionsTimeLinePagerAdapter(getChildFragmentManager(), (MainTimeLineActivity) getActivity(), mentionFragments);
+        MentionsTimeLinePagerAdapter adapter = new MentionsTimeLinePagerAdapter(this, getChildFragmentManager(), (MainTimeLineActivity) getActivity(), mentionFragments);
         viewPager.setAdapter(adapter);
     }
 
@@ -69,4 +72,25 @@ public class MentionsTimeLine extends AbstractAppFragment {
             getActivity().getActionBar().setSelectedNavigationItem(position);
         }
     };
+
+
+    public MentionsCommentTimeLineFragment getMentionsCommentTimeLineFragment() {
+        MentionsCommentTimeLineFragment fragment = ((MentionsCommentTimeLineFragment) getChildFragmentManager().findFragmentByTag(
+                MentionsCommentTimeLineFragment.class.getName()));
+        if (fragment == null) {
+            fragment = new MentionsCommentTimeLineFragment(GlobalContext.getInstance().getAccountBean()
+                    , GlobalContext.getInstance().getAccountBean().getInfo(), GlobalContext.getInstance().getSpecialToken());
+        }
+        return fragment;
+    }
+
+    public MentionsWeiboTimeLineFragment getMentionsWeiboTimeLineFragment() {
+        MentionsWeiboTimeLineFragment fragment = ((MentionsWeiboTimeLineFragment) getChildFragmentManager().findFragmentByTag(
+                MentionsWeiboTimeLineFragment.class.getName()));
+        if (fragment == null)
+            fragment = new MentionsWeiboTimeLineFragment(GlobalContext.getInstance().getAccountBean()
+                    , GlobalContext.getInstance().getAccountBean().getInfo(), GlobalContext.getInstance().getSpecialToken());
+
+        return fragment;
+    }
 }
