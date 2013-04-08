@@ -12,6 +12,8 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.android.MentionTimeLineData;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -40,6 +42,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     private Map<Integer, MessageListBean> groupDataCache = new HashMap<Integer, MessageListBean>();
 
     private UnreadBean unreadBean;
+    private TimeLinePosition timeLinePosition;
 
 
     @Override
@@ -87,6 +90,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         outState.putSerializable("0", groupDataCache.get(0));
         outState.putSerializable("1", groupDataCache.get(1));
         outState.putSerializable("2", groupDataCache.get(2));
+
+        outState.putSerializable("timeLinePosition", timeLinePosition);
     }
 
 
@@ -105,6 +110,17 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 //        }
     }
 
+    @Override
+    protected void onListViewScrollStop() {
+        super.onListViewScrollStop();
+        timeLinePosition = Utility.getCurrentPositionFromListView(getListView());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MentionsTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
+    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -169,7 +185,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
                 accountBean = (AccountBean) savedInstanceState.getSerializable("account");
                 token = savedInstanceState.getString("token");
                 unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
-
+                timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
                 getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
                 timeLineAdapter.notifyDataSetChanged();
                 refreshLayout(getList());
@@ -179,7 +195,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         refreshUnread(this.unreadBean);
     }
 
-    private class DBCacheTask extends MyAsyncTask<Void, MessageListBean, MessageListBean> {
+
+    private class DBCacheTask extends MyAsyncTask<Void, MentionTimeLineData, MentionTimeLineData> {
 
         @Override
         protected void onPreExecute() {
@@ -188,21 +205,23 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         }
 
         @Override
-        protected MessageListBean doInBackground(Void... params) {
+        protected MentionTimeLineData doInBackground(Void... params) {
             return MentionsTimeLineDBTask.getRepostLineMsgList(GlobalContext.getInstance().getCurrentAccountId());
         }
 
         @Override
-        protected void onPostExecute(MessageListBean result) {
+        protected void onPostExecute(MentionTimeLineData result) {
             super.onPostExecute(result);
 
             if (result != null) {
-                getList().replaceData(result);
-                putToGroupDataMemoryCache(0, result);
+                getList().replaceData(result.msgList);
+                putToGroupDataMemoryCache(0, result.msgList);
+                timeLinePosition = result.position;
             }
 
             getPullToRefreshListView().setVisibility(View.VISIBLE);
             getAdapter().notifyDataSetChanged();
+            setListViewPositionFromPositionsCache();
             refreshLayout(bean);
 
             /**
@@ -233,6 +252,12 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         startActivity(intent);
     }
 
+    private void setListViewPositionFromPositionsCache() {
+        if (timeLinePosition != null)
+            getListView().setSelectionFromTop(timeLinePosition.position + 1, timeLinePosition.top);
+        else
+            getListView().setSelectionFromTop(0, 0);
+    }
 
     @Override
     protected MessageListBean getDoInBackgroundNewData() throws WeiboException {

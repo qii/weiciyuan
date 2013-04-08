@@ -15,7 +15,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 23;
+    private static final int DATABASE_VERSION = 24;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -79,8 +79,15 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + "("
             + RepostsTable.ID + " integer primary key autoincrement,"
             + RepostsTable.ACCOUNTID + " text,"
-            + RepostsTable.MBLOGID + " text,"
-            + RepostsTable.JSONDATA + " text"
+            + RepostsTable.TIMELINEDATA + " text"
+            + ");";
+
+    static final String CREATE_REPOSTS_DATA_TABLE_SQL = "create table " + RepostsTable.RepostDataTable.TABLE_NAME
+            + "("
+            + RepostsTable.RepostDataTable.ID + " integer primary key autoincrement,"
+            + RepostsTable.RepostDataTable.ACCOUNTID + " text,"
+            + RepostsTable.RepostDataTable.MBLOGID + " text,"
+            + RepostsTable.RepostDataTable.JSONDATA + " text"
             + ");";
 
     static final String CREATE_COMMENT_BY_ME_TABLE_SQL = "create table " + CommentByMeTable.TABLE_NAME
@@ -164,11 +171,11 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + " ) ";
 
     private static final String CREATE_REPOST_INDEX_SQL = "CREATE INDEX idx_"
-            + RepostsTable.TABLE_NAME
+            + RepostsTable.RepostDataTable.TABLE_NAME
             + " ON "
-            + RepostsTable.TABLE_NAME
+            + RepostsTable.RepostDataTable.TABLE_NAME
             + "("
-            + RepostsTable.ACCOUNTID
+            + RepostsTable.RepostDataTable.ACCOUNTID
             + ")";
 
     private static final String CREATE_COMMENT_INDEX_SQL = "CREATE INDEX idx_"
@@ -258,6 +265,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_COMMENTS_TABLE_SQL);
 
         db.execSQL(CREATE_REPOSTS_TABLE_SQL);
+        db.execSQL(CREATE_REPOSTS_DATA_TABLE_SQL);
 
         db.execSQL(CREATE_MENTION_COMMENTS_TABLE_SQL);
 
@@ -293,7 +301,10 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + HomeOtherGroupTable.HomeOtherGroupDataTable.TABLE_NAME);
 
         db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
+
         db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.RepostDataTable.TABLE_NAME);
+
         db.execSQL("DROP TABLE IF EXISTS " + MentionCommentsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CommentByMeTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
@@ -308,24 +319,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private void deleteAllTable(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + AccountTable.TABLE_NAME);
 
-        db.execSQL("DROP TABLE IF EXISTS " + GroupTable.TABLE_NAME);
-
-        db.execSQL("DROP TABLE IF EXISTS " + HomeTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + HomeTable.HomeDataTable.TABLE_NAME);
-
-        db.execSQL("DROP TABLE IF EXISTS " + HomeOtherGroupTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + HomeOtherGroupTable.HomeOtherGroupDataTable.TABLE_NAME);
-
-        db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + MentionCommentsTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + CommentByMeTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + EmotionsTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DraftTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DMTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + MyStatusTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + AtUsersTable.TABLE_NAME);
+        deleteAllTableExceptAccount(db);
 
     }
 }

@@ -4,10 +4,13 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.android.MentionTimeLineData;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.table.RepostsTable;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -37,16 +40,17 @@ public class MentionsTimeLineDBTask {
     }
 
 
-    public static MessageListBean getRepostLineMsgList(String accountId) {
+    public static MentionTimeLineData getRepostLineMsgList(String accountId) {
+
         Gson gson = new Gson();
         MessageListBean result = new MessageListBean();
 
         List<MessageBean> msgList = new ArrayList<MessageBean>();
-        String sql = "select * from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID + "  = "
-                + accountId + " order by " + RepostsTable.MBLOGID + " desc limit 50";
+        String sql = "select * from " + RepostsTable.RepostDataTable.TABLE_NAME + " where " + RepostsTable.RepostDataTable.ACCOUNTID + "  = "
+                + accountId + " order by " + RepostsTable.RepostDataTable.MBLOGID + " desc limit 50";
         Cursor c = getRsd().rawQuery(sql, null);
         while (c.moveToNext()) {
-            String json = c.getString(c.getColumnIndex(RepostsTable.JSONDATA));
+            String json = c.getString(c.getColumnIndex(RepostsTable.RepostDataTable.JSONDATA));
             try {
                 MessageBean value = gson.fromJson(json, MessageBean.class);
                 value.getListViewSpannableString();
@@ -59,7 +63,9 @@ public class MentionsTimeLineDBTask {
 
         result.setStatuses(msgList);
         c.close();
-        return result;
+        MentionTimeLineData mentionTimeLineData = new MentionTimeLineData(result, getPosition(accountId));
+
+        return mentionTimeLineData;
 
     }
 
@@ -72,12 +78,12 @@ public class MentionsTimeLineDBTask {
             for (int i = 0; i < size; i++) {
                 MessageBean msg = msgList.get(i);
                 ContentValues cv = new ContentValues();
-                cv.put(RepostsTable.MBLOGID, msg.getId());
-                cv.put(RepostsTable.ACCOUNTID, accountId);
+                cv.put(RepostsTable.RepostDataTable.MBLOGID, msg.getId());
+                cv.put(RepostsTable.RepostDataTable.ACCOUNTID, accountId);
                 String json = gson.toJson(msg);
-                cv.put(RepostsTable.JSONDATA, json);
-                getWsd().insert(RepostsTable.TABLE_NAME,
-                        RepostsTable.ID, cv);
+                cv.put(RepostsTable.RepostDataTable.JSONDATA, json);
+                getWsd().insert(RepostsTable.RepostDataTable.TABLE_NAME,
+                        RepostsTable.RepostDataTable.ID, cv);
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
@@ -89,7 +95,7 @@ public class MentionsTimeLineDBTask {
 
 
     private static void reduceRepostTable(String accountId) {
-        String searchCount = "select count(" + RepostsTable.ID + ") as total" + " from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID
+        String searchCount = "select count(" + RepostsTable.RepostDataTable.ID + ") as total" + " from " + RepostsTable.RepostDataTable.TABLE_NAME + " where " + RepostsTable.RepostDataTable.ACCOUNTID
                 + " = " + accountId;
         int total = 0;
         Cursor c = getWsd().rawQuery(searchCount, null);
@@ -105,10 +111,10 @@ public class MentionsTimeLineDBTask {
 
         if (needDeletedNumber > 0) {
             AppLogger.e("" + needDeletedNumber);
-            String sql = " delete from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ID + " in "
-                    + "( select " + RepostsTable.ID + " from " + RepostsTable.TABLE_NAME + " where "
-                    + RepostsTable.ACCOUNTID
-                    + " in " + "(" + accountId + ") order by " + RepostsTable.ID + " asc limit " + needDeletedNumber + " ) ";
+            String sql = " delete from " + RepostsTable.RepostDataTable.TABLE_NAME + " where " + RepostsTable.RepostDataTable.ID + " in "
+                    + "( select " + RepostsTable.RepostDataTable.ID + " from " + RepostsTable.RepostDataTable.TABLE_NAME + " where "
+                    + RepostsTable.RepostDataTable.ACCOUNTID
+                    + " in " + "(" + accountId + ") order by " + RepostsTable.RepostDataTable.ID + " asc limit " + needDeletedNumber + " ) ";
 
             getWsd().execSQL(sql);
         }
@@ -119,15 +125,74 @@ public class MentionsTimeLineDBTask {
         deleteAllReposts(accountId);
 
         //need modification
-//        wsd.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
+//        wsd.execSQL("DROP TABLE IF EXISTS " + RepostsTable.RepostDataTable.TABLE_NAME);
 //        wsd.execSQL(DatabaseHelper.CREATE_REPOSTS_TABLE_SQL);
 
         addRepostLineMsg(list, accountId);
     }
 
     static void deleteAllReposts(String accountId) {
-        String sql = "delete from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID + " in " + "(" + accountId + ")";
+        String sql = "delete from " + RepostsTable.RepostDataTable.TABLE_NAME + " where " + RepostsTable.RepostDataTable.ACCOUNTID + " in " + "(" + accountId + ")";
 
         getWsd().execSQL(sql);
     }
+
+    public static void asyncUpdatePosition(final TimeLinePosition position, final String accountId) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updatePosition(position, accountId);
+            }
+        };
+
+        new Thread(runnable).start();
+    }
+
+
+    private static void updatePosition(TimeLinePosition position, String accountId) {
+        String sql = "select * from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID + "  = "
+                + accountId;
+        Cursor c = getRsd().rawQuery(sql, null);
+        Gson gson = new Gson();
+        if (c.moveToNext()) {
+            try {
+                String[] args = {accountId};
+                ContentValues cv = new ContentValues();
+                cv.put(RepostsTable.TIMELINEDATA, gson.toJson(position));
+                getWsd().update(RepostsTable.TABLE_NAME, cv, RepostsTable.ACCOUNTID + "=?", args);
+            } catch (JsonSyntaxException e) {
+
+            }
+        } else {
+
+            ContentValues cv = new ContentValues();
+            cv.put(RepostsTable.ACCOUNTID, accountId);
+            cv.put(RepostsTable.TIMELINEDATA, gson.toJson(position));
+            getWsd().insert(RepostsTable.TABLE_NAME,
+                    RepostsTable.ID, cv);
+        }
+    }
+
+    private static TimeLinePosition getPosition(String accountId) {
+        String sql = "select * from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID + "  = "
+                + accountId;
+        Cursor c = getRsd().rawQuery(sql, null);
+        Gson gson = new Gson();
+        while (c.moveToNext()) {
+            String json = c.getString(c.getColumnIndex(RepostsTable.TIMELINEDATA));
+            if (!TextUtils.isEmpty(json)) {
+                try {
+                    TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
+                    return value;
+
+                } catch (JsonSyntaxException e) {
+
+                }
+            }
+
+        }
+        c.close();
+        return new TimeLinePosition(0, 0);
+    }
+
 }
