@@ -18,7 +18,6 @@ import org.qii.weiciyuan.dao.maintimeline.FriendGroupTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.TimeLineReCmtCountDao;
 import org.qii.weiciyuan.support.database.FriendsTimeLineDBTask;
-import org.qii.weiciyuan.support.database.HomeOtherGroupTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -87,14 +86,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 if (msg.equals(getList().getItem(i))) {
                     getList().getItem(i).setReposts_count(msg.getReposts_count());
                     getList().getItem(i).setComments_count(msg.getComments_count());
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            FriendsTimeLineDBTask.updateCount(msg.getId(), msg.getComments_count(), msg.getReposts_count());
-                            HomeOtherGroupTimeLineDBTask.updateCount(msg.getId(), msg.getComments_count(), msg.getReposts_count());
-                        }
-                    }).start();
-
+                    FriendsTimeLineDBTask.asyncUpdateCount(msg.getId(), msg.getComments_count(), msg.getReposts_count());
                     break;
                 }
             }

@@ -226,7 +226,7 @@ public class HomeOtherGroupTimeLineDBTask {
 
     }
 
-    public static void updateCount(String msgId, int commentCount, int repostCount) {
+    static void updateCount(String msgId, int commentCount, int repostCount) {
         String sql = "select * from " + HomeOtherGroupTable.HomeOtherGroupDataTable.TABLE_NAME + " where " + HomeOtherGroupTable.HomeOtherGroupDataTable.MBLOGID + "  = "
                 + msgId + " order by "
                 + HomeOtherGroupTable.HomeOtherGroupDataTable.ID + " asc limit 50";

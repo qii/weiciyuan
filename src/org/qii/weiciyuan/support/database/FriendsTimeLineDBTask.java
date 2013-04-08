@@ -241,7 +241,19 @@ public class FriendsTimeLineDBTask {
         getWsd().execSQL(sql);
     }
 
-    public static void updateCount(String msgId, int commentCount, int repostCount) {
+    public static void asyncUpdateCount(final String msgId, final int commentCount, final int repostCount) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FriendsTimeLineDBTask.updateCount(msgId, commentCount, repostCount);
+                HomeOtherGroupTimeLineDBTask.updateCount(msgId, commentCount, repostCount);
+            }
+        }).start();
+
+    }
+
+    private static void updateCount(String msgId, int commentCount, int repostCount) {
         String sql = "select * from " + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.MBLOGID + "  = "
                 + msgId + " order by "
                 + HomeTable.HomeDataTable.ID + " asc limit 50";
