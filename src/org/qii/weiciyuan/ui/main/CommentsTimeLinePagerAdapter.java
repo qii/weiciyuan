@@ -17,11 +17,11 @@ public class CommentsTimeLinePagerAdapter extends AppFragmentPagerAdapter {
 
     private List<Fragment> fragmentList;
 
-    public CommentsTimeLinePagerAdapter(FragmentManager fm, MainTimeLineActivity activity, List<Fragment> fragmentList) {
+    public CommentsTimeLinePagerAdapter(CommentsTimeLine fragment, FragmentManager fm, MainTimeLineActivity activity, List<Fragment> fragmentList) {
         super(fm);
         this.fragmentList = fragmentList;
-        fragmentList.add(0, activity.getCommentsToMeTimeLineFragment());
-        fragmentList.add(1, activity.getCommentsByMeTimeLineFragment());
+        fragmentList.add(0, fragment.getCommentsToMeTimeLineFragment());
+        fragmentList.add(1, fragment.getCommentsByMeTimeLineFragment());
     }
 
 

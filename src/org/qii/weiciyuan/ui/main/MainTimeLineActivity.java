@@ -489,7 +489,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         return fragment;
     }
 
-    public MentionsTimeLine getMentionsAllTimeLineFragment() {
+    public MentionsTimeLine getMentionsTimeLineFragment() {
         MentionsTimeLine fragment = ((MentionsTimeLine) getSupportFragmentManager().findFragmentByTag(
                 MentionsTimeLine.class.getName()));
         if (fragment == null)
@@ -498,30 +498,11 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         return fragment;
     }
 
-    public CommentsTimeLine getCommentsAllTimeLineFragment() {
+    public CommentsTimeLine getCommentsTimeLineFragment() {
         CommentsTimeLine fragment = ((CommentsTimeLine) getSupportFragmentManager().findFragmentByTag(
                 CommentsTimeLine.class.getName()));
         if (fragment == null)
             fragment = new CommentsTimeLine();
-
-        return fragment;
-    }
-
-
-    public CommentsToMeTimeLineFragment getCommentsToMeTimeLineFragment() {
-        CommentsToMeTimeLineFragment fragment = ((CommentsToMeTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
-                CommentsToMeTimeLineFragment.class.getName()));
-        if (fragment == null)
-            fragment = new CommentsToMeTimeLineFragment(getAccount(), getUser(), getToken());
-
-        return fragment;
-    }
-
-    public CommentsByMeTimeLineFragment getCommentsByMeTimeLineFragment() {
-        CommentsByMeTimeLineFragment fragment = ((CommentsByMeTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
-                CommentsByMeTimeLineFragment.class.getName()));
-        if (fragment == null)
-            fragment = new CommentsByMeTimeLineFragment(getAccount(), getUser(), getToken());
 
         return fragment;
     }

@@ -8,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
+import org.qii.weiciyuan.ui.maintimeline.CommentsByMeTimeLineFragment;
+import org.qii.weiciyuan.ui.maintimeline.CommentsToMeTimeLineFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +47,7 @@ public class CommentsTimeLine extends AbstractAppFragment {
         viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         viewPager.setOffscreenPageLimit(3);
         viewPager.setOnPageChangeListener(onPageChangeListener);
-        CommentsTimeLinePagerAdapter adapter = new CommentsTimeLinePagerAdapter(getChildFragmentManager(), (MainTimeLineActivity) getActivity(), mentionFragments);
+        CommentsTimeLinePagerAdapter adapter = new CommentsTimeLinePagerAdapter(this, getChildFragmentManager(), (MainTimeLineActivity) getActivity(), mentionFragments);
         viewPager.setAdapter(adapter);
     }
 
@@ -70,5 +73,23 @@ public class CommentsTimeLine extends AbstractAppFragment {
         }
     };
 
+    public CommentsToMeTimeLineFragment getCommentsToMeTimeLineFragment() {
+        CommentsToMeTimeLineFragment fragment = ((CommentsToMeTimeLineFragment) getChildFragmentManager().findFragmentByTag(
+                CommentsToMeTimeLineFragment.class.getName()));
+        if (fragment == null)
+            fragment = new CommentsToMeTimeLineFragment(GlobalContext.getInstance().getAccountBean()
+                    , GlobalContext.getInstance().getAccountBean().getInfo(), GlobalContext.getInstance().getSpecialToken());
 
+        return fragment;
+    }
+
+    public CommentsByMeTimeLineFragment getCommentsByMeTimeLineFragment() {
+        CommentsByMeTimeLineFragment fragment = ((CommentsByMeTimeLineFragment) getChildFragmentManager().findFragmentByTag(
+                CommentsByMeTimeLineFragment.class.getName()));
+        if (fragment == null)
+            fragment = new CommentsByMeTimeLineFragment(GlobalContext.getInstance().getAccountBean()
+                    , GlobalContext.getInstance().getAccountBean().getInfo(), GlobalContext.getInstance().getSpecialToken());
+
+        return fragment;
+    }
 }

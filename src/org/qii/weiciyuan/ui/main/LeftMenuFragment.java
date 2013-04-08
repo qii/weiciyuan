@@ -87,8 +87,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
         currentIndex = 0;
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.hide(((MainTimeLineActivity) getActivity()).getMentionsAllTimeLineFragment());
-        ft.hide(((MainTimeLineActivity) getActivity()).getCommentsAllTimeLineFragment());
+        ft.hide(((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment());
+        ft.hide(((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
         FriendsTimeLineFragment fragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
 
         if (fragment.isAdded() && fragment.isHidden()) {
@@ -116,11 +116,11 @@ public class LeftMenuFragment extends AbstractAppFragment {
         Fragment fragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
 
         ft.hide(fragment);
-        ft.hide(((MainTimeLineActivity) getActivity()).getCommentsAllTimeLineFragment());
+        ft.hide(((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
 
         currentIndex = 1;
 
-        MentionsTimeLine m = ((MainTimeLineActivity) getActivity()).getMentionsAllTimeLineFragment();
+        MentionsTimeLine m = ((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment();
 
         if (m.isAdded() && m.isHidden()) {
             ft.show(m);
@@ -153,10 +153,10 @@ public class LeftMenuFragment extends AbstractAppFragment {
         Fragment friendsTimeLineFragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
 
         ft.hide(friendsTimeLineFragment);
-        ft.hide(((MainTimeLineActivity) getActivity()).getMentionsAllTimeLineFragment());
+        ft.hide(((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment());
 
 
-        CommentsTimeLine fragment = ((MainTimeLineActivity) getActivity()).getCommentsAllTimeLineFragment();
+        CommentsTimeLine fragment = ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment();
 
         if (fragment.isAdded() && fragment.isHidden()) {
             ft.show(fragment);
