@@ -424,6 +424,8 @@ public class Utility {
     }
 
     public static void buildTabCount(ActionBar.Tab tab, String tabStrRes, int count) {
+        if (tab == null)
+            return;
         String content = tab.getText().toString();
         int value = 0;
         int start = content.indexOf("(");

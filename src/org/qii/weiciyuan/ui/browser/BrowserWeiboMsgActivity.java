@@ -119,7 +119,8 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
         actionBar.addTab(actionBar.newTab()
                 .setText(getString(R.string.repost))
                 .setTabListener(tabListener));
-
+        Utility.buildTabCount(getActionBar().getTabAt(0), getString(R.string.comments), msg.getComments_count());
+        Utility.buildTabCount(getActionBar().getTabAt(1), getString(R.string.repost), msg.getReposts_count());
     }
 
     ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
