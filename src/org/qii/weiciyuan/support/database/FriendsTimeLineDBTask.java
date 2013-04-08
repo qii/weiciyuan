@@ -118,11 +118,11 @@ public class FriendsTimeLineDBTask {
         }
     }
 
-    public static void asyncUpdatePosition(final TimeLinePosition position, String accountId, final String groupId) {
+    public static void asyncUpdatePosition(final TimeLinePosition position, final String accountId, final String groupId) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                FriendsTimeLineDBTask.updatePosition(position, GlobalContext.getInstance().getCurrentAccountId(), groupId);
+                FriendsTimeLineDBTask.updatePosition(position, accountId, groupId);
             }
         };
 
