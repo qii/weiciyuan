@@ -488,6 +488,14 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         return fragment;
     }
 
+    public MentionsWeiboTimeLineFragment getMentionsWeiboTimeLineFragment() {
+        MentionsWeiboTimeLineFragment fragment = ((MentionsWeiboTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+                MentionsWeiboTimeLineFragment.class.getName()));
+        if (fragment == null)
+            fragment = new MentionsWeiboTimeLineFragment(getAccount(), getUser(), getToken());
+
+        return fragment;
+    }
 
     public FriendsTimeLineFragment getFriendsTimeLineFragment() {
         FriendsTimeLineFragment fragment = ((FriendsTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
@@ -516,15 +524,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         return fragment;
     }
 
-
-    public MentionsWeiboTimeLineFragment getMentionsTimeLineFragment() {
-        MentionsWeiboTimeLineFragment fragment = ((MentionsWeiboTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
-                MentionsWeiboTimeLineFragment.class.getName()));
-        if (fragment == null)
-            fragment = new MentionsWeiboTimeLineFragment(getAccount(), getUser(), getToken());
-
-        return fragment;
-    }
 
     public CommentsToMeTimeLineFragment getCommentsTimeLineFragment() {
         CommentsToMeTimeLineFragment fragment = ((CommentsToMeTimeLineFragment) getSupportFragmentManager().findFragmentByTag(

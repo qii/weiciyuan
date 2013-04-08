@@ -343,9 +343,8 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
         Activity activity = getActivity();
         if (activity != null) {
             ActionBar.Tab tab = activity.getActionBar().getTabAt(2);
-            String num = getString(R.string.repost) + "(" + bean.getTotal_number() + ")";
-            tab.setText(num);
-
+            Utility.buildTabCount(tab, getString(R.string.repost), bean.getTotal_number());
+            ((BrowserWeiboMsgActivity) activity).updateRepostCount(bean.getTotal_number());
         }
     }
 
