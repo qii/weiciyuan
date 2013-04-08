@@ -15,7 +15,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 24;
+    private static final int DATABASE_VERSION = 25;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -103,8 +103,15 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + "("
             + MentionCommentsTable.ID + " integer primary key autoincrement,"
             + MentionCommentsTable.ACCOUNTID + " text,"
-            + MentionCommentsTable.MBLOGID + " text,"
-            + MentionCommentsTable.JSONDATA + " text"
+            + MentionCommentsTable.TIMELINEDATA + " text"
+            + ");";
+
+    static final String CREATE_MENTION_COMMENTS_DATA_TABLE_SQL = "create table " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME
+            + "("
+            + MentionCommentsTable.MentionCommentsDataTable.ID + " integer primary key autoincrement,"
+            + MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID + " text,"
+            + MentionCommentsTable.MentionCommentsDataTable.MBLOGID + " text,"
+            + MentionCommentsTable.MentionCommentsDataTable.JSONDATA + " text"
             + ");";
 
     static final String CREATE_DMS_TABLE_SQL = "create table " + DMTable.TABLE_NAME
@@ -187,11 +194,11 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + ")";
 
     private static final String CREATE_MENTION_COMMENTS_INDEX_SQL = "CREATE INDEX idx_"
-            + MentionCommentsTable.TABLE_NAME
+            + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME
             + " ON "
-            + MentionCommentsTable.TABLE_NAME
+            + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME
             + "("
-            + MentionCommentsTable.ACCOUNTID
+            + MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID
             + ")";
 
     private static final String CREATE_COMMENT_BY_ME_INDEX_SQL = "CREATE INDEX idx_"
@@ -268,6 +275,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_REPOSTS_DATA_TABLE_SQL);
 
         db.execSQL(CREATE_MENTION_COMMENTS_TABLE_SQL);
+        db.execSQL(CREATE_MENTION_COMMENTS_DATA_TABLE_SQL);
 
         db.execSQL(CREATE_COMMENT_BY_ME_TABLE_SQL);
 
@@ -306,6 +314,8 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.RepostDataTable.TABLE_NAME);
 
         db.execSQL("DROP TABLE IF EXISTS " + MentionCommentsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME);
+
         db.execSQL("DROP TABLE IF EXISTS " + CommentByMeTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EmotionsTable.TABLE_NAME);
