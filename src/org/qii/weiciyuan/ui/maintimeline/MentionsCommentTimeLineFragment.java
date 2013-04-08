@@ -155,8 +155,6 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
                 unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
-
-
                 clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
                 timeLineAdapter.notifyDataSetChanged();
                 refreshLayout(getList());

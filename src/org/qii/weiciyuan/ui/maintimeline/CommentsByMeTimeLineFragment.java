@@ -9,6 +9,8 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.android.CommentTimeLineData;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.dao.maintimeline.CommentsTimeLineByMeDao;
 import org.qii.weiciyuan.dao.maintimeline.ICommentsTimeLineDao;
@@ -40,6 +42,7 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     private DBCacheTask dbTask;
 
     private CommentListBean bean = new CommentListBean();
+    private TimeLinePosition timeLinePosition;
 
 
     @Override
@@ -71,7 +74,7 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         outState.putSerializable("bean", bean);
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
-
+        outState.putSerializable("timeLinePosition", timeLinePosition);
 
     }
 
@@ -82,6 +85,17 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         Utility.cancelTasks(dbTask);
     }
 
+    @Override
+    protected void onListViewScrollStop() {
+        super.onListViewScrollStop();
+        timeLinePosition = Utility.getCurrentPositionFromListView(getListView());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CommentByMeTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -104,7 +118,7 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
                 userBean = (UserBean) savedInstanceState.getSerializable("userBean");
                 accountBean = (AccountBean) savedInstanceState.getSerializable("account");
                 token = savedInstanceState.getString("token");
-
+                timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
                 clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
                 timeLineAdapter.notifyDataSetChanged();
                 refreshLayout(getList());
@@ -207,7 +221,7 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         }
     }
 
-    private class DBCacheTask extends MyAsyncTask<Void, CommentListBean, CommentListBean> {
+    private class DBCacheTask extends MyAsyncTask<Void, CommentTimeLineData, CommentTimeLineData> {
 
         @Override
         protected void onPreExecute() {
@@ -217,21 +231,24 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
 
         @Override
-        protected CommentListBean doInBackground(Void... params) {
+        protected CommentTimeLineData doInBackground(Void... params) {
             return CommentByMeTimeLineDBTask.getCommentLineMsgList(GlobalContext.getInstance().getCurrentAccountId());
 
         }
 
         @Override
-        protected void onPostExecute(CommentListBean result) {
+        protected void onPostExecute(CommentTimeLineData result) {
             super.onPostExecute(result);
 
             if (result != null) {
-                clearAndReplaceValue(result);
+                clearAndReplaceValue(result.cmtList);
+                timeLinePosition = result.position;
             }
 
             getPullToRefreshListView().setVisibility(View.VISIBLE);
             getAdapter().notifyDataSetChanged();
+            setListViewPositionFromPositionsCache();
+
             refreshLayout(getList());
             /**
              * when this account first open app,if he don't have any data in database,fetch data from server automally
@@ -249,6 +266,13 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         super.onCreate(savedInstanceState);
 
         setRetainInstance(false);
+    }
+
+    private void setListViewPositionFromPositionsCache() {
+        if (timeLinePosition != null)
+            getListView().setSelectionFromTop(timeLinePosition.position + 1, timeLinePosition.top);
+        else
+            getListView().setSelectionFromTop(0, 0);
     }
 
 

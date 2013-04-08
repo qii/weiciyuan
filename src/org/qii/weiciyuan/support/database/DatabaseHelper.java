@@ -15,7 +15,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 25;
+    private static final int DATABASE_VERSION = 26;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -70,8 +70,15 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + "("
             + CommentsTable.ID + " integer primary key autoincrement,"
             + CommentsTable.ACCOUNTID + " text,"
-            + CommentsTable.MBLOGID + " text,"
-            + CommentsTable.JSONDATA + " text"
+            + CommentsTable.TIMELINEDATA + " text"
+            + ");";
+
+    static final String CREATE_COMMENTS_DATA_TABLE_SQL = "create table " + CommentsTable.CommentsDataTable.TABLE_NAME
+            + "("
+            + CommentsTable.CommentsDataTable.ID + " integer primary key autoincrement,"
+            + CommentsTable.CommentsDataTable.ACCOUNTID + " text,"
+            + CommentsTable.CommentsDataTable.MBLOGID + " text,"
+            + CommentsTable.CommentsDataTable.JSONDATA + " text"
             + ");";
 
 
@@ -94,10 +101,16 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + "("
             + CommentByMeTable.ID + " integer primary key autoincrement,"
             + CommentByMeTable.ACCOUNTID + " text,"
-            + CommentByMeTable.MBLOGID + " text,"
-            + CommentByMeTable.JSONDATA + " text"
+            + CommentByMeTable.TIMELINEDATA + " text"
             + ");";
 
+    static final String CREATE_COMMENT_BY_ME_DATA_TABLE_SQL = "create table " + CommentByMeTable.CommentByMeDataTable.TABLE_NAME
+            + "("
+            + CommentByMeTable.CommentByMeDataTable.ID + " integer primary key autoincrement,"
+            + CommentByMeTable.CommentByMeDataTable.ACCOUNTID + " text,"
+            + CommentByMeTable.CommentByMeDataTable.MBLOGID + " text,"
+            + CommentByMeTable.CommentByMeDataTable.JSONDATA + " text"
+            + ");";
 
     static final String CREATE_MENTION_COMMENTS_TABLE_SQL = "create table " + MentionCommentsTable.TABLE_NAME
             + "("
@@ -186,11 +199,11 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + ")";
 
     private static final String CREATE_COMMENT_INDEX_SQL = "CREATE INDEX idx_"
-            + CommentsTable.TABLE_NAME
+            + CommentsTable.CommentsDataTable.TABLE_NAME
             + " ON "
-            + CommentsTable.TABLE_NAME
+            + CommentsTable.CommentsDataTable.TABLE_NAME
             + "("
-            + CommentsTable.ACCOUNTID
+            + CommentsTable.CommentsDataTable.ACCOUNTID
             + ")";
 
     private static final String CREATE_MENTION_COMMENTS_INDEX_SQL = "CREATE INDEX idx_"
@@ -202,11 +215,11 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + ")";
 
     private static final String CREATE_COMMENT_BY_ME_INDEX_SQL = "CREATE INDEX idx_"
-            + CommentByMeTable.TABLE_NAME
+            + CommentByMeTable.CommentByMeDataTable.TABLE_NAME
             + " ON "
-            + CommentByMeTable.TABLE_NAME
+            + CommentByMeTable.CommentByMeDataTable.TABLE_NAME
             + "("
-            + CommentByMeTable.ACCOUNTID
+            + CommentByMeTable.CommentByMeDataTable.ACCOUNTID
             + ")";
 
     private static final String CREATE_DM_INDEX_SQL = "CREATE INDEX idx_"
@@ -270,6 +283,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_HOME_OTHER_GROUP_DATA_TABLE_SQL);
 
         db.execSQL(CREATE_COMMENTS_TABLE_SQL);
+        db.execSQL(CREATE_COMMENTS_DATA_TABLE_SQL);
 
         db.execSQL(CREATE_REPOSTS_TABLE_SQL);
         db.execSQL(CREATE_REPOSTS_DATA_TABLE_SQL);
@@ -278,6 +292,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_MENTION_COMMENTS_DATA_TABLE_SQL);
 
         db.execSQL(CREATE_COMMENT_BY_ME_TABLE_SQL);
+        db.execSQL(CREATE_COMMENT_BY_ME_DATA_TABLE_SQL);
 
         db.execSQL(CREATE_DMS_TABLE_SQL);
 
@@ -309,6 +324,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + HomeOtherGroupTable.HomeOtherGroupDataTable.TABLE_NAME);
 
         db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CommentsTable.CommentsDataTable.TABLE_NAME);
 
         db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.RepostDataTable.TABLE_NAME);
