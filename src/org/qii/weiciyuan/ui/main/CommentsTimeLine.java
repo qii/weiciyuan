@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.maintimeline.CommentsByMeTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.CommentsToMeTimeLineFragment;
@@ -52,7 +53,7 @@ public class CommentsTimeLine extends AbstractAppFragment {
     }
 
     public void buildActionBarAndViewPagerTitles(ActionBar actionBar, int firstTab, int secondTab) {
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(Utility.isDevicePort());
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.removeAllTabs();
         SimpleTwoTabsListener tabListener = new SimpleTwoTabsListener(viewPager);

@@ -55,6 +55,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 showCommentPage(true);
                 break;
         }
+        drawButtonsBackground(currentIndex);
     }
 
     private void openMyProfile() {
@@ -225,24 +226,31 @@ public class LeftMenuFragment extends AbstractAppFragment {
             switch (v.getId()) {
                 case R.id.btn_home:
                     showHomePage(false);
+                    drawButtonsBackground(0);
                     break;
                 case R.id.btn_mention:
                     showMentionPage(false);
+                    drawButtonsBackground(1);
                     break;
                 case R.id.btn_comment:
                     showCommentPage(false);
+                    drawButtonsBackground(2);
                     break;
                 case R.id.btn_search:
                     showSearchPage();
+//                    drawButtonsBackground(3);
                     break;
                 case R.id.btn_profile:
                     openMyProfile();
+//                    drawButtonsBackground(0);
                     break;
                 case R.id.btn_location:
                     startActivity(new Intent(getActivity(), NearbyTimeLineActivity.class));
+//                    drawButtonsBackground(5);
                     break;
                 case R.id.btn_dm:
                     showDMPage();
+                    drawButtonsBackground(4);
                     break;
                 case R.id.btn_setting:
                     showSettingPage();
@@ -253,6 +261,47 @@ public class LeftMenuFragment extends AbstractAppFragment {
             }
         }
     };
+
+    private void drawButtonsBackground(int position) {
+        layout.home.setBackgroundResource(R.color.transparent);
+        layout.mention.setBackgroundResource(R.color.transparent);
+        layout.comment.setBackgroundResource(R.color.transparent);
+//        layout.search.setBackgroundResource(R.color.transparent);
+//        layout.profile.setBackgroundResource(R.color.transparent);
+//        layout.location.setBackgroundResource(R.color.transparent);
+//        layout.setting.setBackgroundResource(R.color.transparent);
+//        layout.dm.setBackgroundResource(R.color.transparent);
+//        layout.logout.setBackgroundResource(R.color.transparent);
+        switch (position) {
+            case 0:
+                layout.home.setBackgroundResource(R.color.ics_blue_semi);
+                break;
+            case 1:
+                layout.mention.setBackgroundResource(R.color.ics_blue_semi);
+                break;
+            case 2:
+                layout.comment.setBackgroundResource(R.color.ics_blue_semi);
+                break;
+            case 3:
+                layout.search.setBackgroundResource(R.color.ics_blue_semi);
+                break;
+            case 4:
+                layout.dm.setBackgroundResource(R.color.ics_blue_semi);
+                break;
+            case 5:
+                layout.location.setBackgroundResource(R.color.ics_blue_semi);
+                break;
+            case 6:
+                layout.profile.setBackgroundResource(R.color.ics_blue_semi);
+                break;
+            case 7:
+                layout.logout.setBackgroundResource(R.color.ics_blue_semi);
+                break;
+            case 8:
+                layout.setting.setBackgroundResource(R.color.ics_blue_semi);
+                break;
+        }
+    }
 
     private SlidingMenu getSlidingMenu() {
         return ((MainTimeLineActivity) getActivity()).getSlidingMenu();

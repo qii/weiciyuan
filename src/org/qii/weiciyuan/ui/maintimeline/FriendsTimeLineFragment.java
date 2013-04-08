@@ -283,6 +283,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private void buildActionBarNav() {
         getActivity().getActionBar().setDisplayShowTitleEnabled(false);
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(Utility.isDevicePort());
         getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         List<GroupBean> list = new ArrayList<GroupBean>();
         if (GlobalContext.getInstance().getGroup() != null) {
