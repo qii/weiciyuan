@@ -216,48 +216,48 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         buildCustomActionBarTitle(savedInstanceState);
 
         if (savedInstanceState == null) {
-
-            Fragment friend = getFriendsTimeLineFragment();
-            Fragment mentions = getMentionsTimeLineFragment();
-            Fragment comments = getCommentsTimeLineFragment();
-
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            if (!friend.isAdded()) {
-                fragmentTransaction.add(R.id.menu_right_fl, friend, FriendsTimeLineFragment.class.getName());
-                fragmentTransaction.hide(friend);
-            }
-            if (!mentions.isAdded()) {
-                fragmentTransaction.add(R.id.menu_right_fl, mentions, MentionsTimeLine.class.getName());
-                fragmentTransaction.hide(mentions);
-
-            }
-            if (!comments.isAdded()) {
-                fragmentTransaction.add(R.id.menu_right_fl, comments, CommentsTimeLine.class.getName());
-                fragmentTransaction.hide(comments);
-
-            }
-            if (!fragmentTransaction.isEmpty()) {
-                fragmentTransaction.commit();
-                getSupportFragmentManager().executePendingTransactions();
-            }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    initFragments();
+                }
+            }, 3000);
 
             FragmentTransaction secondFragmentTransaction = getSupportFragmentManager().beginTransaction();
             secondFragmentTransaction.replace(R.id.menu_frame, getMenuFragment(), LeftMenuFragment.class.getName());
-//            fragmentTransaction.replace(R.id.menu_right_fl, getFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName());
             getSlidingMenu().showContent();
             secondFragmentTransaction.commit();
-        } else {
-//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            fragmentTransaction.remove(getMentionsTimeLineFragment());
-//            fragmentTransaction.remove(getMentionsCommentTimeLineFragment());
-//            fragmentTransaction.remove(getCommentsTimeLineFragment());
-//            fragmentTransaction.remove(getCommentsByMeTimeLineFragment());
-//            fragmentTransaction.commit();
         }
 
 
         configSlidingMenu(phone);
 
+    }
+
+    private void initFragments() {
+        //            Fragment friend = getFriendsTimeLineFragment();
+        Fragment mentions = getMentionsTimeLineFragment();
+        Fragment comments = getCommentsTimeLineFragment();
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            if (!friend.isAdded()) {
+//                fragmentTransaction.add(R.id.menu_right_fl, friend, FriendsTimeLineFragment.class.getName());
+//                fragmentTransaction.hide(friend);
+//            }
+        if (!mentions.isAdded()) {
+            fragmentTransaction.add(R.id.menu_right_fl, mentions, MentionsTimeLine.class.getName());
+            fragmentTransaction.hide(mentions);
+
+        }
+        if (!comments.isAdded()) {
+            fragmentTransaction.add(R.id.menu_right_fl, comments, CommentsTimeLine.class.getName());
+            fragmentTransaction.hide(comments);
+
+        }
+        if (!fragmentTransaction.isEmpty()) {
+            fragmentTransaction.commit();
+            getSupportFragmentManager().executePendingTransactions();
+        }
     }
 
     private void configSlidingMenu(boolean phone) {
