@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
@@ -71,6 +72,19 @@ public class CommentsTimeLine extends AbstractAppFragment {
         @Override
         public void onPageSelected(int position) {
             getActivity().getActionBar().setSelectedNavigationItem(position);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            super.onPageScrollStateChanged(state);
+            switch (state) {
+                case ViewPager.SCROLL_STATE_SETTLING:
+                    LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
+                    break;
+                default:
+                    LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
+                    break;
+            }
         }
     };
 
