@@ -7,6 +7,7 @@ import android.content.*;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -33,7 +34,7 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
-import org.qii.weiciyuan.ui.maintimeline.*;
+import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
@@ -215,11 +216,36 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         buildCustomActionBarTitle(savedInstanceState);
 
         if (savedInstanceState == null) {
+
+            Fragment friend = getFriendsTimeLineFragment();
+            Fragment mentions = getMentionsTimeLineFragment();
+            Fragment comments = getCommentsTimeLineFragment();
+
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.menu_frame, getMenuFragment(), LeftMenuFragment.class.getName());
+            if (!friend.isAdded()) {
+                fragmentTransaction.add(R.id.menu_right_fl, friend, FriendsTimeLineFragment.class.getName());
+                fragmentTransaction.hide(friend);
+            }
+            if (!mentions.isAdded()) {
+                fragmentTransaction.add(R.id.menu_right_fl, mentions, MentionsTimeLine.class.getName());
+                fragmentTransaction.hide(mentions);
+
+            }
+            if (!comments.isAdded()) {
+                fragmentTransaction.add(R.id.menu_right_fl, comments, CommentsTimeLine.class.getName());
+                fragmentTransaction.hide(comments);
+
+            }
+            if (!fragmentTransaction.isEmpty()) {
+                fragmentTransaction.commit();
+                getSupportFragmentManager().executePendingTransactions();
+            }
+
+            FragmentTransaction secondFragmentTransaction = getSupportFragmentManager().beginTransaction();
+            secondFragmentTransaction.replace(R.id.menu_frame, getMenuFragment(), LeftMenuFragment.class.getName());
 //            fragmentTransaction.replace(R.id.menu_right_fl, getFriendsTimeLineFragment(), FriendsTimeLineFragment.class.getName());
             getSlidingMenu().showContent();
-            fragmentTransaction.commit();
+            secondFragmentTransaction.commit();
         } else {
 //            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 //            fragmentTransaction.remove(getMentionsTimeLineFragment());
