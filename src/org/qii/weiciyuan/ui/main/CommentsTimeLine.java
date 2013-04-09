@@ -2,10 +2,12 @@ package org.qii.weiciyuan.ui.main;
 
 import android.app.ActionBar;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
@@ -79,7 +81,13 @@ public class CommentsTimeLine extends AbstractAppFragment {
             super.onPageScrollStateChanged(state);
             switch (state) {
                 case ViewPager.SCROLL_STATE_SETTLING:
-                    LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
+
+                        }
+                    }, ViewConfiguration.getLongPressTimeout());
                     break;
                 default:
                     LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
