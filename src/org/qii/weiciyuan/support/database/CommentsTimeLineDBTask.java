@@ -133,6 +133,9 @@ public class CommentsTimeLineDBTask {
     }
 
     public static void asyncUpdatePosition(final TimeLinePosition position, final String accountId) {
+        if (position == null)
+            return;
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
