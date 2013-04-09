@@ -34,7 +34,11 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
     private Map<ViewHolder, Drawable> bg = new WeakHashMap<ViewHolder, Drawable>();
 
     public CommentListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
-        super(fragment, commander, bean, listView, showOriStatus);
+        this(fragment, commander, bean, listView, showOriStatus, false);
+    }
+
+    public CommentListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<CommentBean> bean, ListView listView, boolean showOriStatus, boolean pref) {
+        super(fragment, commander, bean, listView, showOriStatus, pref);
 
         int[] attrs = new int[]{R.attr.timeline_reply_flag};
         TypedArray ta = fragment.getActivity().obtainStyledAttributes(attrs);

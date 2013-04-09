@@ -93,14 +93,14 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         checkedBG = ta.getColor(0, 430);
 
         if (pre) {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 6; i++) {
                 PrefView prefView = new PrefView();
                 prefView.view = initNormalLayout(null);
                 prefView.holder = buildHolder(prefView.view);
                 prefNormalViews.add(prefView);
             }
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 6; i++) {
                 PrefView prefView = new PrefView();
                 prefView.view = initBigPicLayout(null);
                 prefView.holder = buildHolder(prefView.view);

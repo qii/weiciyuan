@@ -20,8 +20,10 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
+import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.util.HashMap;
@@ -120,6 +122,12 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     public void onPause() {
         super.onPause();
         MentionsTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
+    }
+
+    @Override
+    protected void buildListAdapter() {
+        timeLineAdapter = new StatusListAdapter(this, ((ICommander) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), true, true);
+        getListView().setAdapter(timeLineAdapter);
     }
 
     @Override

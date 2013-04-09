@@ -51,7 +51,7 @@ public class CommentsTimeLine extends AbstractAppFragment {
         viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         viewPager.setOffscreenPageLimit(3);
         viewPager.setOnPageChangeListener(onPageChangeListener);
-        CommentsTimeLinePagerAdapter adapter = new CommentsTimeLinePagerAdapter(this, getChildFragmentManager(), (MainTimeLineActivity) getActivity(), mentionFragments);
+        CommentsTimeLinePagerAdapter adapter = new CommentsTimeLinePagerAdapter(this, viewPager, getChildFragmentManager(), (MainTimeLineActivity) getActivity(), mentionFragments);
         viewPager.setAdapter(adapter);
     }
 

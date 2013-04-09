@@ -216,12 +216,9 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         buildCustomActionBarTitle(savedInstanceState);
 
         if (savedInstanceState == null) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    initFragments();
-                }
-            }, 3000);
+
+            initFragments();
+
 
             FragmentTransaction secondFragmentTransaction = getSupportFragmentManager().beginTransaction();
             secondFragmentTransaction.replace(R.id.menu_frame, getMenuFragment(), LeftMenuFragment.class.getName());
@@ -235,15 +232,15 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     private void initFragments() {
-        //            Fragment friend = getFriendsTimeLineFragment();
+        Fragment friend = getFriendsTimeLineFragment();
         Fragment mentions = getMentionsTimeLineFragment();
         Fragment comments = getCommentsTimeLineFragment();
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            if (!friend.isAdded()) {
-//                fragmentTransaction.add(R.id.menu_right_fl, friend, FriendsTimeLineFragment.class.getName());
-//                fragmentTransaction.hide(friend);
-//            }
+        if (!friend.isAdded()) {
+            fragmentTransaction.add(R.id.menu_right_fl, friend, FriendsTimeLineFragment.class.getName());
+            fragmentTransaction.hide(friend);
+        }
         if (!mentions.isAdded()) {
             fragmentTransaction.add(R.id.menu_right_fl, mentions, MentionsTimeLine.class.getName());
             fragmentTransaction.hide(mentions);
