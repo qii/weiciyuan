@@ -76,6 +76,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //use Up instead of Back to reach this fragment
         if (data == null)
@@ -189,6 +195,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             case SCREEN_ROTATE:
                 //nothing
                 refreshLayout(getList());
+                buildActionBarNav();
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 userBean = (UserBean) savedInstanceState.getSerializable("userBean");
