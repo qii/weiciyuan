@@ -196,6 +196,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 //nothing
                 refreshLayout(getList());
                 buildActionBarNav();
+                setListViewPositionFromPositionsCache();
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 userBean = (UserBean) savedInstanceState.getSerializable("userBean");
