@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.*;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -109,41 +108,36 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
         Executors.newSingleThreadScheduledExecutor().schedule(new ClearCacheTask(), 8, TimeUnit.SECONDS);
 
-        startListenMusicPlaying();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (musicReceiver != null)
-            unregisterReceiver(musicReceiver);
+
     }
 
     private void startListenMusicPlaying() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                IntentFilter musicFilter = new IntentFilter();
-                musicFilter.addAction("com.android.music.metachanged");
-                musicFilter.addAction("com.android.music.playstatechanged");
-                musicFilter.addAction("com.android.music.playbackcomplete");
-                musicFilter.addAction("com.android.music.queuechanged");
 
-                musicFilter.addAction("com.htc.music.metachanged");
-                musicFilter.addAction("fm.last.android.metachanged");
-                musicFilter.addAction("com.sec.android.app.music.metachanged");
-                musicFilter.addAction("com.nullsoft.winamp.metachanged");
-                musicFilter.addAction("com.amazon.mp3.metachanged");
-                musicFilter.addAction("com.miui.player.metachanged");
-                musicFilter.addAction("com.real.IMP.metachanged");
-                musicFilter.addAction("com.sonyericsson.music.metachanged");
-                musicFilter.addAction("com.rdio.android.metachanged");
-                musicFilter.addAction("com.samsung.sec.android.MusicPlayer.metachanged");
-                musicFilter.addAction("com.andrew.apollo.metachanged");
-                musicReceiver = new MusicReceiver();
-                registerReceiver(musicReceiver, musicFilter);
-            }
-        }, 3000);
+        IntentFilter musicFilter = new IntentFilter();
+        musicFilter.addAction("com.android.music.metachanged");
+        musicFilter.addAction("com.android.music.playstatechanged");
+        musicFilter.addAction("com.android.music.playbackcomplete");
+        musicFilter.addAction("com.android.music.queuechanged");
+
+        musicFilter.addAction("com.htc.music.metachanged");
+        musicFilter.addAction("fm.last.android.metachanged");
+        musicFilter.addAction("com.sec.android.app.music.metachanged");
+        musicFilter.addAction("com.nullsoft.winamp.metachanged");
+        musicFilter.addAction("com.amazon.mp3.metachanged");
+        musicFilter.addAction("com.miui.player.metachanged");
+        musicFilter.addAction("com.real.IMP.metachanged");
+        musicFilter.addAction("com.sonyericsson.music.metachanged");
+        musicFilter.addAction("com.rdio.android.metachanged");
+        musicFilter.addAction("com.samsung.sec.android.MusicPlayer.metachanged");
+        musicFilter.addAction("com.andrew.apollo.metachanged");
+        musicReceiver = new MusicReceiver();
+        registerReceiver(musicReceiver, musicFilter);
+
     }
 
     private class MusicReceiver extends BroadcastReceiver {
@@ -403,7 +397,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         filter.setPriority(1);
         newMsgBroadcastReceiver = new NewMsgBroadcastReceiver();
         registerReceiver(newMsgBroadcastReceiver, filter);
-
+        startListenMusicPlaying();
         newMsgScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         newMsgScheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -487,6 +481,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     protected void onPause() {
         super.onPause();
         unregisterReceiver(newMsgBroadcastReceiver);
+        if (musicReceiver != null)
+            unregisterReceiver(musicReceiver);
         newMsgScheduledExecutorService.shutdownNow();
         if (getUnreadCountTask != null)
             getUnreadCountTask.cancel(true);
