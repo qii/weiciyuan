@@ -4,6 +4,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -17,17 +19,14 @@ import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
+import org.qii.weiciyuan.ui.loader.MentionsWeiboTimeDBLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * User: qii
@@ -38,22 +37,15 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     private AccountBean accountBean;
     private UserBean userBean;
     private String token;
-
-    private DBCacheTask dbTask;
-
-    private Map<Integer, MessageListBean> groupDataCache = new HashMap<Integer, MessageListBean>();
-
     private UnreadBean unreadBean;
     private TimeLinePosition timeLinePosition;
-
+    private MessageListBean bean = new MessageListBean();
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Utility.cancelTasks(dbTask);
     }
 
-    private MessageListBean bean = new MessageListBean();
 
     @Override
     public MessageListBean getList() {
@@ -87,12 +79,6 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
         outState.putSerializable("unreadBean", unreadBean);
-
-
-        outState.putSerializable("0", groupDataCache.get(0));
-        outState.putSerializable("1", groupDataCache.get(1));
-        outState.putSerializable("2", groupDataCache.get(2));
-
         outState.putSerializable("timeLinePosition", timeLinePosition);
     }
 
@@ -175,18 +161,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                if (Utility.isTaskStopped(dbTask)) {
-                    dbTask = new DBCacheTask();
-                    dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                }
-
-                groupDataCache.put(0, new MessageListBean());
-                groupDataCache.put(1, new MessageListBean());
-                groupDataCache.put(2, new MessageListBean());
-                break;
-            case SCREEN_ROTATE:
-                //nothing
-                refreshLayout(bean);
+                getLoaderManager().initLoader(0, null, dbCallback);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 userBean = (UserBean) savedInstanceState.getSerializable("userBean");
@@ -194,61 +169,17 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
                 token = savedInstanceState.getString("token");
                 unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
-                getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
-                timeLineAdapter.notifyDataSetChanged();
-                refreshLayout(getList());
-
+                MessageListBean savedBean = (MessageListBean) savedInstanceState.getSerializable("bean");
+                if (savedBean != null && savedBean.getSize() > 0) {
+                    getList().replaceData(savedBean);
+                    timeLineAdapter.notifyDataSetChanged();
+                    refreshLayout(getList());
+                } else {
+                    getLoaderManager().initLoader(0, null, dbCallback);
+                }
                 break;
         }
         refreshUnread(this.unreadBean);
-    }
-
-
-    private class DBCacheTask extends MyAsyncTask<Void, MentionTimeLineData, MentionTimeLineData> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            getPullToRefreshListView().setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        protected MentionTimeLineData doInBackground(Void... params) {
-            return MentionsTimeLineDBTask.getRepostLineMsgList(GlobalContext.getInstance().getCurrentAccountId());
-        }
-
-        @Override
-        protected void onPostExecute(MentionTimeLineData result) {
-            super.onPostExecute(result);
-
-            if (result != null) {
-                getList().replaceData(result.msgList);
-                putToGroupDataMemoryCache(0, result.msgList);
-                timeLinePosition = result.position;
-            }
-
-            getPullToRefreshListView().setVisibility(View.VISIBLE);
-            getAdapter().notifyDataSetChanged();
-            setListViewPositionFromPositionsCache();
-            refreshLayout(bean);
-
-            /**
-             * when this account first open app,if he don't have any data in database,fetch data from server automally
-             */
-
-            if (bean.getSize() == 0) {
-                pullToRefreshListView.startRefreshNow();
-            }
-
-            /**when one user open app from android notification center while this app is using another account,
-             * activity will restart, and then mentions and comment fragment
-             * will fetch new message from server
-             **/
-//            if (getActivity() != null && getActivity().getActionBar().getTabAt(1).getText().toString().contains(")")) {
-//                pullToRefreshListView.startRefreshNow();
-//            }
-        }
-
     }
 
 
@@ -311,8 +242,51 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     private void putToGroupDataMemoryCache(int groupId, MessageListBean value) {
         MessageListBean copy = new MessageListBean();
         copy.addNewData(value);
-        groupDataCache.put(groupId, copy);
     }
 
+
+    private LoaderManager.LoaderCallbacks<MentionTimeLineData> dbCallback = new LoaderManager.LoaderCallbacks<MentionTimeLineData>() {
+        @Override
+        public Loader<MentionTimeLineData> onCreateLoader(int id, Bundle args) {
+            getPullToRefreshListView().setVisibility(View.INVISIBLE);
+            return new MentionsWeiboTimeDBLoader(getActivity(), GlobalContext.getInstance().getCurrentAccountId());
+        }
+
+        @Override
+        public void onLoadFinished(Loader<MentionTimeLineData> loader, MentionTimeLineData result) {
+            getPullToRefreshListView().setVisibility(View.VISIBLE);
+
+            if (result != null) {
+                getList().replaceData(result.msgList);
+                putToGroupDataMemoryCache(0, result.msgList);
+                timeLinePosition = result.position;
+            }
+
+            getAdapter().notifyDataSetChanged();
+            setListViewPositionFromPositionsCache();
+            refreshLayout(bean);
+
+            /**
+             * when this account first open app,if he don't have any data in database,fetch data from server automally
+             */
+
+            if (bean.getSize() == 0) {
+                pullToRefreshListView.startRefreshNow();
+            }
+
+            /**when one user open app from android notification center while this app is using another account,
+             * activity will restart, and then mentions and comment fragment
+             * will fetch new message from server
+             **/
+            //            if (getActivity() != null && getActivity().getActionBar().getTabAt(1).getText().toString().contains(")")) {
+            //                pullToRefreshListView.startRefreshNow();
+            //            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<MentionTimeLineData> loader) {
+
+        }
+    };
 }
 
