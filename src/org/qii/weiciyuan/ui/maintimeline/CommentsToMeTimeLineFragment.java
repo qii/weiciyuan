@@ -3,6 +3,8 @@ package org.qii.weiciyuan.ui.maintimeline;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -28,6 +30,7 @@ import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
+import org.qii.weiciyuan.ui.loader.CommentsToMeDBLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
@@ -42,7 +45,6 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     private String token;
 
     private RemoveTask removeTask;
-    private DBCacheTask dbTask;
 
     private CommentListBean bean = new CommentListBean();
     private UnreadBean unreadBean;
@@ -107,7 +109,6 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Utility.cancelTasks(dbTask);
     }
 
     @Override
@@ -139,16 +140,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                if (Utility.isTaskStopped(dbTask)) {
-                    dbTask = new DBCacheTask();
-                    dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                }
-
-
-                break;
-            case SCREEN_ROTATE:
-                //nothing
-                refreshLayout(bean);
+                getLoaderManager().initLoader(0, null, dbCallback);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 userBean = (UserBean) savedInstanceState.getSerializable("userBean");
@@ -156,9 +148,16 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
                 token = savedInstanceState.getString("token");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
                 unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
-                clearAndReplaceValue((CommentListBean) savedInstanceState.getSerializable("bean"));
-                timeLineAdapter.notifyDataSetChanged();
-                refreshLayout(getList());
+                CommentListBean savedBean = (CommentListBean) savedInstanceState.getSerializable("bean");
+                if (savedBean != null && savedBean.getSize() > 0) {
+                    clearAndReplaceValue(savedBean);
+                    timeLineAdapter.notifyDataSetChanged();
+                    refreshLayout(getList());
+                    setListViewPositionFromPositionsCache();
+                    getLoaderManager().destroyLoader(0);
+                } else {
+                    getLoaderManager().initLoader(0, null, dbCallback);
+                }
                 break;
         }
 
@@ -251,43 +250,6 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         }
     }
 
-    private class DBCacheTask extends MyAsyncTask<Void, CommentTimeLineData, CommentTimeLineData> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            getPullToRefreshListView().setVisibility(View.INVISIBLE);
-        }
-
-
-        @Override
-        protected CommentTimeLineData doInBackground(Void... params) {
-            return CommentsTimeLineDBTask.getCommentLineMsgList(accountBean.getUid());
-        }
-
-        @Override
-        protected void onPostExecute(CommentTimeLineData result) {
-            super.onPostExecute(result);
-
-            if (result != null) {
-                clearAndReplaceValue(result.cmtList);
-                timeLinePosition = result.position;
-            }
-
-            getPullToRefreshListView().setVisibility(View.VISIBLE);
-            getAdapter().notifyDataSetChanged();
-            setListViewPositionFromPositionsCache();
-
-            refreshLayout(getList());
-            /**
-             * when this account first open app,if he don't have any data in database,fetch data from server automally
-             */
-            if (getList().getSize() == 0) {
-                getPullToRefreshListView().startRefreshNow();
-            }
-
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -378,5 +340,37 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         }
     }
 
+    private LoaderManager.LoaderCallbacks<CommentTimeLineData> dbCallback = new LoaderManager.LoaderCallbacks<CommentTimeLineData>() {
+        @Override
+        public Loader<CommentTimeLineData> onCreateLoader(int id, Bundle args) {
+            getPullToRefreshListView().setVisibility(View.INVISIBLE);
+            return new CommentsToMeDBLoader(getActivity(), GlobalContext.getInstance().getCurrentAccountId());
+        }
 
+        @Override
+        public void onLoadFinished(Loader<CommentTimeLineData> loader, CommentTimeLineData result) {
+            if (result != null) {
+                clearAndReplaceValue(result.cmtList);
+                timeLinePosition = result.position;
+            }
+
+            getPullToRefreshListView().setVisibility(View.VISIBLE);
+            getAdapter().notifyDataSetChanged();
+            setListViewPositionFromPositionsCache();
+
+            refreshLayout(getList());
+            /**
+             * when this account first open app,if he don't have any data in database,fetch data from server automally
+             */
+            if (getList().getSize() == 0) {
+                getPullToRefreshListView().startRefreshNow();
+            }
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<CommentTimeLineData> loader) {
+
+        }
+    };
 }
