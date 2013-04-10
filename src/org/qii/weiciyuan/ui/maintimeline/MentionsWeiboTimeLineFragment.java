@@ -174,6 +174,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
                     getList().replaceData(savedBean);
                     timeLineAdapter.notifyDataSetChanged();
                     refreshLayout(getList());
+                    getLoaderManager().destroyLoader(0);
                 } else {
                     getLoaderManager().initLoader(0, null, dbCallback);
                 }

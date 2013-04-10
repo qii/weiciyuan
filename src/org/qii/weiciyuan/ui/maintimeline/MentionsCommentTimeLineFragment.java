@@ -153,6 +153,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                     timeLineAdapter.notifyDataSetChanged();
                     refreshLayout(getList());
                     setListViewPositionFromPositionsCache();
+                    getLoaderManager().destroyLoader(0);
                 } else {
                     getLoaderManager().initLoader(0, null, dbCallback);
                 }
