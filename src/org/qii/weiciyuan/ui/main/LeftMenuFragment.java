@@ -29,7 +29,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private Layout layout;
 
-    private int currentIndex = 0;
+    private int currentIndex = -1;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -42,6 +42,9 @@ public class LeftMenuFragment extends AbstractAppFragment {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
             currentIndex = savedInstanceState.getInt("currentIndex");
+        }
+        if (currentIndex == -1) {
+            currentIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
         }
 
         switch (currentIndex) {
@@ -140,11 +143,17 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
 
         ft.commit();
-        m.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.mentions_weibo, R.string.mentions_to_me);
+        int tabIndex = 0;
+        int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
+        if (navPosition == 1) {
+            tabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
+        }
+        m.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.mentions_weibo, R.string.mentions_to_me, tabIndex);
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
         if (Utility.isDevicePort()) {
             setTitle(R.string.mentions);
         }
+
         return false;
     }
 
@@ -175,7 +184,12 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
 
         ft.commit();
-        fragment.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.all_people_send_to_me, R.string.my_comment);
+        int tabIndex = 0;
+        int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
+        if (navPosition == 2) {
+            tabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
+        }
+        fragment.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.all_people_send_to_me, R.string.my_comment, tabIndex);
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
         if (Utility.isDevicePort()) {
             setTitle(R.string.comments);

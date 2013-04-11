@@ -15,7 +15,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 26;
+    private static final int DATABASE_VERSION = 27;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -23,6 +23,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + AccountTable.OAUTH_TOKEN + " text,"
             + AccountTable.OAUTH_TOKEN_SECRET + " text,"
             + AccountTable.BLACK_MAGIC + " boolean,"
+            + AccountTable.NAVIGATION_POSITION + " integer,"
             + AccountTable.INFOJSON + " text"
             + ");";
 
@@ -255,6 +256,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
             case 19:
+            case 26:
                 deleteAllTable(db);
                 onCreate(db);
             default:
@@ -333,6 +335,8 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME);
 
         db.execSQL("DROP TABLE IF EXISTS " + CommentByMeTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CommentByMeTable.CommentByMeDataTable.TABLE_NAME);
+
         db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EmotionsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DraftTable.TABLE_NAME);

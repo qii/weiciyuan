@@ -23,6 +23,7 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
 import org.qii.weiciyuan.othercomponent.unreadnotification.UnreadMsgReceiver;
+import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -486,6 +487,18 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         newMsgScheduledExecutorService.shutdownNow();
         if (getUnreadCountTask != null)
             getUnreadCountTask.cancel(true);
+
+        if (!isChangingConfigurations() && isFinishing())
+            saveNavigationPositionToDB();
+    }
+
+    private void saveNavigationPositionToDB() {
+        int navPosition = getMenuFragment().getCurrentIndex() * 10;
+        ActionBar actionBar = getActionBar();
+        int second = actionBar.getSelectedNavigationIndex();
+        int result = navPosition + second;
+        GlobalContext.getInstance().getAccountBean().setNavigationPosition(result);
+        AccountDBTask.updateNavigationPosition(GlobalContext.getInstance().getAccountBean(), result);
     }
 
 

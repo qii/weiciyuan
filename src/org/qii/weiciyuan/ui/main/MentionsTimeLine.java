@@ -33,7 +33,7 @@ public class MentionsTimeLine extends AbstractAppFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex() == 1) {
-            buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.mentions_weibo, R.string.mentions_to_me);
+            buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.mentions_weibo, R.string.mentions_to_me, 0);
         }
     }
 
@@ -55,7 +55,7 @@ public class MentionsTimeLine extends AbstractAppFragment {
     }
 
 
-    public void buildActionBarAndViewPagerTitles(ActionBar actionBar, int firstTab, int secondTab) {
+    public void buildActionBarAndViewPagerTitles(ActionBar actionBar, int firstTab, int secondTab, int nav) {
         actionBar.setDisplayHomeAsUpEnabled(Utility.isDevicePort());
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.removeAllTabs();
@@ -68,6 +68,7 @@ public class MentionsTimeLine extends AbstractAppFragment {
                 .setText(secondTab)
                 .setTabListener(tabListener));
 
+        actionBar.setSelectedNavigationItem(nav);
     }
 
     ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {

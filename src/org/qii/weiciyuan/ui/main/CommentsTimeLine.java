@@ -33,7 +33,7 @@ public class CommentsTimeLine extends AbstractAppFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex() == 2) {
-            buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.all_people_send_to_me, R.string.my_comment);
+            buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.all_people_send_to_me, R.string.my_comment, 0);
         }
     }
 
@@ -55,7 +55,7 @@ public class CommentsTimeLine extends AbstractAppFragment {
         viewPager.setAdapter(adapter);
     }
 
-    public void buildActionBarAndViewPagerTitles(ActionBar actionBar, int firstTab, int secondTab) {
+    public void buildActionBarAndViewPagerTitles(ActionBar actionBar, int firstTab, int secondTab, int nav) {
         actionBar.setDisplayHomeAsUpEnabled(Utility.isDevicePort());
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.removeAllTabs();
@@ -67,6 +67,7 @@ public class CommentsTimeLine extends AbstractAppFragment {
         actionBar.addTab(actionBar.newTab()
                 .setText(secondTab)
                 .setTabListener(tabListener));
+        actionBar.setSelectedNavigationItem(nav);
 
     }
 

@@ -75,6 +75,16 @@ public class AccountDBTask {
                 new String[]{uid});
     }
 
+    public static void updateNavigationPosition(AccountBean account, int position) {
+        String uid = account.getUid();
+
+        ContentValues cv = new ContentValues();
+        cv.put(AccountTable.UID, uid);
+        cv.put(AccountTable.NAVIGATION_POSITION, position);
+
+        int c = getWsd().update(AccountTable.TABLE_NAME, cv, AccountTable.UID + "=?",
+                new String[]{uid});
+    }
 
     public static List<AccountBean> getAccountList() {
         List<AccountBean> accountList = new ArrayList<AccountBean>();
@@ -87,6 +97,9 @@ public class AccountDBTask {
 
             colid = c.getColumnIndex(AccountTable.BLACK_MAGIC);
             account.setBlack_magic(c.getInt(colid) == 1);
+
+            colid = c.getColumnIndex(AccountTable.NAVIGATION_POSITION);
+            account.setNavigationPosition(c.getInt(colid));
 
             Gson gson = new Gson();
             String json = c.getString(c.getColumnIndex(AccountTable.INFOJSON));
@@ -114,6 +127,9 @@ public class AccountDBTask {
 
             colid = c.getColumnIndex(AccountTable.BLACK_MAGIC);
             account.setBlack_magic(c.getInt(colid) == 1);
+
+            colid = c.getColumnIndex(AccountTable.NAVIGATION_POSITION);
+            account.setNavigationPosition(c.getInt(colid));
 
             Gson gson = new Gson();
             String json = c.getString(c.getColumnIndex(AccountTable.INFOJSON));

@@ -16,6 +16,9 @@ public class AccountTable {
 
     public static final String OAUTH_TOKEN_SECRET = "oauth_token_secret";
 
+    //tens place is Sliding Menu position, ones place is ActionBar selected index
+    public static final String NAVIGATION_POSITION = "navigation_position";
+
     public static final String INFOJSON = "json";
 
 }

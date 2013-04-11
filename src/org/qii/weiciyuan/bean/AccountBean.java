@@ -52,6 +52,16 @@ public class AccountBean implements Serializable {
 
     private boolean black_magic;
 
+    private int navigationPosition;
+
+    public int getNavigationPosition() {
+        return navigationPosition;
+    }
+
+    public void setNavigationPosition(int navigationPosition) {
+        this.navigationPosition = navigationPosition;
+    }
+
     @Override
     public String toString() {
         return ObjectToStringUtility.toString(this);
