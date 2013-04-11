@@ -370,7 +370,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getPullToRefreshListView().setVisibility(View.VISIBLE);
             getAdapter().notifyDataSetChanged();
             setListViewPositionFromPositionsCache();
-            getActivity().getActionBar().setSelectedNavigationItem(getRecentNavIndex());
+            if (getActivity().getActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST)
+                getActivity().getActionBar().setSelectedNavigationItem(getRecentNavIndex());
             refreshLayout(getList());
             /**
              * when this account first open app,if he don't have any data in database,fetch data from server automally
