@@ -12,7 +12,7 @@ import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.android.CommentTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.table.MentionCommentsTable;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.ArrayList;
@@ -104,7 +104,7 @@ public class MentionCommentsTimeLineDBTask {
 
         AppLogger.e("total=" + total);
 
-        int needDeletedNumber = total - Integer.valueOf(SettingUtility.getMsgCount());
+        int needDeletedNumber = total - AppConfig.DEFAULT_MENTIONS_COMMENT_DB_CACHE_COUNT;
 
         if (needDeletedNumber > 0) {
             AppLogger.e("" + needDeletedNumber);

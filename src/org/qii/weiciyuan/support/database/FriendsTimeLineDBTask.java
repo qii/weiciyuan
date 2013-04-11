@@ -96,7 +96,7 @@ public class FriendsTimeLineDBTask {
 
         AppLogger.e("total=" + total);
 
-        int needDeletedNumber = total - AppConfig.DEFAULT_DB_CACHE_COUNT;
+        int needDeletedNumber = total - AppConfig.DEFAULT_HOME_DB_CACHE_COUNT;
 
         if (needDeletedNumber > 0) {
             AppLogger.e("" + needDeletedNumber);

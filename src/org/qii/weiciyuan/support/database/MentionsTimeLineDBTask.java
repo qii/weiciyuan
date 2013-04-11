@@ -12,7 +12,7 @@ import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.android.MentionTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.table.RepostsTable;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.ArrayList;
@@ -107,7 +107,7 @@ public class MentionsTimeLineDBTask {
 
         AppLogger.e("total=" + total);
 
-        int needDeletedNumber = total - Integer.valueOf(SettingUtility.getMsgCount());
+        int needDeletedNumber = total - AppConfig.DEFAULT_MENTIONS_WEIBO_DB_CACHE_COUNT;
 
         if (needDeletedNumber > 0) {
             AppLogger.e("" + needDeletedNumber);
