@@ -48,6 +48,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
     private UnreadBean unreadBean;
     private TimeLinePosition timeLinePosition;
+    private boolean dbCacheLoaded = false;
 
 
     @Override
@@ -79,7 +80,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         outState.putSerializable("bean", bean);
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
-
+        outState.putBoolean("dbCacheLoaded", dbCacheLoaded);
 
         outState.putSerializable("unreadBean", unreadBean);
         outState.putSerializable("timeLinePosition", timeLinePosition);
@@ -145,6 +146,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                 userBean = (UserBean) savedInstanceState.getSerializable("userBean");
                 accountBean = (AccountBean) savedInstanceState.getSerializable("account");
                 token = savedInstanceState.getString("token");
+                dbCacheLoaded = savedInstanceState.getBoolean("dbCacheLoaded");
                 unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
                 CommentListBean savedBean = (CommentListBean) savedInstanceState.getSerializable("bean");
@@ -153,6 +155,9 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                     timeLineAdapter.notifyDataSetChanged();
                     refreshLayout(getList());
                     setListViewPositionFromPositionsCache();
+                    getLoaderManager().destroyLoader(0);
+                } else if (dbCacheLoaded) {
+                    refreshLayout(getList());
                     getLoaderManager().destroyLoader(0);
                 } else {
                     getLoaderManager().initLoader(0, null, dbCallback);
@@ -319,18 +324,14 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
     @Override
     protected void newMsgOnPostExecute(CommentListBean newValue) {
-        if (newValue != null) {
-            if (newValue.getItemList().size() == 0) {
-                Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
-                getList().addNewData(newValue);
-                getAdapter().notifyDataSetChanged();
-                getListView().setSelectionAfterHeaderView();
-            }
+        if (newValue != null && newValue.getItemList().size() > 0) {
+            Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
         }
-        unreadBean = null;
 
+        unreadBean = null;
     }
 
     @Override
@@ -367,6 +368,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
              */
             if (getList().getSize() == 0) {
                 getPullToRefreshListView().startRefreshNow();
+                dbCacheLoaded = true;
             }
         }
 
