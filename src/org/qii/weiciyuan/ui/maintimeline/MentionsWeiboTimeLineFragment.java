@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.MentionTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
@@ -25,6 +27,9 @@ import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
+import org.qii.weiciyuan.ui.loader.MentionsWeiboMiddleMsgLoader;
+import org.qii.weiciyuan.ui.loader.MentionsWeiboNewMsgLoader;
+import org.qii.weiciyuan.ui.loader.MentionsWeiboOldMsgLoader;
 import org.qii.weiciyuan.ui.loader.MentionsWeiboTimeDBLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -40,6 +45,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     private UnreadBean unreadBean;
     private TimeLinePosition timeLinePosition;
     private MessageListBean bean = new MessageListBean();
+
 
     @Override
     public void onDestroy() {
@@ -169,15 +175,17 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
                 token = savedInstanceState.getString("token");
                 unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
+
                 MessageListBean savedBean = (MessageListBean) savedInstanceState.getSerializable("bean");
                 if (savedBean != null && savedBean.getSize() > 0) {
                     getList().replaceData(savedBean);
                     timeLineAdapter.notifyDataSetChanged();
                     refreshLayout(getList());
-                    getLoaderManager().destroyLoader(0);
+                    getLoaderManager().destroyLoader(DB_CACHE_LOADER_ID);
                 } else {
-                    getLoaderManager().initLoader(0, null, dbCallback);
+                    getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 }
+
                 break;
         }
         refreshUnread(this.unreadBean);
@@ -201,30 +209,13 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
     @Override
     protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
-        MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
-        if (getList().getItemList().size() > 0) {
-            dao.setSince_id(getList().getItemList().get(0).getId());
-        }
-
-        MessageListBean result = dao.getGSONMsgList();
-        if (result != null) {
-            MentionsTimeLineDBTask.addRepostLineMsg(result, accountBean.getUid());
-
-        }
-        return result;
+        return null;
     }
 
 
     @Override
     protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
-        MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
-        if (getList().getItemList().size() > 0) {
-            dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
-        }
-
-        MessageListBean result = dao.getGSONMsgList();
-
-        return result;
+        return null;
     }
 
     @Override
@@ -232,19 +223,41 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
         dao.setMax_id(beginId);
         dao.setSince_id(endId);
-
-
         MessageListBean result = dao.getGSONMsgList();
-
         return result;
     }
 
+    @Override
+    public void loadMiddleMsg(String beginId, String endId, String endTag, int position) {
+        Bundle bundle = new Bundle();
+        bundle.putString("beginId", beginId);
+        bundle.putString("endId", endId);
+        bundle.putString("endTag", endTag);
+        bundle.putInt("position", position);
+        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
+
+    }
 
     private void putToGroupDataMemoryCache(int groupId, MessageListBean value) {
         MessageListBean copy = new MessageListBean();
         copy.addNewData(value);
     }
 
+    public void refresh() {
+        if (allowRefresh()) {
+            getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+            Activity activity = getActivity();
+            if (activity == null)
+                return;
+            ((ICommander) activity).getBitmapDownloader().totalStopLoadPicture();
+        }
+
+    }
+
+    @Override
+    protected void listViewFooterViewClick(View view) {
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+    }
 
     private LoaderManager.LoaderCallbacks<MentionTimeLineData> dbCallback = new LoaderManager.LoaderCallbacks<MentionTimeLineData>() {
         @Override
@@ -289,5 +302,32 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
         }
     };
+
+    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        String accountId = accountBean.getUid();
+        String token = accountBean.getAccess_token();
+        String sinceId = null;
+        if (getList().getItemList().size() > 0) {
+            sinceId = getList().getItemList().get(0).getId();
+        }
+        return new MentionsWeiboNewMsgLoader(getActivity(), accountId, token, sinceId);
+    }
+
+    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateMiddleMsgLoader(int id, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
+        String accountId = accountBean.getUid();
+        String token = accountBean.getAccess_token();
+        return new MentionsWeiboMiddleMsgLoader(getActivity(), accountId, token, middleBeginId, middleEndId);
+    }
+
+    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+        String accountId = accountBean.getUid();
+        String token = accountBean.getAccess_token();
+        String maxId = null;
+        if (getList().getItemList().size() > 0) {
+            maxId = getList().getItemList().get(getList().getItemList().size() - 1).getId();
+        }
+        return new MentionsWeiboOldMsgLoader(getActivity(), accountId, token, maxId);
+    }
+
 }
 

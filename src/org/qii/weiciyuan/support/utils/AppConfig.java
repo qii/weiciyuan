@@ -10,6 +10,8 @@ public class AppConfig {
 
     }
 
+    public static final boolean DEBUG = true;
+
     public static final int DEFAULT_MSG_COUNT_25 = 25;
     public static final int DEFAULT_MSG_COUNT_50 = 50;
 

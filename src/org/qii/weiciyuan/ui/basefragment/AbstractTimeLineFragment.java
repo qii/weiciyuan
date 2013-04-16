@@ -2,6 +2,8 @@ package org.qii.weiciyuan.ui.basefragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.ListBean;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
@@ -25,6 +28,12 @@ import org.qii.weiciyuan.ui.interfaces.ICommander;
 /**
  * User: qii
  * Date: 12-8-27
+ * weiciyuan has two kinds of methods to send/receive network request/response asynchronously,
+ * one is setRetainInstance(true) + AsyncTask, the other is AsyncTaskLoader
+ * Because nested fragment(parent fragment has a viewpager, viewpager has many children fragments,
+ * these children fragments are called nested fragment) can't use setRetainInstance(true), at this moment
+ * you have to use AsyncTaskLoader to solve Android configuration change(for example: change screen orientation,
+ * change system language)
  */
 public abstract class AbstractTimeLineFragment<T extends ListBean> extends AbstractAppFragment {
 
@@ -125,7 +134,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         buildListAdapter();
     }
 
-    private void showFooterView() {
+    protected void showFooterView() {
         TextView tv = ((TextView) footerView.findViewById(R.id.listview_footer));
         tv.setVisibility(View.VISIBLE);
         tv.setText(getString(R.string.loading));
@@ -236,7 +245,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
 
-    private void showErrorFooterView() {
+    protected void showErrorFooterView() {
         TextView tv = ((TextView) footerView.findViewById(R.id.listview_footer));
         tv.setVisibility(View.VISIBLE);
         tv.setText(getString(R.string.click_to_load_older_message));
@@ -323,6 +332,28 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((ICommander) getActivity()).getBitmapDownloader();
+        if (savedInstanceState != null) {
+            newMsgLoaderIsLoading = savedInstanceState.getBoolean("newMsgLoaderIsLoading");
+            middleMsgLoaderIsLoading = savedInstanceState.getBoolean("middleMsgLoaderIsLoading");
+            oldMsgLoaderIsLoading = savedInstanceState.getBoolean("oldMsgLoaderIsLoading");
+        }
+        if (newMsgLoaderIsLoading) {
+            getLoaderManager().initLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+        } else {
+            getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        }
+
+        if (middleMsgLoaderIsLoading) {
+            getLoaderManager().initLoader(MIDDLE_MSG_LOADER_ID, null, msgCallback);
+        } else {
+            getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        }
+
+        if (oldMsgLoaderIsLoading) {
+            getLoaderManager().initLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+        } else {
+            getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        }
 
     }
 
@@ -522,6 +553,14 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         progressBar.setVisibility(View.INVISIBLE);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean("newMsgLoaderIsLoading", newMsgLoaderIsLoading);
+        outState.putBoolean("middleMsgLoaderIsLoading", middleMsgLoaderIsLoading);
+        outState.putBoolean("oldMsgLoaderIsLoading", oldMsgLoaderIsLoading);
+    }
 
     protected abstract T getDoInBackgroundNewData() throws WeiboException;
 
@@ -535,6 +574,103 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     public boolean isListViewFling() {
         return !enableRefreshTime;
     }
+
+    protected boolean newMsgLoaderIsLoading = false;
+    protected boolean middleMsgLoaderIsLoading = false;
+    protected boolean oldMsgLoaderIsLoading = false;
+
+    protected static final int DB_CACHE_LOADER_ID = 0;
+    protected static final int NEW_MSG_LOADER_ID = 1;
+    protected static final int MIDDLE_MSG_LOADER_ID = 2;
+    protected static final int OLD_MSG_LOADER_ID = 3;
+
+    protected Loader<AsyncTaskLoaderResult<T>> onCreateNewMsgLoader(int id, Bundle args) {
+        return null;
+    }
+
+    protected Loader<AsyncTaskLoaderResult<T>> onCreateMiddleMsgLoader(int id, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
+        return null;
+    }
+
+    protected Loader<AsyncTaskLoaderResult<T>> onCreateOldMsgLoader(int id, Bundle args) {
+        return null;
+    }
+
+    protected LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<T>> msgCallback = new LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<T>>() {
+
+        private String middleBeginId = "";
+        private String middleEndId = "";
+        private String middleEndTag = "";
+        private int middlePosition = -1;
+
+        @Override
+        public Loader<AsyncTaskLoaderResult<T>> onCreateLoader(int id, Bundle args) {
+            clearActionMode();
+            showListView();
+            switch (id) {
+                case NEW_MSG_LOADER_ID:
+                    newMsgLoaderIsLoading = true;
+                    Utility.stopListViewScrollingAndScrollToTop(getListView());
+                    return onCreateNewMsgLoader(id, args);
+                case MIDDLE_MSG_LOADER_ID:
+                    middleMsgLoaderIsLoading = true;
+                    middleBeginId = args.getString("beginId");
+                    middleEndId = args.getString("endId");
+                    middleEndTag = args.getString("endTag");
+                    middlePosition = args.getInt("position");
+                    return onCreateMiddleMsgLoader(id, args, middleBeginId, middleEndId, middleEndTag, middlePosition);
+                case OLD_MSG_LOADER_ID:
+                    oldMsgLoaderIsLoading = true;
+                    showFooterView();
+                    return onCreateOldMsgLoader(id, args);
+            }
+
+            return null;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<AsyncTaskLoaderResult<T>> loader, AsyncTaskLoaderResult<T> result) {
+            T data = result.data;
+            WeiboException exception = result.exception;
+
+            switch (loader.getId()) {
+                case NEW_MSG_LOADER_ID:
+                    newMsgLoaderIsLoading = false;
+                    getPullToRefreshListView().onRefreshComplete();
+                    refreshLayout(getList());
+
+                    if (exception != null)
+                        Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
+                    else
+                        newMsgOnPostExecute(data);
+                    break;
+                case MIDDLE_MSG_LOADER_ID:
+                    middleMsgOnPostExecute(middleEndTag, middlePosition, data);
+                    getAdapter().notifyDataSetChanged();
+                    break;
+                case OLD_MSG_LOADER_ID:
+                    oldMsgLoaderIsLoading = false;
+                    refreshLayout(getList());
+
+                    if (Utility.isAllNotNull(exception)) {
+                        Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
+                        showErrorFooterView();
+                    } else {
+                        oldMsgOnPostExecute(data);
+                        getAdapter().notifyDataSetChanged();
+                        dismissFooterView();
+                    }
+
+                    break;
+            }
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<AsyncTaskLoaderResult<T>> loader) {
+
+        }
+    };
 
 }
 
