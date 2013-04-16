@@ -645,6 +645,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                         newMsgOnPostExecute(data);
                     break;
                 case MIDDLE_MSG_LOADER_ID:
+                    middleMsgLoaderIsLoading = false;
                     middleMsgOnPostExecute(middleEndTag, middlePosition, data);
                     getAdapter().notifyDataSetChanged();
                     break;
