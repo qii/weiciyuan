@@ -114,6 +114,7 @@ public class AboutFragment extends PreferenceFragment {
                 }
                 mp.start();
                 playing = true;
+                Toast.makeText(getActivity(), "♩♪♫♬♭", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
