@@ -326,7 +326,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
     protected boolean allowRefresh() {
-        return Utility.isTaskStopped(newTask) && getPullToRefreshListView().getVisibility() == View.VISIBLE;
+        return Utility.isTaskStopped(newTask) && getPullToRefreshListView().getVisibility() == View.VISIBLE && !newMsgLoaderIsLoading;
     }
 
 
