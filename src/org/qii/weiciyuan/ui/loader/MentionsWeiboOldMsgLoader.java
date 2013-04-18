@@ -17,7 +17,6 @@ public class MentionsWeiboOldMsgLoader extends AsyncTaskLoader<AsyncTaskLoaderRe
     private String token;
     private String id;
     private String accountId;
-    private WeiboException exception;
 
     public MentionsWeiboOldMsgLoader(Context context, String accountId, String token, String id) {
         super(context);
@@ -36,6 +35,8 @@ public class MentionsWeiboOldMsgLoader extends AsyncTaskLoader<AsyncTaskLoaderRe
         MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
         dao.setMax_id(id);
         MessageListBean result = null;
+        WeiboException exception = null;
+
         try {
             result = dao.getGSONMsgList();
         } catch (WeiboException e) {

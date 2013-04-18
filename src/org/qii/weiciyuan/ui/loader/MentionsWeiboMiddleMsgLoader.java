@@ -18,7 +18,6 @@ public class MentionsWeiboMiddleMsgLoader extends AsyncTaskLoader<AsyncTaskLoade
     private String sinceId;
     private String maxId;
     private String accountId;
-    private WeiboException exception;
 
     public MentionsWeiboMiddleMsgLoader(Context context, String accountId, String token, String sinceId, String maxId) {
         super(context);
@@ -39,6 +38,8 @@ public class MentionsWeiboMiddleMsgLoader extends AsyncTaskLoader<AsyncTaskLoade
         dao.setSince_id(sinceId);
         dao.setMax_id(maxId);
         MessageListBean result = null;
+        WeiboException exception = null;
+
         try {
             result = dao.getGSONMsgList();
         } catch (WeiboException e) {
