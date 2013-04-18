@@ -428,6 +428,7 @@
     <string name="pref_icon_design_title">图标</string>
     <string name="pref_cache_path_title">缓存文件路径</string>
     <string name="pref_saved_pic_path_title">图片保存路径</string>
+    <string name="pref_open_source_license_title">开源协议</string>
 
 
     <!-- menu-->

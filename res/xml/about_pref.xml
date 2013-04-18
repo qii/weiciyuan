@@ -29,6 +29,12 @@
                 android:data="https://github.com/qii/weiciyuan"/>
         </Preference>
 
+        <Preference android:title="@string/pref_open_source_license_title">
+            <intent
+                android:targetPackage="org.qii.weiciyuan"
+                android:targetClass="org.qii.weiciyuan.ui.preference.LicenseActivity"/>
+        </Preference>
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -100,6 +106,7 @@
             >
 
         </Preference>
+
 
     </PreferenceCategory>
 
