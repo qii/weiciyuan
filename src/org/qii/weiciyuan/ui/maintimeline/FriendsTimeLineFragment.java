@@ -1,9 +1,11 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.Loader;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,11 +13,9 @@ import android.widget.BaseAdapter;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.MessageTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
-import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
-import org.qii.weiciyuan.dao.maintimeline.FriendGroupTimeLineDao;
-import org.qii.weiciyuan.dao.maintimeline.MainFriendsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.TimeLineReCmtCountDao;
 import org.qii.weiciyuan.support.database.FriendsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -28,6 +28,7 @@ import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
+import org.qii.weiciyuan.ui.loader.FriendsMsgLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
@@ -52,8 +53,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private AutoRefreshTask autoRefreshTask = null;
     private ScheduledExecutorService autoRefreshExecutor = null;
 
-    private final String ALL_GROUP_ID = "0";
-    private final String BILATERAL_GROUP_ID = "1";
+    public final static String ALL_GROUP_ID = "0";
+    public final static String BILATERAL_GROUP_ID = "1";
 
     private String currentGroupId = ALL_GROUP_ID;
 
@@ -432,42 +433,17 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     @Override
     protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
-        MainFriendsTimeLineDao dao;
-        if (currentGroupId.equals(BILATERAL_GROUP_ID)) {
-            dao = new BilateralTimeLineDao(token);
-        } else if (currentGroupId.equals(ALL_GROUP_ID)) {
-            dao = new MainFriendsTimeLineDao(token);
-        } else {
-            dao = new FriendGroupTimeLineDao(token, currentGroupId);
-        }
-        if (getList().getItemList().size() > 0) {
-            dao.setSince_id(getList().getItemList().get(0).getId());
-        }
-        return dao.getGSONMsgList();
+        return null;
     }
 
     @Override
     protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
-        MainFriendsTimeLineDao dao;
-        if (currentGroupId.equals(BILATERAL_GROUP_ID)) {
-            dao = new BilateralTimeLineDao(token);
-        } else if (currentGroupId.equals(ALL_GROUP_ID)) {
-            dao = new MainFriendsTimeLineDao(token);
-        } else {
-            dao = new FriendGroupTimeLineDao(token, currentGroupId);
-        }
-        if (getList().getItemList().size() > 0) {
-            dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
-        }
-        return dao.getGSONMsgList();
+        return null;
     }
 
     @Override
     protected MessageListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        MainFriendsTimeLineDao dao = new MainFriendsTimeLineDao(token);
-        dao.setMax_id(beginId);
-        dao.setSince_id(endId);
-        return dao.getGSONMsgList();
+        return null;
     }
 
 
@@ -720,4 +696,57 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
     }
 
+    @Override
+    public void loadMiddleMsg(String beginId, String endId, String endTag, int position) {
+        Bundle bundle = new Bundle();
+        bundle.putString("beginId", beginId);
+        bundle.putString("endId", endId);
+        bundle.putString("endTag", endTag);
+        bundle.putInt("position", position);
+        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
+
+    }
+
+    public void refresh() {
+        if (allowRefresh()) {
+            getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+            Activity activity = getActivity();
+            if (activity == null)
+                return;
+            ((ICommander) activity).getBitmapDownloader().totalStopLoadPicture();
+        }
+
+    }
+
+    @Override
+    protected void listViewFooterViewClick(View view) {
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+    }
+
+
+    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        String accountId = accountBean.getUid();
+        String token = accountBean.getAccess_token();
+        String sinceId = null;
+        if (getList().getItemList().size() > 0) {
+            sinceId = getList().getItemList().get(0).getId();
+        }
+        return new FriendsMsgLoader(getActivity(), accountId, token, currentGroupId, sinceId, null);
+    }
+
+    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateMiddleMsgLoader(int id, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
+        String accountId = accountBean.getUid();
+        String token = accountBean.getAccess_token();
+        return new FriendsMsgLoader(getActivity(), accountId, token, currentGroupId, middleBeginId, middleEndId);
+    }
+
+    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+        String accountId = accountBean.getUid();
+        String token = accountBean.getAccess_token();
+        String maxId = null;
+        if (getList().getItemList().size() > 0) {
+            maxId = getList().getItemList().get(getList().getItemList().size() - 1).getId();
+        }
+        return new FriendsMsgLoader(getActivity(), accountId, token, currentGroupId, null, maxId);
+    }
 }

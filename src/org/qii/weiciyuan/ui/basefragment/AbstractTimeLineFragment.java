@@ -540,7 +540,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         if (newValue == null)
             return;
 
-        if (newValue.getSize() == 1) {
+        if (newValue.getSize() == 0 || newValue.getSize() == 1) {
             getList().getItemList().remove(position);
             getAdapter().notifyDataSetChanged();
             return;
