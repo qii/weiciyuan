@@ -5,7 +5,6 @@ import android.support.v4.content.AsyncTaskLoader;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
-import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 
 /**
@@ -42,10 +41,6 @@ public class MentionsWeiboNewMsgLoader extends AsyncTaskLoader<AsyncTaskLoaderRe
         } catch (WeiboException e) {
             exception = e;
         }
-        if (result != null) {
-            MentionsTimeLineDBTask.addRepostLineMsg(result, accountId);
-        }
-
 
         AsyncTaskLoaderResult<MessageListBean> data = new AsyncTaskLoaderResult<MessageListBean>();
         data.data = result;
