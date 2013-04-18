@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -11,11 +12,10 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.CommentTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
-import org.qii.weiciyuan.dao.maintimeline.CommentsTimeLineByMeDao;
-import org.qii.weiciyuan.dao.maintimeline.ICommentsTimeLineDao;
 import org.qii.weiciyuan.support.database.CommentByMeTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -28,6 +28,7 @@ import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 import org.qii.weiciyuan.ui.loader.CommentsByMeDBLoader;
+import org.qii.weiciyuan.ui.loader.CommentsByMeMsgLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
@@ -252,34 +253,12 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
-        CommentListBean result;
-        ICommentsTimeLineDao dao;
-
-        dao = new CommentsTimeLineByMeDao(token);
-
-        if (getList() != null && getList().getItemList().size() > 0) {
-            dao.setSince_id(getList().getItemList().get(0).getId());
-        }
-        result = dao.getGSONMsgList();
-        if (result != null) {
-            CommentByMeTimeLineDBTask.addCommentLineMsg(result, accountBean.getUid());
-        }
-        return result;
+        return null;
     }
 
     @Override
     protected CommentListBean getDoInBackgroundOldData() throws WeiboException {
-        CommentListBean result;
-        ICommentsTimeLineDao dao;
-
-        dao = new CommentsTimeLineByMeDao(token);
-
-        if (getList() != null && getList().getItemList().size() > 0) {
-            dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
-        }
-        result = dao.getGSONMsgList();
-
-        return result;
+        return null;
     }
 
     @Override
@@ -289,17 +268,13 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     protected void newMsgOnPostExecute(CommentListBean newValue) {
-        if (newValue != null) {
-            if (newValue.getItemList().size() == 0) {
-                Toast.makeText(getActivity(), getString(R.string.no_new_message), Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
-                getList().addNewData(newValue);
-                getAdapter().notifyDataSetChanged();
-                getListView().setSelectionAfterHeaderView();
-            }
+        if (newValue != null && newValue.getItemList() != null && newValue.getItemList().size() > 0) {
+            Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
+            getList().addNewData(newValue);
+            getAdapter().notifyDataSetChanged();
+            getListView().setSelectionAfterHeaderView();
+            CommentByMeTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
         }
-
     }
 
     @Override
@@ -308,6 +283,33 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             getList().addOldData(newValue);
             getAdapter().notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void loadMiddleMsg(String beginId, String endId, String endTag, int position) {
+        Bundle bundle = new Bundle();
+        bundle.putString("beginId", beginId);
+        bundle.putString("endId", endId);
+        bundle.putString("endTag", endTag);
+        bundle.putInt("position", position);
+        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
+
+    }
+
+    public void refresh() {
+        if (allowRefresh()) {
+            getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+            Activity activity = getActivity();
+            if (activity == null)
+                return;
+            ((ICommander) activity).getBitmapDownloader().totalStopLoadPicture();
+        }
+
+    }
+
+    @Override
+    protected void listViewFooterViewClick(View view) {
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
     }
 
     private LoaderManager.LoaderCallbacks<CommentTimeLineData> dbCallback = new LoaderManager.LoaderCallbacks<CommentTimeLineData>() {
@@ -342,4 +344,30 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
         }
     };
+
+    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        String accountId = accountBean.getUid();
+        String token = accountBean.getAccess_token();
+        String sinceId = null;
+        if (getList().getItemList().size() > 0) {
+            sinceId = getList().getItemList().get(0).getId();
+        }
+        return new CommentsByMeMsgLoader(getActivity(), accountId, token, sinceId, null);
+    }
+
+    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateMiddleMsgLoader(int id, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
+        String accountId = accountBean.getUid();
+        String token = accountBean.getAccess_token();
+        return new CommentsByMeMsgLoader(getActivity(), accountId, token, middleBeginId, middleEndId);
+    }
+
+    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+        String accountId = accountBean.getUid();
+        String token = accountBean.getAccess_token();
+        String maxId = null;
+        if (getList().getItemList().size() > 0) {
+            maxId = getList().getItemList().get(getList().getItemList().size() - 1).getId();
+        }
+        return new CommentsByMeMsgLoader(getActivity(), accountId, token, null, maxId);
+    }
 }

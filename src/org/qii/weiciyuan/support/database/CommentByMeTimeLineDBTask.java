@@ -192,4 +192,14 @@ public class CommentByMeTimeLineDBTask {
         c.close();
         return new TimeLinePosition(0, 0);
     }
+
+    public static void asyncReplace(final CommentListBean data, final String accountId) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                deleteAllComments(accountId);
+                addCommentLineMsg(data, accountId);
+            }
+        }).start();
+    }
 }
