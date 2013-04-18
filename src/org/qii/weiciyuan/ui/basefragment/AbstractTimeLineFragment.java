@@ -51,6 +51,15 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     protected TimeLineGetOlderMsgListTask oldTask;
     protected TimeLineGetMiddleMsgListTask middleTask;
 
+    protected boolean newMsgLoaderIsLoading = false;
+    protected boolean middleMsgLoaderIsLoading = false;
+    protected boolean oldMsgLoaderIsLoading = false;
+
+    protected static final int DB_CACHE_LOADER_ID = 0;
+    protected static final int NEW_MSG_LOADER_ID = 1;
+    protected static final int MIDDLE_MSG_LOADER_ID = 2;
+    protected static final int OLD_MSG_LOADER_ID = 3;
+
     protected ActionMode mActionMode;
 
     public abstract T getList();
@@ -329,6 +338,14 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("newMsgLoaderIsLoading", newMsgLoaderIsLoading);
+        outState.putBoolean("middleMsgLoaderIsLoading", middleMsgLoaderIsLoading);
+        outState.putBoolean("oldMsgLoaderIsLoading", oldMsgLoaderIsLoading);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((ICommander) getActivity()).getBitmapDownloader();
@@ -553,14 +570,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         progressBar.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putBoolean("newMsgLoaderIsLoading", newMsgLoaderIsLoading);
-        outState.putBoolean("middleMsgLoaderIsLoading", middleMsgLoaderIsLoading);
-        outState.putBoolean("oldMsgLoaderIsLoading", oldMsgLoaderIsLoading);
-    }
 
     protected abstract T getDoInBackgroundNewData() throws WeiboException;
 
@@ -575,14 +584,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         return !enableRefreshTime;
     }
 
-    protected boolean newMsgLoaderIsLoading = false;
-    protected boolean middleMsgLoaderIsLoading = false;
-    protected boolean oldMsgLoaderIsLoading = false;
-
-    protected static final int DB_CACHE_LOADER_ID = 0;
-    protected static final int NEW_MSG_LOADER_ID = 1;
-    protected static final int MIDDLE_MSG_LOADER_ID = 2;
-    protected static final int OLD_MSG_LOADER_ID = 3;
 
     protected Loader<AsyncTaskLoaderResult<T>> onCreateNewMsgLoader(int id, Bundle args) {
         return null;
