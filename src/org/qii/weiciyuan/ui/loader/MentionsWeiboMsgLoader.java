@@ -11,16 +11,19 @@ import org.qii.weiciyuan.support.error.WeiboException;
  * User: qii
  * Date: 13-4-14
  */
-public class MentionsWeiboNewMsgLoader extends AsyncTaskLoader<AsyncTaskLoaderResult<MessageListBean>> {
+public class MentionsWeiboMsgLoader extends AsyncTaskLoader<AsyncTaskLoaderResult<MessageListBean>> {
+
 
     private String token;
-    private String id;
+    private String sinceId;
+    private String maxId;
     private String accountId;
 
-    public MentionsWeiboNewMsgLoader(Context context, String accountId, String token, String id) {
+    public MentionsWeiboMsgLoader(Context context, String accountId, String token, String sinceId, String maxId) {
         super(context);
         this.token = token;
-        this.id = id;
+        this.sinceId = sinceId;
+        this.maxId = maxId;
         this.accountId = accountId;
     }
 
@@ -32,7 +35,8 @@ public class MentionsWeiboNewMsgLoader extends AsyncTaskLoader<AsyncTaskLoaderRe
 
     public AsyncTaskLoaderResult<MessageListBean> loadInBackground() {
         MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
-        dao.setSince_id(id);
+        dao.setSince_id(sinceId);
+        dao.setMax_id(maxId);
         MessageListBean result = null;
         WeiboException exception = null;
 
@@ -42,6 +46,7 @@ public class MentionsWeiboNewMsgLoader extends AsyncTaskLoader<AsyncTaskLoaderRe
             exception = e;
         }
 
+
         AsyncTaskLoaderResult<MessageListBean> data = new AsyncTaskLoaderResult<MessageListBean>();
         data.data = result;
         data.exception = exception;
@@ -49,3 +54,4 @@ public class MentionsWeiboNewMsgLoader extends AsyncTaskLoader<AsyncTaskLoaderRe
     }
 
 }
+

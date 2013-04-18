@@ -27,9 +27,7 @@ import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
-import org.qii.weiciyuan.ui.loader.MentionsWeiboMiddleMsgLoader;
-import org.qii.weiciyuan.ui.loader.MentionsWeiboNewMsgLoader;
-import org.qii.weiciyuan.ui.loader.MentionsWeiboOldMsgLoader;
+import org.qii.weiciyuan.ui.loader.MentionsWeiboMsgLoader;
 import org.qii.weiciyuan.ui.loader.MentionsWeiboTimeDBLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -310,13 +308,13 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         if (getList().getItemList().size() > 0) {
             sinceId = getList().getItemList().get(0).getId();
         }
-        return new MentionsWeiboNewMsgLoader(getActivity(), accountId, token, sinceId);
+        return new MentionsWeiboMsgLoader(getActivity(), accountId, token, sinceId, null);
     }
 
     protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateMiddleMsgLoader(int id, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
         String accountId = accountBean.getUid();
         String token = accountBean.getAccess_token();
-        return new MentionsWeiboMiddleMsgLoader(getActivity(), accountId, token, middleBeginId, middleEndId);
+        return new MentionsWeiboMsgLoader(getActivity(), accountId, token, middleBeginId, middleEndId);
     }
 
     protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateOldMsgLoader(int id, Bundle args) {
@@ -326,7 +324,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         if (getList().getItemList().size() > 0) {
             maxId = getList().getItemList().get(getList().getItemList().size() - 1).getId();
         }
-        return new MentionsWeiboOldMsgLoader(getActivity(), accountId, token, maxId);
+        return new MentionsWeiboMsgLoader(getActivity(), accountId, token, null, maxId);
     }
 
 }
