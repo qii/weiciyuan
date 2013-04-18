@@ -117,15 +117,15 @@ public class MentionCommentsTimeLineDBTask {
         }
     }
 
-    private void replaceCommentLineMsg(CommentListBean list, String accountId) {
+    public static void asyncReplace(final CommentListBean list, final String accountId) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                deleteAllComments(accountId);
+                addCommentLineMsg(list, accountId);
+            }
+        }).start();
 
-        deleteAllComments(accountId);
-
-        //need modification
-//        wsd.execSQL("DROP TABLE IF EXISTS " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME);
-//        wsd.execSQL(DatabaseHelper.CREATE_COMMENTS_TABLE_SQL);
-
-        addCommentLineMsg(list, accountId);
     }
 
     static void deleteAllComments(String accountId) {
