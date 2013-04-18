@@ -67,14 +67,16 @@ public class CommentsTimeLine extends AbstractAppFragment {
         actionBar.addTab(actionBar.newTab()
                 .setText(secondTab)
                 .setTabListener(tabListener));
-        actionBar.setSelectedNavigationItem(nav);
+        if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS)
+            actionBar.setSelectedNavigationItem(nav);
 
     }
 
     ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
-            getActivity().getActionBar().setSelectedNavigationItem(position);
+            if (getActivity().getActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS)
+                getActivity().getActionBar().setSelectedNavigationItem(position);
         }
 
         @Override
