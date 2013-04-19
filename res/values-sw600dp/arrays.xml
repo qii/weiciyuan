@@ -1,0 +1,9 @@
+<resources>
+
+    <string-array name="font_value">
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+    </string-array>
+
+</resources>
