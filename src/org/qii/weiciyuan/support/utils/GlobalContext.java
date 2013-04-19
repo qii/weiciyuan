@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.Display;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.bean.UserBean;
@@ -221,7 +222,10 @@ public final class GlobalContext extends Application {
                 inputStream = assetManager.open(name);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 if (bitmap != null) {
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, Utility.dip2px(25), Utility.dip2px(25), true);
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap,
+                            Utility.dip2px(getResources().getInteger(R.integer.emotion_size)),
+                            Utility.dip2px(getResources().getInteger(R.integer.emotion_size)),
+                            true);
                     if (bitmap != scaledBitmap) {
                         bitmap.recycle();
                         bitmap = scaledBitmap;
