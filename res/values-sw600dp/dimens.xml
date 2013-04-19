@@ -19,4 +19,9 @@
 
     <!--user info-->
     <dimen name="profile_bg_padding">20dp</dimen>
+
+    <!--write weibo emotion size-->
+    <dimen name="emotion_size">30dp</dimen>
+    <dimen name="emotion_bg_size">50dp</dimen>
+
 </resources>
