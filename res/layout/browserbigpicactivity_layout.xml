@@ -42,6 +42,8 @@
             android:orientation="horizontal"
             android:id="@+id/image_options_buttons"
             android:layout_width="fill_parent"
+            android:paddingLeft="@dimen/browser_pic_bottom_button_layout_padding"
+            android:paddingRight="@dimen/browser_pic_bottom_button_layout_padding"
             android:layout_height="48.0dip">
 
             <ImageButton

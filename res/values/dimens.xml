@@ -26,4 +26,7 @@
     <dimen name="emotion_size">25dp</dimen>
     <dimen name="emotion_bg_size">40dp</dimen>
 
+    <!--browser picture-->
+    <dimen name="browser_pic_bottom_button_layout_padding">0dp</dimen>
+
 </resources>
