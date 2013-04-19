@@ -50,17 +50,11 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         IAccountInfo {
 
     private AccountBean accountBean;
-
     private GetUnreadCountTask getUnreadCountTask;
-
     private NewMsgBroadcastReceiver newMsgBroadcastReceiver;
-
     private ScheduledExecutorService newMsgScheduledExecutorService;
-
     private MusicReceiver musicReceiver;
-
     private AbstractTimeLineFragment currentFragment;
-
     private TextView titleText;
 
 
@@ -102,20 +96,14 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         if (accountBean == null)
             accountBean = GlobalContext.getInstance().getAccountBean();
 
+
         GlobalContext.getInstance().setAccountBean(accountBean);
         SettingUtility.setDefaultAccountId(accountBean.getUid());
 
         buildInterface(savedInstanceState);
-
         Executors.newSingleThreadScheduledExecutor().schedule(new ClearCacheTask(), 8, TimeUnit.SECONDS);
-
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
 
     private void startListenMusicPlaying() {
 
@@ -581,8 +569,11 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     private void buildUnreadTabTxt(UnreadBean unreadBean) {
-
+        LeftMenuFragment fragment = getMenuFragment();
+        if (fragment != null && unreadBean != null) {
+            fragment.setHomeUnreadCount(unreadBean.getStatus());
+            fragment.setMentionUnreadCount(unreadBean.getMention_status() + unreadBean.getMention_cmt());
+            fragment.setCommentUnreadCount(unreadBean.getCmt());
+        }
     }
-
-
 }

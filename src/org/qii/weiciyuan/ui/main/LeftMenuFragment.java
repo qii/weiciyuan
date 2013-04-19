@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -208,15 +210,18 @@ public class LeftMenuFragment extends AbstractAppFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.slidingdrawer_contents, container, false);
         layout = new Layout();
-        layout.home = (Button) view.findViewById(R.id.btn_home);
-        layout.mention = (Button) view.findViewById(R.id.btn_mention);
-        layout.comment = (Button) view.findViewById(R.id.btn_comment);
+        layout.home = (LinearLayout) view.findViewById(R.id.btn_home);
+        layout.mention = (LinearLayout) view.findViewById(R.id.btn_mention);
+        layout.comment = (LinearLayout) view.findViewById(R.id.btn_comment);
         layout.search = (Button) view.findViewById(R.id.btn_search);
         layout.profile = (Button) view.findViewById(R.id.btn_profile);
         layout.location = (Button) view.findViewById(R.id.btn_location);
         layout.setting = (Button) view.findViewById(R.id.btn_setting);
         layout.dm = (Button) view.findViewById(R.id.btn_dm);
         layout.logout = (Button) view.findViewById(R.id.btn_logout);
+        layout.homeCount = (TextView) view.findViewById(R.id.tv_home_count);
+        layout.mentionCount = (TextView) view.findViewById(R.id.tv_mention_count);
+        layout.commentCount = (TextView) view.findViewById(R.id.tv_comment_count);
         return view;
     }
 
@@ -329,10 +334,40 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ((MainTimeLineActivity) getActivity()).setTitle(title);
     }
 
+    public void setHomeUnreadCount(int count) {
+        if (count > 0) {
+            layout.homeCount.setVisibility(View.VISIBLE);
+            layout.homeCount.setText(String.valueOf(count));
+        } else {
+            layout.homeCount.setVisibility(View.GONE);
+        }
+    }
+
+    public void setMentionUnreadCount(int count) {
+        if (count > 0) {
+            layout.mentionCount.setVisibility(View.VISIBLE);
+            layout.mentionCount.setText(String.valueOf(count));
+        } else {
+            layout.mentionCount.setVisibility(View.GONE);
+        }
+    }
+
+    public void setCommentUnreadCount(int count) {
+        if (count > 0) {
+            layout.commentCount.setVisibility(View.VISIBLE);
+            layout.commentCount.setText(String.valueOf(count));
+        } else {
+            layout.commentCount.setVisibility(View.GONE);
+        }
+    }
+
     private class Layout {
-        Button home;
-        Button mention;
-        Button comment;
+        LinearLayout home;
+        LinearLayout mention;
+        LinearLayout comment;
+        TextView homeCount;
+        TextView mentionCount;
+        TextView commentCount;
         Button search;
         Button location;
         Button dm;
