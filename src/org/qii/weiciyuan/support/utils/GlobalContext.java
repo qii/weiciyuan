@@ -15,13 +15,13 @@ import android.view.Display;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.android.MusicInfo;
 import org.qii.weiciyuan.support.crashmanager.CrashManager;
 import org.qii.weiciyuan.support.crashmanager.CrashManagerConstants;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.GroupDBTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.smileypicker.SmileyMap;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +52,7 @@ public final class GlobalContext extends Application {
 
     private GroupListBean group = null;
 
-    private MainTimeLineActivity.MusicInfo musicInfo = new MainTimeLineActivity.MusicInfo();
+    private MusicInfo musicInfo = new MusicInfo();
 
     private Handler handler = new Handler();
 
@@ -234,11 +234,11 @@ public final class GlobalContext extends Application {
         }
     }
 
-    public void updateMusicInfo(MainTimeLineActivity.MusicInfo musicInfo) {
+    public void updateMusicInfo(MusicInfo musicInfo) {
         this.musicInfo = musicInfo;
     }
 
-    public MainTimeLineActivity.MusicInfo getMusicInfo() {
+    public MusicInfo getMusicInfo() {
         return musicInfo;
     }
 }

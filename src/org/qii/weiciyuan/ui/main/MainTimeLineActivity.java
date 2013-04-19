@@ -20,6 +20,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.android.MusicInfo;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
 import org.qii.weiciyuan.othercomponent.unreadnotification.UnreadMsgReceiver;
@@ -146,37 +147,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         }
     }
 
-    ;
-
-    public static class MusicInfo {
-        String artist;
-        String album;
-        String track;
-
-        public void setArtist(String artist) {
-            this.artist = artist;
-        }
-
-        public void setAlbum(String album) {
-            this.album = album;
-        }
-
-        public void setTrack(String track) {
-            this.track = track;
-        }
-
-        @Override
-        public String toString() {
-            if (!TextUtils.isEmpty(artist))
-                return "Now Playing:" + artist + ":" + track;
-            else
-                return "Now Playing:" + track;
-        }
-
-        public boolean isEmpty() {
-            return TextUtils.isEmpty(track);
-        }
-    }
 
     private void getUnreadCount() {
         if (Utility.isTaskStopped(getUnreadCountTask)) {
