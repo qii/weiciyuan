@@ -422,8 +422,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     @Override
     protected boolean allowRefresh() {
-        return Utility.isTaskStopped(newTask) && getPullToRefreshListView().getVisibility() == View.VISIBLE && Utility.isTaskStopped(autoRefreshTask)
-                && !newMsgLoaderIsLoading;
+        return super.allowRefresh() && Utility.isTaskStopped(autoRefreshTask);
     }
 
     public void setSelected(String selectedItemId) {

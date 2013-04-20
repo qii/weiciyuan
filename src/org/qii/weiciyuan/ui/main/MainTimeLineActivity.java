@@ -446,7 +446,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         if (getUnreadCountTask != null)
             getUnreadCountTask.cancel(true);
 
-        saveNavigationPositionToDB();
+        if (isFinishing())
+            saveNavigationPositionToDB();
     }
 
     private void saveNavigationPositionToDB() {

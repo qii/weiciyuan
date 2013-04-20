@@ -51,10 +51,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     protected TimeLineGetOlderMsgListTask oldTask;
     protected TimeLineGetMiddleMsgListTask middleTask;
 
-    protected boolean newMsgLoaderIsLoading = false;
-    protected boolean middleMsgLoaderIsLoading = false;
-    protected boolean oldMsgLoaderIsLoading = false;
-
     protected static final int DB_CACHE_LOADER_ID = 0;
     protected static final int NEW_MSG_LOADER_ID = 1;
     protected static final int MIDDLE_MSG_LOADER_ID = 2;
@@ -326,7 +322,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
     protected boolean allowRefresh() {
-        return Utility.isTaskStopped(newTask) && getPullToRefreshListView().getVisibility() == View.VISIBLE && !newMsgLoaderIsLoading;
+        boolean isNewMsgLoaderLoading = getLoaderManager().getLoader(NEW_MSG_LOADER_ID) != null;
+        return Utility.isTaskStopped(newTask) && getPullToRefreshListView().getVisibility() == View.VISIBLE && !isNewMsgLoaderLoading;
     }
 
 
@@ -338,40 +335,22 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("newMsgLoaderIsLoading", newMsgLoaderIsLoading);
-        outState.putBoolean("middleMsgLoaderIsLoading", middleMsgLoaderIsLoading);
-        outState.putBoolean("oldMsgLoaderIsLoading", oldMsgLoaderIsLoading);
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         commander = ((ICommander) getActivity()).getBitmapDownloader();
-        if (savedInstanceState != null) {
-            newMsgLoaderIsLoading = savedInstanceState.getBoolean("newMsgLoaderIsLoading");
-            middleMsgLoaderIsLoading = savedInstanceState.getBoolean("middleMsgLoaderIsLoading");
-            oldMsgLoaderIsLoading = savedInstanceState.getBoolean("oldMsgLoaderIsLoading");
-        }
-        if (newMsgLoaderIsLoading) {
+
+        Loader<T> loader = getLoaderManager().getLoader(NEW_MSG_LOADER_ID);
+        if (loader != null) {
             getLoaderManager().initLoader(NEW_MSG_LOADER_ID, null, msgCallback);
-        } else {
-            getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
         }
-
-        if (middleMsgLoaderIsLoading) {
+        loader = getLoaderManager().getLoader(MIDDLE_MSG_LOADER_ID);
+        if (loader != null) {
             getLoaderManager().initLoader(MIDDLE_MSG_LOADER_ID, null, msgCallback);
-        } else {
-            getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
         }
-
-        if (oldMsgLoaderIsLoading) {
+        loader = getLoaderManager().getLoader(OLD_MSG_LOADER_ID);
+        if (loader != null) {
             getLoaderManager().initLoader(OLD_MSG_LOADER_ID, null, msgCallback);
-        } else {
-            getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
         }
-
     }
 
     public void setmActionMode(ActionMode mActionMode) {
@@ -610,18 +589,15 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
             showListView();
             switch (id) {
                 case NEW_MSG_LOADER_ID:
-                    newMsgLoaderIsLoading = true;
                     Utility.stopListViewScrollingAndScrollToTop(getListView());
                     return onCreateNewMsgLoader(id, args);
                 case MIDDLE_MSG_LOADER_ID:
-                    middleMsgLoaderIsLoading = true;
                     middleBeginId = args.getString("beginId");
                     middleEndId = args.getString("endId");
                     middleEndTag = args.getString("endTag");
                     middlePosition = args.getInt("position");
                     return onCreateMiddleMsgLoader(id, args, middleBeginId, middleEndId, middleEndTag, middlePosition);
                 case OLD_MSG_LOADER_ID:
-                    oldMsgLoaderIsLoading = true;
                     showFooterView();
                     return onCreateOldMsgLoader(id, args);
             }
@@ -631,12 +607,12 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
         @Override
         public void onLoadFinished(Loader<AsyncTaskLoaderResult<T>> loader, AsyncTaskLoaderResult<T> result) {
+
             T data = result.data;
             WeiboException exception = result.exception;
 
             switch (loader.getId()) {
                 case NEW_MSG_LOADER_ID:
-                    newMsgLoaderIsLoading = false;
                     getPullToRefreshListView().onRefreshComplete();
                     refreshLayout(getList());
 
@@ -646,12 +622,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                         newMsgOnPostExecute(data);
                     break;
                 case MIDDLE_MSG_LOADER_ID:
-                    middleMsgLoaderIsLoading = false;
                     middleMsgOnPostExecute(middleEndTag, middlePosition, data);
                     getAdapter().notifyDataSetChanged();
                     break;
                 case OLD_MSG_LOADER_ID:
-                    oldMsgLoaderIsLoading = false;
                     refreshLayout(getList());
 
                     if (Utility.isAllNotNull(exception)) {
@@ -665,7 +639,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
                     break;
             }
-
+            getLoaderManager().destroyLoader(loader.getId());
         }
 
         @Override

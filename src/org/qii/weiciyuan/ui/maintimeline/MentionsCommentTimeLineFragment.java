@@ -49,7 +49,6 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
     private UnreadBean unreadBean;
     private TimeLinePosition timeLinePosition;
-    private boolean dbCacheLoaded = false;
 
 
     @Override
@@ -81,7 +80,6 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         outState.putSerializable("bean", bean);
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
-        outState.putBoolean("dbCacheLoaded", dbCacheLoaded);
 
         outState.putSerializable("unreadBean", unreadBean);
         outState.putSerializable("timeLinePosition", timeLinePosition);
@@ -147,21 +145,20 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                 userBean = (UserBean) savedInstanceState.getSerializable("userBean");
                 accountBean = (AccountBean) savedInstanceState.getSerializable("account");
                 token = savedInstanceState.getString("token");
-                dbCacheLoaded = savedInstanceState.getBoolean("dbCacheLoaded");
                 unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
                 CommentListBean savedBean = (CommentListBean) savedInstanceState.getSerializable("bean");
+
+                Loader<CommentTimeLineData> loader = getLoaderManager().getLoader(0);
+                if (loader != null) {
+                    getLoaderManager().initLoader(0, null, dbCallback);
+                }
+
                 if (savedBean != null && savedBean.getSize() > 0) {
                     clearAndReplaceValue(savedBean);
                     timeLineAdapter.notifyDataSetChanged();
                     refreshLayout(getList());
                     setListViewPositionFromPositionsCache();
-                    getLoaderManager().destroyLoader(0);
-                } else if (dbCacheLoaded) {
-                    refreshLayout(getList());
-                    getLoaderManager().destroyLoader(0);
-                } else {
-                    getLoaderManager().initLoader(0, null, dbCallback);
                 }
 
                 break;
@@ -358,6 +355,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
         @Override
         public void onLoadFinished(Loader<CommentTimeLineData> loader, CommentTimeLineData result) {
+
             if (result != null) {
                 clearAndReplaceValue(result.cmtList);
                 timeLinePosition = result.position;
@@ -374,8 +372,10 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
              */
             if (getList().getSize() == 0) {
                 getPullToRefreshListView().startRefreshNow();
-                dbCacheLoaded = true;
             }
+
+            getLoaderManager().destroyLoader(loader.getId());
+
         }
 
         @Override
