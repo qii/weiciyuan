@@ -242,7 +242,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
     }
 
-
+    @Override
     public void loadNewMsg() {
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
         getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
