@@ -38,6 +38,19 @@ public class TopTipBar extends TextView {
         super(context, attrs, defStyle);
     }
 
+    public HashSet<String> getValues() {
+        HashSet<String> copy = new HashSet<String>();
+        copy.addAll(this.ids);
+        return copy;
+    }
+
+    public void setValue(HashSet<String> values) {
+        this.ids.clear();
+        this.ids.addAll(values);
+        this.disappear = false;
+        setCount();
+    }
+
     public void setValue(ListBean<?, ?> listData, boolean disappear) {
         this.disappear = disappear;
         ids.clear();

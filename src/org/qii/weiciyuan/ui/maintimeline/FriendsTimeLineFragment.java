@@ -116,16 +116,30 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         positionCache.put(currentGroupId, Utility.getCurrentPositionFromListView(getListView()));
     }
 
+    private void saveNewMsgCountToPositionsCache() {
+        final TimeLinePosition position = positionCache.get(currentGroupId);
+        position.newMsgIds = newMsgTipBar.getValues();
+    }
+
     private void setListViewPositionFromPositionsCache() {
         TimeLinePosition p = positionCache.get(currentGroupId);
         if (p != null)
             getListView().setSelectionFromTop(p.position + 1, p.top);
         else
             getListView().setSelectionFromTop(0, 0);
+
+        setListViewUnreadTipBar(p);
+
+    }
+
+    private void setListViewUnreadTipBar(TimeLinePosition p) {
+        if (p != null && p.newMsgIds != null)
+            newMsgTipBar.setValue(p.newMsgIds);
     }
 
     private void savePositionToDB() {
         final TimeLinePosition position = positionCache.get(currentGroupId);
+        position.newMsgIds = newMsgTipBar.getValues();
         final String groupId = currentGroupId;
         FriendsTimeLineDBTask.asyncUpdatePosition(position, GlobalContext.getInstance().getCurrentAccountId(), groupId);
     }
@@ -316,9 +330,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 String groupId = getGroupIdFromIndex(which, finalList);
 
                 if (!groupId.equals(currentGroupId)) {
-                    positionCache.put(currentGroupId, Utility.getCurrentPositionFromListView(getListView()));
-                    setSelected(groupId);
-                    switchGroup();
+
+                    switchGroup(groupId);
                 }
                 return true;
             }
@@ -452,7 +465,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     protected void newMsgOnPostExecute(MessageListBean newValue) {
         if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 0) {
 
-            addNewDataWithoutRememberPosition(newValue);
+            addNewDataAndRememberPosition(newValue);
 
 
             putToGroupDataMemoryCache(currentGroupId, getList());
@@ -515,8 +528,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
     }
 
-    public void switchGroup() {
-
+    public void switchGroup(String groupId) {
+        positionCache.put(currentGroupId, Utility.getCurrentPositionFromListView(getListView()));
+        saveNewMsgCountToPositionsCache();
+        setSelected(groupId);
+        newMsgTipBar.clearAndReset();
         if (groupDataCache.get(currentGroupId) == null || groupDataCache.get(currentGroupId).getSize() == 0) {
             getList().getItemList().clear();
             getAdapter().notifyDataSetChanged();
