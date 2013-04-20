@@ -330,7 +330,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
                 if (!groupId.equals(currentGroupId)) {
 
-                    switchGroup(groupId);
+                    switchFriendsGroup(groupId);
                 }
                 return true;
             }
@@ -527,7 +527,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
     }
 
-    public void switchGroup(String groupId) {
+    public void switchFriendsGroup(String groupId) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        dismissFooterView();
+
         positionCache.put(currentGroupId, Utility.getCurrentPositionFromListView(getListView()));
         saveNewMsgCountToPositionsCache();
         setSelected(groupId);
