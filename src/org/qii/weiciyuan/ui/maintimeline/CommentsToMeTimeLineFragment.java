@@ -330,7 +330,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     }
 
-    public void refresh() {
+    public void loadNewMsg() {
         if (allowRefresh()) {
             getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
             Activity activity = getActivity();
@@ -342,7 +342,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     }
 
     @Override
-    protected void listViewFooterViewClick(View view) {
+    protected void loadOldMsg(View view) {
         getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
     }
 

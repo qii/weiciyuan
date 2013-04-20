@@ -98,7 +98,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
     protected abstract void listViewItemClick(AdapterView parent, View view, int position, long id);
 
-    protected void listViewFooterViewClick(View view) {
+    protected void loadOldMsg(View view) {
         if (Utility.isTaskStopped(oldTask)) {
             oldTask = new TimeLineGetOlderMsgListTask();
             oldTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
@@ -154,14 +154,14 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     private PullToRefreshBase.OnLastItemVisibleListener listViewOnLastItemVisibleListener = new PullToRefreshBase.OnLastItemVisibleListener() {
         @Override
         public void onLastItemVisible() {
-            listViewFooterViewClick(null);
+            loadOldMsg(null);
         }
     };
 
     private PullToRefreshBase.OnRefreshListener<ListView> listViewOnRefreshListener = new PullToRefreshBase.OnRefreshListener<ListView>() {
         @Override
         public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-            refresh();
+            loadNewMsg();
         }
     };
 
@@ -195,7 +195,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
             } else if (position - 1 >= getList().getSize()) {
 
-                listViewFooterViewClick(view);
+                loadOldMsg(view);
             }
         }
     };
@@ -311,7 +311,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
 
-    public void refresh() {
+    public void loadNewMsg() {
         if (allowRefresh()) {
             newTask = new TimeLineGetNewMsgListTask();
             newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);

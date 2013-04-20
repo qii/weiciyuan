@@ -243,7 +243,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     }
 
 
-    public void refresh() {
+    public void loadNewMsg() {
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
         getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
         dismissFooterView();
@@ -251,7 +251,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     }
 
     @Override
-    protected void listViewFooterViewClick(View view) {
+    protected void loadOldMsg(View view) {
         getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
         getPullToRefreshListView().onRefreshComplete();
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);

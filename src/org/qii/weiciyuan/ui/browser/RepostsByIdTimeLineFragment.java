@@ -66,7 +66,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
         if ((bean == null || bean.getSize() == 0) && newTask == null) {
             if (pullToRefreshListView != null) {
                 pullToRefreshListView.startRefreshNow();
-                refresh();
+                loadNewMsg();
             }
 
         }
@@ -178,14 +178,14 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 
-                refresh();
+                loadNewMsg();
 
             }
         });
         pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
             @Override
             public void onLastItemVisible() {
-                listViewFooterViewClick(null);
+                loadOldMsg(null);
             }
         });
         getListView().setScrollingCacheEnabled(false);
@@ -212,7 +212,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
                     listViewItemClick(parent, view, position - 1, id);
                 } else if (position - 1 >= getList().getSize()) {
 
-                    listViewFooterViewClick(view);
+                    loadOldMsg(view);
                 }
             }
         });
@@ -309,7 +309,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
                 progressFragment.dismissAllowingStateLoss();
             if (s != null) {
                 et.setText("");
-                refresh();
+                loadNewMsg();
             } else {
                 Toast.makeText(getActivity(), getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
             }
@@ -332,7 +332,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
         switch (item.getItemId()) {
             case R.id.menu_refresh:
                 pullToRefreshListView.startRefreshNow();
-                refresh();
+                loadNewMsg();
                 return true;
         }
         return super.onOptionsItemSelected(item);

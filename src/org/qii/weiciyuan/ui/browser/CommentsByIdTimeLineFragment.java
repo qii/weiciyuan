@@ -80,7 +80,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         if ((bean == null || bean.getItemList().size() == 0) && newTask == null) {
             if (pullToRefreshListView != null) {
                 pullToRefreshListView.startRefreshNow();
-                refresh();
+                loadNewMsg();
             }
         }
     }
@@ -350,7 +350,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             progressFragment.dismissAllowingStateLoss();
             if (s != null) {
                 et.setText("");
-                refresh();
+                loadNewMsg();
             } else {
                 Toast.makeText(getActivity(), getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
             }

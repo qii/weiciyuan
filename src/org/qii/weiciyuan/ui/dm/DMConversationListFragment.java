@@ -106,7 +106,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                refresh();
+                loadNewMsg();
 
             }
         });
@@ -314,7 +314,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
             progressFragment.dismissAllowingStateLoss();
             if (s != null) {
                 et.setText("");
-                refresh();
+                loadNewMsg();
             } else {
                 Toast.makeText(getActivity(), getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
             }
