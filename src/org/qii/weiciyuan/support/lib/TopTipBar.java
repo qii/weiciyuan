@@ -53,7 +53,6 @@ public class TopTipBar extends TextView {
 
     public void setValue(ListBean<?, ?> listData, boolean disappear) {
         this.disappear = disappear;
-        ids.clear();
         List<? extends ItemBean> values = listData.getItemList();
         for (ItemBean b : values) {
             if (b != null)
