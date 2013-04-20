@@ -144,15 +144,18 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
                 token = savedInstanceState.getString("token");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
                 unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
+
+                Loader<CommentTimeLineData> loader = getLoaderManager().getLoader(DB_CACHE_LOADER_ID);
+                if (loader != null) {
+                    getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
+                }
+
                 CommentListBean savedBean = (CommentListBean) savedInstanceState.getSerializable("bean");
                 if (savedBean != null && savedBean.getSize() > 0) {
                     clearAndReplaceValue(savedBean);
                     timeLineAdapter.notifyDataSetChanged();
                     refreshLayout(getList());
                     setListViewPositionFromPositionsCache();
-                    getLoaderManager().destroyLoader(0);
-                } else {
-                    getLoaderManager().initLoader(0, null, dbCallback);
                 }
                 break;
         }
@@ -368,6 +371,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             if (getList().getSize() == 0) {
                 getPullToRefreshListView().startRefreshNow();
             }
+            getLoaderManager().destroyLoader(loader.getId());
 
         }
 
