@@ -30,4 +30,6 @@
     <dimen name="browser_pic_bottom_button_layout_padding">0dp</dimen>
     <dimen name="browser_pic_activity_width">-1px</dimen>
 
+    <!--Toptipbar-->
+    <dimen name="toptipbar_layout_margin">10dp</dimen>
 </resources>
