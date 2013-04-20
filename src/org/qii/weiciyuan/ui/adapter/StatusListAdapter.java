@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 
@@ -34,6 +35,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     private Map<String, Integer> oriMsgHeights = new HashMap<String, Integer>();
     private Map<String, Integer> oriMsgWidths = new HashMap<String, Integer>();
 
+    private TopTipBar topTipBar;
 
     private Handler handler = new Handler();
 
@@ -43,6 +45,10 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
     public StatusListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<MessageBean> bean, ListView listView, boolean showOriStatus, boolean pre) {
         super(fragment, commander, bean, listView, showOriStatus, pre);
+    }
+
+    public void setTopTipBar(TopTipBar bar) {
+        this.topTipBar = bar;
     }
 
     @Override
@@ -61,6 +67,24 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.listview_root.setBackgroundColor(checkedBG);
 
         final MessageBean msg = bean.get(position);
+
+        if (this.topTipBar != null && (position + 1) < bean.size()) {
+
+            MessageBean next = bean.get(position + 1);
+            if (next != null) {
+                this.topTipBar.handle(next.getId());
+            }
+            if (position == 0) {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        topTipBar.clearAndReset();
+                    }
+                }, 300);
+
+            }
+        }
+
         UserBean user = msg.getUser();
         if (user != null) {
             holder.username.setVisibility(View.VISIBLE);

@@ -234,7 +234,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusListAdapter(this, ((ICommander) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), true, true);
+        StatusListAdapter adapter = new StatusListAdapter(this, ((ICommander) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), true, true);
+        adapter.setTopTipBar(newMsgTipBar);
+        timeLineAdapter = adapter;
         getListView().setAdapter(timeLineAdapter);
     }
 
@@ -449,10 +451,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     @Override
     protected void newMsgOnPostExecute(MessageListBean newValue) {
         if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 0) {
-            showNewMsgToastMessage(newValue);
-            getList().addNewData(newValue);
-            getAdapter().notifyDataSetChanged();
-            getListView().setSelectionAfterHeaderView();
+
+            addNewDataWithoutRememberPosition(newValue);
+
+
             putToGroupDataMemoryCache(currentGroupId, getList());
             final String groupId = currentGroupId;
             Runnable dbRunnable = new Runnable() {
@@ -462,8 +464,35 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 }
             };
             new Thread(dbRunnable).start();
+
         }
 
+    }
+
+    private void addNewDataAndRememberPosition(MessageListBean newValue) {
+        newMsgTipBar.setValue(newValue, false);
+
+        int size = newValue.getSize();
+
+        if (getActivity() != null && newValue.getSize() > 0) {
+            getList().addNewData(newValue);
+        }
+
+        int index = getListView().getFirstVisiblePosition();
+
+        View v = getListView().getChildAt(1);
+        int top = (v == null) ? 0 : v.getTop();
+        getAdapter().notifyDataSetChanged();
+        int ss = index + size;
+        getListView().setSelectionFromTop(ss + 1, top);
+    }
+
+    private void addNewDataWithoutRememberPosition(MessageListBean newValue) {
+        newMsgTipBar.setValue(newValue, true);
+
+        getList().addNewData(newValue);
+        getAdapter().notifyDataSetChanged();
+        getListView().setSelectionAfterHeaderView();
     }
 
     @Override

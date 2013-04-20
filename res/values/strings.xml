@@ -72,6 +72,7 @@
     <string name="refreshing">刷新中……</string>
     <string name="no_new_message">没有新消息</string>
     <string name="total">共计</string>
+    <string name="new_messages_count">%s条新消息</string>
     <string name="new_messages">条新消息</string>
     <string name="old_messages">条旧消息</string>
     <string name="weibos">条微博</string>

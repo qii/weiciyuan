@@ -18,6 +18,7 @@ import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -41,6 +42,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     protected PullToRefreshListView pullToRefreshListView;
     protected TextView empty;
     protected ProgressBar progressBar;
+    protected TopTipBar newMsgTipBar;
 
     protected BaseAdapter timeLineAdapter;
 
@@ -120,6 +122,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         progressBar.setVisibility(View.GONE);
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
+        newMsgTipBar = (TopTipBar) view.findViewById(R.id.tv_unread_new_message_count_tip_bar);
 
         getListView().setHeaderDividersEnabled(false);
         footerView = inflater.inflate(R.layout.listview_footer_layout, null);
@@ -615,28 +618,29 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                 case NEW_MSG_LOADER_ID:
                     getPullToRefreshListView().onRefreshComplete();
                     refreshLayout(getList());
-
-                    if (exception != null)
-                        Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
-                    else
+                    if (Utility.isAllNotNull(exception)) {
+                        newMsgTipBar.setError(exception.getError());
+                    } else
                         newMsgOnPostExecute(data);
                     break;
                 case MIDDLE_MSG_LOADER_ID:
-                    middleMsgOnPostExecute(middleEndTag, middlePosition, data);
-                    getAdapter().notifyDataSetChanged();
+                    if (exception != null) {
+                        newMsgTipBar.setError(exception.getError());
+                    } else {
+                        middleMsgOnPostExecute(middleEndTag, middlePosition, data);
+                        getAdapter().notifyDataSetChanged();
+                    }
                     break;
                 case OLD_MSG_LOADER_ID:
                     refreshLayout(getList());
 
                     if (Utility.isAllNotNull(exception)) {
-                        Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
                         showErrorFooterView();
                     } else {
                         oldMsgOnPostExecute(data);
                         getAdapter().notifyDataSetChanged();
                         dismissFooterView();
                     }
-
                     break;
             }
             getLoaderManager().destroyLoader(loader.getId());
