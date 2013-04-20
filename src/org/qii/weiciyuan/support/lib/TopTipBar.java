@@ -52,6 +52,9 @@ public class TopTipBar extends TextView {
     }
 
     private void disappear(int duration) {
+        if (getVisibility() == View.INVISIBLE || getVisibility() == View.GONE) {
+            return;
+        }
         if (lastRunnable != null) {
             getHandler().removeCallbacks(lastRunnable);
         }
