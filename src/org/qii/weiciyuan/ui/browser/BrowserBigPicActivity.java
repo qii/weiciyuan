@@ -49,7 +49,7 @@ public class BrowserBigPicActivity extends Activity {
         getWindow().setBackgroundDrawable(new ColorDrawable(0));
         setContentView(R.layout.browserbigpicactivity_layout);
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        params.width = getResources().getDimensionPixelOffset(R.dimen.browser_pic_activity_width);
         getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
 
         layout = new Layout();

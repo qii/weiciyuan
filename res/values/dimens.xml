@@ -28,5 +28,6 @@
 
     <!--browser picture-->
     <dimen name="browser_pic_bottom_button_layout_padding">0dp</dimen>
+    <dimen name="browser_pic_activity_width">-1px</dimen>
 
 </resources>
