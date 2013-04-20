@@ -174,14 +174,16 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
                 unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
 
+                Loader<MentionTimeLineData> loader = getLoaderManager().getLoader(DB_CACHE_LOADER_ID);
+                if (loader != null) {
+                    getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
+                }
+
                 MessageListBean savedBean = (MessageListBean) savedInstanceState.getSerializable("bean");
                 if (savedBean != null && savedBean.getSize() > 0) {
                     getList().replaceData(savedBean);
                     timeLineAdapter.notifyDataSetChanged();
                     refreshLayout(getList());
-                    getLoaderManager().destroyLoader(DB_CACHE_LOADER_ID);
-                } else {
-                    getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 }
 
                 break;
@@ -285,6 +287,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
             if (bean.getSize() == 0) {
                 pullToRefreshListView.startRefreshNow();
             }
+
+            getLoaderManager().destroyLoader(loader.getId());
 
             /**when one user open app from android notification center while this app is using another account,
              * activity will restart, and then mentions and comment fragment

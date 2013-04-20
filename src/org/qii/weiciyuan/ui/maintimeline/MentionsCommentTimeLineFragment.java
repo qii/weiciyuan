@@ -149,9 +149,9 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
                 CommentListBean savedBean = (CommentListBean) savedInstanceState.getSerializable("bean");
 
-                Loader<CommentTimeLineData> loader = getLoaderManager().getLoader(0);
+                Loader<CommentTimeLineData> loader = getLoaderManager().getLoader(DB_CACHE_LOADER_ID);
                 if (loader != null) {
-                    getLoaderManager().initLoader(0, null, dbCallback);
+                    getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 }
 
                 if (savedBean != null && savedBean.getSize() > 0) {
