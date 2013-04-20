@@ -49,7 +49,7 @@
         android:textColor="@color/white"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:text="0条未读"
+        android:freezesText="true"
         android:background="@color/top_tip_bar_tip"/>
 </FrameLayout>
 

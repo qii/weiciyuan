@@ -3,6 +3,8 @@ package org.qii.weiciyuan.support.lib;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
@@ -12,7 +14,6 @@ import org.qii.weiciyuan.bean.ListBean;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * User: qii
@@ -20,7 +21,7 @@ import java.util.Set;
  */
 public class TopTipBar extends TextView {
 
-    private Set<String> ids = new HashSet<String>();
+    private HashSet<String> ids = new HashSet<String>();
     private boolean disappear = false;
     private Runnable lastRunnable;
 
@@ -115,14 +116,74 @@ public class TopTipBar extends TextView {
         setBackgroundResource(R.color.top_tip_bar_error);
     }
 
-//    @Override
-//    public Parcelable onSaveInstanceState() {
-//        Parcelable parcelable= super.onSaveInstanceState();
-//        parcelable.
-//    }
-//
-//    @Override
-//    public void onRestoreInstanceState(Parcelable state) {
-//        super.onRestoreInstanceState(state);
-//    }
+    @Override
+    public Parcelable onSaveInstanceState() {
+        //begin boilerplate code that allows parent classes to save state
+        Parcelable superState = super.onSaveInstanceState();
+
+        SavedState ss = new SavedState(superState);
+        //end
+
+        ss.ids = this.ids;
+        ss.disappear = this.disappear;
+        ss.visible = this.isShown();
+
+        return ss;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+
+        if (!(state instanceof SavedState)) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+
+        this.ids = ss.ids;
+        this.disappear = ss.disappear;
+        if (ss.visible) {
+            setVisibility(View.VISIBLE);
+        }
+    }
+
+    static class SavedState extends BaseSavedState {
+        HashSet<String> ids;
+        boolean disappear;
+        boolean visible;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        private SavedState(Parcel in) {
+            super(in);
+            this.ids = (HashSet<String>) in.readSerializable();
+            boolean[] disappearArray = new boolean[2];
+            in.readBooleanArray(disappearArray);
+            this.disappear = disappearArray[0];
+            this.visible = disappearArray[1];
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeSerializable(ids);
+            out.writeBooleanArray(new boolean[]{this.disappear, this.visible});
+        }
+
+        //required field that makes Parcelables from a Parcel
+        public static final Parcelable.Creator<SavedState> CREATOR =
+                new Parcelable.Creator<SavedState>() {
+                    public SavedState createFromParcel(Parcel in) {
+                        return new SavedState(in);
+                    }
+
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
+                };
+    }
 }
