@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -229,6 +228,11 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
     @Override
     public void loadMiddleMsg(String beginId, String endId, String endTag, int position) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        dismissFooterView();
+
         Bundle bundle = new Bundle();
         bundle.putString("beginId", beginId);
         bundle.putString("endId", endId);
@@ -238,25 +242,26 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
     }
 
-    private void putToGroupDataMemoryCache(int groupId, MessageListBean value) {
-        MessageListBean copy = new MessageListBean();
-        copy.addNewData(value);
-    }
 
     public void refresh() {
-        if (allowRefresh()) {
-            getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
-            Activity activity = getActivity();
-            if (activity == null)
-                return;
-            ((ICommander) activity).getBitmapDownloader().totalStopLoadPicture();
-        }
-
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        dismissFooterView();
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
     }
 
     @Override
     protected void listViewFooterViewClick(View view) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
         getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+    }
+
+
+    private void putToGroupDataMemoryCache(int groupId, MessageListBean value) {
+        MessageListBean copy = new MessageListBean();
+        copy.addNewData(value);
     }
 
     private LoaderManager.LoaderCallbacks<MentionTimeLineData> dbCallback = new LoaderManager.LoaderCallbacks<MentionTimeLineData>() {
