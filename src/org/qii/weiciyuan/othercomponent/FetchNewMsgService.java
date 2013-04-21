@@ -175,7 +175,12 @@ public class FetchNewMsgService extends Service {
 
         @Override
         protected void onPostExecute(Void sum) {
-            sendNewMsgBroadcast();
+            boolean mentionsWeibo = (mentionStatusesResult != null && mentionStatusesResult.getSize() > 0);
+            boolean menttinosComment = (mentionCommentsResult != null && mentionCommentsResult.getSize() > 0);
+            boolean commentsToMe = (commentResult != null && commentResult.getSize() > 0);
+            if (mentionsWeibo || menttinosComment || commentsToMe) {
+                sendNewMsgBroadcast();
+            }
             stopSelf();
             super.onPostExecute(sum);
         }
