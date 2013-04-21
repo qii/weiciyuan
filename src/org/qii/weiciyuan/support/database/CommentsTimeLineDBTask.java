@@ -193,7 +193,9 @@ public class CommentsTimeLineDBTask {
         return new TimeLinePosition(0, 0);
     }
 
-    public static void asyncReplace(final CommentListBean data, final String accountId) {
+    public static void asyncReplace(final CommentListBean list, final String accountId) {
+        final CommentListBean data = new CommentListBean();
+        data.replaceAll(list);
         new Thread(new Runnable() {
             @Override
             public void run() {

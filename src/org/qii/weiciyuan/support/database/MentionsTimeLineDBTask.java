@@ -198,11 +198,13 @@ public class MentionsTimeLineDBTask {
     }
 
     public static void asyncReplace(final MessageListBean list, final String accountId) {
+        final MessageListBean data = new MessageListBean();
+        data.replaceData(list);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 deleteAllReposts(accountId);
-                addRepostLineMsg(list, accountId);
+                addRepostLineMsg(data, accountId);
             }
         }).start();
 

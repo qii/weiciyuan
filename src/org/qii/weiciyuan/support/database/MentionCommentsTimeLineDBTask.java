@@ -118,11 +118,13 @@ public class MentionCommentsTimeLineDBTask {
     }
 
     public static void asyncReplace(final CommentListBean list, final String accountId) {
+        final CommentListBean data = new CommentListBean();
+        data.replaceAll(list);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 deleteAllComments(accountId);
-                addCommentLineMsg(list, accountId);
+                addCommentLineMsg(data, accountId);
             }
         }).start();
 
