@@ -359,6 +359,10 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     private BroadcastReceiver newBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            AccountBean account = (AccountBean) intent.getSerializableExtra("account");
+            if (account == null || !account.getUid().equals(account.getUid())) {
+                return;
+            }
             MessageListBean data = (MessageListBean) intent.getSerializableExtra("repost");
             if (data != null) {
                 addNewDataAndRememberPosition(data);
