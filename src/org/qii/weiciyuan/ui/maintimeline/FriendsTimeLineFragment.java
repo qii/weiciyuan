@@ -3,7 +3,6 @@ package org.qii.weiciyuan.ui.maintimeline;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.Loader;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +20,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
@@ -49,7 +49,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private String token;
     private DBCacheTask dbTask;
 
-    private AutoRefreshTask autoRefreshTask = null;
     private ScheduledExecutorService autoRefreshExecutor = null;
 
     public final static String ALL_GROUP_ID = "0";
@@ -153,7 +152,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         savePositionToDB();
         saveGroupIdToDB();
         removeRefresh();
-        Utility.cancelTasks(autoRefreshTask);
     }
 
     @Override
@@ -434,10 +432,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected boolean allowRefresh() {
-        return super.allowRefresh() && Utility.isTaskStopped(autoRefreshTask);
-    }
 
     public void setSelected(String selectedItemId) {
         currentGroupId = selectedItemId;
@@ -488,15 +482,16 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         if (getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
+            int index = getListView().getFirstVisiblePosition();
+
+            View v = getListView().getChildAt(1);
+            int top = (v == null) ? 0 : v.getTop();
+            getAdapter().notifyDataSetChanged();
+            int ss = index + size;
+            getListView().setSelectionFromTop(ss + 1, top);
         }
 
-        int index = getListView().getFirstVisiblePosition();
 
-        View v = getListView().getChildAt(1);
-        int top = (v == null) ? 0 : v.getTop();
-        getAdapter().notifyDataSetChanged();
-        int ss = index + size;
-        getListView().setSelectionFromTop(ss + 1, top);
     }
 
     private void addNewDataWithoutRememberPosition(MessageListBean newValue) {
@@ -583,112 +578,22 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             if (!Utility.isTaskStopped(dbTask))
                 return;
 
-            if (!Utility.isTaskStopped(newTask))
+            if (!allowRefresh())
                 return;
-
-            if (!Utility.isTaskStopped(oldTask))
-                return;
-
-            if (!Utility.isTaskStopped(middleTask))
-                return;
-
 
             if (!Utility.isWifi(getActivity())) {
                 return;
             }
 
-            if (Utility.isTaskStopped(autoRefreshTask)) {
-                autoRefreshTask = new AutoRefreshTask();
-                autoRefreshTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            }
-        }
-
-    }
-
-    private class AutoRefreshTask extends MyAsyncTask<Void, MessageListBean, MessageListBean> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
             if (isListViewFling() || !isVisible() || ((MainTimeLineActivity) getActivity()).getSlidingMenu().isMenuShowing())
-                cancel(true);
-        }
-
-        @Override
-        protected MessageListBean doInBackground(Void... params) {
-            try {
-                return getDoInBackgroundNewData();
-            } catch (WeiboException e) {
-                cancel(true);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(MessageListBean newValue) {
-            super.onPostExecute(newValue);
-
-            if (!Utility.isTaskStopped(newTask))
                 return;
 
-            if (!Utility.isTaskStopped(oldTask))
-                return;
-
-            if (!Utility.isTaskStopped(middleTask))
-                return;
-
-            if (newValue == null || newValue.getSize() == 0 || getActivity() == null
-                    || isListViewFling()
-                    || !isVisible()
-                    || ((MainTimeLineActivity) getActivity()).getSlidingMenu().isMenuShowing())
-                return;
-
-            int firstPosition = getListView().getFirstVisiblePosition();
-
-            int size = newValue.getSize();
-
-            if (getActivity() != null && newValue.getSize() > 0) {
-
-                getList().addNewData(newValue);
-
-                if (getList() != null && currentGroupId.equals(ALL_GROUP_ID)) {
-                    final String groupId = currentGroupId;
-                    Runnable dbRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            FriendsTimeLineDBTask.replace(getList(), accountBean.getUid(), groupId);
-                        }
-                    };
-                    new Thread(dbRunnable).start();
-                }
-            }
-//            getActivity().getActionBar().getTabAt(0).setText(getString(R.string.home));
-            putToGroupDataMemoryCache(currentGroupId, getList());
-
-            int index = getListView().getFirstVisiblePosition();
-
-            View v = getListView().getChildAt(1);
-            int top = (v == null) ? 0 : v.getTop();
-            getListView().setFastScrollEnabled(false);
-            getAdapter().notifyDataSetChanged();
-            int ss = index + size;
-
-//            if (firstPosition == 0) {
-////
-//            } else {
-
-            getListView().setSelectionFromTop(ss + 1, top);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getListView().setFastScrollEnabled(SettingUtility.allowFastScroll());
-                }
-            }, 2000);
-//            }
-//            getListView().setLayoutTransition(null);
-
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(BundleArgsConstants.SCROLL_TO_TOP, false);
+            getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, bundle, msgCallback);
         }
     }
+
 
     /**
      * refresh timline messages' repost and comment count
@@ -768,6 +673,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         dismissFooterView();
         getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
     }
+
 
     @Override
     protected void loadOldMsg(View view) {

@@ -22,6 +22,7 @@ import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
@@ -592,7 +593,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
             showListView();
             switch (id) {
                 case NEW_MSG_LOADER_ID:
-                    Utility.stopListViewScrollingAndScrollToTop(getListView());
+                    if (args == null || args.getBoolean(BundleArgsConstants.SCROLL_TO_TOP))
+                        Utility.stopListViewScrollingAndScrollToTop(getListView());
                     return onCreateNewMsgLoader(id, args);
                 case MIDDLE_MSG_LOADER_ID:
                     middleBeginId = args.getString("beginId");
