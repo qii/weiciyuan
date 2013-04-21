@@ -274,6 +274,14 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             getListView().setSelectionFromTop(timeLinePosition.position + 1, timeLinePosition.top);
         else
             getListView().setSelectionFromTop(0, 0);
+
+        setListViewUnreadTipBar(timeLinePosition);
+
+    }
+
+    private void setListViewUnreadTipBar(TimeLinePosition p) {
+        if (p != null && p.newMsgIds != null)
+            newMsgTipBar.setValue(p.newMsgIds);
     }
 
 
