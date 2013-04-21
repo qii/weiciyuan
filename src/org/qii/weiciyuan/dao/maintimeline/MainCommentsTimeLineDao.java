@@ -89,13 +89,6 @@ public class MainCommentsTimeLineDao implements ICommentsTimeLineDao {
             AppLogger.e(e.getMessage());
         }
 
-
-        return value;
-    }
-
-    public CommentListBean getGSONMsgList() throws WeiboException {
-
-        CommentListBean value = getGSONMsgListWithoutClearUnread();
         if (value != null && value.getSize() > 0) {
             List<CommentBean> msgList = value.getItemList();
             Iterator<CommentBean> iterator = msgList.iterator();
@@ -111,6 +104,14 @@ public class MainCommentsTimeLineDao implements ICommentsTimeLineDao {
             }
 
         }
+
+        return value;
+    }
+
+    public CommentListBean getGSONMsgList() throws WeiboException {
+
+        CommentListBean value = getGSONMsgListWithoutClearUnread();
+
         clearUnread();
         return value;
     }
