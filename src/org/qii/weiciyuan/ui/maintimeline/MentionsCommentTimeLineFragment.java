@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Toast;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
@@ -295,14 +294,30 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     @Override
     protected void newMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null && newValue.getItemList().size() > 0) {
-            Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
-            getList().addNewData(newValue);
-            getAdapter().notifyDataSetChanged();
-            getListView().setSelectionAfterHeaderView();
+            addNewDataAndRememberPosition(newValue);
             MentionCommentsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
         }
 
         unreadBean = null;
+    }
+
+    private void addNewDataAndRememberPosition(CommentListBean newValue) {
+        newMsgTipBar.setValue(newValue, false);
+
+        int size = newValue.getSize();
+
+        if (getActivity() != null && newValue.getSize() > 0) {
+            getList().addNewData(newValue);
+            int index = getListView().getFirstVisiblePosition();
+
+            View v = getListView().getChildAt(1);
+            int top = (v == null) ? 0 : v.getTop();
+            getAdapter().notifyDataSetChanged();
+            int ss = index + size;
+            getListView().setSelectionFromTop(ss + 1, top);
+        }
+
+
     }
 
     @Override

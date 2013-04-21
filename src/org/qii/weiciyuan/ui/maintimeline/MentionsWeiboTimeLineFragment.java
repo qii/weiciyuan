@@ -134,10 +134,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     @Override
     protected void newMsgOnPostExecute(MessageListBean newValue) {
         if (getActivity() != null && newValue.getSize() > 0) {
-            showNewMsgToastMessage(newValue);
-            getList().addNewData(newValue);
-            getAdapter().notifyDataSetChanged();
-            getListView().setSelectionAfterHeaderView();
+            addNewDataAndRememberPosition(newValue);
             MentionsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
         }
         unreadBean = null;
@@ -145,6 +142,25 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         NotificationManager notificationManager = (NotificationManager) getActivity()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(Long.valueOf(GlobalContext.getInstance().getCurrentAccountId()).intValue());
+
+
+    }
+
+    private void addNewDataAndRememberPosition(MessageListBean newValue) {
+        newMsgTipBar.setValue(newValue, false);
+
+        int size = newValue.getSize();
+
+        if (getActivity() != null && newValue.getSize() > 0) {
+            getList().addNewData(newValue);
+            int index = getListView().getFirstVisiblePosition();
+
+            View v = getListView().getChildAt(1);
+            int top = (v == null) ? 0 : v.getTop();
+            getAdapter().notifyDataSetChanged();
+            int ss = index + size;
+            getListView().setSelectionFromTop(ss + 1, top);
+        }
 
 
     }
