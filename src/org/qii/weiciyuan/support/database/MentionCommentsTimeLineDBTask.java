@@ -175,7 +175,7 @@ public class MentionCommentsTimeLineDBTask {
         }
     }
 
-    private static TimeLinePosition getPosition(String accountId) {
+    public static TimeLinePosition getPosition(String accountId) {
         String sql = "select * from " + MentionCommentsTable.TABLE_NAME + " where " + MentionCommentsTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);

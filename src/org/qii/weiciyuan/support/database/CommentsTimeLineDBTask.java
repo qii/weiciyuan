@@ -171,7 +171,7 @@ public class CommentsTimeLineDBTask {
         }
     }
 
-    private static TimeLinePosition getPosition(String accountId) {
+    public static TimeLinePosition getPosition(String accountId) {
         String sql = "select * from " + CommentsTable.TABLE_NAME + " where " + CommentsTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);

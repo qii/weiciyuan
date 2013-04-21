@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
+import org.qii.weiciyuan.support.database.CommentsTimeLineDBTask;
+import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
 import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -66,10 +68,26 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
         drawButtonsBackground(currentIndex);
 
-        TimeLinePosition s = MentionsTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
-        HashSet<String> f = s.newMsgIds;
-        if (f != null) {
-            setMentionWeiboUnreadCount(f.size());
+        buildUnreadCount();
+    }
+
+    private void buildUnreadCount() {
+        int mentionsCount = 0;
+        TimeLinePosition position = MentionsTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
+        HashSet<String> hashSet = position.newMsgIds;
+        if (hashSet != null) {
+            mentionsCount += hashSet.size();
+        }
+        position = MentionCommentsTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
+        hashSet = position.newMsgIds;
+        if (hashSet != null) {
+            mentionsCount += hashSet.size();
+        }
+        setMentionWeiboUnreadCount(mentionsCount);
+        position = CommentsTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
+        hashSet = position.newMsgIds;
+        if (hashSet != null) {
+            setCommentUnreadCount(hashSet.size());
         }
     }
 

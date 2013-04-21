@@ -3,6 +3,7 @@ package org.qii.weiciyuan.support.lib;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -85,7 +86,9 @@ public class TopTipBar extends TextView {
             }
 
         };
-        getHandler().postDelayed(lastRunnable, duration);
+        Handler handler = getHandler();
+        if (handler != null)
+            handler.postDelayed(lastRunnable, duration);
     }
 
 
