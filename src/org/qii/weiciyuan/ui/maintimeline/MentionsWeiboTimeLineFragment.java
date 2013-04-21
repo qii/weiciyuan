@@ -128,7 +128,9 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusListAdapter(this, ((ICommander) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), true, true);
+        StatusListAdapter adapter = new StatusListAdapter(this, ((ICommander) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), true, true);
+        adapter.setTopTipBar(newMsgTipBar);
+        timeLineAdapter = adapter;
         getListView().setAdapter(timeLineAdapter);
     }
 

@@ -102,23 +102,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         registerReceiver(musicReceiver, AppEventAction.getSystemMusicBroadcastFilterAction());
     }
 
-    private class MusicReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String artist = intent.getStringExtra("artist");
-            String album = intent.getStringExtra("album");
-            String track = intent.getStringExtra("track");
-            if (!TextUtils.isEmpty(track)) {
-                MusicInfo musicInfo = new MusicInfo();
-                musicInfo.setArtist(artist);
-                musicInfo.setAlbum(album);
-                musicInfo.setTrack(track);
-                AppLogger.d("Music" + artist + ":" + album + ":" + track);
-                GlobalContext.getInstance().updateMusicInfo(musicInfo);
-            }
-        }
-    }
-
 
     private void buildInterface(Bundle savedInstanceState) {
         getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
@@ -289,14 +272,11 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 getSlidingMenu().showMenu();
                 return true;
-
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -458,6 +438,23 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             AccountBean newMsgAccountBean = (AccountBean) intent.getSerializableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
             if (newMsgAccountBean.getUid().equals(MainTimeLineActivity.this.accountBean.getUid())) {
                 abortBroadcast();
+            }
+        }
+    }
+
+    private class MusicReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String artist = intent.getStringExtra("artist");
+            String album = intent.getStringExtra("album");
+            String track = intent.getStringExtra("track");
+            if (!TextUtils.isEmpty(track)) {
+                MusicInfo musicInfo = new MusicInfo();
+                musicInfo.setArtist(artist);
+                musicInfo.setAlbum(album);
+                musicInfo.setTrack(track);
+                AppLogger.d("Music" + artist + ":" + album + ":" + track);
+                GlobalContext.getInstance().updateMusicInfo(musicInfo);
             }
         }
     }
