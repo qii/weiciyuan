@@ -258,12 +258,6 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
     }
 
-
-    private void putToGroupDataMemoryCache(int groupId, MessageListBean value) {
-        MessageListBean copy = new MessageListBean();
-        copy.addNewData(value);
-    }
-
     private LoaderManager.LoaderCallbacks<MentionTimeLineData> dbCallback = new LoaderManager.LoaderCallbacks<MentionTimeLineData>() {
         @Override
         public Loader<MentionTimeLineData> onCreateLoader(int id, Bundle args) {
@@ -277,7 +271,6 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
             if (result != null) {
                 getList().replaceData(result.msgList);
-                putToGroupDataMemoryCache(0, result.msgList);
                 timeLinePosition = result.position;
             }
 

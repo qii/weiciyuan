@@ -103,11 +103,6 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     protected void onListViewScrollStop() {
         super.onListViewScrollStop();
         timeLinePosition = Utility.getCurrentPositionFromListView(getListView());
