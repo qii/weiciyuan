@@ -58,8 +58,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         onScrollListener = ((AutoScrollListView) listView).getOnScrollListener();
         autoScrollListView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
-            int lastVisibleItem = -1;
-
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 onScrollListener.onScrollStateChanged(view, scrollState);
@@ -75,11 +73,9 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
                 View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
                 if (childView != null) {
-                    if (firstVisibleItem < lastVisibleItem)
-                        handle(firstVisibleItem + 1);
+                    handle(firstVisibleItem + 1);
                     if (childView.getTop() == 0) {
                         handle(firstVisibleItem);
-                        lastVisibleItem = firstVisibleItem;
                         if (firstVisibleItem == 0) {
                             topTipBar.clearAndReset();
                         }
