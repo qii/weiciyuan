@@ -109,13 +109,23 @@ public class FriendsTimeLineDBTask {
         }
     }
 
-    public static void replace(MessageListBean list, String accountId, String groupId) {
+    private static void replace(MessageListBean list, String accountId, String groupId) {
         if (groupId.equals("0")) {
             deleteAllHomes(accountId);
             addHomeLineMsg(list, accountId);
         } else {
             HomeOtherGroupTimeLineDBTask.replace(list, accountId, groupId);
         }
+    }
+
+    public static void asyncReplace(final MessageListBean list, final String accountId, final String groupId) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                replace(list, accountId, groupId);
+            }
+        }).start();
+
     }
 
     public static void asyncUpdatePosition(final TimeLinePosition position, final String accountId, final String groupId) {

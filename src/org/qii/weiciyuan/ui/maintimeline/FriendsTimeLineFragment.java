@@ -457,22 +457,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     @Override
     protected void newMsgOnPostExecute(MessageListBean newValue) {
         if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 0) {
-
             addNewDataAndRememberPosition(newValue);
-
-
             putToGroupDataMemoryCache(currentGroupId, getList());
-            final String groupId = currentGroupId;
-            Runnable dbRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    FriendsTimeLineDBTask.replace(getList(), accountBean.getUid(), groupId);
-                }
-            };
-            new Thread(dbRunnable).start();
-
+            FriendsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid(), currentGroupId);
         }
-
     }
 
     private void addNewDataAndRememberPosition(MessageListBean newValue) {
@@ -507,15 +495,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         if (Utility.isAllNotNull(getActivity(), oldValue) && oldValue.getSize() > 1) {
             getList().addOldData(oldValue);
             putToGroupDataMemoryCache(currentGroupId, getList());
-
-            final String groupId = currentGroupId;
-            Runnable dbRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    FriendsTimeLineDBTask.replace(getList(), accountBean.getUid(), groupId);
-                }
-            };
-            new Thread(dbRunnable).start();
+            FriendsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid(), currentGroupId);
 
         } else if (Utility.isAllNotNull(getActivity())) {
             Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
@@ -638,15 +618,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 }
             }
             getAdapter().notifyDataSetChanged();
-            final String groupId = currentGroupId;
-            Runnable dbRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    FriendsTimeLineDBTask.replace(getList(), accountBean.getUid(), groupId);
-                }
-            };
-            new Thread(dbRunnable).start();
-
+            FriendsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid(), currentGroupId);
         }
     }
 
