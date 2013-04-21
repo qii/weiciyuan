@@ -123,10 +123,14 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     @Override
     public void onPause() {
         super.onPause();
+        saveTimeLinePositionToDB();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(newBroadcastReceiver);
+    }
+
+    private void saveTimeLinePositionToDB() {
         timeLinePosition = Utility.getCurrentPositionFromListView(getListView());
         timeLinePosition.newMsgIds = newMsgTipBar.getValues();
         MentionCommentsTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(newBroadcastReceiver);
     }
 
 
@@ -340,7 +344,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
             int ss = index + size;
             getListView().setSelectionFromTop(ss + 1, top);
             MentionCommentsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
-
+            saveTimeLinePositionToDB();
         }
 
 

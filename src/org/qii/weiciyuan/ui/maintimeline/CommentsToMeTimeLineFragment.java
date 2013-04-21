@@ -126,10 +126,14 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void onPause() {
         super.onPause();
+        saveTimeLinePositionToDB();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(newBroadcastReceiver);
+    }
+
+    private void saveTimeLinePositionToDB() {
         timeLinePosition = Utility.getCurrentPositionFromListView(getListView());
         timeLinePosition.newMsgIds = newMsgTipBar.getValues();
         CommentsTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(newBroadcastReceiver);
     }
 
     @Override
@@ -344,6 +348,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             int ss = index + size;
             getListView().setSelectionFromTop(ss + 1, top);
             CommentsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
+            saveTimeLinePositionToDB();
         }
     }
 

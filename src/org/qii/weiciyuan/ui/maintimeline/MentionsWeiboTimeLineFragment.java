@@ -80,10 +80,14 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     @Override
     public void onPause() {
         super.onPause();
+        saveTimeLinePositionToDB();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(newBroadcastReceiver);
+    }
+
+    private void saveTimeLinePositionToDB() {
         timeLinePosition = Utility.getCurrentPositionFromListView(getListView());
         timeLinePosition.newMsgIds = newMsgTipBar.getValues();
         MentionsTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(newBroadcastReceiver);
     }
 
     @Override
@@ -164,6 +168,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
             int ss = index + size;
             getListView().setSelectionFromTop(ss + 1, top);
             MentionsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
+            saveTimeLinePositionToDB();
         }
     }
 
