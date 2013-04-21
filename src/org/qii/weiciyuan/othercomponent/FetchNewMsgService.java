@@ -3,6 +3,7 @@ package org.qii.weiciyuan.othercomponent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
@@ -166,6 +167,13 @@ public class FetchNewMsgService extends Service {
             intent.putExtra("unread", unreadBean);
             sendOrderedBroadcast(intent, null);
 
+            intent = new Intent(AppEventAction.NEW_MSG_BROADCAST);
+            intent.putExtra("account", accountBean);
+            intent.putExtra("comment", commentResult);
+            intent.putExtra("repost", mentionStatusesResult);
+            intent.putExtra("mention_comment", mentionCommentsResult);
+            intent.putExtra("unread", unreadBean);
+            LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(intent);
         }
     }
 

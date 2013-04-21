@@ -1,11 +1,14 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -20,6 +23,7 @@ import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
@@ -65,6 +69,18 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         this.token = token;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(newBroadcastReceiver, new IntentFilter(AppEventAction.NEW_MSG_BROADCAST));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MentionsTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(newBroadcastReceiver);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,11 +123,6 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         timeLinePosition = Utility.getCurrentPositionFromListView(getListView());
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MentionsTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
-    }
 
     @Override
     protected void buildListAdapter() {
@@ -345,5 +356,14 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         return new MentionsWeiboMsgLoader(getActivity(), accountId, token, null, maxId);
     }
 
+    private BroadcastReceiver newBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MessageListBean data = (MessageListBean) intent.getSerializableExtra("repost");
+            if (data != null) {
+                addNewDataAndRememberPosition(data);
+            }
+        }
+    };
 }
 
