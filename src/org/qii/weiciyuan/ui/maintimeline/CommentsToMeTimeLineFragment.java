@@ -287,7 +287,9 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new CommentListAdapter(this, ((ICommander) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), true, true);
+        CommentListAdapter adapter = new CommentListAdapter(this, ((ICommander) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), true, true);
+        adapter.setTopTipBar(newMsgTipBar);
+        timeLineAdapter = adapter;
         pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 

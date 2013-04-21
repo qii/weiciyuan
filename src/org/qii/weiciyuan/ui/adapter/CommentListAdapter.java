@@ -3,6 +3,7 @@ package org.qii.weiciyuan.ui.adapter;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
@@ -33,6 +35,11 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
     private Map<ViewHolder, Drawable> bg = new WeakHashMap<ViewHolder, Drawable>();
 
+    private TopTipBar topTipBar;
+
+    private Handler handler = new Handler();
+
+
     public CommentListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
         this(fragment, commander, bean, listView, showOriStatus, false);
     }
@@ -47,6 +54,10 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         attrs = new int[]{R.attr.timeline_comment_flag};
         ta = fragment.getActivity().obtainStyledAttributes(attrs);
         commentPic = ta.getDrawable(0);
+    }
+
+    public void setTopTipBar(TopTipBar bar) {
+        this.topTipBar = bar;
     }
 
     @Override
@@ -65,6 +76,23 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             holder.listview_root.setBackgroundColor(checkedBG);
 
         final CommentBean comment = getList().get(position);
+
+        if (this.topTipBar != null && (position + 1) < bean.size()) {
+
+            CommentBean next = bean.get(position + 1);
+            if (next != null) {
+                this.topTipBar.handle(next.getId());
+            }
+            if (position == 0) {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        topTipBar.clearAndReset();
+                    }
+                }, 300);
+
+            }
+        }
 
         UserBean user = comment.getUser();
         if (user != null) {
