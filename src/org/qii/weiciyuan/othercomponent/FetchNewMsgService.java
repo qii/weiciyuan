@@ -8,11 +8,16 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.bean.android.CommentTimeLineData;
+import org.qii.weiciyuan.bean.android.MentionTimeLineData;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MentionsCommentTimeLineDao;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.support.database.AccountDBTask;
+import org.qii.weiciyuan.support.database.CommentsTimeLineDBTask;
+import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
+import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -115,17 +120,44 @@ public class FetchNewMsgService extends Service {
                 int unreadMentionCommentCount = unreadBean.getMention_cmt();
 
                 if (unreadCommentCount > 0 && SettingUtility.allowCommentToMe()) {
-                    MainCommentsTimeLineDao commentDao = new MainCommentsTimeLineDao(token).setCount(String.valueOf(unreadCommentCount));
-                    commentResult = commentDao.getGSONMsgListWithoutClearUnread();
+                    MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
+                    CommentListBean oldData = null;
+                    CommentTimeLineData commentTimeLineData = CommentsTimeLineDBTask.getCommentLineMsgList(accountBean.getUid());
+                    if (commentTimeLineData != null) {
+                        oldData = commentTimeLineData.cmtList;
+                    }
+                    if (oldData != null) {
+                        dao.setSince_id(oldData.getItem(0).getId());
+                    }
+                    dao.setCount(String.valueOf(unreadCommentCount));
+                    commentResult = dao.getGSONMsgListWithoutClearUnread();
                 }
 
                 if (unreadMentionStatusCount > 0 && SettingUtility.allowMentionToMe()) {
-                    MainMentionsTimeLineDao mentionDao = new MainMentionsTimeLineDao(token).setCount(String.valueOf(unreadMentionStatusCount));
-                    mentionStatusesResult = mentionDao.getGSONMsgListWithoutClearUnread();
+                    MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
+                    MessageListBean oldData = null;
+                    MentionTimeLineData commentTimeLineData = MentionsTimeLineDBTask.getRepostLineMsgList(accountBean.getUid());
+                    if (commentTimeLineData != null) {
+                        oldData = commentTimeLineData.msgList;
+                    }
+                    if (oldData != null) {
+                        dao.setSince_id(oldData.getItem(0).getId());
+                    }
+                    dao.setCount(String.valueOf(unreadMentionStatusCount));
+                    mentionStatusesResult = dao.getGSONMsgListWithoutClearUnread();
                 }
 
                 if (unreadMentionCommentCount > 0 && SettingUtility.allowMentionCommentToMe()) {
-                    MainCommentsTimeLineDao dao = new MentionsCommentTimeLineDao(token).setCount(String.valueOf(unreadMentionCommentCount));
+                    MainCommentsTimeLineDao dao = new MentionsCommentTimeLineDao(token);
+                    CommentListBean oldData = null;
+                    CommentTimeLineData commentTimeLineData = MentionCommentsTimeLineDBTask.getCommentLineMsgList(accountBean.getUid());
+                    if (commentTimeLineData != null) {
+                        oldData = commentTimeLineData.cmtList;
+                    }
+                    if (oldData != null) {
+                        dao.setSince_id(oldData.getItem(0).getId());
+                    }
+                    dao.setCount(String.valueOf(unreadMentionCommentCount));
                     mentionCommentsResult = dao.getGSONMsgListWithoutClearUnread();
                 }
 
@@ -138,16 +170,12 @@ public class FetchNewMsgService extends Service {
                 cancel(true);
             }
 
-
             return null;
-
         }
 
         @Override
         protected void onPostExecute(Void sum) {
-
             sendNewMsgBroadcast();
-
             stopSelf();
             super.onPostExecute(sum);
         }
