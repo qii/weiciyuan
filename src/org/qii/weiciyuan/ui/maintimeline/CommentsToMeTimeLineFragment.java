@@ -114,6 +114,8 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void onPause() {
         super.onPause();
+        timeLinePosition = Utility.getCurrentPositionFromListView(getListView());
+        timeLinePosition.newMsgIds = newMsgTipBar.getValues();
         CommentsTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
     }
 
