@@ -9,6 +9,7 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.Utility;
 
 /**
@@ -31,11 +32,11 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        accountBean = (AccountBean) intent.getSerializableExtra("account");
-        comment = (CommentListBean) intent.getSerializableExtra("comment");
-        repost = (MessageListBean) intent.getSerializableExtra("repost");
-        mentionCommentsResult = (CommentListBean) intent.getSerializableExtra("mention_comment");
-        unreadBean = (UnreadBean) intent.getSerializableExtra("unread");
+        accountBean = (AccountBean) intent.getSerializableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+        comment = (CommentListBean) intent.getSerializableExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA);
+        repost = (MessageListBean) intent.getSerializableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
+        mentionCommentsResult = (CommentListBean) intent.getSerializableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
+        unreadBean = (UnreadBean) intent.getSerializableExtra(BundleArgsConstants.UNREAD_EXTRA);
 
         sum = unreadBean.getMention_cmt() + unreadBean.getMention_status() + unreadBean.getCmt();
 

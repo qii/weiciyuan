@@ -28,10 +28,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.AppEventAction;
-import org.qii.weiciyuan.support.utils.AppLogger;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.support.utils.*;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
@@ -505,7 +502,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     private class NewMsgInterruptBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            AccountBean newMsgAccountBean = (AccountBean) intent.getSerializableExtra("account");
+            AccountBean newMsgAccountBean = (AccountBean) intent.getSerializableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
             if (newMsgAccountBean.getUid().equals(MainTimeLineActivity.this.accountBean.getUid())) {
                 abortBroadcast();
             }

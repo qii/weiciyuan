@@ -24,6 +24,7 @@ import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.AppEventAction;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
@@ -146,7 +147,6 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     protected void newMsgOnPostExecute(MessageListBean newValue) {
         if (getActivity() != null && newValue.getSize() > 0) {
             addNewDataAndRememberPosition(newValue);
-            MentionsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
         }
         unreadBean = null;
         refreshUnread(unreadBean);
@@ -159,21 +159,17 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
     private void addNewDataAndRememberPosition(MessageListBean newValue) {
         newMsgTipBar.setValue(newValue, false);
-
         int size = newValue.getSize();
-
         if (getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             int index = getListView().getFirstVisiblePosition();
-
             View v = getListView().getChildAt(1);
             int top = (v == null) ? 0 : v.getTop();
             getAdapter().notifyDataSetChanged();
             int ss = index + size;
             getListView().setSelectionFromTop(ss + 1, top);
+            MentionsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
         }
-
-
     }
 
     @Override
@@ -359,11 +355,11 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     private BroadcastReceiver newBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            AccountBean account = (AccountBean) intent.getSerializableExtra("account");
+            AccountBean account = (AccountBean) intent.getSerializableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
             if (account == null || !account.getUid().equals(account.getUid())) {
                 return;
             }
-            MessageListBean data = (MessageListBean) intent.getSerializableExtra("repost");
+            MessageListBean data = (MessageListBean) intent.getSerializableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
             if (data != null) {
                 addNewDataAndRememberPosition(data);
             }

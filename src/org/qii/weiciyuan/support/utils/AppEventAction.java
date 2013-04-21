@@ -10,7 +10,9 @@ public class AppEventAction {
     //use ordered broadcast to decide to use which method to show new message notification,
     //Android notification bar or Weiciyuan activity if user has opened this app,
     //activity can interrupt this broadcast
+    //Must equal AndroidManifest's .othercomponent.unreadnotification.UnreadMsgReceiver action name
     public static final String NEW_MSG_PRIORITY_BROADCAST = "org.qii.weiciyuan.newmsg.priority";
+
     //mentions weibo, mentions comment, comments to me fragment use this broadcast to receive actual data
     public static final String NEW_MSG_BROADCAST = "org.qii.weiciyuan.newmsg";
 

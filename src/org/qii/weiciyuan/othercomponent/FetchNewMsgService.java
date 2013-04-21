@@ -17,6 +17,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppEventAction;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 
 import java.util.Calendar;
 import java.util.List;
@@ -160,19 +161,14 @@ public class FetchNewMsgService extends Service {
         private void sendNewMsgBroadcast() {
 
             Intent intent = new Intent(AppEventAction.NEW_MSG_PRIORITY_BROADCAST);
-            intent.putExtra("account", accountBean);
-            intent.putExtra("comment", commentResult);
-            intent.putExtra("repost", mentionStatusesResult);
-            intent.putExtra("mention_comment", mentionCommentsResult);
-            intent.putExtra("unread", unreadBean);
+            intent.putExtra(BundleArgsConstants.ACCOUNT_EXTRA, accountBean);
+            intent.putExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA, commentResult);
+            intent.putExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA, mentionStatusesResult);
+            intent.putExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA, mentionCommentsResult);
+            intent.putExtra(BundleArgsConstants.UNREAD_EXTRA, unreadBean);
             sendOrderedBroadcast(intent, null);
 
-            intent = new Intent(AppEventAction.NEW_MSG_BROADCAST);
-            intent.putExtra("account", accountBean);
-            intent.putExtra("comment", commentResult);
-            intent.putExtra("repost", mentionStatusesResult);
-            intent.putExtra("mention_comment", mentionCommentsResult);
-            intent.putExtra("unread", unreadBean);
+            intent.setAction(AppEventAction.NEW_MSG_BROADCAST);
             LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(intent);
         }
     }

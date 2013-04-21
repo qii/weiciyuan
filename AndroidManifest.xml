@@ -208,7 +208,7 @@
         <!---broadcast receiver -->
         <receiver android:name=".othercomponent.unreadnotification.UnreadMsgReceiver">
             <intent-filter>
-                <action android:name="org.qii.weiciyuan.newmsg"/>
+                <action android:name="org.qii.weiciyuan.newmsg.priority"/>
             </intent-filter>
         </receiver>
         <receiver
