@@ -19,10 +19,7 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.*;
 
 /**
  * User: qii
@@ -72,19 +69,22 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                 }
 
                 View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
-                if (childView != null) {
-                    handle(firstVisibleItem + 1);
-                    if (childView.getTop() == 0) {
-                        handle(firstVisibleItem);
-                        if (firstVisibleItem == 0) {
-                            topTipBar.clearAndReset();
-                        }
-                    }
+
+                if (childView == null) {
+                    return;
+                }
+
+                int position = firstVisibleItem - ((ListView) view).getHeaderViewsCount();
+
+                if (childView.getTop() == 0 && position <= 0) {
+                    topTipBar.clearAndReset();
+                } else {
+                    handle(position + 1);
                 }
             }
 
             private void handle(int position) {
-                if (topTipBar != null && position < bean.size()) {
+                if (position > 0 && topTipBar != null && position < bean.size()) {
                     MessageBean next = bean.get(position);
                     if (next != null) {
                         topTipBar.handle(next.getId());
@@ -118,7 +118,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             if (!TextUtils.isEmpty(user.getRemark())) {
                 holder.username.setText(new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark()).append(")").toString());
             } else {
-                holder.username.setText(user.getScreen_name());
+                holder.username.setText(user.getScreen_name() + position);
             }
             if (!showOriStatus && !SettingUtility.getEnableCommentRepostListAvatar()) {
                 holder.avatar.setLayoutParams(new RelativeLayout.LayoutParams(0, 0));

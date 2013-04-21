@@ -79,14 +79,17 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
                 }
 
                 View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
-                if (childView != null) {
-                    handle(firstVisibleItem + 1);
-                    if (childView.getTop() == 0) {
-                        handle(firstVisibleItem);
-                        if (firstVisibleItem == 0) {
-                            topTipBar.clearAndReset();
-                        }
-                    }
+
+                if (childView == null) {
+                    return;
+                }
+
+                int position = firstVisibleItem - ((ListView) view).getHeaderViewsCount();
+
+                if (childView.getTop() == 0 && position <= 0) {
+                    topTipBar.clearAndReset();
+                } else {
+                    handle(position + 1);
                 }
             }
 
