@@ -190,7 +190,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                getLoaderManager().initLoader(0, null, dbCallback);
+                getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 userBean = (UserBean) savedInstanceState.getSerializable("userBean");
