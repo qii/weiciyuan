@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
+import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.dm.DMUserListActivity;
@@ -22,6 +24,8 @@ import org.qii.weiciyuan.ui.nearby.NearbyTimeLineActivity;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 import org.qii.weiciyuan.ui.search.SearchMainActivity;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
+
+import java.util.HashSet;
 
 /**
  * User: qii
@@ -61,6 +65,12 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 break;
         }
         drawButtonsBackground(currentIndex);
+
+        TimeLinePosition s = MentionsTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
+        HashSet<String> f = s.newMsgIds;
+        if (f != null) {
+            setMentionWeiboUnreadCount(f.size());
+        }
     }
 
     private void openMyProfile() {
@@ -343,7 +353,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
     }
 
-    public void setMentionUnreadCount(int count) {
+    public void setMentionWeiboUnreadCount(int count) {
         if (count > 0) {
             layout.mentionCount.setVisibility(View.VISIBLE);
             layout.mentionCount.setText(String.valueOf(count));

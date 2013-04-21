@@ -175,7 +175,7 @@ public class MentionsTimeLineDBTask {
         }
     }
 
-    private static TimeLinePosition getPosition(String accountId) {
+    public static TimeLinePosition getPosition(String accountId) {
         String sql = "select * from " + RepostsTable.TABLE_NAME + " where " + RepostsTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);

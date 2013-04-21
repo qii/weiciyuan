@@ -23,6 +23,7 @@ import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -79,6 +80,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     @Override
     public void onPause() {
         super.onPause();
+        timeLinePosition = Utility.getCurrentPositionFromListView(getListView());
         timeLinePosition.newMsgIds = newMsgTipBar.getValues();
         MentionsTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(newBroadcastReceiver);
@@ -104,19 +106,9 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     }
 
 
-    public void refreshUnread(UnreadBean unreadBean) {
-
-//        Activity activity = getActivity();
-//        if (activity != null) {
-//            if (unreadBean == null) {
-//                activity.getActionBar().getTabAt(1).setText(getString(R.string.mentions));
-//                return;
-//            }
-//            this.unreadBean = unreadBean;
-//            String number = Utility.buildTabText(unreadBean.getMention_status());
-//            if (!TextUtils.isEmpty(number))
-//                activity.getActionBar().getTabAt(1).setText(getString(R.string.mentions) + number);
-//        }
+    public void refreshUnread(TopTipBar topTipBar) {
+//        LeftMenuFragment fragment = (LeftMenuFragment) getParentFragment().getFragmentManager().findFragmentByTag(LeftMenuFragment.class.getName());
+//            fragment.setMentionWeiboUnreadCount(topTipBar.getValues().size());
     }
 
     @Override
@@ -152,7 +144,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
             addNewDataAndRememberPosition(newValue);
         }
         unreadBean = null;
-        refreshUnread(unreadBean);
+        refreshUnread(newMsgTipBar);
         NotificationManager notificationManager = (NotificationManager) getActivity()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(Long.valueOf(GlobalContext.getInstance().getCurrentAccountId()).intValue());
@@ -213,7 +205,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
                 break;
         }
-        refreshUnread(this.unreadBean);
+        refreshUnread(this.newMsgTipBar);
     }
 
 

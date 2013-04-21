@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.MusicInfo;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
@@ -117,19 +116,13 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         buildCustomActionBarTitle(savedInstanceState);
 
         if (savedInstanceState == null) {
-
             initFragments();
-
-
             FragmentTransaction secondFragmentTransaction = getSupportFragmentManager().beginTransaction();
             secondFragmentTransaction.replace(R.id.menu_frame, getMenuFragment(), LeftMenuFragment.class.getName());
             getSlidingMenu().showContent();
             secondFragmentTransaction.commit();
         }
-
-
         configSlidingMenu(phone);
-
     }
 
     private void initFragments() {
@@ -459,12 +452,4 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         }
     }
 
-    private void buildUnreadTabTxt(UnreadBean unreadBean) {
-        LeftMenuFragment fragment = getMenuFragment();
-        if (fragment != null && unreadBean != null) {
-            fragment.setHomeUnreadCount(unreadBean.getStatus());
-            fragment.setMentionUnreadCount(unreadBean.getMention_status() + unreadBean.getMention_cmt());
-            fragment.setCommentUnreadCount(unreadBean.getCmt());
-        }
-    }
 }
