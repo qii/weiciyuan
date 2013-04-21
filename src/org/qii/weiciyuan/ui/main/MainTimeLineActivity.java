@@ -52,7 +52,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
     private AccountBean accountBean;
     private GetUnreadCountTask getUnreadCountTask;
-    private NewMsgBroadcastReceiver newMsgBroadcastReceiver;
+    private NewMsgInterruptBroadcastReceiver newMsgInterruptBroadcastReceiver;
     private ScheduledExecutorService newMsgScheduledExecutorService;
     private MusicReceiver musicReceiver;
     private AbstractTimeLineFragment currentFragment;
@@ -335,8 +335,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         super.onResume();
         IntentFilter filter = new IntentFilter(AppEventAction.NEW_MSG_PRIORITY_BROADCAST);
         filter.setPriority(1);
-        newMsgBroadcastReceiver = new NewMsgBroadcastReceiver();
-        registerReceiver(newMsgBroadcastReceiver, filter);
+        newMsgInterruptBroadcastReceiver = new NewMsgInterruptBroadcastReceiver();
+        registerReceiver(newMsgInterruptBroadcastReceiver, filter);
         startListenMusicPlaying();
         newMsgScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         newMsgScheduledExecutorService.scheduleAtFixedRate(new Runnable() {
@@ -420,7 +420,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(newMsgBroadcastReceiver);
+        unregisterReceiver(newMsgInterruptBroadcastReceiver);
         if (musicReceiver != null)
             unregisterReceiver(musicReceiver);
         newMsgScheduledExecutorService.shutdownNow();
@@ -502,22 +502,14 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         }
     }
 
-    private class NewMsgBroadcastReceiver extends BroadcastReceiver {
-
+    private class NewMsgInterruptBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-
-
             AccountBean newMsgAccountBean = (AccountBean) intent.getSerializableExtra("account");
             if (newMsgAccountBean.getUid().equals(MainTimeLineActivity.this.accountBean.getUid())) {
                 abortBroadcast();
-                UnreadBean unreadBean = (UnreadBean) intent.getSerializableExtra("unread");
-                buildUnreadTabTxt(unreadBean);
-
             }
-
         }
-
     }
 
     private void buildUnreadTabTxt(UnreadBean unreadBean) {
