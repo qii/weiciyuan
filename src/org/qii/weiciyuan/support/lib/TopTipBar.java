@@ -99,7 +99,7 @@ public class TopTipBar extends TextView {
             setText(String.format(getContext().getString(R.string.new_messages_count), String.valueOf(ids.size())));
             setBackgroundResource(R.color.top_tip_bar_tip);
         } else {
-            disappear(3000);
+            disappear(0);
         }
     }
 
