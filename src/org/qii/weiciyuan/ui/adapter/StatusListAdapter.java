@@ -7,14 +7,17 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +42,8 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
     private Handler handler = new Handler();
 
+    private AbsListView.OnScrollListener onScrollListener;
+
     public StatusListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
         this(fragment, commander, bean, listView, showOriStatus, false);
     }
@@ -49,6 +54,49 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
     public void setTopTipBar(TopTipBar bar) {
         this.topTipBar = bar;
+        AutoScrollListView autoScrollListView = (AutoScrollListView) listView;
+        onScrollListener = ((AutoScrollListView) listView).getOnScrollListener();
+        autoScrollListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            int lastVisibleItem = -1;
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                onScrollListener.onScrollStateChanged(view, scrollState);
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                onScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+
+                if (topTipBar.getValues().size() == 0) {
+                    return;
+                }
+
+                View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
+                if (childView != null) {
+                    if (firstVisibleItem < lastVisibleItem)
+                        handle(firstVisibleItem + 1);
+                    if (childView.getTop() == 0) {
+                        handle(firstVisibleItem);
+                        lastVisibleItem = firstVisibleItem;
+                        if (firstVisibleItem == 0) {
+                            topTipBar.clearAndReset();
+                        }
+                    }
+                }
+            }
+
+            private void handle(int position) {
+                if (topTipBar != null && position < bean.size()) {
+                    MessageBean next = bean.get(position);
+                    if (next != null) {
+                        topTipBar.handle(next.getId());
+                    }
+                }
+
+            }
+        });
     }
 
     @Override
@@ -67,23 +115,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.listview_root.setBackgroundColor(checkedBG);
 
         final MessageBean msg = bean.get(position);
-
-        if (this.topTipBar != null && (position + 1) < bean.size()) {
-
-            MessageBean next = bean.get(position + 1);
-            if (next != null) {
-                this.topTipBar.handle(next.getId());
-            }
-            if (position == 0) {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        topTipBar.clearAndReset();
-                    }
-                }, 300);
-
-            }
-        }
 
         UserBean user = msg.getUser();
         if (user != null) {

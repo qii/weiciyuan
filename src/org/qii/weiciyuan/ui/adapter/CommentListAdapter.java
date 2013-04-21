@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import org.qii.weiciyuan.R;
@@ -15,9 +16,11 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
 import java.util.List;
@@ -39,6 +42,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
     private Handler handler = new Handler();
 
+    private AbsListView.OnScrollListener onScrollListener;
 
     public CommentListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
         this(fragment, commander, bean, listView, showOriStatus, false);
@@ -58,6 +62,50 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
     public void setTopTipBar(TopTipBar bar) {
         this.topTipBar = bar;
+        AutoScrollListView autoScrollListView = (AutoScrollListView) listView;
+        onScrollListener = ((AutoScrollListView) listView).getOnScrollListener();
+        autoScrollListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+
+            int lastVisibleItem = -1;
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                onScrollListener.onScrollStateChanged(view, scrollState);
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                onScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+
+                if (topTipBar.getValues().size() == 0) {
+                    return;
+                }
+
+                View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
+                if (childView != null) {
+                    if (firstVisibleItem < lastVisibleItem)
+                        handle(firstVisibleItem + 1);
+                    if (childView.getTop() == 0) {
+                        handle(firstVisibleItem);
+                        lastVisibleItem = firstVisibleItem;
+                        if (firstVisibleItem == 0) {
+                            topTipBar.clearAndReset();
+                        }
+                    }
+                }
+            }
+
+            private void handle(int position) {
+                if (topTipBar != null && position < bean.size()) {
+                    CommentBean next = bean.get(position);
+                    if (next != null) {
+                        topTipBar.handle(next.getId());
+                    }
+                }
+
+            }
+        });
     }
 
     @Override

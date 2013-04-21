@@ -94,17 +94,12 @@ public class TopTipBar extends TextView {
 
     private void setCount() {
         int count = ids.size();
-        if (count > 1) {
+        if (count > 0) {
             setVisibility(View.VISIBLE);
             setText(String.format(getContext().getString(R.string.new_messages_count), String.valueOf(ids.size())));
             setBackgroundResource(R.color.top_tip_bar_tip);
-        } else if (count == 1) {
-            setVisibility(View.VISIBLE);
-            setText(String.format(getContext().getString(R.string.new_messages_count), String.valueOf(ids.size())));
-            setBackgroundResource(R.color.top_tip_bar_tip);
-            disappear(3000);
         } else {
-            disappear(0);
+            disappear(3000);
         }
     }
 
