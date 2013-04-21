@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
 
     <FrameLayout
         android:layout_width="fill_parent"
@@ -11,12 +11,13 @@
         android:layout_weight="1">
 
         <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="gone"
             android:gravity="center"
+            android:layout_gravity="center"
             android:id="@+id/empty"
-            android:text="@string/empty" />
+            android:text="@string/empty"/>
 
         <!-- requiresFadingEdge may have performance problem in some low price phones, but I like it.
            use overScrollMode to disable blue boundaries at the top and the bottom of listview
@@ -31,7 +32,7 @@
             android:scrollingCache="true"
             android:smoothScrollbar="true"
             android:visibility="visible"
-            android:overScrollMode="never" />
+            android:overScrollMode="never"/>
 
 
         <ProgressBar
@@ -39,7 +40,21 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:id="@+id/progressbar"
-            android:visibility="visible" />
+            android:visibility="visible"/>
+
+        <org.qii.weiciyuan.support.lib.TopTipBar
+            android:visibility="invisible"
+            android:id="@+id/tv_unread_new_message_count_tip_bar"
+            android:layout_height="40dp"
+            android:layout_marginLeft="@dimen/toptipbar_layout_margin"
+            android:layout_marginRight="@dimen/toptipbar_layout_margin"
+            android:layout_gravity="top"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:freezesText="true"
+            android:background="@color/top_tip_bar_tip"/>
 
     </FrameLayout>
 
@@ -47,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:id="@+id/line"
-        android:background="?line_drawable" />
+        android:background="?line_drawable"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,7 +76,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:id="@+id/content"
-            android:hint="@string/quick_comment" />
+            android:hint="@string/quick_comment"/>
 
         <ImageView
             android:layout_height="wrap_content"
@@ -71,7 +86,7 @@
             android:src="?send"
             android:layout_gravity="center_vertical"
             android:background="?android:selectableItemBackground"
-            android:padding="3dp" />
+            android:padding="3dp"/>
 
     </LinearLayout>
 </LinearLayout>

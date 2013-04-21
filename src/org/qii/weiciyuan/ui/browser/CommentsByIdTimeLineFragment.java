@@ -24,7 +24,6 @@ import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
 import org.qii.weiciyuan.dao.timeline.CommentsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -158,18 +157,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.commentsbyidtimelinefragment_layout, container, false);
-        empty = (TextView) view.findViewById(R.id.empty);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        buildLayout(inflater, view);
         quick_repost = (LinearLayout) view.findViewById(R.id.quick_repost);
-        pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
-
-        getListView().setScrollingCacheEnabled(false);
-
-        getListView().setHeaderDividersEnabled(false);
-
-        footerView = inflater.inflate(R.layout.listview_footer_layout, null);
-        getListView().addFooterView(footerView);
-        dismissFooterView();
         et = (EditText) view.findViewById(R.id.content);
         return view;
     }

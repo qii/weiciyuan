@@ -118,7 +118,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.listview_layout, container, false);
+        buildLayout(inflater, view);
+        return view;
+    }
 
+    protected void buildLayout(LayoutInflater inflater, View view) {
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         progressBar.setVisibility(View.GONE);
@@ -129,8 +133,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         footerView = inflater.inflate(R.layout.listview_footer_layout, null);
         getListView().addFooterView(footerView);
         dismissFooterView();
-
-        return view;
     }
 
     @Override
