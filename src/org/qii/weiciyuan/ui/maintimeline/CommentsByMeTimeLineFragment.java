@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Toast;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.UserBean;
@@ -271,7 +270,6 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     protected void newMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null && newValue.getItemList() != null && newValue.getItemList().size() > 0) {
-            Toast.makeText(getActivity(), getString(R.string.total) + newValue.getItemList().size() + getString(R.string.new_messages), Toast.LENGTH_SHORT).show();
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
