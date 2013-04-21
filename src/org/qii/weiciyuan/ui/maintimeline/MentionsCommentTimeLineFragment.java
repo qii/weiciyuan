@@ -1,8 +1,13 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -18,6 +23,8 @@ import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.AppEventAction;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.CommentFloatingMenu;
@@ -108,11 +115,18 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(newBroadcastReceiver, new IntentFilter(AppEventAction.NEW_MSG_BROADCAST));
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         timeLinePosition = Utility.getCurrentPositionFromListView(getListView());
         timeLinePosition.newMsgIds = newMsgTipBar.getValues();
         MentionCommentsTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(newBroadcastReceiver);
     }
 
 
@@ -297,7 +311,6 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     protected void newMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null && newValue.getItemList().size() > 0) {
             addNewDataAndRememberPosition(newValue);
-            MentionCommentsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
         }
 
         unreadBean = null;
@@ -317,6 +330,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
             getAdapter().notifyDataSetChanged();
             int ss = index + size;
             getListView().setSelectionFromTop(ss + 1, top);
+            MentionCommentsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
+
         }
 
 
@@ -425,4 +440,18 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         }
         return new MentionsCommentMsgLoader(getActivity(), accountId, token, null, maxId);
     }
+
+    private BroadcastReceiver newBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            AccountBean account = (AccountBean) intent.getSerializableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+            if (account == null || !account.getUid().equals(account.getUid())) {
+                return;
+            }
+            CommentListBean data = (CommentListBean) intent.getSerializableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
+            if (data != null) {
+                addNewDataAndRememberPosition(data);
+            }
+        }
+    };
 }
