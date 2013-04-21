@@ -21,12 +21,9 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.MusicInfo;
-import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
 import org.qii.weiciyuan.support.database.AccountDBTask;
-import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.*;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -37,7 +34,6 @@ import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -48,9 +44,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         IAccountInfo {
 
     private AccountBean accountBean;
-    private GetUnreadCountTask getUnreadCountTask;
     private NewMsgInterruptBroadcastReceiver newMsgInterruptBroadcastReceiver;
-    private ScheduledExecutorService newMsgScheduledExecutorService;
     private MusicReceiver musicReceiver;
     private AbstractTimeLineFragment currentFragment;
     private TextView titleText;
@@ -125,13 +119,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         }
     }
 
-
-    private void getUnreadCount() {
-        if (Utility.isTaskStopped(getUnreadCountTask)) {
-            getUnreadCountTask = new GetUnreadCountTask();
-            getUnreadCountTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        }
-    }
 
     private void buildInterface(Bundle savedInstanceState) {
         getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
@@ -335,14 +322,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         newMsgInterruptBroadcastReceiver = new NewMsgInterruptBroadcastReceiver();
         registerReceiver(newMsgInterruptBroadcastReceiver, filter);
         startListenMusicPlaying();
-        newMsgScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        newMsgScheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                getUnreadCount();
-            }
-        }, 10, 50, TimeUnit.SECONDS);
-
         readClipboard();
     }
 
@@ -420,9 +399,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         unregisterReceiver(newMsgInterruptBroadcastReceiver);
         if (musicReceiver != null)
             unregisterReceiver(musicReceiver);
-        newMsgScheduledExecutorService.shutdownNow();
-        if (getUnreadCountTask != null)
-            getUnreadCountTask.cancel(true);
 
         if (isFinishing())
             saveNavigationPositionToDB();
@@ -475,29 +451,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         return fragment;
     }
 
-
-    private class GetUnreadCountTask extends MyAsyncTask<Void, Void, UnreadBean> {
-
-        @Override
-        protected UnreadBean doInBackground(Void... params) {
-            UnreadDao unreadDao = new UnreadDao(getToken(), accountBean.getUid());
-            try {
-                return unreadDao.getCount();
-            } catch (WeiboException e) {
-                AppLogger.e(e.getError());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(UnreadBean unreadBean) {
-            super.onPostExecute(unreadBean);
-            if (unreadBean != null) {
-                buildUnreadTabTxt(unreadBean);
-
-            }
-        }
-    }
 
     private class NewMsgInterruptBroadcastReceiver extends BroadcastReceiver {
         @Override
