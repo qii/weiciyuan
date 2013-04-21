@@ -11,11 +11,11 @@ import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MentionsCommentTimeLineDao;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
-import org.qii.weiciyuan.othercomponent.unreadnotification.UnreadMsgReceiver;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.AppEventAction;
 
 import java.util.Calendar;
 import java.util.List;
@@ -158,7 +158,7 @@ public class FetchNewMsgService extends Service {
 
         private void sendNewMsgBroadcast() {
 
-            Intent intent = new Intent(UnreadMsgReceiver.ACTION);
+            Intent intent = new Intent(AppEventAction.NEW_MSG_PRIORITY_BROADCAST);
             intent.putExtra("account", accountBean);
             intent.putExtra("comment", commentResult);
             intent.putExtra("repost", mentionStatusesResult);

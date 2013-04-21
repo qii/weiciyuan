@@ -17,8 +17,6 @@ import org.qii.weiciyuan.support.utils.Utility;
  */
 public class UnreadMsgReceiver extends BroadcastReceiver {
 
-    public static final String ACTION = "org.qii.weiciyuan.newmsg";
-
     private Context context;
     private AccountBean accountBean;
 

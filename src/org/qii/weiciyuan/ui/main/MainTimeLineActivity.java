@@ -23,12 +23,12 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.MusicInfo;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
-import org.qii.weiciyuan.othercomponent.unreadnotification.UnreadMsgReceiver;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -352,7 +352,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     @Override
     protected void onResume() {
         super.onResume();
-        IntentFilter filter = new IntentFilter(UnreadMsgReceiver.ACTION);
+        IntentFilter filter = new IntentFilter(AppEventAction.NEW_MSG_PRIORITY_BROADCAST);
         filter.setPriority(1);
         newMsgBroadcastReceiver = new NewMsgBroadcastReceiver();
         registerReceiver(newMsgBroadcastReceiver, filter);
