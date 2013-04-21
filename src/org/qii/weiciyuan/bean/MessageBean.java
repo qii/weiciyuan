@@ -201,6 +201,9 @@ public class MessageBean extends ItemBean {
     private long mills;
 
     public long getMills() {
+        if (mills == 0L) {
+            TimeTool.dealMills(this);
+        }
         return mills;
     }
 
