@@ -118,7 +118,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             if (!TextUtils.isEmpty(user.getRemark())) {
                 holder.username.setText(new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark()).append(")").toString());
             } else {
-                holder.username.setText(user.getScreen_name() + position);
+                holder.username.setText(user.getScreen_name());
             }
             if (!showOriStatus && !SettingUtility.getEnableCommentRepostListAvatar()) {
                 holder.avatar.setLayoutParams(new RelativeLayout.LayoutParams(0, 0));
