@@ -15,11 +15,15 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.TopTipBar;
+import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * User: qii
@@ -39,8 +43,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
     private Handler handler = new Handler();
 
-    private AbsListView.OnScrollListener onScrollListener;
-
     public StatusListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
         this(fragment, commander, bean, listView, showOriStatus, false);
     }
@@ -52,34 +54,35 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     public void setTopTipBar(TopTipBar bar) {
         this.topTipBar = bar;
         AutoScrollListView autoScrollListView = (AutoScrollListView) listView;
-        onScrollListener = ((AutoScrollListView) listView).getOnScrollListener();
         autoScrollListView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                onScrollListener.onScrollStateChanged(view, scrollState);
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                onScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+                VelocityListView velocityListView = (VelocityListView) view;
+                if (velocityListView.getVelocity() < 0) {
+                    topTipBar.hideCount();
+                } else if (velocityListView.getVelocity() > 0) {
+                    if (topTipBar.getValues().size() == 0) {
+                        return;
+                    }
 
-                if (topTipBar.getValues().size() == 0) {
-                    return;
-                }
+                    View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
 
-                View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
+                    if (childView == null) {
+                        return;
+                    }
 
-                if (childView == null) {
-                    return;
-                }
+                    int position = firstVisibleItem - ((ListView) view).getHeaderViewsCount();
 
-                int position = firstVisibleItem - ((ListView) view).getHeaderViewsCount();
-
-                if (childView.getTop() == 0 && position <= 0) {
-                    topTipBar.clearAndReset();
-                } else {
-                    handle(position + 1);
+                    if (childView.getTop() == 0 && position <= 0) {
+                        topTipBar.clearAndReset();
+                    } else {
+                        handle(position + 1);
+                    }
                 }
             }
 
@@ -87,7 +90,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                 if (position > 0 && topTipBar != null && position < bean.size()) {
                     MessageBean next = bean.get(position);
                     if (next != null) {
-                        topTipBar.handle(next.getId());
+                        topTipBar.handle(next.getId(), bean.get(position - 1).getId());
                     }
                 }
 
@@ -235,6 +238,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                 holder.repost_layout.setVisibility(View.GONE);
             holder.repost_flag.setVisibility(View.GONE);
         }
+
     }
 
 

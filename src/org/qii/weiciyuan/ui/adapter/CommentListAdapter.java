@@ -18,6 +18,7 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.TopTipBar;
+import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -63,41 +64,43 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
     public void setTopTipBar(TopTipBar bar) {
         this.topTipBar = bar;
         AutoScrollListView autoScrollListView = (AutoScrollListView) listView;
-        onScrollListener = ((AutoScrollListView) listView).getOnScrollListener();
         autoScrollListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                onScrollListener.onScrollStateChanged(view, scrollState);
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                onScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+                VelocityListView velocityListView = (VelocityListView) view;
+                if (velocityListView.getVelocity() < 0) {
+                    topTipBar.hideCount();
+                } else if (velocityListView.getVelocity() > 0) {
+                    if (topTipBar.getValues().size() == 0) {
+                        return;
+                    }
 
-                if (topTipBar.getValues().size() == 0) {
-                    return;
-                }
+                    View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
 
-                View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
+                    if (childView == null) {
+                        return;
+                    }
 
-                if (childView == null) {
-                    return;
-                }
+                    int position = firstVisibleItem - ((ListView) view).getHeaderViewsCount();
 
-                int position = firstVisibleItem - ((ListView) view).getHeaderViewsCount();
-
-                if (childView.getTop() == 0 && position <= 0) {
-                    topTipBar.clearAndReset();
-                } else {
-                    handle(position + 1);
+                    if (childView.getTop() == 0 && position <= 0) {
+                        topTipBar.clearAndReset();
+                    } else {
+                        handle(position + 1);
+                    }
                 }
             }
 
             private void handle(int position) {
-                if (topTipBar != null && position < bean.size()) {
+                if (position > 0 && topTipBar != null && position < bean.size()) {
                     CommentBean next = bean.get(position);
                     if (next != null) {
-                        topTipBar.handle(next.getId());
+                        topTipBar.handle(next.getId(), bean.get(position - 1).getId());
                     }
                 }
 
@@ -121,23 +124,6 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             holder.listview_root.setBackgroundColor(checkedBG);
 
         final CommentBean comment = getList().get(position);
-
-        if (this.topTipBar != null && (position + 1) < bean.size()) {
-
-            CommentBean next = bean.get(position + 1);
-            if (next != null) {
-                this.topTipBar.handle(next.getId());
-            }
-            if (position == 0) {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        topTipBar.clearAndReset();
-                    }
-                }, 300);
-
-            }
-        }
 
         UserBean user = comment.getUser();
         if (user != null) {
