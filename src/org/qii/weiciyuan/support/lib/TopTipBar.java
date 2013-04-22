@@ -81,6 +81,9 @@ public class TopTipBar extends TextView {
                         super.onAnimationEnd(animation);
                         setVisibility(View.INVISIBLE);
                         animate().alpha(1.0f).setListener(null);
+                        if (ids.size() > 0) {
+                            setCount();
+                        }
                     }
                 });
             }
@@ -127,7 +130,7 @@ public class TopTipBar extends TextView {
         setVisibility(View.VISIBLE);
         animate().alpha(1.0f);
         setText(error);
-        disappear(5000);
+        disappear(3000);
         setBackgroundResource(R.color.top_tip_bar_error);
     }
 
