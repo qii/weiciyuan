@@ -25,6 +25,7 @@ public class TopTipBar extends TextView {
     private HashSet<String> ids = new HashSet<String>();
     private boolean disappear = false;
     private Runnable lastRunnable;
+    private boolean error;
 
 
     public TopTipBar(Context context) {
@@ -96,6 +97,7 @@ public class TopTipBar extends TextView {
 
 
     private void setCount() {
+        this.error = false;
         int count = ids.size();
         if (count > 0) {
             setVisibility(View.VISIBLE);
@@ -106,13 +108,24 @@ public class TopTipBar extends TextView {
         }
     }
 
-    public void handle(String id) {
+
+    public void hideCount() {
+        if (!error) {
+            setVisibility(View.INVISIBLE);
+        }
+    }
+
+    //helperId can be used to keep TopTipBar stay Visible status
+    public void handle(String id, String helperId) {
         if (disappear) {
             return;
         }
         boolean has = ids.contains(id);
         if (has) {
             ids.remove(id);
+            setCount();
+        }
+        if (ids.contains(helperId)) {
             setCount();
         }
     }
@@ -127,6 +140,7 @@ public class TopTipBar extends TextView {
 
     public void setError(String error) {
         this.disappear = true;
+        this.error = true;
         setVisibility(View.VISIBLE);
         animate().alpha(1.0f);
         setText(error);

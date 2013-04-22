@@ -20,17 +20,6 @@ public class AutoScrollListView extends ListView {
 
     private int mRequestedScrollPosition = -1;
     private boolean mSmoothScrollRequested;
-    private OnScrollListener onScrollListener;
-
-    @Override
-    public void setOnScrollListener(OnScrollListener l) {
-        super.setOnScrollListener(l);
-        onScrollListener = l;
-    }
-
-    public OnScrollListener getOnScrollListener() {
-        return onScrollListener;
-    }
 
     public AutoScrollListView(Context context) {
         super(context);
