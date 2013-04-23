@@ -90,7 +90,12 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                 if (position > 0 && topTipBar != null && position < bean.size()) {
                     MessageBean next = bean.get(position);
                     if (next != null) {
-                        topTipBar.handle(next.getId(), bean.get(position - 1).getId());
+                        MessageBean helperMsg = bean.get(position - 1);
+                        String helperId = null;
+                        if (helperMsg != null) {
+                            helperId = helperMsg.getId();
+                        }
+                        topTipBar.handle(next.getId(), helperId);
                     }
                 }
 
