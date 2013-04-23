@@ -43,7 +43,7 @@
         <item name="timeline_pic_icon">@drawable/timeline_pic_dark</item>
         <item name="timeline_load_more_background">@drawable/timeline_load_more_light</item>
 
-        <item name="listview_item_background_selector">@drawable/listview_item_background_selector</item>
+        <item name="listview_item_background_selector">@drawable/listview_item_background_selector_light</item>
         <item name="listview_item_refresh_animation">@drawable/refresh_dark</item>
         <item name="link_color">@color/dark_blue</item>
         <item name="line_drawable">@drawable/list_divider_holo_light</item>
@@ -51,6 +51,8 @@
         <item name="listview_pic_bg_border">@drawable/bg_border2_dark</item>
         <item name="listview_middle_layout_bg">@color/black</item>
         <item name="listview_middle_layout_text_color">@color/white</item>
+        <item name="listview_card_bg">@drawable/bg_card_white</item>
+        <item name="listview_item_bg">@drawable/bg_listview_item_light</item>
 
 
         <item name="backgroundSplit">@drawable/ab_bottom_solid_inverse_holo</item>

@@ -78,6 +78,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     }
 
     public AbstractAppListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<T> bean, ListView listView, boolean showOriStatus, boolean pre) {
+        if (showOriStatus && SettingUtility.getAppTheme() == R.style.AppTheme_Four)
+            listView.setDivider(null);
+
         this.bean = bean;
         this.commander = commander;
         this.inflater = fragment.getActivity().getLayoutInflater();

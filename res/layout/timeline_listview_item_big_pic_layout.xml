@@ -3,162 +3,170 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:clickable="true"
-                android:background="@drawable/listview_item_background_selector"
+                android:clickable="false"
+                android:background="?listview_item_background_selector"
                 android:id="@+id/listview_root">
 
-    <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
-        android:id="@+id/avatar"
-        android:layout_width="@dimen/timeline_avatar_width"
-        android:layout_height="@dimen/timeline_avatar_height"
-
-        android:padding="1px"
-        android:background="@drawable/bg_border1"
-        android:layout_gravity="left|center_vertical"
-        android:layout_marginRight="8dp"
-        android:clickable="true"/>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:visibility="gone"
-        android:id="@+id/count_layout">
-
-        <TextView
-            android:id="@+id/repost_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:layerType="software"
-            android:textColor="?android:textColorTertiary"
-            android:drawablePadding="4dp"
-            android:fontFamily="monospace"
-            android:drawableLeft="?timeline_repost_flag"/>
-
-        <TextView
-            android:id="@+id/comment_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:layerType="software"
-            android:layout_marginLeft="8dp"
-            android:drawablePadding="4dp"
-            android:fontFamily="monospace"
-            android:textColor="?android:textColorTertiary"
-            android:drawableLeft="?timeline_comment_flag"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="username"
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:layout_toRightOf="@id/avatar"
-        android:layout_toLeftOf="@id/count_layout"
-        android:layerType="software"
-        android:clickable="true"
-        android:textStyle="bold"/>
-
-
-    <org.qii.weiciyuan.support.lib.TimeTextView
-        android:id="@+id/time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="12:00"
-        android:textColor="?android:textColorTertiary"
-        android:layout_below="@id/username"
-        android:layout_toRightOf="@id/avatar"
-        android:layerType="software"/>
-
-
-    <TextView
-        android:layout_marginTop="3dp"
-        android:id="@+id/content"
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="content"
-        android:textSize="15sp"
-        android:layout_below="@id/avatar"
-        android:lineSpacingMultiplier="1.2"
-        android:clickable="true"
-        android:layerType="software"/>
+        android:background="?listview_card_bg">
 
-    <FrameLayout
-
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/content"
-
-        android:id="@+id/repost_and_pic">
+        <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/timeline_avatar_width"
+            android:layout_height="@dimen/timeline_avatar_height"
+            android:padding="1px"
+            android:background="@drawable/bg_border1"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginRight="8dp"
+            android:clickable="true"/>
 
         <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:gravity="center">
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:id="@+id/count_layout">
 
-            <org.qii.weiciyuan.support.lib.TimeLineImageView
-                android:id="@+id/content_pic"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
+            <ImageView
+                android:id="@+id/timeline_gps_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="?timeline_gps_icon"
                 android:visibility="gone"
-                android:padding="2dp"
-                android:clickable="true"/>
-        </LinearLayout>
+                />
 
-        <LinearLayout
-            android:id="@+id/repost_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="3dp"
-            android:orientation="vertical"
-
-            >
+            <ImageView
+                android:id="@+id/timeline_pic_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:visibility="gone"
+                android:src="?timeline_pic_icon"/>
 
             <TextView
-                android:includeFontPadding="true"
-                android:id="@+id/repost_content"
-                android:layout_width="fill_parent"
+                android:id="@+id/repost_count"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="content"
-                android:textSize="15sp"
-                android:lineSpacingMultiplier="1.2"
-                android:visibility="gone"
-                android:clickable="true"
-                android:layerType="software"/>
+                android:textColor="?android:textColorTertiary"
+                android:drawablePadding="4dp"
+                android:layout_marginLeft="8dp"
+                android:fontFamily="monospace"
+                android:drawableLeft="?timeline_repost_flag"/>
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/comment_count"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:layout_marginTop="5dp"
-                android:gravity="center">
+                android:layout_marginLeft="8dp"
+                android:drawablePadding="4dp"
+                android:fontFamily="monospace"
+                android:textColor="?android:textColorTertiary"
+                android:drawableLeft="?timeline_comment_flag"/>
 
-                <org.qii.weiciyuan.support.lib.TimeLineImageView
-                    android:id="@+id/repost_content_pic"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
-                    android:visibility="gone"
-                    android:clickable="true"
-                    android:padding="2dp"
-                    />
-            </LinearLayout>
         </LinearLayout>
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:clickable="false"
+            android:layout_toRightOf="@id/avatar"
+            android:layout_toLeftOf="@id/count_layout"
+            android:textStyle="bold"/>
 
-    <ImageView
-        android:id="@+id/repost_flag"
-        android:layout_width="6dp"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/avatar"
-        android:layout_alignTop="@id/repost_and_pic"
-        android:layout_alignBottom="@id/repost_and_pic"
-        android:layout_marginTop="3dp"
-        android:layout_below="@id/avatar"
-        android:background="@color/lightgray"/>
+
+        <org.qii.weiciyuan.support.lib.TimeTextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?android:textColorTertiary"
+            android:layout_below="@id/username"
+            android:layout_toRightOf="@id/avatar"
+            />
+
+        <TextView
+            android:id="@+id/source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/time"
+            android:textColor="?android:textColorTertiary"
+            android:layout_marginLeft="5dp"
+            android:layout_alignTop="@+id/time"
+            />
+
+        <TextView
+            android:layout_marginTop="3dp"
+            android:id="@+id/content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_below="@id/avatar"
+            android:lineSpacingMultiplier="1.2"
+            android:clickable="false"
+            />
+
+
+        <org.qii.weiciyuan.support.lib.TimeLineImageView
+            android:id="@+id/content_pic"
+            android:layout_below="@id/content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
+            android:visibility="gone"
+            android:clickable="true"/>
+
+
+        <TextView
+            android:layout_below="@id/content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="3dp"
+            android:includeFontPadding="true"
+            android:id="@+id/repost_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:lineSpacingMultiplier="1.2"
+            android:visibility="gone"
+            android:clickable="false"
+            />
+
+
+        <org.qii.weiciyuan.support.lib.TimeLineImageView
+            android:layout_below="@id/repost_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/repost_content_pic"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
+            android:visibility="gone"
+            android:clickable="true"
+            android:padding="2dp"
+            />
+
+
+        <ImageView
+            android:id="@+id/repost_flag"
+            android:layout_width="6dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/avatar"
+            android:layout_alignTop="@id/repost_content"
+            android:layout_alignBottom="@id/repost_content"
+            android:layout_marginTop="3dp"
+            android:layout_below="@id/avatar"
+            android:background="@color/lightgray"/>
+
+        <ImageView
+            android:layout_width="6dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/avatar"
+            android:layout_alignTop="@id/repost_content"
+            android:layout_alignBottom="@id/repost_content_pic"
+            android:layout_marginTop="3dp"
+            android:layout_below="@id/repost_flag"
+            android:background="@color/lightgray"/>
+
+    </RelativeLayout>
 </RelativeLayout>
