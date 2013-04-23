@@ -310,9 +310,9 @@ public class LeftMenuFragment extends AbstractAppFragment {
     };
 
     private void drawButtonsBackground(int position) {
-        layout.home.setBackgroundResource(R.color.transparent);
-        layout.mention.setBackgroundResource(R.color.transparent);
-        layout.comment.setBackgroundResource(R.color.transparent);
+        layout.home.setBackgroundResource(R.drawable.btn_drawer_menu);
+        layout.mention.setBackgroundResource(R.drawable.btn_drawer_menu);
+        layout.comment.setBackgroundResource(R.drawable.btn_drawer_menu);
 //        layout.search.setBackgroundResource(R.color.transparent);
 //        layout.profile.setBackgroundResource(R.color.transparent);
 //        layout.location.setBackgroundResource(R.color.transparent);

@@ -6,7 +6,6 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:id="@+id/btn_home"
-        android:paddingRight="8dp"
         android:background="@drawable/btn_drawer_menu"
         android:layout_height="wrap_content">
 
@@ -21,6 +20,7 @@
         <TextView
             android:id="@+id/tv_home_count"
             style="@style/drawerMessageCount"
+            android:layout_marginRight="8dp"
             android:text="0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +31,6 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:id="@+id/btn_mention"
-        android:paddingRight="8dp"
         android:background="@drawable/btn_drawer_menu"
         android:layout_height="wrap_content">
 
@@ -44,6 +43,7 @@
             />
 
         <TextView
+            android:layout_marginRight="8dp"
             android:id="@+id/tv_mention_count"
             style="@style/drawerMessageCount"
             android:text="0"
@@ -57,7 +57,6 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:id="@+id/btn_comment"
-        android:paddingRight="8dp"
         android:background="@drawable/btn_drawer_menu"
         android:clickable="true"
         android:addStatesFromChildren="true"
@@ -72,6 +71,7 @@
             />
 
         <TextView
+            android:layout_marginRight="8dp"
             android:id="@+id/tv_comment_count"
             style="@style/drawerMessageCount"
             android:text="0"
