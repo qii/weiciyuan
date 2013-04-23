@@ -49,6 +49,8 @@
         <item name="line_drawable">@drawable/list_divider_holo_light</item>
         <item name="listview_checked_color">@color/listview_checked_color_holo_light</item>
         <item name="listview_pic_bg_border">@drawable/bg_border2_dark</item>
+        <item name="listview_middle_layout_bg">@color/black</item>
+        <item name="listview_middle_layout_text_color">@color/white</item>
 
 
         <item name="backgroundSplit">@drawable/ab_bottom_solid_inverse_holo</item>

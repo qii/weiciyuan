@@ -4,13 +4,14 @@
               android:orientation="horizontal"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:background="?timeline_load_more_background"
+              android:background="?listview_middle_layout_bg"
               android:gravity="center">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:text="@string/click_to_load_some_older_msg"
+        android:textColor="?listview_middle_layout_text_color"
         android:id="@+id/tv"
         android:gravity="center"/>
 </LinearLayout>
