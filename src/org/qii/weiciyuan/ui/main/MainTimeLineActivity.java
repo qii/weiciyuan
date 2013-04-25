@@ -452,4 +452,19 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         }
     }
 
+
+    public void setMentionsWeiboCount(int count) {
+        LeftMenuFragment fragment = getMenuFragment();
+        fragment.setMentionWeiboUnreadCount(count);
+    }
+
+    public void setMentionsCommentCount(int count) {
+        LeftMenuFragment fragment = getMenuFragment();
+        fragment.setMentionCommentUnreadCount(count);
+    }
+
+    public void setCommentsToMeCount(int count) {
+        LeftMenuFragment fragment = getMenuFragment();
+        fragment.setCommentUnreadCount(count);
+    }
 }

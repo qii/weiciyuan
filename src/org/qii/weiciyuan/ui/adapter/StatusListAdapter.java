@@ -63,27 +63,27 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 VelocityListView velocityListView = (VelocityListView) view;
-                if (velocityListView.getVelocity() < 0) {
-                    topTipBar.hideCount();
-                } else if (velocityListView.getVelocity() > 0) {
-                    if (topTipBar.getValues().size() == 0) {
-                        return;
-                    }
+//                if (velocityListView.getVelocity() < 0) {
+//                    topTipBar.hideCount();
+//                } else if (velocityListView.getVelocity() > 0) {
+//                    if (topTipBar.getValues().size() == 0) {
+//                        return;
+//                    }
 
-                    View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
+                View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
 
-                    if (childView == null) {
-                        return;
-                    }
-
-                    int position = firstVisibleItem - ((ListView) view).getHeaderViewsCount();
-
-                    if (childView.getTop() == 0 && position <= 0) {
-                        topTipBar.clearAndReset();
-                    } else {
-                        handle(position + 1);
-                    }
+                if (childView == null) {
+                    return;
                 }
+
+                int position = firstVisibleItem - ((ListView) view).getHeaderViewsCount();
+
+                if (childView.getTop() == 0 && position <= 0) {
+                    topTipBar.clearAndReset();
+                } else {
+                    handle(position + 1);
+                }
+//                }
             }
 
             private void handle(int position) {

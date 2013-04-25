@@ -75,6 +75,14 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     public void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(newBroadcastReceiver, new IntentFilter(AppEventAction.NEW_MSG_BROADCAST));
+
+        newMsgTipBar.setOnChangeListener(new TopTipBar.OnChangeListener() {
+            @Override
+            public void onChange(int count) {
+                ((MainTimeLineActivity) getActivity()).setMentionsWeiboCount(count);
+            }
+        });
+
     }
 
     @Override

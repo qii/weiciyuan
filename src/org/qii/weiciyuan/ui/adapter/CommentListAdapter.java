@@ -18,7 +18,6 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.TopTipBar;
-import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -72,29 +71,29 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                VelocityListView velocityListView = (VelocityListView) view;
-                if (velocityListView.getVelocity() < 0) {
-                    topTipBar.hideCount();
-                } else if (velocityListView.getVelocity() > 0) {
-                    if (topTipBar.getValues().size() == 0) {
-                        return;
-                    }
+//                VelocityListView velocityListView = (VelocityListView) view;
+//                if (velocityListView.getVelocity() < 0) {
+//                    topTipBar.hideCount();
+//                } else if (velocityListView.getVelocity() > 0) {
+//                    if (topTipBar.getValues().size() == 0) {
+//                        return;
+//                    }
 
-                    View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
+                View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
 
-                    if (childView == null) {
-                        return;
-                    }
+                if (childView == null) {
+                    return;
+                }
 
-                    int position = firstVisibleItem - ((ListView) view).getHeaderViewsCount();
+                int position = firstVisibleItem - ((ListView) view).getHeaderViewsCount();
 
-                    if (childView.getTop() == 0 && position <= 0) {
-                        topTipBar.clearAndReset();
-                    } else {
-                        handle(position + 1);
-                    }
+                if (childView.getTop() == 0 && position <= 0) {
+                    topTipBar.clearAndReset();
+                } else {
+                    handle(position + 1);
                 }
             }
+//            }
 
             private void handle(int position) {
                 if (position > 0 && topTipBar != null && position < bean.size()) {

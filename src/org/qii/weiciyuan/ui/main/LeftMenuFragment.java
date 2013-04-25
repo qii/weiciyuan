@@ -39,10 +39,23 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private int currentIndex = -1;
 
+    private int mentionsWeiboUnreadCount = 0;
+    private int mentionsCommentUnreadCount = 0;
+    private int commentsToMeUnreadCount = 0;
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("currentIndex", currentIndex);
+        outState.putInt("mentionsWeiboUnreadCount", mentionsWeiboUnreadCount);
+        outState.putInt("mentionsCommentUnreadCount", mentionsCommentUnreadCount);
+        outState.putInt("commentsToMeUnreadCount", commentsToMeUnreadCount);
     }
 
     @Override
@@ -50,6 +63,11 @@ public class LeftMenuFragment extends AbstractAppFragment {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
             currentIndex = savedInstanceState.getInt("currentIndex");
+            mentionsWeiboUnreadCount = savedInstanceState.getInt("mentionsWeiboUnreadCount");
+            mentionsCommentUnreadCount = savedInstanceState.getInt("mentionsCommentUnreadCount");
+            commentsToMeUnreadCount = savedInstanceState.getInt("commentsToMeUnreadCount");
+        } else {
+            readUnreadCountFromDB();
         }
         if (currentIndex == -1) {
             currentIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
@@ -71,24 +89,29 @@ public class LeftMenuFragment extends AbstractAppFragment {
         buildUnreadCount();
     }
 
-    private void buildUnreadCount() {
-        int mentionsCount = 0;
+    private void readUnreadCountFromDB() {
         TimeLinePosition position = MentionsTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
         HashSet<String> hashSet = position.newMsgIds;
         if (hashSet != null) {
-            mentionsCount += hashSet.size();
+            mentionsWeiboUnreadCount = hashSet.size();
         }
+
         position = MentionCommentsTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
         hashSet = position.newMsgIds;
         if (hashSet != null) {
-            mentionsCount += hashSet.size();
+            mentionsCommentUnreadCount = hashSet.size();
         }
-        setMentionWeiboUnreadCount(mentionsCount);
         position = CommentsTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
         hashSet = position.newMsgIds;
         if (hashSet != null) {
-            setCommentUnreadCount(hashSet.size());
+            commentsToMeUnreadCount = hashSet.size();
         }
+    }
+
+    private void buildUnreadCount() {
+        setMentionWeiboUnreadCount(mentionsWeiboUnreadCount);
+        setMentionCommentUnreadCount(mentionsCommentUnreadCount);
+        setCommentUnreadCount(commentsToMeUnreadCount);
     }
 
     private void openMyProfile() {
@@ -372,18 +395,32 @@ public class LeftMenuFragment extends AbstractAppFragment {
     }
 
     public void setMentionWeiboUnreadCount(int count) {
-        if (count > 0) {
+        this.mentionsWeiboUnreadCount = count;
+        int totalCount = this.mentionsWeiboUnreadCount + this.mentionsCommentUnreadCount;
+        if (totalCount > 0) {
             layout.mentionCount.setVisibility(View.VISIBLE);
-            layout.mentionCount.setText(String.valueOf(count));
+            layout.mentionCount.setText(String.valueOf(totalCount));
+        } else {
+            layout.mentionCount.setVisibility(View.GONE);
+        }
+    }
+
+    public void setMentionCommentUnreadCount(int count) {
+        this.mentionsCommentUnreadCount = count;
+        int totalCount = this.mentionsWeiboUnreadCount + this.mentionsCommentUnreadCount;
+        if (totalCount > 0) {
+            layout.mentionCount.setVisibility(View.VISIBLE);
+            layout.mentionCount.setText(String.valueOf(totalCount));
         } else {
             layout.mentionCount.setVisibility(View.GONE);
         }
     }
 
     public void setCommentUnreadCount(int count) {
-        if (count > 0) {
+        this.commentsToMeUnreadCount = count;
+        if (this.commentsToMeUnreadCount > 0) {
             layout.commentCount.setVisibility(View.VISIBLE);
-            layout.commentCount.setText(String.valueOf(count));
+            layout.commentCount.setText(String.valueOf(this.commentsToMeUnreadCount));
         } else {
             layout.commentCount.setVisibility(View.GONE);
         }
@@ -403,4 +440,6 @@ public class LeftMenuFragment extends AbstractAppFragment {
         Button profile;
         Button setting;
     }
+
+
 }

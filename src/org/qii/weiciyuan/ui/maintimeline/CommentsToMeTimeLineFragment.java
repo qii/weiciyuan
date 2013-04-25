@@ -24,6 +24,7 @@ import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.support.database.CommentsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -121,6 +122,12 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     public void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(newBroadcastReceiver, new IntentFilter(AppEventAction.NEW_MSG_BROADCAST));
+        newMsgTipBar.setOnChangeListener(new TopTipBar.OnChangeListener() {
+            @Override
+            public void onChange(int count) {
+                ((MainTimeLineActivity) getActivity()).setCommentsToMeCount(count);
+            }
+        });
     }
 
     @Override
