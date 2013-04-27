@@ -105,7 +105,7 @@ public class CommentsTimeLine extends AbstractAppFragment {
 
 
         if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS && nav > -1) {
-            actionBar.setSelectedNavigationItem(nav);
+//            actionBar.setSelectedNavigationItem(nav);
             viewPager.setCurrentItem(nav, false);
         }
 
@@ -124,6 +124,9 @@ public class CommentsTimeLine extends AbstractAppFragment {
         public void onPageSelected(int position) {
             if (getActivity().getActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS)
                 getActivity().getActionBar().setSelectedNavigationItem(position);
+
+            ((LeftMenuFragment) ((MainTimeLineActivity) getActivity()).getMenuFragment()).commentsTabIndex = position;
+
         }
 
         @Override

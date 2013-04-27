@@ -43,8 +43,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
     private int mentionsCommentUnreadCount = 0;
     private int commentsToMeUnreadCount = 0;
 
-//    private int commentsTabIndex = -1;
-//    private int mentionsTabIndex = -1;
+    public int commentsTabIndex = -1;
+    public int mentionsTabIndex = -1;
 
     private boolean firstStart = true;
 
@@ -60,8 +60,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
         outState.putInt("mentionsWeiboUnreadCount", mentionsWeiboUnreadCount);
         outState.putInt("mentionsCommentUnreadCount", mentionsCommentUnreadCount);
         outState.putInt("commentsToMeUnreadCount", commentsToMeUnreadCount);
-//        outState.putInt("commentsTabIndex", commentsTabIndex);
-//        outState.putInt("mentionsTabIndex", mentionsTabIndex);
+        outState.putInt("commentsTabIndex", commentsTabIndex);
+        outState.putInt("mentionsTabIndex", mentionsTabIndex);
         outState.putBoolean("firstStart", firstStart);
     }
 
@@ -73,8 +73,9 @@ public class LeftMenuFragment extends AbstractAppFragment {
             mentionsWeiboUnreadCount = savedInstanceState.getInt("mentionsWeiboUnreadCount");
             mentionsCommentUnreadCount = savedInstanceState.getInt("mentionsCommentUnreadCount");
             commentsToMeUnreadCount = savedInstanceState.getInt("commentsToMeUnreadCount");
-//            commentsTabIndex = savedInstanceState.getInt("commentsTabIndex");
-//            mentionsTabIndex = savedInstanceState.getInt("mentionsTabIndex");
+            commentsTabIndex = savedInstanceState.getInt("commentsTabIndex");
+            mentionsTabIndex = savedInstanceState.getInt("mentionsTabIndex");
+            firstStart = savedInstanceState.getBoolean("firstStart");
         } else {
             readUnreadCountFromDB();
         }
@@ -207,7 +208,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
 
         ft.commit();
-        int mentionsTabIndex = -1;
+
         if (firstStart) {
             int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
             if (navPosition == 1) {
@@ -251,7 +252,6 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
 
         ft.commit();
-        int commentsTabIndex = -1;
         if (firstStart) {
             int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
             if (navPosition == 2) {
