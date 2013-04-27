@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="0dip"
+                android:layout_height="64dip"
+                android:layout_marginLeft="-3dip"
+                android:layout_marginRight="-3dip"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/title"
+        style="?android:attr/tabWidgetStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/tv_home_count"
+        style="@style/drawerMessageCountTabWidget"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/title"
+        android:layout_marginLeft="-2dp"
+        android:text="423423434235235230"
+        android:maxEms="3"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"/>
+
+</RelativeLayout>

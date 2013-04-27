@@ -81,6 +81,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         return timeLineAdapter;
     }
 
+    public TopTipBar getNewMsgTipBar() {
+        return newMsgTipBar;
+    }
+
     protected void refreshLayout(T bean) {
         if (bean != null && bean.getSize() > 0) {
 //            empty.setVisibility(View.INVISIBLE);

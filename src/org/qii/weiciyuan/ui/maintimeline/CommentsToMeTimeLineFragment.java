@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import android.app.ActionBar;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,7 +13,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
@@ -37,6 +40,7 @@ import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 import org.qii.weiciyuan.ui.loader.CommentsToMeDBLoader;
 import org.qii.weiciyuan.ui.loader.CommentsToMeMsgLoader;
+import org.qii.weiciyuan.ui.main.CommentsTimeLine;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
@@ -122,6 +126,8 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     public void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(newBroadcastReceiver, new IntentFilter(AppEventAction.NEW_MSG_BROADCAST));
+        setActionBarTabCount(newMsgTipBar.getValues().size());
+
         newMsgTipBar.setOnChangeListener(new TopTipBar.OnChangeListener() {
             @Override
             public void onChange(int count) {
@@ -151,6 +157,25 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 //                getPullToRefreshListView().startRefreshNow();
 //            }
 //        }
+    }
+
+    private void setActionBarTabCount(int count) {
+        CommentsTimeLine parent = (CommentsTimeLine) getParentFragment();
+        ActionBar.Tab tab = parent.getCommentsToMeTab();
+        if (tab == null) {
+            return;
+        }
+        String tabTag = (String) tab.getTag();
+        if (CommentsToMeTimeLineFragment.class.getName().equals(tabTag)) {
+            View customView = tab.getCustomView();
+            TextView countTV = (TextView) customView.findViewById(R.id.tv_home_count);
+            countTV.setText(String.valueOf(count));
+            if (count > 0) {
+                countTV.setVisibility(View.VISIBLE);
+            } else {
+                countTV.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
@@ -291,8 +316,11 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     }
 
     private void setListViewUnreadTipBar(TimeLinePosition p) {
-        if (p != null && p.newMsgIds != null)
+        if (p != null && p.newMsgIds != null) {
             newMsgTipBar.setValue(p.newMsgIds);
+            setActionBarTabCount(newMsgTipBar.getValues().size());
+            ((MainTimeLineActivity) getActivity()).setCommentsToMeCount(newMsgTipBar.getValues().size());
+        }
     }
 
 

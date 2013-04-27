@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -18,7 +19,9 @@ import org.qii.weiciyuan.ui.maintimeline.CommentsByMeTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.CommentsToMeTimeLineFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: qii
@@ -28,10 +31,27 @@ public class CommentsTimeLine extends AbstractAppFragment {
 
     private ViewPager viewPager;
     private List<Fragment> mentionFragments = new ArrayList<Fragment>();
+    private Map<Integer, ActionBar.Tab> tabMap = new HashMap<Integer, ActionBar.Tab>();
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        SimpleTwoTabsListener tabListener = new SimpleTwoTabsListener(viewPager);
+
+
+        View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+        ((TextView) customView.findViewById(R.id.title)).setText(R.string.all_people_send_to_me);
+        ActionBar.Tab commentsToMeTab = getActivity().getActionBar().newTab().setCustomView(customView)
+                .setTag(CommentsToMeTimeLineFragment.class.getName()).setTabListener(tabListener);
+        tabMap.put(0, commentsToMeTab);
+
+        customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+        ((TextView) customView.findViewById(R.id.title)).setText(R.string.my_comment);
+        ActionBar.Tab commentsByMeTab = getActivity().getActionBar().newTab().setCustomView(customView)
+                .setTag(CommentsByMeTimeLineFragment.class.getName()).setTabListener(tabListener);
+        tabMap.put(1, commentsByMeTab);
+
         if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex() == 2) {
             buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.all_people_send_to_me, R.string.my_comment, 0);
         }
@@ -60,16 +80,43 @@ public class CommentsTimeLine extends AbstractAppFragment {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.removeAllTabs();
         SimpleTwoTabsListener tabListener = new SimpleTwoTabsListener(viewPager);
-        actionBar.addTab(actionBar.newTab()
-                .setText(firstTab)
-                .setTabListener(tabListener));
 
-        actionBar.addTab(actionBar.newTab()
-                .setText(secondTab)
-                .setTabListener(tabListener));
-        if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS)
+        ActionBar.Tab commentsToMeTab = getCommentsToMeTab();
+        if (commentsToMeTab == null) {
+            View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+            ((TextView) customView.findViewById(R.id.title)).setText(firstTab);
+            commentsToMeTab = actionBar.newTab().setCustomView(customView)
+                    .setTag(CommentsToMeTimeLineFragment.class.getName()).setTabListener(tabListener);
+            tabMap.put(0, commentsToMeTab);
+
+        }
+        ActionBar.Tab commentsByMeTab = getCommentsByMeTab();
+        if (commentsToMeTab == null) {
+            View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+            ((TextView) customView.findViewById(R.id.title)).setText(secondTab);
+            commentsByMeTab = actionBar.newTab().setCustomView(customView)
+                    .setTag(CommentsByMeTimeLineFragment.class.getName()).setTabListener(tabListener);
+            tabMap.put(1, commentsByMeTab);
+
+
+        }
+        actionBar.addTab(commentsToMeTab);
+        actionBar.addTab(commentsByMeTab);
+
+
+        if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS && nav > -1) {
             actionBar.setSelectedNavigationItem(nav);
+            viewPager.setCurrentItem(nav, false);
+        }
 
+    }
+
+    public ActionBar.Tab getCommentsToMeTab() {
+        return tabMap.get(0);
+    }
+
+    public ActionBar.Tab getCommentsByMeTab() {
+        return tabMap.get(1);
     }
 
     ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {

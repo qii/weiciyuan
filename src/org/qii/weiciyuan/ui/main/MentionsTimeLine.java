@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -18,7 +19,9 @@ import org.qii.weiciyuan.ui.maintimeline.MentionsCommentTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsWeiboTimeLineFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: qii
@@ -28,10 +31,31 @@ public class MentionsTimeLine extends AbstractAppFragment {
 
     private ViewPager viewPager;
     private List<Fragment> mentionFragments = new ArrayList<Fragment>();
+    private Map<Integer, ActionBar.Tab> tabMap = new HashMap<Integer, ActionBar.Tab>();
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        SimpleTwoTabsListener tabListener = new SimpleTwoTabsListener(viewPager);
+
+        ActionBar.Tab mentionsWeiboTab = getWeiboTab();
+        if (mentionsWeiboTab == null) {
+            View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+            ((TextView) customView.findViewById(R.id.title)).setText(R.string.mentions_weibo);
+            mentionsWeiboTab = getActivity().getActionBar().newTab().setCustomView(customView)
+                    .setTag(MentionsWeiboTimeLineFragment.class.getName()).setTabListener(tabListener);
+            tabMap.put(0, mentionsWeiboTab);
+        }
+
+        ActionBar.Tab mentionsCommentTab = getCommentTab();
+        if (mentionsCommentTab == null) {
+            View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+            ((TextView) customView.findViewById(R.id.title)).setText(R.string.mentions_to_me);
+            mentionsCommentTab = getActivity().getActionBar().newTab().setCustomView(customView)
+                    .setTag(MentionsCommentTimeLineFragment.class.getName()).setTabListener(tabListener);
+            tabMap.put(1, mentionsCommentTab);
+        }
+
         if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex() == 1) {
             buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.mentions_weibo, R.string.mentions_to_me, 0);
         }
@@ -54,22 +78,51 @@ public class MentionsTimeLine extends AbstractAppFragment {
         viewPager.setAdapter(adapter);
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+    }
 
     public void buildActionBarAndViewPagerTitles(ActionBar actionBar, int firstTab, int secondTab, int nav) {
         actionBar.setDisplayHomeAsUpEnabled(Utility.isDevicePort());
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.removeAllTabs();
         SimpleTwoTabsListener tabListener = new SimpleTwoTabsListener(viewPager);
-        actionBar.addTab(actionBar.newTab()
-                .setText(firstTab)
-                .setTabListener(tabListener));
 
-        actionBar.addTab(actionBar.newTab()
-                .setText(secondTab)
-                .setTabListener(tabListener));
+        ActionBar.Tab mentionsWeiboTab = getWeiboTab();
+        if (mentionsWeiboTab == null) {
+            View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+            ((TextView) customView.findViewById(R.id.title)).setText(firstTab);
+            mentionsWeiboTab = actionBar.newTab().setCustomView(customView)
+                    .setTag(MentionsWeiboTimeLineFragment.class.getName()).setTabListener(tabListener);
+            tabMap.put(0, mentionsWeiboTab);
+        }
+        actionBar.addTab(mentionsWeiboTab);
 
-        if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS)
+        ActionBar.Tab mentionsCommentTab = getCommentTab();
+        if (mentionsCommentTab == null) {
+            View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+            ((TextView) customView.findViewById(R.id.title)).setText(secondTab);
+            mentionsCommentTab = actionBar.newTab().setCustomView(customView)
+                    .setTag(MentionsCommentTimeLineFragment.class.getName()).setTabListener(tabListener);
+            tabMap.put(1, mentionsCommentTab);
+        }
+
+        actionBar.addTab(mentionsCommentTab);
+
+        if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS && nav > -1) {
             actionBar.setSelectedNavigationItem(nav);
+            viewPager.setCurrentItem(nav, false);
+        }
+    }
+
+    public ActionBar.Tab getWeiboTab() {
+        return tabMap.get(0);
+    }
+
+    public ActionBar.Tab getCommentTab() {
+        return tabMap.get(1);
     }
 
     ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
@@ -107,6 +160,7 @@ public class MentionsTimeLine extends AbstractAppFragment {
             fragment = new MentionsCommentTimeLineFragment(GlobalContext.getInstance().getAccountBean()
                     , GlobalContext.getInstance().getAccountBean().getInfo(), GlobalContext.getInstance().getSpecialToken());
         }
+
         return fragment;
     }
 

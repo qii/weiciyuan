@@ -43,6 +43,10 @@ public class LeftMenuFragment extends AbstractAppFragment {
     private int mentionsCommentUnreadCount = 0;
     private int commentsToMeUnreadCount = 0;
 
+//    private int commentsTabIndex = -1;
+//    private int mentionsTabIndex = -1;
+
+    private boolean firstStart = true;
 
     @Override
     public void onPause() {
@@ -56,6 +60,9 @@ public class LeftMenuFragment extends AbstractAppFragment {
         outState.putInt("mentionsWeiboUnreadCount", mentionsWeiboUnreadCount);
         outState.putInt("mentionsCommentUnreadCount", mentionsCommentUnreadCount);
         outState.putInt("commentsToMeUnreadCount", commentsToMeUnreadCount);
+//        outState.putInt("commentsTabIndex", commentsTabIndex);
+//        outState.putInt("mentionsTabIndex", mentionsTabIndex);
+        outState.putBoolean("firstStart", firstStart);
     }
 
     @Override
@@ -66,6 +73,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
             mentionsWeiboUnreadCount = savedInstanceState.getInt("mentionsWeiboUnreadCount");
             mentionsCommentUnreadCount = savedInstanceState.getInt("mentionsCommentUnreadCount");
             commentsToMeUnreadCount = savedInstanceState.getInt("commentsToMeUnreadCount");
+//            commentsTabIndex = savedInstanceState.getInt("commentsTabIndex");
+//            mentionsTabIndex = savedInstanceState.getInt("mentionsTabIndex");
         } else {
             readUnreadCountFromDB();
         }
@@ -87,6 +96,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
         drawButtonsBackground(currentIndex);
 
         buildUnreadCount();
+
+        firstStart = false;
     }
 
     private void readUnreadCountFromDB() {
@@ -196,12 +207,14 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
 
         ft.commit();
-        int tabIndex = 0;
-        int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
-        if (navPosition == 1) {
-            tabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
+        int mentionsTabIndex = -1;
+        if (firstStart) {
+            int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
+            if (navPosition == 1) {
+                mentionsTabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
+            }
         }
-        m.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.mentions_weibo, R.string.mentions_to_me, tabIndex);
+        m.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.mentions_weibo, R.string.mentions_weibo, mentionsTabIndex);
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
         if (Utility.isDevicePort()) {
             setTitle(R.string.mentions);
@@ -213,6 +226,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
     public int getCurrentIndex() {
         return currentIndex;
     }
+
 
     private boolean showCommentPage(boolean reset) {
         getActivity().getActionBar().setDisplayShowTitleEnabled(true);
@@ -237,12 +251,14 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
 
         ft.commit();
-        int tabIndex = 0;
-        int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
-        if (navPosition == 2) {
-            tabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
+        int commentsTabIndex = -1;
+        if (firstStart) {
+            int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
+            if (navPosition == 2) {
+                commentsTabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
+            }
         }
-        fragment.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.all_people_send_to_me, R.string.my_comment, tabIndex);
+        fragment.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.all_people_send_to_me, R.string.my_comment, commentsTabIndex);
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
         if (Utility.isDevicePort()) {
             setTitle(R.string.comments);

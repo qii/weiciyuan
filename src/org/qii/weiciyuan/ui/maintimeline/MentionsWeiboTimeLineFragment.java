@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import android.app.ActionBar;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -35,6 +37,7 @@ import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.loader.MentionsWeiboMsgLoader;
 import org.qii.weiciyuan.ui.loader.MentionsWeiboTimeDBLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.main.MentionsTimeLine;
 
 /**
  * User: qii
@@ -48,7 +51,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     private UnreadBean unreadBean;
     private TimeLinePosition timeLinePosition;
     private MessageListBean bean = new MessageListBean();
-
+    private final int POSITION_IN_PARENT_FRAGMENT = 0;
 
     @Override
     public void onDestroy() {
@@ -76,10 +79,12 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         super.onResume();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(newBroadcastReceiver, new IntentFilter(AppEventAction.NEW_MSG_BROADCAST));
 
-        newMsgTipBar.setOnChangeListener(new TopTipBar.OnChangeListener() {
+        setActionBarTabCount(newMsgTipBar.getValues().size());
+        getNewMsgTipBar().setOnChangeListener(new TopTipBar.OnChangeListener() {
             @Override
             public void onChange(int count) {
                 ((MainTimeLineActivity) getActivity()).setMentionsWeiboCount(count);
+                setActionBarTabCount(count);
             }
         });
 
@@ -138,13 +143,30 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         getListView().setAdapter(timeLineAdapter);
     }
 
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisible() && isVisibleToUser) {
             ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
-            if (getActivity().getActionBar().getTabAt(0).getText().toString().contains(")")) {
-                getPullToRefreshListView().startRefreshNow();
+        }
+    }
+
+    private void setActionBarTabCount(int count) {
+        MentionsTimeLine parent = (MentionsTimeLine) getParentFragment();
+        ActionBar.Tab tab = parent.getWeiboTab();
+        if (tab == null) {
+            return;
+        }
+        String tabTag = (String) tab.getTag();
+        if (MentionsWeiboTimeLineFragment.class.getName().equals(tabTag)) {
+            View customView = tab.getCustomView();
+            TextView countTV = (TextView) customView.findViewById(R.id.tv_home_count);
+            countTV.setText(String.valueOf(count));
+            if (count > 0) {
+                countTV.setVisibility(View.VISIBLE);
+            } else {
+                countTV.setVisibility(View.GONE);
             }
         }
     }
@@ -241,8 +263,11 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     }
 
     private void setListViewUnreadTipBar(TimeLinePosition p) {
-        if (p != null && p.newMsgIds != null)
+        if (p != null && p.newMsgIds != null) {
             newMsgTipBar.setValue(p.newMsgIds);
+            setActionBarTabCount(newMsgTipBar.getValues().size());
+            ((MainTimeLineActivity) getActivity()).setMentionsWeiboCount(newMsgTipBar.getValues().size());
+        }
     }
 
     @Override
