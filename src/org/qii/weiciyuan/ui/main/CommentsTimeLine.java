@@ -40,13 +40,13 @@ public class CommentsTimeLine extends AbstractAppFragment {
         SimpleTwoTabsListener tabListener = new SimpleTwoTabsListener(viewPager);
 
 
-        View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+        View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
         ((TextView) customView.findViewById(R.id.title)).setText(R.string.all_people_send_to_me);
         ActionBar.Tab commentsToMeTab = getActivity().getActionBar().newTab().setCustomView(customView)
                 .setTag(CommentsToMeTimeLineFragment.class.getName()).setTabListener(tabListener);
         tabMap.put(0, commentsToMeTab);
 
-        customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+        customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
         ((TextView) customView.findViewById(R.id.title)).setText(R.string.my_comment);
         ActionBar.Tab commentsByMeTab = getActivity().getActionBar().newTab().setCustomView(customView)
                 .setTag(CommentsByMeTimeLineFragment.class.getName()).setTabListener(tabListener);
@@ -83,7 +83,7 @@ public class CommentsTimeLine extends AbstractAppFragment {
 
         ActionBar.Tab commentsToMeTab = getCommentsToMeTab();
         if (commentsToMeTab == null) {
-            View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+            View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
             ((TextView) customView.findViewById(R.id.title)).setText(firstTab);
             commentsToMeTab = actionBar.newTab().setCustomView(customView)
                     .setTag(CommentsToMeTimeLineFragment.class.getName()).setTabListener(tabListener);
@@ -92,7 +92,7 @@ public class CommentsTimeLine extends AbstractAppFragment {
         }
         ActionBar.Tab commentsByMeTab = getCommentsByMeTab();
         if (commentsToMeTab == null) {
-            View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+            View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
             ((TextView) customView.findViewById(R.id.title)).setText(secondTab);
             commentsByMeTab = actionBar.newTab().setCustomView(customView)
                     .setTag(CommentsByMeTimeLineFragment.class.getName()).setTabListener(tabListener);

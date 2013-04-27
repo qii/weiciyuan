@@ -40,7 +40,7 @@ public class MentionsTimeLine extends AbstractAppFragment {
 
         ActionBar.Tab mentionsWeiboTab = getWeiboTab();
         if (mentionsWeiboTab == null) {
-            View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+            View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
             ((TextView) customView.findViewById(R.id.title)).setText(R.string.mentions_weibo);
             mentionsWeiboTab = getActivity().getActionBar().newTab().setCustomView(customView)
                     .setTag(MentionsWeiboTimeLineFragment.class.getName()).setTabListener(tabListener);
@@ -49,7 +49,7 @@ public class MentionsTimeLine extends AbstractAppFragment {
 
         ActionBar.Tab mentionsCommentTab = getCommentTab();
         if (mentionsCommentTab == null) {
-            View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+            View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
             ((TextView) customView.findViewById(R.id.title)).setText(R.string.mentions_to_me);
             mentionsCommentTab = getActivity().getActionBar().newTab().setCustomView(customView)
                     .setTag(MentionsCommentTimeLineFragment.class.getName()).setTabListener(tabListener);
@@ -92,7 +92,7 @@ public class MentionsTimeLine extends AbstractAppFragment {
 
         ActionBar.Tab mentionsWeiboTab = getWeiboTab();
         if (mentionsWeiboTab == null) {
-            View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+            View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
             ((TextView) customView.findViewById(R.id.title)).setText(firstTab);
             mentionsWeiboTab = actionBar.newTab().setCustomView(customView)
                     .setTag(MentionsWeiboTimeLineFragment.class.getName()).setTabListener(tabListener);
@@ -102,7 +102,7 @@ public class MentionsTimeLine extends AbstractAppFragment {
 
         ActionBar.Tab mentionsCommentTab = getCommentTab();
         if (mentionsCommentTab == null) {
-            View customView = getActivity().getLayoutInflater().inflate(R.layout.test, null);
+            View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
             ((TextView) customView.findViewById(R.id.title)).setText(secondTab);
             mentionsCommentTab = actionBar.newTab().setCustomView(customView)
                     .setTag(MentionsCommentTimeLineFragment.class.getName()).setTabListener(tabListener);
