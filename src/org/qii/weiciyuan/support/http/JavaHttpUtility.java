@@ -296,7 +296,7 @@ public class JavaHttpUtility {
             return false;
         }
 
-        FileOutputStream out = null;
+        BufferedOutputStream out = null;
         InputStream in = null;
         HttpURLConnection urlConnection = null;
         try {
@@ -329,8 +329,8 @@ public class JavaHttpUtility {
             int bytetotal = (int) urlConnection.getContentLength();
             int bytesum = 0;
             int byteread = 0;
-            out = new FileOutputStream(file);
-            in = urlConnection.getInputStream();
+            out = new BufferedOutputStream(new FileOutputStream(file));
+            in = new BufferedInputStream(urlConnection.getInputStream());
 
             final Thread thread = Thread.currentThread();
             byte[] buffer = new byte[1444];
