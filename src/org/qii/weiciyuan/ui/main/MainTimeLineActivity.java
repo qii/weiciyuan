@@ -223,13 +223,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
 
     private void scrollCurrentListViewToTop() {
-//        ListView listView;
-//        if (currentFragment == null) {
-//            listView = getFriendsTimeLineFragment().getListView();
-//        } else {
-//            listView = currentFragment.getListView();
-//        }
-//        Utility.stopListViewScrollingAndScrollToTop(listView);
         if (this.currentFragment != null)
             this.currentFragment.scrollToTop();
     }
