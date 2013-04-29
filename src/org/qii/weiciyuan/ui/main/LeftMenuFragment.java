@@ -27,6 +27,7 @@ import org.qii.weiciyuan.ui.preference.SettingActivity;
 import org.qii.weiciyuan.ui.search.SearchMainActivity;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -47,6 +48,12 @@ public class LeftMenuFragment extends AbstractAppFragment {
     public int mentionsTabIndex = -1;
 
     private boolean firstStart = true;
+
+    private ArrayList<Fragment> rightFragments = new ArrayList<Fragment>();
+
+    private static final int HOME_INDEX = 0;
+    private static final int MENTIONS_INDEX = 1;
+    private static final int COMMENTS_INDEX = 2;
 
     @Override
     public void onPause() {
@@ -82,6 +89,12 @@ public class LeftMenuFragment extends AbstractAppFragment {
         if (currentIndex == -1) {
             currentIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
         }
+
+
+        rightFragments.add(HOME_INDEX, ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment());
+        rightFragments.add(MENTIONS_INDEX, ((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment());
+        rightFragments.add(COMMENTS_INDEX, ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
+
 
         switch (currentIndex) {
             case 0:
@@ -165,16 +178,10 @@ public class LeftMenuFragment extends AbstractAppFragment {
         currentIndex = 0;
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.hide(((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment());
-        ft.hide(((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
-        FriendsTimeLineFragment fragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
-
-        if (fragment.isAdded() && fragment.isHidden()) {
-            ft.show(fragment);
-        } else if (!fragment.isAdded()) {
-            ft.add(R.id.menu_right_fl, fragment, FriendsTimeLineFragment.class.getName());
-        }
-
+        ft.hide(rightFragments.get(MENTIONS_INDEX));
+        ft.hide(rightFragments.get(COMMENTS_INDEX));
+        FriendsTimeLineFragment fragment = (FriendsTimeLineFragment) rightFragments.get(HOME_INDEX);
+        ft.show(fragment);
         ft.commit();
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
         setTitle("");
@@ -190,23 +197,14 @@ public class LeftMenuFragment extends AbstractAppFragment {
         getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-
-        Fragment fragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
-
-        ft.hide(fragment);
-        ft.hide(((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
+        ft.hide(rightFragments.get(HOME_INDEX));
+        ft.hide(rightFragments.get(COMMENTS_INDEX));
 
         currentIndex = 1;
 
-        MentionsTimeLine m = ((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment();
+        MentionsTimeLine m = (MentionsTimeLine) rightFragments.get(MENTIONS_INDEX);
 
-        if (m.isAdded() && m.isHidden()) {
-            ft.show(m);
-        } else if (!m.isAdded()) {
-            ft.attach(m);
-            ft.add(R.id.menu_right_fl, m, MentionsTimeLine.class.getName());
-        }
-
+        ft.show(m);
         ft.commit();
 
         if (firstStart) {
@@ -237,21 +235,14 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
         currentIndex = 2;
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment friendsTimeLineFragment = ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment();
 
-        ft.hide(friendsTimeLineFragment);
-        ft.hide(((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment());
+        ft.hide(rightFragments.get(HOME_INDEX));
+        ft.hide(rightFragments.get(MENTIONS_INDEX));
 
-
-        CommentsTimeLine fragment = ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment();
-
-        if (fragment.isAdded() && fragment.isHidden()) {
-            ft.show(fragment);
-        } else if (!fragment.isAdded()) {
-            ft.add(R.id.menu_right_fl, fragment, CommentsTimeLine.class.getName());
-        }
-
+        CommentsTimeLine fragment = (CommentsTimeLine) rightFragments.get(COMMENTS_INDEX);
+        ft.show(fragment);
         ft.commit();
+
         if (firstStart) {
             int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
             if (navPosition == 2) {
