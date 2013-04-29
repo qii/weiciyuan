@@ -148,7 +148,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisible() && isVisibleToUser) {
-            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+//            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
         }
     }
 

@@ -14,6 +14,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.maintimeline.CommentsByMeTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.CommentsToMeTimeLineFragment;
@@ -27,7 +28,7 @@ import java.util.Map;
  * User: qii
  * Date: 13-4-5
  */
-public class CommentsTimeLine extends AbstractAppFragment {
+public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLineActivity.ScrollableListFragment {
 
     private ViewPager viewPager;
     private List<Fragment> mentionFragments = new ArrayList<Fragment>();
@@ -168,4 +169,12 @@ public class CommentsTimeLine extends AbstractAppFragment {
 
         return fragment;
     }
+
+
+    @Override
+    public void scrollToTop() {
+        AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) (mentionFragments.get(viewPager.getCurrentItem()));
+        Utility.stopListViewScrollingAndScrollToTop(fragment.getListView());
+    }
+
 }

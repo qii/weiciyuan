@@ -13,7 +13,6 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
@@ -25,7 +24,6 @@ import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.*;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
@@ -45,8 +43,13 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     private AccountBean accountBean;
     private NewMsgInterruptBroadcastReceiver newMsgInterruptBroadcastReceiver;
     private MusicReceiver musicReceiver;
-    private AbstractTimeLineFragment currentFragment;
+    private ScrollableListFragment currentFragment;
     private TextView titleText;
+
+
+    public static interface ScrollableListFragment {
+        public void scrollToTop();
+    }
 
 
     public String getToken() {
@@ -220,16 +223,18 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
 
     private void scrollCurrentListViewToTop() {
-        ListView listView;
-        if (currentFragment == null) {
-            listView = getFriendsTimeLineFragment().getListView();
-        } else {
-            listView = currentFragment.getListView();
-        }
-        Utility.stopListViewScrollingAndScrollToTop(listView);
+//        ListView listView;
+//        if (currentFragment == null) {
+//            listView = getFriendsTimeLineFragment().getListView();
+//        } else {
+//            listView = currentFragment.getListView();
+//        }
+//        Utility.stopListViewScrollingAndScrollToTop(listView);
+        if (this.currentFragment != null)
+            this.currentFragment.scrollToTop();
     }
 
-    public void setCurrentFragment(AbstractTimeLineFragment fragment) {
+    public void setCurrentFragment(ScrollableListFragment fragment) {
         this.currentFragment = fragment;
     }
 

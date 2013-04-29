@@ -185,6 +185,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.commit();
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
         setTitle("");
+        ((MainTimeLineActivity) getActivity()).setCurrentFragment(fragment);
         return false;
     }
 
@@ -215,6 +216,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
         m.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.mentions_weibo, R.string.mentions_weibo, mentionsTabIndex);
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+        ((MainTimeLineActivity) getActivity()).setCurrentFragment(m);
         if (Utility.isDevicePort()) {
             setTitle(R.string.mentions);
         }
@@ -251,6 +253,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
         fragment.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.all_people_send_to_me, R.string.my_comment, commentsTabIndex);
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+        ((MainTimeLineActivity) getActivity()).setCurrentFragment(fragment);
         if (Utility.isDevicePort()) {
             setTitle(R.string.comments);
         }

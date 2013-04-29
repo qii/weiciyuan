@@ -42,7 +42,9 @@ import java.util.concurrent.TimeUnit;
  * User: qii
  * Date: 12-7-29
  */
-public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<MessageListBean> implements GlobalContext.MyProfileInfoChangeListener {
+public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<MessageListBean>
+        implements GlobalContext.MyProfileInfoChangeListener,
+        MainTimeLineActivity.ScrollableListFragment {
 
     private AccountBean accountBean;
     private UserBean userBean;
@@ -238,7 +240,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         super.onHiddenChanged(hidden);
         if (!hidden) {
             buildActionBarNav();
-            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+//            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
         }
     }
 
@@ -342,6 +344,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     public void onChange(UserBean newUserBean) {
         if (navAdapter != null)
             navAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void scrollToTop() {
+        Utility.stopListViewScrollingAndScrollToTop(getListView());
     }
 
     private class DBCacheTask extends MyAsyncTask<Void, MessageTimeLineData, List<MessageTimeLineData>> {

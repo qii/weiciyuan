@@ -14,6 +14,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsCommentTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsWeiboTimeLineFragment;
@@ -27,7 +28,7 @@ import java.util.Map;
  * User: qii
  * Date: 13-3-31
  */
-public class MentionsTimeLine extends AbstractAppFragment {
+public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLineActivity.ScrollableListFragment {
 
     private ViewPager viewPager;
     private List<Fragment> mentionFragments = new ArrayList<Fragment>();
@@ -174,5 +175,11 @@ public class MentionsTimeLine extends AbstractAppFragment {
                     , GlobalContext.getInstance().getAccountBean().getInfo(), GlobalContext.getInstance().getSpecialToken());
 
         return fragment;
+    }
+
+    @Override
+    public void scrollToTop() {
+        AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) (mentionFragments.get(viewPager.getCurrentItem()));
+        Utility.stopListViewScrollingAndScrollToTop(fragment.getListView());
     }
 }

@@ -154,7 +154,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisible() && isVisibleToUser) {
-            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+//            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
 
         }
     }
