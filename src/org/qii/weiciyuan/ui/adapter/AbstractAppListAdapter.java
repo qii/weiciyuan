@@ -67,7 +67,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private ArrayDeque<PrefView> prefNormalViews = new ArrayDeque<PrefView>(6);
     private ArrayDeque<PrefView> prefBigPicViews = new ArrayDeque<PrefView>(6);
 
-    private int savedCurrentMiddleLoadingViewPosition = -1;
+    private int savedCurrentMiddleLoadingViewPosition = AbstractTimeLineFragment.NO_SAVED_CURRENT_LOADING_MSG_VIEW_POSITION;
 
     private class PrefView {
         View view;
