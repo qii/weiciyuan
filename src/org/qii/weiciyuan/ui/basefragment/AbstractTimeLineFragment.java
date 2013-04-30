@@ -191,21 +191,15 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     private AdapterView.OnItemClickListener listViewOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            if (mActionMode != null) {
-                getListView().clearChoices();
-                mActionMode.finish();
-                mActionMode = null;
+            if (resetActionMode())
                 return;
-            }
+
             getListView().clearChoices();
             if (position - 1 < getList().getSize() && position - 1 >= 0) {
                 int index = position - 1;
                 ItemBean msg = getList().getItem(index);
-
-                if (msg != null) {
+                if (!isNullFlag(msg)) {
                     listViewItemClick(parent, view, index, id);
-
                 } else {
                     String endId = getList().getItem(index - 1).getId();
                     String endTag = getList().getItem(index + 1).getId();
@@ -221,10 +215,28 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                     }
                 }
 
-            } else if (position - 1 >= getList().getSize()) {
-
+            } else if (isLastItem(position)) {
                 loadOldMsg(view);
             }
+        }
+
+        boolean resetActionMode() {
+            if (mActionMode != null) {
+                getListView().clearChoices();
+                mActionMode.finish();
+                mActionMode = null;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        boolean isNullFlag(ItemBean msg) {
+            return msg == null;
+        }
+
+        boolean isLastItem(int position) {
+            return position - 1 >= getList().getSize();
         }
     };
 
