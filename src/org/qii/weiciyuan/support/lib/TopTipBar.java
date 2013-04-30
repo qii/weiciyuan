@@ -75,6 +75,7 @@ public class TopTipBar extends TextView {
         setCount();
         if (disappear) {
             disappear(3000);
+            ids.clear();
         }
 
         if (this.onChangeListener != null) {

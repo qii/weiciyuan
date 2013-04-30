@@ -253,4 +253,8 @@ public class SettingUtility {
     public static void setLastFoundWeiboAccountLink(String url) {
         SettingHelper.setEditor(getContext(), LAST_FOUND_WEIBO_ACCOUNT_LINK, url);
     }
+
+    public static boolean isReadStyleEqualWeibo() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.READ_STYLE, "1").equals("1");
+    }
 }

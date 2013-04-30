@@ -384,6 +384,11 @@
     <!--Setting Draft-->
     <string name="draft">草稿箱</string>
 
+    <!--Setting Read-->
+    <string name="pref_read_title">阅读</string>
+    <string name="pref_read_style_title">阅读方式</string>
+    <string name="pref_read_style_summary">微博刷新的方向</string>
+
     <!--Setting Control-->
     <string name="pref_data_control_title">流量控制</string>
     <string name="pref_disable_download_pic_title">关闭图片</string>

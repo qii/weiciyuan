@@ -27,6 +27,8 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String SHOW_BIG_PIC = "show_big_pic";
     public static final String SHOW_BIG_AVATAR = "show_big_avatar";
 
+    //read
+    public static final String READ_STYLE = "read_style";
 
     //notification
     public static final String FREQUENCY = "frequency";
