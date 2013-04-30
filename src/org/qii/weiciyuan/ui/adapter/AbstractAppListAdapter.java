@@ -64,8 +64,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     private Set<Integer> tagIndexList = new HashSet<Integer>();
 
-    private ArrayDeque<PrefView> prefNormalViews = new ArrayDeque<PrefView>(6);
-    private ArrayDeque<PrefView> prefBigPicViews = new ArrayDeque<PrefView>(6);
+    private static final int PREF_LISTVIEW_ITEM_VIEW_COUNT = 6;
+    private ArrayDeque<PrefView> prefNormalViews = new ArrayDeque<PrefView>(PREF_LISTVIEW_ITEM_VIEW_COUNT);
+    private ArrayDeque<PrefView> prefBigPicViews = new ArrayDeque<PrefView>(PREF_LISTVIEW_ITEM_VIEW_COUNT);
 
     private int savedCurrentMiddleLoadingViewPosition = AbstractTimeLineFragment.NO_SAVED_CURRENT_LOADING_MSG_VIEW_POSITION;
 
@@ -101,14 +102,14 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         checkedBG = ta.getColor(0, 430);
 
         if (pre) {
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < PREF_LISTVIEW_ITEM_VIEW_COUNT; i++) {
                 PrefView prefView = new PrefView();
                 prefView.view = initNormalLayout(null);
                 prefView.holder = buildHolder(prefView.view);
                 prefNormalViews.add(prefView);
             }
 
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < PREF_LISTVIEW_ITEM_VIEW_COUNT; i++) {
                 PrefView prefView = new PrefView();
                 prefView.view = initBigPicLayout(null);
                 prefView.holder = buildHolder(prefView.view);
