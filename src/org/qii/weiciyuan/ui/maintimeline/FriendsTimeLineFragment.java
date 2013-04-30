@@ -140,7 +140,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     private void savePositionToDB() {
-        final TimeLinePosition position = positionCache.get(currentGroupId);
+        TimeLinePosition position = positionCache.get(currentGroupId);
+        if (position == null) {
+            savePositionToPositionsCache();
+            position = positionCache.get(currentGroupId);
+        }
         position.newMsgIds = newMsgTipBar.getValues();
         final String groupId = currentGroupId;
         FriendsTimeLineDBTask.asyncUpdatePosition(position, GlobalContext.getInstance().getCurrentAccountId(), groupId);
