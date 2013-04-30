@@ -62,6 +62,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private final int TYPE_MIDDLE = 2;
     private final int TYPE_SIMPLE = 3;
 
+    public static final int NO_ITEM_ID = -1;
+
     private Set<Integer> tagIndexList = new HashSet<Integer>();
 
     private static final int PREF_LISTVIEW_ITEM_VIEW_COUNT = 6;
@@ -445,7 +447,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         if (getList() != null && getList().get(position) != null && getList().size() > 0 && position < getList().size())
             return Long.valueOf(getList().get(position).getId());
         else
-            return -1;
+            return NO_ITEM_ID;
     }
 
     protected void buildAvatar(TimeLineAvatarImageView view, int position, final UserBean user) {
