@@ -67,10 +67,15 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private ArrayDeque<PrefView> prefNormalViews = new ArrayDeque<PrefView>(6);
     private ArrayDeque<PrefView> prefBigPicViews = new ArrayDeque<PrefView>(6);
 
+    private int savedCurrentMiddleLoadingViewPosition = -1;
 
     private class PrefView {
         View view;
         ViewHolder holder;
+    }
+
+    public void setSavedMiddleLoadingViewPosition(int position) {
+        savedCurrentMiddleLoadingViewPosition = position;
     }
 
     public AbstractAppListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<T> bean, ListView listView, boolean showOriStatus) {
@@ -258,6 +263,11 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             configViewFont(holder);
             bindViewData(holder, position);
             bindOnTouchListener(holder);
+        } else {
+            if (savedCurrentMiddleLoadingViewPosition == position + listView.getHeaderViewsCount()) {
+                ListViewMiddleMsgLoadingView loadingView = (ListViewMiddleMsgLoadingView) convertView;
+                loadingView.load();
+            }
         }
         return convertView;
     }

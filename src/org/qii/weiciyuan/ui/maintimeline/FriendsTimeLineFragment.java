@@ -23,6 +23,7 @@ import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.adapter.AbstractAppListAdapter;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
@@ -515,6 +516,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
         getPullToRefreshListView().onRefreshComplete();
         dismissFooterView();
+        savedCurrentLoadingMsgViewPositon = -1;
+        if (timeLineAdapter instanceof AbstractAppListAdapter) {
+            ((AbstractAppListAdapter) timeLineAdapter).setSavedMiddleLoadingViewPosition(savedCurrentLoadingMsgViewPositon);
+        }
 
         positionCache.put(currentGroupId, Utility.getCurrentPositionFromListView(getListView()));
         saveNewMsgCountToPositionsCache();

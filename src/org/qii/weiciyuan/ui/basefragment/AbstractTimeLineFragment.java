@@ -16,6 +16,7 @@ import org.qii.weiciyuan.bean.ListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.ListViewMiddleMsgLoadingView;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TopTipBar;
@@ -24,6 +25,7 @@ import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.adapter.AbstractAppListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 
@@ -60,6 +62,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     protected static final int OLD_MSG_LOADER_ID = 3;
 
     protected ActionMode mActionMode;
+
+    protected int savedCurrentLoadingMsgViewPositon = -1;
+
 
     public abstract T getList();
 
@@ -117,6 +122,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("savedCurrentLoadingMsgViewPositon", savedCurrentLoadingMsgViewPositon);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -147,6 +157,12 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         pullToRefreshListView.setOnScrollListener(listViewOnScrollListener);
         pullToRefreshListView.setOnItemClickListener(listViewOnItemClickListener);
         buildListAdapter();
+        if (savedInstanceState != null)
+            savedCurrentLoadingMsgViewPositon = savedInstanceState.getInt("savedCurrentLoadingMsgViewPositon", -1);
+        if (savedCurrentLoadingMsgViewPositon != -1
+                && timeLineAdapter instanceof AbstractAppListAdapter) {
+            ((AbstractAppListAdapter) timeLineAdapter).setSavedMiddleLoadingViewPosition(savedCurrentLoadingMsgViewPositon);
+        }
     }
 
     protected void showFooterView() {
@@ -191,13 +207,18 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                     listViewItemClick(parent, view, index, id);
 
                 } else {
-                    String beginId = getList().getItem(index - 1).getId();
+                    String endId = getList().getItem(index - 1).getId();
                     String endTag = getList().getItem(index + 1).getId();
-                    String endId = getList().getItem(index + 2).getId();
-
-                    loadMiddleMsg(beginId, endId, endTag, index);
-
-                    Toast.makeText(getActivity(), getString(R.string.loading_middle_msg), Toast.LENGTH_SHORT).show();
+                    String beginId = getList().getItem(index + 2).getId();
+                    ListViewMiddleMsgLoadingView loadingView = (ListViewMiddleMsgLoadingView) view;
+                    if (!((ListViewMiddleMsgLoadingView) view).isLoading() && savedCurrentLoadingMsgViewPositon != -1) {
+                        loadingView.load();
+                        loadMiddleMsg(beginId, endId, endTag, index);
+                        savedCurrentLoadingMsgViewPositon = index + 1;
+                        if (timeLineAdapter instanceof AbstractAppListAdapter) {
+                            ((AbstractAppListAdapter) timeLineAdapter).setSavedMiddleLoadingViewPosition(savedCurrentLoadingMsgViewPositon);
+                        }
+                    }
                 }
 
             } else if (position - 1 >= getList().getSize()) {
@@ -633,10 +654,17 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                     break;
                 case MIDDLE_MSG_LOADER_ID:
                     if (exception != null) {
-                        newMsgTipBar.setError(exception.getError());
+                        View view = Utility.getListViewItemViewFromPosition(getListView(), savedCurrentLoadingMsgViewPositon);
+                        ListViewMiddleMsgLoadingView loadingView = (ListViewMiddleMsgLoadingView) view;
+                        if (loadingView != null)
+                            loadingView.setErrorMessage(exception.getError());
                     } else {
                         middleMsgOnPostExecute(middleEndTag, middlePosition, data);
                         getAdapter().notifyDataSetChanged();
+                    }
+                    savedCurrentLoadingMsgViewPositon = -1;
+                    if (timeLineAdapter instanceof AbstractAppListAdapter) {
+                        ((AbstractAppListAdapter) timeLineAdapter).setSavedMiddleLoadingViewPosition(savedCurrentLoadingMsgViewPositon);
                     }
                     break;
                 case OLD_MSG_LOADER_ID:
