@@ -26,6 +26,7 @@ import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.TopTipBar;
+import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -202,6 +203,28 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         }
     }
 
+    protected void middleMsgOnPostExecute(int position, MessageListBean newValue, boolean towardsBottom) {
+
+        if (newValue != null) {
+            int size = newValue.getSize();
+
+            if (getActivity() != null && newValue.getSize() > 0) {
+                getList().addMiddleData(position, newValue, towardsBottom);
+
+                if (towardsBottom) {
+                    getAdapter().notifyDataSetChanged();
+                } else {
+
+                    View v = Utility.getListViewItemViewFromPosition(getListView(), position + 1 + 1);
+                    int top = (v == null) ? 0 : v.getTop();
+                    getAdapter().notifyDataSetChanged();
+                    int ss = position + 1 + size - 1;
+                    getListView().setSelectionFromTop(ss, top);
+                }
+            }
+        }
+    }
+
     @Override
     protected void oldMsgOnPostExecute(MessageListBean newValue) {
         if (newValue != null && newValue.getSize() > 1) {
@@ -301,6 +324,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         bundle.putString("beginId", beginId);
         bundle.putString("endId", endId);
         bundle.putInt("position", position);
+        VelocityListView velocityListView = (VelocityListView) getListView();
+        bundle.putBoolean("towardsBottom", velocityListView.getTowardsOrientation() == VelocityListView.TOWARDS_BOTTOM);
         getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
 
     }

@@ -16,10 +16,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.bean.CommentListBean;
-import org.qii.weiciyuan.bean.UnreadBean;
-import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.CommentTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
@@ -28,6 +25,7 @@ import org.qii.weiciyuan.support.database.CommentsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TopTipBar;
+import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -395,6 +393,28 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         }
     }
 
+    protected void middleMsgOnPostExecute(int position, CommentListBean newValue, boolean towardsBottom) {
+
+        if (newValue != null) {
+            int size = newValue.getSize();
+
+            if (getActivity() != null && newValue.getSize() > 0) {
+                getList().addMiddleData(position, newValue, towardsBottom);
+
+                if (towardsBottom) {
+                    getAdapter().notifyDataSetChanged();
+                } else {
+
+                    View v = Utility.getListViewItemViewFromPosition(getListView(), position + 1 + 1);
+                    int top = (v == null) ? 0 : v.getTop();
+                    getAdapter().notifyDataSetChanged();
+                    int ss = position + 1 + size - 1;
+                    getListView().setSelectionFromTop(ss, top);
+                }
+            }
+        }
+    }
+
     @Override
     public void loadMiddleMsg(String beginId, String endId, int position) {
         getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
@@ -406,6 +426,8 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         bundle.putString("beginId", beginId);
         bundle.putString("endId", endId);
         bundle.putInt("position", position);
+        VelocityListView velocityListView = (VelocityListView) getListView();
+        bundle.putBoolean("towardsBottom", velocityListView.getTowardsOrientation() == VelocityListView.TOWARDS_BOTTOM);
         getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
 
     }
