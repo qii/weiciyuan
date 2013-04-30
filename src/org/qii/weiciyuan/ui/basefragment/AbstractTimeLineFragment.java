@@ -195,8 +195,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                 return;
 
             getListView().clearChoices();
-            if (position - 1 < getList().getSize() && position - 1 >= 0) {
-                int index = position - 1;
+            int headerViewsCount = getListView().getHeaderViewsCount();
+            if (position - headerViewsCount < getList().getSize() && position - headerViewsCount >= 0) {
+                int index = position - headerViewsCount;
                 ItemBean msg = getList().getItem(index);
                 if (!isNullFlag(msg)) {
                     listViewItemClick(parent, view, index, id);
@@ -205,10 +206,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                     String endTag = getList().getItem(index + 1).getId();
                     String beginId = getList().getItem(index + 2).getId();
                     ListViewMiddleMsgLoadingView loadingView = (ListViewMiddleMsgLoadingView) view;
-                    if (!((ListViewMiddleMsgLoadingView) view).isLoading() && savedCurrentLoadingMsgViewPositon != -1) {
+                    if (!((ListViewMiddleMsgLoadingView) view).isLoading() && savedCurrentLoadingMsgViewPositon == -1) {
                         loadingView.load();
                         loadMiddleMsg(beginId, endId, endTag, index);
-                        savedCurrentLoadingMsgViewPositon = index + 1;
+                        savedCurrentLoadingMsgViewPositon = index + headerViewsCount;
                         if (timeLineAdapter instanceof AbstractAppListAdapter) {
                             ((AbstractAppListAdapter) timeLineAdapter).setSavedMiddleLoadingViewPosition(savedCurrentLoadingMsgViewPositon);
                         }
