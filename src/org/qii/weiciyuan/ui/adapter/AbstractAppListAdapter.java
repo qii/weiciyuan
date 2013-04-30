@@ -129,33 +129,42 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
                     if (holder != null) {
                         Drawable drawable = holder.avatar.getImageView().getDrawable();
-                        if (!(drawable instanceof PictureBitmapDrawable)) {
-                            drawable.setCallback(null);
-                            holder.avatar.setImageBitmap(null);
-                            holder.avatar.getImageView().clearAnimation();
-                        }
+                        clearAvatarBitmap(holder, drawable);
                         drawable = holder.content_pic.getImageView().getDrawable();
-                        if (!(drawable instanceof PictureBitmapDrawable)) {
-                            drawable.setCallback(null);
-                            holder.content_pic.setImageBitmap(null);
-                            holder.content_pic.getImageView().clearAnimation();
-                        }
+                        clearPictureBitmap(holder, drawable);
                         drawable = holder.repost_content_pic.getImageView().getDrawable();
-                        if (!(drawable instanceof PictureBitmapDrawable)) {
-                            drawable.setCallback(null);
-                            holder.repost_content_pic.setImageBitmap(null);
-                            holder.repost_content_pic.getImageView().clearAnimation();
-                        }
-
+                        clearRepostPictureBitmap(holder, drawable);
 
                         if (!tag.equals(index)) {
                             holder.listview_root.removeAllViewsInLayout();
                             holder.listview_root = null;
                             view.setTag(tag, null);
                         }
-
-
                     }
+                }
+            }
+
+            void clearAvatarBitmap(ViewHolder holder, Drawable drawable) {
+                if (!(drawable instanceof PictureBitmapDrawable)) {
+                    drawable.setCallback(null);
+                    holder.avatar.setImageBitmap(null);
+                    holder.avatar.getImageView().clearAnimation();
+                }
+            }
+
+            void clearPictureBitmap(ViewHolder holder, Drawable drawable) {
+                if (!(drawable instanceof PictureBitmapDrawable)) {
+                    drawable.setCallback(null);
+                    holder.content_pic.setImageBitmap(null);
+                    holder.content_pic.getImageView().clearAnimation();
+                }
+            }
+
+            void clearRepostPictureBitmap(ViewHolder holder, Drawable drawable) {
+                if (!(drawable instanceof PictureBitmapDrawable)) {
+                    drawable.setCallback(null);
+                    holder.repost_content_pic.setImageBitmap(null);
+                    holder.repost_content_pic.getImageView().clearAnimation();
                 }
             }
         });
