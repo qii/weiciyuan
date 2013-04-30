@@ -61,6 +61,11 @@ public class VelocityListView extends AutoScrollListView {
     private int mLastVisibleViewTop;
     private int mLastItemCount;
 
+    public static final int TOWARDS_BOTTOM = 0;
+    public static final int TOWARDS_TOP = 1;
+
+    private int towardsOrientation = TOWARDS_BOTTOM;
+
     public VelocityListView(Context context) {
         super(context);
         init();
@@ -117,7 +122,17 @@ public class VelocityListView extends AutoScrollListView {
             if (onVelocityEqualZeroListener != null && (mTime == INVALID_TIME)) {
                 onVelocityEqualZeroListener.onZero();
             }
+            if (velocity < 0) {
+                towardsOrientation = TOWARDS_BOTTOM;
+            } else if (velocity > 0) {
+                towardsOrientation = TOWARDS_TOP;
+
+            }
         }
+    }
+
+    public int getTowardsOrientation() {
+        return towardsOrientation;
     }
 
     /**

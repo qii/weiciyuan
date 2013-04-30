@@ -286,7 +286,7 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     }
 
     @Override
-    public void loadMiddleMsg(String beginId, String endId, String endTag, int position) {
+    public void loadMiddleMsg(String beginId, String endId, int position) {
         getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
         getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
         getPullToRefreshListView().onRefreshComplete();
@@ -295,7 +295,6 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         Bundle bundle = new Bundle();
         bundle.putString("beginId", beginId);
         bundle.putString("endId", endId);
-        bundle.putString("endTag", endTag);
         bundle.putInt("position", position);
         getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
 

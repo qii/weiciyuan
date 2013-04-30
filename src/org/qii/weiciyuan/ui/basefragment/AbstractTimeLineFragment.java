@@ -116,9 +116,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         }
     }
 
-    public void loadMiddleMsg(String beginId, String endId, String endTag, int position) {
+    public void loadMiddleMsg(String beginId, String endId, int position) {
         if (Utility.isTaskStopped(middleTask)) {
-            middleTask = new TimeLineGetMiddleMsgListTask(beginId, endId, endTag, position);
+            middleTask = new TimeLineGetMiddleMsgListTask(beginId, endId, null, position);
             middleTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -203,14 +203,13 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                 if (!isNullFlag(msg)) {
                     listViewItemClick(parent, view, indexInDataSource, id);
                 } else {
+                    String beginId = getList().getItem(indexInDataSource + 1).getId();
                     String endId = getList().getItem(indexInDataSource - 1).getId();
-                    String endTag = getList().getItem(indexInDataSource + 1).getId();
-                    String beginId = getList().getItem(indexInDataSource + 2).getId();
                     ListViewMiddleMsgLoadingView loadingView = (ListViewMiddleMsgLoadingView) view;
                     if (!((ListViewMiddleMsgLoadingView) view).isLoading()
                             && savedCurrentLoadingMsgViewPositon == NO_SAVED_CURRENT_LOADING_MSG_VIEW_POSITION) {
                         loadingView.load();
-                        loadMiddleMsg(beginId, endId, endTag, indexInDataSource);
+                        loadMiddleMsg(beginId, endId, indexInDataSource);
                         savedCurrentLoadingMsgViewPositon = indexInDataSource + headerViewsCount;
                         if (timeLineAdapter instanceof AbstractAppListAdapter) {
                             ((AbstractAppListAdapter) timeLineAdapter).setSavedMiddleLoadingViewPosition(savedCurrentLoadingMsgViewPositon);
@@ -557,7 +556,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
         @Override
         protected void onPostExecute(T newValue) {
-            middleMsgOnPostExecute(endTag, position, newValue);
+            middleMsgOnPostExecute(position, newValue, false);
             getAdapter().notifyDataSetChanged();
             super.onPostExecute(newValue);
         }
@@ -565,7 +564,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
 
-    protected void middleMsgOnPostExecute(String endTag, int position, T newValue) {
+    protected void middleMsgOnPostExecute(int position, T newValue, boolean towardsBottom) {
 
         if (newValue == null)
             return;
@@ -578,20 +577,20 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
         ItemBean lastItem = newValue.getItem(newValue.getSize() - 1);
 
-        if (!lastItem.getId().equals(endTag)) {
-            getList().getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
-            getAdapter().notifyDataSetChanged();
-            return;
-        }
-
-        if (lastItem.getId().equals(endTag)) {
-            int nullIndex = position + newValue.getSize() - 1;
-            getList().getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
-            getList().getItemList().remove(nullIndex - 1);
-            getList().getItemList().remove(nullIndex - 1);
-            getAdapter().notifyDataSetChanged();
-            return;
-        }
+//        if (!lastItem.getId().equals(endTag)) {
+//            getList().getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
+//            getAdapter().notifyDataSetChanged();
+//            return;
+//        }
+//
+//        if (lastItem.getId().equals(endTag)) {
+//            int nullIndex = position + newValue.getSize() - 1;
+//            getList().getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
+//            getList().getItemList().remove(nullIndex - 1);
+//            getList().getItemList().remove(nullIndex - 1);
+//            getAdapter().notifyDataSetChanged();
+//            return;
+//        }
 
 
     }
@@ -631,8 +630,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
         private String middleBeginId = "";
         private String middleEndId = "";
-        private String middleEndTag = "";
         private int middlePosition = -1;
+        private boolean towardsBottom = false;
 
         @Override
         public Loader<AsyncTaskLoaderResult<T>> onCreateLoader(int id, Bundle args) {
@@ -646,9 +645,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                 case MIDDLE_MSG_LOADER_ID:
                     middleBeginId = args.getString("beginId");
                     middleEndId = args.getString("endId");
-                    middleEndTag = args.getString("endTag");
                     middlePosition = args.getInt("position");
-                    return onCreateMiddleMsgLoader(id, args, middleBeginId, middleEndId, middleEndTag, middlePosition);
+                    towardsBottom = args.getBoolean("towardsBottom");
+                    return onCreateMiddleMsgLoader(id, args, middleBeginId, middleEndId, null, middlePosition);
                 case OLD_MSG_LOADER_ID:
                     showFooterView();
                     return onCreateOldMsgLoader(id, args);
@@ -679,8 +678,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                         if (loadingView != null)
                             loadingView.setErrorMessage(exception.getError());
                     } else {
-                        middleMsgOnPostExecute(middleEndTag, middlePosition, data);
-                        getAdapter().notifyDataSetChanged();
+                        middleMsgOnPostExecute(middlePosition, data, towardsBottom);
+//                        getAdapter().notifyDataSetChanged();
                     }
                     savedCurrentLoadingMsgViewPositon = NO_SAVED_CURRENT_LOADING_MSG_VIEW_POSITION;
                     if (timeLineAdapter instanceof AbstractAppListAdapter) {
