@@ -24,8 +24,32 @@ public class TimeLineBitmapDownloader {
 
     private Handler handler;
 
+    static boolean pauseWork = false;
+    static final Object pauseWorkLock = new Object();
+
     public TimeLineBitmapDownloader(Handler handler) {
         this.handler = handler;
+    }
+
+    /**
+     * Pause any ongoing background work. This can be used as a temporary
+     * measure to improve performance. For example background work could
+     * be paused when a ListView or GridView is being scrolled using a
+     * {@link android.widget.AbsListView.OnScrollListener} to keep
+     * scrolling smooth.
+     * <p/>
+     * If work is paused, be sure setPauseWork(false) is called again
+     * before your fragment or activity is destroyed (for example during
+     * {@link android.app.Activity#onPause()}), or there is a risk the
+     * background thread will never finish.
+     */
+    public void setPauseWork(boolean pauseWork) {
+        synchronized (pauseWorkLock) {
+            TimeLineBitmapDownloader.pauseWork = pauseWork;
+            if (!TimeLineBitmapDownloader.pauseWork) {
+                pauseWorkLock.notifyAll();
+            }
+        }
     }
 
     protected Bitmap getBitmapFromMemCache(String key) {
