@@ -7,11 +7,16 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.maintimeline.CommentsTimeLineByMeDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * User: qii
  * Date: 13-4-18
  */
 public class CommentsByMeMsgLoader extends AsyncTaskLoader<AsyncTaskLoaderResult<CommentListBean>> {
+
+    private static Lock lock = new ReentrantLock();
 
 
     private String token;
@@ -39,11 +44,14 @@ public class CommentsByMeMsgLoader extends AsyncTaskLoader<AsyncTaskLoaderResult
         dao.setMax_id(maxId);
         CommentListBean result = null;
         WeiboException exception = null;
+        lock.lock();
 
         try {
             result = dao.getGSONMsgList();
         } catch (WeiboException e) {
             exception = e;
+        } finally {
+            lock.unlock();
         }
 
         AsyncTaskLoaderResult<CommentListBean> data = new AsyncTaskLoaderResult<CommentListBean>();
