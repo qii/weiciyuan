@@ -179,7 +179,13 @@
 
         <!--preference activity -->
         <activity android:name=".ui.preference.SettingActivity"/>
-        <activity android:name=".ui.preference.ControlActivity"/>
+        <!--intent-filter is used for Android-Setting-Data usage- click this app- View app Settings-->
+        <activity android:name=".ui.preference.ControlActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.preference.NotificationActivity"/>
         <activity
             android:name=".ui.preference.DraftActivity"
