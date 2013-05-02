@@ -40,7 +40,7 @@ public class ProfileAvatarReadWorker extends MyAsyncTask<String, Integer, Bitmap
 
         String path = FileManager.getFilePathFromUrl(data, FileLocationMethod.avatar_large);
 
-        boolean downloaded = TaskCache.waitForPictureDownload(data, path, FileLocationMethod.avatar_large);
+        boolean downloaded = TaskCache.waitForPictureDownload(data, null, path, FileLocationMethod.avatar_large);
 
         int avatarWidth = globalContext.getResources().getDimensionPixelSize(R.dimen.profile_avatar_width);
         int avatarHeight = globalContext.getResources().getDimensionPixelSize(R.dimen.profile_avatar_height);

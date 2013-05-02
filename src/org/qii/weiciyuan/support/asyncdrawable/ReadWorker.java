@@ -7,12 +7,17 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.TimeLineImageView;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.lang.ref.WeakReference;
@@ -22,15 +27,17 @@ import java.lang.ref.WeakReference;
  * Date: 13-2-9
  * reuse download worker or create a new download worker
  */
-public class ReadWorker extends MyAsyncTask<String, Void, Bitmap> implements IPictureWorker {
+public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements IPictureWorker {
 
     private LruCache<String, Bitmap> lruCache;
     private String data = "";
     private WeakReference<ImageView> viewWeakReference;
+
     private GlobalContext globalContext;
     private FileLocationMethod method;
     private FailedResult failedResult;
     private int mShortAnimationDuration;
+    private WeakReference<ProgressBar> pbWeakReference;
 
     public String getUrl() {
         return data;
@@ -45,6 +52,12 @@ public class ReadWorker extends MyAsyncTask<String, Void, Bitmap> implements IPi
         this.method = method;
         this.mShortAnimationDuration = GlobalContext.getInstance().getResources().getInteger(
                 android.R.integer.config_shortAnimTime);
+    }
+
+    public ReadWorker(TimeLineImageView view, String url, FileLocationMethod method) {
+
+        this(view.getImageView(), url, method);
+        this.pbWeakReference = new WeakReference<ProgressBar>(view.getProgressBar());
     }
 
 
@@ -65,7 +78,8 @@ public class ReadWorker extends MyAsyncTask<String, Void, Bitmap> implements IPi
 
         String path = FileManager.getFilePathFromUrl(data, method);
 
-        boolean downloaded = TaskCache.waitForPictureDownload(data, path, method);
+        boolean downloaded = TaskCache.waitForPictureDownload(data, (SettingUtility.getEnableBigPic() ? downloadListener : null), path, method);
+
         if (!downloaded) {
             failedResult = FailedResult.downloadFailed;
             return null;
@@ -115,6 +129,29 @@ public class ReadWorker extends MyAsyncTask<String, Void, Bitmap> implements IPi
     }
 
     @Override
+    protected void onProgressUpdate(Integer... values) {
+        super.onProgressUpdate(values);
+        ImageView imageView = viewWeakReference.get();
+        if (imageView != null) {
+            if (canDisplay(imageView) && pbWeakReference != null) {
+                ProgressBar pb = pbWeakReference.get();
+                if (pb != null) {
+                    if (pb.getVisibility() != View.VISIBLE) {
+                        pb.setVisibility(View.VISIBLE);
+                    }
+
+                    Integer progress = values[0];
+                    Integer max = values[1];
+                    pb.setMax(max);
+                    pb.setProgress(progress);
+                }
+            } else {
+                pbWeakReference = null;
+            }
+        }
+    }
+
+    @Override
     protected void onCancelled(Bitmap bitmap) {
         super.onCancelled(bitmap);
         this.failedResult = FailedResult.taskCanceled;
@@ -128,6 +165,7 @@ public class ReadWorker extends MyAsyncTask<String, Void, Bitmap> implements IPi
     }
 
     private void displayBitmap(Bitmap bitmap) {
+
         ImageView imageView = viewWeakReference.get();
         if (imageView != null) {
             if (canDisplay(imageView)) {
@@ -147,6 +185,13 @@ public class ReadWorker extends MyAsyncTask<String, Void, Bitmap> implements IPi
                             break;
                     }
 
+                }
+
+                if (pbWeakReference != null) {
+                    ProgressBar pb = pbWeakReference.get();
+                    if (pb != null) {
+                        pb.setVisibility(View.GONE);
+                    }
                 }
             }
         }
@@ -189,4 +234,20 @@ public class ReadWorker extends MyAsyncTask<String, Void, Bitmap> implements IPi
         });
     }
 
+    FileDownloaderHttpHelper.DownloadListener downloadListener = new FileDownloaderHttpHelper.DownloadListener() {
+        @Override
+        public void pushProgress(int progress, int max) {
+            publishProgress(progress, max);
+        }
+
+        @Override
+        public void completed() {
+
+        }
+
+        @Override
+        public void cancel() {
+
+        }
+    };
 }

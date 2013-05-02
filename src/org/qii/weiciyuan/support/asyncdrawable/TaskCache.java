@@ -23,7 +23,7 @@ public class TaskCache {
 
     }
 
-    public static boolean waitForPictureDownload(String url, String savedPath, FileLocationMethod method) {
+    public static boolean waitForPictureDownload(String url, FileDownloaderHttpHelper.DownloadListener downloadListener, String savedPath, FileLocationMethod method) {
         while (true) {
             DownloadWorker downloadWorker = TaskCache.downloadTasks.get(url);
             boolean localFileExist = new File(savedPath).exists();
@@ -41,6 +41,7 @@ public class TaskCache {
                 }
             }
 
+            downloadWorker.addDownloadListener(downloadListener);
 
             try {
                 return downloadWorker.get(30, TimeUnit.SECONDS);

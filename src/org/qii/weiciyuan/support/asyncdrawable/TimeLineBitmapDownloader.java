@@ -10,6 +10,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.TimeLineImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -105,6 +106,23 @@ public class TimeLineBitmapDownloader {
         }
     }
 
+    public void downContentPic(TimeLineImageView view, MessageBean msg, AbstractTimeLineFragment fragment) {
+        String picUrl;
+
+        boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
+
+        if (SettingUtility.getEnableBigPic()) {
+            picUrl = msg.getOriginal_pic();
+            display(view, picUrl, FileLocationMethod.picture_large, isFling);
+
+        } else {
+            picUrl = msg.getThumbnail_pic();
+            display(view, picUrl, FileLocationMethod.picture_thumbnail, isFling);
+
+        }
+    }
+
+
     private void display(final ImageView view, final String urlKey, final FileLocationMethod method, boolean isFling) {
         view.clearAnimation();
         final Bitmap bitmap = getBitmapFromMemCache(urlKey);
@@ -132,6 +150,47 @@ public class TimeLineBitmapDownloader {
                 public void run() {
 
                     if (getBitmapDownloaderTask(view) == newTask) {
+                        newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                    return;
+
+
+                }
+            }, 400);
+
+
+        }
+
+    }
+
+
+    private void display(final TimeLineImageView view, final String urlKey, final FileLocationMethod method, boolean isFling) {
+        view.clearAnimation();
+        final Bitmap bitmap = getBitmapFromMemCache(urlKey);
+        if (bitmap != null) {
+            view.setImageBitmap(bitmap);
+            cancelPotentialDownload(urlKey, view.getImageView());
+        } else {
+
+            if (isFling) {
+                view.setImageDrawable(transPic);
+                return;
+            }
+
+            if (!cancelPotentialDownload(urlKey, view.getImageView())) {
+                return;
+            }
+
+            final ReadWorker newTask = new ReadWorker(view, urlKey, method);
+            PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(newTask);
+            view.setImageDrawable(downloadedDrawable);
+
+            //listview fast scroll performance
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (getBitmapDownloaderTask(view.getImageView()) == newTask) {
                         newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     }
                     return;

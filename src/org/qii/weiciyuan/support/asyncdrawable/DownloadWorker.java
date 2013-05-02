@@ -63,7 +63,8 @@ public class DownloadWorker extends MyAsyncTask<String, Integer, Boolean> implem
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
         for (FileDownloaderHttpHelper.DownloadListener downloadListener : downloadListenerList) {
-            downloadListener.pushProgress(values[0], values[1]);
+            if (downloadListener != null)
+                downloadListener.pushProgress(values[0], values[1]);
         }
     }
 

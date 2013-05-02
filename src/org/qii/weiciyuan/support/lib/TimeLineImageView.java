@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import org.qii.weiciyuan.R;
 
 /**
@@ -21,6 +22,7 @@ public class TimeLineImageView extends FrameLayout {
 
     protected ImageView mImageView;
     protected ImageView mCover;
+    private ProgressBar pb;
 
     public TimeLineImageView(Context context) {
         super(context);
@@ -46,6 +48,7 @@ public class TimeLineImageView extends FrameLayout {
                 return false;
             }
         });
+        pb = (ProgressBar) v.findViewById(R.id.imageview_pb);
         v.setBackgroundColor(Color.TRANSPARENT);
         addView(v, new FrameLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -84,6 +87,21 @@ public class TimeLineImageView extends FrameLayout {
     public void setOnLongClickListener(OnLongClickListener onLongClickListener) {
         mImageView.setOnLongClickListener(onLongClickListener);
     }
+
+    public void setProgress(int value, int max) {
+        if (pb.getVisibility() != View.VISIBLE) {
+            pb.setVisibility(View.VISIBLE);
+        }
+        if (pb.getMax() != max)
+            pb.setMax(max);
+        pb.setProgress(value);
+    }
+
+    public ProgressBar getProgressBar() {
+        return pb;
+    }
+
+
 }
 
 
