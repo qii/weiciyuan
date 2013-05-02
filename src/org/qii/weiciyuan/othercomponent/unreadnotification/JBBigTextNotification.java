@@ -57,6 +57,7 @@ public class JBBigTextNotification {
         i.putExtra("account", accountBean);
         i.putExtra("comment", comment);
         i.putExtra("repost", repost);
+        i.putExtra("mentionsComment", mentionCommentsResult);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, Long.valueOf(accountBean.getUid()).intValue(), i, PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
