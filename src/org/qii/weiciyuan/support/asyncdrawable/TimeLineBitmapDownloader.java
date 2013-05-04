@@ -25,7 +25,7 @@ public class TimeLineBitmapDownloader {
 
     private Handler handler;
 
-    static boolean pauseWork = false;
+    static volatile boolean pauseWork = false;
     static final Object pauseWorkLock = new Object();
 
     public TimeLineBitmapDownloader(Handler handler) {

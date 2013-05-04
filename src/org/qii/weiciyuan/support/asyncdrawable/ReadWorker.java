@@ -131,6 +131,8 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
+        if (TimeLineBitmapDownloader.pauseWork)
+            return;
         ImageView imageView = viewWeakReference.get();
         if (imageView != null) {
             if (canDisplay(imageView) && pbWeakReference != null) {
