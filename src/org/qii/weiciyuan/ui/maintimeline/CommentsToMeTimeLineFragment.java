@@ -16,7 +16,10 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.CommentTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
@@ -130,6 +133,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             @Override
             public void onChange(int count) {
                 ((MainTimeLineActivity) getActivity()).setCommentsToMeCount(count);
+                setActionBarTabCount(count);
             }
         });
     }
