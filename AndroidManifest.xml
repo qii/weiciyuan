@@ -211,6 +211,10 @@
         <service android:name=".othercomponent.sendweiboservice.SendReplyToCommentService"/>
         <service android:name=".othercomponent.SaveToDBService"/>
 
+        <service android:name=".othercomponent.unreadnotification.JBMentionsWeiboNotificationServiceHelper"/>
+        <service android:name=".othercomponent.unreadnotification.JBMentionsCommentNotificationServiceHelper"/>
+        <service android:name=".othercomponent.unreadnotification.JBCommentsToMeNotificationServiceHelper"/>
+
 
         <!---broadcast receiver -->
         <receiver android:name=".othercomponent.unreadnotification.UnreadMsgReceiver">
