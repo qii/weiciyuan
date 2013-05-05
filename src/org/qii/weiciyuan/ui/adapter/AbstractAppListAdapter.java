@@ -160,6 +160,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                     drawable.setCallback(null);
                     holder.content_pic.setImageBitmap(null);
                     holder.content_pic.getImageView().clearAnimation();
+                    holder.content_pic.getProgressBar().setVisibility(View.GONE);
                 }
             }
 
@@ -168,6 +169,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                     drawable.setCallback(null);
                     holder.repost_content_pic.setImageBitmap(null);
                     holder.repost_content_pic.getImageView().clearAnimation();
+                    holder.repost_content_pic.getProgressBar().setVisibility(View.GONE);
                 }
             }
         });
