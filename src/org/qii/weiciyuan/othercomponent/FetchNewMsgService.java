@@ -64,7 +64,8 @@ public class FetchNewMsgService extends Service {
     }
 
     private void startFetchNewMsg() {
-        new GetAccountDBTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        if (tasks.size() == 0)
+            new GetAccountDBTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
