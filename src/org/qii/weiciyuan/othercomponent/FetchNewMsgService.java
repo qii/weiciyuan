@@ -22,8 +22,10 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppEventAction;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -36,6 +38,8 @@ public class FetchNewMsgService extends Service {
     //close service between 1 clock and 8 clock
     private static final int NIGHT_START_TIME_HOUR = 1;
     private static final int NIGHT_END_TIME_HOUR = 7;
+
+    private ArrayList<FetchMsgTask> tasks = new ArrayList<FetchMsgTask>();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -86,7 +90,12 @@ public class FetchNewMsgService extends Service {
         @Override
         protected void onPostExecute(List<AccountBean> accountBeans) {
             for (AccountBean account : accountBeans) {
-                new FetchMsgTask(account).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                FetchMsgTask task = new FetchMsgTask(account);
+                tasks.add(task);
+            }
+
+            for (FetchMsgTask task : tasks) {
+                task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
     }
@@ -126,10 +135,9 @@ public class FetchNewMsgService extends Service {
                     if (commentTimeLineData != null) {
                         oldData = commentTimeLineData.cmtList;
                     }
-                    if (oldData != null) {
+                    if (oldData != null && oldData.getSize() > 0) {
                         dao.setSince_id(oldData.getItem(0).getId());
                     }
-                    dao.setCount(String.valueOf(unreadCommentCount));
                     commentResult = dao.getGSONMsgListWithoutClearUnread();
                 }
 
@@ -140,10 +148,9 @@ public class FetchNewMsgService extends Service {
                     if (commentTimeLineData != null) {
                         oldData = commentTimeLineData.msgList;
                     }
-                    if (oldData != null) {
+                    if (oldData != null && oldData.getSize() > 0) {
                         dao.setSince_id(oldData.getItem(0).getId());
                     }
-                    dao.setCount(String.valueOf(unreadMentionStatusCount));
                     mentionStatusesResult = dao.getGSONMsgListWithoutClearUnread();
                 }
 
@@ -154,10 +161,9 @@ public class FetchNewMsgService extends Service {
                     if (commentTimeLineData != null) {
                         oldData = commentTimeLineData.cmtList;
                     }
-                    if (oldData != null) {
+                    if (oldData != null && oldData.getSize() > 0) {
                         dao.setSince_id(oldData.getItem(0).getId());
                     }
-                    dao.setCount(String.valueOf(unreadMentionCommentCount));
                     mentionCommentsResult = dao.getGSONMsgListWithoutClearUnread();
                 }
 
@@ -181,13 +187,13 @@ public class FetchNewMsgService extends Service {
             if (mentionsWeibo || menttinosComment || commentsToMe) {
                 sendNewMsgBroadcast();
             }
-            stopSelf();
+            checkForFinish();
             super.onPostExecute(sum);
         }
 
         @Override
         protected void onCancelled(Void stringIntegerMap) {
-            stopSelf();
+            checkForFinish();
             super.onCancelled(stringIntegerMap);
         }
 
@@ -204,7 +210,14 @@ public class FetchNewMsgService extends Service {
             intent.setAction(AppEventAction.NEW_MSG_BROADCAST);
             LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(intent);
         }
-    }
 
+        private void checkForFinish() {
+            tasks.remove(FetchMsgTask.this);
+            if (tasks.size() == 0) {
+                stopSelf();
+                AppLogger.d("stop fetchnewmsgservice");
+            }
+        }
+    }
 
 }
