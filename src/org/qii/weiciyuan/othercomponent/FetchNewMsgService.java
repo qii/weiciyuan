@@ -24,6 +24,7 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,6 +41,8 @@ public class FetchNewMsgService extends Service {
     private static final int NIGHT_END_TIME_HOUR = 7;
 
     private ArrayList<FetchMsgTask> tasks = new ArrayList<FetchMsgTask>();
+
+    private GetAccountDBTask dbTask;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -64,8 +67,10 @@ public class FetchNewMsgService extends Service {
     }
 
     private void startFetchNewMsg() {
-        if (tasks.size() == 0)
-            new GetAccountDBTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        if (Utility.isTaskStopped(dbTask)) {
+            dbTask = new GetAccountDBTask();
+            dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
 
