@@ -15,10 +15,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.bean.UnreadBean;
-import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.MentionTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
@@ -78,8 +75,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     @Override
     public void onResume() {
         super.onResume();
+        setListViewPositionFromPositionsCache();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(newBroadcastReceiver, new IntentFilter(AppEventAction.NEW_MSG_BROADCAST));
-
         setActionBarTabCount(newMsgTipBar.getValues().size());
         getNewMsgTipBar().setOnChangeListener(new TopTipBar.OnChangeListener() {
             @Override
@@ -88,7 +85,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
                 setActionBarTabCount(count);
             }
         });
-
+        checkUnreadInfo();
     }
 
     @Override
@@ -96,6 +93,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         super.onPause();
         saveTimeLinePositionToDB();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(newBroadcastReceiver);
+
     }
 
     private void saveTimeLinePositionToDB() {
@@ -124,11 +122,6 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     }
 
 
-    public void refreshUnread(TopTipBar topTipBar) {
-//        LeftMenuFragment fragment = (LeftMenuFragment) getParentFragment().getFragmentManager().findFragmentByTag(LeftMenuFragment.class.getName());
-//            fragment.setMentionWeiboUnreadCount(topTipBar.getValues().size());
-    }
-
     @Override
     protected void onListViewScrollStop() {
         super.onListViewScrollStop();
@@ -145,11 +138,19 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     }
 
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisible() && isVisibleToUser) {
-//            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+    private void checkUnreadInfo() {
+        Loader loader = getLoaderManager().getLoader(DB_CACHE_LOADER_ID);
+        if (loader != null) {
+            return;
+        }
+        Intent intent = getActivity().getIntent();
+        MessageListBean mentionsWeibo = (MessageListBean) intent.getSerializableExtra("repost");
+
+        if (mentionsWeibo != null) {
+            loadNewMsg();
+            MessageListBean nullObject = null;
+            intent.putExtra("repost", nullObject);
+            getActivity().setIntent(intent);
         }
     }
 
@@ -179,7 +180,6 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
             addNewDataAndRememberPosition(newValue);
         }
         unreadBean = null;
-        refreshUnread(newMsgTipBar);
         NotificationManager notificationManager = (NotificationManager) getActivity()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(Long.valueOf(GlobalContext.getInstance().getCurrentAccountId()).intValue());
@@ -263,7 +263,6 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
                 break;
         }
-        refreshUnread(this.newMsgTipBar);
     }
 
 
@@ -376,13 +375,9 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
             getLoaderManager().destroyLoader(loader.getId());
 
-            /**when one user open app from android notification center while this app is using another account,
-             * activity will restart, and then mentions and comment fragment
-             * will fetch new message from server
-             **/
-            //            if (getActivity() != null && getActivity().getActionBar().getTabAt(1).getText().toString().contains(")")) {
-            //                pullToRefreshListView.startRefreshNow();
-            //            }
+            checkUnreadInfo();
+
+
         }
 
         @Override
@@ -426,7 +421,10 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
             }
             MessageListBean data = (MessageListBean) intent.getSerializableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
             if (data != null) {
-                addNewDataAndRememberPosition(data);
+                MessageBean last = data.getItem(data.getSize() - 1);
+                boolean dup = getList().getItemList().contains(last);
+                if (!dup)
+                    addNewDataAndRememberPosition(data);
             }
         }
     };

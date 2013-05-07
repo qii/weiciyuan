@@ -94,22 +94,6 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     }
 
 
-    public void refreshUnread(UnreadBean unreadBean) {
-
-//        Activity activity = getActivity();
-//        if (activity != null) {
-//            if (unreadBean == null) {
-//                activity.getActionBar().getTabAt(2).setText(getString(R.string.comments));
-//                return;
-//            }
-//            this.unreadBean = unreadBean;
-//            String number = Utility.buildTabText(unreadBean.getMention_cmt() + unreadBean.getCmt());
-//            if (!TextUtils.isEmpty(number))
-//                activity.getActionBar().getTabAt(2).setText(getString(R.string.comments) + number);
-//        }
-    }
-
-
     @Override
     protected void onListViewScrollStop() {
         super.onListViewScrollStop();
@@ -119,6 +103,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     @Override
     public void onResume() {
         super.onResume();
+        setListViewPositionFromPositionsCache();
         setActionBarTabCount(newMsgTipBar.getValues().size());
         getNewMsgTipBar().setOnChangeListener(new TopTipBar.OnChangeListener() {
             @Override
@@ -127,12 +112,9 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                 setActionBarTabCount(count);
             }
         });
+        checkUnreadInfo();
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-    }
 
     @Override
     public void onPause() {
@@ -148,12 +130,19 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     }
 
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisible() && isVisibleToUser) {
-//            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+    private void checkUnreadInfo() {
+        Loader loader = getLoaderManager().getLoader(DB_CACHE_LOADER_ID);
+        if (loader != null) {
+            return;
+        }
+        Intent intent = getActivity().getIntent();
+        CommentListBean mentionsWeibo = (CommentListBean) intent.getSerializableExtra("mentionsComment");
 
+        if (mentionsWeibo != null) {
+            loadNewMsg();
+            CommentListBean nullObject = null;
+            intent.putExtra("mentionsComment", nullObject);
+            getActivity().setIntent(intent);
         }
     }
 
@@ -202,13 +191,11 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                     clearAndReplaceValue(savedBean);
                     timeLineAdapter.notifyDataSetChanged();
                     refreshLayout(getList());
-                    setListViewPositionFromPositionsCache();
                 }
 
                 break;
         }
 
-        refreshUnread(unreadBean);
     }
 
     @Override
@@ -521,7 +508,10 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
             }
             CommentListBean data = (CommentListBean) intent.getSerializableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
             if (data != null) {
-                addNewDataAndRememberPosition(data);
+                CommentBean last = data.getItem(data.getSize() - 1);
+                boolean dup = getList().getItemList().contains(last);
+                if (!dup)
+                    addNewDataAndRememberPosition(data);
             }
         }
     };

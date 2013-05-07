@@ -261,11 +261,13 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         MessageListBean mentionWeibos = (MessageListBean) intent.getSerializableExtra("repost");
 
         if (commentsToMe != null || mentionComments != null || mentionWeibos != null) {
-            getSlidingMenu().showMenu();
+            setIntent(intent);
             if (mentionWeibos != null) {
-//                getMenuFragment().switchToTab(1);
+                getMenuFragment().switchCategory(1);
+            } else if (mentionComments != null) {
+                getMenuFragment().switchCategory(1);
             } else if (commentsToMe != null) {
-//                getMenuFragment().switchToTab(2);
+                getMenuFragment().switchCategory(2);
             }
         }
     }
