@@ -1,9 +1,13 @@
 package org.qii.weiciyuan.ui.main;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +20,7 @@ import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.CommentsTimeLineDBTask;
 import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
 import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
+import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.dm.DMUserListActivity;
@@ -182,16 +187,39 @@ public class LeftMenuFragment extends AbstractAppFragment {
         getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
         currentIndex = 0;
 
+        if (Utility.isDevicePort() && !reset) {
+            BroadcastReceiver receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
+                    if (currentIndex == 0)
+                        showHomePageImp();
+
+                }
+            };
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+        } else {
+            showHomePageImp();
+
+        }
+
+
+        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+
+        return false;
+    }
+
+    private void showHomePageImp() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.alphain, R.anim.fragment_alphaout);
+
         ft.hide(rightFragments.get(MENTIONS_INDEX));
         ft.hide(rightFragments.get(COMMENTS_INDEX));
         FriendsTimeLineFragment fragment = (FriendsTimeLineFragment) rightFragments.get(HOME_INDEX);
         ft.show(fragment);
         ft.commit();
-        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
         setTitle("");
         ((MainTimeLineActivity) getActivity()).setCurrentFragment(fragment);
-        return false;
     }
 
     private boolean showMentionPage(boolean reset) {
@@ -201,12 +229,32 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
 
         getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+        currentIndex = 1;
 
+        if (Utility.isDevicePort() && !reset) {
+            BroadcastReceiver receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
+                    if (currentIndex == 1)
+                        showMentionPageImp();
+                }
+            };
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+        } else {
+            showMentionPageImp();
+        }
+        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+
+        return false;
+    }
+
+    private void showMentionPageImp() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.alphain, R.anim.fragment_alphaout);
         ft.hide(rightFragments.get(HOME_INDEX));
         ft.hide(rightFragments.get(COMMENTS_INDEX));
 
-        currentIndex = 1;
 
         MentionsTimeLine m = (MentionsTimeLine) rightFragments.get(MENTIONS_INDEX);
 
@@ -220,13 +268,10 @@ public class LeftMenuFragment extends AbstractAppFragment {
             }
         }
         m.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.mentions_weibo, R.string.mentions_weibo, mentionsTabIndex);
-        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
         ((MainTimeLineActivity) getActivity()).setCurrentFragment(m);
         if (Utility.isDevicePort()) {
             setTitle(R.string.mentions);
         }
-
-        return false;
     }
 
     public int getCurrentIndex() {
@@ -241,7 +286,31 @@ public class LeftMenuFragment extends AbstractAppFragment {
             return true;
         }
         currentIndex = 2;
+        if (Utility.isDevicePort() && !reset) {
+            BroadcastReceiver receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
+                    if (currentIndex == 2)
+                        showCommentPageImp();
+
+                }
+            };
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+        } else {
+            showCommentPageImp();
+
+        }
+
+
+        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+
+        return false;
+    }
+
+    private void showCommentPageImp() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.alphain, R.anim.fragment_alphaout);
 
         ft.hide(rightFragments.get(HOME_INDEX));
         ft.hide(rightFragments.get(MENTIONS_INDEX));
@@ -257,12 +326,10 @@ public class LeftMenuFragment extends AbstractAppFragment {
             }
         }
         fragment.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.all_people_send_to_me, R.string.my_comment, commentsTabIndex);
-        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
         ((MainTimeLineActivity) getActivity()).setCurrentFragment(fragment);
         if (Utility.isDevicePort()) {
             setTitle(R.string.comments);
         }
-        return false;
     }
 
 

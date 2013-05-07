@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -178,6 +179,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             @Override
             public void onClosed() {
                 LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
+                LocalBroadcastManager.getInstance(MainTimeLineActivity.this).sendBroadcast(new Intent(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
             }
         });
     }
