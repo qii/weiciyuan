@@ -60,10 +60,12 @@ public class JBMentionsCommentNotificationServiceHelper extends NotificationServ
                 .setContentIntent(getPendingIntent())
                 .setOnlyAlertOnce(true);
 
-        builder.setContentTitle(String.format(GlobalContext.getInstance().getString(R.string.new_mentions_comment), String.valueOf(data.getSize())));
+        int count = (unreadBean.getMention_cmt() > data.getSize() ? unreadBean.getMention_cmt() : data.getSize());
+        builder.setContentTitle(String.format(GlobalContext.getInstance().getString(R.string.new_mentions_comment), String.valueOf(count)));
 
         if (data.getSize() > 1)
-            builder.setNumber(data.getSize());
+            builder.setNumber(count);
+
 
         if (clearNotificationEventReceiver != null) {
             GlobalContext.getInstance().unregisterReceiver(clearNotificationEventReceiver);

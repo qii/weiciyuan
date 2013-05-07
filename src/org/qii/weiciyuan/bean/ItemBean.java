@@ -25,4 +25,17 @@ public abstract class ItemBean implements Serializable {
 
     public abstract UserBean getUser();
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ItemBean && ((ItemBean) o).getId().equals(getId())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
 }

@@ -58,10 +58,11 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
                 .setContentIntent(getPendingIntent())
                 .setOnlyAlertOnce(true);
 
-        builder.setContentTitle(String.format(GlobalContext.getInstance().getString(R.string.new_mentions_weibo), String.valueOf(data.getSize())));
+        int count = (unreadBean.getMention_status() > data.getSize() ? unreadBean.getMention_status() : data.getSize());
+        builder.setContentTitle(String.format(GlobalContext.getInstance().getString(R.string.new_mentions_weibo), String.valueOf(count)));
 
         if (data.getSize() > 1)
-            builder.setNumber(data.getSize());
+            builder.setNumber(count);
 
         if (clearNotificationEventReceiver != null) {
             GlobalContext.getInstance().unregisterReceiver(clearNotificationEventReceiver);

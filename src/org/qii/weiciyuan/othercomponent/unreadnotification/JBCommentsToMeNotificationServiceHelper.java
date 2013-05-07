@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
@@ -60,10 +61,11 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
                 .setContentIntent(getPendingIntent())
                 .setOnlyAlertOnce(true);
 
-        builder.setContentTitle(String.format(GlobalContext.getInstance().getString(R.string.new_comments), String.valueOf(data.getSize())));
+        int count = (unreadBean.getCmt() > data.getSize() ? unreadBean.getCmt() : data.getSize());
+        builder.setContentTitle(String.format(GlobalContext.getInstance().getString(R.string.new_comments), String.valueOf(count)));
 
         if (data.getSize() > 1)
-            builder.setNumber(data.getSize());
+            builder.setNumber(count);
 
         if (clearNotificationEventReceiver != null) {
             GlobalContext.getInstance().unregisterReceiver(clearNotificationEventReceiver);
@@ -130,9 +132,16 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
         }
 
         Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(builder);
-        bigTextStyle.setBigContentTitle("@"
-                + data.getItem(currentIndex).getUser().getScreen_name()
-                + getString(R.string.comment_sent_to_you));
+        CommentBean commentBean = data.getItem(currentIndex);
+        if (commentBean.getReply_comment() != null) {
+            bigTextStyle.setBigContentTitle("@"
+                    + data.getItem(currentIndex).getUser().getScreen_name()
+                    + getString(R.string.reply_to_you));
+        } else {
+            bigTextStyle.setBigContentTitle("@"
+                    + data.getItem(currentIndex).getUser().getScreen_name()
+                    + getString(R.string.comment_sent_to_you));
+        }
         bigTextStyle.bigText(data.getItem(currentIndex).getText());
         String summaryText;
         if (data.getSize() > 1)
