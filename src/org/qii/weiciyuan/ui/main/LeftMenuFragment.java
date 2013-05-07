@@ -95,8 +95,13 @@ public class LeftMenuFragment extends AbstractAppFragment {
         rightFragments.add(MENTIONS_INDEX, ((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment());
         rightFragments.add(COMMENTS_INDEX, ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
 
+        switchCategory(currentIndex);
 
-        switch (currentIndex) {
+    }
+
+    public void switchCategory(int position) {
+
+        switch (position) {
             case 0:
                 showHomePage(true);
                 break;
@@ -107,7 +112,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 showCommentPage(true);
                 break;
         }
-        drawButtonsBackground(currentIndex);
+        drawButtonsBackground(position);
 
         buildUnreadCount();
 
