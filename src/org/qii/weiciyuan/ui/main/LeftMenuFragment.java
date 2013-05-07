@@ -211,7 +211,6 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private void showHomePageImp() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.alphain, R.anim.fragment_alphaout);
 
         ft.hide(rightFragments.get(MENTIONS_INDEX));
         ft.hide(rightFragments.get(COMMENTS_INDEX));
@@ -251,7 +250,6 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private void showMentionPageImp() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.alphain, R.anim.fragment_alphaout);
         ft.hide(rightFragments.get(HOME_INDEX));
         ft.hide(rightFragments.get(COMMENTS_INDEX));
 
@@ -310,7 +308,6 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private void showCommentPageImp() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.alphain, R.anim.fragment_alphaout);
 
         ft.hide(rightFragments.get(HOME_INDEX));
         ft.hide(rightFragments.get(MENTIONS_INDEX));
