@@ -51,12 +51,16 @@ public class MentionsTimeLineDBTask {
         Cursor c = getRsd().rawQuery(sql, null);
         while (c.moveToNext()) {
             String json = c.getString(c.getColumnIndex(RepostsTable.RepostDataTable.JSONDATA));
-            try {
-                MessageBean value = gson.fromJson(json, MessageBean.class);
-                value.getListViewSpannableString();
-                msgList.add(value);
-            } catch (JsonSyntaxException e) {
-                AppLogger.e(e.getMessage());
+            if (!TextUtils.isEmpty(json)) {
+                try {
+                    MessageBean value = gson.fromJson(json, MessageBean.class);
+                    value.getListViewSpannableString();
+                    msgList.add(value);
+                } catch (JsonSyntaxException e) {
+                    AppLogger.e(e.getMessage());
+                }
+            } else {
+                msgList.add(null);
             }
 
         }
@@ -77,13 +81,22 @@ public class MentionsTimeLineDBTask {
             getWsd().beginTransaction();
             for (int i = 0; i < size; i++) {
                 MessageBean msg = msgList.get(i);
-                ContentValues cv = new ContentValues();
-                cv.put(RepostsTable.RepostDataTable.MBLOGID, msg.getId());
-                cv.put(RepostsTable.RepostDataTable.ACCOUNTID, accountId);
-                String json = gson.toJson(msg);
-                cv.put(RepostsTable.RepostDataTable.JSONDATA, json);
-                getWsd().insert(RepostsTable.RepostDataTable.TABLE_NAME,
-                        RepostsTable.RepostDataTable.ID, cv);
+                if (msg != null) {
+                    ContentValues cv = new ContentValues();
+                    cv.put(RepostsTable.RepostDataTable.MBLOGID, msg.getId());
+                    cv.put(RepostsTable.RepostDataTable.ACCOUNTID, accountId);
+                    String json = gson.toJson(msg);
+                    cv.put(RepostsTable.RepostDataTable.JSONDATA, json);
+                    getWsd().insert(RepostsTable.RepostDataTable.TABLE_NAME,
+                            RepostsTable.RepostDataTable.ID, cv);
+                } else {
+                    ContentValues cv = new ContentValues();
+                    cv.put(RepostsTable.RepostDataTable.MBLOGID, "-1");
+                    cv.put(RepostsTable.RepostDataTable.ACCOUNTID, accountId);
+                    cv.put(RepostsTable.RepostDataTable.JSONDATA, "");
+                    getWsd().insert(RepostsTable.RepostDataTable.TABLE_NAME,
+                            RepostsTable.RepostDataTable.ID, cv);
+                }
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
