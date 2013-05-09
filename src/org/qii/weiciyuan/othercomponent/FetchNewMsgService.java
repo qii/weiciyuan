@@ -134,15 +134,15 @@ public class FetchNewMsgService extends IntentService {
         boolean menttinosComment = (mentionCommentsResult != null && mentionCommentsResult.getSize() > 0);
         boolean commentsToMe = (commentResult != null && commentResult.getSize() > 0);
         if (mentionsWeibo || menttinosComment || commentsToMe) {
-            sendLocalBroadcast(accountBean, commentResult, mentionStatusesResult, mentionCommentsResult, unreadBean);
+            sendTwoKindsOfBroadcast(accountBean, commentResult, mentionStatusesResult, mentionCommentsResult, unreadBean);
         }
     }
 
-    private void sendLocalBroadcast(AccountBean accountBean,
-                                    CommentListBean commentResult,
-                                    MessageListBean mentionStatusesResult,
-                                    CommentListBean mentionCommentsResult,
-                                    UnreadBean unreadBean) {
+    private void sendTwoKindsOfBroadcast(AccountBean accountBean,
+                                         CommentListBean commentResult,
+                                         MessageListBean mentionStatusesResult,
+                                         CommentListBean mentionCommentsResult,
+                                         UnreadBean unreadBean) {
         Intent intent = new Intent(AppEventAction.NEW_MSG_PRIORITY_BROADCAST);
         intent.putExtra(BundleArgsConstants.ACCOUNT_EXTRA, accountBean);
         intent.putExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA, commentResult);
