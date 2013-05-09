@@ -467,6 +467,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
             getLoaderManager().destroyLoader(loader.getId());
 
+            checkUnreadInfo();
         }
 
         @Override
