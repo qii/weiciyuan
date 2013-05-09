@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.main;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.android.UnreadTabIndex;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -74,6 +76,25 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
         viewPager.setOnPageChangeListener(onPageChangeListener);
         CommentsTimeLinePagerAdapter adapter = new CommentsTimeLinePagerAdapter(this, viewPager, getChildFragmentManager(), (MainTimeLineActivity) getActivity(), mentionFragments);
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Intent intent = getActivity().getIntent();
+        if (intent == null)
+            return;
+        UnreadTabIndex unreadTabIndex = (UnreadTabIndex) intent.getSerializableExtra("unreadTabIndex");
+        if (unreadTabIndex == null)
+            return;
+        switch (unreadTabIndex) {
+            case COMMENT_TO_ME:
+                ((MainTimeLineActivity) getActivity()).getMenuFragment().switchCategory(2);
+                viewPager.setCurrentItem(0);
+                intent.putExtra("unreadTabIndex", UnreadTabIndex.NONE);
+                break;
+        }
+
     }
 
     public void buildActionBarAndViewPagerTitles(ActionBar actionBar, int firstTab, int secondTab, int nav) {

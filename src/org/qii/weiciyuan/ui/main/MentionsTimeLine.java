@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.main;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.android.UnreadTabIndex;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -82,6 +84,30 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Intent intent = getActivity().getIntent();
+        if (intent == null)
+            return;
+        UnreadTabIndex unreadTabIndex = (UnreadTabIndex) intent.getSerializableExtra("unreadTabIndex");
+        if (unreadTabIndex == null)
+            return;
+        switch (unreadTabIndex) {
+            case MENTION_WEIBO:
+                ((MainTimeLineActivity) getActivity()).getMenuFragment().switchCategory(1);
+                viewPager.setCurrentItem(0);
+                intent.putExtra("unreadTabIndex", UnreadTabIndex.NONE);
+                break;
+            case MENTION_COMMENT:
+                ((MainTimeLineActivity) getActivity()).getMenuFragment().switchCategory(1);
+                viewPager.setCurrentItem(1);
+                intent.putExtra("unreadTabIndex", UnreadTabIndex.NONE);
+                break;
+        }
 
     }
 

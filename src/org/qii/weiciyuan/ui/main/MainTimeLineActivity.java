@@ -18,8 +18,6 @@ import android.widget.TextView;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.bean.CommentListBean;
-import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.MusicInfo;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
@@ -246,9 +244,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         if (newAccountBean.getUid().equals(accountBean.getUid())) {
             accountBean = newAccountBean;
             GlobalContext.getInstance().setAccountBean(accountBean);
-            hasNewUnreadMsg(intent);
+            setIntent(intent);
         } else {
-            overridePendingTransition(0, 0);
             finish();
             overridePendingTransition(0, 0);
             startActivity(intent);
@@ -257,28 +254,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
     }
 
-    private void hasNewUnreadMsg(Intent intent) {
-        CommentListBean commentsToMe = (CommentListBean) intent.getSerializableExtra("comment");
-        CommentListBean mentionComments = (CommentListBean) intent.getSerializableExtra("mentionsComment");
-        MessageListBean mentionWeibos = (MessageListBean) intent.getSerializableExtra("repost");
-
-        if (commentsToMe != null || mentionComments != null || mentionWeibos != null) {
-            setIntent(intent);
-            if (mentionWeibos != null) {
-                getMenuFragment().switchCategory(1);
-            } else if (mentionComments != null) {
-                getMenuFragment().switchCategory(1);
-            } else if (commentsToMe != null) {
-                getMenuFragment().switchCategory(2);
-            }
-        }
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        hasNewUnreadMsg(getIntent());
-    }
 
     @Override
     public void onBackPressed() {

@@ -11,6 +11,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.bean.android.UnreadTabIndex;
 import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -155,6 +156,7 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
         Intent i = new Intent(getBaseContext(), MainTimeLineActivity.class);
         i.putExtra("account", accountBean);
         i.putExtra("repost", data);
+        i.putExtra("unreadTabIndex", UnreadTabIndex.MENTION_WEIBO);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), Long.valueOf(accountBean.getUid()).intValue(), i, PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
