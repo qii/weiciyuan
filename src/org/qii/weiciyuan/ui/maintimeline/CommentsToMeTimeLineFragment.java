@@ -144,7 +144,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         CommentListBean commentsToMe = (CommentListBean) intent.getSerializableExtra("comment");
 
         if (commentsToMe != null) {
-            addNewDataAndRememberPosition(commentsToMe);
+            addUnreadMessage(commentsToMe);
             CommentListBean nullObject = null;
             intent.putExtra("comment", nullObject);
             getActivity().setIntent(intent);
@@ -510,12 +510,16 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
                 return;
             }
             CommentListBean data = (CommentListBean) intent.getSerializableExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA);
-            if (data != null && data.getSize() > 0) {
-                CommentBean last = data.getItem(data.getSize() - 1);
-                boolean dup = getList().getItemList().contains(last);
-                if (!dup)
-                    addNewDataAndRememberPosition(data);
-            }
+            addUnreadMessage(data);
         }
     };
+
+    private void addUnreadMessage(CommentListBean data) {
+        if (data != null && data.getSize() > 0) {
+            CommentBean last = data.getItem(data.getSize() - 1);
+            boolean dup = getList().getItemList().contains(last);
+            if (!dup)
+                addNewDataAndRememberPosition(data);
+        }
+    }
 }

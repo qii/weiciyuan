@@ -147,7 +147,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         MessageListBean mentionsWeibo = (MessageListBean) intent.getSerializableExtra("repost");
 
         if (mentionsWeibo != null) {
-            loadNewMsg();
+            addUnreadMessage(mentionsWeibo);
             MessageListBean nullObject = null;
             intent.putExtra("repost", nullObject);
             getActivity().setIntent(intent);
@@ -420,13 +420,17 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
                 return;
             }
             MessageListBean data = (MessageListBean) intent.getSerializableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
-            if (data != null) {
-                MessageBean last = data.getItem(data.getSize() - 1);
-                boolean dup = getList().getItemList().contains(last);
-                if (!dup)
-                    addNewDataAndRememberPosition(data);
-            }
+            addUnreadMessage(data);
         }
     };
+
+    private void addUnreadMessage(MessageListBean data) {
+        if (data != null && data.getSize() > 0) {
+            MessageBean last = data.getItem(data.getSize() - 1);
+            boolean dup = getList().getItemList().contains(last);
+            if (!dup)
+                addNewDataAndRememberPosition(data);
+        }
+    }
 }
 

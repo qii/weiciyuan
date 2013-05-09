@@ -139,7 +139,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         CommentListBean mentionsWeibo = (CommentListBean) intent.getSerializableExtra("mentionsComment");
 
         if (mentionsWeibo != null) {
-            loadNewMsg();
+            addUnreadMessage(mentionsWeibo);
             CommentListBean nullObject = null;
             intent.putExtra("mentionsComment", nullObject);
             getActivity().setIntent(intent);
@@ -507,12 +507,16 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                 return;
             }
             CommentListBean data = (CommentListBean) intent.getSerializableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
-            if (data != null) {
-                CommentBean last = data.getItem(data.getSize() - 1);
-                boolean dup = getList().getItemList().contains(last);
-                if (!dup)
-                    addNewDataAndRememberPosition(data);
-            }
+            addUnreadMessage(data);
         }
     };
+
+    private void addUnreadMessage(CommentListBean data) {
+        if (data != null && data.getSize() > 0) {
+            CommentBean last = data.getItem(data.getSize() - 1);
+            boolean dup = getList().getItemList().contains(last);
+            if (!dup)
+                addNewDataAndRememberPosition(data);
+        }
+    }
 }
