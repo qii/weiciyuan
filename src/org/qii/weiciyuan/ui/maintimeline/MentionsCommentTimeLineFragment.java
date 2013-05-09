@@ -203,6 +203,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         super.onViewCreated(view, savedInstanceState);
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         getListView().setOnItemLongClickListener(onItemLongClickListener);
+        newMsgTipBar.setType(TopTipBar.Type.ALWAYS);
+
     }
 
     private AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {

@@ -3,6 +3,7 @@ package org.qii.weiciyuan.support.lib;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -23,11 +24,17 @@ import java.util.List;
  */
 public class TopTipBar extends TextView {
 
+    public enum Type {
+        ALWAYS, AUTO
+    }
+
     private HashSet<String> ids = new HashSet<String>();
     private boolean disappear = false;
     private Runnable lastRunnable;
     private boolean error;
     private OnChangeListener onChangeListener;
+    private Type type;
+
 
     public static interface OnChangeListener {
         public void onChange(int count);
@@ -50,6 +57,11 @@ public class TopTipBar extends TextView {
 
     public TopTipBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        type = Type.AUTO;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public HashSet<String> getValues() {
@@ -156,6 +168,11 @@ public class TopTipBar extends TextView {
                 this.onChangeListener.onChange(ids.size());
             }
         }
+
+        if (type == Type.ALWAYS) {
+            return;
+        }
+
         if (ids.contains(helperId)) {
             setCount();
         } else {
@@ -196,7 +213,7 @@ public class TopTipBar extends TextView {
         ss.ids = this.ids;
         ss.disappear = this.disappear;
         ss.visible = this.isShown();
-
+        ss.type = this.type;
         return ss;
     }
 
@@ -213,6 +230,7 @@ public class TopTipBar extends TextView {
 
         this.ids = ss.ids;
         this.disappear = ss.disappear;
+        this.type = ss.type;
         if (ss.visible) {
             setVisibility(View.VISIBLE);
         }
@@ -222,6 +240,7 @@ public class TopTipBar extends TextView {
         HashSet<String> ids;
         boolean disappear;
         boolean visible;
+        Type type;
 
         SavedState(Parcelable superState) {
             super(superState);
@@ -229,7 +248,9 @@ public class TopTipBar extends TextView {
 
         private SavedState(Parcel in) {
             super(in);
-            this.ids = (HashSet<String>) in.readSerializable();
+            Bundle bundle = in.readBundle();
+            this.ids = (HashSet<String>) bundle.getSerializable("ids");
+            this.type = (Type) bundle.getSerializable("type");
             boolean[] disappearArray = new boolean[2];
             in.readBooleanArray(disappearArray);
             this.disappear = disappearArray[0];
@@ -239,7 +260,10 @@ public class TopTipBar extends TextView {
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeSerializable(ids);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("ids", ids);
+            bundle.putSerializable("type", type);
+            out.writeBundle(bundle);
             out.writeBooleanArray(new boolean[]{this.disappear, this.visible});
         }
 

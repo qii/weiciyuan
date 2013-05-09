@@ -121,6 +121,12 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         outState.putSerializable("timeLinePosition", timeLinePosition);
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        newMsgTipBar.setType(TopTipBar.Type.ALWAYS);
+
+    }
 
     @Override
     protected void onListViewScrollStop() {
