@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,6 @@ import org.qii.weiciyuan.ui.preference.SettingActivity;
 import org.qii.weiciyuan.ui.search.SearchMainActivity;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -54,7 +54,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private boolean firstStart = true;
 
-    private ArrayList<Fragment> rightFragments = new ArrayList<Fragment>();
+    private SparseArray<Fragment> rightFragments = new SparseArray<Fragment>();
 
     private static final int HOME_INDEX = 0;
     private static final int MENTIONS_INDEX = 1;
@@ -96,9 +96,9 @@ public class LeftMenuFragment extends AbstractAppFragment {
         }
 
 
-        rightFragments.add(HOME_INDEX, ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment());
-        rightFragments.add(MENTIONS_INDEX, ((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment());
-        rightFragments.add(COMMENTS_INDEX, ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
+        rightFragments.append(HOME_INDEX, ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment());
+        rightFragments.append(MENTIONS_INDEX, ((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment());
+        rightFragments.append(COMMENTS_INDEX, ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
 
         switchCategory(currentIndex);
 
