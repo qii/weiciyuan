@@ -113,9 +113,15 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
     }
 
     public void buildActionBarAndViewPagerTitles(int nav) {
+
         if (Utility.isDevicePort()) {
             ((MainTimeLineActivity) getActivity()).setTitle(R.string.comments);
+            getActivity().getActionBar().setIcon(R.drawable.comment_light);
+        } else {
+            ((MainTimeLineActivity) getActivity()).setTitle("");
+            getActivity().getActionBar().setIcon(R.drawable.ic_launcher);
         }
+
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(Utility.isDevicePort());
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -135,6 +141,7 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
 
         if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS && nav > -1) {
             viewPager.setCurrentItem(nav, false);
+
         }
 
     }

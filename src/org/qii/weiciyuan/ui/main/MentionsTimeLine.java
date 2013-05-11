@@ -122,6 +122,10 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
     public void buildActionBarAndViewPagerTitles(int nav) {
         if (Utility.isDevicePort()) {
             ((MainTimeLineActivity) getActivity()).setTitle(R.string.mentions);
+            getActivity().getActionBar().setIcon(R.drawable.repost_light);
+        } else {
+            ((MainTimeLineActivity) getActivity()).setTitle("");
+            getActivity().getActionBar().setIcon(R.drawable.ic_launcher);
         }
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(Utility.isDevicePort());

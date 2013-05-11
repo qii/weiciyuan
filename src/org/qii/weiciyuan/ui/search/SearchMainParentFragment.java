@@ -113,7 +113,13 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
     public void buildActionBarAndViewPagerTitles(int nav) {
         if (Utility.isDevicePort()) {
             ((MainTimeLineActivity) getActivity()).setTitle(R.string.search);
+            getActivity().getActionBar().setIcon(R.drawable.search_light);
+        } else {
+            ((MainTimeLineActivity) getActivity()).setTitle("");
+            getActivity().getActionBar().setIcon(R.drawable.ic_launcher);
         }
+
+
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(Utility.isDevicePort());
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

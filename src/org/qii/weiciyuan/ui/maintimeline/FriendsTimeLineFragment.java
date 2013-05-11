@@ -347,6 +347,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         });
         currentGroupId = FriendsTimeLineDBTask.getRecentGroupId(GlobalContext.getInstance().getCurrentAccountId());
 
+        if (Utility.isDevicePort()) {
+            ((MainTimeLineActivity) getActivity()).setTitle("");
+            getActivity().getActionBar().setIcon(R.drawable.ic_menu_home);
+        } else {
+            ((MainTimeLineActivity) getActivity()).setTitle("");
+            getActivity().getActionBar().setIcon(R.drawable.ic_launcher);
+        }
+
         if (getActivity().getActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST && isVisible()) {
             getActivity().getActionBar().setSelectedNavigationItem(getRecentNavIndex());
         }
