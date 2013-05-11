@@ -342,7 +342,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             }
         });
         currentGroupId = FriendsTimeLineDBTask.getRecentGroupId(GlobalContext.getInstance().getCurrentAccountId());
-        getActivity().getActionBar().setSelectedNavigationItem(getRecentNavIndex());
+
+        if (getActivity().getActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST && isVisible()) {
+            getActivity().getActionBar().setSelectedNavigationItem(getRecentNavIndex());
+        }
 
     }
 

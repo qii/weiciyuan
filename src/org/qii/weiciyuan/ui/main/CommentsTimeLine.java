@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -22,9 +23,6 @@ import org.qii.weiciyuan.ui.maintimeline.CommentsByMeTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.CommentsToMeTimeLineFragment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * User: qii
@@ -33,31 +31,37 @@ import java.util.Map;
 public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLineActivity.ScrollableListFragment {
 
     private ViewPager viewPager;
-    private List<Fragment> mentionFragments = new ArrayList<Fragment>();
-    private Map<Integer, ActionBar.Tab> tabMap = new HashMap<Integer, ActionBar.Tab>();
+    private ArrayList<Fragment> mentionFragments = new ArrayList<Fragment>();
+    private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
 
+    private static final int COMMENTS_TO_ME_CHILD_POSITION = 0;
+    private static final int COMMENTS_BY_ME_CHILD_POSITION = 1;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        SimpleTwoTabsListener tabListener = new SimpleTwoTabsListener(viewPager);
 
+        if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex() == 2) {
+            buildActionBarAndViewPagerTitles(((MainTimeLineActivity) getActivity()).getMenuFragment().commentsTabIndex);
+        }
+    }
 
+    private ActionBar.Tab buildCommentsByMeTab(SimpleTwoTabsListener tabListener) {
+        View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
+        ((TextView) customView.findViewById(R.id.title)).setText(R.string.my_comment);
+        ActionBar.Tab commentsByMeTab = getActivity().getActionBar().newTab().setCustomView(customView)
+                .setTag(CommentsByMeTimeLineFragment.class.getName()).setTabListener(tabListener);
+        tabMap.append(COMMENTS_BY_ME_CHILD_POSITION, commentsByMeTab);
+        return commentsByMeTab;
+    }
+
+    private ActionBar.Tab buildCommentsToMeTab(SimpleTwoTabsListener tabListener) {
         View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
         ((TextView) customView.findViewById(R.id.title)).setText(R.string.all_people_send_to_me);
         ActionBar.Tab commentsToMeTab = getActivity().getActionBar().newTab().setCustomView(customView)
                 .setTag(CommentsToMeTimeLineFragment.class.getName()).setTabListener(tabListener);
-        tabMap.put(0, commentsToMeTab);
-
-        customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
-        ((TextView) customView.findViewById(R.id.title)).setText(R.string.my_comment);
-        ActionBar.Tab commentsByMeTab = getActivity().getActionBar().newTab().setCustomView(customView)
-                .setTag(CommentsByMeTimeLineFragment.class.getName()).setTabListener(tabListener);
-        tabMap.put(1, commentsByMeTab);
-
-        if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex() == 2) {
-            buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.all_people_send_to_me, R.string.my_comment, 0);
-        }
+        tabMap.append(COMMENTS_TO_ME_CHILD_POSITION, commentsToMeTab);
+        return commentsToMeTab;
     }
 
     @Override
@@ -97,7 +101,22 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
 
     }
 
-    public void buildActionBarAndViewPagerTitles(ActionBar actionBar, int firstTab, int secondTab, int nav) {
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            int commentsTabIndex = getArguments().getInt("commentsTabIndex");
+            buildActionBarAndViewPagerTitles(commentsTabIndex);
+            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+
+        }
+    }
+
+    public void buildActionBarAndViewPagerTitles(int nav) {
+        if (Utility.isDevicePort()) {
+            ((MainTimeLineActivity) getActivity()).setTitle(R.string.comments);
+        }
+        ActionBar actionBar = getActivity().getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(Utility.isDevicePort());
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.removeAllTabs();
@@ -105,47 +124,37 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
 
         ActionBar.Tab commentsToMeTab = getCommentsToMeTab();
         if (commentsToMeTab == null) {
-            View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
-            ((TextView) customView.findViewById(R.id.title)).setText(firstTab);
-            commentsToMeTab = actionBar.newTab().setCustomView(customView)
-                    .setTag(CommentsToMeTimeLineFragment.class.getName()).setTabListener(tabListener);
-            tabMap.put(0, commentsToMeTab);
-
+            commentsToMeTab = buildCommentsToMeTab(tabListener);
         }
         ActionBar.Tab commentsByMeTab = getCommentsByMeTab();
-        if (commentsToMeTab == null) {
-            View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
-            ((TextView) customView.findViewById(R.id.title)).setText(secondTab);
-            commentsByMeTab = actionBar.newTab().setCustomView(customView)
-                    .setTag(CommentsByMeTimeLineFragment.class.getName()).setTabListener(tabListener);
-            tabMap.put(1, commentsByMeTab);
-
-
+        if (commentsByMeTab == null) {
+            commentsByMeTab = buildCommentsByMeTab(tabListener);
         }
         actionBar.addTab(commentsToMeTab);
         actionBar.addTab(commentsByMeTab);
 
-
         if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS && nav > -1) {
-//            actionBar.setSelectedNavigationItem(nav);
             viewPager.setCurrentItem(nav, false);
         }
 
     }
 
     public ActionBar.Tab getCommentsToMeTab() {
-        return tabMap.get(0);
+        return tabMap.get(COMMENTS_TO_ME_CHILD_POSITION);
     }
 
     public ActionBar.Tab getCommentsByMeTab() {
-        return tabMap.get(1);
+        return tabMap.get(COMMENTS_BY_ME_CHILD_POSITION);
     }
 
     ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
-            if (getActivity().getActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS)
-                getActivity().getActionBar().setSelectedNavigationItem(position);
+            ActionBar ab = getActivity().getActionBar();
+            if (getActivity().getActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS
+                    && ab.getTabAt(position) == tabMap.get(position)) {
+                ab.setSelectedNavigationItem(position);
+            }
 
             ((LeftMenuFragment) ((MainTimeLineActivity) getActivity()).getMenuFragment()).commentsTabIndex = position;
 

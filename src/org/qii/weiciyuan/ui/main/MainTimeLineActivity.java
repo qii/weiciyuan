@@ -400,27 +400,30 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     public FriendsTimeLineFragment getFriendsTimeLineFragment() {
         FriendsTimeLineFragment fragment = ((FriendsTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 FriendsTimeLineFragment.class.getName()));
-        if (fragment == null)
+        if (fragment == null) {
             fragment = new FriendsTimeLineFragment(getAccount(), getUser(), getToken());
-
+            fragment.setArguments(new Bundle());
+        }
         return fragment;
     }
 
     public MentionsTimeLine getMentionsTimeLineFragment() {
         MentionsTimeLine fragment = ((MentionsTimeLine) getSupportFragmentManager().findFragmentByTag(
                 MentionsTimeLine.class.getName()));
-        if (fragment == null)
+        if (fragment == null) {
             fragment = new MentionsTimeLine();
-
+            fragment.setArguments(new Bundle());
+        }
         return fragment;
     }
 
     public CommentsTimeLine getCommentsTimeLineFragment() {
         CommentsTimeLine fragment = ((CommentsTimeLine) getSupportFragmentManager().findFragmentByTag(
                 CommentsTimeLine.class.getName()));
-        if (fragment == null)
+        if (fragment == null) {
             fragment = new CommentsTimeLine();
-
+            fragment.setArguments(new Bundle());
+        }
         return fragment;
     }
 

@@ -254,10 +254,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(COMMENTS_INDEX));
 
 
-        MentionsTimeLine m = (MentionsTimeLine) rightFragments.get(MENTIONS_INDEX);
-
-        ft.show(m);
-        ft.commit();
+        Fragment m = rightFragments.get(MENTIONS_INDEX);
 
         if (firstStart) {
             int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
@@ -265,11 +262,12 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 mentionsTabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
             }
         }
-        m.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.mentions_weibo, R.string.mentions_weibo, mentionsTabIndex);
-        ((MainTimeLineActivity) getActivity()).setCurrentFragment(m);
-        if (Utility.isDevicePort()) {
-            setTitle(R.string.mentions);
-        }
+        m.getArguments().putInt("mentionsTabIndex", mentionsTabIndex);
+
+        ft.show(m);
+        ft.commit();
+
+
     }
 
     public int getCurrentIndex() {
@@ -312,21 +310,19 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(HOME_INDEX));
         ft.hide(rightFragments.get(MENTIONS_INDEX));
 
-        CommentsTimeLine fragment = (CommentsTimeLine) rightFragments.get(COMMENTS_INDEX);
-        ft.show(fragment);
-        ft.commit();
-
+        Fragment fragment = rightFragments.get(COMMENTS_INDEX);
         if (firstStart) {
             int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
             if (navPosition == 2) {
                 commentsTabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
             }
         }
-        fragment.buildActionBarAndViewPagerTitles(getActivity().getActionBar(), R.string.all_people_send_to_me, R.string.my_comment, commentsTabIndex);
-        ((MainTimeLineActivity) getActivity()).setCurrentFragment(fragment);
-        if (Utility.isDevicePort()) {
-            setTitle(R.string.comments);
-        }
+        fragment.getArguments().putInt("commentsTabIndex", commentsTabIndex);
+
+        ft.show(fragment);
+        ft.commit();
+
+
     }
 
 
