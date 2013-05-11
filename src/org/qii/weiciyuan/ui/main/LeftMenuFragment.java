@@ -62,6 +62,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
     private static final int MENTIONS_INDEX = 1;
     private static final int COMMENTS_INDEX = 2;
     private static final int SEARCH_INDEX = 3;
+    private static final int DM_INDEX = 4;
 
 
     @Override
@@ -106,6 +107,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         rightFragments.append(MENTIONS_INDEX, ((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment());
         rightFragments.append(COMMENTS_INDEX, ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
         rightFragments.append(SEARCH_INDEX, ((MainTimeLineActivity) getActivity()).getSearchFragment());
+        rightFragments.append(DM_INDEX, ((MainTimeLineActivity) getActivity()).getDMFragment());
 
         switchCategory(currentIndex);
 
@@ -125,6 +127,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 break;
             case 3:
                 showSearchPage(true);
+            case 4:
+                showDMPage(true);
                 break;
         }
         drawButtonsBackground(position);
@@ -225,6 +229,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(MENTIONS_INDEX));
         ft.hide(rightFragments.get(COMMENTS_INDEX));
         ft.hide(rightFragments.get(SEARCH_INDEX));
+        ft.hide(rightFragments.get(DM_INDEX));
+
         FriendsTimeLineFragment fragment = (FriendsTimeLineFragment) rightFragments.get(HOME_INDEX);
         ft.show(fragment);
         ft.commit();
@@ -264,6 +270,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(HOME_INDEX));
         ft.hide(rightFragments.get(COMMENTS_INDEX));
         ft.hide(rightFragments.get(SEARCH_INDEX));
+        ft.hide(rightFragments.get(DM_INDEX));
 
 
         Fragment m = rightFragments.get(MENTIONS_INDEX);
@@ -322,6 +329,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(HOME_INDEX));
         ft.hide(rightFragments.get(MENTIONS_INDEX));
         ft.hide(rightFragments.get(SEARCH_INDEX));
+        ft.hide(rightFragments.get(DM_INDEX));
 
         Fragment fragment = rightFragments.get(COMMENTS_INDEX);
         if (firstStart) {
@@ -374,6 +382,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(HOME_INDEX));
         ft.hide(rightFragments.get(MENTIONS_INDEX));
         ft.hide(rightFragments.get(COMMENTS_INDEX));
+        ft.hide(rightFragments.get(DM_INDEX));
 
         Fragment fragment = rightFragments.get(SEARCH_INDEX);
 
@@ -384,6 +393,53 @@ public class LeftMenuFragment extends AbstractAppFragment {
             }
         }
         fragment.getArguments().putInt("searchTabIndex", searchTabIndex);
+
+        ft.show(fragment);
+        ft.commit();
+
+
+    }
+
+
+    private boolean showDMPage(boolean reset) {
+        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+        if (currentIndex == 4 && !reset) {
+            ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+            return true;
+        }
+        currentIndex = 4;
+        if (Utility.isDevicePort() && !reset) {
+            BroadcastReceiver receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
+                    if (currentIndex == 4)
+                        showDMPageImp();
+
+                }
+            };
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+        } else {
+            showDMPageImp();
+
+        }
+
+
+        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+
+        return false;
+    }
+
+    private void showDMPageImp() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+        ft.hide(rightFragments.get(HOME_INDEX));
+        ft.hide(rightFragments.get(MENTIONS_INDEX));
+        ft.hide(rightFragments.get(COMMENTS_INDEX));
+        ft.hide(rightFragments.get(SEARCH_INDEX));
+
+        Fragment fragment = rightFragments.get(DM_INDEX);
+
 
         ft.show(fragment);
         ft.commit();
@@ -461,7 +517,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 //                    drawButtonsBackground(5);
                     break;
                 case R.id.btn_dm:
-                    showDMPage();
+                    showDMPage(false);
                     drawButtonsBackground(4);
                     break;
                 case R.id.btn_setting:
@@ -482,7 +538,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 //        layout.profile.setBackgroundResource(R.color.transparent);
 //        layout.location.setBackgroundResource(R.color.transparent);
 //        layout.setting.setBackgroundResource(R.color.transparent);
-//        layout.dm.setBackgroundResource(R.color.transparent);
+        layout.dm.setBackgroundResource(R.drawable.btn_drawer_menu);
 //        layout.logout.setBackgroundResource(R.color.transparent);
         switch (position) {
             case 0:

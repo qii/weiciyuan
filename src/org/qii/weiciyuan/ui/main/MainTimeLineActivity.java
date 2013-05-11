@@ -25,6 +25,7 @@ import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.*;
+import org.qii.weiciyuan.ui.dm.DMUserListFragment;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
@@ -135,6 +136,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         Fragment mentions = getMentionsTimeLineFragment();
         Fragment comments = getCommentsTimeLineFragment();
         Fragment search = getSearchFragment();
+        Fragment dm = getDMFragment();
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (!friend.isAdded()) {
@@ -156,6 +158,13 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             fragmentTransaction.hide(search);
 
         }
+
+        if (!dm.isAdded()) {
+            fragmentTransaction.add(R.id.menu_right_fl, dm, DMUserListFragment.class.getName());
+            fragmentTransaction.hide(dm);
+
+        }
+
         if (!fragmentTransaction.isEmpty()) {
             fragmentTransaction.commit();
             getSupportFragmentManager().executePendingTransactions();
@@ -439,6 +448,16 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 SearchMainParentFragment.class.getName()));
         if (fragment == null) {
             fragment = new SearchMainParentFragment();
+            fragment.setArguments(new Bundle());
+        }
+        return fragment;
+    }
+
+    public DMUserListFragment getDMFragment() {
+        DMUserListFragment fragment = ((DMUserListFragment) getSupportFragmentManager().findFragmentByTag(
+                DMUserListFragment.class.getName()));
+        if (fragment == null) {
+            fragment = new DMUserListFragment();
             fragment.setArguments(new Bundle());
         }
         return fragment;

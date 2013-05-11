@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.dm;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,7 +18,8 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.DMUserListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.interfaces.ICommander;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
  * User: qii
@@ -63,6 +65,9 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
                 refreshLayout(getList());
                 break;
         }
+        if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex() == 4) {
+            buildActionBarAndViewPagerTitles();
+        }
 
     }
 
@@ -72,6 +77,27 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         Utility.cancelTasks(dbTask);
     }
 
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            buildActionBarAndViewPagerTitles();
+        }
+    }
+
+    public void buildActionBarAndViewPagerTitles() {
+        if (Utility.isDevicePort()) {
+            ((MainTimeLineActivity) getActivity()).setTitle(getString(R.string.dm));
+            getActivity().getActionBar().setIcon(R.drawable.ic_menu_message);
+        } else {
+            ((MainTimeLineActivity) getActivity()).setTitle(getString(R.string.dm));
+            getActivity().getActionBar().setIcon(R.drawable.ic_launcher);
+        }
+
+        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        getActivity().getActionBar().removeAllTabs();
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -100,7 +126,7 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new DMUserListAdapter(this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView());
+        timeLineAdapter = new DMUserListAdapter(this, ((ICommander) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView());
         getListView().setAdapter(timeLineAdapter);
     }
 
