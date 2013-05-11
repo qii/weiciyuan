@@ -127,6 +127,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 break;
             case 3:
                 showSearchPage(true);
+                break;
             case 4:
                 showDMPage(true);
                 break;

@@ -396,7 +396,10 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     private void saveNavigationPositionToDB() {
         int navPosition = getMenuFragment().getCurrentIndex() * 10;
         ActionBar actionBar = getActionBar();
-        int second = actionBar.getSelectedNavigationIndex();
+        int second = 0;
+        if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_STANDARD) {
+            second = actionBar.getSelectedNavigationIndex();
+        }
         int result = navPosition + second;
         GlobalContext.getInstance().getAccountBean().setNavigationPosition(result);
         AccountDBTask.updateNavigationPosition(GlobalContext.getInstance().getAccountBean(), result);
