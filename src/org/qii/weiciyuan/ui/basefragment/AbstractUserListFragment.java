@@ -15,8 +15,8 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.UserListAdapter;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
+import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
@@ -88,7 +88,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-        setRetainInstance(true);
+        setRetainInstance(false);
     }
 
     public UserListBean getList() {
@@ -131,7 +131,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         dismissFooterView();
 
 
-        userListAdapter = new UserListAdapter(AbstractUserListFragment.this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), bean.getUsers(), getListView());
+        userListAdapter = new UserListAdapter(AbstractUserListFragment.this, ((ICommander) getActivity()).getBitmapDownloader(), bean.getUsers(), getListView());
         pullToRefreshListView.setAdapter(userListAdapter);
 
         pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -249,7 +249,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     public void refresh() {
         if (newTask == null || newTask.getStatus() == MyAsyncTask.Status.FINISHED) {
 
-            ((AbstractAppActivity) getActivity()).getBitmapDownloader().totalStopLoadPicture();
+            ((ICommander) getActivity()).getBitmapDownloader().totalStopLoadPicture();
 
             newTask = new UserListGetNewDataTask();
             newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);

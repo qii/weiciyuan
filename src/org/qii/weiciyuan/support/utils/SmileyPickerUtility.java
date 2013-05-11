@@ -5,9 +5,9 @@ import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 /**
@@ -16,11 +16,11 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
  * from top to bottom:statusbar, actionbar, app content, keyboard
  */
 public class SmileyPickerUtility {
-    public static void hideSoftInput(EditText paramEditText) {
+    public static void hideSoftInput(View paramEditText) {
         ((InputMethodManager) GlobalContext.getInstance().getSystemService("input_method")).hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
     }
 
-    public static void showKeyBoard(final EditText paramEditText) {
+    public static void showKeyBoard(final View paramEditText) {
         paramEditText.requestFocus();
         paramEditText.post(new Runnable() {
             @Override

@@ -10,7 +10,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.interfaces.ICommander;
 
 /**
  * User: qii
@@ -36,6 +36,12 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(false);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
@@ -45,7 +51,7 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
+        commander = ((ICommander) getActivity()).getBitmapDownloader();
         if (savedInstanceState != null && bean.getItemList().size() == 0) {
             clearAndReplaceValue((SearchStatusListBean) savedInstanceState.getSerializable("bean"));
             timeLineAdapter.notifyDataSetChanged();
@@ -75,7 +81,7 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
     @Override
     protected SearchStatusListBean getDoInBackgroundNewData() throws WeiboException {
         page = 1;
-        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainActivity) getActivity()).getSearchWord());
+        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainParentFragment) getParentFragment()).getSearchWord());
         SearchStatusListBean result = dao.getStatusList();
 
         return result;
@@ -84,7 +90,7 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
     @Override
     protected SearchStatusListBean getDoInBackgroundOldData() throws WeiboException {
 
-        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainActivity) getActivity()).getSearchWord());
+        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainParentFragment) getParentFragment()).getSearchWord());
         dao.setPage(String.valueOf(page + 1));
 
         SearchStatusListBean result = dao.getStatusList();

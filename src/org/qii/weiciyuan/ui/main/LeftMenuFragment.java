@@ -51,6 +51,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     public int commentsTabIndex = -1;
     public int mentionsTabIndex = -1;
+    public int searchTabIndex = -1;
+
 
     private boolean firstStart = true;
 
@@ -59,6 +61,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
     private static final int HOME_INDEX = 0;
     private static final int MENTIONS_INDEX = 1;
     private static final int COMMENTS_INDEX = 2;
+    private static final int SEARCH_INDEX = 3;
+
 
     @Override
     public void onPause() {
@@ -74,6 +78,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         outState.putInt("commentsToMeUnreadCount", commentsToMeUnreadCount);
         outState.putInt("commentsTabIndex", commentsTabIndex);
         outState.putInt("mentionsTabIndex", mentionsTabIndex);
+        outState.putInt("searchTabIndex", searchTabIndex);
         outState.putBoolean("firstStart", firstStart);
     }
 
@@ -87,6 +92,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
             commentsToMeUnreadCount = savedInstanceState.getInt("commentsToMeUnreadCount");
             commentsTabIndex = savedInstanceState.getInt("commentsTabIndex");
             mentionsTabIndex = savedInstanceState.getInt("mentionsTabIndex");
+            searchTabIndex = savedInstanceState.getInt("searchTabIndex");
             firstStart = savedInstanceState.getBoolean("firstStart");
         } else {
             readUnreadCountFromDB();
@@ -99,6 +105,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         rightFragments.append(HOME_INDEX, ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment());
         rightFragments.append(MENTIONS_INDEX, ((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment());
         rightFragments.append(COMMENTS_INDEX, ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
+        rightFragments.append(SEARCH_INDEX, ((MainTimeLineActivity) getActivity()).getSearchFragment());
 
         switchCategory(currentIndex);
 
@@ -115,6 +122,9 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 break;
             case 2:
                 showCommentPage(true);
+                break;
+            case 3:
+                showSearchPage(true);
                 break;
         }
         drawButtonsBackground(position);
@@ -214,6 +224,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
         ft.hide(rightFragments.get(MENTIONS_INDEX));
         ft.hide(rightFragments.get(COMMENTS_INDEX));
+        ft.hide(rightFragments.get(SEARCH_INDEX));
         FriendsTimeLineFragment fragment = (FriendsTimeLineFragment) rightFragments.get(HOME_INDEX);
         ft.show(fragment);
         ft.commit();
@@ -252,6 +263,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.hide(rightFragments.get(HOME_INDEX));
         ft.hide(rightFragments.get(COMMENTS_INDEX));
+        ft.hide(rightFragments.get(SEARCH_INDEX));
 
 
         Fragment m = rightFragments.get(MENTIONS_INDEX);
@@ -309,6 +321,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
         ft.hide(rightFragments.get(HOME_INDEX));
         ft.hide(rightFragments.get(MENTIONS_INDEX));
+        ft.hide(rightFragments.get(SEARCH_INDEX));
 
         Fragment fragment = rightFragments.get(COMMENTS_INDEX);
         if (firstStart) {
@@ -318,6 +331,59 @@ public class LeftMenuFragment extends AbstractAppFragment {
             }
         }
         fragment.getArguments().putInt("commentsTabIndex", commentsTabIndex);
+
+        ft.show(fragment);
+        ft.commit();
+
+
+    }
+
+
+    private boolean showSearchPage(boolean reset) {
+        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+        if (currentIndex == 3 && !reset) {
+            ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+            return true;
+        }
+        currentIndex = 3;
+        if (Utility.isDevicePort() && !reset) {
+            BroadcastReceiver receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
+                    if (currentIndex == 3)
+                        showSearchPageImp();
+
+                }
+            };
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+        } else {
+            showSearchPageImp();
+
+        }
+
+
+        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+
+        return false;
+    }
+
+    private void showSearchPageImp() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+        ft.hide(rightFragments.get(HOME_INDEX));
+        ft.hide(rightFragments.get(MENTIONS_INDEX));
+        ft.hide(rightFragments.get(COMMENTS_INDEX));
+
+        Fragment fragment = rightFragments.get(SEARCH_INDEX);
+
+        if (firstStart) {
+            int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
+            if (navPosition == 3) {
+                searchTabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
+            }
+        }
+        fragment.getArguments().putInt("searchTabIndex", searchTabIndex);
 
         ft.show(fragment);
         ft.commit();
@@ -382,8 +448,9 @@ public class LeftMenuFragment extends AbstractAppFragment {
                     drawButtonsBackground(2);
                     break;
                 case R.id.btn_search:
-                    showSearchPage();
-//                    drawButtonsBackground(3);
+//                    showSearchPage();
+                    showSearchPage(false);
+                    drawButtonsBackground(3);
                     break;
                 case R.id.btn_profile:
                     openMyProfile();
@@ -411,7 +478,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         layout.home.setBackgroundResource(R.drawable.btn_drawer_menu);
         layout.mention.setBackgroundResource(R.drawable.btn_drawer_menu);
         layout.comment.setBackgroundResource(R.drawable.btn_drawer_menu);
-//        layout.search.setBackgroundResource(R.color.transparent);
+        layout.search.setBackgroundResource(R.drawable.btn_drawer_menu);
 //        layout.profile.setBackgroundResource(R.color.transparent);
 //        layout.location.setBackgroundResource(R.color.transparent);
 //        layout.setting.setBackgroundResource(R.color.transparent);

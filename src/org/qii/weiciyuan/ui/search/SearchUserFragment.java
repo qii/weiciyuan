@@ -27,6 +27,11 @@ public class SearchUserFragment extends AbstractUserListFragment {
         pullToRefreshListView.startRefreshNow();
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(false);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -42,7 +47,7 @@ public class SearchUserFragment extends AbstractUserListFragment {
     @Override
     protected UserListBean getDoInBackgroundNewData() throws WeiboException {
         page = 1;
-        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainActivity) getActivity()).getSearchWord());
+        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainParentFragment) getParentFragment()).getSearchWord());
         UserListBean result = dao.getUserList();
 
         return result;
@@ -50,7 +55,7 @@ public class SearchUserFragment extends AbstractUserListFragment {
 
     @Override
     protected UserListBean getDoInBackgroundOldData() throws WeiboException {
-        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainActivity) getActivity()).getSearchWord());
+        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainParentFragment) getParentFragment()).getSearchWord());
         dao.setPage(String.valueOf(page + 1));
 
         UserListBean result = dao.getUserList();

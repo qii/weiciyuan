@@ -28,6 +28,7 @@ import org.qii.weiciyuan.support.utils.*;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
+import org.qii.weiciyuan.ui.search.SearchMainParentFragment;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
@@ -133,6 +134,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         Fragment friend = getFriendsTimeLineFragment();
         Fragment mentions = getMentionsTimeLineFragment();
         Fragment comments = getCommentsTimeLineFragment();
+        Fragment search = getSearchFragment();
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (!friend.isAdded()) {
@@ -147,6 +149,11 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         if (!comments.isAdded()) {
             fragmentTransaction.add(R.id.menu_right_fl, comments, CommentsTimeLine.class.getName());
             fragmentTransaction.hide(comments);
+
+        }
+        if (!search.isAdded()) {
+            fragmentTransaction.add(R.id.menu_right_fl, search, SearchMainParentFragment.class.getName());
+            fragmentTransaction.hide(search);
 
         }
         if (!fragmentTransaction.isEmpty()) {
@@ -422,6 +429,16 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 CommentsTimeLine.class.getName()));
         if (fragment == null) {
             fragment = new CommentsTimeLine();
+            fragment.setArguments(new Bundle());
+        }
+        return fragment;
+    }
+
+    public SearchMainParentFragment getSearchFragment() {
+        SearchMainParentFragment fragment = ((SearchMainParentFragment) getSupportFragmentManager().findFragmentByTag(
+                SearchMainParentFragment.class.getName()));
+        if (fragment == null) {
+            fragment = new SearchMainParentFragment();
             fragment.setArguments(new Bundle());
         }
         return fragment;
