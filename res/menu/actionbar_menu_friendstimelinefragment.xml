@@ -4,8 +4,9 @@
 
 
     <item
-        android:id="@+id/group_name"
-        android:title="name"
+        android:id="@+id/write_weibo"
+        android:icon="?write_weibo"
+        android:title="@string/write_weibo"
         android:showAsAction="always"/>
 
 

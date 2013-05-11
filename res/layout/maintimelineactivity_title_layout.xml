@@ -34,6 +34,6 @@
         android:src="?write_weibo"
         android:layout_marginRight="0dp"
         android:id="@+id/btn_write"
-        android:visibility="visible"
+        android:visibility="gone"
         android:clickable="true"/>
 </LinearLayout>

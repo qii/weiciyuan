@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -82,6 +84,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -429,6 +433,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         intent.putExtra("msg", getList().getItem(position));
         intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
         startActivityForResult(intent, 0);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.actionbar_menu_friendstimelinefragment, menu);
     }
 
     @Override
