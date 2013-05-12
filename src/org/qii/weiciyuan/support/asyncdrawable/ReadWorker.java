@@ -171,6 +171,13 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         ImageView imageView = viewWeakReference.get();
         if (imageView != null) {
             if (canDisplay(imageView)) {
+                if (pbWeakReference != null) {
+                    ProgressBar pb = pbWeakReference.get();
+                    if (pb != null) {
+                        pb.setVisibility(View.GONE);
+                    }
+                }
+
                 if (bitmap != null) {
                     playImageViewAnimation(imageView, bitmap);
                     lruCache.put(data, bitmap);
@@ -189,12 +196,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
 
                 }
 
-                if (pbWeakReference != null) {
-                    ProgressBar pb = pbWeakReference.get();
-                    if (pb != null) {
-                        pb.setVisibility(View.GONE);
-                    }
-                }
+
             }
         }
 
