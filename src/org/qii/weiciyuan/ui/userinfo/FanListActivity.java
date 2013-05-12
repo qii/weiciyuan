@@ -29,6 +29,8 @@ public class FanListActivity extends AbstractAppActivity implements IUserInfo {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.fan_list));
+        getActionBar().setIcon(R.drawable.ic_ab_friendship);
+
         token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getSerializableExtra("user");
 

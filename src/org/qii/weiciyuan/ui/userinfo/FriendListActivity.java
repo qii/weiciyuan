@@ -28,6 +28,7 @@ public class FriendListActivity extends AbstractAppActivity implements IUserInfo
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.following_list));
+        getActionBar().setIcon(R.drawable.ic_ab_friendship);
         bean = (UserBean) getIntent().getSerializableExtra("user");
         if (getSupportFragmentManager().findFragmentByTag(FriendsListFragment.class.getName()) == null) {
             getSupportFragmentManager().beginTransaction()
