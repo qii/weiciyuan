@@ -3,7 +3,7 @@ package org.qii.weiciyuan.ui.userinfo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
+import android.support.v4.content.Loader;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,12 +12,14 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.dao.user.StatusesTimeLineDao;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
+import org.qii.weiciyuan.ui.loader.StatusesByIdLoader;
 
 /**
  * User: Jiang Qi
@@ -100,11 +102,6 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
 
     @Override
-    protected MessageListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        return null;
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
         switch (getCurrentState(savedInstanceState)) {
@@ -158,38 +155,18 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     @Override
     protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
 
-        String id = userBean.getId();
-        String screenName = userBean.getScreen_name();
+        return null;
+    }
 
-        StatusesTimeLineDao dao = new StatusesTimeLineDao(token, id);
-
-        if (TextUtils.isEmpty(id)) {
-            dao.setScreen_name(screenName);
-        }
-
-        if (getList().getSize() > 0) {
-            dao.setSince_id(getList().getItem(0).getId());
-        }
-        MessageListBean result = dao.getGSONMsgList();
-
-        return result;
+    @Override
+    protected MessageListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+        return null;
     }
 
     @Override
     protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
-        String id = userBean.getId();
-        String screenName = userBean.getScreen_name();
 
-        StatusesTimeLineDao dao = new StatusesTimeLineDao(token, id);
-        if (TextUtils.isEmpty(id)) {
-            dao.setScreen_name(screenName);
-        }
-        if (getList().getSize() > 0) {
-            dao.setMax_id(getList().getItemList().get(getList().getSize() - 1).getId());
-        }
-        MessageListBean result = dao.getGSONMsgList();
-
-        return result;
+        return null;
     }
 
 
@@ -218,6 +195,69 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         }
     }
 
+
+    @Override
+    public void loadMiddleMsg(String beginId, String endId, int position) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        dismissFooterView();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("beginId", beginId);
+        bundle.putString("endId", endId);
+        bundle.putInt("position", position);
+        VelocityListView velocityListView = (VelocityListView) getListView();
+        bundle.putBoolean("towardsBottom", velocityListView.getTowardsOrientation() == VelocityListView.TOWARDS_BOTTOM);
+        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
+
+    }
+
+    @Override
+    public void loadNewMsg() {
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        dismissFooterView();
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+    }
+
+
+    @Override
+    protected void loadOldMsg(View view) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+    }
+
+
+    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        String uid = userBean.getId();
+        String screenName = userBean.getScreen_name();
+        String sinceId = null;
+        if (getList().getItemList().size() > 0) {
+            sinceId = getList().getItemList().get(0).getId();
+        }
+        return new StatusesByIdLoader(getActivity(), uid, screenName, token, sinceId, null);
+    }
+
+    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateMiddleMsgLoader(int id, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
+        String uid = userBean.getId();
+        String screenName = userBean.getScreen_name();
+        return new StatusesByIdLoader(getActivity(), uid, screenName, token, middleBeginId, middleEndId);
+    }
+
+    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+        String uid = userBean.getId();
+        String screenName = userBean.getScreen_name();
+        String maxId = null;
+
+        if (getList().getSize() > 0) {
+            maxId = getList().getItemList().get(getList().getSize() - 1).getId();
+        }
+
+        return new StatusesByIdLoader(getActivity(), uid, screenName, token, null, maxId);
+    }
 }
 
 
