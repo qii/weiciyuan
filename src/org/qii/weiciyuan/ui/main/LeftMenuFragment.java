@@ -116,19 +116,19 @@ public class LeftMenuFragment extends AbstractAppFragment {
     public void switchCategory(int position) {
 
         switch (position) {
-            case 0:
+            case HOME_INDEX:
                 showHomePage(true);
                 break;
-            case 1:
+            case MENTIONS_INDEX:
                 showMentionPage(true);
                 break;
-            case 2:
+            case COMMENTS_INDEX:
                 showCommentPage(true);
                 break;
-            case 3:
+            case SEARCH_INDEX:
                 showSearchPage(true);
                 break;
-            case 4:
+            case DM_INDEX:
                 showDMPage(true);
                 break;
         }
@@ -194,20 +194,20 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
 
     private boolean showHomePage(boolean reset) {
-        if (currentIndex == 0 && !reset) {
+        if (currentIndex == HOME_INDEX && !reset) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
         }
 
         getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        currentIndex = 0;
+        currentIndex = HOME_INDEX;
 
         if (Utility.isDevicePort() && !reset) {
             BroadcastReceiver receiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
-                    if (currentIndex == 0)
+                    if (currentIndex == HOME_INDEX)
                         showHomePageImp();
 
                 }
@@ -240,20 +240,20 @@ public class LeftMenuFragment extends AbstractAppFragment {
     }
 
     private boolean showMentionPage(boolean reset) {
-        if (currentIndex == 1 && !reset) {
+        if (currentIndex == MENTIONS_INDEX && !reset) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
         }
 
         getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-        currentIndex = 1;
+        currentIndex = MENTIONS_INDEX;
 
         if (Utility.isDevicePort() && !reset) {
             BroadcastReceiver receiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
-                    if (currentIndex == 1)
+                    if (currentIndex == MENTIONS_INDEX)
                         showMentionPageImp();
                 }
             };
@@ -278,7 +278,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
         if (firstStart) {
             int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
-            if (navPosition == 1) {
+            if (navPosition == MENTIONS_INDEX) {
                 mentionsTabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
             }
         }
@@ -297,17 +297,17 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private boolean showCommentPage(boolean reset) {
         getActivity().getActionBar().setDisplayShowTitleEnabled(true);
-        if (currentIndex == 2 && !reset) {
+        if (currentIndex == COMMENTS_INDEX && !reset) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
         }
-        currentIndex = 2;
+        currentIndex = COMMENTS_INDEX;
         if (Utility.isDevicePort() && !reset) {
             BroadcastReceiver receiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
-                    if (currentIndex == 2)
+                    if (currentIndex == COMMENTS_INDEX)
                         showCommentPageImp();
 
                 }
@@ -335,7 +335,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         Fragment fragment = rightFragments.get(COMMENTS_INDEX);
         if (firstStart) {
             int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
-            if (navPosition == 2) {
+            if (navPosition == COMMENTS_INDEX) {
                 commentsTabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
             }
         }
@@ -350,17 +350,17 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private boolean showSearchPage(boolean reset) {
         getActivity().getActionBar().setDisplayShowTitleEnabled(true);
-        if (currentIndex == 3 && !reset) {
+        if (currentIndex == SEARCH_INDEX && !reset) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
         }
-        currentIndex = 3;
+        currentIndex = SEARCH_INDEX;
         if (Utility.isDevicePort() && !reset) {
             BroadcastReceiver receiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
-                    if (currentIndex == 3)
+                    if (currentIndex == SEARCH_INDEX)
                         showSearchPageImp();
 
                 }
@@ -389,7 +389,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
         if (firstStart) {
             int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
-            if (navPosition == 3) {
+            if (navPosition == SEARCH_INDEX) {
                 searchTabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
             }
         }
@@ -404,17 +404,17 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private boolean showDMPage(boolean reset) {
         getActivity().getActionBar().setDisplayShowTitleEnabled(true);
-        if (currentIndex == 4 && !reset) {
+        if (currentIndex == DM_INDEX && !reset) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
         }
-        currentIndex = 4;
+        currentIndex = DM_INDEX;
         if (Utility.isDevicePort() && !reset) {
             BroadcastReceiver receiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
-                    if (currentIndex == 4)
+                    if (currentIndex == DM_INDEX)
                         showDMPageImp();
 
                 }
