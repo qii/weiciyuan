@@ -41,7 +41,8 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex() == 2) {
+        if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
+                == LeftMenuFragment.COMMENTS_INDEX) {
             buildActionBarAndViewPagerTitles(((MainTimeLineActivity) getActivity()).getMenuFragment().commentsTabIndex);
         }
     }

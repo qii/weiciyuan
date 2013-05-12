@@ -59,7 +59,8 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
         if (savedInstanceState != null) {
             this.q = savedInstanceState.getString("q");
         }
-        if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex() == 3) {
+        if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
+                == LeftMenuFragment.SEARCH_INDEX) {
             buildActionBarAndViewPagerTitles(((MainTimeLineActivity) getActivity()).getMenuFragment().searchTabIndex);
         }
     }

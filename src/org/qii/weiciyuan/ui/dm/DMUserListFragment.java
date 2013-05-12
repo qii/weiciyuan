@@ -19,6 +19,7 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.DMUserListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
+import org.qii.weiciyuan.ui.main.LeftMenuFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
@@ -65,7 +66,8 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
                 refreshLayout(getList());
                 break;
         }
-        if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex() == 4) {
+        if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
+                == LeftMenuFragment.SEARCH_INDEX) {
             buildActionBarAndViewPagerTitles();
         }
 

@@ -58,11 +58,11 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private SparseArray<Fragment> rightFragments = new SparseArray<Fragment>();
 
-    private static final int HOME_INDEX = 0;
-    private static final int MENTIONS_INDEX = 1;
-    private static final int COMMENTS_INDEX = 2;
-    private static final int SEARCH_INDEX = 3;
-    private static final int DM_INDEX = 4;
+    public static final int HOME_INDEX = 0;
+    public static final int MENTIONS_INDEX = 1;
+    public static final int COMMENTS_INDEX = 2;
+    public static final int SEARCH_INDEX = 3;
+    public static final int DM_INDEX = 4;
 
 
     @Override

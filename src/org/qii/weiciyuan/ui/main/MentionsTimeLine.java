@@ -41,7 +41,8 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex() == 1) {
+        if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
+                == LeftMenuFragment.MENTIONS_INDEX) {
             buildActionBarAndViewPagerTitles(((MainTimeLineActivity) getActivity()).getMenuFragment().mentionsTabIndex);
         }
     }
