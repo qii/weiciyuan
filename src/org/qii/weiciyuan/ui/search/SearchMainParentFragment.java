@@ -48,9 +48,17 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("q", q);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        if (savedInstanceState != null) {
+            this.q = savedInstanceState.getString("q");
+        }
         if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex() == 3) {
             buildActionBarAndViewPagerTitles(((MainTimeLineActivity) getActivity()).getMenuFragment().searchTabIndex);
         }
@@ -142,6 +150,8 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
         if (actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS && nav > -1) {
             viewPager.setCurrentItem(nav, false);
         }
+
+
     }
 
     @Override
@@ -174,6 +184,9 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
                 search(q);
             }
         });
+        if (!TextUtils.isEmpty(this.q)) {
+            searchView.setQuery(this.q, false);
+        }
     }
 
     public String getSearchWord() {
