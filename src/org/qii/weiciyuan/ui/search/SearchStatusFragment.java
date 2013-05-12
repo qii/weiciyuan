@@ -2,15 +2,17 @@ package org.qii.weiciyuan.ui.search;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.bean.SearchStatusListBean;
-import org.qii.weiciyuan.dao.search.SearchDao;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
+import org.qii.weiciyuan.ui.loader.SearchStatusLoader;
 
 /**
  * User: qii
@@ -80,23 +82,46 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
 
     @Override
     protected SearchStatusListBean getDoInBackgroundNewData() throws WeiboException {
-        page = 1;
-        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainParentFragment) getParentFragment()).getSearchWord());
-        SearchStatusListBean result = dao.getStatusList();
-
-        return result;
+        return null;
     }
 
     @Override
     protected SearchStatusListBean getDoInBackgroundOldData() throws WeiboException {
-
-        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainParentFragment) getParentFragment()).getSearchWord());
-        dao.setPage(String.valueOf(page + 1));
-
-        SearchStatusListBean result = dao.getStatusList();
-
-        return result;
+        return null;
     }
+
+    @Override
+    public void loadNewMsg() {
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        dismissFooterView();
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+    }
+
+
+    @Override
+    protected void loadOldMsg(View view) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+    }
+
+    @Override
+    protected Loader<AsyncTaskLoaderResult<SearchStatusListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String word = ((SearchMainParentFragment) getParentFragment()).getSearchWord();
+        page = 1;
+        return new SearchStatusLoader(getActivity(), token, word, String.valueOf(page));
+    }
+
+    @Override
+    protected Loader<AsyncTaskLoaderResult<SearchStatusListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String word = ((SearchMainParentFragment) getParentFragment()).getSearchWord();
+        return new SearchStatusLoader(getActivity(), token, word, String.valueOf(page + 1));
+    }
+
 
     @Override
     protected void newMsgOnPostExecute(SearchStatusListBean newValue) {
