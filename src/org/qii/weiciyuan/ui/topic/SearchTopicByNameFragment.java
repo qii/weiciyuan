@@ -159,20 +159,6 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
         getActivity().getActionBar().setSubtitle(number);
     }
 
-    @Override
-    protected TopicResultListBean getDoInBackgroundNewData() throws WeiboException {
-        return null;
-    }
-
-    @Override
-    protected TopicResultListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        return null;
-    }
-
-    @Override
-    protected TopicResultListBean getDoInBackgroundOldData() throws WeiboException {
-        return null;
-    }
 
     private class FollowTopicTask extends MyAsyncTask<Void, Boolean, Boolean> {
         WeiboException e;

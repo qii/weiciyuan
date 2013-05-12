@@ -473,22 +473,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
 
     @Override
-    protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
-        return null;
-    }
-
-    @Override
-    protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
-        return null;
-    }
-
-    @Override
-    protected MessageListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        return null;
-    }
-
-
-    @Override
     protected void newMsgOnPostExecute(MessageListBean newValue) {
         if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 0) {
             addNewDataAndRememberPosition(newValue);

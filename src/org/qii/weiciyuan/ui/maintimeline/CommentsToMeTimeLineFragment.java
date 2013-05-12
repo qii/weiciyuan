@@ -334,21 +334,6 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
 
     @Override
-    protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
-        return null;
-    }
-
-    @Override
-    protected CommentListBean getDoInBackgroundOldData() throws WeiboException {
-        return null;
-    }
-
-    @Override
-    protected CommentListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        throw new UnsupportedOperationException("comment list dont support this operation");
-    }
-
-    @Override
     protected void newMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null && newValue.getItemList() != null && newValue.getItemList().size() > 0) {
             addNewDataAndRememberPosition(newValue);

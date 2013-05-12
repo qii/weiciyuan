@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.bean.SearchStatusListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
-import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
@@ -73,22 +72,6 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
         startActivity(intent);
     }
 
-
-    @Override
-    protected SearchStatusListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        return null;
-    }
-
-
-    @Override
-    protected SearchStatusListBean getDoInBackgroundNewData() throws WeiboException {
-        return null;
-    }
-
-    @Override
-    protected SearchStatusListBean getDoInBackgroundOldData() throws WeiboException {
-        return null;
-    }
 
     @Override
     public void loadNewMsg() {

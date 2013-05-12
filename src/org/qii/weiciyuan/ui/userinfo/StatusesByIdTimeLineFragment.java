@@ -13,7 +13,6 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
-import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -149,24 +148,6 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
-
-        return null;
-    }
-
-    @Override
-    protected MessageListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        return null;
-    }
-
-    @Override
-    protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
-
-        return null;
     }
 
 

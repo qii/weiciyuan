@@ -19,9 +19,7 @@ import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.MentionTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
-import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
-import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.utils.AppEventAction;
@@ -296,26 +294,6 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
             setActionBarTabCount(newMsgTipBar.getValues().size());
             ((MainTimeLineActivity) getActivity()).setMentionsWeiboCount(newMsgTipBar.getValues().size());
         }
-    }
-
-    @Override
-    protected MessageListBean getDoInBackgroundNewData() throws WeiboException {
-        return null;
-    }
-
-
-    @Override
-    protected MessageListBean getDoInBackgroundOldData() throws WeiboException {
-        return null;
-    }
-
-    @Override
-    protected MessageListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
-        dao.setMax_id(beginId);
-        dao.setSince_id(endId);
-        MessageListBean result = dao.getGSONMsgList();
-        return result;
     }
 
     @Override

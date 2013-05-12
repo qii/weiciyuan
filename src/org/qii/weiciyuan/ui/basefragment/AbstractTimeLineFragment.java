@@ -609,11 +609,17 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
 
-    protected abstract T getDoInBackgroundNewData() throws WeiboException;
+    protected T getDoInBackgroundNewData() throws WeiboException {
+        return null;
+    }
 
-    protected abstract T getDoInBackgroundOldData() throws WeiboException;
+    protected T getDoInBackgroundOldData() throws WeiboException {
+        return null;
+    }
 
-    protected abstract T getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException;
+    protected T getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
+        return null;
+    }
 
 
     private volatile boolean enableRefreshTime = true;
