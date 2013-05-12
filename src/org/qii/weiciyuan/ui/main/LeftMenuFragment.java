@@ -199,7 +199,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
             return true;
         }
 
-        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         currentIndex = 0;
 
         if (Utility.isDevicePort() && !reset) {
