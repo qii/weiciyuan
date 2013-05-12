@@ -494,20 +494,20 @@ public class LeftMenuFragment extends AbstractAppFragment {
             switch (v.getId()) {
                 case R.id.btn_home:
                     showHomePage(false);
-                    drawButtonsBackground(0);
+                    drawButtonsBackground(HOME_INDEX);
                     break;
                 case R.id.btn_mention:
                     showMentionPage(false);
-                    drawButtonsBackground(1);
+                    drawButtonsBackground(MENTIONS_INDEX);
                     break;
                 case R.id.btn_comment:
                     showCommentPage(false);
-                    drawButtonsBackground(2);
+                    drawButtonsBackground(COMMENTS_INDEX);
                     break;
                 case R.id.btn_search:
 //                    showSearchPage();
                     showSearchPage(false);
-                    drawButtonsBackground(3);
+                    drawButtonsBackground(SEARCH_INDEX);
                     break;
                 case R.id.btn_profile:
                     openMyProfile();
@@ -519,7 +519,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
                     break;
                 case R.id.btn_dm:
                     showDMPage(false);
-                    drawButtonsBackground(4);
+                    drawButtonsBackground(DM_INDEX);
                     break;
                 case R.id.btn_setting:
                     showSettingPage();
@@ -542,19 +542,19 @@ public class LeftMenuFragment extends AbstractAppFragment {
         layout.dm.setBackgroundResource(R.drawable.btn_drawer_menu);
 //        layout.logout.setBackgroundResource(R.color.transparent);
         switch (position) {
-            case 0:
+            case HOME_INDEX:
                 layout.home.setBackgroundResource(R.color.ics_blue_semi);
                 break;
-            case 1:
+            case MENTIONS_INDEX:
                 layout.mention.setBackgroundResource(R.color.ics_blue_semi);
                 break;
-            case 2:
+            case COMMENTS_INDEX:
                 layout.comment.setBackgroundResource(R.color.ics_blue_semi);
                 break;
-            case 3:
+            case SEARCH_INDEX:
                 layout.search.setBackgroundResource(R.color.ics_blue_semi);
                 break;
-            case 4:
+            case DM_INDEX:
                 layout.dm.setBackgroundResource(R.color.ics_blue_semi);
                 break;
             case 5:
