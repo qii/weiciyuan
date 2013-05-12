@@ -1,12 +1,13 @@
 package org.qii.weiciyuan.ui.search;
 
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
-import org.qii.weiciyuan.dao.search.SearchDao;
-import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
+import org.qii.weiciyuan.ui.loader.SearchUserLoader;
 
 import java.util.List;
 
@@ -45,25 +46,6 @@ public class SearchUserFragment extends AbstractUserListFragment {
 
 
     @Override
-    protected UserListBean getDoInBackgroundNewData() throws WeiboException {
-        page = 1;
-        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainParentFragment) getParentFragment()).getSearchWord());
-        UserListBean result = dao.getUserList();
-
-        return result;
-    }
-
-    @Override
-    protected UserListBean getDoInBackgroundOldData() throws WeiboException {
-        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainParentFragment) getParentFragment()).getSearchWord());
-        dao.setPage(String.valueOf(page + 1));
-
-        UserListBean result = dao.getUserList();
-
-        return result;
-    }
-
-    @Override
     protected void oldUserOnPostExecute(UserListBean newValue) {
         if (newValue != null && newValue.getUsers().size() > 0) {
             List<UserBean> list = newValue.getUsers();
@@ -72,9 +54,20 @@ public class SearchUserFragment extends AbstractUserListFragment {
         }
     }
 
-    @Override
-    protected void newUserOnPostExecute() {
 
+    @Override
+    protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String word = ((SearchMainParentFragment) getParentFragment()).getSearchWord();
+        page = 1;
+        return new SearchUserLoader(getActivity(), token, word, String.valueOf(page));
+    }
+
+    @Override
+    protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String word = ((SearchMainParentFragment) getParentFragment()).getSearchWord();
+        return new SearchUserLoader(getActivity(), token, word, String.valueOf(page + 1));
     }
 
 }

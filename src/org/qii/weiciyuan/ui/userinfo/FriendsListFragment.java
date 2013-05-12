@@ -1,15 +1,16 @@
 package org.qii.weiciyuan.ui.userinfo;
 
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.bean.UserListBean;
-import org.qii.weiciyuan.dao.user.FriendListDao;
-import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.actionmenu.MyFriendSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.actionmenu.NormalFriendShipSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.basefragment.AbstractFriendsFanListFragment;
+import org.qii.weiciyuan.ui.loader.FriendUserLoader;
 
 /**
  * User: Jiang Qi
@@ -32,30 +33,6 @@ public class FriendsListFragment extends AbstractFriendsFanListFragment {
         super.onActivityCreated(savedInstanceState);
         getListView().setOnItemLongClickListener(new FriendListOnItemLongClickListener());
 
-    }
-
-
-    @Override
-    protected UserListBean getDoInBackgroundNewData() throws WeiboException {
-        FriendListDao dao = new FriendListDao(GlobalContext.getInstance().getSpecialToken(), uid);
-        dao.setCursor(String.valueOf(0));
-        return dao.getGSONMsgList();
-    }
-
-    @Override
-    protected UserListBean getDoInBackgroundOldData() throws WeiboException {
-
-        if (getList().getUsers().size() > 0 && Integer.valueOf(getList().getNext_cursor()) == 0) {
-            return null;
-        }
-
-        FriendListDao dao = new FriendListDao(GlobalContext.getInstance().getSpecialToken(), uid);
-        if (getList().getUsers().size() > 0) {
-            dao.setCursor(String.valueOf(bean.getNext_cursor()));
-        }
-        UserListBean result = dao.getGSONMsgList();
-
-        return result;
     }
 
 
@@ -89,5 +66,28 @@ public class FriendsListFragment extends AbstractFriendsFanListFragment {
             return false;
         }
     }
+
+
+    @Override
+    protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String cursor = String.valueOf(0);
+        return new FriendUserLoader(getActivity(), token, uid, cursor);
+    }
+
+    @Override
+    protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+
+        if (getList().getUsers().size() > 0 && Integer.valueOf(getList().getNext_cursor()) == 0) {
+            return null;
+        }
+
+
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String cursor = String.valueOf(bean.getNext_cursor());
+
+        return new FriendUserLoader(getActivity(), token, uid, cursor);
+    }
+
 }
 
