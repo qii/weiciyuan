@@ -3,6 +3,7 @@ package org.qii.weiciyuan.ui.dm;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,15 +11,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMUserListBean;
-import org.qii.weiciyuan.dao.dm.DMDao;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.database.DMDBTask;
-import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.DMUserListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
+import org.qii.weiciyuan.ui.loader.DMUserLoader;
 import org.qii.weiciyuan.ui.main.LeftMenuFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -166,6 +167,8 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
+            DMDBTask.asyncReplace(getList(), GlobalContext.getInstance().getCurrentAccountId());
+
         }
 
     }
@@ -178,34 +181,42 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         }
     }
 
+
     @Override
-    protected DMUserListBean getDoInBackgroundNewData() throws WeiboException {
-        DMDao dao = new DMDao(GlobalContext.getInstance().getSpecialToken());
-        dao.setCursor(String.valueOf(0));
-        DMUserListBean result = dao.getUserList();
-        if (result != null) {
-            DMDBTask.add(result, GlobalContext.getInstance().getCurrentAccountId());
-        }
-        return result;
+    public void loadNewMsg() {
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        dismissFooterView();
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
     }
 
     @Override
-    protected DMUserListBean getDoInBackgroundOldData() throws WeiboException {
+    protected void loadOldMsg(View view) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+    }
 
+
+    protected Loader<AsyncTaskLoaderResult<DMUserListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String cursor = String.valueOf(0);
+        return new DMUserLoader(getActivity(), token, cursor);
+    }
+
+
+    protected Loader<AsyncTaskLoaderResult<DMUserListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String cursor = null;
         if (getList().getSize() > 0 && Integer.valueOf(getList().getNext_cursor()) == 0) {
             return null;
         }
 
-        DMDao dao = new DMDao(GlobalContext.getInstance().getSpecialToken());
         if (getList().getSize() > 0) {
-            dao.setCursor(String.valueOf(getList().getNext_cursor()));
+            cursor = String.valueOf(getList().getNext_cursor());
         }
 
-        return dao.getUserList();
-    }
-
-    @Override
-    protected DMUserListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        return null;
+        return new DMUserLoader(getActivity(), token, cursor);
     }
 }

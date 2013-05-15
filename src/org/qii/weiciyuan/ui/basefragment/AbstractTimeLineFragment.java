@@ -28,6 +28,7 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.AbstractAppListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
+import org.qii.weiciyuan.ui.loader.DummyLoader;
 
 /**
  * User: qii
@@ -629,6 +630,31 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
 
+    private Loader<AsyncTaskLoaderResult<T>> createNewMsgLoader(int id, Bundle args) {
+        Loader<AsyncTaskLoaderResult<T>> loader = onCreateNewMsgLoader(id, args);
+        if (loader == null) {
+            loader = new DummyLoader(getActivity());
+        }
+        return loader;
+    }
+
+    private Loader<AsyncTaskLoaderResult<T>> createMiddleMsgLoader(int id, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
+        Loader<AsyncTaskLoaderResult<T>> loader = onCreateMiddleMsgLoader(id, args, middleBeginId, middleEndId, middleEndTag, middlePosition);
+        if (loader == null) {
+            loader = new DummyLoader(getActivity());
+        }
+        return loader;
+    }
+
+    private Loader<AsyncTaskLoaderResult<T>> createOldMsgLoader(int id, Bundle args) {
+        Loader<AsyncTaskLoaderResult<T>> loader = onCreateOldMsgLoader(id, args);
+        if (loader == null) {
+            loader = new DummyLoader(getActivity());
+        }
+        return loader;
+    }
+
+
     protected Loader<AsyncTaskLoaderResult<T>> onCreateNewMsgLoader(int id, Bundle args) {
         return null;
     }
@@ -656,16 +682,16 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                 case NEW_MSG_LOADER_ID:
                     if (args == null || args.getBoolean(BundleArgsConstants.SCROLL_TO_TOP))
                         Utility.stopListViewScrollingAndScrollToTop(getListView());
-                    return onCreateNewMsgLoader(id, args);
+                    return createNewMsgLoader(id, args);
                 case MIDDLE_MSG_LOADER_ID:
                     middleBeginId = args.getString("beginId");
                     middleEndId = args.getString("endId");
                     middlePosition = args.getInt("position");
                     towardsBottom = args.getBoolean("towardsBottom");
-                    return onCreateMiddleMsgLoader(id, args, middleBeginId, middleEndId, null, middlePosition);
+                    return createMiddleMsgLoader(id, args, middleBeginId, middleEndId, null, middlePosition);
                 case OLD_MSG_LOADER_ID:
                     showFooterView();
-                    return onCreateOldMsgLoader(id, args);
+                    return createOldMsgLoader(id, args);
             }
 
             return null;
@@ -674,8 +700,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         @Override
         public void onLoadFinished(Loader<AsyncTaskLoaderResult<T>> loader, AsyncTaskLoaderResult<T> result) {
 
-            T data = result.data;
-            WeiboException exception = result.exception;
+            T data = result != null ? result.data : null;
+            WeiboException exception = result != null ? result.exception : null;
 
             switch (loader.getId()) {
                 case NEW_MSG_LOADER_ID:
