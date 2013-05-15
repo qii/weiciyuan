@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.basefragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -18,8 +17,8 @@ import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.ListViewMiddleMsgLoadingView;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TopTipBar;
+import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -53,9 +52,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     protected View footerView;
     protected TimeLineBitmapDownloader commander;
 
-    protected TimeLineGetNewMsgListTask newTask;
-    protected TimeLineGetOlderMsgListTask oldTask;
-    protected TimeLineGetMiddleMsgListTask middleTask;
 
     protected static final int DB_CACHE_LOADER_ID = 0;
     protected static final int NEW_MSG_LOADER_ID = 1;
@@ -110,18 +106,35 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
     protected abstract void listViewItemClick(AdapterView parent, View view, int position, long id);
 
+    public void loadNewMsg() {
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        dismissFooterView();
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+    }
+
+
     protected void loadOldMsg(View view) {
-        if (Utility.isTaskStopped(oldTask)) {
-            oldTask = new TimeLineGetOlderMsgListTask();
-            oldTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        }
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
     }
 
     public void loadMiddleMsg(String beginId, String endId, int position) {
-        if (Utility.isTaskStopped(middleTask)) {
-            middleTask = new TimeLineGetMiddleMsgListTask(beginId, endId, null, position);
-            middleTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        }
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        dismissFooterView();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("beginId", beginId);
+        bundle.putString("endId", endId);
+        bundle.putInt("position", position);
+        VelocityListView velocityListView = (VelocityListView) getListView();
+        bundle.putBoolean("towardsBottom", velocityListView.getTowardsOrientation() == VelocityListView.TOWARDS_BOTTOM);
+        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
+
     }
 
     @Override
@@ -347,43 +360,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
     protected abstract void buildListAdapter();
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Utility.cancelTasks(newTask, oldTask, middleTask);
-    }
-
-
-    protected boolean canSwitchGroup() {
-        if (newTask != null && newTask.getStatus() != MyAsyncTask.Status.FINISHED) {
-            return false;
-        }
-        if (oldTask != null && oldTask.getStatus() != MyAsyncTask.Status.FINISHED) {
-            return false;
-        }
-        if (middleTask != null && middleTask.getStatus() != MyAsyncTask.Status.FINISHED) {
-            return false;
-        }
-        return true;
-    }
-
-
-    public void loadNewMsg() {
-        if (allowRefresh()) {
-            newTask = new TimeLineGetNewMsgListTask();
-            newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            Activity activity = getActivity();
-            if (activity == null)
-                return;
-            ((ICommander) activity).getBitmapDownloader().totalStopLoadPicture();
-
-        }
-
-    }
 
     protected boolean allowRefresh() {
         boolean isNewMsgLoaderLoading = getLoaderManager().getLoader(NEW_MSG_LOADER_ID) != null;
-        return Utility.isTaskStopped(newTask) && getPullToRefreshListView().getVisibility() == View.VISIBLE && !isNewMsgLoaderLoading;
+        return getPullToRefreshListView().getVisibility() == View.VISIBLE && !isNewMsgLoaderLoading;
     }
 
 
@@ -426,153 +406,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
     protected abstract void oldMsgOnPostExecute(T newValue);
 
-    public class TimeLineGetNewMsgListTask extends MyAsyncTask<Object, T, T> {
-        WeiboException e;
-
-        @Override
-        protected void onPreExecute() {
-            showListView();
-            clearActionMode();
-            Utility.stopListViewScrollingAndScrollToTop(getListView());
-        }
-
-        @Override
-        protected T doInBackground(Object... params) {
-
-            try {
-                return getDoInBackgroundNewData();
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-            }
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(T newValue) {
-            newMsgOnPostExecute(newValue);
-            cleanWork();
-            super.onPostExecute(newValue);
-        }
-
-        @Override
-        protected void onCancelled(T messageListBean) {
-            super.onCancelled(messageListBean);
-            if (getActivity() != null) {
-                if (this.e != null)
-                    Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-                cleanWork();
-            }
-        }
-
-        private void cleanWork() {
-            refreshLayout(getList());
-            getPullToRefreshListView().onRefreshComplete();
-
-        }
-    }
-
-
-    public class TimeLineGetOlderMsgListTask extends MyAsyncTask<Object, T, T> {
-
-        WeiboException e;
-
-        @Override
-        protected void onPreExecute() {
-            showListView();
-
-            showFooterView();
-            clearActionMode();
-        }
-
-        @Override
-        protected T doInBackground(Object... params) {
-
-            try {
-                return getDoInBackgroundOldData();
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-            }
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(T newValue) {
-            oldMsgOnPostExecute(newValue);
-
-            cleanWork();
-            super.onPostExecute(newValue);
-        }
-
-        @Override
-        protected void onCancelled(T messageListBean) {
-            super.onCancelled(messageListBean);
-            if (getActivity() != null) {
-                if (Utility.isAllNotNull(this.e, getActivity())) {
-                    Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
-                    showErrorFooterView();
-                    getPullToRefreshListView().onRefreshComplete();
-                } else {
-                    dismissFooterView();
-                }
-            }
-
-        }
-
-        private void cleanWork() {
-            getPullToRefreshListView().onRefreshComplete();
-            getAdapter().notifyDataSetChanged();
-            dismissFooterView();
-        }
-    }
-
-
-    public class TimeLineGetMiddleMsgListTask extends MyAsyncTask<Object, T, T> {
-
-        WeiboException e;
-        String beginId;
-        String endId;
-        String endTag;
-        int position;
-
-        public TimeLineGetMiddleMsgListTask(String beginId, String endId, String endTag, int position) {
-            this.beginId = beginId;
-            this.endId = endId;
-            this.endTag = endTag;
-            this.position = position;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            clearActionMode();
-        }
-
-        @Override
-        protected T doInBackground(Object... params) {
-
-            try {
-                return getDoInBackgroundMiddleData(beginId, endId);
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-            }
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(T newValue) {
-            middleMsgOnPostExecute(position, newValue, false);
-            getAdapter().notifyDataSetChanged();
-            super.onPostExecute(newValue);
-        }
-
-    }
-
 
     protected void middleMsgOnPostExecute(int position, T newValue, boolean towardsBottom) {
 
@@ -607,19 +440,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
     protected void showListView() {
         progressBar.setVisibility(View.INVISIBLE);
-    }
-
-
-    protected T getDoInBackgroundNewData() throws WeiboException {
-        return null;
-    }
-
-    protected T getDoInBackgroundOldData() throws WeiboException {
-        return null;
-    }
-
-    protected T getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        return null;
     }
 
 

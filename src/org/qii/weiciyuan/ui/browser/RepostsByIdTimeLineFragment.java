@@ -66,7 +66,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
 
     //restore from activity destroy
     public void load() {
-        if ((bean == null || bean.getSize() == 0) && newTask == null) {
+        if ((bean == null || bean.getSize() == 0)) {
             if (pullToRefreshListView != null) {
                 pullToRefreshListView.startRefreshNow();
                 loadNewMsg();
