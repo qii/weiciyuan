@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.userinfo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -9,12 +10,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.FavListBean;
-import org.qii.weiciyuan.dao.fav.FavListDao;
-import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.loader.MyFavMsgLoader;
 
 /**
  * User: qii
@@ -40,7 +41,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
-        outState.putInt("page",page);
+        outState.putInt("page", page);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 getList().addNewData((FavListBean) savedInstanceState.getSerializable("bean"));
-                page=savedInstanceState.getInt("page");
+                page = savedInstanceState.getInt("page");
                 timeLineAdapter.notifyDataSetChanged();
                 refreshLayout(bean);
                 break;
@@ -102,28 +103,6 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
 
 
     @Override
-    protected FavListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        return null;
-    }
-
-
-    @Override
-    protected FavListBean getDoInBackgroundNewData() throws WeiboException {
-        page = 1;
-        FavListDao dao = new FavListDao(GlobalContext.getInstance().getSpecialToken()).setPage(String.valueOf(page));
-        FavListBean result = dao.getGSONMsgList();
-        return result;
-    }
-
-    @Override
-    protected FavListBean getDoInBackgroundOldData() throws WeiboException {
-
-        FavListDao dao = new FavListDao(GlobalContext.getInstance().getSpecialToken()).setPage(String.valueOf(page + 1));
-        FavListBean result = dao.getGSONMsgList();
-        return result;
-    }
-
-    @Override
     protected void newMsgOnPostExecute(FavListBean newValue) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
@@ -146,4 +125,33 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     }
 
 
+    @Override
+    public void loadNewMsg() {
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        dismissFooterView();
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+    }
+
+
+    @Override
+    protected void loadOldMsg(View view) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+    }
+
+    @Override
+    protected Loader<AsyncTaskLoaderResult<FavListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        page = 1;
+        return new MyFavMsgLoader(getActivity(), token, String.valueOf(page));
+    }
+
+    @Override
+    protected Loader<AsyncTaskLoaderResult<FavListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        return new MyFavMsgLoader(getActivity(), token, String.valueOf(page + 1));
+    }
 }
