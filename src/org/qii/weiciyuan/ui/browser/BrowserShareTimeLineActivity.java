@@ -2,16 +2,17 @@ package org.qii.weiciyuan.ui.browser;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ShareListBean;
-import org.qii.weiciyuan.dao.shorturl.ShareShortUrlTimeLineDao;
-import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.loader.BrowserShareMsgLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
@@ -125,21 +126,42 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
             }
         }
 
-        @Override
-        protected ShareListBean getDoInBackgroundNewData() throws WeiboException {
-            return new ShareShortUrlTimeLineDao(GlobalContext.getInstance().getSpecialToken(), url).getGSONMsgList();
-        }
 
         @Override
-        protected ShareListBean getDoInBackgroundOldData() throws WeiboException {
-            ShareShortUrlTimeLineDao dao = new ShareShortUrlTimeLineDao(GlobalContext.getInstance().getSpecialToken(), url);
-            dao.setMaxId(getList().getItemList().get(getList().getSize() - 1).getId());
-            return dao.getGSONMsgList();
+        public void loadNewMsg() {
+            getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+            getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+            dismissFooterView();
+            getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
         }
 
+
         @Override
-        protected ShareListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-            return null;
+        protected void loadOldMsg(View view) {
+            getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+            getPullToRefreshListView().onRefreshComplete();
+            getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+            getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
         }
+
+        protected Loader<AsyncTaskLoaderResult<ShareListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+            String token = GlobalContext.getInstance().getSpecialToken();
+            String sinceId = null;
+            if (getList().getItemList().size() > 0) {
+                sinceId = getList().getItemList().get(0).getId();
+            }
+            return new BrowserShareMsgLoader(getActivity(), token, url, null);
+        }
+
+
+        protected Loader<AsyncTaskLoaderResult<ShareListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+            String token = GlobalContext.getInstance().getSpecialToken();
+            String maxId = null;
+            if (getList().getItemList().size() > 0) {
+                maxId = getList().getItemList().get(getList().getItemList().size() - 1).getId();
+            }
+            return new BrowserShareMsgLoader(getActivity(), token, url, maxId);
+        }
+
     }
 }

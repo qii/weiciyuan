@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class ShareShortUrlTimeLineDao {
 
-    private String getMsgListJson() {
+    private String getMsgListJson() throws WeiboException {
         String url = URLHelper.SHORT_URL_SHARE_TIMELINE;
 
         Map<String, String> map = new HashMap<String, String>();
@@ -33,16 +33,13 @@ public class ShareShortUrlTimeLineDao {
 
 
         String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();
-        }
+
+        jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
         return jsonData;
     }
 
-    public ShareListBean getGSONMsgList() {
+    public ShareListBean getGSONMsgList() throws WeiboException {
 
         String json = getMsgListJson();
         Gson gson = new Gson();
