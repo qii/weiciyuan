@@ -6,7 +6,7 @@ import android.content.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.content.*;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,9 +19,9 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
-import org.qii.weiciyuan.dao.timeline.CommentsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppConfig;
@@ -32,6 +32,7 @@ import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
+import org.qii.weiciyuan.ui.loader.CommentsByIdMsgLoader;
 import org.qii.weiciyuan.ui.widgets.QuickSendProgressFragment;
 
 /**
@@ -368,27 +369,6 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
 
     @Override
-    protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
-        CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, msg.getId());
-        return dao.getGSONMsgList();
-    }
-
-    @Override
-    protected CommentListBean getDoInBackgroundOldData() throws WeiboException {
-        CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, msg.getId());
-        if (getList().getItemList().size() > 0) {
-            dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
-        }
-        CommentListBean result = dao.getGSONMsgList();
-        return result;
-    }
-
-    @Override
-    protected CommentListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        throw new UnsupportedOperationException("comment by id list dont support this operation");
-    }
-
-    @Override
     protected void newMsgOnPostExecute(CommentListBean newValue) {
         if (newValue != null && newValue.getSize() > 0) {
             getList().replaceAll(newValue);
@@ -420,4 +400,60 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         }
     }
 
+    @Override
+    public void loadMiddleMsg(String beginId, String endId, int position) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        dismissFooterView();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("beginId", beginId);
+        bundle.putString("endId", endId);
+        bundle.putInt("position", position);
+        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
+
+    }
+
+    @Override
+    public void loadNewMsg() {
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        dismissFooterView();
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+    }
+
+    @Override
+    protected void loadOldMsg(View view) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+    }
+
+
+    protected android.support.v4.content.Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateNewMsgLoader(int loaderId, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+
+        String sinceId = null;
+        if (getList().getItemList().size() > 0) {
+            sinceId = getList().getItemList().get(0).getId();
+        }
+        return new CommentsByIdMsgLoader(getActivity(), msg.getId(), token, sinceId, null);
+    }
+
+    protected android.support.v4.content.Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateMiddleMsgLoader(int loaderId, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+
+        return new CommentsByIdMsgLoader(getActivity(), msg.getId(), token, middleBeginId, middleEndId);
+    }
+
+    protected android.support.v4.content.Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateOldMsgLoader(int loaderId, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String maxId = null;
+        if (getList().getItemList().size() > 0) {
+            maxId = getList().getItemList().get(getList().getItemList().size() - 1).getId();
+        }
+        return new CommentsByIdMsgLoader(getActivity(), msg.getId(), token, null, maxId);
+    }
 }
