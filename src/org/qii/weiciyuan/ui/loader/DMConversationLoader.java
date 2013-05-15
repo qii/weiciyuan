@@ -1,9 +1,7 @@
 package org.qii.weiciyuan.ui.loader;
 
 import android.content.Context;
-import android.support.v4.content.AsyncTaskLoader;
 import org.qii.weiciyuan.bean.DMListBean;
-import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.dm.DMConversationDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 
@@ -14,7 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * User: qii
  * Date: 13-5-15
  */
-public class DMConversationLoader extends AsyncTaskLoader<AsyncTaskLoaderResult<DMListBean>> {
+public class DMConversationLoader extends AbstractAsyncNetRequestTaskLoader<DMListBean> {
 
     private static Lock lock = new ReentrantLock();
 
@@ -29,34 +27,23 @@ public class DMConversationLoader extends AsyncTaskLoader<AsyncTaskLoaderResult<
         this.page = page;
     }
 
-    @Override
-    protected void onStartLoading() {
-        super.onStartLoading();
-        forceLoad();
-    }
 
-    public AsyncTaskLoaderResult<DMListBean> loadInBackground() {
+    public DMListBean loadData() throws WeiboException {
         DMConversationDao dao = new DMConversationDao(token);
         dao.setPage(Integer.valueOf(page));
         dao.setUid(uid);
 
         DMListBean result = null;
-        WeiboException exception = null;
         lock.lock();
 
         try {
             result = dao.getConversationList();
-        } catch (WeiboException e) {
-            exception = e;
         } finally {
             lock.unlock();
         }
 
 
-        AsyncTaskLoaderResult<DMListBean> data = new AsyncTaskLoaderResult<DMListBean>();
-        data.data = result;
-        data.exception = exception;
-        return data;
+        return result;
     }
 
 }

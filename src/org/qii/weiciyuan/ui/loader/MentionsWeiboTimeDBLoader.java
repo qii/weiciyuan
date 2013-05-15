@@ -12,6 +12,7 @@ import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
 public class MentionsWeiboTimeDBLoader extends AsyncTaskLoader<MentionTimeLineData> {
 
     private String accountId;
+    private MentionTimeLineData result;
 
     public MentionsWeiboTimeDBLoader(Context context, String accountId) {
         super(context);
@@ -21,11 +22,16 @@ public class MentionsWeiboTimeDBLoader extends AsyncTaskLoader<MentionTimeLineDa
     @Override
     protected void onStartLoading() {
         super.onStartLoading();
-        forceLoad();
+        if (result == null) {
+            forceLoad();
+        } else {
+            deliverResult(result);
+        }
     }
 
     public MentionTimeLineData loadInBackground() {
-        return MentionsTimeLineDBTask.getRepostLineMsgList(accountId);
+        result = MentionsTimeLineDBTask.getRepostLineMsgList(accountId);
+        return result;
     }
 
 }

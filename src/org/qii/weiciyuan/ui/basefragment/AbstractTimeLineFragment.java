@@ -453,7 +453,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     private Loader<AsyncTaskLoaderResult<T>> createNewMsgLoader(int id, Bundle args) {
         Loader<AsyncTaskLoaderResult<T>> loader = onCreateNewMsgLoader(id, args);
         if (loader == null) {
-            loader = new DummyLoader(getActivity());
+            loader = new DummyLoader<T>(getActivity());
         }
         return loader;
     }
@@ -461,7 +461,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     private Loader<AsyncTaskLoaderResult<T>> createMiddleMsgLoader(int id, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
         Loader<AsyncTaskLoaderResult<T>> loader = onCreateMiddleMsgLoader(id, args, middleBeginId, middleEndId, middleEndTag, middlePosition);
         if (loader == null) {
-            loader = new DummyLoader(getActivity());
+            loader = new DummyLoader<T>(getActivity());
         }
         return loader;
     }
@@ -469,7 +469,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     private Loader<AsyncTaskLoaderResult<T>> createOldMsgLoader(int id, Bundle args) {
         Loader<AsyncTaskLoaderResult<T>> loader = onCreateOldMsgLoader(id, args);
         if (loader == null) {
-            loader = new DummyLoader(getActivity());
+            loader = new DummyLoader<T>(getActivity());
         }
         return loader;
     }

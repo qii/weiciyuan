@@ -1,9 +1,7 @@
 package org.qii.weiciyuan.ui.loader;
 
 import android.content.Context;
-import android.support.v4.content.AsyncTaskLoader;
 import org.qii.weiciyuan.bean.CommentListBean;
-import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 
@@ -14,7 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * User: qii
  * Date: 13-4-18
  */
-public class CommentsToMeMsgLoader extends AsyncTaskLoader<AsyncTaskLoaderResult<CommentListBean>> {
+public class CommentsToMeMsgLoader extends AbstractAsyncNetRequestTaskLoader<CommentListBean> {
 
     private static Lock lock = new ReentrantLock();
 
@@ -31,32 +29,21 @@ public class CommentsToMeMsgLoader extends AsyncTaskLoader<AsyncTaskLoaderResult
         this.accountId = accountId;
     }
 
-    @Override
-    protected void onStartLoading() {
-        super.onStartLoading();
-        forceLoad();
-    }
 
-    public AsyncTaskLoaderResult<CommentListBean> loadInBackground() {
+    public CommentListBean loadData() throws WeiboException {
         MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
         dao.setSince_id(sinceId);
         dao.setMax_id(maxId);
         CommentListBean result = null;
-        WeiboException exception = null;
         lock.lock();
 
         try {
             result = dao.getGSONMsgList();
-        } catch (WeiboException e) {
-            exception = e;
         } finally {
             lock.unlock();
         }
 
-        AsyncTaskLoaderResult<CommentListBean> data = new AsyncTaskLoaderResult<CommentListBean>();
-        data.data = result;
-        data.exception = exception;
-        return data;
+        return result;
     }
 
 }

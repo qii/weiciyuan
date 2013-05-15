@@ -12,6 +12,7 @@ import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
 public class MentionsCommentDBLoader extends AsyncTaskLoader<CommentTimeLineData> {
 
     private String accountId;
+    private CommentTimeLineData result;
 
     public MentionsCommentDBLoader(Context context, String accountId) {
         super(context);
@@ -21,11 +22,16 @@ public class MentionsCommentDBLoader extends AsyncTaskLoader<CommentTimeLineData
     @Override
     protected void onStartLoading() {
         super.onStartLoading();
-        forceLoad();
+        if (result == null) {
+            forceLoad();
+        } else {
+            deliverResult(result);
+        }
     }
 
     public CommentTimeLineData loadInBackground() {
-        return MentionCommentsTimeLineDBTask.getCommentLineMsgList(accountId);
+        result = MentionCommentsTimeLineDBTask.getCommentLineMsgList(accountId);
+        return result;
     }
 
 }
