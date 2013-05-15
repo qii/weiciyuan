@@ -4,12 +4,13 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.Loader;
 import android.view.*;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMListBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.dao.dm.DMConversationDao;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.dm.SendDMDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -22,6 +23,7 @@ import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.ui.adapter.DMConversationAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.loader.DMConversationLoader;
 import org.qii.weiciyuan.ui.widgets.QuickSendProgressFragment;
 
 /**
@@ -242,27 +244,6 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         }
     }
 
-    @Override
-    protected DMListBean getDoInBackgroundNewData() throws WeiboException {
-        page = 1;
-        return new DMConversationDao(GlobalContext.getInstance().getSpecialToken())
-                .setUid(userBean.getId())
-                .setPage(page).getConversationList();
-    }
-
-    @Override
-    protected DMListBean getDoInBackgroundOldData() throws WeiboException {
-        DMConversationDao dao = new DMConversationDao(GlobalContext.getInstance().getSpecialToken())
-                .setUid(userBean.getId())
-                .setPage(page + 1);
-        DMListBean result = dao.getConversationList();
-        return result;
-    }
-
-    @Override
-    protected DMListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        return null;
-    }
 
     private class QuickCommentTask extends AsyncTask<Void, Void, Boolean> {
         WeiboException e;
@@ -322,4 +303,37 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
 
         }
     }
+
+
+    @Override
+    public void loadNewMsg() {
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        dismissFooterView();
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+    }
+
+
+    @Override
+    protected void loadOldMsg(View view) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+    }
+
+    @Override
+    protected Loader<AsyncTaskLoaderResult<DMListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        page = 1;
+        return new DMConversationLoader(getActivity(), token, userBean.getId(), String.valueOf(page));
+    }
+
+    @Override
+    protected Loader<AsyncTaskLoaderResult<DMListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        return new DMConversationLoader(getActivity(), token, userBean.getId(), String.valueOf(page + 1));
+    }
+
+
 }
