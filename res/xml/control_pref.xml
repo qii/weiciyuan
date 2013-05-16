@@ -12,13 +12,6 @@
             android:summary="@string/pref_disable_download_pic_summary"
             android:defaultValue="false"/>
 
-        <ListPreference
-            android:key="msg_count"
-            android:title="@string/pref_msg_count_title"
-            android:dialogTitle="@string/pref_msg_count_title"
-            android:entries="@array/msg_count_title"
-            android:entryValues="@array/msg_count_title_value"
-            android:defaultValue="3"/>
 
         <ListPreference
             android:key="comment_repost_list_avatar"
@@ -36,6 +29,26 @@
             android:entries="@array/upload_pic_quality"
             android:entryValues="@array/upload_pic_quality_value"
             android:defaultValue="4"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_data_category_title"
+        >
+
+        <ListPreference
+            android:key="msg_count"
+            android:title="@string/pref_msg_count_title"
+            android:dialogTitle="@string/pref_msg_count_title"
+            android:entries="@array/msg_count_title"
+            android:entryValues="@array/msg_count_title_value"
+            android:defaultValue="3"/>
+
+        <CheckBoxPreference
+            android:key="enable_wifi_unlimited_msg_count"
+            android:title="@string/pref_enable_wifi_unlimited_msg_count_title"
+            android:summary="@string/pref_enable_wifi_unlimited_msg_count_summary"
+            android:defaultValue="true"/>
 
     </PreferenceCategory>
 

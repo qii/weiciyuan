@@ -257,4 +257,9 @@ public class SettingUtility {
     public static boolean isReadStyleEqualWeibo() {
         return SettingHelper.getSharedPreferences(getContext(), SettingActivity.READ_STYLE, "1").equals("1");
     }
+
+    public static boolean isWifiUnlimitedMsgCount() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.WIFI_UNLIMITED_MSG_COUNT, true);
+
+    }
 }
