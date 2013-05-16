@@ -19,7 +19,7 @@ public class AppConfig {
     public static final int DEFAULT_MENTIONS_WEIBO_DB_CACHE_COUNT = 100;
     public static final int DEFAULT_COMMENTS_TO_ME_DB_CACHE_COUNT = 100;
     public static final int DEFAULT_COMMENTS_BY_ME_DB_CACHE_COUNT = 100;
-    public static final int DEFAULT_HOME_DB_CACHE_COUNT = 200;
+    public static final int DEFAULT_HOME_DB_CACHE_COUNT = 500;
 
     //friend timeline
     public static final long AUTO_REFRESH_INITIALDELAY = 9L;
