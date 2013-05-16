@@ -44,7 +44,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         return !enableRefreshTime;
     }
 
-    protected ListView getListView() {
+    public ListView getListView() {
         return pullToRefreshListView.getRefreshableView();
     }
 

@@ -19,6 +19,7 @@ import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.main.LeftMenuFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -276,8 +277,13 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
 
     @Override
     public void scrollToTop() {
-        AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) (searchFragments.get(viewPager.getCurrentItem()));
-        Utility.stopListViewScrollingAndScrollToTop(fragment.getListView());
+        Fragment fragment = searchFragments.get(viewPager.getCurrentItem());
+        if (fragment instanceof AbstractTimeLineFragment) {
+            Utility.stopListViewScrollingAndScrollToTop(((AbstractTimeLineFragment) fragment).getListView());
+        } else if (fragment instanceof AbstractUserListFragment) {
+            Utility.stopListViewScrollingAndScrollToTop(((AbstractUserListFragment) fragment).getListView());
+
+        }
     }
 }
 
