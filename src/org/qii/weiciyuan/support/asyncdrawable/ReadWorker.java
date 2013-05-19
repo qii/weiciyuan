@@ -58,6 +58,8 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
 
         this(view.getImageView(), url, method);
         this.pbWeakReference = new WeakReference<ProgressBar>(view.getProgressBar());
+        view.getProgressBar().setVisibility(View.VISIBLE);
+        view.getProgressBar().setProgress(0);
     }
 
 
@@ -138,10 +140,6 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
             if (canDisplay(imageView) && pbWeakReference != null) {
                 ProgressBar pb = pbWeakReference.get();
                 if (pb != null) {
-                    if (pb.getVisibility() != View.VISIBLE) {
-                        pb.setVisibility(View.VISIBLE);
-                    }
-
                     Integer progress = values[0];
                     Integer max = values[1];
                     pb.setMax(max);
