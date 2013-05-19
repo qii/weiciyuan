@@ -43,6 +43,14 @@ public class DownloadWorker extends MyAsyncTask<String, Integer, Boolean> implem
         if (isCancelled())
             return false;
 
+        synchronized (TimeLineBitmapDownloader.pauseDownloadWorkLock) {
+            while (TimeLineBitmapDownloader.pauseDownloadWork && !isCancelled()) {
+                try {
+                    TimeLineBitmapDownloader.pauseDownloadWorkLock.wait();
+                } catch (InterruptedException e) {
+                }
+            }
+        }
         String filePath = FileManager.getFilePathFromUrl(url, method);
 
         boolean result = ImageTool.getBitmapFromNetWork(url, filePath, new FileDownloaderHttpHelper.DownloadListener() {

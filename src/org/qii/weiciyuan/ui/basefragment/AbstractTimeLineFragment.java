@@ -273,17 +273,21 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                     }
                     onListViewScrollStop();
                     LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
-                    ((ICommander) getActivity()).getBitmapDownloader().setPauseWork(false);
+                    ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(false);
+                    ((ICommander) getActivity()).getBitmapDownloader().setPauseReadWork(false);
+
                     break;
                 case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
                     enableRefreshTime = false;
                     LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
-                    ((ICommander) getActivity()).getBitmapDownloader().setPauseWork(true);
+                    ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(true);
+                    ((ICommander) getActivity()).getBitmapDownloader().setPauseReadWork(true);
                     break;
                 case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
                     enableRefreshTime = true;
                     LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
-                    ((ICommander) getActivity()).getBitmapDownloader().setPauseWork(true);
+                    ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(true);
+
                     break;
             }
         }
@@ -297,7 +301,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     @Override
     public void onPause() {
         super.onPause();
-        ((ICommander) getActivity()).getBitmapDownloader().setPauseWork(false);
+        ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(false);
+        ((ICommander) getActivity()).getBitmapDownloader().setPauseReadWork(false);
+
     }
 
     protected void onListViewScrollStop() {

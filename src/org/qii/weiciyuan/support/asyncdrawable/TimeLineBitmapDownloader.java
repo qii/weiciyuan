@@ -25,8 +25,11 @@ public class TimeLineBitmapDownloader {
 
     private Handler handler;
 
-    static volatile boolean pauseWork = false;
-    static final Object pauseWorkLock = new Object();
+    static volatile boolean pauseDownloadWork = false;
+    static final Object pauseDownloadWorkLock = new Object();
+
+    static volatile boolean pauseReadWork = false;
+    static final Object pauseReadWorkLock = new Object();
 
     public TimeLineBitmapDownloader(Handler handler) {
         this.handler = handler;
@@ -39,16 +42,25 @@ public class TimeLineBitmapDownloader {
      * {@link android.widget.AbsListView.OnScrollListener} to keep
      * scrolling smooth.
      * <p/>
-     * If work is paused, be sure setPauseWork(false) is called again
+     * If work is paused, be sure setPauseDownloadWork(false) is called again
      * before your fragment or activity is destroyed (for example during
      * {@link android.app.Activity#onPause()}), or there is a risk the
      * background thread will never finish.
      */
-    public void setPauseWork(boolean pauseWork) {
-        synchronized (pauseWorkLock) {
-            TimeLineBitmapDownloader.pauseWork = pauseWork;
-            if (!TimeLineBitmapDownloader.pauseWork) {
-                pauseWorkLock.notifyAll();
+    public void setPauseDownloadWork(boolean pauseWork) {
+        synchronized (pauseDownloadWorkLock) {
+            TimeLineBitmapDownloader.pauseDownloadWork = pauseWork;
+            if (!TimeLineBitmapDownloader.pauseDownloadWork) {
+                pauseDownloadWorkLock.notifyAll();
+            }
+        }
+    }
+
+    public void setPauseReadWork(boolean pauseWork) {
+        synchronized (pauseReadWorkLock) {
+            TimeLineBitmapDownloader.pauseReadWork = pauseWork;
+            if (!TimeLineBitmapDownloader.pauseReadWork) {
+                pauseReadWorkLock.notifyAll();
             }
         }
     }

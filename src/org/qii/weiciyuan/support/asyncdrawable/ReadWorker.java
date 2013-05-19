@@ -69,15 +69,14 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         if (isCancelled())
             return null;
 
-        synchronized (TimeLineBitmapDownloader.pauseWorkLock) {
-            while (TimeLineBitmapDownloader.pauseWork && !isCancelled()) {
+        synchronized (TimeLineBitmapDownloader.pauseReadWorkLock) {
+            while (TimeLineBitmapDownloader.pauseReadWork && !isCancelled()) {
                 try {
-                    TimeLineBitmapDownloader.pauseWorkLock.wait();
+                    TimeLineBitmapDownloader.pauseReadWorkLock.wait();
                 } catch (InterruptedException e) {
                 }
             }
         }
-
         String path = FileManager.getFilePathFromUrl(data, method);
 
         boolean downloaded = TaskCache.waitForPictureDownload(data, (SettingUtility.getEnableBigPic() ? downloadListener : null), path, method);
@@ -115,10 +114,10 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
                 width = (int) (metrics.widthPixels - (14 + 14) * reSize);
         }
 
-        synchronized (TimeLineBitmapDownloader.pauseWorkLock) {
-            while (TimeLineBitmapDownloader.pauseWork && !isCancelled()) {
+        synchronized (TimeLineBitmapDownloader.pauseReadWorkLock) {
+            while (TimeLineBitmapDownloader.pauseReadWork && !isCancelled()) {
                 try {
-                    TimeLineBitmapDownloader.pauseWorkLock.wait();
+                    TimeLineBitmapDownloader.pauseReadWorkLock.wait();
                 } catch (InterruptedException e) {
                 }
             }
@@ -133,7 +132,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        if (TimeLineBitmapDownloader.pauseWork)
+        if (TimeLineBitmapDownloader.pauseReadWork)
             return;
         ImageView imageView = viewWeakReference.get();
         if (imageView != null) {
