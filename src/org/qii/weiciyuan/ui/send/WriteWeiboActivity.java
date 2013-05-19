@@ -293,6 +293,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             imageFileUri = savedInstanceState.getParcelable("imageFileUri");
             statusDraftBean = (StatusDraftBean) savedInstanceState.getSerializable("statusDraftBean");
             accountBean = (AccountBean) savedInstanceState.getSerializable("accountBean");
+            token = accountBean.getAccess_token();
         }
     }
 
