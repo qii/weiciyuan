@@ -40,9 +40,6 @@ public class DownloadWorker extends MyAsyncTask<String, Integer, Boolean> implem
     @Override
     protected Boolean doInBackground(String... d) {
 
-        if (isCancelled())
-            return false;
-
         synchronized (TimeLineBitmapDownloader.pauseDownloadWorkLock) {
             while (TimeLineBitmapDownloader.pauseDownloadWork && !isCancelled()) {
                 try {
@@ -51,6 +48,10 @@ public class DownloadWorker extends MyAsyncTask<String, Integer, Boolean> implem
                 }
             }
         }
+
+        if (isCancelled())
+            return false;
+
         String filePath = FileManager.getFilePathFromUrl(url, method);
 
         boolean result = ImageTool.getBitmapFromNetWork(url, filePath, new FileDownloaderHttpHelper.DownloadListener() {

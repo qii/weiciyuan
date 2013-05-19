@@ -66,9 +66,6 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
     @Override
     protected Bitmap doInBackground(String... url) {
 
-        if (isCancelled())
-            return null;
-
         synchronized (TimeLineBitmapDownloader.pauseReadWorkLock) {
             while (TimeLineBitmapDownloader.pauseReadWork && !isCancelled()) {
                 try {
@@ -77,6 +74,10 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
                 }
             }
         }
+
+        if (isCancelled())
+            return null;
+
         String path = FileManager.getFilePathFromUrl(data, method);
 
         boolean downloaded = TaskCache.waitForPictureDownload(data, (SettingUtility.getEnableBigPic() ? downloadListener : null), path, method);
