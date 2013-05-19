@@ -1,6 +1,8 @@
 package org.qii.weiciyuan.support.lib;
 
-import android.os.*;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Process;
 
 import java.util.ArrayDeque;
@@ -15,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class MyAsyncTask<Params, Progress, Result> {
     private static final String LOG_TAG = "AsyncTask";
 
-    private static final int CORE_POOL_SIZE = 10;
+    private static final int CORE_POOL_SIZE = 5;
     private static final int MAXIMUM_POOL_SIZE = 128;
     private static final int KEEP_ALIVE = 1;
 
@@ -27,7 +29,17 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
         }
     };
 
+    private static final ThreadFactory sDownloadThreadFactory = new ThreadFactory() {
+        private final AtomicInteger mCount = new AtomicInteger(1);
+
+        public Thread newThread(Runnable r) {
+            return new Thread(r, "AsyncTask Download #" + mCount.getAndIncrement());
+        }
+    };
+
     private static final BlockingQueue<Runnable> sPoolWorkQueue =
+            new LinkedBlockingQueue<Runnable>(10);
+    private static final BlockingQueue<Runnable> sDownloadPoolWorkQueue =
             new LinkedBlockingQueue<Runnable>(10);
 
     /**
@@ -36,6 +48,10 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
     public static final Executor THREAD_POOL_EXECUTOR
             = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
             TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
+
+    public static final Executor DOWNLOAD_THREAD_POOL_EXECUTOR
+            = new ThreadPoolExecutor(4, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
+            TimeUnit.SECONDS, sDownloadPoolWorkQueue, sDownloadThreadFactory);
 
     /**
      * An {@link Executor} that executes tasks one at a time in serial

@@ -34,7 +34,7 @@ public class TaskCache {
                     downloadWorker = TaskCache.downloadTasks.putIfAbsent(url, newWorker);
                     if (downloadWorker == null) {
                         downloadWorker = newWorker;
-                        downloadWorker.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                        downloadWorker.executeOnExecutor(MyAsyncTask.DOWNLOAD_THREAD_POOL_EXECUTOR);
                     }
                 } else {
                     return true;
@@ -101,7 +101,7 @@ public class TaskCache {
                 downloadWorker = TaskCache.downloadTasks.putIfAbsent(middleUrl, newWorker);
                 if (downloadWorker == null) {
                     downloadWorker = newWorker;
-                    downloadWorker.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                    downloadWorker.executeOnExecutor(MyAsyncTask.DOWNLOAD_THREAD_POOL_EXECUTOR);
                 }
             }
 
