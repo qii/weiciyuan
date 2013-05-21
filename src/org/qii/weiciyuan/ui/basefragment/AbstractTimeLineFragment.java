@@ -282,12 +282,13 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                     LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
                     ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(true);
                     ((ICommander) getActivity()).getBitmapDownloader().setPauseReadWork(true);
+                    onListViewScrollStateFling();
                     break;
                 case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
                     enableRefreshTime = true;
                     LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
                     ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(true);
-
+                    onListViewScrollStateTouchScroll();
                     break;
             }
         }
@@ -307,6 +308,14 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
     protected void onListViewScrollStop() {
+
+    }
+
+    protected void onListViewScrollStateTouchScroll() {
+
+    }
+
+    protected void onListViewScrollStateFling() {
 
     }
 

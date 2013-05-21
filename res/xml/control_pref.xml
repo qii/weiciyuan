@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
     <PreferenceCategory
-        android:title="@string/pref_data_control_title"
+        android:title="@string/pref_pic_category_title"
         >
 
         <CheckBoxPreference
@@ -30,6 +30,11 @@
             android:entryValues="@array/upload_pic_quality_value"
             android:defaultValue="4"/>
 
+        <CheckBoxPreference
+            android:key="enable_wifi_auto_download_pic"
+            android:title="@string/pref_enable_wifi_auto_download_pic_title"
+            android:summary="@string/pref_enable_wifi_auto_download_pic_summary"
+            android:defaultValue="true"/>
     </PreferenceCategory>
 
     <PreferenceCategory

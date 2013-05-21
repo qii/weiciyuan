@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,15 +18,15 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.MessageTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.maintimeline.TimeLineReCmtCountDao;
+import org.qii.weiciyuan.support.asyncdrawable.TaskCache;
 import org.qii.weiciyuan.support.database.FriendsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.AppConfig;
-import org.qii.weiciyuan.support.utils.BundleArgsConstants;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.support.utils.*;
 import org.qii.weiciyuan.ui.adapter.AbstractAppListAdapter;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
@@ -69,6 +70,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private BaseAdapter navAdapter;
 
+    private Thread backgroundWifiDownloadPicThread = null;
 
     @Override
     public MessageListBean getList() {
@@ -113,9 +115,172 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         this.token = token;
     }
 
+
     @Override
     protected void onListViewScrollStop() {
         savePositionToPositionsCache();
+        startDownloadingOtherPicturesOnWifiNetworkEnvironment();
+
+    }
+
+    private void startDownloadingOtherPicturesOnWifiNetworkEnvironment() {
+        if (backgroundWifiDownloadPicThread == null
+                && Utility.isWifi(getActivity())
+                && SettingUtility.getEnableBigPic()
+                && SettingUtility.isWifiAutoDownloadPic()) {
+            final int position = getListView().getFirstVisiblePosition();
+            int listVewOrientation = ((VelocityListView) getListView()).getTowardsOrientation();
+            WifiAutoDownloadPictureRunnable runnable = new WifiAutoDownloadPictureRunnable(getList(), position, listVewOrientation);
+            backgroundWifiDownloadPicThread = new Thread(runnable);
+            backgroundWifiDownloadPicThread.start();
+            AppLogger.i("WifiAutoDownloadPictureRunnable startDownloadingOtherPicturesOnWifiNetworkEnvironment");
+
+        }
+    }
+
+    @Override
+    protected void onListViewScrollStateTouchScroll() {
+        super.onListViewScrollStateTouchScroll();
+        stopDownloadingOtherPicturesOnWifiNetworkEnvironment();
+    }
+
+    @Override
+    protected void onListViewScrollStateFling() {
+        super.onListViewScrollStateFling();
+        stopDownloadingOtherPicturesOnWifiNetworkEnvironment();
+    }
+
+    private void stopDownloadingOtherPicturesOnWifiNetworkEnvironment() {
+        if (backgroundWifiDownloadPicThread != null) {
+            backgroundWifiDownloadPicThread.interrupt();
+            backgroundWifiDownloadPicThread = null;
+            AppLogger.i("WifiAutoDownloadPictureRunnable stopDownloadingOtherPicturesOnWifiNetworkEnvironment");
+
+        }
+    }
+
+    private static class WifiAutoDownloadPictureRunnable implements Runnable {
+
+        MessageListBean list;
+        int position;
+        static HashMap<String, Boolean> result = new HashMap<String, Boolean>();
+        int listViewOrientation = -1;
+
+        public WifiAutoDownloadPictureRunnable(MessageListBean list, int position, int listViewOrientation) {
+            this.list = new MessageListBean();
+            this.list.addNewData(list);
+            this.position = position;
+            this.listViewOrientation = listViewOrientation;
+            AppLogger.i("WifiAutoDownloadPictureRunnable new Runnable");
+        }
+
+        @Override
+        public void run() {
+
+            switch (this.listViewOrientation) {
+                case VelocityListView.TOWARDS_BOTTOM:
+                    for (int i = position; i < list.getSize(); i++) {
+                        //wait until other download tasks are finished
+                        synchronized (TaskCache.backgroundWifiDownloadPicturesWorkLock) {
+                            while (!TaskCache.isDownloadTaskFinish() && !Thread.currentThread().isInterrupted()) {
+                                try {
+                                    AppLogger.i("WifiAutoDownloadPictureRunnable wait for lock");
+                                    TaskCache.backgroundWifiDownloadPicturesWorkLock.wait();
+                                } catch (InterruptedException e) {
+                                    Thread.currentThread().interrupt();
+                                }
+                            }
+                        }
+
+                        if (Thread.currentThread().isInterrupted()) {
+                            AppLogger.i("WifiAutoDownloadPictureRunnable interrupted");
+                            return;
+                        }
+
+                        MessageBean msg = list.getItem(i);
+                        if (msg == null) {
+                            continue;
+                        }
+                        Boolean done = result.get(msg.getId());
+                        if (done != null && done) {
+                            AppLogger.i("already done skipped");
+                            continue;
+                        }
+                        AppLogger.i("WifiAutoDownloadPictureRunnable" + msg.getId() + "start");
+                        startDownload(msg);
+                        AppLogger.i("WifiAutoDownloadPictureRunnable" + msg.getId() + "finished");
+                        result.put(msg.getId(), true);
+                    }
+                    break;
+                case VelocityListView.TOWARDS_TOP:
+                    for (int i = position; i >= 0; i--) {
+                        //wait until other download tasks are finished
+                        synchronized (TaskCache.backgroundWifiDownloadPicturesWorkLock) {
+                            while (!TaskCache.isDownloadTaskFinish() && !Thread.currentThread().isInterrupted()) {
+                                try {
+                                    AppLogger.i("WifiAutoDownloadPictureRunnable wait for lock");
+                                    TaskCache.backgroundWifiDownloadPicturesWorkLock.wait();
+                                } catch (InterruptedException e) {
+                                    Thread.currentThread().interrupt();
+                                }
+                            }
+                        }
+
+                        if (Thread.currentThread().isInterrupted()) {
+                            return;
+                        }
+
+                        MessageBean msg = list.getItem(i);
+                        if (msg == null) {
+                            continue;
+                        }
+                        Boolean done = result.get(msg.getId());
+                        if (done != null && done) {
+                            AppLogger.i("already done skipped");
+                            continue;
+                        }
+
+                        AppLogger.i("WifiAutoDownloadPictureRunnable" + msg.getId() + "start");
+                        startDownload(msg);
+                        AppLogger.i("WifiAutoDownloadPictureRunnable" + msg.getId() + "finished");
+
+                        result.put(msg.getId(), true);
+                    }
+                    break;
+            }
+
+
+        }
+
+        private void startDownload(MessageBean msg) {
+            String url = msg.getOriginal_pic();
+            if (TextUtils.isEmpty(url) && msg.getRetweeted_status() != null) {
+                url = msg.getRetweeted_status().getOriginal_pic();
+            }
+
+            downloadPic(url);
+            UserBean user = msg.getUser();
+            if (user != null) {
+                downloadAvatar(user.getAvatar_large());
+            }
+        }
+
+        private void downloadPic(String url) {
+            if (TextUtils.isEmpty(url)) {
+                return;
+            }
+            String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_large);
+            TaskCache.waitForPictureDownload(url, null, path, FileLocationMethod.picture_large);
+        }
+
+        private void downloadAvatar(String url) {
+            if (TextUtils.isEmpty(url)) {
+                return;
+            }
+            String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.avatar_large);
+            TaskCache.waitForPictureDownload(url, null, path, FileLocationMethod.avatar_large);
+        }
+
     }
 
     private void savePositionToPositionsCache() {
@@ -164,6 +329,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         savePositionToDB();
         saveGroupIdToDB();
         removeRefresh();
+        stopDownloadingOtherPicturesOnWifiNetworkEnvironment();
     }
 
     @Override

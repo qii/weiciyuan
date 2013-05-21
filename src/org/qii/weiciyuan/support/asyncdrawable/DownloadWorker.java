@@ -60,10 +60,7 @@ public class DownloadWorker extends MyAsyncTask<String, Integer, Boolean> implem
                 publishProgress(progress, max);
             }
         });
-
-
         TaskCache.removeDownloadTask(url, DownloadWorker.this);
-
         return result;
 
     }

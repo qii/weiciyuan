@@ -12,15 +12,26 @@ import java.util.concurrent.*;
 /**
  * User: qii
  * Date: 13-2-9
+ * ReadWorker can be interrupted, DownloadWorker can't be interrupted, maybe I can remove CancellationException exception?
  */
 public class TaskCache {
 
     private static ConcurrentHashMap<String, DownloadWorker> downloadTasks = new ConcurrentHashMap<String, DownloadWorker>();
 
+    public static final Object backgroundWifiDownloadPicturesWorkLock = new Object();
+
+
     public static void removeDownloadTask(String url, DownloadWorker downloadWorker) {
+        synchronized (TaskCache.backgroundWifiDownloadPicturesWorkLock) {
+            downloadTasks.remove(url, downloadWorker);
+            if (TaskCache.isDownloadTaskFinish())
+                TaskCache.backgroundWifiDownloadPicturesWorkLock.notifyAll();
+        }
 
-        downloadTasks.remove(url, downloadWorker);
+    }
 
+    public static boolean isDownloadTaskFinish() {
+        return TaskCache.downloadTasks.isEmpty();
     }
 
     public static boolean waitForPictureDownload(String url, FileDownloaderHttpHelper.DownloadListener downloadListener, String savedPath, FileLocationMethod method) {
@@ -31,7 +42,9 @@ public class TaskCache {
             if (downloadWorker == null) {
                 if (!localFileExist) {
                     DownloadWorker newWorker = new DownloadWorker(url, method);
-                    downloadWorker = TaskCache.downloadTasks.putIfAbsent(url, newWorker);
+                    synchronized (backgroundWifiDownloadPicturesWorkLock) {
+                        downloadWorker = TaskCache.downloadTasks.putIfAbsent(url, newWorker);
+                    }
                     if (downloadWorker == null) {
                         downloadWorker = newWorker;
                         downloadWorker.executeOnExecutor(MyAsyncTask.DOWNLOAD_THREAD_POOL_EXECUTOR);
@@ -47,6 +60,7 @@ public class TaskCache {
                 return downloadWorker.get(30, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
                 return false;
             } catch (ExecutionException e) {
                 e.printStackTrace();
@@ -55,7 +69,7 @@ public class TaskCache {
                 e.printStackTrace();
                 return false;
             } catch (CancellationException e) {
-                downloadTasks.remove(url, downloadWorker);
+                removeDownloadTask(url, downloadWorker);
             }
 
         }
@@ -98,7 +112,10 @@ public class TaskCache {
 
 
                 DownloadWorker newWorker = new DownloadWorker(middleUrl, FileLocationMethod.picture_bmiddle);
-                downloadWorker = TaskCache.downloadTasks.putIfAbsent(middleUrl, newWorker);
+                synchronized (backgroundWifiDownloadPicturesWorkLock) {
+                    downloadWorker = TaskCache.downloadTasks.putIfAbsent(middleUrl, newWorker);
+
+                }
                 if (downloadWorker == null) {
                     downloadWorker = newWorker;
                     downloadWorker.executeOnExecutor(MyAsyncTask.DOWNLOAD_THREAD_POOL_EXECUTOR);
@@ -111,6 +128,7 @@ public class TaskCache {
                 downloadWorker.get(30, TimeUnit.SECONDS);
                 return;
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 e.printStackTrace();
                 return;
             } catch (ExecutionException e) {
@@ -120,7 +138,7 @@ public class TaskCache {
                 e.printStackTrace();
                 return;
             } catch (CancellationException e) {
-                downloadTasks.remove(middleUrl, downloadWorker);
+                removeDownloadTask(middleUrl, downloadWorker);
             }
 
         }

@@ -54,6 +54,7 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String DISABLE_DOWNLOAD_AVATAR_PIC = "disable_download";
     public static final String MSG_COUNT = "msg_count";
     public static final String WIFI_UNLIMITED_MSG_COUNT = "enable_wifi_unlimited_msg_count";
+    public static final String WIFI_AUTO_DOWNLOAD_PIC = "enable_wifi_auto_download_pic";
 
     //performance
     public static final String DISABLE_HARDWARE_ACCELERATED = "pref_disable_hardware_accelerated_key";

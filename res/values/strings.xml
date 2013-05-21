@@ -393,6 +393,7 @@
 
     <!--Setting Control-->
     <string name="pref_data_control_title">流量控制</string>
+    <string name="pref_pic_category_title">图片</string>
     <string name="pref_disable_download_pic_title">关闭图片</string>
     <string name="pref_disable_download_pic_summary">同时暂停头像的下载</string>
     <string name="pref_upload_pic_quality_title">上传图片质量</string>
@@ -402,7 +403,8 @@
     <string name="pref_enable_wifi_unlimited_msg_count_title">Wifi下尽可能获取数据</string>
     <string name="pref_enable_wifi_unlimited_msg_count_summary">可一次性载入344条新数据</string>
     <string name="pref_data_category_title">数据</string>
-
+    <string name="pref_enable_wifi_auto_download_pic_title">Wifi下预先载入图片</string>
+    <string name="pref_enable_wifi_auto_download_pic_summary">只适用大图模式，加快图片获取速度</string>
 
     <!--Setting Filter-->
     <string name="filter">首页过滤</string>

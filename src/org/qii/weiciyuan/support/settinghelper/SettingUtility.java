@@ -260,6 +260,9 @@ public class SettingUtility {
 
     public static boolean isWifiUnlimitedMsgCount() {
         return SettingHelper.getSharedPreferences(getContext(), SettingActivity.WIFI_UNLIMITED_MSG_COUNT, true);
+    }
 
+    public static boolean isWifiAutoDownloadPic() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.WIFI_AUTO_DOWNLOAD_PIC, true);
     }
 }
