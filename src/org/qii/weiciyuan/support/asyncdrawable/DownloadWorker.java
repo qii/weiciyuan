@@ -45,6 +45,7 @@ public class DownloadWorker extends MyAsyncTask<String, Integer, Boolean> implem
                 try {
                     TimeLineBitmapDownloader.pauseDownloadWorkLock.wait();
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
         }

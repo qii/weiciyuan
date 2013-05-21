@@ -71,6 +71,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
                 try {
                     TimeLineBitmapDownloader.pauseReadWorkLock.wait();
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
         }
@@ -120,9 +121,14 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
                 try {
                     TimeLineBitmapDownloader.pauseReadWorkLock.wait();
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
         }
+
+        if (isCancelled())
+            return null;
+
         Bitmap bitmap = ImageTool.getRoundedCornerPic(path, width, height);
         if (bitmap == null) {
             this.failedResult = FailedResult.readFailed;
