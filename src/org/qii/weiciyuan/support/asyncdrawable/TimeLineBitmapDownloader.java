@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
@@ -140,6 +141,9 @@ public class TimeLineBitmapDownloader {
         final Bitmap bitmap = getBitmapFromMemCache(urlKey);
         if (bitmap != null) {
             view.setImageBitmap(bitmap);
+            if (view.getAlpha() != 1.0f) {
+                view.setAlpha(1.0f);
+            }
             cancelPotentialDownload(urlKey, view);
         } else {
 
@@ -181,11 +185,16 @@ public class TimeLineBitmapDownloader {
         final Bitmap bitmap = getBitmapFromMemCache(urlKey);
         if (bitmap != null) {
             view.setImageBitmap(bitmap);
+            view.getProgressBar().setVisibility(View.GONE);
+            if (view.getAlpha() != 1.0f) {
+                view.setAlpha(1.0f);
+            }
             cancelPotentialDownload(urlKey, view.getImageView());
         } else {
 
             if (isFling) {
                 view.setImageDrawable(transPic);
+                view.getProgressBar().setVisibility(View.GONE);
                 return;
             }
 

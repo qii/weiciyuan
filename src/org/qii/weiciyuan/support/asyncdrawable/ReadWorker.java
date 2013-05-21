@@ -145,7 +145,9 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
                     pb.setMax(max);
                     pb.setProgress(progress);
                 }
-            } else {
+            } else if (isImageViewDrawableBitmap(imageView)) {
+                //imageview drawable actually is bitmap, so hide progressbar
+                resetProgressBarStatues();
                 pbWeakReference = null;
             }
         }
@@ -195,10 +197,26 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
                 }
 
 
+            } else if (isImageViewDrawableBitmap(imageView)) {
+                //imageview drawable actually is bitmap, so hide progressbar
+                resetProgressBarStatues();
             }
         }
 
 
+    }
+
+    private void resetProgressBarStatues() {
+        if (pbWeakReference == null)
+            return;
+        ProgressBar pb = pbWeakReference.get();
+        if (pb != null) {
+            pb.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean isImageViewDrawableBitmap(ImageView imageView) {
+        return !(imageView.getDrawable() instanceof PictureBitmapDrawable);
     }
 
     private boolean canDisplay(ImageView view) {
@@ -227,9 +245,13 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                if (!canDisplay(view)) {
+                if (isImageViewDrawableBitmap(view)) {
+                    resetProgressBarStatues();
+                    return;
+                } else if (!canDisplay(view)) {
                     return;
                 }
+
                 view.setImageBitmap(bitmap);
                 view.animate().alpha(1.0f).setDuration(mShortAnimationDuration).setListener(null);
             }
