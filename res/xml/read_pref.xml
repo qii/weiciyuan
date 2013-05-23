@@ -4,8 +4,14 @@
     >
 
     <PreferenceCategory
-        android:title="@string/pref_read_title"
+        android:title="@string/home"
         >
+
+        <CheckBoxPreference
+            android:key="auto_refresh"
+            android:title="@string/pref_auto_refresh_title"
+            android:summary="@string/pref_auto_refresh_summary"
+            android:defaultValue="false"/>
 
         <ListPreference
             android:key="read_style"

@@ -330,7 +330,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
 
     @Override
-    protected void newMsgOnPostExecute(CommentListBean newValue) {
+    protected void newMsgOnPostExecute(CommentListBean newValue, Bundle loaderArgs) {
         if (newValue != null && newValue.getItemList().size() > 0) {
             addNewDataAndRememberPosition(newValue);
         }

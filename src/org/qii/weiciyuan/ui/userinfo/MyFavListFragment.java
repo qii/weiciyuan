@@ -103,7 +103,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
 
 
     @Override
-    protected void newMsgOnPostExecute(FavListBean newValue) {
+    protected void newMsgOnPostExecute(FavListBean newValue, Bundle loaderArgs) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();

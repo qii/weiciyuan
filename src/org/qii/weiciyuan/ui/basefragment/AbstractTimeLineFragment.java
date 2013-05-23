@@ -27,6 +27,7 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.AbstractAppListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
+import org.qii.weiciyuan.ui.loader.AbstractAsyncNetRequestTaskLoader;
 import org.qii.weiciyuan.ui.loader.DummyLoader;
 
 /**
@@ -417,7 +418,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
 
-    protected abstract void newMsgOnPostExecute(T newValue);
+    protected abstract void newMsgOnPostExecute(T newValue, Bundle loaderArgs);
 
     protected abstract void oldMsgOnPostExecute(T newValue);
 
@@ -469,6 +470,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         Loader<AsyncTaskLoaderResult<T>> loader = onCreateNewMsgLoader(id, args);
         if (loader == null) {
             loader = new DummyLoader<T>(getActivity());
+        }
+        if (loader instanceof AbstractAsyncNetRequestTaskLoader) {
+            ((AbstractAsyncNetRequestTaskLoader) loader).setArgs(args);
         }
         return loader;
     }
@@ -537,6 +541,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
             T data = result != null ? result.data : null;
             WeiboException exception = result != null ? result.exception : null;
+            Bundle args = result != null ? result.args : null;
 
             switch (loader.getId()) {
                 case NEW_MSG_LOADER_ID:
@@ -545,7 +550,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                     if (Utility.isAllNotNull(exception)) {
                         newMsgTipBar.setError(exception.getError());
                     } else
-                        newMsgOnPostExecute(data);
+                        newMsgOnPostExecute(data, args);
                     break;
                 case MIDDLE_MSG_LOADER_ID:
                     if (exception != null) {

@@ -108,7 +108,8 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getPullToRefreshListView().startRefreshNow();
+                        if (getActivity() != null)
+                            getPullToRefreshListView().startRefreshNow();
 
                     }
                 }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
@@ -152,7 +153,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
 
     @Override
-    protected void newMsgOnPostExecute(MessageListBean newValue) {
+    protected void newMsgOnPostExecute(MessageListBean newValue, Bundle loaderArgs) {
         if (getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();

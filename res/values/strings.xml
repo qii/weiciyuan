@@ -344,7 +344,7 @@
     <string name="pref_normal_title">常规</string>
     <string name="pref_sound_title">音效</string>
     <string name="pref_auto_refresh_title">首页自动刷新</string>
-    <string name="pref_auto_refresh_summary">仅在 Wifi 网络下有效</string>
+    <string name="pref_auto_refresh_summary">仅在 Wifi 网络下有效，新消息提示条会保持显示状态</string>
     <string name="pref_advanced_title">高级</string>
     <string name="have_selected">已经选择了%s项</string>
     <string name="pref_other_title">其它</string>
@@ -388,7 +388,7 @@
 
     <!--Setting Read-->
     <string name="pref_read_title">阅读</string>
-    <string name="pref_read_style_title">阅读方式</string>
+    <string name="pref_read_style_title">新数据载入后</string>
     <string name="pref_read_style_summary">微博刷新的方向</string>
 
     <!--Setting Control-->

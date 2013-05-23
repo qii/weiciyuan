@@ -353,7 +353,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
 
 
     @Override
-    protected void newMsgOnPostExecute(RepostListBean newValue) {
+    protected void newMsgOnPostExecute(RepostListBean newValue, Bundle loaderArgs) {
         if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 0) {
             getList().replaceAll(newValue);
             getAdapter().notifyDataSetChanged();

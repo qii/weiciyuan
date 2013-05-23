@@ -8,6 +8,9 @@ public class BundleArgsConstants {
     //listview fragment
     public static final String SCROLL_TO_TOP = "scroll_to_top";
 
+    //friend timeline
+    public static final String AUTO_REFRESH = "auto_refresh";
+
     /**
      * new message broadcast arg
      */

@@ -226,7 +226,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
 
 
     @Override
-    protected void newMsgOnPostExecute(DMListBean newValue) {
+    protected void newMsgOnPostExecute(DMListBean newValue, Bundle loaderArgs) {
         if (newValue != null && newValue.getSize() > 0 && getActivity() != null) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();

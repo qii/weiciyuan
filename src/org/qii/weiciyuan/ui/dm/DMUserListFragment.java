@@ -162,7 +162,7 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
     }
 
     @Override
-    protected void newMsgOnPostExecute(DMUserListBean newValue) {
+    protected void newMsgOnPostExecute(DMUserListBean newValue, Bundle loaderArgs) {
         if (newValue != null && newValue.getSize() > 0 && getActivity() != null) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();

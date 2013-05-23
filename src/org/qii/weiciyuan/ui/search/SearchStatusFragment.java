@@ -107,7 +107,7 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
 
 
     @Override
-    protected void newMsgOnPostExecute(SearchStatusListBean newValue) {
+    protected void newMsgOnPostExecute(SearchStatusListBean newValue, Bundle loaderArgs) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();

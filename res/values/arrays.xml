@@ -111,8 +111,8 @@
         <item>3</item>
     </string-array>
     <string-array name="read_style_mode">
-        <item>从上往下（新浪微博）</item>
-        <item>从下往上（Twitter）</item>
+        <item>滚动到第一条（新浪微博）</item>
+        <item>保留阅读位置（Twitter）</item>
     </string-array>
     <string-array name="read_style_mode_value">
         <item>1</item>

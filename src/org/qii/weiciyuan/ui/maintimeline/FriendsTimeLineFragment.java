@@ -24,6 +24,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.*;
@@ -639,16 +640,50 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
 
     @Override
-    protected void newMsgOnPostExecute(MessageListBean newValue) {
+    protected void newMsgOnPostExecute(MessageListBean newValue, Bundle loaderArgs) {
         if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 0) {
-            addNewDataAndRememberPosition(newValue);
+            if (loaderArgs != null && loaderArgs.getBoolean(BundleArgsConstants.AUTO_REFRESH, false)) {
+                addNewDataAndRememberPositionAutoRefresh(newValue);
+            } else {
+                boolean scrollToTop = SettingUtility.isReadStyleEqualWeibo();
+                if (scrollToTop) {
+                    addNewDataWithoutRememberPosition(newValue);
+                } else {
+                    addNewDataAndRememberPosition(newValue);
+                }
+            }
             putToGroupDataMemoryCache(currentGroupId, getList());
             FriendsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid(), currentGroupId);
         }
     }
 
+    private void addNewDataAndRememberPositionAutoRefresh(MessageListBean newValue) {
+
+        int size = newValue.getSize();
+
+        if (getActivity() != null && newValue.getSize() > 0) {
+            getList().addNewData(newValue);
+            int index = getListView().getFirstVisiblePosition();
+//            if (index > 0) {
+            newMsgTipBar.setValue(newValue, false);
+            newMsgTipBar.setType(TopTipBar.Type.ALWAYS);
+            View v = getListView().getChildAt(1);
+            int top = (v == null) ? 0 : v.getTop();
+            getAdapter().notifyDataSetChanged();
+            int ss = index + size;
+            getListView().setSelectionFromTop(ss + 1, top);
+
+//            } else {
+//                getAdapter().notifyDataSetChanged();
+//                getListView().setSelectionAfterHeaderView();
+//            }
+        }
+
+    }
+
     private void addNewDataAndRememberPosition(MessageListBean newValue) {
         newMsgTipBar.setValue(newValue, false);
+        newMsgTipBar.setType(TopTipBar.Type.AUTO);
 
         int size = newValue.getSize();
 
@@ -780,6 +815,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
             Bundle bundle = new Bundle();
             bundle.putBoolean(BundleArgsConstants.SCROLL_TO_TOP, false);
+            bundle.putBoolean(BundleArgsConstants.AUTO_REFRESH, true);
             getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, bundle, msgCallback);
         }
     }

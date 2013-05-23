@@ -334,7 +334,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
 
     @Override
-    protected void newMsgOnPostExecute(CommentListBean newValue) {
+    protected void newMsgOnPostExecute(CommentListBean newValue, Bundle loaderArgs) {
         if (newValue != null && newValue.getItemList() != null && newValue.getItemList().size() > 0) {
             addNewDataAndRememberPosition(newValue);
         }

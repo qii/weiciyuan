@@ -179,7 +179,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
 
     @Override
-    protected void newMsgOnPostExecute(MessageListBean newValue) {
+    protected void newMsgOnPostExecute(MessageListBean newValue, Bundle loaderArgs) {
         if (getActivity() != null && newValue.getSize() > 0) {
             addNewDataAndRememberPosition(newValue);
         }

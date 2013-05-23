@@ -110,7 +110,7 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
         }
 
         @Override
-        protected void newMsgOnPostExecute(ShareListBean newValue) {
+        protected void newMsgOnPostExecute(ShareListBean newValue, Bundle loaderArgs) {
             if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
                 getList().addNewData(newValue);
                 getAdapter().notifyDataSetChanged();

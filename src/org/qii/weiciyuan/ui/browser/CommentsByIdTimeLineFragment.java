@@ -369,7 +369,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
 
     @Override
-    protected void newMsgOnPostExecute(CommentListBean newValue) {
+    protected void newMsgOnPostExecute(CommentListBean newValue, Bundle loaderArgs) {
         if (newValue != null && newValue.getSize() > 0) {
             getList().replaceAll(newValue);
             getAdapter().notifyDataSetChanged();

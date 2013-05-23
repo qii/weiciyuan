@@ -10,15 +10,18 @@
                 android:targetClass="org.qii.weiciyuan.ui.preference.AppearanceActivity"/>
         </Preference>
 
+        <Preference android:title="@string/pref_read_title">
+            <intent
+                android:targetPackage="org.qii.weiciyuan"
+                android:targetClass="org.qii.weiciyuan.ui.preference.ReadActivity"/>
+        </Preference>
+
+
         <CheckBoxPreference
             android:key="sound"
             android:title="@string/pref_sound_title"
             android:defaultValue="true"/>
-        <CheckBoxPreference
-            android:key="auto_refresh"
-            android:title="@string/pref_auto_refresh_title"
-            android:summary="@string/pref_auto_refresh_summary"
-            android:defaultValue="false"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_advanced_title">

@@ -88,7 +88,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
     }
 
     @Override
-    protected void newMsgOnPostExecute(TopicResultListBean newValue) {
+    protected void newMsgOnPostExecute(TopicResultListBean newValue, Bundle loaderArgs) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();
