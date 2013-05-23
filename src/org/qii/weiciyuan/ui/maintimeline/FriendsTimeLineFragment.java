@@ -664,7 +664,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         if (getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             int index = getListView().getFirstVisiblePosition();
-//            if (index > 0) {
             newMsgTipBar.setValue(newValue, false);
             newMsgTipBar.setType(TopTipBar.Type.ALWAYS);
             View v = getListView().getChildAt(1);
@@ -673,10 +672,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             int ss = index + size;
             getListView().setSelectionFromTop(ss + 1, top);
 
-//            } else {
-//                getAdapter().notifyDataSetChanged();
-//                getListView().setSelectionAfterHeaderView();
-//            }
         }
 
     }
