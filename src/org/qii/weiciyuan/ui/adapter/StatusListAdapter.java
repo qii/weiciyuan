@@ -172,7 +172,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
         holder.time.setTime(msg.getMills());
         if (holder.source != null)
-            holder.source.setText(Html.fromHtml(msg.getSource()).toString());
+            holder.source.setText(msg.getSourceString());
 
         if (showOriStatus) {
             boolean checkRepostsCount = (msg.getReposts_count() != 0);

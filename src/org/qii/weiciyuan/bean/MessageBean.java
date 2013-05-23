@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.bean;
 
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -185,6 +186,8 @@ public class MessageBean extends ItemBean {
 
     private transient SpannableString listViewSpannableString;
 
+    private String sourceString;
+
     public SpannableString getListViewSpannableString() {
         if (!TextUtils.isEmpty(listViewSpannableString)) {
             return listViewSpannableString;
@@ -196,6 +199,20 @@ public class MessageBean extends ItemBean {
 
     public void setListViewSpannableString(SpannableString listViewSpannableString) {
         this.listViewSpannableString = listViewSpannableString;
+    }
+
+    public String getSourceString() {
+        if (!TextUtils.isEmpty(sourceString)) {
+            return sourceString;
+        } else {
+            if (!TextUtils.isEmpty(source))
+                source = Html.fromHtml(this.source).toString();
+            return sourceString;
+        }
+    }
+
+    public void setSourceString(String sourceString) {
+        this.sourceString = sourceString;
     }
 
     private long mills;

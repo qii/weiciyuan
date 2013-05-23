@@ -65,8 +65,11 @@ public class ListViewTool {
 
     public static void addJustHighLightLinks(MessageBean bean) {
         bean.setListViewSpannableString(convertNormalStringToSpannableString(bean.getText()));
+        bean.getSourceString();
+
         if (bean.getRetweeted_status() != null) {
             bean.getRetweeted_status().setListViewSpannableString(buildOriWeiboSpannalString(bean.getRetweeted_status()));
+            bean.getRetweeted_status().getSourceString();
         }
     }
 
