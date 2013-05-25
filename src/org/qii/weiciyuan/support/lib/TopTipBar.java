@@ -80,6 +80,7 @@ public class TopTipBar extends TextView {
 
     public void setType(Type type) {
         this.type = type;
+        setCount();
     }
 
     public HashSet<String> getValues() {

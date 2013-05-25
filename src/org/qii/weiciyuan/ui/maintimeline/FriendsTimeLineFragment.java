@@ -338,6 +338,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         super.onResume();
         addRefresh();
         GlobalContext.getInstance().registerForAccountChangeListener(this);
+        if (SettingUtility.getEnableAutoRefresh()) {
+            this.newMsgTipBar.setType(TopTipBar.Type.ALWAYS);
+        } else {
+            this.newMsgTipBar.setType(TopTipBar.Type.AUTO);
+        }
     }
 
     @Override
