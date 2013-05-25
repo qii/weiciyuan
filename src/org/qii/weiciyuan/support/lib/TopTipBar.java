@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
@@ -14,9 +15,8 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.ListBean;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * User: qii
@@ -28,7 +28,7 @@ public class TopTipBar extends TextView {
         ALWAYS, AUTO
     }
 
-    private HashSet<String> ids = new HashSet<String>();
+    private TreeSet<String> ids = null;
     private boolean disappear = false;
     private Runnable lastRunnable;
     private boolean error;
@@ -36,10 +36,27 @@ public class TopTipBar extends TextView {
     private Type type;
 
 
+    private static class TopTipBarComparator implements Comparator<String>, Serializable {
+        @Override
+        public int compare(String a, String b) {
+            Long aL = Long.valueOf(a);
+            Long bL = Long.valueOf(b);
+            Long resultL = aL - bL;
+            int result = 0;
+            if (resultL > 0L) {
+                result = 1;
+            } else if (resultL < 0L) {
+                result = -1;
+            }
+            return result;
+        }
+    }
+
     public static interface OnChangeListener {
         public void onChange(int count);
 
     }
+
 
     public void setOnChangeListener(OnChangeListener l) {
         this.onChangeListener = l;
@@ -58,6 +75,7 @@ public class TopTipBar extends TextView {
     public TopTipBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         type = Type.AUTO;
+        ids = new TreeSet<String>(new TopTipBarComparator());
     }
 
     public void setType(Type type) {
@@ -147,21 +165,13 @@ public class TopTipBar extends TextView {
 
     //helperId can be used to keep TopTipBar stay Visible status
     public void handle(String id, String helperId) {
-        if (disappear) {
+        if (disappear || TextUtils.isEmpty(id)) {
             return;
         }
-        boolean has = ids.contains(id);
-        if (has) {
-            ids.remove(id);
-            long d = Long.valueOf(id);
-            Iterator<String> iterator = ids.iterator();
-            while (iterator.hasNext()) {
-                String v = iterator.next();
-                long t = Long.valueOf(v);
-                if (t < d) {
-                    iterator.remove();
-                }
-            }
+
+        SortedSet tmp = ids.headSet(id, true);
+        if (tmp.size() > 0) {
+            tmp.clear();
             setCount();
 
             if (this.onChangeListener != null) {
@@ -237,7 +247,7 @@ public class TopTipBar extends TextView {
     }
 
     static class SavedState extends BaseSavedState {
-        HashSet<String> ids;
+        TreeSet<String> ids;
         boolean disappear;
         boolean visible;
         Type type;
@@ -249,7 +259,7 @@ public class TopTipBar extends TextView {
         private SavedState(Parcel in) {
             super(in);
             Bundle bundle = in.readBundle();
-            this.ids = (HashSet<String>) bundle.getSerializable("ids");
+            this.ids = (TreeSet<String>) bundle.getSerializable("ids");
             this.type = (Type) bundle.getSerializable("type");
             boolean[] disappearArray = new boolean[2];
             in.readBooleanArray(disappearArray);
