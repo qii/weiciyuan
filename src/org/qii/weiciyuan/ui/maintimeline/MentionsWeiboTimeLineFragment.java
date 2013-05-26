@@ -233,11 +233,14 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("account", accountBean);
-        outState.putSerializable("bean", bean);
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
-        outState.putSerializable("unreadBean", unreadBean);
-        outState.putSerializable("timeLinePosition", timeLinePosition);
+
+        if (getActivity().isChangingConfigurations()) {
+            outState.putSerializable("bean", bean);
+            outState.putSerializable("unreadBean", unreadBean);
+            outState.putSerializable("timeLinePosition", timeLinePosition);
+        }
     }
 
     @Override
@@ -265,6 +268,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
                     getList().replaceData(savedBean);
                     timeLineAdapter.notifyDataSetChanged();
                     refreshLayout(getList());
+                } else {
+                    getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 }
 
                 break;

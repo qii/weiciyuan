@@ -237,7 +237,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.show(fragment);
         ft.commit();
         setTitle("");
-        ((MainTimeLineActivity) getActivity()).setCurrentFragment(fragment);
+        fragment.buildActionBarNav();
     }
 
     private boolean showMentionPage(boolean reset) {

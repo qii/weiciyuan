@@ -357,12 +357,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("account", accountBean);
-        outState.putSerializable("bean", getList());
         outState.putSerializable("userBean", userBean);
         outState.putString("token", token);
 
-        outState.putSerializable("groupDataCache", groupDataCache);
-        outState.putString("currentGroupId", currentGroupId);
+//        outState.putSerializable("bean", getList());
+//        outState.putSerializable("groupDataCache", groupDataCache);
+//        outState.putString("currentGroupId", currentGroupId);
     }
 
     @Override
@@ -400,13 +400,31 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 accountBean = (AccountBean) savedInstanceState.getSerializable("account");
                 token = savedInstanceState.getString("token");
 
-                groupDataCache = (HashMap) savedInstanceState.getSerializable("groupDataCache");
-                currentGroupId = savedInstanceState.getString("currentGroupId");
+//                groupDataCache = (HashMap) savedInstanceState.getSerializable("groupDataCache");
+//                currentGroupId = savedInstanceState.getString("currentGroupId");
+//
+//                getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
+//                timeLineAdapter.notifyDataSetChanged();
+//
+//                refreshLayout(getList());
+//                buildActionBarNav();
 
-                getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
-                timeLineAdapter.notifyDataSetChanged();
+                if (Utility.isTaskStopped(dbTask) && getList().getSize() == 0) {
+                    dbTask = new DBCacheTask();
+                    dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                    GroupInfoTask groupInfoTask = new GroupInfoTask(GlobalContext.getInstance().getSpecialToken());
+                    groupInfoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    getAdapter().notifyDataSetChanged();
+                    refreshLayout(getList());
+                }
 
-                refreshLayout(getList());
+                groupDataCache.put(ALL_GROUP_ID, new MessageListBean());
+                groupDataCache.put(BILATERAL_GROUP_ID, new MessageListBean());
+
+                if (getList().getSize() > 0) {
+                    groupDataCache.put(ALL_GROUP_ID, getList().copy());
+                }
                 buildActionBarNav();
 
                 break;
@@ -488,11 +506,13 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
 
-    private void buildActionBarNav() {
+    public void buildActionBarNav() {
         if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
                 != LeftMenuFragment.HOME_INDEX) {
             return;
         }
+        ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+
         getActivity().getActionBar().setDisplayShowTitleEnabled(false);
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(Utility.isDevicePort());
         getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
