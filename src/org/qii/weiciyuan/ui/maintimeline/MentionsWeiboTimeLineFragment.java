@@ -108,16 +108,6 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("account", accountBean);
-        outState.putSerializable("bean", bean);
-        outState.putSerializable("userBean", userBean);
-        outState.putString("token", token);
-        outState.putSerializable("unreadBean", unreadBean);
-        outState.putSerializable("timeLinePosition", timeLinePosition);
-    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -236,6 +226,18 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         } else {
             Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("account", accountBean);
+        outState.putSerializable("bean", bean);
+        outState.putSerializable("userBean", userBean);
+        outState.putString("token", token);
+        outState.putSerializable("unreadBean", unreadBean);
+        outState.putSerializable("timeLinePosition", timeLinePosition);
     }
 
     @Override
