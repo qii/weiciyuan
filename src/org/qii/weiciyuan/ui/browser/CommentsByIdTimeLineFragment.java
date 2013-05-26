@@ -150,7 +150,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         super.onCreate(savedInstanceState);
         bean = new CommentListBean();
         setHasOptionsMenu(true);
-        setRetainInstance(true);
+        setRetainInstance(false);
     }
 
 
@@ -436,9 +436,9 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         String token = GlobalContext.getInstance().getSpecialToken();
 
         String sinceId = null;
-        if (getList().getItemList().size() > 0) {
-            sinceId = getList().getItemList().get(0).getId();
-        }
+//        if (getList().getItemList().size() > 0) {
+//            sinceId = getList().getItemList().get(0).getId();
+//        }
         return new CommentsByIdMsgLoader(getActivity(), msg.getId(), token, sinceId, null);
     }
 

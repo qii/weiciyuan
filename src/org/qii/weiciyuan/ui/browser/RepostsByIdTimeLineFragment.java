@@ -165,7 +165,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        setRetainInstance(true);
+        setRetainInstance(false);
     }
 
 
