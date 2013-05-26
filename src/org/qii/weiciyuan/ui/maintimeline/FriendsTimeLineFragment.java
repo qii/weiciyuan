@@ -34,6 +34,7 @@ import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.loader.FriendsMsgLoader;
+import org.qii.weiciyuan.ui.main.LeftMenuFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
@@ -488,6 +489,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
 
     private void buildActionBarNav() {
+        if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
+                != LeftMenuFragment.HOME_INDEX) {
+            return;
+        }
         getActivity().getActionBar().setDisplayShowTitleEnabled(false);
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(Utility.isDevicePort());
         getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);

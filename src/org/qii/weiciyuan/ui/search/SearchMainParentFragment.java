@@ -110,7 +110,6 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
             int searchTabIndex = getArguments().getInt("searchTabIndex");
             buildActionBarAndViewPagerTitles(searchTabIndex);
 
-            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
             if (searchView != null)
                 SmileyPickerUtility.showKeyBoard(searchView);
         } else {
@@ -121,6 +120,8 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
 
 
     public void buildActionBarAndViewPagerTitles(int nav) {
+        ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+
         if (Utility.isDevicePort()) {
             ((MainTimeLineActivity) getActivity()).setTitle(R.string.search);
             getActivity().getActionBar().setIcon(R.drawable.search_light);

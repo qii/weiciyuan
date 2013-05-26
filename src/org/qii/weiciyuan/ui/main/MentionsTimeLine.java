@@ -90,7 +90,6 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
         if (!hidden) {
             int mentionsTabIndex = getArguments().getInt("mentionsTabIndex");
             buildActionBarAndViewPagerTitles(mentionsTabIndex);
-            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
 
         }
     }
@@ -121,6 +120,8 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
 
 
     public void buildActionBarAndViewPagerTitles(int nav) {
+        ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+
         if (Utility.isDevicePort()) {
             ((MainTimeLineActivity) getActivity()).setTitle(R.string.mentions);
             getActivity().getActionBar().setIcon(R.drawable.repost_light);

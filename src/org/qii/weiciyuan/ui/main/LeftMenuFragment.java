@@ -31,6 +31,7 @@ import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.nearby.NearbyTimeLineActivity;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 import org.qii.weiciyuan.ui.search.SearchMainActivity;
+import org.qii.weiciyuan.ui.search.SearchMainParentFragment;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
 import java.util.HashSet;
@@ -287,7 +288,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.show(m);
         ft.commit();
 
-
+        ((MentionsTimeLine) m).buildActionBarAndViewPagerTitles(mentionsTabIndex);
     }
 
     public int getCurrentIndex() {
@@ -344,7 +345,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.show(fragment);
         ft.commit();
 
-
+        ((CommentsTimeLine) fragment).buildActionBarAndViewPagerTitles(commentsTabIndex);
     }
 
 
@@ -398,6 +399,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.show(fragment);
         ft.commit();
 
+        ((SearchMainParentFragment) fragment).buildActionBarAndViewPagerTitles(searchTabIndex);
 
     }
 

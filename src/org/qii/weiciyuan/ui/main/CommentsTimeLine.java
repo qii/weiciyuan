@@ -108,12 +108,12 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
         if (!hidden) {
             int commentsTabIndex = getArguments().getInt("commentsTabIndex");
             buildActionBarAndViewPagerTitles(commentsTabIndex);
-            ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
 
         }
     }
 
     public void buildActionBarAndViewPagerTitles(int nav) {
+        ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
 
         if (Utility.isDevicePort()) {
             ((MainTimeLineActivity) getActivity()).setTitle(R.string.comments);
