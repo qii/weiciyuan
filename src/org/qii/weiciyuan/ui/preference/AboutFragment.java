@@ -93,13 +93,13 @@ public class AboutFragment extends PreferenceFragment {
         });
 
 
-        findPreference(SettingActivity.DONATE).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Toast.makeText(getActivity(), getString(R.string.donate_summary2), Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
+//        findPreference(SettingActivity.DONATE).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+//            @Override
+//            public boolean onPreferenceClick(Preference preference) {
+//                Toast.makeText(getActivity(), getString(R.string.donate_summary2), Toast.LENGTH_SHORT).show();
+//                return true;
+//            }
+//        });
 
         findPreference(SettingActivity.AUTHOR).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

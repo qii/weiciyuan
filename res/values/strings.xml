@@ -432,7 +432,7 @@
     <string name="pref_recommend_title">推荐给微博好友</string>
     <string name="recommend_content">还在被微博的广告恶心吗？换用 四次元 吧，干净清爽的新浪微博安卓客户端，下载 => http://t.cn/zlAUwy7</string>
     <string name="pref_donate_title">捐赠支持开发</string>
-    <string name="pref_donate_summary">支付宝: qiibeta@gmail.com</string>
+    <string name="pref_donate_summary">捐之前想清楚，下个版本不一定会支持你的设备</string>
     <string name="donate_summary2">没钱好痛苦……_(:3」∠)_</string>
     <string name="pref_play_store_address_title">Google Play</string>
     <string name="pref_play_store_address_summary">打分支持该应用</string>
