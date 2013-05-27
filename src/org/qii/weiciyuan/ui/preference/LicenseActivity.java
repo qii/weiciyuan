@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -37,6 +38,12 @@ public class LicenseActivity extends AbstractAppActivity {
         }
         webView = new WebView(this);
         setContentView(webView);
+        if (getWindow().isFloating()) {
+            WindowManager.LayoutParams layout = new WindowManager.LayoutParams();
+            layout.copyFrom(getWindow().getAttributes());
+            layout.height = WindowManager.LayoutParams.MATCH_PARENT;
+            getWindow().setAttributes(layout);
+        }
         webView.loadUrl("file:///android_asset/licenses.html");
     }
 
