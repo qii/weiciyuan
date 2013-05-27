@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
  */
 public class AbstractAppActivity extends FragmentActivity implements ICommander {
 
-    private int theme = 0;
+    protected int theme = 0;
 
     protected TimeLineBitmapDownloader commander = null;
 

@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.preference;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -18,10 +19,22 @@ public class LicenseActivity extends AbstractAppActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayShowHomeEnabled(false);
-        getActionBar().setDisplayShowTitleEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(getString(R.string.pref_open_source_license_title));
+        switch (theme) {
+            case R.style.AppTheme_Four:
+                setTheme(android.R.style.Theme_Holo_Light_DialogWhenLarge);
+                break;
+            default:
+                setTheme(android.R.style.Theme_Holo_DialogWhenLarge);
+        }
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(getString(R.string.pref_open_source_license_title));
+        } else {
+            setTitle(getString(R.string.pref_open_source_license_title));
+        }
         webView = new WebView(this);
         setContentView(webView);
         webView.loadUrl("file:///android_asset/licenses.html");

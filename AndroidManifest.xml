@@ -197,7 +197,9 @@
         <activity android:name=".ui.preference.ReadActivity"/>
         <activity android:name=".ui.preference.PerformanceActivity"/>
         <activity android:name=".ui.preference.AboutActivity"/>
-        <activity android:name=".ui.preference.LicenseActivity"/>
+        <activity
+            android:name=".ui.preference.LicenseActivity"
+            android:theme="@android:style/Theme.Holo.DialogWhenLarge"/>
 
 
         <!-- service -->
