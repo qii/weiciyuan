@@ -1,7 +1,10 @@
 package org.qii.weiciyuan.support.file;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Environment;
 import android.text.TextUtils;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
@@ -25,12 +28,45 @@ public class FileManager {
     private static final String WEBVIEW_FAVICON = "favicon";
     private static final String LOG = "log";
 
+    /**
+     * install weiciyuan, open app and login in, Android system will create cache dir.
+     * then open cache dir (/sdcard dir/Android/data/org.qii.weiciyuan) with Root Explorer,
+     * uninstall weiciyuan and reinstall it, the new weiciyuan app will have the bug it can't
+     * read cache dir again, so I have to tell user to delete that cache dir
+     */
+    private static volatile boolean cantReadBecauseOfAndroidBugPermissionProblem = false;
+
     private static String getSdCardPath() {
         if (isExternalStorageMounted()) {
-            return GlobalContext.getInstance().getExternalCacheDir().getAbsolutePath();
+            File path = GlobalContext.getInstance().getExternalCacheDir();
+            if (path != null)
+                return path.getAbsolutePath();
+            else {
+                if (!cantReadBecauseOfAndroidBugPermissionProblem) {
+                    cantReadBecauseOfAndroidBugPermissionProblem = true;
+                    GlobalContext.getInstance().getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            new AlertDialog.Builder(GlobalContext.getInstance().getActivity())
+                                    .setTitle(R.string.something_error)
+                                    .setMessage(R.string.please_deleted_cache_dir)
+                                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    })
+                                    .show();
+
+                        }
+                    });
+                }
+            }
         } else {
             return "";
         }
+
+        return "";
     }
 
     public File getAlbumStorageDir(String albumName) {
