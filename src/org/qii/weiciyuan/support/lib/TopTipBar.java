@@ -184,6 +184,9 @@ public class TopTipBar extends TextView {
             return;
         }
 
+        if (TextUtils.isEmpty(helperId)) {
+            return;
+        }
         if (ids.contains(helperId)) {
             setCount();
         } else {
