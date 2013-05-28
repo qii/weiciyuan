@@ -154,13 +154,6 @@ public class MessageBean extends ItemBean {
         return TimeTool.getListTime(this);
     }
 
-    public String getIdstr() {
-        return idstr;
-    }
-
-    public void setIdstr(String idstr) {
-        this.idstr = idstr;
-    }
 
     private String created_at;
     private String id;
@@ -268,12 +261,12 @@ public class MessageBean extends ItemBean {
         }
 
         MessageBean other = (MessageBean) otherObject;
-        return getIdstr().equals(other.getIdstr());
+        return getId().equals(other.getId());
     }
 
     @Override
     public int hashCode() {
-        return getIdstr().hashCode();
+        return getId().hashCode();
     }
 
     @Override
