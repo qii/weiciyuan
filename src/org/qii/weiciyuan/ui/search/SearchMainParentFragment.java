@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class SearchMainParentFragment extends AbstractAppFragment implements MainTimeLineActivity.ScrollableListFragment {
 
     private ViewPager viewPager;
-    private ArrayList<Fragment> searchFragments = new ArrayList<Fragment>();
+    private SparseArray<Fragment> searchFragments = new SparseArray<Fragment>();
     private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
 
     private static final int SEARCH_WEIBO_CHILD_POSITION = 0;

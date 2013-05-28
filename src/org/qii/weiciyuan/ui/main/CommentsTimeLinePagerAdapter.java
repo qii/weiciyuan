@@ -4,12 +4,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.SparseArray;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.ui.maintimeline.CommentsByMeTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.CommentsToMeTimeLineFragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * User: qii
@@ -17,13 +15,13 @@ import java.util.List;
  */
 public class CommentsTimeLinePagerAdapter extends AppFragmentPagerAdapter {
 
-    private List<Fragment> fragmentList;
+    private SparseArray<Fragment> fragmentList;
 
-    public CommentsTimeLinePagerAdapter(CommentsTimeLine fragment, ViewPager viewPager, FragmentManager fm, MainTimeLineActivity activity, List<Fragment> fragmentList) {
+    public CommentsTimeLinePagerAdapter(CommentsTimeLine fragment, ViewPager viewPager, FragmentManager fm, MainTimeLineActivity activity, SparseArray<Fragment> fragmentList) {
         super(fm);
         this.fragmentList = fragmentList;
-        fragmentList.add(0, fragment.getCommentsToMeTimeLineFragment());
-        fragmentList.add(1, fragment.getCommentsByMeTimeLineFragment());
+        fragmentList.append(0, fragment.getCommentsToMeTimeLineFragment());
+        fragmentList.append(1, fragment.getCommentsByMeTimeLineFragment());
         FragmentTransaction transaction = fragment.getChildFragmentManager().beginTransaction();
         if (!fragmentList.get(0).isAdded())
             transaction.add(viewPager.getId(), fragmentList.get(0), CommentsToMeTimeLineFragment.class.getName());
@@ -42,9 +40,9 @@ public class CommentsTimeLinePagerAdapter extends AppFragmentPagerAdapter {
 
     @Override
     protected String getTag(int position) {
-        List<String> tagList = new ArrayList<String>();
-        tagList.add(CommentsToMeTimeLineFragment.class.getName());
-        tagList.add(CommentsByMeTimeLineFragment.class.getName());
+        SparseArray<String> tagList = new SparseArray<String>();
+        tagList.append(0, CommentsToMeTimeLineFragment.class.getName());
+        tagList.append(1, CommentsByMeTimeLineFragment.class.getName());
 
         return tagList.get(position);
     }

@@ -4,13 +4,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.SparseArray;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.maintimeline.MentionsCommentTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsWeiboTimeLineFragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * User: qii
@@ -18,13 +16,13 @@ import java.util.List;
  */
 public class SearchTimeLinePagerAdapter extends AppFragmentPagerAdapter {
 
-    private List<Fragment> fragmentList;
+    private SparseArray<Fragment> fragmentList;
 
-    public SearchTimeLinePagerAdapter(SearchMainParentFragment fragment, ViewPager viewPager, FragmentManager fm, MainTimeLineActivity activity, List<Fragment> fragmentList) {
+    public SearchTimeLinePagerAdapter(SearchMainParentFragment fragment, ViewPager viewPager, FragmentManager fm, MainTimeLineActivity activity, SparseArray<Fragment> fragmentList) {
         super(fm);
         this.fragmentList = fragmentList;
-        fragmentList.add(0, fragment.getSearchWeiboFragment());
-        fragmentList.add(1, fragment.getSearchUserFragment());
+        fragmentList.append(0, fragment.getSearchWeiboFragment());
+        fragmentList.append(1, fragment.getSearchUserFragment());
         FragmentTransaction transaction = fragment.getChildFragmentManager().beginTransaction();
         if (!fragmentList.get(0).isAdded())
             transaction.add(viewPager.getId(), fragmentList.get(0), SearchStatusFragment.class.getName());
@@ -43,9 +41,9 @@ public class SearchTimeLinePagerAdapter extends AppFragmentPagerAdapter {
 
     @Override
     protected String getTag(int position) {
-        List<String> tagList = new ArrayList<String>();
-        tagList.add(MentionsWeiboTimeLineFragment.class.getName());
-        tagList.add(MentionsCommentTimeLineFragment.class.getName());
+        SparseArray<String> tagList = new SparseArray<String>();
+        tagList.append(0, MentionsWeiboTimeLineFragment.class.getName());
+        tagList.append(0, MentionsCommentTimeLineFragment.class.getName());
 
         return tagList.get(position);
     }

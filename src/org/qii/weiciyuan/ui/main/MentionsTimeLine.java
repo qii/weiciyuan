@@ -22,8 +22,6 @@ import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsCommentTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.MentionsWeiboTimeLineFragment;
 
-import java.util.ArrayList;
-
 /**
  * User: qii
  * Date: 13-3-31
@@ -31,7 +29,7 @@ import java.util.ArrayList;
 public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLineActivity.ScrollableListFragment {
 
     private ViewPager viewPager;
-    private ArrayList<Fragment> mentionFragments = new ArrayList<Fragment>();
+    private SparseArray<Fragment> mentionFragments = new SparseArray<Fragment>();
     private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
 
     private static final int MENTIONS_WEIBO_CHILD_POSITION = 0;

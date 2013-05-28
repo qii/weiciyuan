@@ -22,8 +22,6 @@ import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.maintimeline.CommentsByMeTimeLineFragment;
 import org.qii.weiciyuan.ui.maintimeline.CommentsToMeTimeLineFragment;
 
-import java.util.ArrayList;
-
 /**
  * User: qii
  * Date: 13-4-5
@@ -31,7 +29,7 @@ import java.util.ArrayList;
 public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLineActivity.ScrollableListFragment {
 
     private ViewPager viewPager;
-    private ArrayList<Fragment> mentionFragments = new ArrayList<Fragment>();
+    private SparseArray<Fragment> mentionFragments = new SparseArray<Fragment>();
     private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
 
     private static final int COMMENTS_TO_ME_CHILD_POSITION = 0;
