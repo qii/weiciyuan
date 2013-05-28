@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.LongSparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -19,9 +20,7 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
@@ -30,13 +29,13 @@ import java.util.WeakHashMap;
  */
 public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
-    private Map<ViewHolder, Drawable> bg = new WeakHashMap<ViewHolder, Drawable>();
+    private WeakHashMap<ViewHolder, Drawable> bg = new WeakHashMap<ViewHolder, Drawable>();
 
-    private Map<String, Integer> msgHeights = new HashMap<String, Integer>();
-    private Map<String, Integer> msgWidths = new HashMap<String, Integer>();
+    private LongSparseArray<Integer> msgHeights = new LongSparseArray<Integer>();
+    private LongSparseArray<Integer> msgWidths = new LongSparseArray<Integer>();
 
-    private Map<String, Integer> oriMsgHeights = new HashMap<String, Integer>();
-    private Map<String, Integer> oriMsgWidths = new HashMap<String, Integer>();
+    private LongSparseArray<Integer> oriMsgHeights = new LongSparseArray<Integer>();
+    private LongSparseArray<Integer> oriMsgWidths = new LongSparseArray<Integer>();
 
     private TopTipBar topTipBar;
 
@@ -139,17 +138,17 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         }
 
         if (!TextUtils.isEmpty(msg.getListViewSpannableString())) {
-            boolean haveCachedHeight = msgHeights.containsKey(msg.getId());
+            boolean haveCachedHeight = msgHeights.get(msg.getIdLong()) != null;
             ViewGroup.LayoutParams layoutParams = holder.content.getLayoutParams();
             if (haveCachedHeight) {
-                layoutParams.height = msgHeights.get(msg.getId());
+                layoutParams.height = msgHeights.get(msg.getIdLong());
             } else {
                 layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             }
 
-            boolean haveCachedWidth = msgWidths.containsKey(msg.getId());
+            boolean haveCachedWidth = msgWidths.get(msg.getIdLong()) != null;
             if (haveCachedWidth) {
-                layoutParams.width = msgWidths.get(msg.getId());
+                layoutParams.width = msgWidths.get(msg.getIdLong());
             } else {
                 layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             }
@@ -157,11 +156,11 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.content.requestLayout();
             holder.content.setText(msg.getListViewSpannableString());
             if (!haveCachedHeight) {
-                msgHeights.put(msg.getId(), layoutParams.height);
+                msgHeights.append(msg.getIdLong(), layoutParams.height);
             }
 
             if (!haveCachedWidth) {
-                msgWidths.put(msg.getId(), layoutParams.width);
+                msgWidths.append(msg.getIdLong(), layoutParams.width);
             }
         } else {
             ListViewTool.addJustHighLightLinks(msg);
@@ -249,17 +248,17 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     private void buildRepostContent(MessageBean msg, final MessageBean repost_msg, ViewHolder holder, int position) {
         holder.repost_content.setVisibility(View.VISIBLE);
         if (!repost_msg.getId().equals((String) holder.repost_content.getTag())) {
-            boolean haveCachedHeight = oriMsgHeights.containsKey(msg.getId());
+            boolean haveCachedHeight = oriMsgHeights.get(msg.getIdLong()) != null;
             ViewGroup.LayoutParams layoutParams = holder.repost_content.getLayoutParams();
             if (haveCachedHeight) {
-                layoutParams.height = oriMsgHeights.get(msg.getId());
+                layoutParams.height = oriMsgHeights.get(msg.getIdLong());
             } else {
                 layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             }
 
-            boolean haveCachedWidth = oriMsgWidths.containsKey(msg.getId());
+            boolean haveCachedWidth = oriMsgWidths.get(msg.getIdLong()) != null;
             if (haveCachedWidth) {
-                layoutParams.width = oriMsgWidths.get(msg.getId());
+                layoutParams.width = oriMsgWidths.get(msg.getIdLong());
             } else {
                 layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             }
@@ -268,11 +267,11 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.repost_content.setText(repost_msg.getListViewSpannableString());
 
             if (!haveCachedHeight) {
-                oriMsgHeights.put(msg.getId(), layoutParams.height);
+                oriMsgHeights.append(msg.getIdLong(), layoutParams.height);
             }
 
             if (!haveCachedWidth) {
-                oriMsgWidths.put(msg.getId(), layoutParams.width);
+                oriMsgWidths.append(msg.getIdLong(), layoutParams.width);
             }
 
             holder.repost_content.setText(repost_msg.getListViewSpannableString());

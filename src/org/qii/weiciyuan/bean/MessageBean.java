@@ -38,11 +38,11 @@ public class MessageBean extends ItemBean {
     }
 
     public String getId() {
-        return id;
+        return idstr;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.idstr = id;
     }
 
     public String getText() {
@@ -154,9 +154,12 @@ public class MessageBean extends ItemBean {
         return TimeTool.getListTime(this);
     }
 
+    public long getIdLong() {
+        return this.id;
+    }
 
     private String created_at;
-    private String id;
+    private long id;
     private String idstr;
     private String text;
     private String source;
