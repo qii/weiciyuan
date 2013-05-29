@@ -31,6 +31,7 @@ import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.search.SearchMainParentFragment;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
+import org.qii.weiciyuan.ui.userinfo.MyFavListFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.concurrent.Executors;
@@ -137,6 +138,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         Fragment comments = getCommentsTimeLineFragment();
         Fragment search = getSearchFragment();
         Fragment dm = getDMFragment();
+        Fragment fav = getFavFragment();
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (!friend.isAdded()) {
@@ -164,6 +166,12 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             fragmentTransaction.hide(dm);
 
         }
+
+        if (!fav.isAdded()) {
+            fragmentTransaction.add(R.id.menu_right_fl, fav, MyFavListFragment.class.getName());
+            fragmentTransaction.hide(fav);
+        }
+
 
         if (!fragmentTransaction.isEmpty()) {
             fragmentTransaction.commit();
@@ -461,6 +469,16 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 DMUserListFragment.class.getName()));
         if (fragment == null) {
             fragment = new DMUserListFragment();
+            fragment.setArguments(new Bundle());
+        }
+        return fragment;
+    }
+
+    public MyFavListFragment getFavFragment() {
+        MyFavListFragment fragment = ((MyFavListFragment) getSupportFragmentManager().findFragmentByTag(
+                MyFavListFragment.class.getName()));
+        if (fragment == null) {
+            fragment = new MyFavListFragment();
             fragment.setArguments(new Bundle());
         }
         return fragment;

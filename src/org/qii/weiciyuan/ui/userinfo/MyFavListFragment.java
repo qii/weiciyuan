@@ -1,10 +1,9 @@
 package org.qii.weiciyuan.ui.userinfo;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,17 +11,20 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.FavListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.loader.MyFavMsgLoader;
+import org.qii.weiciyuan.ui.main.LeftMenuFragment;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
  * User: qii
  * Date: 12-8-18
  * this class need to refactor
  */
-public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBean> {
+public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBean> implements MainTimeLineActivity.ScrollableListFragment {
 
     private int page = 1;
 
@@ -44,16 +46,19 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         outState.putInt("page", page);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.actionbar_menu_myfavlistfragment, menu);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.actionbar_menu_myfavlistfragment, menu);
+//    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
+        setRetainInstance(true);
+        setHasOptionsMenu(true);
+
+        commander = ((ICommander) getActivity()).getBitmapDownloader();
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
@@ -71,8 +76,34 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
                 break;
         }
 
+        if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
+                == LeftMenuFragment.FAV_INDEX) {
+            buildActionBarAndViewPagerTitles();
+        }
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            buildActionBarAndViewPagerTitles();
+        }
+    }
+
+    public void buildActionBarAndViewPagerTitles() {
+        ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+
+        if (Utility.isDevicePort()) {
+            ((MainTimeLineActivity) getActivity()).setTitle(getString(R.string.favourite));
+            getActivity().getActionBar().setIcon(R.drawable.ic_menu_fav);
+        } else {
+            ((MainTimeLineActivity) getActivity()).setTitle(getString(R.string.favourite));
+            getActivity().getActionBar().setIcon(R.drawable.ic_launcher);
+        }
+
+        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        getActivity().getActionBar().removeAllTabs();
+    }
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
@@ -86,7 +117,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         if (bean != null) {
             int newSize = bean.getTotal_number();
             String number = bean.getSize() + "/" + newSize;
-            getActivity().getActionBar().setSubtitle(number);
+//            getActivity().getActionBar().setSubtitle(number);
         }
     }
 
@@ -154,4 +185,10 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         String token = GlobalContext.getInstance().getSpecialToken();
         return new MyFavMsgLoader(getActivity(), token, String.valueOf(page + 1));
     }
+
+    @Override
+    public void scrollToTop() {
+        Utility.stopListViewScrollingAndScrollToTop(getListView());
+    }
+
 }

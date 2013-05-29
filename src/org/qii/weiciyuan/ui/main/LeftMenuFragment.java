@@ -62,8 +62,12 @@ public class LeftMenuFragment extends AbstractAppFragment {
     public static final int HOME_INDEX = 0;
     public static final int MENTIONS_INDEX = 1;
     public static final int COMMENTS_INDEX = 2;
-    public static final int SEARCH_INDEX = 3;
-    public static final int DM_INDEX = 4;
+    public static final int DM_INDEX = 3;
+    public static final int FAV_INDEX = 4;
+    public static final int SEARCH_INDEX = 5;
+    public static final int PROFILE_INDEX = 6;
+    public static final int LOGOUT_INDEX = 7;
+    public static final int SETTING_INDEX = 8;
 
 
     @Override
@@ -109,6 +113,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         rightFragments.append(COMMENTS_INDEX, ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
         rightFragments.append(SEARCH_INDEX, ((MainTimeLineActivity) getActivity()).getSearchFragment());
         rightFragments.append(DM_INDEX, ((MainTimeLineActivity) getActivity()).getDMFragment());
+        rightFragments.append(FAV_INDEX, ((MainTimeLineActivity) getActivity()).getFavFragment());
 
         switchCategory(currentIndex);
 
@@ -131,6 +136,9 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 break;
             case DM_INDEX:
                 showDMPage(true);
+                break;
+            case FAV_INDEX:
+                showFavPage(true);
                 break;
         }
         drawButtonsBackground(position);
@@ -232,6 +240,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(COMMENTS_INDEX));
         ft.hide(rightFragments.get(SEARCH_INDEX));
         ft.hide(rightFragments.get(DM_INDEX));
+        ft.hide(rightFragments.get(FAV_INDEX));
 
         FriendsTimeLineFragment fragment = (FriendsTimeLineFragment) rightFragments.get(HOME_INDEX);
         ft.show(fragment);
@@ -273,6 +282,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(COMMENTS_INDEX));
         ft.hide(rightFragments.get(SEARCH_INDEX));
         ft.hide(rightFragments.get(DM_INDEX));
+        ft.hide(rightFragments.get(FAV_INDEX));
 
 
         Fragment m = rightFragments.get(MENTIONS_INDEX);
@@ -332,6 +342,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(MENTIONS_INDEX));
         ft.hide(rightFragments.get(SEARCH_INDEX));
         ft.hide(rightFragments.get(DM_INDEX));
+        ft.hide(rightFragments.get(FAV_INDEX));
 
         Fragment fragment = rightFragments.get(COMMENTS_INDEX);
         if (firstStart) {
@@ -385,6 +396,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(MENTIONS_INDEX));
         ft.hide(rightFragments.get(COMMENTS_INDEX));
         ft.hide(rightFragments.get(DM_INDEX));
+        ft.hide(rightFragments.get(FAV_INDEX));
 
         Fragment fragment = rightFragments.get(SEARCH_INDEX);
 
@@ -440,6 +452,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(MENTIONS_INDEX));
         ft.hide(rightFragments.get(COMMENTS_INDEX));
         ft.hide(rightFragments.get(SEARCH_INDEX));
+        ft.hide(rightFragments.get(FAV_INDEX));
 
         Fragment fragment = rightFragments.get(DM_INDEX);
 
@@ -448,6 +461,50 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.commit();
 
 
+    }
+
+    private boolean showFavPage(boolean reset) {
+        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+        if (currentIndex == FAV_INDEX && !reset) {
+            ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+            return true;
+        }
+        currentIndex = FAV_INDEX;
+        if (Utility.isDevicePort() && !reset) {
+            BroadcastReceiver receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
+                    if (currentIndex == FAV_INDEX)
+                        showFavPageImp();
+
+                }
+            };
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+        } else {
+            showFavPageImp();
+
+        }
+
+
+        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+
+        return false;
+    }
+
+    private void showFavPageImp() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+        ft.hide(rightFragments.get(HOME_INDEX));
+        ft.hide(rightFragments.get(MENTIONS_INDEX));
+        ft.hide(rightFragments.get(COMMENTS_INDEX));
+        ft.hide(rightFragments.get(SEARCH_INDEX));
+        ft.hide(rightFragments.get(DM_INDEX));
+
+        Fragment fragment = rightFragments.get(FAV_INDEX);
+
+        ft.show(fragment);
+        ft.commit();
     }
 
 
@@ -466,10 +523,11 @@ public class LeftMenuFragment extends AbstractAppFragment {
         layout.comment = (LinearLayout) view.findViewById(R.id.btn_comment);
         layout.search = (Button) view.findViewById(R.id.btn_search);
         layout.profile = (Button) view.findViewById(R.id.btn_profile);
-        layout.location = (Button) view.findViewById(R.id.btn_location);
+//        layout.location = (Button) view.findViewById(R.id.btn_location);
         layout.setting = (Button) view.findViewById(R.id.btn_setting);
         layout.dm = (Button) view.findViewById(R.id.btn_dm);
         layout.logout = (Button) view.findViewById(R.id.btn_logout);
+        layout.fav = (Button) view.findViewById(R.id.btn_favourite);
         layout.homeCount = (TextView) view.findViewById(R.id.tv_home_count);
         layout.mentionCount = (TextView) view.findViewById(R.id.tv_mention_count);
         layout.commentCount = (TextView) view.findViewById(R.id.tv_comment_count);
@@ -484,10 +542,11 @@ public class LeftMenuFragment extends AbstractAppFragment {
         layout.comment.setOnClickListener(onClickListener);
         layout.search.setOnClickListener(onClickListener);
         layout.profile.setOnClickListener(onClickListener);
-        layout.location.setOnClickListener(onClickListener);
+//        layout.location.setOnClickListener(onClickListener);
         layout.setting.setOnClickListener(onClickListener);
         layout.dm.setOnClickListener(onClickListener);
         layout.logout.setOnClickListener(onClickListener);
+        layout.fav.setOnClickListener(onClickListener);
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -519,6 +578,10 @@ public class LeftMenuFragment extends AbstractAppFragment {
                     startActivity(new Intent(getActivity(), NearbyTimeLineActivity.class));
 //                    drawButtonsBackground(5);
                     break;
+                case R.id.btn_favourite:
+                    showFavPage(false);
+                    drawButtonsBackground(FAV_INDEX);
+                    break;
                 case R.id.btn_dm:
                     showDMPage(false);
                     drawButtonsBackground(DM_INDEX);
@@ -542,6 +605,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 //        layout.location.setBackgroundResource(R.color.transparent);
 //        layout.setting.setBackgroundResource(R.color.transparent);
         layout.dm.setBackgroundResource(R.drawable.btn_drawer_menu);
+        layout.fav.setBackgroundResource(R.drawable.btn_drawer_menu);
 //        layout.logout.setBackgroundResource(R.color.transparent);
         switch (position) {
             case HOME_INDEX:
@@ -559,16 +623,19 @@ public class LeftMenuFragment extends AbstractAppFragment {
             case DM_INDEX:
                 layout.dm.setBackgroundResource(R.color.ics_blue_semi);
                 break;
-            case 5:
-                layout.location.setBackgroundResource(R.color.ics_blue_semi);
+            case FAV_INDEX:
+                layout.fav.setBackgroundResource(R.color.ics_blue_semi);
                 break;
-            case 6:
+//            case 5:
+//                layout.location.setBackgroundResource(R.color.ics_blue_semi);
+//                break;
+            case PROFILE_INDEX:
                 layout.profile.setBackgroundResource(R.color.ics_blue_semi);
                 break;
-            case 7:
+            case LOGOUT_INDEX:
                 layout.logout.setBackgroundResource(R.color.ics_blue_semi);
                 break;
-            case 8:
+            case SETTING_INDEX:
                 layout.setting.setBackgroundResource(R.color.ics_blue_semi);
                 break;
         }
@@ -635,11 +702,12 @@ public class LeftMenuFragment extends AbstractAppFragment {
         TextView mentionCount;
         TextView commentCount;
         Button search;
-        Button location;
+        //        Button location;
         Button dm;
         Button logout;
         Button profile;
         Button setting;
+        Button fav;
     }
 
 

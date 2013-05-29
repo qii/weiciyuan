@@ -81,12 +81,11 @@
             android:visibility="gone"/>
     </LinearLayout>
 
-
     <Button
         style="@style/drawerMenuButton"
-        android:id="@+id/btn_search"
-        android:text="@string/search"
-        android:drawableLeft="@drawable/ic_menu_search"
+        android:id="@+id/btn_dm"
+        android:text="@string/dm"
+        android:drawableLeft="@drawable/ic_menu_message"
         android:layout_weight="0"
         android:layout_width="match_parent"
         />
@@ -94,9 +93,19 @@
 
     <Button
         style="@style/drawerMenuButton"
-        android:id="@+id/btn_dm"
-        android:text="@string/dm"
-        android:drawableLeft="@drawable/ic_menu_message"
+        android:id="@+id/btn_favourite"
+        android:text="@string/favourite"
+        android:drawableLeft="@drawable/ic_menu_fav"
+        android:layout_weight="0"
+        android:layout_width="match_parent"
+        />
+
+
+    <Button
+        style="@style/drawerMenuButton"
+        android:id="@+id/btn_search"
+        android:text="@string/search"
+        android:drawableLeft="@drawable/ic_menu_search"
         android:layout_weight="0"
         android:layout_width="match_parent"
         />

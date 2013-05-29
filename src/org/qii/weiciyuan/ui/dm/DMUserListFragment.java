@@ -27,7 +27,7 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  * User: qii
  * Date: 12-11-14
  */
-public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean> {
+public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean> implements MainTimeLineActivity.ScrollableListFragment {
 
     private DMUserListBean bean = new DMUserListBean();
 
@@ -90,6 +90,8 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
     }
 
     public void buildActionBarAndViewPagerTitles() {
+        ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+
         if (Utility.isDevicePort()) {
             ((MainTimeLineActivity) getActivity()).setTitle(getString(R.string.dm));
             getActivity().getActionBar().setIcon(R.drawable.ic_menu_message);
@@ -218,5 +220,10 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         }
 
         return new DMUserLoader(getActivity(), token, cursor);
+    }
+
+    @Override
+    public void scrollToTop() {
+        Utility.stopListViewScrollingAndScrollToTop(getListView());
     }
 }
