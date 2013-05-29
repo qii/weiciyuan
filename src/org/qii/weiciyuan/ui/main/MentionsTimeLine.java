@@ -29,7 +29,7 @@ import org.qii.weiciyuan.ui.maintimeline.MentionsWeiboTimeLineFragment;
 public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLineActivity.ScrollableListFragment {
 
     private ViewPager viewPager;
-    private SparseArray<Fragment> mentionFragments = new SparseArray<Fragment>();
+    private SparseArray<Fragment> childrenFragments = new SparseArray<Fragment>();
     private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
 
     static final int MENTIONS_WEIBO_CHILD_POSITION = 0;
@@ -76,9 +76,9 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setOnPageChangeListener(onPageChangeListener);
-        MentionsTimeLinePagerAdapter adapter = new MentionsTimeLinePagerAdapter(this, viewPager, getChildFragmentManager(), mentionFragments);
+        MentionsTimeLinePagerAdapter adapter = new MentionsTimeLinePagerAdapter(this, viewPager, getChildFragmentManager(), childrenFragments);
         viewPager.setAdapter(adapter);
     }
 
@@ -214,7 +214,7 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
 
     @Override
     public void scrollToTop() {
-        AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) (mentionFragments.get(viewPager.getCurrentItem()));
+        AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) (childrenFragments.get(viewPager.getCurrentItem()));
         Utility.stopListViewScrollingAndScrollToTop(fragment.getListView());
     }
 }

@@ -17,16 +17,16 @@ public class CommentsTimeLinePagerAdapter extends AppFragmentPagerAdapter {
 
     private SparseArray<Fragment> fragmentList;
 
-    public CommentsTimeLinePagerAdapter(CommentsTimeLine fragment, ViewPager viewPager, FragmentManager fm, MainTimeLineActivity activity, SparseArray<Fragment> fragmentList) {
+    public CommentsTimeLinePagerAdapter(CommentsTimeLine fragment, ViewPager viewPager, FragmentManager fm, SparseArray<Fragment> fragmentList) {
         super(fm);
         this.fragmentList = fragmentList;
-        fragmentList.append(0, fragment.getCommentsToMeTimeLineFragment());
-        fragmentList.append(1, fragment.getCommentsByMeTimeLineFragment());
+        fragmentList.append(CommentsTimeLine.COMMENTS_TO_ME_CHILD_POSITION, fragment.getCommentsToMeTimeLineFragment());
+        fragmentList.append(CommentsTimeLine.COMMENTS_BY_ME_CHILD_POSITION, fragment.getCommentsByMeTimeLineFragment());
         FragmentTransaction transaction = fragment.getChildFragmentManager().beginTransaction();
-        if (!fragmentList.get(0).isAdded())
-            transaction.add(viewPager.getId(), fragmentList.get(0), CommentsToMeTimeLineFragment.class.getName());
-        if (!fragmentList.get(1).isAdded())
-            transaction.add(viewPager.getId(), fragmentList.get(1), CommentsByMeTimeLineFragment.class.getName());
+        if (!fragmentList.get(CommentsTimeLine.COMMENTS_TO_ME_CHILD_POSITION).isAdded())
+            transaction.add(viewPager.getId(), fragmentList.get(CommentsTimeLine.COMMENTS_TO_ME_CHILD_POSITION), CommentsToMeTimeLineFragment.class.getName());
+        if (!fragmentList.get(CommentsTimeLine.COMMENTS_BY_ME_CHILD_POSITION).isAdded())
+            transaction.add(viewPager.getId(), fragmentList.get(CommentsTimeLine.COMMENTS_BY_ME_CHILD_POSITION), CommentsByMeTimeLineFragment.class.getName());
         if (!transaction.isEmpty()) {
             transaction.commit();
             fragment.getChildFragmentManager().executePendingTransactions();
@@ -41,8 +41,8 @@ public class CommentsTimeLinePagerAdapter extends AppFragmentPagerAdapter {
     @Override
     protected String getTag(int position) {
         SparseArray<String> tagList = new SparseArray<String>();
-        tagList.append(0, CommentsToMeTimeLineFragment.class.getName());
-        tagList.append(1, CommentsByMeTimeLineFragment.class.getName());
+        tagList.append(CommentsTimeLine.COMMENTS_TO_ME_CHILD_POSITION, CommentsToMeTimeLineFragment.class.getName());
+        tagList.append(CommentsTimeLine.COMMENTS_BY_ME_CHILD_POSITION, CommentsByMeTimeLineFragment.class.getName());
 
         return tagList.get(position);
     }

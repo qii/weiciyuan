@@ -29,11 +29,11 @@ import org.qii.weiciyuan.ui.maintimeline.CommentsToMeTimeLineFragment;
 public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLineActivity.ScrollableListFragment {
 
     private ViewPager viewPager;
-    private SparseArray<Fragment> mentionFragments = new SparseArray<Fragment>();
+    private SparseArray<Fragment> childrenFragments = new SparseArray<Fragment>();
     private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
 
-    private static final int COMMENTS_TO_ME_CHILD_POSITION = 0;
-    private static final int COMMENTS_BY_ME_CHILD_POSITION = 1;
+    static final int COMMENTS_TO_ME_CHILD_POSITION = 0;
+    static final int COMMENTS_BY_ME_CHILD_POSITION = 1;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -75,9 +75,9 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setOnPageChangeListener(onPageChangeListener);
-        CommentsTimeLinePagerAdapter adapter = new CommentsTimeLinePagerAdapter(this, viewPager, getChildFragmentManager(), (MainTimeLineActivity) getActivity(), mentionFragments);
+        CommentsTimeLinePagerAdapter adapter = new CommentsTimeLinePagerAdapter(this, viewPager, getChildFragmentManager(), childrenFragments);
         viewPager.setAdapter(adapter);
     }
 
@@ -209,7 +209,7 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
 
     @Override
     public void scrollToTop() {
-        AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) (mentionFragments.get(viewPager.getCurrentItem()));
+        AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) (childrenFragments.get(viewPager.getCurrentItem()));
         Utility.stopListViewScrollingAndScrollToTop(fragment.getListView());
     }
 
