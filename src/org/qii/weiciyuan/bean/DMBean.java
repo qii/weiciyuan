@@ -16,7 +16,7 @@ public class DMBean extends ItemBean {
     private transient SpannableString listViewSpannableString;
 
     public String getId() {
-        return id;
+        return idstr;
     }
 
     @Override
@@ -25,11 +25,11 @@ public class DMBean extends ItemBean {
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.idstr = id;
     }
 
-    public String getIdstr() {
-        return idstr;
+    public long getIdLong() {
+        return id;
     }
 
     public void setIdstr(String idstr) {
@@ -159,7 +159,7 @@ public class DMBean extends ItemBean {
         this.geo = geo;
     }
 
-    private String id;
+    private long id;
     private String idstr;
     private String created_at;
     private String text;

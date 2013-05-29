@@ -12,7 +12,8 @@ import org.qii.weiciyuan.support.utils.TimeTool;
  */
 public class CommentBean extends ItemBean {
     private String created_at;
-    private String id;
+    private long id;
+    private String idstr;
     private String text;
     private String source;
     private String mid;
@@ -72,12 +73,17 @@ public class CommentBean extends ItemBean {
     }
 
     public String getId() {
-        return id;
+        return idstr;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.idstr = id;
     }
+
+    public long getIdLong() {
+        return this.id;
+    }
+
 
     public String getText() {
         return text;

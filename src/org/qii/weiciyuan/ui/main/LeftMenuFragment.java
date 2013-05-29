@@ -142,7 +142,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private void readUnreadCountFromDB() {
         TimeLinePosition position = MentionsTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
-        HashSet<String> hashSet = position.newMsgIds;
+        HashSet<Long> hashSet = position.newMsgIds;
         if (hashSet != null) {
             mentionsWeiboUnreadCount = hashSet.size();
         }

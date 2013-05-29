@@ -15,5 +15,5 @@ public class TimeLinePosition implements Serializable {
 
     public int position = 0;
     public int top = 0;
-    public HashSet<String> newMsgIds = null;
+    public HashSet<Long> newMsgIds = null;
 }

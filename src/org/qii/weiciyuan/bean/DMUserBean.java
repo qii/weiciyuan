@@ -60,6 +60,11 @@ public class DMUserBean extends ItemBean {
         return direct_message.getId();
     }
 
+    @Override
+    public long getIdLong() {
+        return Long.valueOf(getId());
+    }
+
     public UserBean getUser() {
         return user;
     }

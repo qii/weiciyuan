@@ -100,11 +100,11 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
                     CommentBean next = bean.get(position);
                     if (next != null) {
                         CommentBean helperMsg = bean.get(position - 1);
-                        String helperId = null;
+                        long helperId = 0L;
                         if (helperMsg != null) {
-                            helperId = helperMsg.getId();
+                            helperId = helperMsg.getIdLong();
                         }
-                        topTipBar.handle(next.getId(), helperId);
+                        topTipBar.handle(next.getIdLong(), helperId);
                     }
                 }
 

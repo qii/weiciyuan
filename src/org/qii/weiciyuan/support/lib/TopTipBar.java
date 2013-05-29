@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
@@ -28,7 +27,7 @@ public class TopTipBar extends TextView {
         ALWAYS, AUTO
     }
 
-    private TreeSet<String> ids = null;
+    private TreeSet<Long> ids = null;
     private boolean disappear = false;
     private Runnable lastRunnable;
     private boolean error;
@@ -36,11 +35,11 @@ public class TopTipBar extends TextView {
     private Type type;
 
 
-    private static class TopTipBarComparator implements Comparator<String>, Serializable {
+    private static class TopTipBarComparator implements Comparator<Long>, Serializable {
         @Override
-        public int compare(String a, String b) {
-            Long aL = Long.valueOf(a);
-            Long bL = Long.valueOf(b);
+        public int compare(Long a, Long b) {
+            Long aL = a;
+            Long bL = b;
             Long resultL = aL - bL;
             int result = 0;
             if (resultL > 0L) {
@@ -75,7 +74,7 @@ public class TopTipBar extends TextView {
     public TopTipBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         type = Type.AUTO;
-        ids = new TreeSet<String>(new TopTipBarComparator());
+        ids = new TreeSet<Long>(new TopTipBarComparator());
     }
 
     public void setType(Type type) {
@@ -83,13 +82,13 @@ public class TopTipBar extends TextView {
         setCount();
     }
 
-    public HashSet<String> getValues() {
-        HashSet<String> copy = new HashSet<String>();
+    public HashSet<Long> getValues() {
+        HashSet<Long> copy = new HashSet<Long>();
         copy.addAll(this.ids);
         return copy;
     }
 
-    public void setValue(HashSet<String> values) {
+    public void setValue(HashSet<Long> values) {
         this.ids.clear();
         this.ids.addAll(values);
         this.disappear = false;
@@ -101,7 +100,7 @@ public class TopTipBar extends TextView {
         List<? extends ItemBean> values = listData.getItemList();
         for (ItemBean b : values) {
             if (b != null)
-                ids.add(b.getId());
+                ids.add(b.getIdLong());
         }
         setCount();
         if (disappear) {
@@ -165,8 +164,8 @@ public class TopTipBar extends TextView {
     }
 
     //helperId can be used to keep TopTipBar stay Visible status
-    public void handle(String id, String helperId) {
-        if (disappear || TextUtils.isEmpty(id)) {
+    public void handle(long id, long helperId) {
+        if (disappear || id == 0L) {
             return;
         }
 
@@ -184,7 +183,7 @@ public class TopTipBar extends TextView {
             return;
         }
 
-        if (TextUtils.isEmpty(helperId)) {
+        if (helperId == 0L) {
             return;
         }
         if (ids.contains(helperId)) {
@@ -251,7 +250,7 @@ public class TopTipBar extends TextView {
     }
 
     static class SavedState extends BaseSavedState {
-        TreeSet<String> ids;
+        TreeSet<Long> ids;
         boolean disappear;
         boolean visible;
         Type type;
@@ -263,7 +262,7 @@ public class TopTipBar extends TextView {
         private SavedState(Parcel in) {
             super(in);
             Bundle bundle = in.readBundle();
-            this.ids = (TreeSet<String>) bundle.getSerializable("ids");
+            this.ids = (TreeSet<Long>) bundle.getSerializable("ids");
             this.type = (Type) bundle.getSerializable("type");
             boolean[] disappearArray = new boolean[2];
             in.readBooleanArray(disappearArray);

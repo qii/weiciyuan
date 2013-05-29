@@ -23,6 +23,8 @@ public abstract class ItemBean implements Serializable {
 
     public abstract String getId();
 
+    public abstract long getIdLong();
+
     public abstract UserBean getUser();
 
     @Override
