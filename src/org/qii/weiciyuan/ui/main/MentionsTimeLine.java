@@ -32,8 +32,8 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
     private SparseArray<Fragment> mentionFragments = new SparseArray<Fragment>();
     private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
 
-    private static final int MENTIONS_WEIBO_CHILD_POSITION = 0;
-    private static final int MENTIONS_COMMENT_CHILD_POSITION = 1;
+    static final int MENTIONS_WEIBO_CHILD_POSITION = 0;
+    static final int MENTIONS_COMMENT_CHILD_POSITION = 1;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

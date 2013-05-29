@@ -16,18 +16,17 @@ import org.qii.weiciyuan.ui.maintimeline.MentionsWeiboTimeLineFragment;
 public class MentionsTimeLinePagerAdapter extends AppFragmentPagerAdapter {
 
     private SparseArray<Fragment> fragmentList;
-    private MentionsTimeLine fragment;
 
     public MentionsTimeLinePagerAdapter(MentionsTimeLine fragment, ViewPager viewPager, FragmentManager fm, SparseArray<Fragment> fragmentList) {
         super(fm);
         this.fragmentList = fragmentList;
-        fragmentList.append(0, fragment.getMentionsWeiboTimeLineFragment());
-        fragmentList.append(1, fragment.getMentionsCommentTimeLineFragment());
+        fragmentList.append(MentionsTimeLine.MENTIONS_WEIBO_CHILD_POSITION, fragment.getMentionsWeiboTimeLineFragment());
+        fragmentList.append(MentionsTimeLine.MENTIONS_COMMENT_CHILD_POSITION, fragment.getMentionsCommentTimeLineFragment());
         FragmentTransaction transaction = fragment.getChildFragmentManager().beginTransaction();
-        if (!fragmentList.get(0).isAdded())
-            transaction.add(viewPager.getId(), fragmentList.get(0), MentionsWeiboTimeLineFragment.class.getName());
-        if (!fragmentList.get(1).isAdded())
-            transaction.add(viewPager.getId(), fragmentList.get(1), MentionsCommentTimeLineFragment.class.getName());
+        if (!fragmentList.get(MentionsTimeLine.MENTIONS_WEIBO_CHILD_POSITION).isAdded())
+            transaction.add(viewPager.getId(), fragmentList.get(MentionsTimeLine.MENTIONS_WEIBO_CHILD_POSITION), MentionsWeiboTimeLineFragment.class.getName());
+        if (!fragmentList.get(MentionsTimeLine.MENTIONS_COMMENT_CHILD_POSITION).isAdded())
+            transaction.add(viewPager.getId(), fragmentList.get(MentionsTimeLine.MENTIONS_COMMENT_CHILD_POSITION), MentionsCommentTimeLineFragment.class.getName());
         if (!transaction.isEmpty()) {
             transaction.commit();
             fragment.getChildFragmentManager().executePendingTransactions();
@@ -42,8 +41,8 @@ public class MentionsTimeLinePagerAdapter extends AppFragmentPagerAdapter {
     @Override
     protected String getTag(int position) {
         SparseArray<String> tagList = new SparseArray<String>();
-        tagList.append(0, MentionsWeiboTimeLineFragment.class.getName());
-        tagList.append(0, MentionsCommentTimeLineFragment.class.getName());
+        tagList.append(MentionsTimeLine.MENTIONS_WEIBO_CHILD_POSITION, MentionsWeiboTimeLineFragment.class.getName());
+        tagList.append(MentionsTimeLine.MENTIONS_COMMENT_CHILD_POSITION, MentionsCommentTimeLineFragment.class.getName());
 
         return tagList.get(position);
     }
