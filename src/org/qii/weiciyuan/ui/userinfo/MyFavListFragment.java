@@ -42,8 +42,8 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("bean", bean);
-        outState.putInt("page", page);
+//        outState.putSerializable("bean", bean);
+//        outState.putInt("page", page);
     }
 
 //    @Override
@@ -69,10 +69,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
                 refreshLayout(bean);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                getList().addNewData((FavListBean) savedInstanceState.getSerializable("bean"));
-                page = savedInstanceState.getInt("page");
-                timeLineAdapter.notifyDataSetChanged();
-                refreshLayout(bean);
+                getPullToRefreshListView().startRefreshNow();
                 break;
         }
 
