@@ -78,7 +78,7 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
         viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         viewPager.setOffscreenPageLimit(3);
         viewPager.setOnPageChangeListener(onPageChangeListener);
-        MentionsTimeLinePagerAdapter adapter = new MentionsTimeLinePagerAdapter(this, viewPager, getChildFragmentManager(), (MainTimeLineActivity) getActivity(), mentionFragments);
+        MentionsTimeLinePagerAdapter adapter = new MentionsTimeLinePagerAdapter(this, viewPager, getChildFragmentManager(), mentionFragments);
         viewPager.setAdapter(adapter);
     }
 

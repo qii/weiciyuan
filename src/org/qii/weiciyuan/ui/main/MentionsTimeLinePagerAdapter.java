@@ -18,7 +18,7 @@ public class MentionsTimeLinePagerAdapter extends AppFragmentPagerAdapter {
     private SparseArray<Fragment> fragmentList;
     private MentionsTimeLine fragment;
 
-    public MentionsTimeLinePagerAdapter(MentionsTimeLine fragment, ViewPager viewPager, FragmentManager fm, MainTimeLineActivity activity, SparseArray<Fragment> fragmentList) {
+    public MentionsTimeLinePagerAdapter(MentionsTimeLine fragment, ViewPager viewPager, FragmentManager fm, SparseArray<Fragment> fragmentList) {
         super(fm);
         this.fragmentList = fragmentList;
         fragmentList.append(0, fragment.getMentionsWeiboTimeLineFragment());
