@@ -47,7 +47,7 @@ public class MentionsTimeLineDBTask {
 
         List<MessageBean> msgList = new ArrayList<MessageBean>();
         String sql = "select * from " + RepostsTable.RepostDataTable.TABLE_NAME + " where " + RepostsTable.RepostDataTable.ACCOUNTID + "  = "
-                + accountId + " order by " + RepostsTable.RepostDataTable.MBLOGID + " desc limit 50";
+                + accountId + " order by " + RepostsTable.RepostDataTable.MBLOGID + " desc";
         Cursor c = getRsd().rawQuery(sql, null);
         while (c.moveToNext()) {
             String json = c.getString(c.getColumnIndex(RepostsTable.RepostDataTable.JSONDATA));

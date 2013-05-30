@@ -68,7 +68,7 @@ public class CommentByMeTimeLineDBTask {
 
         List<CommentBean> msgList = new ArrayList<CommentBean>();
         String sql = "select * from " + CommentByMeTable.CommentByMeDataTable.TABLE_NAME + " where " + CommentByMeTable.CommentByMeDataTable.ACCOUNTID + "  = "
-                + accountId + " order by " + CommentByMeTable.CommentByMeDataTable.MBLOGID + " desc limit 50";
+                + accountId + " order by " + CommentByMeTable.CommentByMeDataTable.MBLOGID + " desc";
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
         while (c.moveToNext()) {
