@@ -75,7 +75,8 @@ public class CommentByMeTimeLineDBTask {
             String json = c.getString(c.getColumnIndex(CommentByMeTable.CommentByMeDataTable.JSONDATA));
             try {
                 CommentBean value = gson.fromJson(json, CommentBean.class);
-                value.getListViewSpannableString();
+                if (value != null)
+                    value.getListViewSpannableString();
                 msgList.add(value);
             } catch (JsonSyntaxException e) {
                 AppLogger.e(e.getMessage());
