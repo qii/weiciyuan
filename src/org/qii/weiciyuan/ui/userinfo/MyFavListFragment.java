@@ -148,7 +148,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     @Override
     protected void newMsgOnPostExecute(FavListBean newValue, Bundle loaderArgs) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
-            getList().addNewData(newValue);
+            getList().replaceData(newValue);
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
             buildActionBarSubtitle();
@@ -227,7 +227,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
             getPullToRefreshListView().setVisibility(View.VISIBLE);
 
             if (result != null) {
-                bean.addNewData(result.favList);
+                bean.replaceData(result.favList);
                 page = result.page;
                 getAdapter().notifyDataSetChanged();
             }

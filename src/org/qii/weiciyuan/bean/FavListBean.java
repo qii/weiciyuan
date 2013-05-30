@@ -41,8 +41,7 @@ public class FavListBean extends ListBean<MessageBean, FavListBean> {
         return actualStore;
     }
 
-    @Override
-    public void addNewData(FavListBean newValue) {
+    public void replaceData(FavListBean newValue) {
         if (newValue != null && newValue.getSize() > 0) {
 
             this.getItemList().clear();
@@ -52,6 +51,11 @@ public class FavListBean extends ListBean<MessageBean, FavListBean> {
             this.favorites.clear();
             this.favorites.addAll(newValue.getFavorites());
         }
+    }
+
+    @Override
+    public void addNewData(FavListBean newValue) {
+        replaceData(newValue);
     }
 
     @Override
