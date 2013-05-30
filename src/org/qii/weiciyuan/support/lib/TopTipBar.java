@@ -82,13 +82,13 @@ public class TopTipBar extends TextView {
         setCount();
     }
 
-    public HashSet<Long> getValues() {
-        HashSet<Long> copy = new HashSet<Long>();
+    public TreeSet<Long> getValues() {
+        TreeSet<Long> copy = new TreeSet<Long>();
         copy.addAll(this.ids);
         return copy;
     }
 
-    public void setValue(HashSet<Long> values) {
+    public void setValue(Set<Long> values) {
         this.ids.clear();
         this.ids.addAll(values);
         this.disappear = false;

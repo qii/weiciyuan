@@ -1,7 +1,7 @@
 package org.qii.weiciyuan.bean.android;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.TreeSet;
 
 /**
  * User: qii
@@ -15,5 +15,5 @@ public class TimeLinePosition implements Serializable {
 
     public int position = 0;
     public int top = 0;
-    public HashSet<Long> newMsgIds = null;
+    public TreeSet<Long> newMsgIds = null;
 }

@@ -34,7 +34,7 @@ import org.qii.weiciyuan.ui.search.SearchMainActivity;
 import org.qii.weiciyuan.ui.search.SearchMainParentFragment;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 
-import java.util.HashSet;
+import java.util.TreeSet;
 
 /**
  * User: qii
@@ -150,7 +150,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private void readUnreadCountFromDB() {
         TimeLinePosition position = MentionsTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
-        HashSet<Long> hashSet = position.newMsgIds;
+        TreeSet<Long> hashSet = position.newMsgIds;
         if (hashSet != null) {
             mentionsWeiboUnreadCount = hashSet.size();
         }

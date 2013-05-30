@@ -12,6 +12,7 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.FavListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.FavouriteTimeLineData;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.FavouriteDBTask;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -33,6 +34,8 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     private int page = 1;
 
     private FavListBean bean = new FavListBean();
+
+    private TimeLinePosition position;
 
     private DBCacheTask dbTask;
 
@@ -144,13 +147,17 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        savePositionToDB();
+    }
+
 
     @Override
     protected void newMsgOnPostExecute(FavListBean newValue, Bundle loaderArgs) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
-            getList().replaceData(newValue);
-            getAdapter().notifyDataSetChanged();
-            getListView().setSelectionAfterHeaderView();
+            addNewDataWithoutRememberPosition(newValue);
             buildActionBarSubtitle();
             FavouriteDBTask.asyncReplace(getList(), page, account.getUid());
 
@@ -168,6 +175,12 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
             page++;
             FavouriteDBTask.asyncReplace(getList(), page, account.getUid());
         }
+    }
+
+    private void addNewDataWithoutRememberPosition(FavListBean newValue) {
+        getList().replaceData(newValue);
+        getAdapter().notifyDataSetChanged();
+        getListView().setSelectionAfterHeaderView();
     }
 
 
@@ -206,6 +219,36 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         Utility.stopListViewScrollingAndScrollToTop(getListView());
     }
 
+    @Override
+    protected void onListViewScrollStop() {
+        savePositionToPositionsCache();
+
+    }
+
+    private void savePositionToDB() {
+        if (position == null) {
+            savePositionToPositionsCache();
+        }
+        position.newMsgIds = newMsgTipBar.getValues();
+        FavouriteDBTask.asyncUpdatePosition(position, account.getUid());
+    }
+
+
+    private void savePositionToPositionsCache() {
+        position = Utility.getCurrentPositionFromListView(getListView());
+    }
+
+
+    private void setListViewPositionFromPositionsCache() {
+        TimeLinePosition p = position;
+        if (p != null)
+            getListView().setSelectionFromTop(p.position + 1, p.top);
+        else
+            getListView().setSelectionFromTop(0, 0);
+
+
+    }
+
 
     private class DBCacheTask extends MyAsyncTask<Void, FavouriteTimeLineData, FavouriteTimeLineData> {
 
@@ -229,7 +272,10 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
             if (result != null) {
                 bean.replaceData(result.favList);
                 page = result.page;
+                position = result.position;
                 getAdapter().notifyDataSetChanged();
+                setListViewPositionFromPositionsCache();
+
             }
 
             refreshLayout(getList());
