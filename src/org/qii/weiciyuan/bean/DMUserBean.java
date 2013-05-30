@@ -3,6 +3,7 @@ package org.qii.weiciyuan.bean;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
 /**
@@ -87,5 +88,10 @@ public class DMUserBean extends ItemBean {
 
     public void setUnread_count(int unread_count) {
         this.unread_count = unread_count;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

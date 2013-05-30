@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 /**
  * User: qii
  * Date: 12-10-7
@@ -33,8 +35,9 @@ public class AtUserBean {
         this.remark = remark;
     }
 
+
     @Override
     public String toString() {
-        return super.toString();
+        return ObjectToStringUtility.toString(this);
     }
 }

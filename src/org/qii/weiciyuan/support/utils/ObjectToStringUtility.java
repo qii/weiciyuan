@@ -49,4 +49,18 @@ public class ObjectToStringUtility {
         String username = (userBean != null ? userBean.getScreen_name() : "user is null");
         return String.format("%s @%s:%s", TimeTool.getListTime(dm.getMills()), username, dm.getText());
     }
+
+    public static String toString(DMUserBean dm) {
+        UserBean userBean = dm.getUser();
+        String username = (userBean != null ? userBean.getScreen_name() : "user is null");
+        return String.format("%s @%s:%s", TimeTool.getListTime(dm.getMills()), username, dm.getText());
+    }
+
+    public static String toString(DMUserListBean listBean) {
+        StringBuilder builder = new StringBuilder();
+        for (DMUserBean data : listBean.getItemList()) {
+            builder.append(data.toString());
+        }
+        return builder.toString();
+    }
 }
