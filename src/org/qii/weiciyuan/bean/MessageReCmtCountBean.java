@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 /**
  * User: qii
  * Date: 13-2-14
@@ -32,5 +34,10 @@ public class MessageReCmtCountBean {
 
     public void setReposts(int reposts) {
         this.reposts = reposts;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

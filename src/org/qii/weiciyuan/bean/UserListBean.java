@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +9,8 @@ import java.util.List;
 /**
  * User: Jiang Qi
  * Date: 12-8-16
-  */
-public class UserListBean implements Serializable{
+ */
+public class UserListBean implements Serializable {
     public List<UserBean> getUsers() {
         return users;
     }
@@ -45,4 +47,9 @@ public class UserListBean implements Serializable{
     private int previous_cursor = 0;
     private int next_cursor = 0;
     private int total_number = 0;
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
+    }
 }

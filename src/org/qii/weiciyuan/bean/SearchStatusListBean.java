@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class SearchStatusListBean extends ListBean<MessageBean, SearchStatusList
     public List<MessageBean> getItemList() {
         return statuses;
     }
+
     @Override
     public void addNewData(SearchStatusListBean newValue) {
         if (newValue != null && newValue.getSize() > 0) {
@@ -36,6 +39,7 @@ public class SearchStatusListBean extends ListBean<MessageBean, SearchStatusList
 
         }
     }
+
     @Override
     public void addOldData(SearchStatusListBean oldValue) {
         if (oldValue != null && oldValue.getSize() > 0) {
@@ -43,5 +47,10 @@ public class SearchStatusListBean extends ListBean<MessageBean, SearchStatusList
             setTotal_number(oldValue.getTotal_number());
 
         }
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

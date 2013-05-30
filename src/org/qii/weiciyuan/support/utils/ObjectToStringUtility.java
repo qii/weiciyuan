@@ -97,4 +97,83 @@ public class ObjectToStringUtility {
         return builder.toString();
     }
 
+    public static String toString(MessageListBean listBean) {
+        StringBuilder builder = new StringBuilder();
+        for (MessageBean data : listBean.getItemList()) {
+            builder.append(data.toString());
+        }
+        return builder.toString();
+    }
+
+    public static String toString(MessageReCmtCountBean bean) {
+        return "message id=" + bean.getId() + "," + "reposts=" + bean.getReposts()
+                + "," + "comments=" + bean.getComments();
+    }
+
+    public static String toString(NearbyStatusListBean listBean) {
+        StringBuilder builder = new StringBuilder();
+        for (MessageBean data : listBean.getItemList()) {
+            builder.append(data.toString());
+        }
+        return builder.toString();
+    }
+
+    public static String toString(RepostListBean listBean) {
+        StringBuilder builder = new StringBuilder();
+        for (MessageBean data : listBean.getItemList()) {
+            builder.append(data.toString());
+        }
+        return builder.toString();
+    }
+
+    public static String toString(SearchStatusListBean listBean) {
+        StringBuilder builder = new StringBuilder();
+        for (MessageBean data : listBean.getItemList()) {
+            builder.append(data.toString());
+        }
+        return builder.toString();
+    }
+
+    public static String toString(SearchUserBean bean) {
+        return "user id=" + bean.getUid() + "," + "name=" + bean.getScreen_name();
+    }
+
+    public static String toString(ShareListBean listBean) {
+        StringBuilder builder = new StringBuilder();
+        for (MessageBean data : listBean.getItemList()) {
+            builder.append(data.toString());
+        }
+        return builder.toString();
+    }
+
+    public static String toString(TagBean bean) {
+        return "tag id=" + bean.getId() + "," + "name=" + bean.getName();
+    }
+
+    public static String toString(TopicResultListBean listBean) {
+        StringBuilder builder = new StringBuilder();
+        for (MessageBean data : listBean.getItemList()) {
+            builder.append(data.toString());
+        }
+        return builder.toString();
+    }
+
+    public static String toString(UnreadBean bean) {
+        return "unread count: mention comments=" + bean.getMention_cmt()
+                + "," + "mention weibos=" + bean.getMention_status()
+                + "," + "comments" + bean.getCmt();
+    }
+
+    public static String toString(UserListBean listBean) {
+        StringBuilder builder = new StringBuilder();
+        for (UserBean data : listBean.getUsers()) {
+            builder.append(data.toString());
+        }
+        return builder.toString();
+    }
+
+    public static String toString(UserBean bean) {
+        return "user id=" + bean.getId()
+                + "," + "name=" + bean.getScreen_name();
+    }
 }

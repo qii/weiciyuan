@@ -1,12 +1,14 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.io.Serializable;
 
 /**
  * User: qii
  * Date: 12-9-26
  */
-public class UnreadBean implements Serializable{
+public class UnreadBean implements Serializable {
     private int status;
     private int follower;
     private int cmt;
@@ -105,5 +107,10 @@ public class UnreadBean implements Serializable{
 
     public void setPhoto(int photo) {
         this.photo = photo;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

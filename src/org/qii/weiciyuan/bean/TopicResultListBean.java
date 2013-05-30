@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,10 +9,10 @@ import java.util.List;
  * User: qii
  * Date: 12-9-26
  */
-public class TopicResultListBean extends ListBean<MessageBean,TopicResultListBean> {
+public class TopicResultListBean extends ListBean<MessageBean, TopicResultListBean> {
 
 
-    private List<MessageBean> statuses=new ArrayList<MessageBean>();
+    private List<MessageBean> statuses = new ArrayList<MessageBean>();
 
     @Override
     public int getSize() {
@@ -48,6 +50,7 @@ public class TopicResultListBean extends ListBean<MessageBean,TopicResultListBea
 
         }
     }
+
     @Override
     public void addOldData(TopicResultListBean oldValue) {
         if (oldValue != null && oldValue.getSize() > 0) {
@@ -55,5 +58,10 @@ public class TopicResultListBean extends ListBean<MessageBean,TopicResultListBea
             setTotal_number(oldValue.getTotal_number());
 
         }
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

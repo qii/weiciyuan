@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,5 +68,10 @@ public class ShareListBean extends ListBean<MessageBean, ShareListBean> {
             getItemList().addAll(oldValue.getItemList().subList(1, oldValue.getSize()));
             setTotal_number(oldValue.getTotal_number());
         }
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,5 +51,9 @@ public class NearbyStatusListBean extends ListBean<MessageBean, NearbyStatusList
         }
     }
 
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
+    }
 }
 

@@ -2,6 +2,7 @@ package org.qii.weiciyuan.bean;
 
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -115,5 +116,10 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> {
         MessageListBean object = new MessageListBean();
         object.replaceData(MessageListBean.this);
         return object;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

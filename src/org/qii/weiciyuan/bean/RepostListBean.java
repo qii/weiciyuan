@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,5 +57,10 @@ public class RepostListBean extends ListBean<MessageBean, RepostListBean> {
             getItemList().clear();
             getItemList().addAll(newValue.getItemList());
         }
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }
