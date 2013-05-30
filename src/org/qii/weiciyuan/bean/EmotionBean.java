@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 /**
  * User: qii
  * Date: 12-9-24
@@ -87,4 +89,9 @@ public class EmotionBean {
     private String icon;
     private String value;
     private String picid;
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
+    }
 }

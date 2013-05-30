@@ -63,4 +63,8 @@ public class ObjectToStringUtility {
         }
         return builder.toString();
     }
+
+    public static String toString(EmotionBean bean) {
+        return bean.getPhrase();
+    }
 }
