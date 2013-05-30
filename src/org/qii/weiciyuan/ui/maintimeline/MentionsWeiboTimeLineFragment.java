@@ -19,7 +19,7 @@ import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.MentionTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
-import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
+import org.qii.weiciyuan.support.database.MentionWeiboTimeLineDBTask;
 import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.utils.AppEventAction;
@@ -97,7 +97,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     private void saveTimeLinePositionToDB() {
         timeLinePosition = Utility.getCurrentPositionFromListView(getListView());
         timeLinePosition.newMsgIds = newMsgTipBar.getValues();
-        MentionsTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
+        MentionWeiboTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
     }
 
     @Override
@@ -192,7 +192,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
             getAdapter().notifyDataSetChanged();
             int ss = index + size;
             getListView().setSelectionFromTop(ss + 1, top);
-            MentionsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
+            MentionWeiboTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
             saveTimeLinePositionToDB();
         }
     }

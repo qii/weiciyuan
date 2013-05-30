@@ -21,7 +21,7 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.CommentTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
-import org.qii.weiciyuan.support.database.CommentsTimeLineDBTask;
+import org.qii.weiciyuan.support.database.CommentToMeTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TopTipBar;
@@ -132,7 +132,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     private void saveTimeLinePositionToDB() {
         timeLinePosition = Utility.getCurrentPositionFromListView(getListView());
         timeLinePosition.newMsgIds = newMsgTipBar.getValues();
-        CommentsTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
+        CommentToMeTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
     }
 
 
@@ -362,7 +362,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             getAdapter().notifyDataSetChanged();
             int ss = index + size;
             getListView().setSelectionFromTop(ss + 1, top);
-            CommentsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
+            CommentToMeTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
             saveTimeLinePositionToDB();
         }
     }

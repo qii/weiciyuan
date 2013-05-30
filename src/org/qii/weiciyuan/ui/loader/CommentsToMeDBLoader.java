@@ -3,7 +3,7 @@ package org.qii.weiciyuan.ui.loader;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import org.qii.weiciyuan.bean.android.CommentTimeLineData;
-import org.qii.weiciyuan.support.database.CommentsTimeLineDBTask;
+import org.qii.weiciyuan.support.database.CommentToMeTimeLineDBTask;
 
 /**
  * User: qii
@@ -30,7 +30,7 @@ public class CommentsToMeDBLoader extends AsyncTaskLoader<CommentTimeLineData> {
     }
 
     public CommentTimeLineData loadInBackground() {
-        result = CommentsTimeLineDBTask.getCommentLineMsgList(accountId);
+        result = CommentToMeTimeLineDBTask.getCommentLineMsgList(accountId);
         return result;
     }
 

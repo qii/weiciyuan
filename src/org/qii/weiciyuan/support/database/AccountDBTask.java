@@ -158,8 +158,8 @@ public class AccountDBTask {
 
         for (String id : args) {
             FriendsTimeLineDBTask.deleteAllHomes(id);
-            MentionsTimeLineDBTask.deleteAllReposts(id);
-            CommentsTimeLineDBTask.deleteAllComments(id);
+            MentionWeiboTimeLineDBTask.deleteAllReposts(id);
+            CommentToMeTimeLineDBTask.deleteAllComments(id);
             MyStatusDBTask.clear(id);
             AtUsersDBTask.clear(id);
             FavouriteDBTask.deleteAllFavourites(id);

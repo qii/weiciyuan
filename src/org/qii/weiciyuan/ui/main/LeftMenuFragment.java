@@ -18,9 +18,9 @@ import android.widget.TextView;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
-import org.qii.weiciyuan.support.database.CommentsTimeLineDBTask;
+import org.qii.weiciyuan.support.database.CommentToMeTimeLineDBTask;
 import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
-import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
+import org.qii.weiciyuan.support.database.MentionWeiboTimeLineDBTask;
 import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -149,7 +149,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
     }
 
     private void readUnreadCountFromDB() {
-        TimeLinePosition position = MentionsTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
+        TimeLinePosition position = MentionWeiboTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
         TreeSet<Long> hashSet = position.newMsgIds;
         if (hashSet != null) {
             mentionsWeiboUnreadCount = hashSet.size();
@@ -160,7 +160,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         if (hashSet != null) {
             mentionsCommentUnreadCount = hashSet.size();
         }
-        position = CommentsTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
+        position = CommentToMeTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
         hashSet = position.newMsgIds;
         if (hashSet != null) {
             commentsToMeUnreadCount = hashSet.size();

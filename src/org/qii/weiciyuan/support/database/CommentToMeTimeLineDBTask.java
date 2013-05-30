@@ -22,9 +22,9 @@ import java.util.List;
  * User: qii
  * Date: 13-1-7
  */
-public class CommentsTimeLineDBTask {
+public class CommentToMeTimeLineDBTask {
 
-    private CommentsTimeLineDBTask() {
+    private CommentToMeTimeLineDBTask() {
 
     }
 

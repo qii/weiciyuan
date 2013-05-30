@@ -15,9 +15,9 @@ import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MentionsCommentTimeLineDao;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.support.database.AccountDBTask;
-import org.qii.weiciyuan.support.database.CommentsTimeLineDBTask;
+import org.qii.weiciyuan.support.database.CommentToMeTimeLineDBTask;
 import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
-import org.qii.weiciyuan.support.database.MentionsTimeLineDBTask;
+import org.qii.weiciyuan.support.database.MentionWeiboTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppEventAction;
@@ -94,7 +94,7 @@ public class FetchNewMsgService extends IntentService {
         if (unreadCommentCount > 0 && SettingUtility.allowCommentToMe()) {
             MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
             CommentListBean oldData = null;
-            CommentTimeLineData commentTimeLineData = CommentsTimeLineDBTask.getCommentLineMsgList(accountBean.getUid());
+            CommentTimeLineData commentTimeLineData = CommentToMeTimeLineDBTask.getCommentLineMsgList(accountBean.getUid());
             if (commentTimeLineData != null) {
                 oldData = commentTimeLineData.cmtList;
             }
@@ -107,7 +107,7 @@ public class FetchNewMsgService extends IntentService {
         if (unreadMentionStatusCount > 0 && SettingUtility.allowMentionToMe()) {
             MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
             MessageListBean oldData = null;
-            MentionTimeLineData commentTimeLineData = MentionsTimeLineDBTask.getRepostLineMsgList(accountBean.getUid());
+            MentionTimeLineData commentTimeLineData = MentionWeiboTimeLineDBTask.getRepostLineMsgList(accountBean.getUid());
             if (commentTimeLineData != null) {
                 oldData = commentTimeLineData.msgList;
             }
