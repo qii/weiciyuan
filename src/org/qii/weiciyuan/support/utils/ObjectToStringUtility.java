@@ -67,4 +67,34 @@ public class ObjectToStringUtility {
     public static String toString(EmotionBean bean) {
         return bean.getPhrase();
     }
+
+    public static String toString(FavBean bean) {
+        return toString(bean.getStatus());
+    }
+
+    public static String toString(FavListBean listBean) {
+        StringBuilder builder = new StringBuilder();
+        for (FavBean data : listBean.getFavorites()) {
+            builder.append(data.toString());
+        }
+        return builder.toString();
+    }
+
+    public static String toString(GeoBean bean) {
+        double[] c = bean.getCoordinates();
+        return "type=" + bean.getType() + "coordinates=" + "[" + c[0] + "," + c[1] + "]";
+    }
+
+    public static String toString(GroupBean bean) {
+        return "group id=" + bean.getIdstr() + "," + "name=" + bean.getName();
+    }
+
+    public static String toString(GroupListBean listBean) {
+        StringBuilder builder = new StringBuilder();
+        for (GroupBean data : listBean.getLists()) {
+            builder.append(data.toString());
+        }
+        return builder.toString();
+    }
+
 }

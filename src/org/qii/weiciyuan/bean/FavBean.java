@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.io.Serializable;
 
 /**
@@ -24,5 +26,10 @@ public class FavBean implements Serializable {
 
     public void setFavorited_time(String favorited_time) {
         this.favorited_time = favorited_time;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

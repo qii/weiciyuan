@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.io.Serializable;
 
 /**
@@ -41,5 +43,10 @@ public class GeoBean implements Serializable {
 
     public void setLongitude(double lon) {
         coordinates[1] = lon;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,5 +30,10 @@ public class GroupListBean implements Serializable {
 
     public void setTotal_number(String total_number) {
         this.total_number = total_number;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

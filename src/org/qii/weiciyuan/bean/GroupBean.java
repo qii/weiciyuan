@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.io.Serializable;
 
 /**
@@ -39,6 +41,6 @@ public class GroupBean implements Serializable {
 
     @Override
     public String toString() {
-        return getName();
+        return ObjectToStringUtility.toString(this);
     }
 }

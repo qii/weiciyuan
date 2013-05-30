@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,5 +67,10 @@ public class FavListBean extends ListBean<MessageBean, FavListBean> {
             setTotal_number(oldValue.getTotal_number());
             this.favorites.addAll(oldValue.getFavorites());
         }
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }
