@@ -29,6 +29,14 @@ import java.util.List;
  */
 public class FriendsTimeLineDBTask {
 
+    /**
+     * the number of messages to read is calculated by listview position, for example,
+     * if you have 1000 messages, but the first position of listview is 60,
+     * weiciyuan will save 1000 messages to database, but at the next time when
+     * app need to read database, app will read only 60+ DB_CACHE_COUNT_OFFSET =70 messages.
+     */
+    private static final int DB_CACHE_COUNT_OFFSET = 10;
+
     private FriendsTimeLineDBTask() {
 
     }
@@ -96,17 +104,17 @@ public class FriendsTimeLineDBTask {
 
         AppLogger.e("total=" + total);
 
-        int needDeletedNumber = total - AppConfig.DEFAULT_HOME_DB_CACHE_COUNT;
-
-        if (needDeletedNumber > 0) {
-            AppLogger.e("" + needDeletedNumber);
-            String sql = " delete from " + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.ID + " in "
-                    + "( select " + HomeTable.HomeDataTable.ID + " from " + HomeTable.HomeDataTable.TABLE_NAME + " where "
-                    + HomeTable.HomeDataTable.ACCOUNTID
-                    + " in " + "(" + accountId + ") order by " + HomeTable.HomeDataTable.ID + " desc limit " + needDeletedNumber + " ) ";
-
-            getWsd().execSQL(sql);
-        }
+//        int needDeletedNumber = total - AppConfig.DEFAULT_HOME_DB_CACHE_COUNT;
+//
+//        if (needDeletedNumber > 0) {
+//            AppLogger.e("" + needDeletedNumber);
+//            String sql = " delete from " + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.ID + " in "
+//                    + "( select " + HomeTable.HomeDataTable.ID + " from " + HomeTable.HomeDataTable.TABLE_NAME + " where "
+//                    + HomeTable.HomeDataTable.ACCOUNTID
+//                    + " in " + "(" + accountId + ") order by " + HomeTable.HomeDataTable.ID + " desc limit " + needDeletedNumber + " ) ";
+//
+//            getWsd().execSQL(sql);
+//        }
     }
 
     private static void replace(MessageListBean list, String accountId, String groupId) {
@@ -295,8 +303,8 @@ public class FriendsTimeLineDBTask {
         MessageListBean msgList;
         TimeLinePosition position;
         if (groupId.equals("0")) {
-            msgList = getHomeLineMsgList(accountId);
             position = getPosition(accountId);
+            msgList = getHomeLineMsgList(accountId, position.position + DB_CACHE_COUNT_OFFSET);
         } else {
             msgList = HomeOtherGroupTimeLineDBTask.get(accountId, groupId);
             position = HomeOtherGroupTimeLineDBTask.getPosition(accountId, groupId);
@@ -308,8 +316,9 @@ public class FriendsTimeLineDBTask {
     public static List<MessageTimeLineData> getOtherGroupData(String accountId, String exceptGroupId) {
         List<MessageTimeLineData> data = new ArrayList<MessageTimeLineData>();
 
-        MessageListBean msgList = getHomeLineMsgList(accountId);
-        MessageTimeLineData home = new MessageTimeLineData("0", msgList, getPosition(accountId));
+        TimeLinePosition position = getPosition(accountId);
+        MessageListBean msgList = getHomeLineMsgList(accountId, position.position + DB_CACHE_COUNT_OFFSET);
+        MessageTimeLineData home = new MessageTimeLineData("0", msgList, position);
         data.add(home);
 
         MessageTimeLineData biGroup = HomeOtherGroupTimeLineDBTask.getTimeLineData(accountId, "1");
@@ -337,13 +346,13 @@ public class FriendsTimeLineDBTask {
         return data;
     }
 
-    private static MessageListBean getHomeLineMsgList(String accountId) {
+    private static MessageListBean getHomeLineMsgList(String accountId, int limitCount) {
         Gson gson = new Gson();
         MessageListBean result = new MessageListBean();
-
+        int limit = limitCount > AppConfig.DEFAULT_MSG_COUNT_50 ? limitCount : AppConfig.DEFAULT_MSG_COUNT_50;
         List<MessageBean> msgList = new ArrayList<MessageBean>();
         String sql = "select * from " + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.ACCOUNTID + "  = "
-                + accountId + " order by " + HomeTable.HomeDataTable.ID + " asc";
+                + accountId + " order by " + HomeTable.HomeDataTable.ID + " asc limit " + limit;
         Cursor c = getRsd().rawQuery(sql, null);
         while (c.moveToNext()) {
             String json = c.getString(c.getColumnIndex(HomeTable.HomeDataTable.JSONDATA));
