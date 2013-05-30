@@ -166,6 +166,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
             getAdapter().notifyDataSetChanged();
             buildActionBarSubtitle();
             page++;
+            FavouriteDBTask.asyncReplace(getList(), page, account.getUid());
         }
     }
 
