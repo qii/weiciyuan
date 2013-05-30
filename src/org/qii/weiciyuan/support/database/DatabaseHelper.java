@@ -15,7 +15,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 28;
+    private static final int DATABASE_VERSION = 29;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -134,6 +134,22 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + DMTable.ACCOUNTID + " text,"
             + DMTable.MBLOGID + " text,"
             + DMTable.JSONDATA + " text"
+            + ");";
+
+    static final String CREATE_FAVOURITES_TABLE_SQL = "create table " + FavouriteTable.TABLE_NAME
+            + "("
+            + FavouriteTable.ID + " integer primary key autoincrement,"
+            + FavouriteTable.ACCOUNTID + " text,"
+            + FavouriteTable.TIMELINEDATA + " text,"
+            + FavouriteTable.PAGE + " text"
+            + ");";
+
+    static final String CREATE_FAVOURITES_DATA_TABLE_SQL = "create table " + FavouriteTable.FavouriteDataTable.TABLE_NAME
+            + "("
+            + FavouriteTable.FavouriteDataTable.ID + " integer primary key autoincrement,"
+            + FavouriteTable.FavouriteDataTable.ACCOUNTID + " text,"
+            + FavouriteTable.FavouriteDataTable.MBLOGID + " text,"
+            + FavouriteTable.FavouriteDataTable.JSONDATA + " text"
             + ");";
 
     static final String CREATE_MYSTATUSES_TABLE_SQL = "create table " + MyStatusTable.TABLE_NAME
@@ -298,6 +314,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL(CREATE_DMS_TABLE_SQL);
 
+        db.execSQL(CREATE_FAVOURITES_TABLE_SQL);
+        db.execSQL(CREATE_FAVOURITES_DATA_TABLE_SQL);
+
         db.execSQL(CREATE_MYSTATUSES_TABLE_SQL);
 
         db.execSQL(CREATE_FILTER_TABLE_SQL);
@@ -336,6 +355,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS " + CommentByMeTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CommentByMeTable.CommentByMeDataTable.TABLE_NAME);
+
+        db.execSQL("DROP TABLE IF EXISTS " + FavouriteTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FavouriteTable.FavouriteDataTable.TABLE_NAME);
 
         db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EmotionsTable.TABLE_NAME);

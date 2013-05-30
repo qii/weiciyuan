@@ -8,8 +8,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.FavListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
+import org.qii.weiciyuan.bean.android.FavouriteTimeLineData;
+import org.qii.weiciyuan.support.database.FavouriteDBTask;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
@@ -29,6 +33,10 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     private int page = 1;
 
     private FavListBean bean = new FavListBean();
+
+    private DBCacheTask dbTask;
+
+    private AccountBean account;
 
     @Override
     public FavListBean getList() {
@@ -59,17 +67,17 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         setHasOptionsMenu(true);
 
         commander = ((ICommander) getActivity()).getBitmapDownloader();
-
+        account = GlobalContext.getInstance().getAccountBean();
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                getPullToRefreshListView().startRefreshNow();
+                readDBCache();
                 break;
             case SCREEN_ROTATE:
                 //nothing
                 refreshLayout(bean);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                getPullToRefreshListView().startRefreshNow();
+                readDBCache();
                 break;
         }
 
@@ -118,6 +126,13 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         }
     }
 
+    private void readDBCache() {
+        if (Utility.isTaskStopped(dbTask) && getList().getSize() == 0) {
+            dbTask = new DBCacheTask();
+            dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -137,6 +152,8 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
             buildActionBarSubtitle();
+            FavouriteDBTask.asyncReplace(getList(), page, account.getUid());
+
         }
 
     }
@@ -188,4 +205,38 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         Utility.stopListViewScrollingAndScrollToTop(getListView());
     }
 
+
+    private class DBCacheTask extends MyAsyncTask<Void, FavouriteTimeLineData, FavouriteTimeLineData> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            getPullToRefreshListView().setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        protected FavouriteTimeLineData doInBackground(Void... params) {
+
+            return FavouriteDBTask.getFavouriteMsgList(account.getUid());
+        }
+
+        @Override
+        protected void onPostExecute(FavouriteTimeLineData result) {
+            super.onPostExecute(result);
+            getPullToRefreshListView().setVisibility(View.VISIBLE);
+
+            if (result != null) {
+                bean.addNewData(result.favList);
+                page = result.page;
+                getAdapter().notifyDataSetChanged();
+            }
+
+            refreshLayout(getList());
+
+            if (getList().getSize() == 0) {
+                getPullToRefreshListView().startRefreshNow();
+
+            }
+        }
+    }
 }
