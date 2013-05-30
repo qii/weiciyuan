@@ -162,6 +162,7 @@ public class AccountDBTask {
             CommentsTimeLineDBTask.deleteAllComments(id);
             MyStatusDBTask.clear(id);
             AtUsersDBTask.clear(id);
+            FavouriteDBTask.deleteAllFavourites(id);
         }
 
         return getAccountList();
