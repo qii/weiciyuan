@@ -73,12 +73,16 @@ public class MentionCommentsTimeLineDBTask {
         Gson gson = new Gson();
         while (c.moveToNext()) {
             String json = c.getString(c.getColumnIndex(MentionCommentsTable.MentionCommentsDataTable.JSONDATA));
-            try {
-                CommentBean value = gson.fromJson(json, CommentBean.class);
-                value.getListViewSpannableString();
-                msgList.add(value);
-            } catch (JsonSyntaxException e) {
-                AppLogger.e(e.getMessage());
+            if (!TextUtils.isEmpty(json)) {
+                try {
+                    CommentBean value = gson.fromJson(json, CommentBean.class);
+                    value.getListViewSpannableString();
+                    msgList.add(value);
+                } catch (JsonSyntaxException e) {
+                    AppLogger.e(e.getMessage());
+                }
+            } else {
+                msgList.add(null);
             }
         }
 

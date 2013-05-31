@@ -73,13 +73,16 @@ public class CommentToMeTimeLineDBTask {
         Gson gson = new Gson();
         while (c.moveToNext()) {
             String json = c.getString(c.getColumnIndex(CommentsTable.CommentsDataTable.JSONDATA));
-            try {
-                CommentBean value = gson.fromJson(json, CommentBean.class);
-                if (value != null)
+            if (!TextUtils.isEmpty(json)) {
+                try {
+                    CommentBean value = gson.fromJson(json, CommentBean.class);
                     value.getListViewSpannableString();
-                msgList.add(value);
-            } catch (JsonSyntaxException e) {
-                AppLogger.e(e.getMessage());
+                    msgList.add(value);
+                } catch (JsonSyntaxException e) {
+                    AppLogger.e(e.getMessage());
+                }
+            } else {
+                msgList.add(null);
             }
         }
 
