@@ -6,11 +6,13 @@ import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
+import java.io.Serializable;
+
 /**
  * User: qii
  * Date: 12-11-11
  */
-public class DMBean extends ItemBean {
+public class DMBean extends ItemBean implements Serializable {
 
     private long mills;
     private transient SpannableString listViewSpannableString;

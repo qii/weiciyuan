@@ -86,7 +86,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
 
     private void handleFailedOperation(Intent intent) {
         token = ((AccountBean) intent.getParcelableExtra("account")).getAccess_token();
-        msg = (MessageBean) getIntent().getSerializableExtra("oriMsg");
+        msg = (MessageBean) getIntent().getParcelableExtra("oriMsg");
 
         getEditTextView().setError(intent.getStringExtra("failedReason"));
         getEditTextView().setText(intent.getStringExtra("content"));
@@ -103,7 +103,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         if (TextUtils.isEmpty(token))
             token = GlobalContext.getInstance().getSpecialToken();
 
-        msg = (MessageBean) getIntent().getSerializableExtra("msg");
+        msg = (MessageBean) getIntent().getParcelableExtra("msg");
         getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
     }
 
@@ -127,7 +127,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         outState.putBoolean("commentOri", enableCommentOri.isChecked());
         outState.putBoolean("repost", enableRepost.isChecked());
         outState.putString("token", token);
-        outState.putSerializable("msg", msg);
+        outState.putParcelable("msg", msg);
         outState.putSerializable("commentDraftBean", commentDraftBean);
     }
 
@@ -138,7 +138,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
             savedEnableCommentOri = savedInstanceState.getBoolean("commentOri");
             savedEnableRepost = savedInstanceState.getBoolean("repost");
             token = savedInstanceState.getString("token");
-            msg = (MessageBean) savedInstanceState.getSerializable("msg");
+            msg = (MessageBean) savedInstanceState.getParcelable("msg");
             commentDraftBean = (CommentDraftBean) savedInstanceState.getSerializable("commentDraftBean");
         }
     }

@@ -6,11 +6,13 @@ import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
+import java.io.Serializable;
+
 /**
  * User: qii
  * Date: 12-11-14
  */
-public class DMUserBean extends ItemBean {
+public class DMUserBean extends ItemBean implements Serializable {
     private UserBean user;
     private DMBean direct_message;
     private int unread_count;

@@ -128,7 +128,7 @@ public class BrowserBigPicActivity extends Activity {
             }
         });
 
-        msg = (MessageBean) getIntent().getSerializableExtra("msg");
+        msg = (MessageBean) getIntent().getParcelableExtra("msg");
         if (Utility.isTaskStopped(task)) {
             task = new PicSimpleBitmapWorkerTask(hd);
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
@@ -216,7 +216,7 @@ public class BrowserBigPicActivity extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("msg", msg);
+        outState.putParcelable("msg", msg);
     }
 
 

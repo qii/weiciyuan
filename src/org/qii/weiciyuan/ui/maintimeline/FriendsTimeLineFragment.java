@@ -97,7 +97,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         //use Up instead of Back to reach this fragment
         if (data == null)
             return;
-        final MessageBean msg = (MessageBean) data.getSerializableExtra("msg");
+        final MessageBean msg = (MessageBean) data.getParcelableExtra("msg");
         if (msg != null) {
             for (int i = 0; i < getList().getSize(); i++) {
                 if (msg.equals(getList().getItem(i))) {

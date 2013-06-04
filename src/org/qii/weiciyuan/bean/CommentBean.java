@@ -6,11 +6,13 @@ import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
+import java.io.Serializable;
+
 /**
  * User: Jiang Qi
  * Date: 12-8-2
  */
-public class CommentBean extends ItemBean {
+public class CommentBean extends ItemBean implements Serializable {
     private String created_at;
     private long id;
     private String idstr;

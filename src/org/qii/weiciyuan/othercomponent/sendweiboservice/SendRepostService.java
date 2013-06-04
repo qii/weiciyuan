@@ -51,7 +51,7 @@ public class SendRepostService extends Service {
         String token = intent.getStringExtra("token");
         AccountBean account = (AccountBean) intent.getParcelableExtra("account");
         String content = intent.getStringExtra("content");
-        MessageBean oriMsg = (MessageBean) intent.getSerializableExtra("oriMsg");
+        MessageBean oriMsg = (MessageBean) intent.getParcelableExtra("oriMsg");
         String is_comment = intent.getStringExtra("is_comment");
 
         RepostDraftBean repostDraftBean = (RepostDraftBean) intent.getSerializableExtra("draft");

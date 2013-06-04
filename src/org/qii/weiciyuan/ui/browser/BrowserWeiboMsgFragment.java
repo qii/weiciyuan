@@ -83,7 +83,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         super.onSaveInstanceState(outState);
         if (hasGpsInfo())
             layout.mapView.onSaveInstanceState(outState);
-        outState.putSerializable("msg", msg);
+        outState.putParcelable("msg", msg);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 //nothing
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                msg = (MessageBean) savedInstanceState.getSerializable("msg");
+                msg = (MessageBean) savedInstanceState.getParcelable("msg");
                 buildViewData(true);
                 break;
         }
@@ -180,10 +180,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             layout.mapView = (MapView) inflated.findViewById(R.id.location_mv);
         }
         if (savedInstanceState != null && hasGpsInfo()) {
-            MessageBean msg = (MessageBean) savedInstanceState.get("msg");
+            MessageBean msg = (MessageBean) savedInstanceState.getParcelable("msg");
             savedInstanceState.remove("msg");
             layout.mapView.onCreate(savedInstanceState);
-            savedInstanceState.putSerializable("msg", msg);
+            savedInstanceState.putParcelable("msg", msg);
         } else if (hasGpsInfo()) {
             layout.mapView.onCreate(savedInstanceState);
         }

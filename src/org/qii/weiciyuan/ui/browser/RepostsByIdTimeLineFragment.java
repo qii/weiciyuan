@@ -81,7 +81,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
         outState.putSerializable("bean", bean);
         outState.putString("id", id);
         outState.putString("token", token);
-        outState.putSerializable("msg", msg);
+        outState.putParcelable("msg", msg);
     }
 
 
@@ -124,7 +124,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
                 clearAndReplaceValue((RepostListBean) savedInstanceState.getSerializable("bean"));
                 token = savedInstanceState.getString("token");
                 id = savedInstanceState.getString("id");
-                msg = (MessageBean) savedInstanceState.getSerializable("msg");
+                msg = (MessageBean) savedInstanceState.getParcelable("msg");
                 timeLineAdapter.notifyDataSetChanged();
                 refreshLayout(bean);
                 break;
@@ -225,7 +225,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
                 quick_repost.setVisibility(View.VISIBLE);
             }
         } else if (savedInstanceState != null) {
-            msg = (MessageBean) savedInstanceState.getSerializable("msg");
+            msg = (MessageBean) savedInstanceState.getParcelable("msg");
             if (msg.getRetweeted_status() == null) {
                 quick_repost.setVisibility(View.VISIBLE);
             }

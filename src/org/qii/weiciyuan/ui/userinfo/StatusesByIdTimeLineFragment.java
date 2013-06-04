@@ -45,7 +45,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null)
             return;
-        MessageBean msg = (MessageBean) data.getSerializableExtra("msg");
+        MessageBean msg = (MessageBean) data.getParcelableExtra("msg");
         if (msg != null) {
             for (int i = 0; i < getList().getSize(); i++) {
                 if (msg.equals(getList().getItem(i))) {

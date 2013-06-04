@@ -62,7 +62,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("msg", msg);
+        outState.putParcelable("msg", msg);
         outState.putString("token", token);
     }
 
@@ -70,12 +70,12 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            msg = (MessageBean) savedInstanceState.getSerializable("msg");
+            msg = (MessageBean) savedInstanceState.getParcelable("msg");
             token = savedInstanceState.getString("token");
         } else {
             Intent intent = getIntent();
             token = intent.getStringExtra("token");
-            msg = (MessageBean) intent.getSerializableExtra("msg");
+            msg = (MessageBean) intent.getParcelableExtra("msg");
         }
         setContentView(R.layout.viewpager_layout);
 

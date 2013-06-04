@@ -54,7 +54,7 @@ public class SendCommentService extends Service {
         String token = intent.getStringExtra("token");
         AccountBean account = (AccountBean) intent.getParcelableExtra("account");
         String content = intent.getStringExtra("content");
-        MessageBean oriMsg = (MessageBean) intent.getSerializableExtra("oriMsg");
+        MessageBean oriMsg = (MessageBean) intent.getParcelableExtra("oriMsg");
         boolean comment_ori = intent.getBooleanExtra("comment_ori", false);
         CommentDraftBean commentDraftBean = (CommentDraftBean) intent.getSerializableExtra("draft");
 

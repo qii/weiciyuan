@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -15,7 +17,7 @@ import java.util.Date;
  * Date: 12-7-29
  */
 
-public class MessageBean extends ItemBean {
+public class MessageBean extends ItemBean implements Parcelable {
 
     private String created_at;
     private long id;
@@ -31,19 +33,101 @@ public class MessageBean extends ItemBean {
     private int reposts_count = 0;
     private int comments_count = 0;
     //    private Object annotations;
-    private UserBean user;
-    private MessageBean retweeted_status;
-    private GeoBean geo;
 
     private String thumbnail_pic;
     private String bmiddle_pic;
     private String original_pic;
 
-    private transient SpannableString listViewSpannableString;
-
     private String sourceString;
 
     private long mills;
+
+    private MessageBean retweeted_status;
+    private UserBean user;
+    private GeoBean geo;
+
+
+    private transient SpannableString listViewSpannableString;
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(created_at);
+        dest.writeLong(id);
+
+        dest.writeString(idstr);
+        dest.writeString(text);
+        dest.writeString(source);
+        dest.writeBooleanArray(new boolean[]{this.favorited});
+        dest.writeString(truncated);
+        dest.writeString(in_reply_to_status_id);
+        dest.writeString(in_reply_to_user_id);
+        dest.writeString(in_reply_to_screen_name);
+        dest.writeString(mid);
+        dest.writeInt(reposts_count);
+        dest.writeInt(comments_count);
+
+        dest.writeString(thumbnail_pic);
+        dest.writeString(bmiddle_pic);
+        dest.writeString(original_pic);
+
+        dest.writeString(sourceString);
+
+        dest.writeLong(mills);
+
+        dest.writeParcelable(retweeted_status, flags);
+        dest.writeParcelable(user, flags);
+        dest.writeParcelable(geo, flags);
+
+    }
+
+    public static final Parcelable.Creator<MessageBean> CREATOR =
+            new Parcelable.Creator<MessageBean>() {
+                public MessageBean createFromParcel(Parcel in) {
+                    MessageBean messageBean = new MessageBean();
+                    messageBean.created_at = in.readString();
+                    messageBean.id = in.readLong();
+                    messageBean.idstr = in.readString();
+                    messageBean.text = in.readString();
+                    messageBean.source = in.readString();
+
+                    boolean[] booleans = new boolean[1];
+                    in.readBooleanArray(booleans);
+                    messageBean.favorited = booleans[0];
+
+
+                    messageBean.truncated = in.readString();
+                    messageBean.in_reply_to_status_id = in.readString();
+                    messageBean.in_reply_to_user_id = in.readString();
+                    messageBean.in_reply_to_screen_name = in.readString();
+                    messageBean.mid = in.readString();
+
+
+                    messageBean.reposts_count = in.readInt();
+                    messageBean.comments_count = in.readInt();
+
+                    messageBean.thumbnail_pic = in.readString();
+                    messageBean.bmiddle_pic = in.readString();
+                    messageBean.original_pic = in.readString();
+                    messageBean.sourceString = in.readString();
+                    messageBean.mills = in.readLong();
+
+                    messageBean.retweeted_status = in.readParcelable(MessageBean.class.getClassLoader());
+                    messageBean.user = in.readParcelable(UserBean.class.getClassLoader());
+                    messageBean.geo = in.readParcelable(GeoBean.class.getClassLoader());
+
+                    return messageBean;
+                }
+
+                public MessageBean[] newArray(int size) {
+                    return new MessageBean[size];
+                }
+            };
 
 
     public String getCreated_at() {
@@ -278,4 +362,6 @@ public class MessageBean extends ItemBean {
     public String toString() {
         return ObjectToStringUtility.toString(this);
     }
+
+
 }

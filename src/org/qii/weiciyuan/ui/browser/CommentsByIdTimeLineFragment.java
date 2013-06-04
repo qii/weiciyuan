@@ -70,7 +70,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
-        outState.putSerializable("msg", msg);
+        outState.putParcelable("msg", msg);
         outState.putString("token", token);
     }
 
@@ -135,7 +135,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             case ACTIVITY_DESTROY_AND_CREATE:
                 getList().replaceAll((CommentListBean) savedInstanceState.getSerializable("bean"));
                 token = savedInstanceState.getString("token");
-                msg = (MessageBean) savedInstanceState.get("msg");
+                msg = (MessageBean) savedInstanceState.getParcelable("msg");
                 timeLineAdapter.notifyDataSetChanged();
                 refreshLayout(bean);
                 break;
