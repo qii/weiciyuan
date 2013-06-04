@@ -28,7 +28,7 @@ public class MyFavActivity extends AbstractAppActivity implements IUserInfo {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.my_fav_list));
         String token = getIntent().getStringExtra("token");
-        bean = (UserBean) getIntent().getSerializableExtra("user");
+        bean = (UserBean) getIntent().getParcelableExtra("user");
         if (getSupportFragmentManager().findFragmentByTag(MyFavListFragment.class.getName()) == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content, new MyFavListFragment(), MyFavListFragment.class.getName())

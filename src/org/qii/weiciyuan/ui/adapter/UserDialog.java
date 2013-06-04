@@ -40,14 +40,14 @@ public class UserDialog extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("user", user);
+        outState.putParcelable("user", user);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            user = (UserBean) savedInstanceState.getSerializable("user");
+            user = savedInstanceState.getParcelable("user");
         }
     }
 

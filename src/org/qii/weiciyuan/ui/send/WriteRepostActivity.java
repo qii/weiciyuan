@@ -62,7 +62,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
     }
 
     private void handleDraftOperation(Intent intent) {
-        AccountBean account = (AccountBean) intent.getSerializableExtra("account");
+        AccountBean account = (AccountBean) intent.getParcelableExtra("account");
         token = account.getAccess_token();
 
         repostDraftBean = (RepostDraftBean) intent.getSerializableExtra("draft");
@@ -93,7 +93,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
     }
 
     private void handleFailedOperation(Intent intent) {
-        token = ((AccountBean) intent.getSerializableExtra("account")).getAccess_token();
+        token = ((AccountBean) intent.getParcelableExtra("account")).getAccess_token();
 
         msg = (MessageBean) intent.getSerializableExtra("oriMsg");
         getEditTextView().setText(intent.getStringExtra("content"));

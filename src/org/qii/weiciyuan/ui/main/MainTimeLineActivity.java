@@ -77,7 +77,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("account", accountBean);
+        outState.putParcelable("account", accountBean);
     }
 
     @Override
@@ -85,10 +85,10 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            accountBean = (AccountBean) savedInstanceState.getSerializable("account");
+            accountBean = (AccountBean) savedInstanceState.getParcelable("account");
         } else {
             Intent intent = getIntent();
-            accountBean = (AccountBean) intent.getSerializableExtra("account");
+            accountBean = (AccountBean) intent.getParcelableExtra("account");
         }
 
         if (accountBean == null)
@@ -260,7 +260,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        AccountBean newAccountBean = (AccountBean) intent.getSerializableExtra("account");
+        AccountBean newAccountBean = (AccountBean) intent.getParcelableExtra("account");
         if (newAccountBean == null) {
             return;
         }
@@ -488,7 +488,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     private class NewMsgInterruptBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            AccountBean newMsgAccountBean = (AccountBean) intent.getSerializableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+            AccountBean newMsgAccountBean = (AccountBean) intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
             if (newMsgAccountBean.getUid().equals(MainTimeLineActivity.this.accountBean.getUid())) {
                 abortBroadcast();
             }

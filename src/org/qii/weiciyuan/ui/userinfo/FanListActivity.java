@@ -32,7 +32,7 @@ public class FanListActivity extends AbstractAppActivity implements IUserInfo {
         getActionBar().setIcon(R.drawable.ic_ab_friendship);
 
         token = getIntent().getStringExtra("token");
-        bean = (UserBean) getIntent().getSerializableExtra("user");
+        bean = (UserBean) getIntent().getParcelableExtra("user");
 
 
         if (getSupportFragmentManager().findFragmentByTag(FanListFragment.class.getName()) == null) {

@@ -356,8 +356,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("account", accountBean);
-        outState.putSerializable("userBean", userBean);
+        outState.putParcelable("account", accountBean);
+        outState.putParcelable("userBean", userBean);
         outState.putString("token", token);
 
 //        outState.putSerializable("bean", getList());
@@ -396,8 +396,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 setListViewPositionFromPositionsCache();
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                userBean = (UserBean) savedInstanceState.getSerializable("userBean");
-                accountBean = (AccountBean) savedInstanceState.getSerializable("account");
+                userBean = (UserBean) savedInstanceState.getParcelable("userBean");
+                accountBean = (AccountBean) savedInstanceState.getParcelable("account");
                 token = savedInstanceState.getString("token");
 
 //                groupDataCache = (HashMap) savedInstanceState.getSerializable("groupDataCache");

@@ -72,7 +72,7 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
                 refreshLayout(bean);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                currentUser = (UserBean) savedInstanceState.getSerializable("currentUser");
+                currentUser = savedInstanceState.getParcelable("currentUser");
                 uid = savedInstanceState.getString("uid");
                 clearAndReplaceValue((UserListBean) savedInstanceState.getSerializable("bean"));
                 getAdapter().notifyDataSetChanged();
@@ -96,7 +96,7 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("currentUser", currentUser);
+        outState.putParcelable("currentUser", currentUser);
         outState.putString("uid", uid);
     }
 }

@@ -71,8 +71,8 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putSerializable("account", accountBean);
-        outState.putSerializable("userBean", userBean);
+        outState.putParcelable("account", accountBean);
+        outState.putParcelable("userBean", userBean);
         outState.putString("token", token);
 
         if (getActivity().isChangingConfigurations()) {
@@ -109,8 +109,8 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
                 getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                userBean = (UserBean) savedInstanceState.getSerializable("userBean");
-                accountBean = (AccountBean) savedInstanceState.getSerializable("account");
+                userBean = (UserBean) savedInstanceState.getParcelable("userBean");
+                accountBean = (AccountBean) savedInstanceState.getParcelable("account");
                 token = savedInstanceState.getString("token");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
 

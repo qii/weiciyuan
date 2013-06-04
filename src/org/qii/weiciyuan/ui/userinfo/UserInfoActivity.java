@@ -89,7 +89,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         token = getIntent().getStringExtra("token");
-        bean = (UserBean) getIntent().getSerializableExtra("user");
+        bean = getIntent().getParcelableExtra("user");
         if (bean == null) {
             String id = getIntent().getStringExtra("id");
             if (!TextUtils.isEmpty(id)) {

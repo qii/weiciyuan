@@ -83,8 +83,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putSerializable("account", accountBean);
-        outState.putSerializable("userBean", userBean);
+        outState.putParcelable("account", accountBean);
+        outState.putParcelable("userBean", userBean);
         outState.putString("token", token);
 
         if (getActivity().isChangingConfigurations()) {
@@ -176,8 +176,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                 getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                userBean = (UserBean) savedInstanceState.getSerializable("userBean");
-                accountBean = (AccountBean) savedInstanceState.getSerializable("account");
+                userBean = (UserBean) savedInstanceState.getParcelable("userBean");
+                accountBean = (AccountBean) savedInstanceState.getParcelable("account");
                 token = savedInstanceState.getString("token");
                 unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
@@ -493,7 +493,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     private BroadcastReceiver newBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            AccountBean account = (AccountBean) intent.getSerializableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+            AccountBean account = (AccountBean) intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
             if (account == null || !account.getUid().equals(account.getUid())) {
                 return;
             }

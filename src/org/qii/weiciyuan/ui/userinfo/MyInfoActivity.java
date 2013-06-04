@@ -52,8 +52,8 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo, IA
         super.onCreate(savedInstanceState);
 
         String token = getIntent().getStringExtra("token");
-        bean = (UserBean) getIntent().getSerializableExtra("user");
-        account = (AccountBean) getIntent().getSerializableExtra("account");
+        bean = (UserBean) getIntent().getParcelableExtra("user");
+        account = (AccountBean) getIntent().getParcelableExtra("account");
 
         setContentView(R.layout.viewpager_layout);
         getActionBar().setDisplayHomeAsUpEnabled(true);

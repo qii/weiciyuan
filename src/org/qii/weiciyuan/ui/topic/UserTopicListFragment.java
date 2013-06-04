@@ -64,7 +64,7 @@ public class UserTopicListFragment extends ListFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("userBean", userBean);
+        outState.putParcelable("userBean", userBean);
         outState.putStringArrayList("topicList", result);
     }
 
@@ -79,7 +79,7 @@ public class UserTopicListFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
-            userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+            userBean = (UserBean) savedInstanceState.getParcelable("userBean");
             result = (ArrayList<String>) savedInstanceState.getStringArrayList("topicList");
         }
         adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, result);

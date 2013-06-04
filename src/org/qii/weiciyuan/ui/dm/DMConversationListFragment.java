@@ -57,7 +57,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("bean", bean);
-        outState.putSerializable("userBean", userBean);
+        outState.putParcelable("userBean", userBean);
         outState.putInt("page", page);
     }
 
@@ -83,7 +83,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 getList().addNewData((DMListBean) savedInstanceState.getSerializable("bean"));
-                userBean = (UserBean) savedInstanceState.getSerializable("userBean");
+                userBean = (UserBean) savedInstanceState.getParcelable("userBean");
                 page = savedInstanceState.getInt("page");
                 getAdapter().notifyDataSetChanged();
                 refreshLayout(bean);

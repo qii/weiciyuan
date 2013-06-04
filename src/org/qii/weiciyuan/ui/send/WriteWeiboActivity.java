@@ -100,7 +100,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     private void handleFailedOperation(Intent intent) {
-        accountBean = (AccountBean) intent.getSerializableExtra("account");
+        accountBean = (AccountBean) intent.getParcelableExtra("account");
         token = accountBean.getAccess_token();
         getActionBar().setSubtitle(accountBean.getUsernick());
         String stringExtra = intent.getStringExtra("content");
@@ -273,7 +273,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         outState.putString("location", location);
         outState.putParcelable("imageFileUri", imageFileUri);
         outState.putSerializable("statusDraftBean", statusDraftBean);
-        outState.putSerializable("accountBean", accountBean);
+        outState.putParcelable("accountBean", accountBean);
     }
 
     @Override
@@ -292,7 +292,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
             imageFileUri = savedInstanceState.getParcelable("imageFileUri");
             statusDraftBean = (StatusDraftBean) savedInstanceState.getSerializable("statusDraftBean");
-            accountBean = (AccountBean) savedInstanceState.getSerializable("accountBean");
+            accountBean = (AccountBean) savedInstanceState.getParcelable("accountBean");
             token = accountBean.getAccess_token();
         }
     }
@@ -326,7 +326,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
 
     private void handleDraftOperation(Intent intent) {
-        accountBean = (AccountBean) intent.getSerializableExtra("account");
+        accountBean = (AccountBean) intent.getParcelableExtra("account");
         token = accountBean.getAccess_token();
         getActionBar().setSubtitle(accountBean.getUsernick());
 
@@ -349,7 +349,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     private void handleNormalOperation(Intent intent) {
-        accountBean = (AccountBean) intent.getSerializableExtra("account");
+        accountBean = (AccountBean) intent.getParcelableExtra("account");
         token = accountBean.getAccess_token();
         getActionBar().setSubtitle(accountBean.getUsernick());
         String contentStr = intent.getStringExtra("content");

@@ -85,7 +85,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
     }
 
     private void handleFailedOperation(Intent intent) {
-        token = ((AccountBean) intent.getSerializableExtra("account")).getAccess_token();
+        token = ((AccountBean) intent.getParcelableExtra("account")).getAccess_token();
         msg = (MessageBean) getIntent().getSerializableExtra("oriMsg");
 
         getEditTextView().setError(intent.getStringExtra("failedReason"));

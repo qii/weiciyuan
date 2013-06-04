@@ -54,7 +54,7 @@ public class SendWeiboService extends Service {
         int lastNotificationId = intent.getIntExtra("lastNotificationId", -1);
 
         String token = intent.getStringExtra("token");
-        AccountBean account = (AccountBean) intent.getSerializableExtra("account");
+        AccountBean account = (AccountBean) intent.getParcelableExtra("account");
         String picPath = intent.getStringExtra("picPath");
         String content = intent.getStringExtra("content");
         GeoBean geoBean = (GeoBean) intent.getSerializableExtra("geo");

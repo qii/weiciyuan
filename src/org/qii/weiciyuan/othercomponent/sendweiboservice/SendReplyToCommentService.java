@@ -52,7 +52,7 @@ public class SendReplyToCommentService extends Service {
         }
 
         String token = intent.getStringExtra("token");
-        AccountBean account = (AccountBean) intent.getSerializableExtra("account");
+        AccountBean account = (AccountBean) intent.getParcelableExtra("account");
         String content = intent.getStringExtra("content");
         String repostContent = intent.getStringExtra("repostContent");
         CommentBean oriMsg = (CommentBean) intent.getSerializableExtra("oriMsg");

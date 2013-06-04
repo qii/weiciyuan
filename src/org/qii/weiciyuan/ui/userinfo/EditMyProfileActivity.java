@@ -70,7 +70,7 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
         getActionBar().setTitle(getString(R.string.edit_my_profile));
         setContentView(R.layout.editmyprofileactivity_layout);
         initLayout();
-        userBean = (UserBean) getIntent().getSerializableExtra("userBean");
+        userBean = (UserBean) getIntent().getParcelableExtra("userBean");
         initValue(savedInstanceState);
 
     }

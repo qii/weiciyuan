@@ -58,7 +58,7 @@ public class UserInfoFragment extends AbstractAppFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putStringArrayList("topicList", topicList);
-        outState.putSerializable("bean", bean);
+        outState.putParcelable("bean", bean);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class UserInfoFragment extends AbstractAppFragment {
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 topicList = savedInstanceState.getStringArrayList("topicList");
-                bean = (UserBean) savedInstanceState.getSerializable("bean");
+                bean = (UserBean) savedInstanceState.getParcelable("bean");
                 break;
         }
 

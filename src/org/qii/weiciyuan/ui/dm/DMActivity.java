@@ -21,7 +21,7 @@ public class DMActivity extends AbstractAppActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        UserBean bean = (UserBean) getIntent().getSerializableExtra("user");
+        UserBean bean = (UserBean) getIntent().getParcelableExtra("user");
 
         setTitle(bean.getScreen_name());
         if (savedInstanceState == null) {
