@@ -2,6 +2,7 @@ package org.qii.weiciyuan.bean;
 
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * User: qii
  * Date: 12-11-11
  */
-public class DMListBean extends ListBean<DMBean, DMListBean> {
+public class DMListBean extends ListBean<DMBean, DMListBean> implements Serializable {
     private List<DMBean> direct_messages = new ArrayList<DMBean>();
 
 

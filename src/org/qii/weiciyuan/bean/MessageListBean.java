@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
@@ -12,9 +14,48 @@ import java.util.List;
  * User: qii
  * Date: 12-7-29
  */
-public class MessageListBean extends ListBean<MessageBean, MessageListBean> {
+public class MessageListBean extends ListBean<MessageBean, MessageListBean> implements Parcelable {
 
     private List<MessageBean> statuses = new ArrayList<MessageBean>();
+    private int removedCount = 0;
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(total_number);
+        dest.writeString(previous_cursor);
+        dest.writeString(next_cursor);
+
+        dest.writeTypedList(statuses);
+        dest.writeInt(removedCount);
+    }
+
+    public static final Parcelable.Creator<MessageListBean> CREATOR =
+            new Parcelable.Creator<MessageListBean>() {
+                public MessageListBean createFromParcel(Parcel in) {
+                    MessageListBean messageListBean = new MessageListBean();
+
+                    messageListBean.total_number = in.readInt();
+                    messageListBean.previous_cursor = in.readString();
+                    messageListBean.next_cursor = in.readString();
+
+                    messageListBean.statuses = new ArrayList<MessageBean>();
+                    in.readTypedList(messageListBean.statuses, MessageBean.CREATOR);
+
+                    messageListBean.removedCount = in.readInt();
+
+                    return messageListBean;
+                }
+
+                public MessageListBean[] newArray(int size) {
+                    return new MessageListBean[size];
+                }
+            };
 
 
     private List<MessageBean> getStatuses() {
@@ -41,7 +82,6 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> {
         return getStatuses();
     }
 
-    private int removedCount = 0;
 
     public int getReceivedNumber() {
         return getSize() + removedCount;
@@ -122,4 +162,6 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> {
     public String toString() {
         return ObjectToStringUtility.toString(this);
     }
+
+
 }

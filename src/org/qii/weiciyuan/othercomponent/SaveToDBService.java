@@ -27,7 +27,7 @@ public class SaveToDBService extends IntentService {
         switch (type) {
             case TYPE_STATUS:
                 AppLogger.e("start db");
-                MessageListBean value = (MessageListBean) intent.getSerializableExtra("value");
+                MessageListBean value = (MessageListBean) intent.getParcelableExtra("value");
 //                FriendsTimeLineDBTask.replace(value, accountId);
                 AppLogger.e("end db");
                 break;

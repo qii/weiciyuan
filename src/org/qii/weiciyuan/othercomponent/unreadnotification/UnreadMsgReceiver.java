@@ -34,7 +34,7 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
         this.context = context;
         accountBean = (AccountBean) intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
         commentsToMeData = (CommentListBean) intent.getSerializableExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA);
-        mentionsWeiboData = (MessageListBean) intent.getSerializableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
+        mentionsWeiboData = (MessageListBean) intent.getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
         mentionsCommentData = (CommentListBean) intent.getSerializableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
         unreadBean = (UnreadBean) intent.getSerializableExtra(BundleArgsConstants.UNREAD_EXTRA);
 

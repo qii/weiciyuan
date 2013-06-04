@@ -138,7 +138,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
             return;
         }
         Intent intent = getActivity().getIntent();
-        MessageListBean mentionsWeibo = (MessageListBean) intent.getSerializableExtra("repost");
+        MessageListBean mentionsWeibo = (MessageListBean) intent.getParcelableExtra("repost");
 
         if (mentionsWeibo != null) {
             addUnreadMessage(mentionsWeibo);
@@ -237,7 +237,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         outState.putString("token", token);
 
         if (getActivity().isChangingConfigurations()) {
-            outState.putSerializable("bean", bean);
+            outState.putParcelable("bean", bean);
             outState.putSerializable("unreadBean", unreadBean);
             outState.putSerializable("timeLinePosition", timeLinePosition);
         }
@@ -263,7 +263,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
                     getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 }
 
-                MessageListBean savedBean = (MessageListBean) savedInstanceState.getSerializable("bean");
+                MessageListBean savedBean = (MessageListBean) savedInstanceState.getParcelable("bean");
                 if (savedBean != null && savedBean.getSize() > 0) {
                     getList().replaceData(savedBean);
                     timeLineAdapter.notifyDataSetChanged();
@@ -410,7 +410,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
             if (account == null || !account.getUid().equals(account.getUid())) {
                 return;
             }
-            MessageListBean data = (MessageListBean) intent.getSerializableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
+            MessageListBean data = (MessageListBean) intent.getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
             addUnreadMessage(data);
         }
     };

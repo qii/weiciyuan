@@ -2,6 +2,7 @@ package org.qii.weiciyuan.bean;
 
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * User: qii
  * Date: 13-2-27
  */
-public class ShareListBean extends ListBean<MessageBean, ShareListBean> {
+public class ShareListBean extends ListBean<MessageBean, ShareListBean> implements Serializable {
     private String url_long;
     private String url_short;
     private List<MessageBean> share_statuses = new ArrayList<MessageBean>();

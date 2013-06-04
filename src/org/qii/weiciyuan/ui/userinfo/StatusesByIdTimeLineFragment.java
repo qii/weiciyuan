@@ -94,7 +94,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("bean", getList());
+        outState.putParcelable("bean", getList());
         outState.putParcelable("userBean", userBean);
         outState.putString("token", token);
     }
@@ -119,7 +119,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
                 refreshLayout(getList());
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
+                getList().replaceData((MessageListBean) savedInstanceState.getParcelable("bean"));
                 userBean = (UserBean) savedInstanceState.getParcelable("userBean");
                 token = savedInstanceState.getString("token");
                 getAdapter().notifyDataSetChanged();

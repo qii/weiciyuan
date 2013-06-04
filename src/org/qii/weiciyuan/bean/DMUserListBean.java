@@ -2,6 +2,7 @@ package org.qii.weiciyuan.bean;
 
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * User: qii
  * Date: 12-11-14
  */
-public class DMUserListBean extends ListBean<DMUserBean, DMUserListBean> {
+public class DMUserListBean extends ListBean<DMUserBean, DMUserListBean> implements Serializable {
     private List<DMUserBean> user_list = new ArrayList<DMUserBean>();
 
     @Override

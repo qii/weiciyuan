@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
  * User: Jiang Qi
  * Date: 12-8-2
  */
-public class CommentListBean extends ListBean<CommentBean, CommentListBean> {
+public class CommentListBean extends ListBean<CommentBean, CommentListBean> implements Serializable {
 
     private List<CommentBean> comments = new ArrayList<CommentBean>();
 

@@ -2,6 +2,7 @@ package org.qii.weiciyuan.bean;
 
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * User: qii
  * Date: 13-3-8
  */
-public class NearbyStatusListBean extends ListBean<MessageBean, NearbyStatusListBean> {
+public class NearbyStatusListBean extends ListBean<MessageBean, NearbyStatusListBean> implements Serializable {
     private List<MessageBean> statuses = new ArrayList<MessageBean>();
 
 

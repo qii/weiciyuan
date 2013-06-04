@@ -2,6 +2,7 @@ package org.qii.weiciyuan.bean;
 
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * User: Jiang Qi
  * Date: 12-8-7
  */
-public class RepostListBean extends ListBean<MessageBean, RepostListBean> {
+public class RepostListBean extends ListBean<MessageBean, RepostListBean> implements Serializable {
 
     private List<MessageBean> reposts = new ArrayList<MessageBean>();
 

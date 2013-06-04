@@ -2,6 +2,7 @@ package org.qii.weiciyuan.bean;
 
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * User: qii
  * Date: 12-8-18
  */
-public class FavListBean extends ListBean<MessageBean, FavListBean> {
+public class FavListBean extends ListBean<MessageBean, FavListBean> implements Serializable {
     private List<FavBean> favorites = new ArrayList<FavBean>();
     private List<MessageBean> actualStore = null;
 

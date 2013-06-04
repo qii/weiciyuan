@@ -7,11 +7,11 @@ import java.util.List;
  * User: qii
  * Date: 12-8-27
  */
-public abstract class ListBean<T extends ItemBean, K> implements Serializable {
+public abstract class ListBean<T extends ItemBean, K> {
 
     protected int total_number = 0;
-    private String previous_cursor = "0";
-    private String next_cursor = "0";
+    protected String previous_cursor = "0";
+    protected String next_cursor = "0";
 
     public abstract int getSize();
 
