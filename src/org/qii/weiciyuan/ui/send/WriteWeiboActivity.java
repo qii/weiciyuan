@@ -269,7 +269,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("picPath", picPath);
-        outState.putSerializable("geoBean", geoBean);
+        outState.putParcelable("geoBean", geoBean);
         outState.putString("location", location);
         outState.putParcelable("imageFileUri", imageFileUri);
         outState.putSerializable("statusDraftBean", statusDraftBean);
@@ -283,7 +283,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             picPath = savedInstanceState.getString("picPath");
             if (!TextUtils.isEmpty(picPath))
                 enablePicture();
-            geoBean = (GeoBean) savedInstanceState.getSerializable("geoBean");
+            geoBean = (GeoBean) savedInstanceState.getParcelable("geoBean");
             location = savedInstanceState.getString("location");
             if (geoBean != null && !TextUtils.isEmpty(location))
                 enableGeo();

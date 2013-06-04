@@ -17,6 +17,34 @@ import java.util.Date;
 
 public class MessageBean extends ItemBean {
 
+    private String created_at;
+    private long id;
+    private String idstr;
+    private String text;
+    private String source;
+    private boolean favorited;
+    private String truncated;
+    private String in_reply_to_status_id;
+    private String in_reply_to_user_id;
+    private String in_reply_to_screen_name;
+    private String mid;
+    private int reposts_count = 0;
+    private int comments_count = 0;
+    //    private Object annotations;
+    private UserBean user;
+    private MessageBean retweeted_status;
+    private GeoBean geo;
+
+    private String thumbnail_pic;
+    private String bmiddle_pic;
+    private String original_pic;
+
+    private transient SpannableString listViewSpannableString;
+
+    private String sourceString;
+
+    private long mills;
+
 
     public String getCreated_at() {
 
@@ -158,31 +186,6 @@ public class MessageBean extends ItemBean {
         return this.id;
     }
 
-    private String created_at;
-    private long id;
-    private String idstr;
-    private String text;
-    private String source;
-    private boolean favorited;
-    private String truncated;
-    private String in_reply_to_status_id;
-    private String in_reply_to_user_id;
-    private String in_reply_to_screen_name;
-    private String mid;
-    private int reposts_count = 0;
-    private int comments_count = 0;
-    //    private Object annotations;
-    private UserBean user;
-    private MessageBean retweeted_status;
-    private GeoBean geo;
-
-    private String thumbnail_pic;
-    private String bmiddle_pic;
-    private String original_pic;
-
-    private transient SpannableString listViewSpannableString;
-
-    private String sourceString;
 
     public SpannableString getListViewSpannableString() {
         if (!TextUtils.isEmpty(listViewSpannableString)) {
@@ -211,7 +214,6 @@ public class MessageBean extends ItemBean {
         this.sourceString = sourceString;
     }
 
-    private long mills;
 
     public long getMills() {
         if (mills == 0L) {
