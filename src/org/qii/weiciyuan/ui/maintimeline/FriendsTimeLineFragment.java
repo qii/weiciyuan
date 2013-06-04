@@ -328,8 +328,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     @Override
     public void onPause() {
         super.onPause();
-        savePositionToDB();
-        saveGroupIdToDB();
+        if (!getActivity().isChangingConfigurations()) {
+            savePositionToDB();
+            saveGroupIdToDB();
+        }
         removeRefresh();
         stopDownloadingOtherPicturesOnWifiNetworkEnvironment();
     }
@@ -448,7 +450,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     @Override
     protected void buildListAdapter() {
-        StatusListAdapter adapter = new StatusListAdapter(this, ((ICommander) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), true, true);
+        StatusListAdapter adapter = new StatusListAdapter(this,
+                ((ICommander) getActivity()).getBitmapDownloader(),
+                getList().getItemList(),
+                getListView(),
+                true, false);
         adapter.setTopTipBar(newMsgTipBar);
         timeLineAdapter = adapter;
         getListView().setAdapter(timeLineAdapter);

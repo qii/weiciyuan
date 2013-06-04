@@ -89,7 +89,9 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     @Override
     public void onPause() {
         super.onPause();
-        saveTimeLinePositionToDB();
+        if (!getActivity().isChangingConfigurations()) {
+            saveTimeLinePositionToDB();
+        }
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(newBroadcastReceiver);
 
     }
@@ -125,7 +127,10 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
     @Override
     protected void buildListAdapter() {
-        StatusListAdapter adapter = new StatusListAdapter(this, ((ICommander) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), true, true);
+        StatusListAdapter adapter = new StatusListAdapter(this,
+                ((ICommander) getActivity()).getBitmapDownloader(),
+                getList().getItemList(),
+                getListView(), true, false);
         adapter.setTopTipBar(newMsgTipBar);
         timeLineAdapter = adapter;
         getListView().setAdapter(timeLineAdapter);

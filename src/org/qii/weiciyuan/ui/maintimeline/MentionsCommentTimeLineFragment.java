@@ -120,7 +120,9 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     @Override
     public void onPause() {
         super.onPause();
-        saveTimeLinePositionToDB();
+        if (!getActivity().isChangingConfigurations()) {
+            saveTimeLinePositionToDB();
+        }
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(newBroadcastReceiver);
     }
 
@@ -319,7 +321,10 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
     @Override
     protected void buildListAdapter() {
-        CommentListAdapter adapter = new CommentListAdapter(this, ((ICommander) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), true, true);
+        CommentListAdapter adapter = new CommentListAdapter(this,
+                ((ICommander) getActivity()).getBitmapDownloader(),
+                getList().getItemList(),
+                getListView(), true, false);
         adapter.setTopTipBar(newMsgTipBar);
         timeLineAdapter = adapter;
         pullToRefreshListView.setAdapter(timeLineAdapter);

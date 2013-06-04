@@ -96,7 +96,9 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void onPause() {
         super.onPause();
-        CommentByMeTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
+        if (!getActivity().isChangingConfigurations()) {
+            CommentByMeTimeLineDBTask.asyncUpdatePosition(timeLinePosition, accountBean.getUid());
+        }
     }
 
     @Override
@@ -245,7 +247,10 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new CommentListAdapter(this, ((ICommander) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), true, true);
+        timeLineAdapter = new CommentListAdapter(this,
+                ((ICommander) getActivity()).getBitmapDownloader(),
+                getList().getItemList(),
+                getListView(), true, false);
         pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 

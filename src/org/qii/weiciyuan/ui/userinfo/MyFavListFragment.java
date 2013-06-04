@@ -150,7 +150,9 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     @Override
     public void onPause() {
         super.onPause();
-        savePositionToDB();
+        if (!getActivity().isChangingConfigurations()) {
+            savePositionToDB();
+        }
     }
 
 
