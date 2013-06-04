@@ -36,7 +36,7 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("bean", bean);
+        outState.putParcelable("bean", bean);
         outState.putSerializable("replyDraftBean", replyDraftBean);
         outState.putBoolean("repost", enableRepost.isChecked());
     }
@@ -46,7 +46,7 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
             savedEnableRepost = savedInstanceState.getBoolean("repost", false);
-            bean = (CommentBean) savedInstanceState.getSerializable("bean");
+            bean = (CommentBean) savedInstanceState.getParcelable("bean");
             replyDraftBean = (ReplyDraftBean) savedInstanceState.getSerializable("replyDraftBean");
         }
     }
@@ -93,7 +93,7 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
 
     private void handleFailedOperation(Intent intent) {
         token = ((AccountBean) intent.getParcelableExtra("account")).getAccess_token();
-        bean = (CommentBean) getIntent().getSerializableExtra("oriMsg");
+        bean = (CommentBean) getIntent().getParcelableExtra("oriMsg");
         getEditTextView().setHint("@" + bean.getUser().getScreen_name() + "：" + bean.getText());
         getEditTextView().setError(intent.getStringExtra("failedReason"));
         getEditTextView().setText(intent.getStringExtra("content"));
@@ -110,7 +110,7 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
         if (TextUtils.isEmpty(token))
             token = GlobalContext.getInstance().getSpecialToken();
 
-        bean = (CommentBean) intent.getSerializableExtra("msg");
+        bean = (CommentBean) intent.getParcelableExtra("msg");
         getEditTextView().setHint("@" + bean.getUser().getScreen_name() + "：" + bean.getText());
     }
 

@@ -88,7 +88,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         outState.putString("token", token);
 
         if (getActivity().isChangingConfigurations()) {
-            outState.putSerializable("bean", bean);
+            outState.putParcelable("bean", bean);
             outState.putSerializable("unreadBean", unreadBean);
             outState.putSerializable("timeLinePosition", timeLinePosition);
         }
@@ -137,7 +137,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
             return;
         }
         Intent intent = getActivity().getIntent();
-        CommentListBean mentionsWeibo = (CommentListBean) intent.getSerializableExtra("mentionsComment");
+        CommentListBean mentionsWeibo = (CommentListBean) intent.getParcelableExtra("mentionsComment");
 
         if (mentionsWeibo != null) {
             addUnreadMessage(mentionsWeibo);
@@ -181,7 +181,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                 token = savedInstanceState.getString("token");
                 unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
-                CommentListBean savedBean = (CommentListBean) savedInstanceState.getSerializable("bean");
+                CommentListBean savedBean = (CommentListBean) savedInstanceState.getParcelable("bean");
 
                 Loader<CommentTimeLineData> loader = getLoaderManager().getLoader(DB_CACHE_LOADER_ID);
                 if (loader != null) {
@@ -497,7 +497,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
             if (account == null || !account.getUid().equals(account.getUid())) {
                 return;
             }
-            CommentListBean data = (CommentListBean) intent.getSerializableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
+            CommentListBean data = (CommentListBean) intent.getParcelableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
             addUnreadMessage(data);
         }
     };

@@ -92,7 +92,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         outState.putString("token", token);
 
         if (getActivity().isChangingConfigurations()) {
-            outState.putSerializable("bean", bean);
+            outState.putParcelable("bean", bean);
             outState.putSerializable("unreadBean", unreadBean);
             outState.putSerializable("timeLinePosition", timeLinePosition);
         }
@@ -142,7 +142,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             return;
         }
         Intent intent = getActivity().getIntent();
-        CommentListBean commentsToMe = (CommentListBean) intent.getSerializableExtra("comment");
+        CommentListBean commentsToMe = (CommentListBean) intent.getParcelableExtra("comment");
 
         if (commentsToMe != null) {
             addUnreadMessage(commentsToMe);
@@ -499,7 +499,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             if (account == null || !account.getUid().equals(account.getUid())) {
                 return;
             }
-            CommentListBean data = (CommentListBean) intent.getSerializableExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA);
+            CommentListBean data = (CommentListBean) intent.getParcelableExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA);
             addUnreadMessage(data);
         }
     };

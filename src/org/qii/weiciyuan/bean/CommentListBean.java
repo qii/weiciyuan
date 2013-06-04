@@ -1,10 +1,11 @@
 package org.qii.weiciyuan.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -13,9 +14,44 @@ import java.util.List;
  * User: Jiang Qi
  * Date: 12-8-2
  */
-public class CommentListBean extends ListBean<CommentBean, CommentListBean> implements Serializable {
+public class CommentListBean extends ListBean<CommentBean, CommentListBean> implements Parcelable {
 
     private List<CommentBean> comments = new ArrayList<CommentBean>();
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(total_number);
+        dest.writeString(previous_cursor);
+        dest.writeString(next_cursor);
+
+        dest.writeTypedList(comments);
+    }
+
+    public static final Parcelable.Creator<CommentListBean> CREATOR =
+            new Parcelable.Creator<CommentListBean>() {
+                public CommentListBean createFromParcel(Parcel in) {
+                    CommentListBean commentListBean = new CommentListBean();
+
+                    commentListBean.total_number = in.readInt();
+                    commentListBean.previous_cursor = in.readString();
+                    commentListBean.next_cursor = in.readString();
+
+                    commentListBean.comments = new ArrayList<CommentBean>();
+                    in.readTypedList(commentListBean.comments, CommentBean.CREATOR);
+
+                    return commentListBean;
+                }
+
+                public CommentListBean[] newArray(int size) {
+                    return new CommentListBean[size];
+                }
+            };
 
 
     private List<CommentBean> getComments() {

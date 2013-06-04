@@ -76,7 +76,7 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         outState.putString("token", token);
 
         if (getActivity().isChangingConfigurations()) {
-            outState.putSerializable("bean", bean);
+            outState.putParcelable("bean", bean);
             outState.putSerializable("timeLinePosition", timeLinePosition);
         }
     }
@@ -119,7 +119,7 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
                     getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 }
 
-                CommentListBean savedBean = (CommentListBean) savedInstanceState.getSerializable("bean");
+                CommentListBean savedBean = (CommentListBean) savedInstanceState.getParcelable("bean");
                 if (savedBean != null && savedBean.getSize() > 0) {
                     clearAndReplaceValue(savedBean);
                     timeLineAdapter.notifyDataSetChanged();

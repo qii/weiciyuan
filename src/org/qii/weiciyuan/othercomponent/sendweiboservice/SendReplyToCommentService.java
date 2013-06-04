@@ -55,7 +55,7 @@ public class SendReplyToCommentService extends Service {
         AccountBean account = (AccountBean) intent.getParcelableExtra("account");
         String content = intent.getStringExtra("content");
         String repostContent = intent.getStringExtra("repostContent");
-        CommentBean oriMsg = (CommentBean) intent.getSerializableExtra("oriMsg");
+        CommentBean oriMsg = (CommentBean) intent.getParcelableExtra("oriMsg");
 
         ReplyDraftBean replyDraftBean = (ReplyDraftBean) intent.getSerializableExtra("draft");
 

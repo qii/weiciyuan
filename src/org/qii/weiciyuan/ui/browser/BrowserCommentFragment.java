@@ -52,7 +52,7 @@ public class BrowserCommentFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("msg", msg);
+        outState.putParcelable("msg", msg);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class BrowserCommentFragment extends Fragment {
         setHasOptionsMenu(true);
         setRetainInstance(true);
         if (savedInstanceState != null) {
-            msg = (CommentBean) savedInstanceState.getSerializable("msg");
+            msg = (CommentBean) savedInstanceState.getParcelable("msg");
         }
         buildViewData();
 

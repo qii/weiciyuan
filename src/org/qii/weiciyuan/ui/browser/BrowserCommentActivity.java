@@ -11,7 +11,7 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  * User: qii
  * Date: 12-9-19
  */
-public class BrowserCommentActivity extends AbstractAppActivity  {
+public class BrowserCommentActivity extends AbstractAppActivity {
 
     private String token;
 
@@ -28,7 +28,7 @@ public class BrowserCommentActivity extends AbstractAppActivity  {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        CommentBean bean = (CommentBean) intent.getSerializableExtra("comment");
+        CommentBean bean = (CommentBean) intent.getParcelableExtra("comment");
         token = intent.getStringExtra("token");
 
         if (getFragmentManager().findFragmentByTag(BrowserCommentActivity.class.getName()) == null) {
