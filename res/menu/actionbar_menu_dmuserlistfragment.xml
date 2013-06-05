@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_write_dm"
-        android:icon="?attr/add"
+        android:icon="?attr/write_dm"
         android:title="@string/write_dm"
         android:showAsAction="always"/>
 </menu>

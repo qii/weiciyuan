@@ -12,6 +12,7 @@
     <attr name="fav_un" format="reference"/>
     <attr name="search" format="reference"/>
     <attr name="write_weibo" format="reference"/>
+    <attr name="write_dm" format="reference"/>
     <attr name="location_place" format="reference"/>
     <attr name="at" format="reference"/>
     <attr name="emoticon" format="reference"/>
