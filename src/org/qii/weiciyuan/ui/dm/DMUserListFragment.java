@@ -68,7 +68,7 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
                 break;
         }
         if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
-                == LeftMenuFragment.SEARCH_INDEX) {
+                == LeftMenuFragment.DM_INDEX) {
             buildActionBarAndViewPagerTitles();
         }
 
