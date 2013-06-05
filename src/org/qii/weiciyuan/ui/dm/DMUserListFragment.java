@@ -115,7 +115,7 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         switch (item.getItemId()) {
             case R.id.menu_write_dm:
                 Intent intent = new Intent(getActivity(), DMSelectUserActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -128,6 +128,16 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         startActivity(intent);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null)
+            return;
+
+        Intent intent = new Intent(getActivity(), DMActivity.class);
+        intent.putExtra("user", data.getParcelableExtra("user"));
+        startActivity(intent);
+    }
 
     @Override
     protected void buildListAdapter() {

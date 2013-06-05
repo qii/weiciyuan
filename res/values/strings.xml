@@ -261,6 +261,7 @@
     <string name="write_dm">写信</string>
     <string name="select_dm_receiver">选择收信人</string>
     <string name="clear_dm">删除全部</string>
+    <string name="input_username_or_remark">输入用户名或者备注</string>
 
     <!-- relationship-->
     <string name="he_is_not_following_you">Ta没关注你</string>
