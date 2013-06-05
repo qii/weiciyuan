@@ -8,6 +8,7 @@ import android.support.v4.content.Loader;
 import android.view.*;
 import android.widget.*;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.DMBean;
 import org.qii.weiciyuan.bean.DMListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
@@ -25,6 +26,9 @@ import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.loader.DMConversationLoader;
 import org.qii.weiciyuan.ui.widgets.QuickSendProgressFragment;
+
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * User: qii
@@ -44,6 +48,21 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
 
     private LinearLayout mContainer;
 
+    private Comparator<DMBean> comparator = new Comparator<DMBean>() {
+        @Override
+        public int compare(DMBean a, DMBean b) {
+            long aL = a.getIdLong();
+            long bL = b.getIdLong();
+            int result = 0;
+            if (aL > bL) {
+                result = 1;
+            } else if (aL < bL) {
+                result = -1;
+            }
+            return result;
+        }
+    };
+
     @Override
     public DMListBean getList() {
         return bean;
@@ -56,7 +75,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("bean", bean);
+        outState.putParcelable("bean", bean);
         outState.putParcelable("userBean", userBean);
         outState.putInt("page", page);
     }
@@ -73,7 +92,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
                     @Override
                     public void run() {
                         if (getActivity() != null)
-                            getPullToRefreshListView().startRefreshNow();
+                            loadNewMsg();
 
                     }
                 }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
@@ -83,7 +102,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
                 refreshLayout(getList());
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                getList().addNewData((DMListBean) savedInstanceState.getSerializable("bean"));
+                getList().addNewData((DMListBean) savedInstanceState.getParcelable("bean"));
                 userBean = (UserBean) savedInstanceState.getParcelable("userBean");
                 page = savedInstanceState.getInt("page");
                 getAdapter().notifyDataSetChanged();
@@ -106,14 +125,18 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
-        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
-            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                loadNewMsg();
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                loadOldMsg(null);
+            }
 
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                loadNewMsg();
             }
         });
-
         getListView().setScrollingCacheEnabled(false);
         getListView().setHeaderDividersEnabled(false);
         getListView().setStackFromBottom(true);
@@ -230,6 +253,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
     protected void newMsgOnPostExecute(DMListBean newValue, Bundle loaderArgs) {
         if (newValue != null && newValue.getSize() > 0 && getActivity() != null) {
             getList().addNewData(newValue);
+            Collections.sort(getList().getItemList(), comparator);
             getAdapter().notifyDataSetChanged();
             getListView().setSelection(bean.getSize() - 1);
         }
@@ -240,6 +264,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
     protected void oldMsgOnPostExecute(DMListBean newValue) {
         if (newValue != null && newValue.getSize() > 0) {
             getList().addOldData(newValue);
+            Collections.sort(getList().getItemList(), comparator);
             getAdapter().notifyDataSetChanged();
             page++;
         }
