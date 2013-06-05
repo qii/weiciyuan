@@ -330,6 +330,13 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         }
     }
 
+    public boolean isSmileyPanelClosed() {
+        return !smiley.isShown();
+    }
+
+    public void closeSmileyPanel() {
+        hideSmileyPicker(false);
+    }
 
     @Override
     public void loadNewMsg() {

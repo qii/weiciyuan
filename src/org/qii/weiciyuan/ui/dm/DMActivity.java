@@ -26,7 +26,7 @@ public class DMActivity extends AbstractAppActivity {
         setTitle(bean.getScreen_name());
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new DMConversationListFragment(bean))
+                    .replace(android.R.id.content, new DMConversationListFragment(bean), DMConversationListFragment.class.getName())
                     .commit();
         }
     }
@@ -46,4 +46,18 @@ public class DMActivity extends AbstractAppActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        DMConversationListFragment fragment = (DMConversationListFragment) getSupportFragmentManager()
+                .findFragmentByTag(DMConversationListFragment.class.getName());
+        if (fragment != null) {
+            if (!fragment.isSmileyPanelClosed()) {
+                fragment.closeSmileyPanel();
+            } else {
+                super.onBackPressed();
+            }
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
