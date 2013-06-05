@@ -72,7 +72,8 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getPullToRefreshListView().startRefreshNow();
+                        if (getActivity() != null)
+                            getPullToRefreshListView().startRefreshNow();
 
                     }
                 }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
