@@ -42,7 +42,7 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("bean", bean);
+        outState.putParcelable("bean", bean);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
                 refreshLayout(getList());
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                bean.addNewData((DMUserListBean) savedInstanceState.getSerializable("bean"));
+                bean.addNewData((DMUserListBean) savedInstanceState.getParcelable("bean"));
                 getAdapter().notifyDataSetChanged();
                 refreshLayout(getList());
                 break;
