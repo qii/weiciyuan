@@ -5,15 +5,16 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp">
 
-    <ImageView
+    <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
         android:id="@+id/avatar"
         android:layout_width="@dimen/timeline_avatar_width"
         android:layout_height="@dimen/timeline_avatar_height"
+        android:padding="1px"
         android:background="@drawable/bg_border1"
-        android:layout_gravity="left|center_vertical"
         android:layout_marginRight="0dp"
         android:layout_alignParentRight="true"
         android:clickable="true"/>
+
 
     <TextView
         android:id="@+id/time"

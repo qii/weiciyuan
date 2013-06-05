@@ -8,13 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -135,7 +135,7 @@ public class DMConversationAdapter extends BaseAdapter {
         DMViewHolder holder = new DMViewHolder();
         holder.content = (TextView) convertView.findViewById(R.id.content);
         holder.time = (TextView) convertView.findViewById(R.id.time);
-        holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
+        holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
         return holder;
     }
 
@@ -203,11 +203,11 @@ public class DMConversationAdapter extends BaseAdapter {
             return -1;
     }
 
-    protected void buildAvatar(ImageView view, int position, final UserBean user) {
+    protected void buildAvatar(TimeLineAvatarImageView view, int position, final UserBean user) {
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
             view.setVisibility(View.VISIBLE);
-            commander.downloadAvatar(view, user, (AbstractTimeLineFragment) fragment);
+            commander.downloadAvatar(view.getImageView(), user, (AbstractTimeLineFragment) fragment);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -227,7 +227,7 @@ public class DMConversationAdapter extends BaseAdapter {
     private static class DMViewHolder {
         TextView content;
         TextView time;
-        ImageView avatar;
+        TimeLineAvatarImageView avatar;
 
     }
 
