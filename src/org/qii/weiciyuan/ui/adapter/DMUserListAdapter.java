@@ -135,6 +135,9 @@ public class DMUserListAdapter extends BaseAdapter {
             ListViewTool.addJustHighLightLinks(msg);
             holder.content.setText(msg.getListViewSpannableString());
         }
+
+        ListViewTool.addLinks(holder.content);
+
         String time = msg.getListviewItemShowTime();
 
         if (!holder.time.getText().toString().equals(time)) {
