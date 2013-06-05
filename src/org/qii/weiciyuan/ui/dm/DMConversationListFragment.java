@@ -55,9 +55,9 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
             long bL = b.getIdLong();
             int result = 0;
             if (aL > bL) {
-                result = 1;
-            } else if (aL < bL) {
                 result = -1;
+            } else if (aL < bL) {
+                result = 1;
             }
             return result;
         }

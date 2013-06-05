@@ -119,11 +119,11 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
         mHeaderLoadingView.setVisibility(View.GONE);
         lv.addHeaderView(frame, null, false);
 
-//        mLvFooterLoadingFrame = new FrameLayout(context);
-//        mFooterLoadingView = createLoadingLayout(context, Mode.PULL_UP_TO_REFRESH, a);
-//        mLvFooterLoadingFrame.addView(mFooterLoadingView, FrameLayout.LayoutParams.MATCH_PARENT,
-//                FrameLayout.LayoutParams.WRAP_CONTENT);
-//        mFooterLoadingView.setVisibility(View.GONE);
+        FrameLayout mLvFooterLoadingFrame = new FrameLayout(context);
+        mFooterLoadingView = createLoadingLayout(context, Mode.PULL_UP_TO_REFRESH, a);
+        mLvFooterLoadingFrame.addView(mFooterLoadingView, FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT);
+        mFooterLoadingView.setVisibility(View.GONE);
 
         //to disable blue line
 
