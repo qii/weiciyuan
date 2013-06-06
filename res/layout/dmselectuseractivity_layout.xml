@@ -5,12 +5,13 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <EditText
-        android:hint="@string/input_username_or_remark"
+    <AutoCompleteTextView
+        android:hint="@string/input_username"
         android:background="@color/white"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:layout_width="match_parent"
+        android:id="@+id/search"
         android:layout_height="60dp"/>
 
     <FrameLayout
