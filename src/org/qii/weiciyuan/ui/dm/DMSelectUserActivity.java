@@ -181,7 +181,7 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
         }
 
         @Override
-        protected void newUserOnPostExecute() {
+        protected void buildActionBarSubtitle() {
             //empty
         }
 

@@ -43,7 +43,7 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
         buildActionBarSubtitle();
     }
 
-    private void buildActionBarSubtitle() {
+    protected void buildActionBarSubtitle() {
         if (!TextUtils.isEmpty(currentUser.getFriends_count())) {
 
             int size = Integer.valueOf(currentUser.getFriends_count());
