@@ -30,11 +30,11 @@ public class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filte
     private int selectPosition = -1;
     private int atSignPosition = -1;
 
-    public AutoCompleteAdapter(Activity context, int textViewResourceId, AutoCompleteTextView content) {
-        super(context, textViewResourceId);
+    public AutoCompleteAdapter(Activity context, AutoCompleteTextView content) {
+        super(context, android.R.layout.simple_dropdown_item_1line);
         data = new ArrayList<UserBean>();
         this.activity = context;
-        this.res = textViewResourceId;
+        this.res = android.R.layout.simple_dropdown_item_1line;
         this.content = content;
         this.content.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

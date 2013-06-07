@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,7 +34,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
 
     protected abstract boolean canSend();
 
-    private EditText et;
+    private AutoCompleteTextView et;
     private SmileyPicker smiley = null;
     private LinearLayout mContainer = null;
 
@@ -100,9 +101,10 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         token = getIntent().getStringExtra("token");
 
 
-        et = ((EditText) findViewById(R.id.status_new_content));
+        et = ((AutoCompleteTextView) findViewById(R.id.status_new_content));
         et.addTextChangedListener(new TextNumLimitWatcher((TextView) findViewById(R.id.menu_send), et, this));
-
+        AutoCompleteAdapter adapter = new AutoCompleteAdapter(this, et);
+        et.setAdapter(adapter);
 
         findViewById(R.id.menu_topic).setOnClickListener(this);
         findViewById(R.id.menu_at).setOnClickListener(this);
