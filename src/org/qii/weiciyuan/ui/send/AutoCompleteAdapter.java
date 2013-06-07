@@ -24,17 +24,19 @@ public class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filte
 
     private Activity activity;
     private AutoCompleteTextView content;
+    private ProgressBar pb;
     private List<UserBean> data;
     private int res;
 
     private int selectPosition = -1;
     private int atSignPosition = -1;
 
-    public AutoCompleteAdapter(Activity context, AutoCompleteTextView content) {
+    public AutoCompleteAdapter(Activity context, AutoCompleteTextView content, ProgressBar pb) {
         super(context, android.R.layout.simple_dropdown_item_1line);
         data = new ArrayList<UserBean>();
         this.activity = context;
         this.res = android.R.layout.simple_dropdown_item_1line;
+        this.pb = pb;
         this.content = content;
         this.content.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -109,7 +111,13 @@ public class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filte
             if (start == search.length() - 1) {
                 return filterResults;
             }
+            activity.runOnUiThread(new Runnable() {
 
+                @Override
+                public void run() {
+                    pb.setVisibility(View.VISIBLE);
+                }
+            });
             String q = "";
             Matcher localMatcher = WeiboPatterns.MENTION_URL.matcher(search);
 
@@ -137,6 +145,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filte
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    pb.setVisibility(View.GONE);
                     //                                    int pos = content.getSelectionStart();
                     int pos = atSignPosition;
                     Layout layout = content.getLayout();

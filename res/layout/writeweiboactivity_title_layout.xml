@@ -2,10 +2,19 @@
 
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center_vertical">
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:gravity="center_vertical">
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:id="@+id/have_suggest_progressbar"
+        android:visibility="gone"
+        android:clickable="false"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -14,7 +23,7 @@
         android:layout_marginRight="8dp"
         android:id="@+id/have_gps"
         android:visibility="gone"
-        android:clickable="true" />
+        android:clickable="true"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -23,7 +32,7 @@
         android:layout_marginRight="8dp"
         android:id="@+id/have_pic"
         android:visibility="gone"
-        android:clickable="true" />
+        android:clickable="true"/>
 
     <TextView
 
@@ -34,6 +43,6 @@
         android:textSize="21sp"
         android:layout_marginRight="8dp"
         android:id="@+id/content_number"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
 
 </LinearLayout>

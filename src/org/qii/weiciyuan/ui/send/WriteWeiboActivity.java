@@ -441,7 +441,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         content = ((KeyboardControlEditText) findViewById(R.id.status_new_content));
         content.addTextChangedListener(new TextNumLimitWatcher((TextView) findViewById(R.id.menu_send), content, this));
         content.setDrawingCacheEnabled(true);
-        AutoCompleteAdapter adapter = new AutoCompleteAdapter(this, content);
+        AutoCompleteAdapter adapter = new AutoCompleteAdapter(this, content, (ProgressBar) title.findViewById(R.id.have_suggest_progressbar));
         content.setAdapter(adapter);
 
         View.OnClickListener onClickListener = new BottomButtonClickListener();

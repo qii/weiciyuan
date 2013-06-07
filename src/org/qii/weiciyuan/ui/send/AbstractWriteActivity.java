@@ -6,11 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
@@ -100,10 +98,12 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
 
         token = getIntent().getStringExtra("token");
 
+        View title = getLayoutInflater().inflate(R.layout.writeweiboactivity_title_layout, null);
+        actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
 
         et = ((AutoCompleteTextView) findViewById(R.id.status_new_content));
         et.addTextChangedListener(new TextNumLimitWatcher((TextView) findViewById(R.id.menu_send), et, this));
-        AutoCompleteAdapter adapter = new AutoCompleteAdapter(this, et);
+        AutoCompleteAdapter adapter = new AutoCompleteAdapter(this, et, (ProgressBar) title.findViewById(R.id.have_suggest_progressbar));
         et.setAdapter(adapter);
 
         findViewById(R.id.menu_topic).setOnClickListener(this);
