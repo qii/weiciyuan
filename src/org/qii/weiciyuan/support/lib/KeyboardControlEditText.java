@@ -2,13 +2,13 @@ package org.qii.weiciyuan.support.lib;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.EditText;
+import android.widget.AutoCompleteTextView;
 
 /**
  * User: qii
  * Date: 13-1-31
  */
-public class KeyboardControlEditText extends EditText {
+public class KeyboardControlEditText extends AutoCompleteTextView {
     private boolean mShowKeyboard = true;
 
     public void setShowKeyboard(boolean value) {
