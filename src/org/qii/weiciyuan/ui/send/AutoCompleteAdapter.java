@@ -6,8 +6,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.dao.search.SearchDao;
+import org.qii.weiciyuan.bean.AtUserBean;
+import org.qii.weiciyuan.dao.search.AtUserDao;
 import org.qii.weiciyuan.support.lib.WeiboPatterns;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -20,12 +20,12 @@ import java.util.regex.Matcher;
  * User: qii
  * Date: 13-6-7
  */
-public class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filterable {
+public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Filterable {
 
     private Activity activity;
     private AutoCompleteTextView content;
     private ProgressBar pb;
-    private List<UserBean> data;
+    private List<AtUserBean> data;
     private int res;
 
     private int selectPosition = -1;
@@ -33,7 +33,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filte
 
     public AutoCompleteAdapter(Activity context, AutoCompleteTextView content, ProgressBar pb) {
         super(context, android.R.layout.simple_dropdown_item_1line);
-        data = new ArrayList<UserBean>();
+        data = new ArrayList<AtUserBean>();
         this.activity = context;
         this.res = android.R.layout.simple_dropdown_item_1line;
         this.pb = pb;
@@ -41,7 +41,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filte
         this.content.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String searchFetchedWord = getItem(position).getScreen_name();
+                String searchFetchedWord = getItem(position).getNickname();
                 int searchFetchedWordLength = searchFetchedWord.length();
                 int calcResultSelectionPosition = atSignPosition + searchFetchedWordLength;
                 AutoCompleteAdapter.this.content.setSelection(calcResultSelectionPosition + 2);
@@ -55,7 +55,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filte
     }
 
     @Override
-    public UserBean getItem(int index) {
+    public AtUserBean getItem(int index) {
         return data.get(index);
     }
 
@@ -77,7 +77,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filte
         }
 
         text = (TextView) view;
-        text.setText(getItem(position).getScreen_name());
+        text.setText(getItem(position).getNickname());
         return view;
     }
 
@@ -131,11 +131,12 @@ public class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filte
                 }
             }
 
-
-            SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), q);
+            AtUserDao dao = new AtUserDao(GlobalContext.getInstance().getSpecialToken(), q);
+//            SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), q);
 
             try {
-                data = dao.getUserList().getUsers();
+//                data = dao.getUserList().getUsers();
+                data = dao.getUserInfo();
             } catch (Exception e) {
             }
             // Now assign the values and count to the FilterResults object
@@ -169,7 +170,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filte
         @Override
         public CharSequence convertResultToString(Object resultValue) {
             String ori = content.getText().toString();
-            String result = ((UserBean) resultValue).getScreen_name();
+            String result = ((AtUserBean) resultValue).getNickname();
             String left = ori.substring(0, atSignPosition + 1);
             String right = ori.substring(selectPosition);
             ori = left + result + " " + right;
