@@ -75,7 +75,7 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
             case ACTIVITY_DESTROY_AND_CREATE:
                 currentUser = savedInstanceState.getParcelable("currentUser");
                 uid = savedInstanceState.getString("uid");
-                clearAndReplaceValue((UserListBean) savedInstanceState.getSerializable("bean"));
+                clearAndReplaceValue((UserListBean) savedInstanceState.getParcelable("bean"));
                 getAdapter().notifyDataSetChanged();
                 break;
         }

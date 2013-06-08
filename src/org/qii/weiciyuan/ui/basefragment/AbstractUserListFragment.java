@@ -96,7 +96,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("bean", bean);
+        outState.putParcelable("bean", bean);
 
     }
 
