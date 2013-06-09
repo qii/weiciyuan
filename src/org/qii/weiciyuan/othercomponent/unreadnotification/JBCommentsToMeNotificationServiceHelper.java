@@ -41,7 +41,7 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
 
         this.accountBean = (AccountBean) intent.getParcelableExtra(NotificationServiceHelper.ACCOUNT_ARG);
         this.data = (CommentListBean) intent.getParcelableExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG);
-        this.unreadBean = (UnreadBean) intent.getSerializableExtra(NotificationServiceHelper.UNREAD_ARG);
+        this.unreadBean = (UnreadBean) intent.getParcelableExtra(NotificationServiceHelper.UNREAD_ARG);
         this.currentIndex = intent.getIntExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
 
         buildNotification();

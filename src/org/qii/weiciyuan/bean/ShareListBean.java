@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +11,52 @@ import java.util.List;
  * User: qii
  * Date: 13-2-27
  */
-public class ShareListBean extends ListBean<MessageBean, ShareListBean> implements Serializable {
+public class ShareListBean extends ListBean<MessageBean, ShareListBean> implements Parcelable {
     private String url_long;
     private String url_short;
     private List<MessageBean> share_statuses = new ArrayList<MessageBean>();
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(total_number);
+        dest.writeString(previous_cursor);
+        dest.writeString(next_cursor);
+
+        dest.writeString(url_long);
+        dest.writeString(url_short);
+
+        dest.writeTypedList(share_statuses);
+    }
+
+    public static final Parcelable.Creator<ShareListBean> CREATOR =
+            new Parcelable.Creator<ShareListBean>() {
+                public ShareListBean createFromParcel(Parcel in) {
+                    ShareListBean shareListBean = new ShareListBean();
+
+                    shareListBean.total_number = in.readInt();
+                    shareListBean.previous_cursor = in.readString();
+                    shareListBean.next_cursor = in.readString();
+
+                    shareListBean.url_long = in.readString();
+                    shareListBean.url_short = in.readString();
+
+                    shareListBean.share_statuses = new ArrayList<MessageBean>();
+                    in.readTypedList(shareListBean.share_statuses, MessageBean.CREATOR);
+
+                    return shareListBean;
+                }
+
+                public ShareListBean[] newArray(int size) {
+                    return new ShareListBean[size];
+                }
+            };
+
 
     public String getUrl_long() {
         return url_long;

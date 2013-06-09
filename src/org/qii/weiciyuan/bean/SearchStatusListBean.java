@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +11,43 @@ import java.util.List;
  * User: qii
  * Date: 12-11-23
  */
-public class SearchStatusListBean extends ListBean<MessageBean, SearchStatusListBean> implements Serializable {
+public class SearchStatusListBean extends ListBean<MessageBean, SearchStatusListBean> implements Parcelable {
     private List<MessageBean> statuses = new ArrayList<MessageBean>();
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(total_number);
+        dest.writeString(previous_cursor);
+        dest.writeString(next_cursor);
+
+        dest.writeTypedList(statuses);
+    }
+
+    public static final Parcelable.Creator<SearchStatusListBean> CREATOR =
+            new Parcelable.Creator<SearchStatusListBean>() {
+                public SearchStatusListBean createFromParcel(Parcel in) {
+                    SearchStatusListBean searchStatusListBean = new SearchStatusListBean();
+
+                    searchStatusListBean.total_number = in.readInt();
+                    searchStatusListBean.previous_cursor = in.readString();
+                    searchStatusListBean.next_cursor = in.readString();
+
+                    searchStatusListBean.statuses = new ArrayList<MessageBean>();
+                    in.readTypedList(searchStatusListBean.statuses, MessageBean.CREATOR);
+
+                    return searchStatusListBean;
+                }
+
+                public SearchStatusListBean[] newArray(int size) {
+                    return new SearchStatusListBean[size];
+                }
+            };
 
 
     @Override

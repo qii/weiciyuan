@@ -243,7 +243,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
         if (getActivity().isChangingConfigurations()) {
             outState.putParcelable("bean", bean);
-            outState.putSerializable("unreadBean", unreadBean);
+            outState.putParcelable("unreadBean", unreadBean);
             outState.putSerializable("timeLinePosition", timeLinePosition);
         }
     }
@@ -260,7 +260,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
                 userBean = (UserBean) savedInstanceState.getParcelable("userBean");
                 accountBean = (AccountBean) savedInstanceState.getParcelable("account");
                 token = savedInstanceState.getString("token");
-                unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
+                unreadBean = (UnreadBean) savedInstanceState.getParcelable("unreadBean");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
 
                 Loader<MentionTimeLineData> loader = getLoaderManager().getLoader(DB_CACHE_LOADER_ID);

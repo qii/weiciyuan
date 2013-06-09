@@ -62,7 +62,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
         super.onSaveInstanceState(outState);
         outState.putString("q", q);
         outState.putInt("page", page);
-        outState.putSerializable("bean", bean);
+        outState.putParcelable("bean", bean);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
             case ACTIVITY_DESTROY_AND_CREATE:
                 q = savedInstanceState.getString("q");
                 page = savedInstanceState.getInt("page");
-                getList().addNewData((TopicResultListBean) savedInstanceState.getSerializable("bean"));
+                getList().addNewData((TopicResultListBean) savedInstanceState.getParcelable("bean"));
                 getAdapter().notifyDataSetChanged();
                 refreshLayout(getList());
                 break;

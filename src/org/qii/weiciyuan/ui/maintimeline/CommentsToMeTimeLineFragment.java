@@ -93,7 +93,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
         if (getActivity().isChangingConfigurations()) {
             outState.putParcelable("bean", bean);
-            outState.putSerializable("unreadBean", unreadBean);
+            outState.putParcelable("unreadBean", unreadBean);
             outState.putSerializable("timeLinePosition", timeLinePosition);
         }
     }
@@ -187,7 +187,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
                 accountBean = (AccountBean) savedInstanceState.getParcelable("account");
                 token = savedInstanceState.getString("token");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
-                unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
+                unreadBean = (UnreadBean) savedInstanceState.getParcelable("unreadBean");
 
                 Loader<CommentTimeLineData> loader = getLoaderManager().getLoader(DB_CACHE_LOADER_ID);
                 if (loader != null) {

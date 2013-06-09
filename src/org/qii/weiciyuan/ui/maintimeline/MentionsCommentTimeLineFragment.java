@@ -89,7 +89,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
         if (getActivity().isChangingConfigurations()) {
             outState.putParcelable("bean", bean);
-            outState.putSerializable("unreadBean", unreadBean);
+            outState.putParcelable("unreadBean", unreadBean);
             outState.putSerializable("timeLinePosition", timeLinePosition);
         }
     }
@@ -181,7 +181,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                 userBean = (UserBean) savedInstanceState.getParcelable("userBean");
                 accountBean = (AccountBean) savedInstanceState.getParcelable("account");
                 token = savedInstanceState.getString("token");
-                unreadBean = (UnreadBean) savedInstanceState.getSerializable("unreadBean");
+                unreadBean = (UnreadBean) savedInstanceState.getParcelable("unreadBean");
                 timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
                 CommentListBean savedBean = (CommentListBean) savedInstanceState.getParcelable("bean");
 

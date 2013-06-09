@@ -38,7 +38,7 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
 
         this.accountBean = (AccountBean) intent.getParcelableExtra(NotificationServiceHelper.ACCOUNT_ARG);
         this.data = (MessageListBean) intent.getParcelableExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG);
-        this.unreadBean = (UnreadBean) intent.getSerializableExtra(NotificationServiceHelper.UNREAD_ARG);
+        this.unreadBean = (UnreadBean) intent.getParcelableExtra(NotificationServiceHelper.UNREAD_ARG);
         this.currentIndex = intent.getIntExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
 
         buildNotification();

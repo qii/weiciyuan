@@ -44,7 +44,7 @@ public class ManageGroupDialog extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("group", group);
+        outState.putParcelable("group", group);
         outState.putString("uid", uid);
         outState.putStringArray("valueArray", valueArray);
         outState.putBooleanArray("selectedArray", selectedArray);
@@ -88,7 +88,7 @@ public class ManageGroupDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
-            group = (GroupListBean) savedInstanceState.getSerializable("group");
+            group = (GroupListBean) savedInstanceState.getParcelable("group");
             uid = savedInstanceState.getString("uid");
             valueArray = savedInstanceState.getStringArray("valueArray");
             selectedArray = savedInstanceState.getBooleanArray("selectedArray");

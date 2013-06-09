@@ -78,7 +78,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("bean", bean);
+        outState.putParcelable("bean", bean);
         outState.putString("id", id);
         outState.putString("token", token);
         outState.putParcelable("msg", msg);
@@ -121,7 +121,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
                 refreshLayout(bean);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                clearAndReplaceValue((RepostListBean) savedInstanceState.getSerializable("bean"));
+                clearAndReplaceValue((RepostListBean) savedInstanceState.getParcelable("bean"));
                 token = savedInstanceState.getString("token");
                 id = savedInstanceState.getString("id");
                 msg = (MessageBean) savedInstanceState.getParcelable("msg");

@@ -75,7 +75,7 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
         @Override
         public void onSaveInstanceState(Bundle outState) {
             super.onSaveInstanceState(outState);
-            outState.putSerializable("bean", bean);
+            outState.putParcelable("bean", bean);
             outState.putString("url", url);
         }
 
@@ -91,7 +91,7 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
                     refreshLayout(bean);
                     break;
                 case ACTIVITY_DESTROY_AND_CREATE:
-                    getList().addNewData((ShareListBean) savedInstanceState.getSerializable("bean"));
+                    getList().addNewData((ShareListBean) savedInstanceState.getParcelable("bean"));
                     url = savedInstanceState.getString("url");
                     timeLineAdapter.notifyDataSetChanged();
                     refreshLayout(bean);

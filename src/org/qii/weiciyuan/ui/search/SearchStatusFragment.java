@@ -45,7 +45,7 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("bean", bean);
+        outState.putParcelable("bean", bean);
     }
 
 
@@ -54,7 +54,7 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
         super.onActivityCreated(savedInstanceState);
         commander = ((ICommander) getActivity()).getBitmapDownloader();
         if (savedInstanceState != null && bean.getItemList().size() == 0) {
-            clearAndReplaceValue((SearchStatusListBean) savedInstanceState.getSerializable("bean"));
+            clearAndReplaceValue((SearchStatusListBean) savedInstanceState.getParcelable("bean"));
             timeLineAdapter.notifyDataSetChanged();
 
         }
