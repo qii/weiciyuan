@@ -34,7 +34,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
 
     private AutoCompleteTextView et;
     private SmileyPicker smiley = null;
-    private LinearLayout mContainer = null;
+    private RelativeLayout container = null;
 
     public static final int AT_USER = 3;
 
@@ -118,7 +118,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
 
         smiley = (SmileyPicker) findViewById(R.id.smiley_picker);
         smiley.setEditText(AbstractWriteActivity.this, ((LinearLayout) findViewById(R.id.root_layout)), et);
-        mContainer = (LinearLayout) findViewById(R.id.container);
+        container = (RelativeLayout) findViewById(R.id.container);
         et.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,7 +137,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         if (this.smiley.isShown()) {
             if (showKeyBoard) {
                 //this time softkeyboard is hidden
-                LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
+                LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.container.getLayoutParams();
                 localLayoutParams.height = smiley.getTop();
                 localLayoutParams.weight = 0.0F;
                 this.smiley.hide(AbstractWriteActivity.this);
@@ -158,14 +158,14 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
     }
 
     private void lockContainerHeight(int paramInt) {
-        LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
+        LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.container.getLayoutParams();
         localLayoutParams.height = paramInt;
         localLayoutParams.weight = 0.0F;
     }
 
     public void unlockContainerHeightDelayed() {
 
-        ((LinearLayout.LayoutParams) AbstractWriteActivity.this.mContainer.getLayoutParams()).weight = 1.0F;
+        ((LinearLayout.LayoutParams) AbstractWriteActivity.this.container.getLayoutParams()).weight = 1.0F;
 
     }
 

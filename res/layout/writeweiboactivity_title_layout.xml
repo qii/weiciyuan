@@ -43,6 +43,7 @@
         android:textSize="21sp"
         android:layout_marginRight="8dp"
         android:id="@+id/content_number"
+        android:visibility="gone"
         android:layout_weight="1"/>
 
 </LinearLayout>

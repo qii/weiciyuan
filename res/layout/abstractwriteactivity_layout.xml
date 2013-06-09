@@ -5,36 +5,32 @@
               android:id="@+id/root_layout"
               android:orientation="vertical">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
         android:id="@+id/container"
         android:layout_width="fill_parent"
         android:layout_height="0.0dip"
         android:layout_weight="1.0">
 
-        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:fillViewport="true"
-                    android:id="@+id/scrollview">
+        <org.qii.weiciyuan.support.lib.KeyboardControlEditText
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/ll_bottom_menu"
+            android:hint="@string/say_something"
+            android:id="@+id/status_new_content"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="true"
+            android:scrollbarStyle="outsideOverlay"
+            android:gravity="left|top"/>
 
-
-            <AutoCompleteTextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/say_something"
-                android:id="@+id/status_new_content"
-                android:gravity="left|top"/>
-
-
-        </ScrollView>
 
         <LinearLayout
+            android:id="@+id/ll_bottom_menu"
+            android:layout_alignParentBottom="true"
             android:background="?backgroundSplit"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="?android:actionBarSize">
+
 
             <ImageButton
                 style="?android:actionButtonStyle"
@@ -73,7 +69,7 @@
                 android:layout_height="match_parent"/>
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <org.qii.weiciyuan.support.lib.SmileyPicker
         android:id="@+id/smiley_picker"
