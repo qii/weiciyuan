@@ -76,7 +76,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private ImageView haveGPS = null;
     private KeyboardControlEditText content = null;
     private SmileyPicker smiley = null;
-    private LinearLayout mContainer = null;
+    private RelativeLayout container = null;
 
     private String2PicTask string2PicTask;
     private GetGoogleLocationInfo locationTask;
@@ -457,7 +457,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
         smiley = (SmileyPicker) findViewById(R.id.smiley_picker);
         smiley.setEditText(WriteWeiboActivity.this, ((LinearLayout) findViewById(R.id.root_layout)), content);
-        mContainer = (LinearLayout) findViewById(R.id.container);
+        container = (RelativeLayout) findViewById(R.id.container);
         content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -744,7 +744,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         if (this.smiley.isShown()) {
             if (showKeyBoard) {
                 //this time softkeyboard is hidden
-                LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
+                LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.container.getLayoutParams();
                 localLayoutParams.height = smiley.getTop();
                 localLayoutParams.weight = 0.0F;
                 this.smiley.hide(WriteWeiboActivity.this);
@@ -765,14 +765,14 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     private void lockContainerHeight(int paramInt) {
-        LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
+        LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.container.getLayoutParams();
         localLayoutParams.height = paramInt;
         localLayoutParams.weight = 0.0F;
     }
 
     public void unlockContainerHeightDelayed() {
 
-        ((LinearLayout.LayoutParams) WriteWeiboActivity.this.mContainer.getLayoutParams()).weight = 1.0F;
+        ((LinearLayout.LayoutParams) WriteWeiboActivity.this.container.getLayoutParams()).weight = 1.0F;
 
     }
 
