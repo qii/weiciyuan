@@ -12,22 +12,18 @@
         android:layout_height="0.0dip"
         android:layout_weight="1.0">
 
-        <ScrollView
+
+        <org.qii.weiciyuan.support.lib.KeyboardControlEditText
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:fillViewport="true"
-            android:id="@+id/scrollview">
+            android:hint="@string/say_something"
+            android:id="@+id/status_new_content"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="true"
+            android:scrollbarStyle="outsideOverlay"
+            android:gravity="left|top"/>
 
-            <org.qii.weiciyuan.support.lib.KeyboardControlEditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/say_something"
-                android:id="@+id/status_new_content"
-                android:gravity="left|top"/>
-
-
-        </ScrollView>
 
         <LinearLayout
             android:background="?backgroundSplit"

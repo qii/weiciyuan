@@ -88,6 +88,8 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
     private Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+            pb.setVisibility(View.GONE);
+
             FilterResults filterResults = new FilterResults();
             //AutoCompleteTextView is empty, return empty;
             if (TextUtils.isEmpty(constraint)) {
@@ -111,16 +113,11 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
             if (start == search.length() - 1) {
                 return filterResults;
             }
-            activity.runOnUiThread(new Runnable() {
 
-                @Override
-                public void run() {
-                    pb.setVisibility(View.VISIBLE);
-                }
-            });
             String q = "";
             Matcher localMatcher = WeiboPatterns.MENTION_URL.matcher(search);
 
+            boolean canDoSearch = false;
             while (localMatcher.find()) {
                 String str2 = localMatcher.group(0);
                 int k = localMatcher.start();
@@ -128,11 +125,23 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
                 if (m == selectPosition) {
                     q = str2.substring(1);
                     atSignPosition = k;
+                    canDoSearch = true;
                 }
+            }
+
+            if (!canDoSearch) {
+                return filterResults;
             }
 
             AtUserDao dao = new AtUserDao(GlobalContext.getInstance().getSpecialToken(), q);
 //            SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), q);
+            activity.runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    pb.setVisibility(View.VISIBLE);
+                }
+            });
 
             try {
 //                data = dao.getUserList().getUsers();

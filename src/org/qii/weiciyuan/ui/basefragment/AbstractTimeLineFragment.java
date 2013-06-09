@@ -160,6 +160,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         newMsgTipBar = (TopTipBar) view.findViewById(R.id.tv_unread_new_message_count_tip_bar);
 
         getListView().setHeaderDividersEnabled(false);
+        getListView().setScrollingCacheEnabled(false);
+
         footerView = inflater.inflate(R.layout.listview_footer_layout, null);
         getListView().addFooterView(footerView);
         dismissFooterView();
