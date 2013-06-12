@@ -5,6 +5,7 @@ import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import java.io.File;
 import java.util.concurrent.*;
@@ -59,14 +60,14 @@ public class TaskCache {
             try {
                 return downloadWorker.get(30, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Utility.printStackTrace(e);
                 Thread.currentThread().interrupt();
                 return false;
             } catch (ExecutionException e) {
-                e.printStackTrace();
+                Utility.printStackTrace(e);
                 return false;
             } catch (TimeoutException e) {
-                e.printStackTrace();
+                Utility.printStackTrace(e);
                 return false;
             } catch (CancellationException e) {
                 removeDownloadTask(url, downloadWorker);
@@ -129,13 +130,13 @@ public class TaskCache {
                 return;
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                e.printStackTrace();
+                Utility.printStackTrace(e);
                 return;
             } catch (ExecutionException e) {
-                e.printStackTrace();
+                Utility.printStackTrace(e);
                 return;
             } catch (TimeoutException e) {
-                e.printStackTrace();
+                Utility.printStackTrace(e);
                 return;
             } catch (CancellationException e) {
                 removeDownloadTask(middleUrl, downloadWorker);

@@ -24,6 +24,7 @@ import android.util.TypedValue;
 import android.view.*;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
+import org.qii.weiciyuan.BuildConfig;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
@@ -502,6 +503,11 @@ public class Utility {
 
     public static boolean isDevicePort() {
         return GlobalContext.getInstance().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+
+    public static void printStackTrace(Exception e) {
+        if (BuildConfig.DEBUG)
+            e.printStackTrace();
     }
 }
 
