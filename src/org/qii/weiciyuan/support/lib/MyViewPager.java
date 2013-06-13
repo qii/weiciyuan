@@ -26,6 +26,9 @@ public class MyViewPager extends ViewPager {
     private float[] firstPosition = new float[2];
     private View topView;
 
+    private int operationItemPosition = -1;
+    private static final int OFFSET = 5;
+
 
     public MyViewPager(Context context) {
         super(context);
@@ -44,10 +47,16 @@ public class MyViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+
+        if (operationItemPosition != 0) {
+            return super.onTouchEvent(ev);
+        }
+
         if (this.gestureDetector != null)
             this.gestureDetector.onTouchEvent(ev);
 
-        if ((ev.getActionMasked() == MotionEvent.ACTION_UP || ev.getActionMasked() == MotionEvent.ACTION_CANCEL) && (getCurrentItem() == 0)) {
+
+        if (ev.getActionMasked() == MotionEvent.ACTION_UP || ev.getActionMasked() == MotionEvent.ACTION_CANCEL) {
             int x = (int) (ev.getRawX() - firstPosition[0]);
             firstPosition[0] = 0f;
             firstPosition[1] = 0f;
@@ -71,16 +80,12 @@ public class MyViewPager extends ViewPager {
         if (isDragging) {
             return true;
         }
-        if (getCurrentItem() == 0) {
-            switch (ev.getActionMasked()) {
-                case MotionEvent.ACTION_MOVE:
-                    float x = ev.getRawX();
-                    if (x > firstPosition[0] + 10) {
-                        AppLogger.e("onTouchEvent 2");
-                        isDragging = true;
-                        return true;
-                    }
-                    break;
+        if (ev.getActionMasked() == MotionEvent.ACTION_MOVE) {
+            float x = ev.getRawX();
+            if (x > firstPosition[0] + Utility.dip2px(OFFSET)) {
+                AppLogger.e("onTouchEvent 2");
+                isDragging = true;
+                return true;
             }
         }
 
@@ -94,6 +99,7 @@ public class MyViewPager extends ViewPager {
             case MotionEvent.ACTION_DOWN:
                 firstPosition[0] = ev.getRawX();
                 firstPosition[1] = ev.getRawY();
+                operationItemPosition = getCurrentItem();
                 break;
         }
         if (this.gestureDetector != null && ev.getActionMasked() == MotionEvent.ACTION_DOWN)
@@ -109,7 +115,7 @@ public class MyViewPager extends ViewPager {
             return true;
         }
 
-        if (getCurrentItem() == 0) {
+        if (operationItemPosition == 0) {
             switch (ev.getActionMasked()) {
                 case MotionEvent.ACTION_MOVE:
                     float x = ev.getRawX();
