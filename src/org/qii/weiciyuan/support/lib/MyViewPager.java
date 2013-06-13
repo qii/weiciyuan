@@ -1,10 +1,17 @@
 package org.qii.weiciyuan.support.lib;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
@@ -12,7 +19,13 @@ import android.view.MotionEvent;
  */
 public class MyViewPager extends ViewPager {
 
+    private Activity activity;
+
     private GestureDetector gestureDetector;
+    private boolean isDragging = false;
+    private float[] firstPosition = new float[2];
+    private View topView;
+
 
     public MyViewPager(Context context) {
         super(context);
@@ -22,22 +35,90 @@ public class MyViewPager extends ViewPager {
         super(context, attrs);
     }
 
-    public void setGestureDetector(GestureDetector gestureDetector) {
+    public void setGestureDetector(Activity activity, GestureDetector gestureDetector) {
+        this.activity = activity;
         this.gestureDetector = gestureDetector;
+        this.topView = ((View) (activity.findViewById(android.R.id.content).getParent()));
+
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (this.gestureDetector != null)
             this.gestureDetector.onTouchEvent(ev);
+
+        if ((ev.getActionMasked() == MotionEvent.ACTION_UP || ev.getActionMasked() == MotionEvent.ACTION_CANCEL) && (getCurrentItem() == 0)) {
+            int x = (int) (ev.getRawX() - firstPosition[0]);
+            firstPosition[0] = 0f;
+            firstPosition[1] = 0f;
+            isDragging = false;
+
+            if (x > (Utility.getScreenWidth() / 2)) {
+                activity.finish();
+                activity.overridePendingTransition(R.anim.stay, R.anim.swipe_right_to_close);
+                return true;
+            } else if (getCurrentItem() == 0) {
+                this.topView.animate().translationX(0)
+                        .setDuration(300L).withLayer().setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        topView.animate().setListener(null);
+                    }
+                });
+            }
+        }
+        if (isDragging) {
+            return true;
+        }
+        if (getCurrentItem() == 0) {
+            switch (ev.getActionMasked()) {
+                case MotionEvent.ACTION_MOVE:
+                    float x = ev.getRawX();
+                    if (x > firstPosition[0] + 10) {
+                        AppLogger.e("onTouchEvent 2");
+                        isDragging = true;
+                        return true;
+                    }
+                    break;
+            }
+        }
+
         return super.onTouchEvent(ev);
     }
 
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                firstPosition[0] = ev.getRawX();
+                firstPosition[1] = ev.getRawY();
+                break;
+        }
         if (this.gestureDetector != null && ev.getActionMasked() == MotionEvent.ACTION_DOWN)
             this.gestureDetector.onTouchEvent(ev);
+
         return super.dispatchTouchEvent(ev);
 
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (isDragging) {
+            return true;
+        }
+
+        if (getCurrentItem() == 0) {
+            switch (ev.getActionMasked()) {
+                case MotionEvent.ACTION_MOVE:
+                    float x = ev.getRawX();
+                    if (x > firstPosition[0]) {
+                        return true;
+                    }
+                    break;
+            }
+        }
+        return super.onInterceptTouchEvent(ev);
     }
 }

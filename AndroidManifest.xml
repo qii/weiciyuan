@@ -90,6 +90,7 @@
         <!--browser activity-->
         <activity
             android:name=".ui.browser.BrowserWeiboMsgActivity"
+            android:theme="@style/AppTheme_Dummy"
             android:label="@string/detail"/>
         <activity
             android:name=".ui.browser.BrowserCommentActivity"
@@ -127,7 +128,9 @@
         <activity android:name=".ui.topic.UserTopicListActivity"/>
 
         <!--user activity -->
-        <activity android:name=".ui.userinfo.UserInfoActivity">
+        <activity
+            android:name=".ui.userinfo.UserInfoActivity"
+            android:theme="@style/AppTheme_Dummy">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <action android:name="android.intent.action.VIEW"/>
@@ -141,6 +144,7 @@
         </activity>
         <activity
             android:name=".ui.userinfo.MyInfoActivity"
+            android:theme="@style/AppTheme_Dummy"
             android:launchMode="singleTop"/>
         <activity
             android:name=".ui.userinfo.EditMyProfileActivity"

@@ -4,44 +4,49 @@ import android.app.Activity;
 import android.support.v4.view.ViewPager;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.ViewConfiguration;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.utils.AppConfig;
+import android.view.View;
 
 /**
  * User: qii
  * Date: 13-2-26
  */
 public class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOnGestureListener {
-    private Activity activity;
     private ViewPager viewPager;
     protected MotionEvent mLastOnDownEvent = null;
-    private int scaledMinimumFlingVelocity;
+    private float[] firstPosition = new float[2];
+    private View topView;
 
     public SwipeRightToCloseOnGestureListener(Activity activity, ViewPager viewPager) {
-        this.activity = activity;
         this.viewPager = viewPager;
-        this.scaledMinimumFlingVelocity = ViewConfiguration.get(activity).getScaledMinimumFlingVelocity();
+        this.topView = ((View) (activity.findViewById(android.R.id.content).getParent()));
     }
 
     @Override
     public boolean onDown(MotionEvent e) {
         mLastOnDownEvent = e;
+        firstPosition[0] = e.getRawX();
+        firstPosition[1] = e.getRawY();
         return true;
     }
 
     @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        if (e1 == null)
-            e1 = mLastOnDownEvent;
-        if (e1 == null || e2 == null)
-            return false;
-        if (e2.getRawX() - e1.getRawX() > AppConfig.SWIPE_MIN_DISTANCE
-                && this.viewPager.getCurrentItem() == 0 && Math.abs(velocityX) > scaledMinimumFlingVelocity) {
-            this.activity.finish();
-            this.activity.overridePendingTransition(R.anim.activity_swipe_right_close_enter, R.anim.activity_swipe_right_close_exit);
-            return true;
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        if (e2.getRawX() < firstPosition[0]) {
+            float y = this.topView.getTranslationX();
+            if (y != 0f) {
+                this.topView.setTranslationX(0);
+                return super.onScroll(e1, e2, distanceX, distanceY);
+            } else {
+                return false;
+            }
         }
-        return false;
+        float s = e2.getRawX() - firstPosition[0];
+        if ((this.viewPager == null || this.viewPager.getCurrentItem() == 0)) {
+            this.topView.setTranslationX(s);
+            return super.onScroll(e1, e2, distanceX, distanceY);
+        } else {
+            return false;
+        }
     }
+
 }

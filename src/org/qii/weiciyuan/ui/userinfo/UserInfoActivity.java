@@ -146,7 +146,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     private void initLayout() {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.personal_info));
-        setContentView(R.layout.viewpager_layout);
+        setContentView(R.layout.viewpager_with_bg_layout);
 
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -166,7 +166,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         mViewPager.setOnPageChangeListener(onPageChangeListener);
         gestureDetector = new GestureDetector(UserInfoActivity.this
                 , new SwipeRightToCloseOnGestureListener(UserInfoActivity.this, mViewPager));
-        mViewPager.setGestureDetector(gestureDetector);
+        mViewPager.setGestureDetector(this, gestureDetector);
+        getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
 
 
     }

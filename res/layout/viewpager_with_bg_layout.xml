@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<view
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    class="org.qii.weiciyuan.support.lib.MyViewPager"
+    android:id="@+id/viewpager"
+    android:layout_width="match_parent"
+    android:background="?android:windowBackground"
+    android:layout_height="match_parent"/>
+

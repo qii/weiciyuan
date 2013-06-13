@@ -55,7 +55,7 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo, IA
         bean = (UserBean) getIntent().getParcelableExtra("user");
         account = (AccountBean) getIntent().getParcelableExtra("account");
 
-        setContentView(R.layout.viewpager_layout);
+        setContentView(R.layout.viewpager_with_bg_layout);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.my_info));
         mViewPager = (MyViewPager) findViewById(R.id.viewpager);
@@ -66,8 +66,9 @@ public class MyInfoActivity extends AbstractAppActivity implements IUserInfo, IA
         mViewPager.setOnPageChangeListener(onPageChangeListener);
         GestureDetector gestureDetector = new GestureDetector(MyInfoActivity.this
                 , new SwipeRightToCloseOnGestureListener(MyInfoActivity.this, mViewPager));
-        mViewPager.setGestureDetector(gestureDetector);
+        mViewPager.setGestureDetector(this, gestureDetector);
 
+        getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
 
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

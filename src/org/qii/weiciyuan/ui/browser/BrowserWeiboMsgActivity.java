@@ -77,7 +77,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
             token = intent.getStringExtra("token");
             msg = (MessageBean) intent.getParcelableExtra("msg");
         }
-        setContentView(R.layout.viewpager_layout);
+        setContentView(R.layout.viewpager_with_bg_layout);
 
         buildViewPager();
         buildActionBarAndViewPagerTitles();
@@ -98,7 +98,9 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
         mViewPager.setOnPageChangeListener(onPageChangeListener);
         gestureDetector = new GestureDetector(BrowserWeiboMsgActivity.this
                 , new SwipeRightToCloseOnGestureListener(BrowserWeiboMsgActivity.this, mViewPager));
-        mViewPager.setGestureDetector(gestureDetector);
+        mViewPager.setGestureDetector(this, gestureDetector);
+        getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
+
     }
 
 
