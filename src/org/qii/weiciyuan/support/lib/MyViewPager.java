@@ -83,7 +83,7 @@ public class MyViewPager extends ViewPager {
         if (ev.getActionMasked() == MotionEvent.ACTION_MOVE) {
             float x = ev.getRawX();
             if (x > firstPosition[0] + Utility.dip2px(OFFSET)) {
-                AppLogger.e("onTouchEvent 2");
+                AppLogger.e("begin swipe to right");
                 isDragging = true;
                 return true;
             }
