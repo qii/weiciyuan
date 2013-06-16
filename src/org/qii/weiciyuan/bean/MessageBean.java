@@ -289,7 +289,7 @@ public class MessageBean extends ItemBean implements Parcelable {
             return sourceString;
         } else {
             if (!TextUtils.isEmpty(source))
-                source = Html.fromHtml(this.source).toString();
+                sourceString = Html.fromHtml(this.source).toString();
             return sourceString;
         }
     }
