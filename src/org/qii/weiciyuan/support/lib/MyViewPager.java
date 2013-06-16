@@ -52,6 +52,10 @@ public class MyViewPager extends ViewPager {
             return super.onTouchEvent(ev);
         }
 
+        if (this.gestureDetector == null) {
+            return super.onTouchEvent(ev);
+        }
+
         if (this.gestureDetector != null)
             this.gestureDetector.onTouchEvent(ev);
 
