@@ -16,6 +16,11 @@ import java.util.Set;
  */
 public class FilterDBTask {
 
+    public static int TYPE_KEYWORD = 0;
+    public static int TYPE_USER = 1;
+    public static int TYPE_TOPIC = 2;
+    public static int TYPE_SOURCE = 3;
+
     private FilterDBTask() {
 
     }
@@ -31,11 +36,12 @@ public class FilterDBTask {
         return databaseHelper.getReadableDatabase();
     }
 
-    public static OAuthActivity.DBResult addFilterKeyword(String word) {
+    public static OAuthActivity.DBResult addFilterKeyword(int type, String word) {
 
         ContentValues cv = new ContentValues();
         cv.put(FilterTable.NAME, word);
         cv.put(FilterTable.ACTIVE, "true");
+        cv.put(FilterTable.TYPE, type);
 
         Cursor c = getRsd().query(FilterTable.TABLE_NAME, null, FilterTable.NAME + "=?",
                 new String[]{word}, null, null, null);
@@ -53,10 +59,11 @@ public class FilterDBTask {
     }
 
 
-    public static List<String> getFilterList() {
+    public static List<String> getFilterKeywordList(int type) {
 
         List<String> keywordList = new ArrayList<String>();
-        String sql = "select * from " + FilterTable.TABLE_NAME + " order by " + FilterTable.ID + " desc ";
+        String sql = "select * from " + FilterTable.TABLE_NAME + " where " + FilterTable.TYPE
+                + "= " + type + " order by " + FilterTable.ID + " desc ";
         Cursor c = getRsd().rawQuery(sql, null);
         while (c.moveToNext()) {
             String word = c.getString(c.getColumnIndex(FilterTable.NAME));
@@ -68,18 +75,21 @@ public class FilterDBTask {
 
     }
 
-    public static void removeAndGetNewFilterList(String word) {
+    private static void removeAndGetFilterKeywordList(int type, String word) {
 
-        String sql = "delete from " + FilterTable.TABLE_NAME + " where " + FilterTable.NAME + " = " + "\"" + word + "\"";
+        String sql = "delete from " + FilterTable.TABLE_NAME + " where " + FilterTable.TYPE + " = " + type + " and " +
+                FilterTable.NAME + " = " + "\"" + word + "\"";
 
         getWsd().execSQL(sql);
 
     }
 
-    public static List<String> removeAndGetNewFilterList(Set<String> words) {
+    public static List<String> removeAndGetNewFilterKeywordList(int type, Set<String> words) {
         for (String word : words)
-            removeAndGetNewFilterList(word);
+            removeAndGetFilterKeywordList(type, word);
 
-        return getFilterList();
+        return getFilterKeywordList(type);
     }
+
+
 }

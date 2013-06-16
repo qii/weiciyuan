@@ -83,7 +83,7 @@ public class UserDialog extends DialogFragment {
                     new FollowTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     break;
                 case 2:
-                    FilterDBTask.addFilterKeyword(user.getScreen_name());
+                    FilterDBTask.addFilterKeyword(FilterDBTask.TYPE_USER, user.getScreen_name());
                     Toast.makeText(getActivity(), getString(R.string.filter_successfully), Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -107,7 +107,7 @@ public class UserDialog extends DialogFragment {
                     manageGroupDialog.show(getFragmentManager(), "");
                     break;
                 case 2:
-                    FilterDBTask.addFilterKeyword(user.getScreen_name());
+                    FilterDBTask.addFilterKeyword(FilterDBTask.TYPE_USER, user.getScreen_name());
                     Toast.makeText(getActivity(), getString(R.string.filter_successfully), Toast.LENGTH_SHORT).show();
                     break;
                 case 3:

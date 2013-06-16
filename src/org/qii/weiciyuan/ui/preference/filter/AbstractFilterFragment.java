@@ -1,28 +1,27 @@
-package org.qii.weiciyuan.ui.preference;
+package org.qii.weiciyuan.ui.preference.filter;
 
-import android.app.ListFragment;
-import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.util.SparseBooleanArray;
 import android.view.*;
 import android.view.animation.Animation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.database.FilterDBTask;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.animation.CollapseAnimation;
+import org.qii.weiciyuan.ui.preference.AddFilterDialog;
+import org.qii.weiciyuan.ui.preference.ModifyFilterDialog;
 
 import java.util.*;
 
 /**
  * User: qii
- * Date: 12-9-21
+ * Date: 13-6-16
  */
-public class FilterFragment extends ListFragment {
+public abstract class AbstractFilterFragment extends ListFragment {
 
     private BaseAdapter adapter;
 
@@ -53,7 +52,7 @@ public class FilterFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        adapter = new FilterAdapter();
+        adapter = new FilterAdapter(getActivity(), getListView(), list);
         setListAdapter(adapter);
         if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
             task = new DBTask();
@@ -66,7 +65,7 @@ public class FilterFragment extends ListFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ModifyFilterDialog dialog = new ModifyFilterDialog(list.get(position));
-                dialog.setTargetFragment(FilterFragment.this, 1);
+                dialog.setTargetFragment(AbstractFilterFragment.this, 1);
                 dialog.show(getFragmentManager(), "");
             }
         });
@@ -84,7 +83,7 @@ public class FilterFragment extends ListFragment {
         switch (item.getItemId()) {
             case R.id.menu_add:
                 AddFilterDialog dialog = new AddFilterDialog();
-                dialog.setTargetFragment(FilterFragment.this, 0);
+                dialog.setTargetFragment(AbstractFilterFragment.this, 0);
                 dialog.show(getFragmentManager(), "");
                 break;
 
@@ -95,7 +94,7 @@ public class FilterFragment extends ListFragment {
 
 
     public void addFilter(String word) {
-        FilterDBTask.addFilterKeyword(word);
+        addFilterImpl(word);
         if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
             task = new DBTask();
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
@@ -230,12 +229,13 @@ public class FilterFragment extends ListFragment {
 
         @Override
         protected List<String> doInBackground(Void... params) {
-            return FilterDBTask.removeAndGetNewFilterList(set);
+            return removeAndGetFilterListImpl(set);
         }
 
         @Override
         protected void onPostExecute(List<String> result) {
-            list = result;
+            list.clear();
+            list.addAll(result);
             adapter.notifyDataSetChanged();
         }
     }
@@ -244,63 +244,29 @@ public class FilterFragment extends ListFragment {
 
         @Override
         protected List<String> doInBackground(Void... params) {
-            List<String> set = FilterDBTask.getFilterList();
-
-            return set;
+            return getDBDataImpl();
         }
 
         @Override
         protected void onPostExecute(List<String> result) {
             super.onPostExecute(result);
-            list = result;
+            list.clear();
+            list.addAll(result);
             adapter.notifyDataSetChanged();
         }
     }
 
-    class FilterAdapter extends BaseAdapter {
+    protected abstract List<String> getDBDataImpl();
 
-        int checkedBG;
-        int defaultBG;
+    protected abstract void addFilterImpl(String value);
 
-        public FilterAdapter() {
-            defaultBG = getResources().getColor(R.color.transparent);
+    protected abstract List<String> removeAndGetFilterListImpl(Set<String> set);
 
-            int[] attrs = new int[]{R.attr.listview_checked_color};
-            TypedArray ta = getActivity().obtainStyledAttributes(attrs);
-            checkedBG = ta.getColor(0, 430);
-        }
+    public void modifyFilter(String oldWord, String newWord) {
+        Set<String> set = new HashSet<String>();
+        set.add(oldWord);
+        removeAndGetFilterListImpl(set);
+        addFilter(newWord);
 
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            View view = getActivity().getLayoutInflater().inflate(R.layout.simple_listview_item, parent, false);
-            TextView tv = (TextView) view.findViewById(R.id.text1);
-            tv.setBackgroundColor(defaultBG);
-            if (getListView().getCheckedItemPositions().get(position)) {
-                tv.setBackgroundColor(checkedBG);
-            }
-            tv.setText(list.get(position));
-            return view;
-        }
     }
 }

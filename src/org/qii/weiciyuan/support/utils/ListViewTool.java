@@ -9,10 +9,13 @@ import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.widget.TextView;
 import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.support.database.FilterDBTask;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.lib.WeiboPatterns;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -131,32 +134,117 @@ public class ListViewTool {
         bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
     }
 
+    public static void filterMessage(MessageListBean value) {
 
-    public static boolean haveFilterWord(MessageBean content, List<String> filterWordList) {
+        List<MessageBean> msgList = value.getItemList();
+        Iterator<MessageBean> iterator = msgList.iterator();
 
+        List<String> keywordFilter = FilterDBTask.getFilterKeywordList(FilterDBTask.TYPE_KEYWORD);
+        List<String> userFilter = FilterDBTask.getFilterKeywordList(FilterDBTask.TYPE_USER);
+        List<String> topicFilter = FilterDBTask.getFilterKeywordList(FilterDBTask.TYPE_TOPIC);
+        List<String> sourceFilter = FilterDBTask.getFilterKeywordList(FilterDBTask.TYPE_SOURCE);
+
+
+        while (iterator.hasNext()) {
+            MessageBean msg = iterator.next();
+            if (msg.getUser() == null) {
+                iterator.remove();
+                value.removedCountPlus();
+            } else if (SettingUtility.isEnableFilter() && ListViewTool.haveFilterWord(msg, keywordFilter, userFilter, topicFilter, sourceFilter)) {
+                iterator.remove();
+                value.removedCountPlus();
+            } else {
+                msg.getListViewSpannableString();
+                TimeTool.dealMills(msg);
+            }
+        }
+    }
+
+    public static boolean haveFilterWord(MessageBean content, List<String> keywordFilter
+            , List<String> userFilter, List<String> topicFilter, List<String> sourceFilter) {
+
+        //if this message is sent myself, ignore it;
         if (content.getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
             return false;
         }
 
-        for (String filterWord : filterWordList) {
+        boolean hasOriMessage = content.getRetweeted_status() != null;
+        MessageBean oriMessage = content.getRetweeted_status();
 
-            if (content.getUser() != null && content.getUser().getScreen_name().contains(filterWord)) {
-                return true;
-            }
+        for (String filterWord : keywordFilter) {
 
             if (content.getText().contains(filterWord)) {
                 return true;
             }
 
-            if (content.getRetweeted_status() != null && content.getRetweeted_status().getText().contains(filterWord)) {
+            if (hasOriMessage && oriMessage.getText().contains(filterWord)) {
                 return true;
             }
 
-            if (content.getRetweeted_status() != null && content.getRetweeted_status().getUser() != null
-                    && content.getRetweeted_status().getUser().getScreen_name().contains(filterWord)) {
+        }
+
+        for (String filterWord : userFilter) {
+
+            if (content.getUser() != null && content.getUser().getScreen_name().equals(filterWord)) {
+                return true;
+            }
+
+
+            if (hasOriMessage && oriMessage.getUser() != null
+                    && oriMessage.getUser().getScreen_name().equals(filterWord)) {
                 return true;
             }
         }
+
+        for (String filterWord : topicFilter) {
+
+
+            Matcher localMatcher = WeiboPatterns.TOPIC_URL.matcher(content.getText());
+
+            while (localMatcher.find()) {
+                String str2 = localMatcher.group(0);
+                if (TextUtils.isEmpty(str2) || str2.length() < 3) {
+                    continue;
+                }
+
+                if (filterWord.equals(str2.substring(1, str2.length() - 1))) {
+                    return true;
+                }
+
+            }
+
+
+            if (content.getRetweeted_status() != null) {
+
+                localMatcher = WeiboPatterns.TOPIC_URL.matcher(content.getRetweeted_status().getText());
+
+                while (localMatcher.find()) {
+                    String str2 = localMatcher.group(0);
+                    if (TextUtils.isEmpty(str2) || str2.length() < 3) {
+                        continue;
+                    }
+
+                    if (filterWord.equals(str2.substring(1, str2.length() - 1))) {
+                        return true;
+                    }
+
+                }
+            }
+
+        }
+
+        for (String filterWord : sourceFilter) {
+
+            if (filterWord.equals(content.getSourceString())) {
+                return true;
+            }
+
+
+            if (hasOriMessage && filterWord.equals(content.getRetweeted_status().getSourceString())) {
+                return true;
+            }
+        }
+
         return false;
     }
 

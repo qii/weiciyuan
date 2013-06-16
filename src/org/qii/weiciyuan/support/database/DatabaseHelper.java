@@ -15,7 +15,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 29;
+    private static final int DATABASE_VERSION = 30;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -164,7 +164,8 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + "("
             + FilterTable.ID + " integer primary key autoincrement,"
             + FilterTable.NAME + " text,"
-            + FilterTable.ACTIVE + " text"
+            + FilterTable.ACTIVE + " text,"
+            + FilterTable.TYPE + " integer"
             + ");";
 
     static final String CREATE_EMOTIONS_TABLE_SQL = "create table " + EmotionsTable.TABLE_NAME

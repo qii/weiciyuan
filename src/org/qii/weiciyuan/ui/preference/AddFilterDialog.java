@@ -2,13 +2,14 @@ package org.qii.weiciyuan.ui.preference;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.WindowManager;
 import android.widget.EditText;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.ui.preference.filter.AbstractFilterFragment;
 
 /**
  * User: qii
@@ -34,7 +35,7 @@ public class AddFilterDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         String word = et.getText().toString().trim();
                         if (!TextUtils.isEmpty(word)) {
-                            FilterFragment filterFragment = (FilterFragment) getTargetFragment();
+                            AbstractFilterFragment filterFragment = (AbstractFilterFragment) getTargetFragment();
                             filterFragment.addFilter(word);
                         }
                     }

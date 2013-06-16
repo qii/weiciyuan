@@ -2,22 +2,17 @@ package org.qii.weiciyuan.dao.maintimeline;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
-import org.qii.weiciyuan.support.database.FilterDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.ListViewTool;
-import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,25 +61,7 @@ public class MainFriendsTimeLineDao {
             return null;
         }
         if (value != null && value.getItemList().size() > 0) {
-            List<MessageBean> msgList = value.getItemList();
-            Iterator<MessageBean> iterator = msgList.iterator();
-
-            List<String> filterWordList = FilterDBTask.getFilterList();
-
-            while (iterator.hasNext()) {
-                MessageBean msg = iterator.next();
-                if (msg.getUser() == null) {
-                    iterator.remove();
-                    value.removedCountPlus();
-                } else if (SettingUtility.isEnableFilter() && ListViewTool.haveFilterWord(msg, filterWordList)) {
-                    iterator.remove();
-                    value.removedCountPlus();
-                } else {
-                    msg.getListViewSpannableString();
-                    TimeTool.dealMills(msg);
-                }
-            }
-
+            ListViewTool.filterMessage(value);
         }
 
 

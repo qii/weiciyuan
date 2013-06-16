@@ -279,7 +279,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
                 break;
             case R.id.menu_add_to_app_filter:
                 if (!TextUtils.isEmpty(bean.getScreen_name())) {
-                    FilterDBTask.addFilterKeyword(bean.getScreen_name());
+                    FilterDBTask.addFilterKeyword(FilterDBTask.TYPE_USER, bean.getScreen_name());
                     Toast.makeText(this, getString(R.string.filter_successfully), Toast.LENGTH_SHORT).show();
                 }
                 break;
