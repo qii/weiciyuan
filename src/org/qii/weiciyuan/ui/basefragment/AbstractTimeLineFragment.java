@@ -21,6 +21,7 @@ import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.lib.pulltorefresh.extras.SoundPullEventListener;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -174,6 +175,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         pullToRefreshListView.setOnLastItemVisibleListener(listViewOnLastItemVisibleListener);
         pullToRefreshListView.setOnScrollListener(listViewOnScrollListener);
         pullToRefreshListView.setOnItemClickListener(listViewOnItemClickListener);
+        pullToRefreshListView.setOnPullEventListener(getPullEventListener());
         buildListAdapter();
         if (savedInstanceState != null)
             savedCurrentLoadingMsgViewPositon = savedInstanceState.getInt("savedCurrentLoadingMsgViewPositon", NO_SAVED_CURRENT_LOADING_MSG_VIEW_POSITION);
@@ -205,6 +207,17 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
             loadNewMsg();
         }
     };
+
+    private SoundPullEventListener<ListView> getPullEventListener() {
+        SoundPullEventListener<ListView> listener = new SoundPullEventListener<ListView>(getActivity());
+        if (SettingUtility.getEnableSound()) {
+            listener.addSoundEvent(PullToRefreshBase.State.RELEASE_TO_REFRESH, R.raw.psst1);
+//            listener.addSoundEvent(PullToRefreshBase.State.GIVE_UP, R.raw.psst2);
+            listener.addSoundEvent(PullToRefreshBase.State.RESET, R.raw.pop);
+        }
+        return listener;
+    }
+
 
     private AdapterView.OnItemClickListener listViewOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override

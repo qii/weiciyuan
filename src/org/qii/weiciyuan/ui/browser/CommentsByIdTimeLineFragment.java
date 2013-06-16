@@ -6,7 +6,7 @@ import android.content.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.*;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -79,7 +79,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         String sss = token;
         if ((bean == null || bean.getItemList().size() == 0)) {
             if (pullToRefreshListView != null) {
-                pullToRefreshListView.startRefreshNow();
+                pullToRefreshListView.setRefreshing();
                 loadNewMsg();
             }
         }
@@ -123,7 +123,10 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getPullToRefreshListView().startRefreshNow();
+                        if (getActivity() != null) {
+                            getPullToRefreshListView().setRefreshing();
+                            loadNewMsg();
+                        }
 
                     }
                 }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
@@ -234,7 +237,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         sendCompletedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                getPullToRefreshListView().startRefreshNow();
+                getPullToRefreshListView().setRefreshing();
+                loadNewMsg();
             }
         };
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(sendCompletedReceiver,
@@ -361,7 +365,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                getPullToRefreshListView().startRefreshNow();
+                getPullToRefreshListView().setRefreshing();
+                loadNewMsg();
                 return true;
         }
         return super.onOptionsItemSelected(item);

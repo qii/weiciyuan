@@ -25,7 +25,8 @@ public class SearchUserFragment extends AbstractUserListFragment {
     }
 
     public void search() {
-        pullToRefreshListView.startRefreshNow();
+        pullToRefreshListView.setRefreshing();
+        loadNewMsg();
     }
 
     @Override

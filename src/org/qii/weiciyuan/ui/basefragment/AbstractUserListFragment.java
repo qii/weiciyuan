@@ -280,7 +280,8 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refresh:
-                pullToRefreshListView.startRefreshNow();
+                pullToRefreshListView.setRefreshing();
+                loadNewMsg();
                 break;
         }
         return super.onOptionsItemSelected(item);

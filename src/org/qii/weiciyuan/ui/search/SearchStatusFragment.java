@@ -33,7 +33,8 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
     }
 
     public void search() {
-        pullToRefreshListView.startRefreshNow();
+        pullToRefreshListView.setRefreshing();
+        loadNewMsg();
     }
 
     @Override

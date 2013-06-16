@@ -71,7 +71,8 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                getPullToRefreshListView().startRefreshNow();
+                getPullToRefreshListView().setRefreshing();
+                loadNewMsg();
                 break;
             case SCREEN_ROTATE:
                 //nothing
@@ -125,7 +126,8 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
                 break;
 
             case R.id.menu_refresh:
-                pullToRefreshListView.startRefreshNow();
+                pullToRefreshListView.setRefreshing();
+                loadNewMsg();
                 break;
             case R.id.menu_follow_topic:
                 if (Utility.isTaskStopped(followTopicTask)) {

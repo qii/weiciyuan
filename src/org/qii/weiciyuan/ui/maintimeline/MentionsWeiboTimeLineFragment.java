@@ -366,7 +366,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
              */
 
             if (bean.getSize() == 0) {
-                pullToRefreshListView.startRefreshNow();
+                pullToRefreshListView.setRefreshing();
+                loadNewMsg();
             }
 
             getLoaderManager().destroyLoader(loader.getId());

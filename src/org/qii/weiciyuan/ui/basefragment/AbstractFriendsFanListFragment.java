@@ -66,7 +66,8 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                pullToRefreshListView.startRefreshNow();
+                pullToRefreshListView.setRefreshing();
+                loadNewMsg();
                 break;
             case SCREEN_ROTATE:
                 //nothing

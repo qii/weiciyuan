@@ -108,8 +108,10 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (getActivity() != null)
-                            getPullToRefreshListView().startRefreshNow();
+                        if (getActivity() != null) {
+                            getPullToRefreshListView().setRefreshing();
+                            loadNewMsg();
+                        }
 
                     }
                 }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
@@ -145,7 +147,8 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         switch (item.getItemId()) {
 
             case R.id.menu_refresh:
-                getPullToRefreshListView().startRefreshNow();
+                getPullToRefreshListView().setRefreshing();
+                loadNewMsg();
                 return true;
         }
         return super.onOptionsItemSelected(item);

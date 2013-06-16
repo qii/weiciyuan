@@ -141,7 +141,8 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         switch (item.getItemId()) {
 
             case R.id.menu_refresh:
-                getPullToRefreshListView().startRefreshNow();
+                getPullToRefreshListView().setRefreshing();
+                loadNewMsg();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -283,8 +284,8 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
             refreshLayout(getList());
 
             if (getList().getSize() == 0) {
-                getPullToRefreshListView().startRefreshNow();
-
+                getPullToRefreshListView().setRefreshing();
+                loadNewMsg();
             }
         }
     }

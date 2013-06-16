@@ -68,7 +68,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     public void load() {
         if ((bean == null || bean.getSize() == 0)) {
             if (pullToRefreshListView != null) {
-                pullToRefreshListView.startRefreshNow();
+                pullToRefreshListView.setRefreshing();
                 loadNewMsg();
             }
 
@@ -334,7 +334,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                pullToRefreshListView.startRefreshNow();
+                pullToRefreshListView.setRefreshing();
                 loadNewMsg();
                 return true;
         }

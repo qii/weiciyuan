@@ -458,7 +458,8 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
              * when this account first open app,if he don't have any data in database,fetch data from server automally
              */
             if (getList().getSize() == 0) {
-                getPullToRefreshListView().startRefreshNow();
+                getPullToRefreshListView().setRefreshing();
+                loadNewMsg();
             }
             getLoaderManager().destroyLoader(loader.getId());
 

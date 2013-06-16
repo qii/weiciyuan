@@ -84,7 +84,8 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
             super.onActivityCreated(savedInstanceState);
             switch (getCurrentState(savedInstanceState)) {
                 case FIRST_TIME_START:
-                    getPullToRefreshListView().startRefreshNow();
+                    getPullToRefreshListView().setRefreshing();
+                    loadNewMsg();
                     break;
                 case SCREEN_ROTATE:
                     //nothing

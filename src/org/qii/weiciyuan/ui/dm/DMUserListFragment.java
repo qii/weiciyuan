@@ -168,7 +168,8 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
             refreshLayout(getList());
 
             if (getList().getSize() == 0) {
-                getPullToRefreshListView().startRefreshNow();
+                getPullToRefreshListView().setRefreshing();
+                loadNewMsg();
             }
         }
     }

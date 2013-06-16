@@ -621,7 +621,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
              * when this account first open app,if he don't have any data in database,fetch data from server automally
              */
             if (getList().getSize() == 0) {
-                getPullToRefreshListView().startRefreshNow();
+                getPullToRefreshListView().setRefreshing();
+                loadNewMsg();
             } else {
                 new RefreshReCmtCountTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
@@ -662,8 +663,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 startActivity(intent);
                 break;
             case R.id.refresh:
-                if (allowRefresh())
-                    getPullToRefreshListView().startRefreshNow();
+                if (allowRefresh()) {
+                    getPullToRefreshListView().setRefreshing();
+                    loadNewMsg();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -792,7 +795,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         if (groupDataCache.get(currentGroupId) == null || groupDataCache.get(currentGroupId).getSize() == 0) {
             getList().getItemList().clear();
             getAdapter().notifyDataSetChanged();
-            getPullToRefreshListView().startRefreshNow();
+            getPullToRefreshListView().setRefreshing();
+            loadNewMsg();
 
         } else {
             getList().replaceData(groupDataCache.get(currentGroupId));

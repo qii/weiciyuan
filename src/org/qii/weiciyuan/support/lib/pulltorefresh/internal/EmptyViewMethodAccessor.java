@@ -13,33 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package org.qii.weiciyuan.support.lib.pulltorefresh;
+package org.qii.weiciyuan.support.lib.pulltorefresh.internal;
 
 import android.view.View;
 
 /**
  * Interface that allows PullToRefreshBase to hijack the call to
  * AdapterView.setEmptyView()
- * 
+ *
  * @author chris
  */
 public interface EmptyViewMethodAccessor {
 
-	/**
-	 * Calls upto AdapterView.setEmptyView()
-	 * 
-	 * @param emptyView
-	 *            to set as Empty View
-	 */
-	public void setEmptyViewInternal(View emptyView);
+    /**
+     * Calls upto AdapterView.setEmptyView()
+     *
+     * @param emptyView - to set as Empty View
+     */
+    public void setEmptyViewInternal(View emptyView);
 
-	/**
-	 * Should call PullToRefreshBase.setEmptyView() which will then
-	 * automatically call through to setEmptyViewInternal()
-	 * 
-	 * @param emptyView
-	 *            to set as Empty View
-	 */
-	public void setEmptyView(View emptyView);
+    /**
+     * Should call PullToRefreshBase.setEmptyView() which will then
+     * automatically call through to setEmptyViewInternal()
+     *
+     * @param emptyView - to set as Empty View
+     */
+    public void setEmptyView(View emptyView);
 
 }
