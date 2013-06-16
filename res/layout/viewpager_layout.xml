@@ -2,7 +2,7 @@
 
 <view
     xmlns:android="http://schemas.android.com/apk/res/android"
-    class="org.qii.weiciyuan.support.lib.MyViewPager"
+    class="android.support.v4.view.ViewPager"
     android:id="@+id/viewpager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>

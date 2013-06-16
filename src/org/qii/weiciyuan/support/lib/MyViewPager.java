@@ -99,6 +99,10 @@ public class MyViewPager extends ViewPager {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (this.gestureDetector == null) {
+            return super.onTouchEvent(ev);
+        }
+
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 firstPosition[0] = ev.getRawX();
@@ -115,6 +119,10 @@ public class MyViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (this.gestureDetector == null) {
+            return super.onTouchEvent(ev);
+        }
+
         if (isDragging) {
             return true;
         }
