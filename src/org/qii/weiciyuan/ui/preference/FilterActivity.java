@@ -215,7 +215,7 @@ public class FilterActivity extends AbstractAppActivity {
                 return true;
             case R.id.filter_rule:
                 new AlertDialog.Builder(this).setMessage(getString(R.string.filter_rule_content))
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
