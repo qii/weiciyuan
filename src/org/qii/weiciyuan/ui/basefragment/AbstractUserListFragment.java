@@ -13,6 +13,7 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.lib.pulltorefresh.extras.SoundPullEventListener;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -128,6 +129,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
         userListAdapter = new UserListAdapter(AbstractUserListFragment.this, ((ICommander) getActivity()).getBitmapDownloader(), bean.getUsers(), getListView());
         pullToRefreshListView.setAdapter(userListAdapter);
+        pullToRefreshListView.setOnPullEventListener(getPullEventListener());
 
         pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -186,6 +188,16 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
             }
         });
         return view;
+    }
+
+    private SoundPullEventListener<ListView> getPullEventListener() {
+        SoundPullEventListener<ListView> listener = new SoundPullEventListener<ListView>(getActivity());
+        if (SettingUtility.getEnableSound()) {
+            listener.addSoundEvent(PullToRefreshBase.State.RELEASE_TO_REFRESH, R.raw.psst1);
+            //            listener.addSoundEvent(PullToRefreshBase.State.GIVE_UP, R.raw.psst2);
+            listener.addSoundEvent(PullToRefreshBase.State.RESET, R.raw.pop);
+        }
+        return listener;
     }
 
     @Override
