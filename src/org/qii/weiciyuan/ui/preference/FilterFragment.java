@@ -53,7 +53,7 @@ public class FilterFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        adapter = new DraftAdapter();
+        adapter = new FilterAdapter();
         setListAdapter(adapter);
         if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
             task = new DBTask();
@@ -257,12 +257,12 @@ public class FilterFragment extends ListFragment {
         }
     }
 
-    class DraftAdapter extends BaseAdapter {
+    class FilterAdapter extends BaseAdapter {
 
         int checkedBG;
         int defaultBG;
 
-        public DraftAdapter() {
+        public FilterAdapter() {
             defaultBG = getResources().getColor(R.color.transparent);
 
             int[] attrs = new int[]{R.attr.listview_checked_color};
