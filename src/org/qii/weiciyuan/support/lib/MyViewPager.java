@@ -29,6 +29,8 @@ public class MyViewPager extends ViewPager {
     private int operationItemPosition = -1;
     private static final int OFFSET = 5;
 
+    private int max_motion_event_down_x_position;
+
 
     public MyViewPager(Context context) {
         super(context);
@@ -42,6 +44,7 @@ public class MyViewPager extends ViewPager {
         this.activity = activity;
         this.gestureDetector = gestureDetector;
         this.topView = ((View) (activity.findViewById(android.R.id.content).getParent()));
+        this.max_motion_event_down_x_position = Utility.dip2px(100);
 
     }
 
@@ -60,7 +63,8 @@ public class MyViewPager extends ViewPager {
             this.gestureDetector.onTouchEvent(ev);
 
 
-        if (ev.getActionMasked() == MotionEvent.ACTION_UP || ev.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+        if ((ev.getActionMasked() == MotionEvent.ACTION_UP || ev.getActionMasked() == MotionEvent.ACTION_CANCEL)
+                && firstPosition[0] <= max_motion_event_down_x_position) {
             int x = (int) (ev.getRawX() - firstPosition[0]);
             firstPosition[0] = 0f;
             firstPosition[1] = 0f;
@@ -86,7 +90,7 @@ public class MyViewPager extends ViewPager {
         }
         if (ev.getActionMasked() == MotionEvent.ACTION_MOVE) {
             float x = ev.getRawX();
-            if (x > firstPosition[0] + Utility.dip2px(OFFSET)) {
+            if ((x > firstPosition[0] + Utility.dip2px(OFFSET)) && firstPosition[0] <= max_motion_event_down_x_position) {
                 AppLogger.e("begin swipe to right");
                 isDragging = true;
                 return true;
@@ -131,7 +135,7 @@ public class MyViewPager extends ViewPager {
             switch (ev.getActionMasked()) {
                 case MotionEvent.ACTION_MOVE:
                     float x = ev.getRawX();
-                    if (x > firstPosition[0]) {
+                    if (x > firstPosition[0] && firstPosition[0] <= max_motion_event_down_x_position) {
                         return true;
                     }
                     break;
