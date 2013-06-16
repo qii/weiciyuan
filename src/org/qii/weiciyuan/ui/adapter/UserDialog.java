@@ -84,6 +84,7 @@ public class UserDialog extends DialogFragment {
                     break;
                 case 2:
                     FilterDBTask.addFilterKeyword(FilterDBTask.TYPE_USER, user.getScreen_name());
+                    FilterDBTask.addFilterKeyword(FilterDBTask.TYPE_KEYWORD, user.getScreen_name());
                     Toast.makeText(getActivity(), getString(R.string.filter_successfully), Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -108,6 +109,7 @@ public class UserDialog extends DialogFragment {
                     break;
                 case 2:
                     FilterDBTask.addFilterKeyword(FilterDBTask.TYPE_USER, user.getScreen_name());
+                    FilterDBTask.addFilterKeyword(FilterDBTask.TYPE_KEYWORD, user.getScreen_name());
                     Toast.makeText(getActivity(), getString(R.string.filter_successfully), Toast.LENGTH_SHORT).show();
                     break;
                 case 3:
