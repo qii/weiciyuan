@@ -91,7 +91,9 @@ public abstract class AbstractFilterFragment extends ListFragment {
                 dialog.show(getFragmentManager(), "");
                 break;
             case R.id.filter_clear:
-                new ClearFilterDialog().show(getFragmentManager(), "");
+                ClearFilterDialog clearFilterDialog = new ClearFilterDialog();
+                clearFilterDialog.setTargetFragment(this, 0);
+                clearFilterDialog.show(getFragmentManager(), "");
 
                 return true;
         }
