@@ -2,8 +2,8 @@ package org.qii.weiciyuan.ui.preference.filter;
 
 import org.qii.weiciyuan.support.database.FilterDBTask;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * User: qii
@@ -18,12 +18,12 @@ public class FilterTopicFragment extends AbstractFilterFragment {
     }
 
     @Override
-    protected void addFilterImpl(Set<String> set) {
+    protected void addFilterImpl(Collection<String> set) {
         FilterDBTask.addFilterKeyword(FilterDBTask.TYPE_TOPIC, set);
     }
 
     @Override
-    protected List<String> removeAndGetFilterListImpl(Set<String> set) {
+    protected List<String> removeAndGetFilterListImpl(Collection<String> set) {
         return FilterDBTask.removeAndGetNewFilterKeywordList(FilterDBTask.TYPE_TOPIC, set);
     }
 

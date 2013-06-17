@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.database.FilterDBTask;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -22,12 +23,12 @@ public class FilterKeywordFragment extends AbstractFilterFragment {
     }
 
     @Override
-    protected void addFilterImpl(Set<String> set) {
+    protected void addFilterImpl(Collection<String> set) {
         FilterDBTask.addFilterKeyword(FilterDBTask.TYPE_KEYWORD, set);
     }
 
     @Override
-    protected List<String> removeAndGetFilterListImpl(Set<String> set) {
+    protected List<String> removeAndGetFilterListImpl(Collection<String> set) {
         return FilterDBTask.removeAndGetNewFilterKeywordList(FilterDBTask.TYPE_KEYWORD, set);
     }
 
@@ -44,9 +45,7 @@ public class FilterKeywordFragment extends AbstractFilterFragment {
                 words.removeAll(list);
                 addFilter(words);
                 return true;
-            case R.id.filter_clear:
 
-                return true;
         }
 
         return super.onOptionsItemSelected(item);

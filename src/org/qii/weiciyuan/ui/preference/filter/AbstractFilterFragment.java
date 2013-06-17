@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.ui.preference.filter;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.SparseBooleanArray;
@@ -86,7 +88,23 @@ public abstract class AbstractFilterFragment extends ListFragment {
                 dialog.setTargetFragment(AbstractFilterFragment.this, 0);
                 dialog.show(getFragmentManager(), "");
                 break;
+            case R.id.filter_clear:
+                new AlertDialog.Builder(getActivity()).setMessage(getString(R.string.ask_clear))
+                        .setPositiveButton(getString(R.string.clear), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (Utility.isTaskStopped(removeTask)) {
+                                    removeTask = new RemoveFilterDBTask(list);
+                                    removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                                }
+                            }
+                        }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
+                    }
+                }).show();
+                return true;
         }
 
         return true;
@@ -111,7 +129,7 @@ public abstract class AbstractFilterFragment extends ListFragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
+                if (Utility.isTaskStopped(task)) {
                     task = new DBTask();
                     task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -241,9 +259,9 @@ public abstract class AbstractFilterFragment extends ListFragment {
 
     private class RemoveFilterDBTask extends MyAsyncTask<Void, List<String>, List<String>> {
 
-        Set<String> set = new HashSet<String>();
+        Collection<String> set;
 
-        public RemoveFilterDBTask(Set<String> set) {
+        public RemoveFilterDBTask(Collection<String> set) {
             this.set = set;
         }
 
@@ -278,9 +296,9 @@ public abstract class AbstractFilterFragment extends ListFragment {
 
     protected abstract List<String> getDBDataImpl();
 
-    protected abstract void addFilterImpl(Set<String> set);
+    protected abstract void addFilterImpl(Collection<String> set);
 
-    protected abstract List<String> removeAndGetFilterListImpl(Set<String> set);
+    protected abstract List<String> removeAndGetFilterListImpl(Collection<String> set);
 
     public void modifyFilter(String oldWord, String newWord) {
         Set<String> set = new HashSet<String>();

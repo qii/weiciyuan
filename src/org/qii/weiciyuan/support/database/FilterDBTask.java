@@ -6,10 +6,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import org.qii.weiciyuan.support.database.table.FilterTable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: qii
@@ -43,7 +40,7 @@ public class FilterDBTask {
         addFilterKeyword(type, set);
     }
 
-    public static void addFilterKeyword(int type, Set<String> words) {
+    public static void addFilterKeyword(int type, Collection<String> words) {
 
         DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), FilterTable.TABLE_NAME);
         final int nameColumn = ih.getColumnIndex(FilterTable.NAME);
@@ -96,7 +93,7 @@ public class FilterDBTask {
 
     }
 
-    public static List<String> removeAndGetNewFilterKeywordList(int type, Set<String> words) {
+    public static List<String> removeAndGetNewFilterKeywordList(int type, Collection<String> words) {
         for (String word : words)
             removeAndGetFilterKeywordList(type, word);
 
