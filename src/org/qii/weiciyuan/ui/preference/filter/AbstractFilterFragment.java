@@ -93,8 +93,12 @@ public abstract class AbstractFilterFragment extends ListFragment {
                         .setPositiveButton(getString(R.string.clear), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                ArrayList<String> deletedList = new ArrayList<String>();
+                                deletedList.addAll(list);
+                                list.clear();
+                                adapter.notifyDataSetChanged();
                                 if (Utility.isTaskStopped(removeTask)) {
-                                    removeTask = new RemoveFilterDBTask(list);
+                                    removeTask = new RemoveFilterDBTask(deletedList);
                                     removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                                 }
                             }
