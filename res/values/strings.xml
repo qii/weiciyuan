@@ -423,6 +423,8 @@
     <string name="filter_rule_content">关键词只针对内容，不会误伤到微博的用户昵称，但@到的用户昵称如果匹配会被过滤，而用户只针对发微博/转发微博的用户昵称，是不涉及内容中@到的用户。</string>
     <string name="add_common_filter_list">直接添加预设清单</string>
     <string name="congratulation_to_you">恭喜你，智商又提高一层！</string>
+    <string name="ask_clear_filter_list">清空列表？</string>
+
 
     <!--Setting Performance-->
     <string name="pref_performance_title">性能</string>

@@ -2,10 +2,12 @@ package org.qii.weiciyuan.ui.preference;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -214,17 +216,23 @@ public class FilterActivity extends AbstractAppActivity {
                 startActivity(intent);
                 return true;
             case R.id.filter_rule:
-                new AlertDialog.Builder(this).setMessage(getString(R.string.filter_rule_content))
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        }).show();
+                new FilterRuleDialog().show(getSupportFragmentManager(), "");
                 break;
 
         }
         return false;
     }
 
+    public static class FilterRuleDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity()).setMessage(getString(R.string.filter_rule_content))
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).create();
+        }
+    }
 }

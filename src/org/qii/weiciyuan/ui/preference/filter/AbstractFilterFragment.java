@@ -1,8 +1,10 @@
 package org.qii.weiciyuan.ui.preference.filter;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
 import android.util.SparseBooleanArray;
 import android.view.*;
@@ -89,25 +91,8 @@ public abstract class AbstractFilterFragment extends ListFragment {
                 dialog.show(getFragmentManager(), "");
                 break;
             case R.id.filter_clear:
-                new AlertDialog.Builder(getActivity()).setMessage(getString(R.string.ask_clear))
-                        .setPositiveButton(getString(R.string.clear), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ArrayList<String> deletedList = new ArrayList<String>();
-                                deletedList.addAll(list);
-                                list.clear();
-                                adapter.notifyDataSetChanged();
-                                if (Utility.isTaskStopped(removeTask)) {
-                                    removeTask = new RemoveFilterDBTask(deletedList);
-                                    removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                                }
-                            }
-                        }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                new ClearFilterDialog().show(getFragmentManager(), "");
 
-                    }
-                }).show();
                 return true;
         }
 
@@ -311,4 +296,38 @@ public abstract class AbstractFilterFragment extends ListFragment {
         addFilter(newWord);
 
     }
+
+    public void clear() {
+        ArrayList<String> deletedList = new ArrayList<String>();
+        deletedList.addAll(list);
+        list.clear();
+        adapter.notifyDataSetChanged();
+        if (Utility.isTaskStopped(removeTask)) {
+            removeTask = new RemoveFilterDBTask(deletedList);
+            removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    public static class ClearFilterDialog extends DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity()).setMessage(getString(R.string.ask_clear_filter_list))
+                    .setPositiveButton(getString(R.string.clear), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            AbstractFilterFragment fragment = (AbstractFilterFragment) getTargetFragment();
+                            fragment.clear();
+                        }
+                    }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).create();
+
+        }
+    }
+
+
 }
