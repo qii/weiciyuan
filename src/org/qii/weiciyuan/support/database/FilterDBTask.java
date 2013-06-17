@@ -1,12 +1,13 @@
 package org.qii.weiciyuan.support.database;
 
-import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import org.qii.weiciyuan.support.database.table.FilterTable;
-import org.qii.weiciyuan.ui.login.OAuthActivity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,24 +37,35 @@ public class FilterDBTask {
         return databaseHelper.getReadableDatabase();
     }
 
-    public static OAuthActivity.DBResult addFilterKeyword(int type, String word) {
+    public static void addFilterKeyword(int type, String word) {
+        Set<String> set = new HashSet<String>();
+        set.add(word);
+        addFilterKeyword(type, set);
+    }
 
-        ContentValues cv = new ContentValues();
-        cv.put(FilterTable.NAME, word);
-        cv.put(FilterTable.ACTIVE, "true");
-        cv.put(FilterTable.TYPE, type);
+    public static void addFilterKeyword(int type, Set<String> words) {
 
-        Cursor c = getRsd().query(FilterTable.TABLE_NAME, null, FilterTable.NAME + "=?",
-                new String[]{word}, null, null, null);
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), FilterTable.TABLE_NAME);
+        final int nameColumn = ih.getColumnIndex(FilterTable.NAME);
+        final int activeColumn = ih.getColumnIndex(FilterTable.ACTIVE);
+        final int typeColumn = ih.getColumnIndex(FilterTable.TYPE);
+        try {
+            getWsd().beginTransaction();
+            for (String word : words) {
+                ih.prepareForInsert();
 
-        if (c != null && c.getCount() > 0) {
+                ih.bind(nameColumn, word);
+                ih.bind(activeColumn, true);
+                ih.bind(typeColumn, type);
 
-            return OAuthActivity.DBResult.update_successfully;
-        } else {
+                ih.execute();
+            }
 
-            getWsd().insert(FilterTable.TABLE_NAME,
-                    FilterTable.ID, cv);
-            return OAuthActivity.DBResult.add_successfuly;
+            getWsd().setTransactionSuccessful();
+        } catch (SQLException e) {
+        } finally {
+            getWsd().endTransaction();
+            ih.close();
         }
 
     }

@@ -27,7 +27,7 @@ public abstract class AbstractFilterFragment extends ListFragment {
 
     private DBTask task;
 
-    private List<String> list = new ArrayList<String>();
+    protected List<String> list = new ArrayList<String>();
 
     private RemoveFilterDBTask removeTask;
 
@@ -94,12 +94,32 @@ public abstract class AbstractFilterFragment extends ListFragment {
 
 
     public void addFilter(String word) {
-        addFilterImpl(word);
-        if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
-            task = new DBTask();
-            task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        Set<String> words = new HashSet<String>();
+        words.add(word);
+        addFilter(words);
+    }
 
-        }
+    public void addFilter(final Set<String> words) {
+        new MyAsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                addFilterImpl(words);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
+                    task = new DBTask();
+                    task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+
+                }
+            }
+        }.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+
+
     }
 
 
@@ -258,7 +278,7 @@ public abstract class AbstractFilterFragment extends ListFragment {
 
     protected abstract List<String> getDBDataImpl();
 
-    protected abstract void addFilterImpl(String value);
+    protected abstract void addFilterImpl(Set<String> set);
 
     protected abstract List<String> removeAndGetFilterListImpl(Set<String> set);
 

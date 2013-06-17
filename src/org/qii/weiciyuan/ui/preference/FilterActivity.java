@@ -222,6 +222,7 @@ public class FilterActivity extends AbstractAppActivity {
                             }
                         }).show();
                 break;
+
         }
         return false;
     }

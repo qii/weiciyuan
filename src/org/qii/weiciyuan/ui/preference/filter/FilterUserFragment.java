@@ -18,8 +18,8 @@ public class FilterUserFragment extends AbstractFilterFragment {
     }
 
     @Override
-    protected void addFilterImpl(String value) {
-        FilterDBTask.addFilterKeyword(FilterDBTask.TYPE_USER, value);
+    protected void addFilterImpl(Set<String> set) {
+        FilterDBTask.addFilterKeyword(FilterDBTask.TYPE_USER, set);
     }
 
     @Override

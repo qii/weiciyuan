@@ -7,6 +7,9 @@
         android:id="@+id/filter_rule"
         android:title="@string/filter_rule"
         android:showAsAction="never"/>
-
+    <item
+        android:id="@+id/filter_clear"
+        android:title="@string/clear"
+        android:showAsAction="never"/>
 
 </menu>
