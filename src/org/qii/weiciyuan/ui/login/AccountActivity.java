@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.login;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.*;
 import android.content.res.TypedArray;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class AccountActivity extends AbstractAppActivity implements LoaderManager.LoaderCallbacks<List<AccountBean>> {
 
@@ -115,6 +117,21 @@ public class AccountActivity extends AbstractAppActivity implements LoaderManage
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_ACCOUNT_REQUEST_CODE && resultCode == RESULT_OK) {
             refresh();
+            String expires_time = data.getExtras().getString("expires_in");
+            long expiresDays = TimeUnit.SECONDS.toDays(Long.valueOf(expires_time));
+
+            String content = String.format(getString(R.string.token_expires_in_time), String.valueOf(expiresDays));
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setMessage(content)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+            builder.show();
+
         }
     }
 

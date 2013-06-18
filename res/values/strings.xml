@@ -12,7 +12,7 @@
     <!--Account -->
     <string name="oauthing">授权中</string>
     <string name="sina_server_error">检测到你跳转到错误页面，这是因为新浪微博第三方认证服务器出错，多次重复操作依然不行的话尝试换网络，四次元无能为力</string>
-
+    <string name="token_expires_in_time">请注意，根据新浪微博的平台政策，刚添加的帐号会在 %s 天后过期，到时需要重新登录</string>
 
     <!--Tip Dialog-->
     <string name="tip_dialog_title">提示</string>
