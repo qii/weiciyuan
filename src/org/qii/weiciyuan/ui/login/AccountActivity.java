@@ -117,6 +117,8 @@ public class AccountActivity extends AbstractAppActivity implements LoaderManage
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_ACCOUNT_REQUEST_CODE && resultCode == RESULT_OK) {
             refresh();
+            if (data == null)
+                return;
             String expires_time = data.getExtras().getString("expires_in");
             long expiresDays = TimeUnit.SECONDS.toDays(Long.valueOf(expires_time));
 

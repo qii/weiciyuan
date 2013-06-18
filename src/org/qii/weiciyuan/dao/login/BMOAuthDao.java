@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class BMOAuthDao {
 
-    public String login() throws WeiboException {
+    public String[] login() throws WeiboException {
         String url = URLHelper.OAUTH2_ACCESS_TOKEN;
         Map<String, String> map = new HashMap<String, String>();
         map.put("username", username);
@@ -31,8 +31,10 @@ public class BMOAuthDao {
         if ((jsonData != null) && (jsonData.contains("{"))) {
             try {
                 JSONObject localJSONObject = new JSONObject(jsonData);
-                return localJSONObject.optString("access_token");
-//            setExpiresIn(localJSONObject.optInt("expires_in"));
+                String[] result = new String[2];
+                result[0] = localJSONObject.optString("access_token");
+                result[1] = localJSONObject.optString("expires_in");
+                return result;
 //            setUserId(localJSONObject.optLong("uid"));
 
             } catch (JSONException localJSONException) {
@@ -40,7 +42,7 @@ public class BMOAuthDao {
             }
 
         }
-        return "";
+        return null;
 
     }
 

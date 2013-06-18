@@ -15,6 +15,7 @@ import org.qii.weiciyuan.dao.login.OAuthDao;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.login.AccountActivity;
@@ -123,13 +124,15 @@ public class BlackMagicActivity extends AbstractAppActivity {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                String token = new BMOAuthDao(username.getText().toString(), password.getText().toString(), appkey, appSecret).login();
-                UserBean user = new OAuthDao(token).getOAuthUserInfo();
+                String[] result = new BMOAuthDao(username.getText().toString(), password.getText().toString(), appkey, appSecret).login();
+                UserBean user = new OAuthDao(result[0]).getOAuthUserInfo();
                 AccountBean account = new AccountBean();
-                account.setAccess_token(token);
+                account.setAccess_token(result[0]);
                 account.setInfo(user);
+                account.setExpires_time(System.currentTimeMillis() + Long.valueOf(result[1]) * 1000);
                 AccountDBTask.addOrUpdateAccount(account, true);
-                return token;
+                AppLogger.e("token expires in " + Utility.calcTokenExpiresInDays(account) + " days");
+                return result[0];
             } catch (WeiboException e) {
                 this.e = e;
                 cancel(true);
