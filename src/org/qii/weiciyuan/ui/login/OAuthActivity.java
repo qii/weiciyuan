@@ -1,8 +1,8 @@
 package org.qii.weiciyuan.ui.login;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,20 +56,21 @@ public class OAuthActivity extends AbstractAppActivity {
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setSaveFormData(false);
-        settings.setSavePassword(false);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+//        settings.setSaveFormData(true);
+//        settings.setSavePassword(true);
+//        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
 
         CookieSyncManager.createInstance(this);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        webView.clearCache(true);
+//        webView.clearCache(true);
     }
 
     @Override
@@ -154,6 +156,12 @@ public class OAuthActivity extends AbstractAppActivity {
         }
 
         @Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            super.onReceivedError(view, errorCode, description, failingUrl);
+            new SinaWeiboErrorDialog().show(getSupportFragmentManager(), "");
+        }
+
+        @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             if (!url.equals("about:blank"))
@@ -203,8 +211,7 @@ public class OAuthActivity extends AbstractAppActivity {
         @Override
         protected void onPreExecute() {
             progressFragment.setAsyncTask(this);
-
-            progressFragment.show(getFragmentManager(), "");
+            progressFragment.show(getSupportFragmentManager(), "");
 
         }
 
@@ -301,6 +308,22 @@ public class OAuthActivity extends AbstractAppActivity {
 
         void setAsyncTask(AsyncTask task) {
             asyncTask = task;
+        }
+    }
+
+
+    public static class SinaWeiboErrorDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.sina_server_error)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            return builder.create();
         }
     }
 
