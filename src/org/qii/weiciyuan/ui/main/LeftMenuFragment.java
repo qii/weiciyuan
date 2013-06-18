@@ -312,6 +312,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
         }
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+
         currentIndex = COMMENTS_INDEX;
         if (Utility.isDevicePort() && !reset) {
             BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -366,6 +368,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
         }
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+
         currentIndex = SEARCH_INDEX;
         if (Utility.isDevicePort() && !reset) {
             BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -422,6 +426,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
         }
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+
         currentIndex = DM_INDEX;
         if (Utility.isDevicePort() && !reset) {
             BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -469,6 +475,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
         }
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+
         currentIndex = FAV_INDEX;
         if (Utility.isDevicePort() && !reset) {
             BroadcastReceiver receiver = new BroadcastReceiver() {
