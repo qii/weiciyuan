@@ -56,9 +56,9 @@ public class OAuthActivity extends AbstractAppActivity {
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-//        settings.setSaveFormData(true);
-//        settings.setSavePassword(true);
-//        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setSaveFormData(false);
+        settings.setSavePassword(false);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
 
         CookieSyncManager.createInstance(this);
@@ -70,7 +70,7 @@ public class OAuthActivity extends AbstractAppActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        webView.clearCache(true);
+        webView.clearCache(true);
     }
 
     @Override
