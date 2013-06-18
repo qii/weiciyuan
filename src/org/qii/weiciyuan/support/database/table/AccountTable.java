@@ -14,6 +14,8 @@ public class AccountTable {
 
     public static final String OAUTH_TOKEN = "oauth_token";
 
+    public static final String OAUTH_TOKEN_EXPIRES_TIME = "oauth_token_expires_time";
+
     public static final String OAUTH_TOKEN_SECRET = "oauth_token_secret";
 
     //tens place is Sliding Menu position, ones place is ActionBar selected index

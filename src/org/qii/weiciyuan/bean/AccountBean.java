@@ -11,6 +11,7 @@ import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 public class AccountBean implements Parcelable {
 
     private String access_token;
+    private long expires_time;
     private UserBean info;
     private boolean black_magic;
     private int navigationPosition;
@@ -33,6 +34,14 @@ public class AccountBean implements Parcelable {
 
     public void setAccess_token(String access_token) {
         this.access_token = access_token;
+    }
+
+    public long getExpires_time() {
+        return expires_time;
+    }
+
+    public void setExpires_time(long expires_time) {
+        this.expires_time = expires_time;
     }
 
     public UserBean getInfo() {
@@ -73,6 +82,7 @@ public class AccountBean implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(access_token);
+        dest.writeLong(expires_time);
         dest.writeInt(navigationPosition);
         dest.writeBooleanArray(new boolean[]{this.black_magic});
         dest.writeParcelable(info, flags);
@@ -83,6 +93,7 @@ public class AccountBean implements Parcelable {
                 public AccountBean createFromParcel(Parcel in) {
                     AccountBean accountBean = new AccountBean();
                     accountBean.access_token = in.readString();
+                    accountBean.expires_time = in.readLong();
                     accountBean.navigationPosition = in.readInt();
 
                     boolean[] booleans = new boolean[1];

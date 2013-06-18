@@ -15,12 +15,13 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 30;
+    private static final int DATABASE_VERSION = 31;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
             + AccountTable.UID + " integer primary key autoincrement,"
             + AccountTable.OAUTH_TOKEN + " text,"
+            + AccountTable.OAUTH_TOKEN_EXPIRES_TIME + " text,"
             + AccountTable.OAUTH_TOKEN_SECRET + " text,"
             + AccountTable.BLACK_MAGIC + " boolean,"
             + AccountTable.NAVIGATION_POSITION + " integer,"
@@ -274,6 +275,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         switch (oldVersion) {
             case 19:
             case 26:
+            case 30:
                 deleteAllTable(db);
                 onCreate(db);
             default:

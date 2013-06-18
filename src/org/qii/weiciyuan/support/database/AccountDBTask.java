@@ -42,6 +42,7 @@ public class AccountDBTask {
         ContentValues cv = new ContentValues();
         cv.put(AccountTable.UID, account.getUid());
         cv.put(AccountTable.OAUTH_TOKEN, account.getAccess_token());
+        cv.put(AccountTable.OAUTH_TOKEN_EXPIRES_TIME, String.valueOf(account.getExpires_time()));
         cv.put(AccountTable.BLACK_MAGIC, blackMagic);
 
         String json = new Gson().toJson(account.getInfo());
@@ -95,6 +96,9 @@ public class AccountDBTask {
             int colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN);
             account.setAccess_token(c.getString(colid));
 
+            colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN_EXPIRES_TIME);
+            account.setExpires_time(Long.valueOf(c.getString(colid)));
+
             colid = c.getColumnIndex(AccountTable.BLACK_MAGIC);
             account.setBlack_magic(c.getInt(colid) == 1);
 
@@ -124,6 +128,9 @@ public class AccountDBTask {
             AccountBean account = new AccountBean();
             int colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN);
             account.setAccess_token(c.getString(colid));
+
+            colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN_EXPIRES_TIME);
+            account.setExpires_time(Long.valueOf(c.getString(colid)));
 
             colid = c.getColumnIndex(AccountTable.BLACK_MAGIC);
             account.setBlack_magic(c.getInt(colid) == 1);

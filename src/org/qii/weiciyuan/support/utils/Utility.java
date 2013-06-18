@@ -25,6 +25,7 @@ import android.view.*;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import org.qii.weiciyuan.BuildConfig;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
@@ -45,6 +46,7 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 
 public class Utility {
@@ -508,6 +510,16 @@ public class Utility {
     public static void printStackTrace(Exception e) {
         if (BuildConfig.DEBUG)
             e.printStackTrace();
+    }
+
+    public boolean isTokenValid(AccountBean account) {
+        return (!TextUtils.isEmpty(account.getAccess_token()) && (account.getExpires_time() == 0 || (System
+                .currentTimeMillis() < account.getExpires_time())));
+    }
+
+    public boolean isTokenExpiresInThreeDay(AccountBean account) {
+        long days = TimeUnit.MICROSECONDS.toDays(account.getExpires_time() - System.currentTimeMillis());
+        return days > 0 && days <= 3;
     }
 }
 

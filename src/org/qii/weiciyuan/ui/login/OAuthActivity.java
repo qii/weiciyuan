@@ -181,8 +181,9 @@ public class OAuthActivity extends AbstractAppActivity {
         if (error == null && error_code == null) {
 
             String access_token = values.getString("access_token");
+            String expires_time = values.getString("expires_in");
             setResult(RESULT_OK, intent);
-            new OAuthTask().execute(access_token);
+            new OAuthTask().execute(access_token, expires_time);
 
         } else {
             Toast.makeText(OAuthActivity.this, getString(R.string.you_cancel_login), Toast.LENGTH_SHORT).show();
@@ -219,11 +220,13 @@ public class OAuthActivity extends AbstractAppActivity {
         protected DBResult doInBackground(String... params) {
 
             String token = params[0];
+            long expiresTime = Long.valueOf(params[1]);
 
             try {
                 UserBean user = new OAuthDao(token).getOAuthUserInfo();
                 AccountBean account = new AccountBean();
                 account.setAccess_token(token);
+                account.setExpires_time(expiresTime);
                 account.setInfo(user);
                 return AccountDBTask.addOrUpdateAccount(account, false);
             } catch (WeiboException e) {
