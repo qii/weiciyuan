@@ -88,6 +88,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initLayout();
         token = getIntent().getStringExtra("token");
         bean = getIntent().getParcelableExtra("user");
         if (bean == null) {
@@ -115,7 +116,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             }
             fetchUserInfoFromServer();
         } else {
-            initLayout();
+            buildContent();
         }
 
         boolean screenNameEqualCurrentAccount = bean.getScreen_name() != null
@@ -144,10 +145,14 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     }
 
     private void initLayout() {
+        getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
+
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.personal_info));
         setContentView(R.layout.viewpager_with_bg_layout);
+    }
 
+    private void buildContent() {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.addTab(actionBar.newTab()
@@ -167,9 +172,6 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         gestureDetector = new GestureDetector(UserInfoActivity.this
                 , new SwipeRightToCloseOnGestureListener(UserInfoActivity.this, mViewPager));
         mViewPager.setGestureDetector(this, gestureDetector);
-        getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
-
-
     }
 
     private void processIntent(Intent intent) {
@@ -632,7 +634,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         protected void onPostExecute(UserBean o) {
             if (o != null) {
                 bean = o;
-                initLayout();
+                buildContent();
             }
             super.onPostExecute(o);
         }
