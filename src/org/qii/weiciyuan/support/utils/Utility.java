@@ -512,14 +512,20 @@ public class Utility {
             e.printStackTrace();
     }
 
-    public boolean isTokenValid(AccountBean account) {
-        return (!TextUtils.isEmpty(account.getAccess_token()) && (account.getExpires_time() == 0 || (System
-                .currentTimeMillis() < account.getExpires_time())));
+    public static boolean isTokenValid(AccountBean account) {
+        return !TextUtils.isEmpty(account.getAccess_token())
+                && (account.getExpires_time() == 0
+                || (System.currentTimeMillis()) < account.getExpires_time());
     }
 
-    public boolean isTokenExpiresInThreeDay(AccountBean account) {
-        long days = TimeUnit.MICROSECONDS.toDays(account.getExpires_time() - System.currentTimeMillis());
+    public static boolean isTokenExpiresInThreeDay(AccountBean account) {
+        long days = TimeUnit.MILLISECONDS.toDays(account.getExpires_time() - System.currentTimeMillis());
         return days > 0 && days <= 3;
+    }
+
+    public static long calcTokenExpiresInDays(AccountBean account) {
+        long days = TimeUnit.MILLISECONDS.toDays(account.getExpires_time() - System.currentTimeMillis());
+        return days;
     }
 }
 
