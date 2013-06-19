@@ -104,7 +104,7 @@ public class BlackMagicActivity extends AbstractAppActivity {
     }
 
 
-    private class LoginTask extends MyAsyncTask<Void, Void, String> {
+    private class LoginTask extends MyAsyncTask<Void, Void, String[]> {
         WeiboException e;
 
         @Override
@@ -122,7 +122,7 @@ public class BlackMagicActivity extends AbstractAppActivity {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected String[] doInBackground(Void... params) {
             try {
                 String[] result = new BMOAuthDao(username.getText().toString(), password.getText().toString(), appkey, appSecret).login();
                 UserBean user = new OAuthDao(result[0]).getOAuthUserInfo();
@@ -132,25 +132,29 @@ public class BlackMagicActivity extends AbstractAppActivity {
                 account.setExpires_time(System.currentTimeMillis() + Long.valueOf(result[1]) * 1000);
                 AccountDBTask.addOrUpdateAccount(account, true);
                 AppLogger.e("token expires in " + Utility.calcTokenExpiresInDays(account) + " days");
-                return result[0];
+                return result;
             } catch (WeiboException e) {
                 this.e = e;
                 cancel(true);
             }
-            return "";
+            return null;
         }
 
         @Override
-        protected void onCancelled(String s) {
+        protected void onCancelled(String[] s) {
             super.onCancelled(s);
             if (e != null)
                 Toast.makeText(BlackMagicActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(String[] s) {
             super.onPostExecute(s);
-            setResult(RESULT_OK, null);
+            Bundle values = new Bundle();
+            values.putString("expires_in", s[1]);
+            Intent intent = new Intent();
+            intent.putExtras(values);
+            setResult(RESULT_OK, intent);
             finish();
         }
     }
