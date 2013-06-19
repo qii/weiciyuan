@@ -539,6 +539,12 @@ public class LeftMenuFragment extends AbstractAppFragment {
         layout.homeCount = (TextView) view.findViewById(R.id.tv_home_count);
         layout.mentionCount = (TextView) view.findViewById(R.id.tv_mention_count);
         layout.commentCount = (TextView) view.findViewById(R.id.tv_comment_count);
+
+        boolean blackMagic = GlobalContext.getInstance().getAccountBean().isBlack_magic();
+        if (!blackMagic) {
+            layout.dm.setVisibility(View.GONE);
+            layout.search.setVisibility(View.GONE);
+        }
         return view;
     }
 
