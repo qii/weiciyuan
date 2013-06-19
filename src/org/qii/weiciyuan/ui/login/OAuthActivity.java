@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -26,6 +25,7 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.dao.login.OAuthDao;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -202,7 +202,7 @@ public class OAuthActivity extends AbstractAppActivity {
         }
     }
 
-    class OAuthTask extends AsyncTask<String, UserBean, DBResult> {
+    class OAuthTask extends MyAsyncTask<String, UserBean, DBResult> {
 
         WeiboException e;
 
@@ -277,7 +277,7 @@ public class OAuthActivity extends AbstractAppActivity {
 
     public static class ProgressFragment extends DialogFragment {
 
-        AsyncTask asyncTask = null;
+        MyAsyncTask asyncTask = null;
 
         public static ProgressFragment newInstance() {
             ProgressFragment frag = new ProgressFragment();
@@ -309,7 +309,7 @@ public class OAuthActivity extends AbstractAppActivity {
             super.onCancel(dialog);
         }
 
-        void setAsyncTask(AsyncTask task) {
+        void setAsyncTask(MyAsyncTask task) {
             asyncTask = task;
         }
     }

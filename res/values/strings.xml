@@ -190,6 +190,7 @@
     <string name="login_email">登录邮箱</string>
     <string name="login_password">密　码</string>
     <string name="app_key">尾巴</string>
+    <string name="official_app_login">官方客户端授权</string>
 
 
     <!--write comment -->

@@ -54,6 +54,7 @@
             android:name=".ui.login.AccountActivity"
             android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.login.OAuthActivity"/>
+        <activity android:name=".ui.login.SSOActivity"/>
 
         <!--main activity -->
         <activity

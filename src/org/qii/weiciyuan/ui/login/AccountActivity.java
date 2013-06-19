@@ -101,8 +101,19 @@ public class AccountActivity extends AbstractAppActivity implements LoaderManage
         Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_add_account:
-                intent = new Intent(this, OAuthActivity.class);
-                startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
+                String[] values = {"网页授权", "官方客户端直接授权"};
+                new AlertDialog.Builder(this).setItems(values, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent;
+                        if (which == 0)
+                            intent = new Intent(AccountActivity.this, OAuthActivity.class);
+                        else
+                            intent = new Intent(AccountActivity.this, SSOActivity.class);
+                        startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
+                    }
+                }).show();
+
                 break;
             case R.id.menu_hack_login:
                 intent = new Intent(this, BlackMagicActivity.class);
