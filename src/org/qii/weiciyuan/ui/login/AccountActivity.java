@@ -101,7 +101,7 @@ public class AccountActivity extends AbstractAppActivity implements LoaderManage
         Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_add_account:
-                String[] values = {"网页授权", "官方客户端直接授权"};
+                String[] values = {getString(R.string.oauth_login), getString(R.string.official_app_login)};
                 new AlertDialog.Builder(this).setItems(values, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
