@@ -12,7 +12,7 @@
     <!--Account -->
     <string name="oauthing">授权中</string>
     <string name="sina_server_error">检测到你跳转到错误页面，这是因为新浪微博第三方认证服务器出错，多次重复操作依然不行的话尝试换网络，四次元无能为力</string>
-    <string name="token_expires_in_time">请注意，根据新浪微博的平台政策，刚添加的帐号会在 %s 天后过期，到时需要重新登录</string>
+    <string name="token_expires_in_time">请注意，根据新浪微博的平台政策，刚添加的帐号会在 %s 天后过期，到时需要重新登录，在授权过期之前重复登陆不会刷新剩余天数</string>
 
     <!--Tip Dialog-->
     <string name="tip_dialog_title">提示</string>
@@ -184,6 +184,12 @@
     <string name="add_account">添加</string>
     <string name="hack_login">黑魔法</string>
     <string name="login">登录</string>
+    <string name="logining">登录中</string>
+    <string name="email_cant_be_empty">登录邮箱不能为空</string>
+    <string name="password_cant_be_empty">密码不能为空</string>
+    <string name="login_email">登录邮箱</string>
+    <string name="login_password">密　码</string>
+    <string name="app_key">尾巴</string>
 
 
     <!--write comment -->

@@ -1,8 +1,12 @@
 package org.qii.weiciyuan.ui.blackmagic;
 
 import android.app.ActionBar;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -93,6 +97,15 @@ public class BlackMagicActivity extends AbstractAppActivity {
                 startActivity(intent);
                 return true;
             case R.id.menu_login:
+                if (username.getText().toString().length() == 0) {
+                    username.setError(getString(R.string.email_cant_be_empty));
+                    return true;
+                }
+
+                if (password.getText().toString().length() == 0) {
+                    password.setError(getString(R.string.password_cant_be_empty));
+                    return true;
+                }
                 if (Utility.isTaskStopped(loginTask)) {
                     loginTask = new LoginTask();
                     loginTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
@@ -106,19 +119,14 @@ public class BlackMagicActivity extends AbstractAppActivity {
 
     private class LoginTask extends MyAsyncTask<Void, Void, String[]> {
         WeiboException e;
+        ProgressFragment progressFragment = ProgressFragment.newInstance();
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if (username.getText().toString().length() == 0) {
-                username.setError("用户名不能为空");
-                cancel(true);
-            }
 
-            if (password.getText().toString().length() == 0) {
-                password.setError("密码不能为空");
-                cancel(true);
-            }
+            progressFragment.setAsyncTask(LoginTask.this);
+            progressFragment.show(getSupportFragmentManager(), "");
         }
 
         @Override
@@ -143,6 +151,9 @@ public class BlackMagicActivity extends AbstractAppActivity {
         @Override
         protected void onCancelled(String[] s) {
             super.onCancelled(s);
+            if (progressFragment != null) {
+                progressFragment.dismissAllowingStateLoss();
+            }
             if (e != null)
                 Toast.makeText(BlackMagicActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
         }
@@ -150,12 +161,55 @@ public class BlackMagicActivity extends AbstractAppActivity {
         @Override
         protected void onPostExecute(String[] s) {
             super.onPostExecute(s);
+            if (progressFragment != null) {
+                progressFragment.dismissAllowingStateLoss();
+            }
             Bundle values = new Bundle();
             values.putString("expires_in", s[1]);
             Intent intent = new Intent();
             intent.putExtras(values);
             setResult(RESULT_OK, intent);
             finish();
+        }
+    }
+
+
+    public static class ProgressFragment extends DialogFragment {
+
+        MyAsyncTask asyncTask = null;
+
+        public static ProgressFragment newInstance() {
+            ProgressFragment frag = new ProgressFragment();
+            frag.setRetainInstance(true);
+            Bundle args = new Bundle();
+            frag.setArguments(args);
+            return frag;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            ProgressDialog dialog = new ProgressDialog(getActivity());
+            dialog.setMessage(getString(R.string.logining));
+            dialog.setIndeterminate(false);
+            dialog.setCancelable(true);
+
+
+            return dialog;
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+
+            if (asyncTask != null) {
+                asyncTask.cancel(true);
+            }
+
+            super.onCancel(dialog);
+        }
+
+        void setAsyncTask(MyAsyncTask task) {
+            asyncTask = task;
         }
     }
 }
