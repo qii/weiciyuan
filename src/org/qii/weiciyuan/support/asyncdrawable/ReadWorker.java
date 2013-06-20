@@ -113,7 +113,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
 
                 height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
                 //8 is  layout padding
-                width = (int) (metrics.widthPixels - (14 + 14) * reSize);
+                width = (int) (metrics.widthPixels - (8 + 8) * reSize);
         }
 
         synchronized (TimeLineBitmapDownloader.pauseReadWorkLock) {
