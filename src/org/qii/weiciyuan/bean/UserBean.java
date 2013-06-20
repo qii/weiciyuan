@@ -178,6 +178,14 @@ public class UserBean implements Parcelable {
         this.allow_all_comment = allow_all_comment;
     }
 
+    public String getCover_image() {
+        return cover_image;
+    }
+
+    public void setCover_image(String cover_image) {
+        this.cover_image = cover_image;
+    }
+
     public String getAvatar_large() {
         return avatar_large;
     }
@@ -219,6 +227,7 @@ public class UserBean implements Parcelable {
     private String description;
     private String url;
     private String profile_image_url;
+    private String cover_image;
     private String domain;
     private String gender;
     private String statuses_count = "0";
@@ -276,6 +285,7 @@ public class UserBean implements Parcelable {
         dest.writeString(description);
         dest.writeString(url);
         dest.writeString(profile_image_url);
+        dest.writeString(cover_image);
         dest.writeString(domain);
         dest.writeString(gender);
         dest.writeString(statuses_count);
@@ -308,6 +318,7 @@ public class UserBean implements Parcelable {
                     userBean.description = in.readString();
                     userBean.url = in.readString();
                     userBean.profile_image_url = in.readString();
+                    userBean.cover_image = in.readString();
                     userBean.domain = in.readString();
                     userBean.gender = in.readString();
                     userBean.statuses_count = in.readString();
