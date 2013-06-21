@@ -143,6 +143,7 @@
                 <data android:mimeType="application/org.qii.weiciyuan.beam"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ui.userinfo.UserTimeLineActivity"/>
         <activity
             android:name=".ui.userinfo.MyInfoActivity"
             android:theme="@style/AppTheme_Dummy"

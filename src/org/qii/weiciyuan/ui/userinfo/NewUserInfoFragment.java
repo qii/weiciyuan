@@ -142,6 +142,16 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         View fansCountLayout = header.findViewById(R.id.fans_count_layout);
         View topicCountLayout = header.findViewById(R.id.topics_count_layout);
 
+        weiboCountLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UserTimeLineActivity.class);
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("user", userBean);
+                startActivity(intent);
+            }
+        });
+
         friendsCountLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
