@@ -197,6 +197,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     private PullToRefreshBase.OnLastItemVisibleListener listViewOnLastItemVisibleListener = new PullToRefreshBase.OnLastItemVisibleListener() {
         @Override
         public void onLastItemVisible() {
+            if (getActivity() == null) {
+                return;
+            }
             loadOldMsg(null);
         }
     };
@@ -204,6 +207,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     private PullToRefreshBase.OnRefreshListener<ListView> listViewOnRefreshListener = new PullToRefreshBase.OnRefreshListener<ListView>() {
         @Override
         public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+            if (getActivity() == null) {
+                return;
+            }
             loadNewMsg();
         }
     };
