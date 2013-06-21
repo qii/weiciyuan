@@ -19,7 +19,6 @@ import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
@@ -34,7 +33,6 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.MyViewPager;
-import org.qii.weiciyuan.support.lib.SwipeRightToCloseOnGestureListener;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -145,33 +143,38 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     }
 
     private void initLayout() {
-        getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
+//        getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.personal_info));
-        setContentView(R.layout.viewpager_with_bg_layout);
+//        setContentView(R.layout.viewpager_with_bg_layout);
     }
 
     private void buildContent() {
         ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.info))
-                .setTabListener(tabListener));
+//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//        actionBar.addTab(actionBar.newTab()
+//                .setText(getString(R.string.info))
+//                .setTabListener(tabListener));
+//
+//        actionBar.addTab(actionBar.newTab()
+//                .setText(getString(R.string.weibo))
+//                .setTabListener(tabListener));
 
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.weibo))
-                .setTabListener(tabListener));
+//        mViewPager = (MyViewPager) findViewById(R.id.viewpager);
+//        mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
+//        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
+//        mViewPager.setOffscreenPageLimit(2);
+//        mViewPager.setAdapter(adapter);
+//        mViewPager.setOnPageChangeListener(onPageChangeListener);
+//        gestureDetector = new GestureDetector(UserInfoActivity.this
+//                , new SwipeRightToCloseOnGestureListener(UserInfoActivity.this, mViewPager));
+//        mViewPager.setGestureDetector(this, gestureDetector);
 
-        mViewPager = (MyViewPager) findViewById(R.id.viewpager);
-        mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
-        mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setAdapter(adapter);
-        mViewPager.setOnPageChangeListener(onPageChangeListener);
-        gestureDetector = new GestureDetector(UserInfoActivity.this
-                , new SwipeRightToCloseOnGestureListener(UserInfoActivity.this, mViewPager));
-        mViewPager.setGestureDetector(this, gestureDetector);
+        getSupportFragmentManager().beginTransaction()
+                .replace(android.R.id.content, new NewUserInfoFragment(getUser(), getToken()))
+                .commit();
+
     }
 
     private void processIntent(Intent intent) {
@@ -299,7 +302,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
     private AbstractTimeLineFragment getStatusFragment() {
         return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
-                StatusesByIdTimeLineFragment.class.getName()));
+                NewUserInfoFragment.class.getName()));
     }
 
 
@@ -545,7 +548,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         public TimeLinePagerAdapter(FragmentManager fm) {
             super(fm);
             if (getInfoFragment() == null) {
-                list.add(new UserInfoFragment());
+                list.add(new NewUserInfoFragment(getUser(), getToken()));
             } else {
                 list.add(getInfoFragment());
             }
@@ -564,14 +567,14 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         @Override
         protected String getTag(int position) {
             List<String> tagList = new ArrayList<String>();
-            tagList.add(UserInfoFragment.class.getName());
+            tagList.add(NewUserInfoFragment.class.getName());
             tagList.add(StatusesByIdTimeLineFragment.class.getName());
             return tagList.get(position);
         }
 
         @Override
         public int getCount() {
-            return list.size();
+            return 1;
         }
     }
 

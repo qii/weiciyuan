@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:background="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
+
+        <LinearLayout
+            android:layout_gravity="bottom|center"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:id="@+id/left_point"
+                android:paddingLeft="50dp"
+                android:paddingTop="15dp"
+                android:paddingRight="1dp"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_point"/>
+
+            <ImageView
+                android:id="@+id/center_point"
+                android:paddingLeft="1dp"
+                android:paddingTop="15dp"
+                android:paddingRight="1dp"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_point"/>
+
+            <ImageView
+                android:id="@+id/right_point"
+                android:paddingLeft="1dp"
+                android:paddingTop="15dp"
+                android:paddingRight="50dp"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_point"/>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:showDividers="middle"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:clickable="true"
+            android:paddingLeft="10dp"
+            android:background="?android:selectableItemBackground"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/weibo_count"
+                style="@style/profileStatValue"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="400"/>
+
+            <TextView
+                style="@style/profileStatName"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="微博数"/>
+
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/list_divider_color"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:background="?android:selectableItemBackground"
+            android:layout_weight="1">
+
+            <TextView
+                style="@style/profileStatValue"
+                android:id="@+id/friends_count"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="400"/>
+
+            <TextView
+                style="@style/profileStatName"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="关注数"/>
+
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/list_divider_color"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:background="?android:selectableItemBackground"
+            android:layout_weight="1">
+
+            <TextView
+                style="@style/profileStatValue"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:id="@+id/fans_count"
+                android:text="400"/>
+
+            <TextView
+                style="@style/profileStatName"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="粉丝数"/>
+
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/list_divider_color"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:background="?android:selectableItemBackground"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:layout_weight="1">
+
+
+            <TextView
+                style="@style/profileStatValue"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:id="@+id/topics_count"
+                android:text="400"/>
+
+            <TextView
+                style="@style/profileStatName"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="话题数"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/list_divider_color"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+</LinearLayout>
