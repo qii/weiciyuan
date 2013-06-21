@@ -2,7 +2,6 @@ package org.qii.weiciyuan.ui.userinfo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -17,16 +16,22 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
+import org.qii.weiciyuan.dao.topic.UserTopicListDao;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.loader.StatusesByIdLoader;
+import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
+
+import java.util.ArrayList;
 
 /**
  * User: qii
@@ -59,14 +64,31 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     private ImageView centerPoint;
     private ImageView rightPoint;
 
+    private ArrayList<String> topicList;
+
+    private TopicListTask topicListTask;
+
+
     public NewUserInfoFragment() {
 
     }
 
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Utility.cancelTasks(topicListTask);
+    }
+
+    @Override
     public MessageListBean getList() {
         return bean;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
@@ -114,6 +136,41 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         centerPoint = (ImageView) header.findViewById(R.id.center_point);
         rightPoint = (ImageView) header.findViewById(R.id.right_point);
         leftPoint.getDrawable().setLevel(1);
+
+        View weiboCountLayout = header.findViewById(R.id.weibo_count_layout);
+        View friendsCountLayout = header.findViewById(R.id.friends_count_layout);
+        View fansCountLayout = header.findViewById(R.id.fans_count_layout);
+        View topicCountLayout = header.findViewById(R.id.topics_count_layout);
+
+        friendsCountLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FriendListActivity.class);
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("user", userBean);
+                startActivity(intent);
+            }
+        });
+
+        fansCountLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FanListActivity.class);
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("user", userBean);
+                startActivity(intent);
+            }
+        });
+
+        topicCountLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UserTopicListActivity.class);
+                intent.putExtra("userBean", userBean);
+                intent.putStringArrayListExtra("topicList", topicList);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
@@ -173,6 +230,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         weiboCount.setText(userBean.getStatuses_count());
 
         nickname.setText(userBean.getScreen_name());
+
 
         ((ICommander) getActivity()).getBitmapDownloader().downloadAvatar(avatar, userBean, (AbstractTimeLineFragment) this);
 
@@ -247,16 +305,9 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (getActivity() != null) {
-//                            getPullToRefreshListView().setRefreshing();
-                            loadNewMsg();
-                        }
-
-                    }
-                }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
+                loadNewMsg();
+                topicListTask = new TopicListTask();
+                topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 break;
             case SCREEN_ROTATE:
                 //nothing
@@ -421,6 +472,35 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         @Override
         public boolean isViewFromObject(View view, Object object) {
             return view == (View) object;
+        }
+    }
+
+
+    private class TopicListTask extends MyAsyncTask<Void, ArrayList<String>, ArrayList<String>> {
+        WeiboException e;
+
+        @Override
+        protected ArrayList<String> doInBackground(Void... params) {
+            UserTopicListDao dao = new UserTopicListDao(GlobalContext.getInstance().getSpecialToken(), userBean.getId());
+            try {
+                return dao.getGSONMsgList();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> result) {
+            super.onPostExecute(result);
+            if (isCancelled())
+                return;
+            if (result == null || result.size() == 0) {
+                return;
+            }
+            topicList = result;
+            topicsCount.setText(String.valueOf(result.size()));
         }
     }
 

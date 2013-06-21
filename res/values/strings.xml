@@ -91,6 +91,7 @@
     <string name="fan_list">粉丝列表</string>
     <string name="topic_number">话题数</string>
     <string name="topic_list">话题列表</string>
+    <string name="weibo_number">微博数</string>
     <string name="follow_him">关注</string>
     <string name="manage_group">管理分组</string>
     <string name="unfollow_him">取消关注</string>

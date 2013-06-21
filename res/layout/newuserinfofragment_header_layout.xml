@@ -69,6 +69,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center_vertical"
+            android:id="@+id/weibo_count_layout"
             android:layout_weight="1">
 
             <TextView
@@ -76,13 +77,13 @@
                 style="@style/profileStatValue"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="400"/>
+                android:text="0"/>
 
             <TextView
                 style="@style/profileStatName"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="微博数"/>
+                android:text="@string/weibo_number"/>
 
 
         </LinearLayout>
@@ -100,6 +101,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:background="?android:selectableItemBackground"
+            android:id="@+id/friends_count_layout"
             android:layout_weight="1">
 
             <TextView
@@ -107,13 +109,13 @@
                 android:id="@+id/friends_count"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="400"/>
+                android:text="0"/>
 
             <TextView
                 style="@style/profileStatName"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="关注数"/>
+                android:text="@string/following_number"/>
 
 
         </LinearLayout>
@@ -131,6 +133,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:background="?android:selectableItemBackground"
+            android:id="@+id/fans_count_layout"
             android:layout_weight="1">
 
             <TextView
@@ -138,13 +141,13 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:id="@+id/fans_count"
-                android:text="400"/>
+                android:text="0"/>
 
             <TextView
                 style="@style/profileStatName"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="粉丝数"/>
+                android:text="@string/fan_number"/>
 
 
         </LinearLayout>
@@ -162,6 +165,7 @@
             android:background="?android:selectableItemBackground"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
+            android:id="@+id/topics_count_layout"
             android:layout_weight="1">
 
 
@@ -170,13 +174,13 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:id="@+id/topics_count"
-                android:text="400"/>
+                android:text="0"/>
 
             <TextView
                 style="@style/profileStatName"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="话题数"/>
+                android:text="@string/topic_number"/>
 
         </LinearLayout>
 
