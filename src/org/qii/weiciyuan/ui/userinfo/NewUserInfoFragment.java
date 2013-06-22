@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.AdapterView;
@@ -61,6 +62,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     private TextView location;
     private TextView url;
     private TextView verifiedReason;
+    private TextView followsYou;
 
     private ImageView leftPoint;
     private ImageView centerPoint;
@@ -144,7 +146,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         avatar = (ImageView) headerLeft.findViewById(R.id.avatar);
         nickname = (TextView) headerLeft.findViewById(R.id.nickname);
         location = (TextView) headerLeft.findViewById(R.id.location);
-
+        followsYou = (TextView) headerLeft.findViewById(R.id.follows_you);
 
         bio = (TextView) headerRight.findViewById(R.id.bio);
         url = (TextView) headerRight.findViewById(R.id.url);
@@ -271,6 +273,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         fansCount.setText(Utility.convertStateNumberToString(getActivity(), userBean.getFollowers_count()));
         weiboCount.setText(Utility.convertStateNumberToString(getActivity(), userBean.getStatuses_count()));
 
+        TextPaint tp = nickname.getPaint();
+        tp.setFakeBoldText(true);
         if (TextUtils.isEmpty(userBean.getRemark()))
             nickname.setText(userBean.getScreen_name());
         else
@@ -307,6 +311,13 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             verifiedReason.setText(userBean.getVerified_reason());
         } else {
             verifiedReason.setVisibility(View.GONE);
+        }
+
+        if (userBean.isFollow_me()) {
+            followsYou.setVisibility(View.VISIBLE);
+            followsYou.setText(getString(R.string.is_following_me) + "@" + GlobalContext.getInstance().getCurrentAccountName());
+        } else {
+            followsYou.setVisibility(View.GONE);
         }
     }
 

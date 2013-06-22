@@ -104,6 +104,7 @@
     <string name="f">女</string>
     <string name="verified_user">认证账户</string>
     <string name="verified_reason">新浪认证</string>
+    <string name="is_following_me">正在关注</string>
 
     <!--main category -->
     <string name="home">首页</string>
