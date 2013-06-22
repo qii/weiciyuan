@@ -24,9 +24,8 @@
 
             <ImageView
                 android:id="@+id/left_point"
-                android:paddingLeft="50dp"
                 android:paddingTop="15dp"
-                android:paddingRight="1dp"
+                android:layout_marginRight="1dp"
                 android:visibility="visible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -34,9 +33,9 @@
 
             <ImageView
                 android:id="@+id/center_point"
-                android:paddingLeft="1dp"
+                android:layout_marginLeft="1dp"
                 android:paddingTop="15dp"
-                android:paddingRight="1dp"
+                android:layout_marginRight="1dp"
                 android:visibility="visible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,9 +43,8 @@
 
             <ImageView
                 android:id="@+id/right_point"
-                android:paddingLeft="1dp"
+                android:layout_marginLeft="1dp"
                 android:paddingTop="15dp"
-                android:paddingRight="50dp"
                 android:visibility="visible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

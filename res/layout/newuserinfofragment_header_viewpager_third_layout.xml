@@ -12,16 +12,12 @@
         android:textColorLink="@color/white"
         android:ellipsize="none"
         android:gravity="center"
-        android:id="@+id/bio"
+        android:id="@+id/verified_reason"
         android:visibility="gone"
         android:maxLines="4"
         android:singleLine="false"
         style="@style/profileHeaderText"
         />
 
-    <TextView
-        android:id="@+id/url"
-        android:visibility="gone"
-        android:layout_marginTop="4.0dip"
-        style="@style/profileHeaderText.Bold"/>
+
 </LinearLayout>

@@ -50,6 +50,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
     private View headerLeft;
     private View headerRight;
+    private View headerThird;
+
 
     private ImageView avatar;
     private TextView nickname;
@@ -134,6 +136,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
         headerLeft = inflater.inflate(R.layout.newuserinfofragment_header_viewpager_left_layout, null, false);
         headerRight = inflater.inflate(R.layout.newuserinfofragment_header_viewpager_right_layout, null, false);
+        headerThird = inflater.inflate(R.layout.newuserinfofragment_header_viewpager_third_layout, null, false);
 
         avatar = (ImageView) headerLeft.findViewById(R.id.avatar);
         nickname = (TextView) headerLeft.findViewById(R.id.nickname);
@@ -142,11 +145,17 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
         bio = (TextView) headerRight.findViewById(R.id.bio);
         url = (TextView) headerRight.findViewById(R.id.url);
+        verifiedReason = (TextView) headerThird.findViewById(R.id.verified_reason);
 
         leftPoint = (ImageView) header.findViewById(R.id.left_point);
         centerPoint = (ImageView) header.findViewById(R.id.center_point);
         rightPoint = (ImageView) header.findViewById(R.id.right_point);
         leftPoint.getDrawable().setLevel(1);
+        if (!userBean.isVerified()) {
+            rightPoint.setVisibility(View.GONE);
+        } else {
+            rightPoint.setVisibility(View.VISIBLE);
+        }
 
         View weiboCountLayout = header.findViewById(R.id.weibo_count_layout);
         View friendsCountLayout = header.findViewById(R.id.friends_count_layout);
@@ -266,14 +275,25 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
         if (!TextUtils.isEmpty(userBean.getLocation())) {
             location.setText(userBean.getLocation());
+            location.setVisibility(View.VISIBLE);
+        } else {
+            location.setVisibility(View.GONE);
         }
 
         if (!TextUtils.isEmpty(userBean.getUrl())) {
             url.setText(userBean.getUrl());
             ListViewTool.addLinks(url);
             url.setVisibility(View.VISIBLE);
+        } else {
+            url.setVisibility(View.GONE);
         }
 
+        if (userBean.isVerified()) {
+            verifiedReason.setVisibility(View.VISIBLE);
+            verifiedReason.setText(userBean.getVerified_reason());
+        } else {
+            verifiedReason.setVisibility(View.GONE);
+        }
 
         HeaderPagerAdapter adapter = new HeaderPagerAdapter();
         viewPager.setAdapter(adapter);
@@ -433,7 +453,9 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
                     break;
                 case 1:
                     view = headerRight;
-
+                    break;
+                case 2:
+                    view = headerThird;
                     break;
 
             }
@@ -449,7 +471,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
         @Override
         public int getCount() {
-            return 2;
+            return userBean.isVerified() ? 3 : 2;
         }
 
         @Override
