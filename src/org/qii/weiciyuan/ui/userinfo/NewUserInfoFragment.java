@@ -585,6 +585,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         @Override
         protected void onPostExecute(UserBean o) {
             setValue();
+            ((UserInfoActivity) getActivity()).setUser(o);
+            getActivity().invalidateOptionsMenu();
             topicListTask = new TopicListTask();
             topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             for (MessageBean msg : bean.getItemList()) {

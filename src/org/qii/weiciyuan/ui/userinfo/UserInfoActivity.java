@@ -67,6 +67,10 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         return bean;
     }
 
+    public void setUser(UserBean bean) {
+        this.bean = bean;
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -162,6 +166,21 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu_infofragment, menu);
+        if (bean.isFollowing()) {
+            menu.findItem(R.id.menu_follow).setVisible(false);
+            menu.findItem(R.id.menu_unfollow).setVisible(true);
+            menu.findItem(R.id.menu_manage_group).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_follow).setVisible(true);
+            menu.findItem(R.id.menu_unfollow).setVisible(false);
+            menu.findItem(R.id.menu_manage_group).setVisible(false);
+        }
+
+        if (!bean.isFollowing() && bean.isFollow_me()) {
+            menu.findItem(R.id.menu_remove_fan).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_remove_fan).setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -317,7 +336,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             super.onPostExecute(o);
             Toast.makeText(UserInfoActivity.this, getString(R.string.unfollow_successfully), Toast.LENGTH_SHORT).show();
             bean = o;
-            getInfoFragment().forceReloadData(o);
+            bean.setFollowing(false);
+            invalidateOptionsMenu();
         }
     }
 
@@ -368,7 +388,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             super.onPostExecute(o);
             Toast.makeText(UserInfoActivity.this, getString(R.string.follow_successfully), Toast.LENGTH_SHORT).show();
             bean = o;
-            getInfoFragment().forceReloadData(o);
+            bean.setFollowing(true);
+            invalidateOptionsMenu();
             manageGroup();
         }
     }
