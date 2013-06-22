@@ -8,7 +8,6 @@ import org.qii.weiciyuan.R;
 
 /**
  * User: qii
- * Date: 12-8-13
  */
 public class QuickSendProgressFragment extends DialogFragment {
 
