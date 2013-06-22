@@ -655,7 +655,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     private ViewHolder getViewHolderByView(int position) {
 
-        int wantedPosition = position - 1;
+        int wantedPosition = position - listView.getHeaderViewsCount();
         int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
         int wantedChild = wantedPosition - firstPosition;
 
