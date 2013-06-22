@@ -531,11 +531,22 @@ public class Utility {
     }
 
     public static String convertStateNumberToString(Context context, String numberStr) {
+        int thousandInt = 1000;
+        int tenThousandInt = thousandInt * 10;
         int number = Integer.valueOf(numberStr);
-        if (number > 10000) {
-            return String.valueOf((number / 10000) + context.getString(R.string.ten_thousand));
+        if (number == tenThousandInt) {
+            return String.valueOf((number / tenThousandInt) + context.getString(R.string.ten_thousand));
         }
-        if (number > 1000) {
+        if (number > tenThousandInt) {
+            String result = String.valueOf((number / tenThousandInt) + context.getString(R.string.ten_thousand));
+            if (number > tenThousandInt * 10) {
+                return result;
+            }
+            String thousand = String.valueOf(numberStr.charAt(numberStr.length() - 4));
+            result += thousand;
+            return result;
+        }
+        if (number > thousandInt) {
             NumberFormat nf = NumberFormat.getNumberInstance();
             return nf.format(Long.valueOf(number));
         }
