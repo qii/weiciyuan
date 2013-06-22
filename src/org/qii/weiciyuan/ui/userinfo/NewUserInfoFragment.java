@@ -20,6 +20,8 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -32,6 +34,7 @@ import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.loader.StatusesByIdLoader;
 import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -282,7 +285,16 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
 
         ((ICommander) getActivity()).getBitmapDownloader().downloadAvatar(avatar, userBean, (AbstractTimeLineFragment) this);
-
+        avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String path = FileManager.getFilePathFromUrl(userBean.getAvatar_large(), FileLocationMethod.avatar_large);
+                if (new File(path).exists()) {
+                    UserAvatarDialog dialog = new UserAvatarDialog(path);
+                    dialog.show(getFragmentManager(), "");
+                }
+            }
+        });
 
         if (!TextUtils.isEmpty(userBean.getDescription())) {
             bio.setText(userBean.getDescription());
