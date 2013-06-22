@@ -64,6 +64,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     private ImageView centerPoint;
     private ImageView rightPoint;
 
+    private View progressFooter;
+
     private ArrayList<String> topicList;
 
     private TopicListTask topicListTask;
@@ -114,6 +116,10 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         View view = super.onCreateView(inflater, container, savedInstanceState);
         View header = inflater.inflate(R.layout.newuserinfofragment_header_layout, getListView(), false);
         getListView().addHeaderView(header);
+
+        progressFooter = inflater.inflate(R.layout.newuserinfofragment_progress_footer, getListView(), false);
+        progressFooter.setVisibility(View.GONE);
+        getListView().addFooterView(progressFooter);
 
         viewPager = (ViewPager) header.findViewById(R.id.viewpager);
         friendsCount = (TextView) header.findViewById(R.id.friends_count);
@@ -360,6 +366,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
     @Override
     protected void newMsgOnPostExecute(MessageListBean newValue, Bundle loaderArgs) {
+        progressFooter.setVisibility(View.GONE);
         if (getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();
@@ -403,6 +410,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
     @Override
     public void loadNewMsg() {
+        progressFooter.setVisibility(View.VISIBLE);
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
         getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
         dismissFooterView();
