@@ -113,25 +113,22 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
         }
 
         Intent intent;
-        MessageBean msg;
         long[] ids = listView.getCheckedItemIds();
         switch (item.getItemId()) {
             case R.id.menu_repost:
-                msg = (MessageBean) adapter.getItem(listView.getCheckedItemPositions().keyAt(listView.getCheckedItemCount() - 1) - 1);
                 intent = new Intent(getActivity(), WriteRepostActivity.class);
                 intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("id", String.valueOf(ids[0]));
-                intent.putExtra("msg", msg);
+                intent.putExtra("msg", bean);
                 getActivity().startActivity(intent);
                 listView.clearChoices();
                 mode.finish();
                 break;
             case R.id.menu_comment:
-                msg = (MessageBean) adapter.getItem(listView.getCheckedItemPositions().keyAt(listView.getCheckedItemCount() - 1) - 1);
                 intent = new Intent(getActivity(), WriteCommentActivity.class);
                 intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("id", String.valueOf(ids[0]));
-                intent.putExtra("msg", msg);
+                intent.putExtra("msg", bean);
                 getActivity().startActivity(intent);
                 listView.clearChoices();
                 mode.finish();
@@ -155,7 +152,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
                 break;
             case R.id.menu_remove:
 
-                int position = listView.getCheckedItemPosition() - 1;
+                int position = listView.getCheckedItemPosition() - listView.getHeaderViewsCount();
                 RemoveDialog dialog = new RemoveDialog(position);
                 dialog.setTargetFragment(fragment, 0);
                 dialog.show(fragment.getFragmentManager(), "");
