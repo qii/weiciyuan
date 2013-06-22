@@ -543,7 +543,8 @@ public class Utility {
                 return result;
             }
             String thousand = String.valueOf(numberStr.charAt(numberStr.length() - 4));
-            result += thousand;
+            if (Integer.valueOf(thousand) != 0)
+                result += thousand;
             return result;
         }
         if (number > thousandInt) {
