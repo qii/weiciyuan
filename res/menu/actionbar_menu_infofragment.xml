@@ -28,10 +28,10 @@
     <item
         android:id="@+id/menu_add_to_app_filter"
         android:title="@string/add_to_app_filter"/>
-    <item
-        android:id="@+id/menu_refresh"
-        android:icon="?refresh"
-        android:title="@string/refresh"/>
+    <!--<item-->
+    <!--android:id="@+id/menu_refresh"-->
+    <!--android:icon="?refresh"-->
+    <!--android:title="@string/refresh"/>-->
 
 
 </menu>

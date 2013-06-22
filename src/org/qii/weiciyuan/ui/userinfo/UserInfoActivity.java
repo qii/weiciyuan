@@ -143,7 +143,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
     private void buildContent() {
         getSupportFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new NewUserInfoFragment(getUser(), getToken()))
+                .replace(android.R.id.content, new NewUserInfoFragment(getUser(), getToken()), NewUserInfoFragment.class.getName())
                 .commit();
 
     }

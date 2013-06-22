@@ -271,7 +271,10 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         fansCount.setText(Utility.convertStateNumberToString(getActivity(), userBean.getFollowers_count()));
         weiboCount.setText(Utility.convertStateNumberToString(getActivity(), userBean.getStatuses_count()));
 
-        nickname.setText(userBean.getScreen_name());
+        if (TextUtils.isEmpty(userBean.getRemark()))
+            nickname.setText(userBean.getScreen_name());
+        else
+            nickname.setText(userBean.getScreen_name() + "(" + userBean.getRemark() + ")");
 
 
         ((ICommander) getActivity()).getBitmapDownloader().downloadAvatar(avatar, userBean, (AbstractTimeLineFragment) this);
@@ -356,6 +359,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
                 loadNewMsg();
                 topicListTask = new TopicListTask();
                 topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                refresh();
                 break;
             case SCREEN_ROTATE:
                 //nothing
@@ -583,6 +587,10 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             setValue();
             topicListTask = new TopicListTask();
             topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            for (MessageBean msg : bean.getItemList()) {
+                msg.setUser(o);
+            }
+            getAdapter().notifyDataSetChanged();
             super.onPostExecute(o);
         }
 
