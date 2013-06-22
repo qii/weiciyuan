@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.send;
 
+import android.R;
 import android.app.Activity;
 import android.text.Layout;
 import android.text.TextUtils;
@@ -32,10 +33,10 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
     private int atSignPosition = -1;
 
     public AutoCompleteAdapter(Activity context, AutoCompleteTextView content, ProgressBar pb) {
-        super(context, android.R.layout.simple_dropdown_item_1line);
+        super(context, android.R.layout.simple_list_item_1);
         data = new ArrayList<AtUserBean>();
         this.activity = context;
-        this.res = android.R.layout.simple_dropdown_item_1line;
+        this.res = R.layout.simple_list_item_1;
         this.pb = pb;
         this.content = content;
         this.content.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -167,7 +168,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
                     int height = content.getBottom();
                     content.setDropDownVerticalOffset(-(int) (height - y) + Utility.dip2px(24));
                     content.setDropDownHorizontalOffset((int) x);
-                    content.setDropDownWidth(Utility.getScreenWidth() / 2);
+                    content.setDropDownWidth((Utility.getScreenWidth() * 2) / 3);
 
                 }
             });
