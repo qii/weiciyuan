@@ -25,6 +25,7 @@ import android.view.*;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import org.qii.weiciyuan.BuildConfig;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -43,6 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -526,6 +528,18 @@ public class Utility {
     public static long calcTokenExpiresInDays(AccountBean account) {
         long days = TimeUnit.MILLISECONDS.toDays(account.getExpires_time() - System.currentTimeMillis());
         return days;
+    }
+
+    public static String convertStateNumberToString(Context context, String numberStr) {
+        int number = Integer.valueOf(numberStr);
+        if (number > 10000) {
+            return String.valueOf((number / 10000) + context.getString(R.string.ten_thousand));
+        }
+        if (number > 1000) {
+            NumberFormat nf = NumberFormat.getNumberInstance();
+            return nf.format(Long.valueOf(number));
+        }
+        return String.valueOf(number);
     }
 }
 

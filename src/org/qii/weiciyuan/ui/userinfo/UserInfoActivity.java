@@ -1,9 +1,7 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,9 +10,6 @@ import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -30,19 +25,15 @@ import org.qii.weiciyuan.dao.user.RemarkDao;
 import org.qii.weiciyuan.support.database.FilterDBTask;
 import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.MyViewPager;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -146,31 +137,11 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 //        getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setTitle(getString(R.string.personal_info));
-//        setContentView(R.layout.viewpager_with_bg_layout);
     }
 
     private void buildContent() {
-        ActionBar actionBar = getActionBar();
-//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-//        actionBar.addTab(actionBar.newTab()
-//                .setText(getString(R.string.info))
-//                .setTabListener(tabListener));
-//
-//        actionBar.addTab(actionBar.newTab()
-//                .setText(getString(R.string.weibo))
-//                .setTabListener(tabListener));
-
-//        mViewPager = (MyViewPager) findViewById(R.id.viewpager);
-//        mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
-//        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
-//        mViewPager.setOffscreenPageLimit(2);
-//        mViewPager.setAdapter(adapter);
-//        mViewPager.setOnPageChangeListener(onPageChangeListener);
-//        gestureDetector = new GestureDetector(UserInfoActivity.this
-//                , new SwipeRightToCloseOnGestureListener(UserInfoActivity.this, mViewPager));
-//        mViewPager.setGestureDetector(this, gestureDetector);
-
         getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new NewUserInfoFragment(getUser(), getToken()))
                 .commit();
@@ -186,55 +157,6 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         bean = new UserBean();
         bean.setScreen_name(new String(msg.getRecords()[0].getPayload()));
     }
-
-    ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-        boolean status = false;
-
-        public void onTabSelected(ActionBar.Tab tab,
-                                  FragmentTransaction ft) {
-            if (mViewPager != null && mViewPager.getCurrentItem() != tab.getPosition())
-                mViewPager.setCurrentItem(tab.getPosition());
-
-            switch (tab.getPosition()) {
-
-                case 1:
-                    status = true;
-                    break;
-
-            }
-        }
-
-        public void onTabUnselected(ActionBar.Tab tab,
-                                    FragmentTransaction ft) {
-            switch (tab.getPosition()) {
-
-                case 1:
-                    status = false;
-                    break;
-
-            }
-        }
-
-        public void onTabReselected(ActionBar.Tab tab,
-                                    FragmentTransaction ft) {
-            switch (tab.getPosition()) {
-
-                case 1:
-                    if (status) {
-                        Utility.stopListViewScrollingAndScrollToTop(getStatusFragment().getListView());
-                    }
-                    break;
-
-            }
-        }
-    };
-
-    ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
-        @Override
-        public void onPageSelected(int position) {
-            getActionBar().setSelectedNavigationItem(position);
-        }
-    };
 
 
     @Override
@@ -300,15 +222,10 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         new UpdateRemarkTask(remark).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private AbstractTimeLineFragment getStatusFragment() {
-        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+
+    private NewUserInfoFragment getInfoFragment() {
+        return ((NewUserInfoFragment) getSupportFragmentManager().findFragmentByTag(
                 NewUserInfoFragment.class.getName()));
-    }
-
-
-    private UserInfoFragment getInfoFragment() {
-        return ((UserInfoFragment) getSupportFragmentManager().findFragmentByTag(
-                UserInfoFragment.class.getName()));
     }
 
     private void manageGroup() {
@@ -536,45 +453,6 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             if (getInfoFragment() != null)
                 getInfoFragment().forceReloadData(userBean);
 
-        }
-    }
-
-    class TimeLinePagerAdapter extends
-            AppFragmentPagerAdapter {
-
-        List<Fragment> list = new ArrayList<Fragment>();
-
-
-        public TimeLinePagerAdapter(FragmentManager fm) {
-            super(fm);
-            if (getInfoFragment() == null) {
-                list.add(new NewUserInfoFragment(getUser(), getToken()));
-            } else {
-                list.add(getInfoFragment());
-            }
-            if (getStatusFragment() == null) {
-                list.add(new StatusesByIdTimeLineFragment(getUser(), getToken()));
-            } else {
-                list.add(getStatusFragment());
-            }
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-            return list.get(i);
-        }
-
-        @Override
-        protected String getTag(int position) {
-            List<String> tagList = new ArrayList<String>();
-            tagList.add(NewUserInfoFragment.class.getName());
-            tagList.add(StatusesByIdTimeLineFragment.class.getName());
-            return tagList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return 1;
         }
     }
 

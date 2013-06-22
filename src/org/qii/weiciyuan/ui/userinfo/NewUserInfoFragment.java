@@ -10,11 +10,13 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
+import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -70,6 +72,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     private ArrayList<String> topicList;
 
     private TopicListTask topicListTask;
+    private RefreshTask refreshTask;
 
 
     public NewUserInfoFragment() {
@@ -254,17 +257,25 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             }
         });
 
-        friendsCount.setText(String.valueOf(userBean.getFriends_count()));
-        fansCount.setText(userBean.getFollowers_count());
-//        topicsCount.setText(userBean.());
-        weiboCount.setText(userBean.getStatuses_count());
+
+        HeaderPagerAdapter adapter = new HeaderPagerAdapter();
+        viewPager.setAdapter(adapter);
+
+        setValue();
+
+
+    }
+
+    private void setValue() {
+        friendsCount.setText(Utility.convertStateNumberToString(getActivity(), userBean.getFriends_count()));
+        fansCount.setText(Utility.convertStateNumberToString(getActivity(), userBean.getFollowers_count()));
+        weiboCount.setText(Utility.convertStateNumberToString(getActivity(), userBean.getStatuses_count()));
 
         nickname.setText(userBean.getScreen_name());
 
 
         ((ICommander) getActivity()).getBitmapDownloader().downloadAvatar(avatar, userBean, (AbstractTimeLineFragment) this);
 
-//        userBean.getProfile_image_url()
 
         if (!TextUtils.isEmpty(userBean.getDescription())) {
             bio.setText(userBean.getDescription());
@@ -294,10 +305,6 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         } else {
             verifiedReason.setVisibility(View.GONE);
         }
-
-        HeaderPagerAdapter adapter = new HeaderPagerAdapter();
-        viewPager.setAdapter(adapter);
-
     }
 
     @Override
@@ -505,10 +512,81 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
                 return;
             }
             topicList = result;
-            topicsCount.setText(String.valueOf(result.size()));
+            topicsCount.setText(Utility.convertStateNumberToString(getActivity(), String.valueOf(result.size())));
         }
     }
 
+    //sina api has bug,so must refresh to get actual data
+    public void forceReloadData(UserBean bean) {
+        this.userBean = bean;
+        refresh();
+    }
+
+    private void refresh() {
+        if (Utility.isTaskStopped(refreshTask)) {
+            refreshTask = new RefreshTask();
+            refreshTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    private class RefreshTask extends MyAsyncTask<Object, UserBean, UserBean> {
+        WeiboException e;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected UserBean doInBackground(Object... params) {
+            if (!isCancelled()) {
+                ShowUserDao dao = new ShowUserDao(GlobalContext.getInstance().getSpecialToken());
+                boolean haveId = !TextUtils.isEmpty(userBean.getId());
+                boolean haveName = !TextUtils.isEmpty(userBean.getScreen_name());
+                if (haveId) {
+                    dao.setUid(userBean.getId());
+                } else if (haveName) {
+                    dao.setScreen_name(userBean.getScreen_name());
+                } else {
+                    cancel(true);
+                    return null;
+                }
+
+                UserBean user = null;
+                try {
+                    user = dao.getUserInfo();
+                } catch (WeiboException e) {
+                    this.e = e;
+                    cancel(true);
+                }
+                if (user != null) {
+                    userBean = user;
+                } else {
+                    cancel(true);
+                }
+                return user;
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onCancelled(UserBean userBean) {
+            super.onCancelled(userBean);
+            if (Utility.isAllNotNull(getActivity(), this.e)) {
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(UserBean o) {
+            setValue();
+            topicListTask = new TopicListTask();
+            topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            super.onPostExecute(o);
+        }
+
+    }
 }
 
 
