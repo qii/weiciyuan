@@ -10,7 +10,6 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
@@ -19,7 +18,6 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -65,6 +63,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     private ImageView rightPoint;
 
     private View progressFooter;
+    private View moreFooter;
 
     private ArrayList<String> topicList;
 
@@ -117,9 +116,15 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         View header = inflater.inflate(R.layout.newuserinfofragment_header_layout, getListView(), false);
         getListView().addHeaderView(header);
 
+        footerView.setVisibility(View.GONE);
+
         progressFooter = inflater.inflate(R.layout.newuserinfofragment_progress_footer, getListView(), false);
         progressFooter.setVisibility(View.GONE);
         getListView().addFooterView(progressFooter);
+
+        moreFooter = inflater.inflate(R.layout.newuserinfofragment_more_footer, getListView(), false);
+        moreFooter.setVisibility(View.GONE);
+        getListView().addFooterView(moreFooter);
 
         viewPager = (ViewPager) header.findViewById(R.id.viewpager);
         friendsCount = (TextView) header.findViewById(R.id.friends_count);
@@ -366,12 +371,13 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
     @Override
     protected void newMsgOnPostExecute(MessageListBean newValue, Bundle loaderArgs) {
-        progressFooter.setVisibility(View.GONE);
+        getListView().removeFooterView(progressFooter);
         if (getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
             getActivity().invalidateOptionsMenu();
+            moreFooter.setVisibility(View.VISIBLE);
 
         }
 
@@ -380,37 +386,14 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
     @Override
     protected void oldMsgOnPostExecute(MessageListBean newValue) {
-        if (newValue != null && newValue.getSize() > 1) {
-            getList().addOldData(newValue);
-            getActivity().invalidateOptionsMenu();
-
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
-
-        }
-    }
-
-
-    @Override
-    public void loadMiddleMsg(String beginId, String endId, int position) {
-        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
-        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
-        getPullToRefreshListView().onRefreshComplete();
-        dismissFooterView();
-
-        Bundle bundle = new Bundle();
-        bundle.putString("beginId", beginId);
-        bundle.putString("endId", endId);
-        bundle.putInt("position", position);
-        VelocityListView velocityListView = (VelocityListView) getListView();
-        bundle.putBoolean("towardsBottom", velocityListView.getTowardsOrientation() == VelocityListView.TOWARDS_BOTTOM);
-        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
 
     }
+
 
     @Override
     public void loadNewMsg() {
         progressFooter.setVisibility(View.VISIBLE);
+        moreFooter.setVisibility(View.GONE);
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
         getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
         dismissFooterView();
@@ -420,10 +403,10 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
     @Override
     protected void loadOldMsg(View view) {
-        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
-        getPullToRefreshListView().onRefreshComplete();
-        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+        Intent intent = new Intent(getActivity(), UserTimeLineActivity.class);
+        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+        intent.putExtra("user", userBean);
+        startActivity(intent);
     }
 
 
@@ -435,24 +418,6 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             sinceId = getList().getItemList().get(0).getId();
         }
         return new StatusesByIdLoader(getActivity(), uid, screenName, token, sinceId, null);
-    }
-
-    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateMiddleMsgLoader(int id, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
-        String uid = userBean.getId();
-        String screenName = userBean.getScreen_name();
-        return new StatusesByIdLoader(getActivity(), uid, screenName, token, middleBeginId, middleEndId);
-    }
-
-    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateOldMsgLoader(int id, Bundle args) {
-        String uid = userBean.getId();
-        String screenName = userBean.getScreen_name();
-        String maxId = null;
-
-        if (getList().getSize() > 0) {
-            maxId = getList().getItemList().get(getList().getSize() - 1).getId();
-        }
-
-        return new StatusesByIdLoader(getActivity(), uid, screenName, token, null, maxId);
     }
 
 
