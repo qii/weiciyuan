@@ -6,7 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
-    <ImageView
+    <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
         android:id="@+id/avatar"
         android:background="@drawable/bg_header_avatar"
         android:padding="5.0dp"

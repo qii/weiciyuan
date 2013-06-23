@@ -5,17 +5,17 @@
 
     <org.qii.weiciyuan.support.lib.PerformanceImageView
         android:id="@+id/imageview"
-        android:layout_width="@dimen/timeline_avatar_width"
-        android:layout_height="@dimen/timeline_avatar_height"/>
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
 
     <org.qii.weiciyuan.support.lib.PerformanceImageView
         android:id="@+id/imageview_v"
-        android:layout_width="@dimen/timeline_avatar_width"
-        android:layout_height="@dimen/timeline_avatar_height"/>
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
 
 
     <org.qii.weiciyuan.support.lib.PerformanceImageView
         android:id="@+id/imageview_cover"
-        android:layout_width="@dimen/timeline_avatar_width"
-        android:layout_height="@dimen/timeline_avatar_height"/>
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
 </FrameLayout>

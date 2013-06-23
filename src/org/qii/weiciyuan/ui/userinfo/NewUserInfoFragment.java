@@ -23,6 +23,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -59,7 +60,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     private View headerThird;
 
 
-    private ImageView avatar;
+    private TimeLineAvatarImageView avatar;
     private TextView nickname;
     private TextView bio;
     private TextView location;
@@ -140,7 +141,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         headerRight = inflater.inflate(R.layout.newuserinfofragment_header_viewpager_right_layout, null, false);
         headerThird = inflater.inflate(R.layout.newuserinfofragment_header_viewpager_third_layout, null, false);
 
-        avatar = (ImageView) headerLeft.findViewById(R.id.avatar);
+        avatar = (TimeLineAvatarImageView) headerLeft.findViewById(R.id.avatar);
         nickname = (TextView) headerLeft.findViewById(R.id.nickname);
         location = (TextView) headerLeft.findViewById(R.id.location);
         followsYou = (TextView) headerLeft.findViewById(R.id.follows_you);
@@ -277,16 +278,29 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         else
             nickname.setText(userBean.getScreen_name() + "(" + userBean.getRemark() + ")");
 
+        if (userBean.isVerified()) {
+            avatar.isVerified();
+        } else {
+            avatar.reset();
+        }
 
-        ((ICommander) getActivity()).getBitmapDownloader().downloadAvatar(avatar, userBean, (AbstractTimeLineFragment) this);
+
+        ((ICommander) getActivity()).getBitmapDownloader().downloadAvatar(avatar.getImageView(), userBean, (AbstractTimeLineFragment) this);
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String path = FileManager.getFilePathFromUrl(userBean.getAvatar_large(), FileLocationMethod.avatar_large);
-                if (new File(path).exists()) {
-                    UserAvatarDialog dialog = new UserAvatarDialog(path);
-                    dialog.show(getFragmentManager(), "");
+                if (!new File(path).exists()) {
+
+                    path = FileManager.getFilePathFromUrl(userBean.getProfile_image_url(), FileLocationMethod.avatar_small);
+
+                    if (!new File(path).exists()) {
+                        return;
+                    }
                 }
+
+                UserAvatarDialog dialog = new UserAvatarDialog(path);
+                dialog.show(getFragmentManager(), "");
             }
         });
 
