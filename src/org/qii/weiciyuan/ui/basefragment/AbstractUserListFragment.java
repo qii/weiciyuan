@@ -21,6 +21,8 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.UserListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.interfaces.ICommander;
+import org.qii.weiciyuan.ui.loader.AbstractAsyncNetRequestTaskLoader;
+import org.qii.weiciyuan.ui.loader.DummyLoader;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
@@ -317,6 +319,26 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
     }
 
+    private Loader<AsyncTaskLoaderResult<UserListBean>> createNewMsgLoader(int id, Bundle args) {
+        Loader<AsyncTaskLoaderResult<UserListBean>> loader = onCreateNewMsgLoader(id, args);
+        if (loader == null) {
+            loader = new DummyLoader<UserListBean>(getActivity());
+        }
+        if (loader instanceof AbstractAsyncNetRequestTaskLoader) {
+            ((AbstractAsyncNetRequestTaskLoader) loader).setArgs(args);
+        }
+        return loader;
+    }
+
+
+    private Loader<AsyncTaskLoaderResult<UserListBean>> createOldMsgLoader(int id, Bundle args) {
+        Loader<AsyncTaskLoaderResult<UserListBean>> loader = onCreateOldMsgLoader(id, args);
+        if (loader == null) {
+            loader = new DummyLoader<UserListBean>(getActivity());
+        }
+        return loader;
+    }
+
 
     protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewMsgLoader(int id, Bundle args) {
         return null;
@@ -338,10 +360,10 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
                 case NEW_USER_LOADER_ID:
                     if (args == null || args.getBoolean(BundleArgsConstants.SCROLL_TO_TOP))
                         Utility.stopListViewScrollingAndScrollToTop(getListView());
-                    return onCreateNewMsgLoader(id, args);
+                    return createNewMsgLoader(id, args);
                 case OLD_USER_LOADER_ID:
                     showFooterView();
-                    return onCreateOldMsgLoader(id, args);
+                    return createOldMsgLoader(id, args);
             }
 
             return null;
@@ -350,8 +372,8 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         @Override
         public void onLoadFinished(Loader<AsyncTaskLoaderResult<UserListBean>> loader, AsyncTaskLoaderResult<UserListBean> result) {
 
-            UserListBean data = result.data;
-            WeiboException exception = result.exception;
+            UserListBean data = result != null ? result.data : null;
+            WeiboException exception = result != null ? result.exception : null;
 
             switch (loader.getId()) {
                 case NEW_USER_LOADER_ID:
