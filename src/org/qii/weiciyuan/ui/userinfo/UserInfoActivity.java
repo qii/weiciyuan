@@ -75,7 +75,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     @Override
     protected void onPause() {
         super.onPause();
-        Utility.cancelTasks(followOrUnfollowTask);
+        Utility.cancelTasks(followOrUnfollowTask, modifyGroupMemberTask);
 
     }
 
@@ -261,7 +261,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     }
 
     public void handleGroup(List<String> add, List<String> remove) {
-        if (modifyGroupMemberTask == null || modifyGroupMemberTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+        if (Utility.isTaskStopped(modifyGroupMemberTask)) {
             modifyGroupMemberTask = new ModifyGroupMemberTask(add, remove);
             modifyGroupMemberTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
