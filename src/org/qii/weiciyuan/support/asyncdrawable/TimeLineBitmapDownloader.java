@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,8 +33,21 @@ public class TimeLineBitmapDownloader {
     static volatile boolean pauseReadWork = false;
     static final Object pauseReadWorkLock = new Object();
 
-    public TimeLineBitmapDownloader(Handler handler) {
+    private static final Object lock = new Object();
+
+    private static TimeLineBitmapDownloader instance;
+
+    private TimeLineBitmapDownloader(Handler handler) {
         this.handler = handler;
+    }
+
+    public static TimeLineBitmapDownloader getInstance() {
+        synchronized (lock) {
+            if (instance == null) {
+                instance = new TimeLineBitmapDownloader(new Handler(Looper.getMainLooper()));
+            }
+        }
+        return instance;
     }
 
     /**

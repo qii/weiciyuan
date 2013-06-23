@@ -19,6 +19,7 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -31,7 +32,6 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.loader.StatusesByIdLoader;
 import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
 
@@ -285,7 +285,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         }
 
 
-        ((ICommander) getActivity()).getBitmapDownloader().downloadAvatar(avatar.getImageView(), userBean, (AbstractTimeLineFragment) this);
+        TimeLineBitmapDownloader.getInstance().downloadAvatar(avatar.getImageView(), userBean, (AbstractTimeLineFragment) this);
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

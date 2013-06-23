@@ -6,10 +6,8 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.ViewConfiguration;
 import android.widget.Toast;
-import com.slidingmenu.lib.app.SlidingActivity;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -61,7 +59,7 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity implemen
         super.onCreate(savedInstanceState);
         forceShowActionBarOverflowMenu();
         initNFC();
-        commander = new TimeLineBitmapDownloader(new Handler());
+        commander = TimeLineBitmapDownloader.getInstance();
     }
 
 

@@ -6,7 +6,6 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.ViewConfiguration;
 import android.widget.Toast;
@@ -59,7 +58,7 @@ public class AbstractAppActivity extends FragmentActivity implements ICommander 
         super.onCreate(savedInstanceState);
         forceShowActionBarOverflowMenu();
         initNFC();
-        commander = new TimeLineBitmapDownloader(new Handler());
+        commander = TimeLineBitmapDownloader.getInstance();
     }
 
 
