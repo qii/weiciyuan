@@ -17,12 +17,10 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.lib.changelogdialog.ChangeLogDialog;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
-import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.io.File;
 
@@ -50,20 +48,6 @@ public class AboutFragment extends PreferenceFragment {
                 intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
                 intent.putExtra("content", buildContent());
-                startActivity(intent);
-                return true;
-            }
-        });
-
-        findPreference(SettingActivity.OFFICIAL_WEIBO).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                UserBean bean = new UserBean();
-                bean.setScreen_name(getString(R.string.official_weibo_link));
-                String token = GlobalContext.getInstance().getSpecialToken();
-                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                intent.putExtra("token", token);
-                intent.putExtra("user", bean);
                 startActivity(intent);
                 return true;
             }

@@ -8,7 +8,11 @@
         <Preference
             android:key="pref_official_weibo_key"
             android:title="@string/pref_official_weibo_title"
-            />
+            >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="org.qii.weiciyuan://@四次元App"/>
+        </Preference>
 
         <Preference
             android:key="pref_version_key"
