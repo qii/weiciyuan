@@ -165,9 +165,11 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(android.R.id.content, new NewUserInfoFragment(getUser(), getToken()), NewUserInfoFragment.class.getName())
-                        .commit();
+                if (getSupportFragmentManager().findFragmentByTag(NewUserInfoFragment.class.getName()) == null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(android.R.id.content, new NewUserInfoFragment(getUser(), getToken()), NewUserInfoFragment.class.getName())
+                            .commit();
+                }
             }
         });
 

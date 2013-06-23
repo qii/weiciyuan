@@ -154,11 +154,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         centerPoint = (ImageView) header.findViewById(R.id.center_point);
         rightPoint = (ImageView) header.findViewById(R.id.right_point);
         leftPoint.getDrawable().setLevel(1);
-        if (!userBean.isVerified()) {
-            rightPoint.setVisibility(View.GONE);
-        } else {
-            rightPoint.setVisibility(View.VISIBLE);
-        }
+
 
         View weiboCountLayout = header.findViewById(R.id.weibo_count_layout);
         View friendsCountLayout = header.findViewById(R.id.friends_count_layout);
@@ -261,8 +257,6 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         HeaderPagerAdapter adapter = new HeaderPagerAdapter();
         viewPager.setAdapter(adapter);
 
-        setValue();
-
 
     }
 
@@ -284,6 +278,11 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             avatar.reset();
         }
 
+        if (!userBean.isVerified()) {
+            rightPoint.setVisibility(View.GONE);
+        } else {
+            rightPoint.setVisibility(View.VISIBLE);
+        }
 
         TimeLineBitmapDownloader.getInstance().downloadAvatar(avatar.getImageView(), userBean, (AbstractTimeLineFragment) this);
         avatar.setOnClickListener(new View.OnClickListener() {
@@ -392,10 +391,14 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
                 topicListTask = new TopicListTask();
                 topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 refresh();
+                setValue();
+
                 break;
             case SCREEN_ROTATE:
                 //nothing
                 refreshLayout(getList());
+                setValue();
+
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 getList().replaceData((MessageListBean) savedInstanceState.getParcelable("bean"));
@@ -403,10 +406,14 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
                 token = savedInstanceState.getString("token");
                 getAdapter().notifyDataSetChanged();
                 refreshLayout(getList());
+                setValue();
+
                 break;
         }
 
         super.onActivityCreated(savedInstanceState);
+
+
     }
 
 
