@@ -37,7 +37,7 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("bean", bean);
-        outState.putSerializable("replyDraftBean", replyDraftBean);
+        outState.putParcelable("replyDraftBean", replyDraftBean);
         outState.putBoolean("repost", enableRepost.isChecked());
     }
 
@@ -47,7 +47,7 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
         if (savedInstanceState != null) {
             savedEnableRepost = savedInstanceState.getBoolean("repost", false);
             bean = (CommentBean) savedInstanceState.getParcelable("bean");
-            replyDraftBean = (ReplyDraftBean) savedInstanceState.getSerializable("replyDraftBean");
+            replyDraftBean = (ReplyDraftBean) savedInstanceState.getParcelable("replyDraftBean");
         }
     }
 
@@ -97,7 +97,7 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
         getEditTextView().setHint("@" + bean.getUser().getScreen_name() + "：" + bean.getText());
         getEditTextView().setError(intent.getStringExtra("failedReason"));
         getEditTextView().setText(intent.getStringExtra("content"));
-        replyDraftBean = (ReplyDraftBean) intent.getSerializableExtra("replyDraftBean");
+        replyDraftBean = (ReplyDraftBean) intent.getParcelableExtra("replyDraftBean");
         if (!TextUtils.isEmpty(intent.getStringExtra("repostContent"))) {
             savedEnableRepost = true;
         }
@@ -120,7 +120,7 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
             token = GlobalContext.getInstance().getSpecialToken();
 
 
-        replyDraftBean = (ReplyDraftBean) intent.getSerializableExtra("draft");
+        replyDraftBean = (ReplyDraftBean) intent.getParcelableExtra("draft");
         getEditTextView().setText(replyDraftBean.getContent());
         bean = replyDraftBean.getCommentBean();
         getEditTextView().setHint("@" + bean.getUser().getScreen_name() + "：" + bean.getText());

@@ -1,15 +1,48 @@
 package org.qii.weiciyuan.support.database.draftbean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import org.qii.weiciyuan.bean.CommentBean;
-
-import java.io.Serializable;
 
 /**
  * User: qii
  * Date: 12-10-21
  */
-public class ReplyDraftBean implements Serializable {
+public class ReplyDraftBean implements Parcelable {
     private String content;
+    private String accountId;
+    private CommentBean commentBean;
+    private String id;
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(content);
+        dest.writeString(accountId);
+        dest.writeParcelable(commentBean, flags);
+        dest.writeString(id);
+    }
+
+    public static final Parcelable.Creator<ReplyDraftBean> CREATOR =
+            new Parcelable.Creator<ReplyDraftBean>() {
+                public ReplyDraftBean createFromParcel(Parcel in) {
+                    ReplyDraftBean replyDraftBean = new ReplyDraftBean();
+                    replyDraftBean.content = in.readString();
+                    replyDraftBean.accountId = in.readString();
+                    replyDraftBean.commentBean = in.readParcelable(CommentBean.class.getClassLoader());
+                    replyDraftBean.id = in.readString();
+                    return replyDraftBean;
+                }
+
+                public ReplyDraftBean[] newArray(int size) {
+                    return new ReplyDraftBean[size];
+                }
+            };
+
 
     public String getAccountId() {
         return accountId;
@@ -35,9 +68,6 @@ public class ReplyDraftBean implements Serializable {
         this.commentBean = commentBean;
     }
 
-    private String accountId;
-    private CommentBean commentBean;
-    private String id;
 
     public String getId() {
         return id;

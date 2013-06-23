@@ -57,9 +57,9 @@ public class SendWeiboService extends Service {
         AccountBean account = (AccountBean) intent.getParcelableExtra("account");
         String picPath = intent.getStringExtra("picPath");
         String content = intent.getStringExtra("content");
-        GeoBean geoBean = (GeoBean) intent.getSerializableExtra("geo");
+        GeoBean geoBean = (GeoBean) intent.getParcelableExtra("geo");
 
-        StatusDraftBean statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("draft");
+        StatusDraftBean statusDraftBean = (StatusDraftBean) intent.getParcelableExtra("draft");
 
         WeiboSendTask task = new WeiboSendTask(lastNotificationId, token, account, picPath, content, geoBean, statusDraftBean);
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);

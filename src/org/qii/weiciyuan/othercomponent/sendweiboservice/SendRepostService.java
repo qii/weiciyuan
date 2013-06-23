@@ -54,7 +54,7 @@ public class SendRepostService extends Service {
         MessageBean oriMsg = (MessageBean) intent.getParcelableExtra("oriMsg");
         String is_comment = intent.getStringExtra("is_comment");
 
-        RepostDraftBean repostDraftBean = (RepostDraftBean) intent.getSerializableExtra("draft");
+        RepostDraftBean repostDraftBean = (RepostDraftBean) intent.getParcelableExtra("draft");
 
         WeiboSendTask task = new WeiboSendTask(token, account, content, oriMsg, is_comment, repostDraftBean);
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);

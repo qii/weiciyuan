@@ -56,7 +56,7 @@ public class SendCommentService extends Service {
         String content = intent.getStringExtra("content");
         MessageBean oriMsg = (MessageBean) intent.getParcelableExtra("oriMsg");
         boolean comment_ori = intent.getBooleanExtra("comment_ori", false);
-        CommentDraftBean commentDraftBean = (CommentDraftBean) intent.getSerializableExtra("draft");
+        CommentDraftBean commentDraftBean = (CommentDraftBean) intent.getParcelableExtra("draft");
 
         WeiboSendTask task = new WeiboSendTask(account, token, content, oriMsg, comment_ori, commentDraftBean);
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);

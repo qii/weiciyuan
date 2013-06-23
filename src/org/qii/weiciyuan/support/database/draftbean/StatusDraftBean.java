@@ -1,18 +1,52 @@
 package org.qii.weiciyuan.support.database.draftbean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import org.qii.weiciyuan.bean.GeoBean;
-
-import java.io.Serializable;
 
 /**
  * User: qii
  * Date: 12-10-21
  */
-public class StatusDraftBean implements Serializable {
+public class StatusDraftBean implements Parcelable {
     private String content;
     private String pic;
     private GeoBean gps;
     private String accountId;
+    private String id;
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(content);
+        dest.writeString(pic);
+        dest.writeParcelable(gps, flags);
+        dest.writeString(accountId);
+        dest.writeString(id);
+    }
+
+    public static final Parcelable.Creator<StatusDraftBean> CREATOR =
+            new Parcelable.Creator<StatusDraftBean>() {
+                public StatusDraftBean createFromParcel(Parcel in) {
+                    StatusDraftBean statusDraftBean = new StatusDraftBean();
+                    statusDraftBean.content = in.readString();
+                    statusDraftBean.pic = in.readString();
+                    statusDraftBean.gps = in.readParcelable(GeoBean.class.getClassLoader());
+                    statusDraftBean.accountId = in.readString();
+                    statusDraftBean.id = in.readString();
+                    return statusDraftBean;
+                }
+
+                public StatusDraftBean[] newArray(int size) {
+                    return new StatusDraftBean[size];
+                }
+            };
+
 
     public String getContent() {
         return content;
@@ -47,7 +81,6 @@ public class StatusDraftBean implements Serializable {
         this.accountId = accountId;
     }
 
-    private String id;
 
     public String getId() {
         return id;

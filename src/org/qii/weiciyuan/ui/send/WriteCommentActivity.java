@@ -90,7 +90,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
 
         getEditTextView().setError(intent.getStringExtra("failedReason"));
         getEditTextView().setText(intent.getStringExtra("content"));
-        commentDraftBean = (CommentDraftBean) intent.getSerializableExtra("draft");
+        commentDraftBean = (CommentDraftBean) intent.getParcelableExtra("draft");
         getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
 
         savedEnableRepost = intent.getBooleanExtra("comment_ori", false);
@@ -114,7 +114,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
             token = GlobalContext.getInstance().getSpecialToken();
 
 
-        commentDraftBean = (CommentDraftBean) getIntent().getSerializableExtra("draft");
+        commentDraftBean = (CommentDraftBean) getIntent().getParcelableExtra("draft");
         msg = commentDraftBean.getMessageBean();
         getEditTextView().setText(commentDraftBean.getContent());
 
@@ -128,7 +128,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         outState.putBoolean("repost", enableRepost.isChecked());
         outState.putString("token", token);
         outState.putParcelable("msg", msg);
-        outState.putSerializable("commentDraftBean", commentDraftBean);
+        outState.putParcelable("commentDraftBean", commentDraftBean);
     }
 
     @Override
@@ -139,7 +139,7 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
             savedEnableRepost = savedInstanceState.getBoolean("repost");
             token = savedInstanceState.getString("token");
             msg = (MessageBean) savedInstanceState.getParcelable("msg");
-            commentDraftBean = (CommentDraftBean) savedInstanceState.getSerializable("commentDraftBean");
+            commentDraftBean = (CommentDraftBean) savedInstanceState.getParcelable("commentDraftBean");
         }
     }
 

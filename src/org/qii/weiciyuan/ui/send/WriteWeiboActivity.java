@@ -115,7 +115,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         if (geoBean != null)
             enableGeo();
 
-        statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("statusDraftBean");
+        statusDraftBean = (StatusDraftBean) intent.getParcelableExtra("statusDraftBean");
     }
 
 
@@ -272,7 +272,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         outState.putParcelable("geoBean", geoBean);
         outState.putString("location", location);
         outState.putParcelable("imageFileUri", imageFileUri);
-        outState.putSerializable("statusDraftBean", statusDraftBean);
+        outState.putParcelable("statusDraftBean", statusDraftBean);
         outState.putParcelable("accountBean", accountBean);
     }
 
@@ -291,7 +291,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 disableGeo();
 
             imageFileUri = savedInstanceState.getParcelable("imageFileUri");
-            statusDraftBean = (StatusDraftBean) savedInstanceState.getSerializable("statusDraftBean");
+            statusDraftBean = (StatusDraftBean) savedInstanceState.getParcelable("statusDraftBean");
             accountBean = (AccountBean) savedInstanceState.getParcelable("accountBean");
             token = accountBean.getAccess_token();
         }
@@ -330,7 +330,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         token = accountBean.getAccess_token();
         getActionBar().setSubtitle(accountBean.getUsernick());
 
-        statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("draft");
+        statusDraftBean = (StatusDraftBean) intent.getParcelableExtra("draft");
         if (statusDraftBean != null) {
             content.setText(statusDraftBean.getContent());
             picPath = statusDraftBean.getPic();

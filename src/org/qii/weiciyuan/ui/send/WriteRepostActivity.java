@@ -65,7 +65,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         AccountBean account = (AccountBean) intent.getParcelableExtra("account");
         token = account.getAccess_token();
 
-        repostDraftBean = (RepostDraftBean) intent.getSerializableExtra("draft");
+        repostDraftBean = (RepostDraftBean) intent.getParcelableExtra("draft");
         getEditTextView().setText(repostDraftBean.getContent());
         msg = repostDraftBean.getMessageBean();
 
@@ -104,7 +104,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
             getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
         }
         getEditTextView().setError(intent.getStringExtra("failedReason"));
-        repostDraftBean = (RepostDraftBean) intent.getSerializableExtra("repostDraftBean");
+        repostDraftBean = (RepostDraftBean) intent.getParcelableExtra("repostDraftBean");
     }
 
     private void handleNormalOperation(Intent intent) {
@@ -134,7 +134,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
 
             token = savedInstanceState.getString("token");
             msg = (MessageBean) savedInstanceState.getParcelable("msg");
-            repostDraftBean = (RepostDraftBean) savedInstanceState.getSerializable("repostDraftBean");
+            repostDraftBean = (RepostDraftBean) savedInstanceState.getParcelable("repostDraftBean");
         }
     }
 
@@ -146,7 +146,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
 
         outState.putString("token", token);
         outState.putParcelable("msg", msg);
-        outState.putSerializable("repostDraftBean", repostDraftBean);
+        outState.putParcelable("repostDraftBean", repostDraftBean);
     }
 
     @Override
