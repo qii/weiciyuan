@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.userinfo;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -147,6 +148,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     private void fetchUserInfoFromServer() {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(bean.getScreen_name());
+        FetchingDataDialog dialog = new FetchingDataDialog();
+        getSupportFragmentManager().beginTransaction().add(dialog, FetchingDataDialog.class.getName()).commit();
         getSupportLoaderManager().initLoader(REFRESH_LOADER_ID, null, refreshCallback);
     }
 
@@ -584,6 +587,16 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             UserBean data = result != null ? result.data : null;
             WeiboException exception = result != null ? result.exception : null;
 
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    FetchingDataDialog dialog = (FetchingDataDialog) getSupportFragmentManager().findFragmentByTag(FetchingDataDialog.class.getName());
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                }
+            });
+
             if (exception != null) {
                 UserInfoActivityErrorDialog userInfoActivityErrorDialog = new UserInfoActivityErrorDialog(exception.getError());
                 getSupportFragmentManager().beginTransaction().show(userInfoActivityErrorDialog).commitAllowingStateLoss();
@@ -600,4 +613,19 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
         }
     };
+
+    public static class FetchingDataDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            ProgressDialog dialog = new ProgressDialog(getActivity());
+            dialog.setMessage(getString(R.string.fetching_user_info));
+            return dialog;
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            super.onCancel(dialog);
+            getActivity().finish();
+        }
+    }
 }
