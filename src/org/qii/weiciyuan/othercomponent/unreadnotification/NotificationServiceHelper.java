@@ -27,16 +27,16 @@ public class NotificationServiceHelper extends Service {
     public static final String COMMENTS_TO_ME_ARG = "comment";
 
 
-    protected int getMentionsWeiboNotificationId(AccountBean accountBean) {
-        return Integer.valueOf(accountBean.getUid()) + MENTIONS_WEIBO_NOTIFICATION_ID;
+    public static int getMentionsWeiboNotificationId(AccountBean accountBean) {
+        return accountBean.getUid().hashCode() + MENTIONS_WEIBO_NOTIFICATION_ID;
     }
 
-    protected int getMentionsCommentNotificationId(AccountBean accountBean) {
-        return Integer.valueOf(accountBean.getUid()) + MENTIONS_COMMENT_NOTIFICATION_ID;
+    public static int getMentionsCommentNotificationId(AccountBean accountBean) {
+        return accountBean.getUid().hashCode() + MENTIONS_COMMENT_NOTIFICATION_ID;
     }
 
-    protected int getCommentsToMeNotificationId(AccountBean accountBean) {
-        return Integer.valueOf(accountBean.getUid()) + COMMENTS_TO_ME_NOTIFICATION_ID;
+    public static int getCommentsToMeNotificationId(AccountBean accountBean) {
+        return accountBean.getUid().hashCode() + COMMENTS_TO_ME_NOTIFICATION_ID;
     }
 
 
