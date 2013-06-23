@@ -86,18 +86,6 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Utility.cancelTasks(topicListTask);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Utility.cancelTasks(refreshTask);
-    }
-
-    @Override
     public MessageListBean getList() {
         return bean;
     }
@@ -352,6 +340,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Utility.cancelTasks(refreshTask, topicListTask);
         GlobalContext.getInstance().unRegisterForAccountChangeListener(myProfileInfoChangeListener);
     }
 

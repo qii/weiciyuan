@@ -75,14 +75,13 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     @Override
     protected void onPause() {
         super.onPause();
-        Utility.cancelTasks(followOrUnfollowTask, modifyGroupMemberTask);
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Utility.cancelTasks(refreshTask);
+        Utility.cancelTasks(refreshTask, followOrUnfollowTask, modifyGroupMemberTask);
     }
 
     @Override
