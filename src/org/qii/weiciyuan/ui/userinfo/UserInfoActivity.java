@@ -29,6 +29,7 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.MyViewPager;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -74,8 +75,14 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     @Override
     protected void onPause() {
         super.onPause();
-        if (followOrUnfollowTask != null)
-            followOrUnfollowTask.cancel(true);
+        Utility.cancelTasks(followOrUnfollowTask);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Utility.cancelTasks(refreshTask);
     }
 
     @Override

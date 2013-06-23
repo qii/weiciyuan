@@ -92,6 +92,12 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        Utility.cancelTasks(refreshTask);
+    }
+
+    @Override
     public MessageListBean getList() {
         return bean;
     }
