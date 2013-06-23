@@ -2,14 +2,19 @@ package org.qii.weiciyuan.ui.userinfo;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -17,6 +22,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.group.ModifyGroupMemberDao;
 import org.qii.weiciyuan.dao.relationship.FanDao;
 import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
@@ -32,6 +38,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
+import org.qii.weiciyuan.ui.loader.AbstractAsyncNetRequestTaskLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
@@ -54,7 +61,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
     private GestureDetector gestureDetector;
 
-    private RefreshTask refreshTask;
+
+    private static final int REFRESH_LOADER_ID = 0;
 
 
     public String getToken() {
@@ -81,7 +89,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Utility.cancelTasks(refreshTask, followOrUnfollowTask, modifyGroupMemberTask);
+        Utility.cancelTasks(followOrUnfollowTask, modifyGroupMemberTask);
     }
 
     @Override
@@ -139,8 +147,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     private void fetchUserInfoFromServer() {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(bean.getScreen_name());
-        refreshTask = new RefreshTask();
-        refreshTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        getSupportLoaderManager().initLoader(REFRESH_LOADER_ID, null, refreshCallback);
     }
 
     private void initLayout() {
@@ -152,9 +159,15 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     }
 
     private void buildContent() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new NewUserInfoFragment(getUser(), getToken()), NewUserInfoFragment.class.getName())
-                .commit();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new NewUserInfoFragment(getUser(), getToken()), NewUserInfoFragment.class.getName())
+                        .commit();
+            }
+        });
+
 
     }
 
@@ -484,71 +497,6 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     }
 
 
-    private class RefreshTask extends MyAsyncTask<Object, UserBean, UserBean> {
-        WeiboException e;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected UserBean doInBackground(Object... params) {
-            if (!isCancelled()) {
-                ShowUserDao dao = new ShowUserDao(GlobalContext.getInstance().getSpecialToken());
-                boolean haveId = !TextUtils.isEmpty(bean.getId());
-                boolean haveName = !TextUtils.isEmpty(bean.getScreen_name());
-                boolean haveDomain = !TextUtils.isEmpty(bean.getDomain());
-
-                if (haveId) {
-                    dao.setUid(bean.getId());
-                } else if (haveName) {
-                    dao.setScreen_name(bean.getScreen_name());
-                } else if (haveDomain) {
-                    dao.setDomain(bean.getDomain());
-                } else {
-                    cancel(true);
-                    return null;
-                }
-
-                UserBean user = null;
-                try {
-                    user = dao.getUserInfo();
-                } catch (WeiboException e) {
-                    this.e = e;
-                    cancel(true);
-                }
-                if (user != null) {
-                    bean = user;
-                } else {
-                    cancel(true);
-                }
-                return user;
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onCancelled(UserBean userBean) {
-            super.onCancelled(userBean);
-            if (this.e != null) {
-                UserInfoActivityErrorDialog userInfoActivityErrorDialog = new UserInfoActivityErrorDialog(this.e.getError());
-                userInfoActivityErrorDialog.show(getSupportFragmentManager(), "");
-            }
-        }
-
-        @Override
-        protected void onPostExecute(UserBean o) {
-            if (o != null) {
-                bean = o;
-                buildContent();
-            }
-            super.onPostExecute(o);
-        }
-
-    }
-
     public static class UserInfoActivityErrorDialog extends DialogFragment {
 
         private String error;
@@ -593,4 +541,63 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         }
     }
 
+
+    private static class RefreshLoader extends AbstractAsyncNetRequestTaskLoader<UserBean> {
+
+        private UserBean bean;
+
+        public RefreshLoader(Context context, UserBean userBean) {
+            super(context);
+            this.bean = userBean;
+        }
+
+        @Override
+        protected UserBean loadData() throws WeiboException {
+            ShowUserDao dao = new ShowUserDao(GlobalContext.getInstance().getSpecialToken());
+            boolean haveId = !TextUtils.isEmpty(bean.getId());
+            boolean haveName = !TextUtils.isEmpty(bean.getScreen_name());
+            boolean haveDomain = !TextUtils.isEmpty(bean.getDomain());
+
+            if (haveId) {
+                dao.setUid(bean.getId());
+            } else if (haveName) {
+                dao.setScreen_name(bean.getScreen_name());
+            } else if (haveDomain) {
+                dao.setDomain(bean.getDomain());
+            } else {
+                return null;
+            }
+
+            return dao.getUserInfo();
+        }
+    }
+
+
+    private LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserBean>> refreshCallback = new LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserBean>>() {
+        @Override
+        public Loader<AsyncTaskLoaderResult<UserBean>> onCreateLoader(int id, Bundle args) {
+            return new RefreshLoader(UserInfoActivity.this, bean);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<AsyncTaskLoaderResult<UserBean>> loader, AsyncTaskLoaderResult<UserBean> result) {
+            UserBean data = result != null ? result.data : null;
+            WeiboException exception = result != null ? result.exception : null;
+
+            if (exception != null) {
+                UserInfoActivityErrorDialog userInfoActivityErrorDialog = new UserInfoActivityErrorDialog(exception.getError());
+                getSupportFragmentManager().beginTransaction().show(userInfoActivityErrorDialog).commitAllowingStateLoss();
+            }
+            if (data != null) {
+                bean = data;
+                buildContent();
+            }
+            getLoaderManager().destroyLoader(loader.getId());
+        }
+
+        @Override
+        public void onLoaderReset(Loader<AsyncTaskLoaderResult<UserBean>> loader) {
+
+        }
+    };
 }
