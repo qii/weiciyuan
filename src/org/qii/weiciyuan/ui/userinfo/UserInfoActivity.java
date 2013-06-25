@@ -127,10 +127,11 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             buildContent();
         }
 
-        boolean screenNameEqualCurrentAccount = bean.getScreen_name() != null
-                && bean.getScreen_name().equals(GlobalContext.getInstance().getCurrentAccountName());
-        boolean idEqualCurrentAccount = bean.getId() != null && bean.getId().equals(GlobalContext.getInstance().getCurrentAccountId());
-        if (screenNameEqualCurrentAccount || idEqualCurrentAccount) {
+
+        if (isMyselfProfile()) {
+            if (getClass() == MyInfoActivity.class) {
+                return;
+            }
             Intent intent = new Intent(this, MyInfoActivity.class);
             intent.putExtra("token", getToken());
 
@@ -143,6 +144,13 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         }
 
 
+    }
+
+    private boolean isMyselfProfile() {
+        boolean screenNameEqualCurrentAccount = bean.getScreen_name() != null
+                && bean.getScreen_name().equals(GlobalContext.getInstance().getCurrentAccountName());
+        boolean idEqualCurrentAccount = bean.getId() != null && bean.getId().equals(GlobalContext.getInstance().getCurrentAccountId());
+        return screenNameEqualCurrentAccount || idEqualCurrentAccount;
     }
 
     private void fetchUserInfoFromServer() {
@@ -189,21 +197,29 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.actionbar_menu_infofragment, menu);
-        if (bean.isFollowing()) {
-            menu.findItem(R.id.menu_follow).setVisible(false);
-            menu.findItem(R.id.menu_unfollow).setVisible(true);
-            menu.findItem(R.id.menu_manage_group).setVisible(true);
-        } else {
-            menu.findItem(R.id.menu_follow).setVisible(true);
-            menu.findItem(R.id.menu_unfollow).setVisible(false);
-            menu.findItem(R.id.menu_manage_group).setVisible(false);
-        }
 
-        if (!bean.isFollowing() && bean.isFollow_me()) {
-            menu.findItem(R.id.menu_remove_fan).setVisible(true);
+        if (isMyselfProfile()) {
+
+            getMenuInflater().inflate(R.menu.actionbar_menu_myinfoactivity, menu);
+            MenuItem edit = menu.findItem(R.id.menu_edit);
+            edit.setVisible(GlobalContext.getInstance().getAccountBean().isBlack_magic());
         } else {
-            menu.findItem(R.id.menu_remove_fan).setVisible(false);
+            getMenuInflater().inflate(R.menu.actionbar_menu_infofragment, menu);
+            if (bean.isFollowing()) {
+                menu.findItem(R.id.menu_follow).setVisible(false);
+                menu.findItem(R.id.menu_unfollow).setVisible(true);
+                menu.findItem(R.id.menu_manage_group).setVisible(true);
+            } else {
+                menu.findItem(R.id.menu_follow).setVisible(true);
+                menu.findItem(R.id.menu_unfollow).setVisible(false);
+                menu.findItem(R.id.menu_manage_group).setVisible(false);
+            }
+
+            if (!bean.isFollowing() && bean.isFollow_me()) {
+                menu.findItem(R.id.menu_remove_fan).setVisible(true);
+            } else {
+                menu.findItem(R.id.menu_remove_fan).setVisible(false);
+            }
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -216,6 +232,11 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             case android.R.id.home:
                 intent = new Intent(this, MainTimeLineActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                return true;
+            case R.id.menu_edit:
+                intent = new Intent(this, EditMyProfileActivity.class);
+                intent.putExtra("userBean", GlobalContext.getInstance().getAccountBean().getInfo());
                 startActivity(intent);
                 return true;
             case R.id.menu_at:

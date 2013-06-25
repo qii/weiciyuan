@@ -360,6 +360,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     private GlobalContext.MyProfileInfoChangeListener myProfileInfoChangeListener = new GlobalContext.MyProfileInfoChangeListener() {
         @Override
         public void onChange(UserBean newUserBean) {
+            userBean = newUserBean;
+            setValue();
             for (MessageBean msg : getList().getItemList()) {
                 msg.setUser(newUserBean);
             }
