@@ -2,8 +2,10 @@ package org.qii.weiciyuan.support.utils;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -35,6 +37,7 @@ import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.ui.login.AccountActivity;
 
 import java.io.Closeable;
 import java.io.File;
@@ -552,6 +555,29 @@ public class Utility {
             return nf.format(Long.valueOf(number));
         }
         return String.valueOf(number);
+    }
+
+    public static void showExpiredTokenDialogOrNotification() {
+        final Activity activity = GlobalContext.getInstance().getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new AlertDialog.Builder(activity).setTitle(R.string.dialog_title_error)
+                            .setMessage(R.string.your_token_is_expired)
+                            .setPositiveButton(R.string.logout_to_login_again, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(activity, AccountActivity.class);
+                                    intent.putExtra("launcher", false);
+                                    activity.startActivity(intent);
+                                    activity.finish();
+                                }
+                            }).show();
+
+                }
+            });
+        }
     }
 }
 

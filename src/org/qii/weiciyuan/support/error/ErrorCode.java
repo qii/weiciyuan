@@ -107,4 +107,5 @@ public class ErrorCode {
     public static final int NOT_FOLLOWED = 20522;
     public static final int DELETED = 20101;
     public static final int USER_NOT_EXISTS = 20003;
+    public static final int EXPIRED_TOKEN = 21327;
 }

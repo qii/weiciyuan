@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.qii.weiciyuan.BuildConfig;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -168,6 +169,11 @@ public class JavaHttpUtility {
             WeiboException exception = new WeiboException();
             exception.setError_code(errCode);
             exception.setOriError(err);
+
+            if (errCode == ErrorCode.EXPIRED_TOKEN) {
+                Utility.showExpiredTokenDialogOrNotification();
+            }
+
             throw exception;
 
         } catch (JSONException e) {
