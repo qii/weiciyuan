@@ -560,7 +560,13 @@ public class Utility {
 
     public static void showExpiredTokenDialogOrNotification() {
         final Activity activity = GlobalContext.getInstance().getCurrentRunningActivity();
-        if (activity != null && !GlobalContext.getInstance().tokenExpiredDialogIsShowing) {
+        boolean currentAccountTokenIsExpired = true;
+        AccountBean currentAccount = GlobalContext.getInstance().getAccountBean();
+        if (currentAccount != null) {
+            currentAccountTokenIsExpired = !Utility.isTokenValid(currentAccount);
+        }
+
+        if (currentAccountTokenIsExpired && activity != null && !GlobalContext.getInstance().tokenExpiredDialogIsShowing) {
             if (activity.getClass() == AccountActivity.class) {
                 return;
             }
@@ -598,7 +604,7 @@ public class Utility {
                     GlobalContext.getInstance().tokenExpiredDialogIsShowing = true;
                 }
             });
-        } else if (activity == null) {
+        } else if (!currentAccountTokenIsExpired || activity == null) {
 
             Intent i = new Intent(GlobalContext.getInstance(), AccountActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
