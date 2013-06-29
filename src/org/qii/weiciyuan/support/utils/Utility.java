@@ -35,7 +35,10 @@ import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.ui.blackmagic.BlackMagicActivity;
 import org.qii.weiciyuan.ui.login.AccountActivity;
+import org.qii.weiciyuan.ui.login.OAuthActivity;
+import org.qii.weiciyuan.ui.login.SSOActivity;
 
 import java.io.Closeable;
 import java.io.File;
@@ -558,6 +561,20 @@ public class Utility {
     public static void showExpiredTokenDialogOrNotification() {
         final Activity activity = GlobalContext.getInstance().getCurrentRunningActivity();
         if (activity != null && !GlobalContext.getInstance().tokenExpiredDialogIsShowing) {
+            if (activity.getClass() == AccountActivity.class) {
+                return;
+            }
+            if (activity.getClass() == OAuthActivity.class) {
+                return;
+            }
+            if (activity.getClass() == BlackMagicActivity.class) {
+                return;
+            }
+
+            if (activity.getClass() == SSOActivity.class) {
+                return;
+            }
+
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
