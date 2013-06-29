@@ -15,6 +15,7 @@ import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.lib.changelogdialog.ChangeLogDialog;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.blackmagic.BlackMagicActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -286,6 +287,13 @@ public class AccountActivity extends AbstractAppActivity implements LoaderManage
 
             if (!TextUtils.isEmpty(accountList.get(i).getAvatar_url())) {
                 commander.downloadAvatar(imageView, accountList.get(i).getInfo(), false);
+            }
+
+            TextView token = (TextView) mView.findViewById(R.id.token_expired);
+            if (!Utility.isTokenValid(accountList.get(i))) {
+                token.setVisibility(View.VISIBLE);
+            } else {
+                token.setVisibility(View.GONE);
             }
 
             return mView;

@@ -18,6 +18,7 @@
     <string name="dialog_title_error">出错啦</string>
     <string name="login_again">重新授权</string>
     <string name="have_account_whose_token_is_expired">有帐号已经过期，无法收取新消息</string>
+    <string name="token_has_expired">已过期</string>
 
     <!--Tip Dialog-->
     <string name="tip_dialog_title">提示</string>
