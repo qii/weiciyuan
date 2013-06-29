@@ -1,9 +1,6 @@
 package org.qii.weiciyuan.support.utils;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Notification;
+import android.app.*;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,6 +29,7 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
+import org.qii.weiciyuan.othercomponent.unreadnotification.NotificationServiceHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.AutoScrollListView;
@@ -558,7 +556,7 @@ public class Utility {
     }
 
     public static void showExpiredTokenDialogOrNotification() {
-        final Activity activity = GlobalContext.getInstance().getActivity();
+        final Activity activity = GlobalContext.getInstance().getCurrentRunningActivity();
         if (activity != null && !GlobalContext.getInstance().tokenExpiredDialogIsShowing) {
             activity.runOnUiThread(new Runnable() {
                 @Override
@@ -583,6 +581,27 @@ public class Utility {
                     GlobalContext.getInstance().tokenExpiredDialogIsShowing = true;
                 }
             });
+        } else if (activity == null) {
+
+            Intent i = new Intent(GlobalContext.getInstance(), AccountActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.putExtra("launcher", false);
+            PendingIntent pendingIntent = PendingIntent.getActivity(GlobalContext.getInstance(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Notification.Builder builder = new Notification.Builder(GlobalContext.getInstance())
+                    .setContentTitle(GlobalContext.getInstance().getString(R.string.login_again))
+                    .setContentText(GlobalContext.getInstance().getString(R.string.have_account_whose_token_is_expired))
+                    .setSmallIcon(R.drawable.notification)
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .setOnlyAlertOnce(true);
+            NotificationManager notificationManager = (NotificationManager) GlobalContext.getInstance()
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(NotificationServiceHelper.getTokenExpiredNotificationId(), builder.build());
+        } else if (GlobalContext.getInstance().tokenExpiredDialogIsShowing) {
+            NotificationManager notificationManager = (NotificationManager) GlobalContext.getInstance()
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(NotificationServiceHelper.getTokenExpiredNotificationId());
         }
     }
 }

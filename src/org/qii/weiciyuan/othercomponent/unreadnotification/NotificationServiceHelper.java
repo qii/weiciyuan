@@ -18,6 +18,7 @@ public class NotificationServiceHelper extends Service {
     private static final int MENTIONS_WEIBO_NOTIFICATION_ID = 1;
     private static final int MENTIONS_COMMENT_NOTIFICATION_ID = 2;
     private static final int COMMENTS_TO_ME_NOTIFICATION_ID = 3;
+    private static final int TOKEN_EXPIRED_NOTIFICATION_ID = 2013;
 
     public static final String ACCOUNT_ARG = "accountBean";
     public static final String UNREAD_ARG = "unreadBean";
@@ -37,6 +38,10 @@ public class NotificationServiceHelper extends Service {
 
     public static int getCommentsToMeNotificationId(AccountBean accountBean) {
         return accountBean.getUid().hashCode() + COMMENTS_TO_ME_NOTIFICATION_ID;
+    }
+
+    public static int getTokenExpiredNotificationId() {
+        return TOKEN_EXPIRED_NOTIFICATION_ID;
     }
 
 

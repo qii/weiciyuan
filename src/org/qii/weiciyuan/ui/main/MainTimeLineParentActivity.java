@@ -33,11 +33,21 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity implemen
     protected void onResume() {
         super.onResume();
         GlobalContext.getInstance().setActivity(this);
+        GlobalContext.getInstance().setCurrentRunningActivity(this);
+
 
         if (theme == SettingUtility.getAppTheme()) {
 
         } else {
             reload();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (GlobalContext.getInstance().getCurrentRunningActivity() == this) {
+            GlobalContext.getInstance().setCurrentRunningActivity(null);
         }
     }
 

@@ -16,6 +16,8 @@
     <string name="your_token_is_expired">检测到你的授权信息已经过期了，请重新授权一次</string>
     <string name="logout_to_login_again">返回帐号管理页面，重新授权</string>
     <string name="dialog_title_error">出错啦</string>
+    <string name="login_again">重新授权</string>
+    <string name="have_account_whose_token_is_expired">有帐号已经过期，无法收取新消息</string>
 
     <!--Tip Dialog-->
     <string name="tip_dialog_title">提示</string>

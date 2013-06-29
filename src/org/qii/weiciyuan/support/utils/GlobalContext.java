@@ -39,6 +39,7 @@ public final class GlobalContext extends Application {
 
     //image size
     private Activity activity = null;
+    private Activity currentRunningActivity = null;
     private DisplayMetrics displayMetrics = null;
 
     //image memory cache
@@ -183,6 +184,14 @@ public final class GlobalContext extends Application {
 
     public void setActivity(Activity activity) {
         this.activity = activity;
+    }
+
+    public Activity getCurrentRunningActivity() {
+        return currentRunningActivity;
+    }
+
+    public void setCurrentRunningActivity(Activity currentRunningActivity) {
+        this.currentRunningActivity = currentRunningActivity;
     }
 
     private void buildCache() {
