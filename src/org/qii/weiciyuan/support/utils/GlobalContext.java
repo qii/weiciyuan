@@ -57,6 +57,8 @@ public final class GlobalContext extends Application {
 
     private Handler handler = new Handler();
 
+    public boolean tokenExpiredDialogIsShowing = false;
+
     @Override
     public void onCreate() {
         super.onCreate();

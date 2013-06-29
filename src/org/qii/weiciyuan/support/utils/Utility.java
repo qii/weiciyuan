@@ -559,7 +559,7 @@ public class Utility {
 
     public static void showExpiredTokenDialogOrNotification() {
         final Activity activity = GlobalContext.getInstance().getActivity();
-        if (activity != null) {
+        if (activity != null && !GlobalContext.getInstance().tokenExpiredDialogIsShowing) {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -572,9 +572,10 @@ public class Utility {
                                     intent.putExtra("launcher", false);
                                     activity.startActivity(intent);
                                     activity.finish();
+                                    GlobalContext.getInstance().tokenExpiredDialogIsShowing = false;
                                 }
                             }).show();
-
+                    GlobalContext.getInstance().tokenExpiredDialogIsShowing = true;
                 }
             });
         }
