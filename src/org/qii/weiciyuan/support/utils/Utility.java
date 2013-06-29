@@ -574,7 +574,12 @@ public class Utility {
                                     activity.finish();
                                     GlobalContext.getInstance().tokenExpiredDialogIsShowing = false;
                                 }
-                            }).show();
+                            }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            //do nothing
+                        }
+                    }).show();
                     GlobalContext.getInstance().tokenExpiredDialogIsShowing = true;
                 }
             });
