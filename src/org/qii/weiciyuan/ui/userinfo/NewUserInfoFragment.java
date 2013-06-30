@@ -1,8 +1,6 @@
 package org.qii.weiciyuan.ui.userinfo;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
@@ -21,12 +19,10 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
-import org.qii.weiciyuan.support.asyncdrawable.TaskCache;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
@@ -359,30 +355,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         final int height = viewPager.getHeight();
         final int width = Utility.getMaxLeftWidthOrHeightImageViewCanRead(height);
         final String picPath = userBean.getCover_image();
-        if (TextUtils.isEmpty(picPath))
-            return;
-
-        new MyAsyncTask<Void, Bitmap, Bitmap>() {
-
-            @Override
-            protected Bitmap doInBackground(Void... params) {
-                Bitmap bitmap = null;
-                boolean downloaded = TaskCache.waitForPictureDownload(
-                        picPath, null, FileManager.getFilePathFromUrl(picPath, FileLocationMethod.cover), FileLocationMethod.cover);
-                if (downloaded)
-                    bitmap = ImageTool.getNormalPic(FileManager.getFilePathFromUrl(picPath, FileLocationMethod.cover), width, height);
-                return bitmap;
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap bitmap) {
-                super.onPostExecute(bitmap);
-                if (getActivity() == null)
-                    return;
-                cover.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
-            }
-        }.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-
+        TimeLineBitmapDownloader.getInstance().display(cover, width, height, picPath, FileLocationMethod.cover);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -11,6 +12,8 @@ import android.widget.ImageView;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TimeLineImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -273,5 +276,28 @@ public class TimeLineBitmapDownloader {
         return null;
     }
 
+    public void display(final ImageView imageView, final int width, final int height, final String url, final FileLocationMethod method) {
+        if (TextUtils.isEmpty(url))
+            return;
 
+        new MyAsyncTask<Void, Bitmap, Bitmap>() {
+
+            @Override
+            protected Bitmap doInBackground(Void... params) {
+                Bitmap bitmap = null;
+                boolean downloaded = TaskCache.waitForPictureDownload(
+                        url, null, FileManager.getFilePathFromUrl(url, method), method);
+                if (downloaded)
+                    bitmap = ImageTool.getNormalPic(FileManager.getFilePathFromUrl(url, FileLocationMethod.cover), width, height);
+                return bitmap;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                super.onPostExecute(bitmap);
+                if (bitmap != null)
+                    imageView.setImageDrawable(new BitmapDrawable(GlobalContext.getInstance().getResources(), bitmap));
+            }
+        }.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+    }
 }
