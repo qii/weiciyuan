@@ -23,6 +23,7 @@ public class FileManager {
     private static final String PICTURE_THUMBNAIL = "picture_thumbnail";
     private static final String PICTURE_BMIDDLE = "picture_bmiddle";
     private static final String PICTURE_LARGE = "picture_large";
+    private static final String COVER = "cover";
     private static final String EMOTION = "emotion";
     private static final String TXT2PIC = "txt2pic";
     private static final String WEBVIEW_FAVICON = "favicon";
@@ -145,6 +146,9 @@ public class FileManager {
             case emotion:
                 String name = new File(oldRelativePath).getName();
                 newRelativePath = EMOTION + File.separator + name;
+                break;
+            case cover:
+                newRelativePath = COVER + oldRelativePath;
                 break;
         }
 

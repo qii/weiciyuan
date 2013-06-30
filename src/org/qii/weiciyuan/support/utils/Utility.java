@@ -14,6 +14,7 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.opengl.GLES10;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -40,6 +41,7 @@ import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.login.OAuthActivity;
 import org.qii.weiciyuan.ui.login.SSOActivity;
 
+import javax.microedition.khronos.opengles.GL10;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -626,6 +628,16 @@ public class Utility {
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(NotificationServiceHelper.getTokenExpiredNotificationId());
         }
+    }
+
+
+    public static int getMaxLeftWidthOrHeightImageViewCanRead(int heightOrWidth) {
+        //1pixel==4bytes http://stackoverflow.com/questions/13536042/android-bitmap-allocating-16-bytes-per-pixel
+        int[] maxSizeArray = new int[1];
+        GLES10.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE, maxSizeArray, 0);
+        int maxHeight = maxSizeArray[0];
+        int maxWidth = maxSizeArray[0];
+        return (maxHeight * maxWidth) / heightOrWidth;
     }
 }
 

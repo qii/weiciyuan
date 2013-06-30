@@ -355,6 +355,58 @@ public class ImageTool {
         }
     }
 
+    public static Bitmap getNormalPic(String filePath, int reqWidth, int reqHeight) {
+        try {
+
+            if (!FileManager.isExternalStorageMounted()) {
+                return null;
+            }
+
+
+            if (!filePath.endsWith(".jpg") && !filePath.endsWith(".gif"))
+                filePath = filePath + ".jpg";
+
+            boolean fileExist = new File(filePath).exists();
+
+            if (!fileExist && !SettingUtility.isEnablePic()) {
+                return null;
+            }
+
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(filePath, options);
+
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+            options.inJustDecodeBounds = false;
+            options.inPurgeable = true;
+            options.inInputShareable = true;
+
+            Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
+
+            if (bitmap == null) {
+                //this picture is broken,so delete it
+                new File(filePath).delete();
+                return null;
+            }
+
+
+            int[] size = calcResize(bitmap.getWidth(), bitmap.getHeight(), reqWidth, reqHeight);
+            if (size[0] > 0 && size[1] > 0) {
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size[0], size[1], true);
+                if (scaledBitmap != bitmap) {
+                    bitmap.recycle();
+                    bitmap = scaledBitmap;
+                }
+            }
+
+            return bitmap;
+        } catch (OutOfMemoryError ignored) {
+            ignored.printStackTrace();
+            return null;
+        }
+    }
+
     public static Bitmap getMiddlePictureInBrowserMSGActivity(String url, FileLocationMethod method, FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
         try {
