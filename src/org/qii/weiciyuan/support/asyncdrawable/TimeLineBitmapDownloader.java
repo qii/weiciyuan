@@ -288,7 +288,7 @@ public class TimeLineBitmapDownloader {
                 boolean downloaded = TaskCache.waitForPictureDownload(
                         url, null, FileManager.getFilePathFromUrl(url, method), method);
                 if (downloaded)
-                    bitmap = ImageTool.getNormalPic(FileManager.getFilePathFromUrl(url, FileLocationMethod.cover), width, height);
+                    bitmap = ImageTool.getNormalPic(FileManager.getFilePathFromUrl(url, method), width, height);
                 return bitmap;
             }
 
