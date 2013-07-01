@@ -213,16 +213,25 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         getPullToRefreshListView().setOnLastItemVisibleListener(null);
         getPullToRefreshListView().getRefreshableView().setOverScrollMode(View.OVER_SCROLL_ALWAYS);
         viewPager.setOnTouchListener(new View.OnTouchListener() {
+
+            float rawX;
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
-                        viewPager.getParent().requestDisallowInterceptTouchEvent(true);
+                        rawX = event.getRawX();
                         return false;
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
                         viewPager.getParent().requestDisallowInterceptTouchEvent(false);
+                        rawX = 0f;
                         return false;
+                    case MotionEvent.ACTION_MOVE:
+                        if (Math.abs(rawX - event.getRawX()) > ViewConfiguration.get(getActivity()).getScaledTouchSlop())
+                            viewPager.getParent().requestDisallowInterceptTouchEvent(true);
+
+                        break;
                 }
 
 
