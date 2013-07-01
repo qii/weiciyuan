@@ -32,6 +32,7 @@ import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.search.SearchMainParentFragment;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 import org.qii.weiciyuan.ui.userinfo.MyFavListFragment;
+import org.qii.weiciyuan.ui.userinfo.NewUserInfoFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.concurrent.Executors;
@@ -139,6 +140,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         Fragment search = getSearchFragment();
         Fragment dm = getDMFragment();
         Fragment fav = getFavFragment();
+        Fragment myself = getMyProfileFragment();
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (!friend.isAdded()) {
@@ -170,6 +172,11 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         if (!fav.isAdded()) {
             fragmentTransaction.add(R.id.menu_right_fl, fav, MyFavListFragment.class.getName());
             fragmentTransaction.hide(fav);
+        }
+
+        if (!myself.isAdded()) {
+            fragmentTransaction.add(R.id.menu_right_fl, myself, NewUserInfoFragment.class.getName());
+            fragmentTransaction.hide(myself);
         }
 
 
@@ -479,6 +486,17 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 MyFavListFragment.class.getName()));
         if (fragment == null) {
             fragment = new MyFavListFragment();
+            fragment.setArguments(new Bundle());
+        }
+        return fragment;
+    }
+
+    public NewUserInfoFragment getMyProfileFragment() {
+        NewUserInfoFragment fragment = ((NewUserInfoFragment) getSupportFragmentManager().findFragmentByTag(
+                NewUserInfoFragment.class.getName()));
+        if (fragment == null) {
+            fragment = new NewUserInfoFragment(GlobalContext.getInstance().getAccountBean().getInfo(),
+                    GlobalContext.getInstance().getSpecialToken());
             fragment.setArguments(new Bundle());
         }
         return fragment;

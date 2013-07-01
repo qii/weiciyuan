@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.userinfo;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
@@ -33,6 +34,8 @@ import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.loader.StatusesByIdLoader;
+import org.qii.weiciyuan.ui.main.LeftMenuFragment;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
 
 import java.io.File;
@@ -42,7 +45,7 @@ import java.util.ArrayList;
  * User: qii
  * Date: 13-6-20
  */
-public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<MessageListBean> {
+public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<MessageListBean> implements MainTimeLineActivity.ScrollableListFragment {
 
 
     protected UserBean userBean;
@@ -361,7 +364,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     }
 
     private void displayCoverPicture() {
-        final int height = viewPager.getHeight();
+//        final int height = viewPager.getHeight();
+        final int height = Utility.dip2px(200);
         final int width = Utility.getMaxLeftWidthOrHeightImageViewCanRead(height);
         final String picPath = userBean.getCover_image();
         TimeLineBitmapDownloader.getInstance().display(cover, width, height, picPath, FileLocationMethod.cover);
@@ -443,7 +447,34 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
         super.onActivityCreated(savedInstanceState);
 
+        if ((getActivity() instanceof MainTimeLineActivity) && (((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
+                == LeftMenuFragment.PROFILE_INDEX) {
+            buildActionBarAndViewPagerTitles();
+        }
 
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if ((getActivity() instanceof MainTimeLineActivity) && !hidden) {
+            buildActionBarAndViewPagerTitles();
+        }
+    }
+
+    public void buildActionBarAndViewPagerTitles() {
+        ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+
+        if (Utility.isDevicePort()) {
+            ((MainTimeLineActivity) getActivity()).setTitle(getString(R.string.profile));
+            getActivity().getActionBar().setIcon(R.drawable.ic_menu_profile);
+        } else {
+            ((MainTimeLineActivity) getActivity()).setTitle(getString(R.string.profile));
+            getActivity().getActionBar().setIcon(R.drawable.ic_launcher);
+        }
+
+        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        getActivity().getActionBar().removeAllTabs();
     }
 
 
@@ -518,6 +549,11 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             sinceId = getList().getItemList().get(0).getId();
         }
         return new StatusesByIdLoader(getActivity(), uid, screenName, token, sinceId, null);
+    }
+
+    @Override
+    public void scrollToTop() {
+        Utility.stopListViewScrollingAndScrollToTop(getListView());
     }
 
 
@@ -654,8 +690,10 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         @Override
         protected void onPostExecute(UserBean o) {
             setValue();
-            ((UserInfoActivity) getActivity()).setUser(o);
-            getActivity().invalidateOptionsMenu();
+            if (getActivity() instanceof UserInfoActivity) {
+                ((UserInfoActivity) getActivity()).setUser(o);
+                getActivity().invalidateOptionsMenu();
+            }
             topicListTask = new TopicListTask();
             topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             for (MessageBean msg : bean.getItemList()) {

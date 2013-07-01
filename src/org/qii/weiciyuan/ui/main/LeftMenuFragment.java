@@ -114,6 +114,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         rightFragments.append(SEARCH_INDEX, ((MainTimeLineActivity) getActivity()).getSearchFragment());
         rightFragments.append(DM_INDEX, ((MainTimeLineActivity) getActivity()).getDMFragment());
         rightFragments.append(FAV_INDEX, ((MainTimeLineActivity) getActivity()).getFavFragment());
+        rightFragments.append(PROFILE_INDEX, ((MainTimeLineActivity) getActivity()).getMyProfileFragment());
 
         switchCategory(currentIndex);
 
@@ -139,6 +140,9 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 break;
             case FAV_INDEX:
                 showFavPage(true);
+                break;
+            case PROFILE_INDEX:
+                showProfilePage(true);
                 break;
         }
         drawButtonsBackground(position);
@@ -241,6 +245,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(SEARCH_INDEX));
         ft.hide(rightFragments.get(DM_INDEX));
         ft.hide(rightFragments.get(FAV_INDEX));
+        ft.hide(rightFragments.get(PROFILE_INDEX));
 
         FriendsTimeLineFragment fragment = (FriendsTimeLineFragment) rightFragments.get(HOME_INDEX);
         ft.show(fragment);
@@ -283,6 +288,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(SEARCH_INDEX));
         ft.hide(rightFragments.get(DM_INDEX));
         ft.hide(rightFragments.get(FAV_INDEX));
+        ft.hide(rightFragments.get(PROFILE_INDEX));
 
 
         Fragment m = rightFragments.get(MENTIONS_INDEX);
@@ -345,6 +351,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(SEARCH_INDEX));
         ft.hide(rightFragments.get(DM_INDEX));
         ft.hide(rightFragments.get(FAV_INDEX));
+        ft.hide(rightFragments.get(PROFILE_INDEX));
 
         Fragment fragment = rightFragments.get(COMMENTS_INDEX);
         if (firstStart) {
@@ -401,6 +408,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(COMMENTS_INDEX));
         ft.hide(rightFragments.get(DM_INDEX));
         ft.hide(rightFragments.get(FAV_INDEX));
+        ft.hide(rightFragments.get(PROFILE_INDEX));
 
         Fragment fragment = rightFragments.get(SEARCH_INDEX);
 
@@ -459,6 +467,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(COMMENTS_INDEX));
         ft.hide(rightFragments.get(SEARCH_INDEX));
         ft.hide(rightFragments.get(FAV_INDEX));
+        ft.hide(rightFragments.get(PROFILE_INDEX));
 
         Fragment fragment = rightFragments.get(DM_INDEX);
 
@@ -508,8 +517,56 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(COMMENTS_INDEX));
         ft.hide(rightFragments.get(SEARCH_INDEX));
         ft.hide(rightFragments.get(DM_INDEX));
+        ft.hide(rightFragments.get(PROFILE_INDEX));
 
         Fragment fragment = rightFragments.get(FAV_INDEX);
+
+        ft.show(fragment);
+        ft.commit();
+    }
+
+    private boolean showProfilePage(boolean reset) {
+        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+        if (currentIndex == PROFILE_INDEX && !reset) {
+            ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+            return true;
+        }
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+
+        currentIndex = PROFILE_INDEX;
+        if (Utility.isDevicePort() && !reset) {
+            BroadcastReceiver receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
+                    if (currentIndex == PROFILE_INDEX)
+                        showProfilePageImp();
+
+                }
+            };
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+        } else {
+            showProfilePageImp();
+
+        }
+
+
+        ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
+
+        return false;
+    }
+
+    private void showProfilePageImp() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+        ft.hide(rightFragments.get(HOME_INDEX));
+        ft.hide(rightFragments.get(MENTIONS_INDEX));
+        ft.hide(rightFragments.get(COMMENTS_INDEX));
+        ft.hide(rightFragments.get(SEARCH_INDEX));
+        ft.hide(rightFragments.get(DM_INDEX));
+        ft.hide(rightFragments.get(FAV_INDEX));
+
+        Fragment fragment = rightFragments.get(PROFILE_INDEX);
 
         ft.show(fragment);
         ft.commit();
@@ -585,8 +642,9 @@ public class LeftMenuFragment extends AbstractAppFragment {
                     drawButtonsBackground(SEARCH_INDEX);
                     break;
                 case R.id.btn_profile:
-                    openMyProfile();
-//                    drawButtonsBackground(0);
+//                    openMyProfile();
+                    showProfilePage(false);
+                    drawButtonsBackground(PROFILE_INDEX);
                     break;
                 case R.id.btn_location:
                     startActivity(new Intent(getActivity(), NearbyTimeLineActivity.class));
@@ -615,7 +673,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         layout.mention.setBackgroundResource(R.drawable.btn_drawer_menu);
         layout.comment.setBackgroundResource(R.drawable.btn_drawer_menu);
         layout.search.setBackgroundResource(R.drawable.btn_drawer_menu);
-//        layout.profile.setBackgroundResource(R.color.transparent);
+        layout.profile.setBackgroundResource(R.drawable.btn_drawer_menu);
 //        layout.location.setBackgroundResource(R.color.transparent);
 //        layout.setting.setBackgroundResource(R.color.transparent);
         layout.dm.setBackgroundResource(R.drawable.btn_drawer_menu);
