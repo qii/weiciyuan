@@ -21,6 +21,7 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.database.MyStatusDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -83,6 +84,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
     private TopicListTask topicListTask;
     private RefreshTask refreshTask;
+    private DBCacheTask dbTask;
 
 
     public NewUserInfoFragment() {
@@ -420,12 +422,16 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                loadNewMsg();
-                topicListTask = new TopicListTask();
-                topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 refresh();
                 setValue();
+                if (isMyself() && isOpenedFromMainPage()) {
+                    readDBCache();
+                } else {
+                    loadNewMsg();
+                    topicListTask = new TopicListTask();
+                    topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
+                }
                 break;
             case SCREEN_ROTATE:
                 //nothing
@@ -486,6 +492,13 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
     }
 
+    private boolean isMyself() {
+        return userBean.getId().equals(GlobalContext.getInstance().getCurrentAccountId());
+    }
+
+    private boolean isOpenedFromMainPage() {
+        return getActivity() instanceof MainTimeLineActivity;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -509,7 +522,9 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             getListView().setSelectionAfterHeaderView();
             getActivity().invalidateOptionsMenu();
             moreFooter.setVisibility(View.VISIBLE);
-
+            if (isMyself()) {
+                MyStatusDBTask.asyncReplace(getList(), userBean.getId());
+            }
         }
 
 
@@ -518,6 +533,13 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     @Override
     protected void oldMsgOnPostExecute(MessageListBean newValue) {
 
+    }
+
+    private void readDBCache() {
+        if (Utility.isTaskStopped(dbTask) && getList().getSize() == 0) {
+            dbTask = new DBCacheTask();
+            dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
 
@@ -703,6 +725,38 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             super.onPostExecute(o);
         }
 
+    }
+
+
+    private class DBCacheTask extends MyAsyncTask<Void, MessageListBean, MessageListBean> {
+
+
+        @Override
+        protected MessageListBean doInBackground(Void... params) {
+            progressFooter.setVisibility(View.VISIBLE);
+            return MyStatusDBTask.get(userBean.getId());
+        }
+
+        @Override
+        protected void onPostExecute(MessageListBean result) {
+            super.onPostExecute(result);
+
+            if (result != null) {
+                getListView().removeFooterView(progressFooter);
+                getList().addNewData(result);
+                getAdapter().notifyDataSetChanged();
+                getListView().setSelectionAfterHeaderView();
+                getActivity().invalidateOptionsMenu();
+                moreFooter.setVisibility(View.VISIBLE);
+
+            }
+
+            refreshLayout(getList());
+
+            if (getList().getSize() == 0) {
+                loadNewMsg();
+            }
+        }
     }
 }
 

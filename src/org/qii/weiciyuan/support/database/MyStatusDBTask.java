@@ -1,7 +1,7 @@
 package org.qii.weiciyuan.support.database;
 
-import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import com.google.gson.Gson;
@@ -9,7 +9,6 @@ import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.support.database.table.MyStatusTable;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,54 +40,43 @@ public class MyStatusDBTask {
             return;
         }
 
+
         Gson gson = new Gson();
         List<MessageBean> msgList = list.getItemList();
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), MyStatusTable.StatusDataTable.TABLE_NAME);
+        final int mblogidColumn = ih.getColumnIndex(MyStatusTable.StatusDataTable.MBLOGID);
+        final int accountidColumn = ih.getColumnIndex(MyStatusTable.StatusDataTable.ACCOUNTID);
+        final int jsondataColumn = ih.getColumnIndex(MyStatusTable.StatusDataTable.JSONDATA);
         try {
             getWsd().beginTransaction();
-            for (MessageBean msg : msgList) {
-                ContentValues cv = new ContentValues();
-                cv.put(MyStatusTable.MBLOGID, msg.getId());
-                cv.put(MyStatusTable.ACCOUNTID, accountId);
-                String json = gson.toJson(msg);
-                cv.put(MyStatusTable.JSONDATA, json);
-                getWsd().insert(MyStatusTable.TABLE_NAME,
-                        MyStatusTable.ID, cv);
+            for (int i = 0; i < msgList.size(); i++) {
+                MessageBean msg = msgList.get(i);
+                ih.prepareForInsert();
+                if (msg != null) {
+                    ih.bind(mblogidColumn, msg.getId());
+                    ih.bind(accountidColumn, accountId);
+                    String json = gson.toJson(msg);
+                    ih.bind(jsondataColumn, json);
+                } else {
+                    ih.bind(mblogidColumn, "-1");
+                    ih.bind(accountidColumn, accountId);
+                    ih.bind(jsondataColumn, "");
+                }
+                ih.execute();
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
         } finally {
             getWsd().endTransaction();
-        }
-        reduceTableSize(accountId);
-
-    }
-
-    private static void reduceTableSize(String accountId) {
-        String searchCount = "select count(" + MyStatusTable.ID + ") as total" + " from " + MyStatusTable.TABLE_NAME + " where " + MyStatusTable.ACCOUNTID
-                + " = " + accountId;
-        int total = 0;
-        Cursor c = getWsd().rawQuery(searchCount, null);
-        if (c.moveToNext()) {
-            total = c.getInt(c.getColumnIndex("total"));
+            ih.close();
         }
 
-        c.close();
 
-        int needDeletedNumber = total - Integer.valueOf(SettingUtility.getMsgCount());
-
-        if (needDeletedNumber > 0) {
-            String sql = " delete from " + MyStatusTable.TABLE_NAME + " where " + MyStatusTable.ID + " in "
-                    + "( select " + MyStatusTable.ID + " from " + MyStatusTable.TABLE_NAME + " where "
-                    + MyStatusTable.ACCOUNTID
-                    + " in " + "(" + accountId + ") order by " + MyStatusTable.ID + " asc limit " + needDeletedNumber + " ) ";
-
-            getWsd().execSQL(sql);
-        }
     }
 
 
     public static void clear(String accountId) {
-        String sql = "delete from " + MyStatusTable.TABLE_NAME + " where " + MyStatusTable.ACCOUNTID + " in " + "(" + accountId + ")";
+        String sql = "delete from " + MyStatusTable.StatusDataTable.TABLE_NAME + " where " + MyStatusTable.StatusDataTable.ACCOUNTID + " in " + "(" + accountId + ")";
 
         getWsd().execSQL(sql);
     }
@@ -98,11 +86,11 @@ public class MyStatusDBTask {
         MessageListBean result = new MessageListBean();
 
         List<MessageBean> msgList = new ArrayList<MessageBean>();
-        String sql = "select * from " + MyStatusTable.TABLE_NAME + " where " + MyStatusTable.ACCOUNTID + "  = "
-                + accountId + " order by " + MyStatusTable.MBLOGID + " desc limit 50";
+        String sql = "select * from " + MyStatusTable.StatusDataTable.TABLE_NAME + " where " + MyStatusTable.StatusDataTable.ACCOUNTID + "  = "
+                + accountId + " order by " + MyStatusTable.StatusDataTable.MBLOGID + " desc limit 50";
         Cursor c = getRsd().rawQuery(sql, null);
         while (c.moveToNext()) {
-            String json = c.getString(c.getColumnIndex(MyStatusTable.JSONDATA));
+            String json = c.getString(c.getColumnIndex(MyStatusTable.StatusDataTable.JSONDATA));
             try {
                 MessageBean value = gson.fromJson(json, MessageBean.class);
                 value.getListViewSpannableString();
@@ -119,4 +107,13 @@ public class MyStatusDBTask {
 
     }
 
+    public static void asyncReplace(final MessageListBean data, final String accountId) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                clear(accountId);
+                add(data, accountId);
+            }
+        }).start();
+    }
 }

@@ -15,7 +15,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 31;
+    private static final int DATABASE_VERSION = 33;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -157,8 +157,15 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + "("
             + MyStatusTable.ID + " integer primary key autoincrement,"
             + MyStatusTable.ACCOUNTID + " text,"
-            + MyStatusTable.MBLOGID + " text,"
-            + MyStatusTable.JSONDATA + " text"
+            + MyStatusTable.TIMELINEDATA + " text"
+            + ");";
+
+    static final String CREATE_MYSTATUSES_DATA_TABLE_SQL = "create table " + MyStatusTable.StatusDataTable.TABLE_NAME
+            + "("
+            + MyStatusTable.StatusDataTable.ID + " integer primary key autoincrement,"
+            + MyStatusTable.StatusDataTable.ACCOUNTID + " text,"
+            + MyStatusTable.StatusDataTable.MBLOGID + " text,"
+            + MyStatusTable.StatusDataTable.JSONDATA + " text"
             + ");";
 
     static final String CREATE_FILTER_TABLE_SQL = "create table " + FilterTable.TABLE_NAME
@@ -321,6 +328,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_FAVOURITES_DATA_TABLE_SQL);
 
         db.execSQL(CREATE_MYSTATUSES_TABLE_SQL);
+        db.execSQL(CREATE_MYSTATUSES_DATA_TABLE_SQL);
 
         db.execSQL(CREATE_FILTER_TABLE_SQL);
         db.execSQL(CREATE_EMOTIONS_TABLE_SQL);
@@ -362,11 +370,13 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + FavouriteTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + FavouriteTable.FavouriteDataTable.TABLE_NAME);
 
+        db.execSQL("DROP TABLE IF EXISTS " + MyStatusTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MyStatusTable.StatusDataTable.TABLE_NAME);
+
         db.execSQL("DROP TABLE IF EXISTS " + FilterTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EmotionsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DraftTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DMTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + MyStatusTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + AtUsersTable.TABLE_NAME);
 
     }
