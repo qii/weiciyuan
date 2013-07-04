@@ -43,6 +43,7 @@ import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * User: qii
@@ -89,6 +90,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     private TopicListTask topicListTask;
     private RefreshTask refreshTask;
     private DBCacheTask dbTask;
+
+    private AtomicInteger finishedWatcher;
 
 
     public NewUserInfoFragment() {
@@ -426,15 +429,13 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                refresh();
                 setValue();
                 if (isMyself() && isOpenedFromMainPage()) {
                     readDBCache();
                 } else {
+                    fetchLastestUserInfoFromServer();
                     loadNewMsg();
-                    topicListTask = new TopicListTask();
-                    topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-
+                    fetchTopicInfoFromServer();
                 }
                 break;
             case SCREEN_ROTATE:
@@ -462,6 +463,11 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             buildActionBarAndViewPagerTitles();
         }
 
+    }
+
+    private void fetchTopicInfoFromServer() {
+        topicListTask = new TopicListTask();
+        topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -507,6 +513,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
     @Override
     protected void newMsgOnPostExecute(MessageListBean newValue, Bundle loaderArgs) {
+        stopRefreshMenuAnimationIfPossible();
         getListView().removeFooterView(progressFooter);
         if (getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
@@ -518,7 +525,6 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
                 MyStatusDBTask.asyncReplace(getList(), userBean.getId());
             }
         }
-
 
     }
 
@@ -582,11 +588,16 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         }
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh_my_profile:
                 startRefreshMenuAnimation();
+                finishedWatcher = new AtomicInteger(3);
+                fetchLastestUserInfoFromServer();
+                fetchTopicInfoFromServer();
+                loadNewMsg();
                 return true;
             case R.id.menu_edit:
                 if (isMyself() && isOpenedFromMainPage()) {
@@ -610,6 +621,17 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     private void stopRefreshMenuAnimation() {
         if (refreshItem.getActionView() != null) {
             refreshItem.setActionView(null);
+        }
+    }
+
+    private void stopRefreshMenuAnimationIfPossible() {
+        if (!isMyself() || !isOpenedFromMainPage()) {
+            return;
+        }
+
+        finishedWatcher.getAndDecrement();
+        if (finishedWatcher.get() == 0) {
+            stopRefreshMenuAnimation();
         }
     }
 
@@ -681,16 +703,17 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             ArrayList<String> dbCache = new ArrayList<String>();
             dbCache.addAll(topicList);
             TopicDBTask.asyncReplace(userBean.getId(), dbCache);
+            stopRefreshMenuAnimationIfPossible();
         }
     }
 
     //sina api has bug,so must refresh to get actual data
     public void forceReloadData(UserBean bean) {
         this.userBean = bean;
-        refresh();
+        fetchLastestUserInfoFromServer();
     }
 
-    private void refresh() {
+    private void fetchLastestUserInfoFromServer() {
         if (Utility.isTaskStopped(refreshTask)) {
             refreshTask = new RefreshTask();
             refreshTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
@@ -744,6 +767,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             if (Utility.isAllNotNull(getActivity(), this.e)) {
                 Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
             }
+            stopRefreshMenuAnimationIfPossible();
         }
 
         @Override
@@ -753,12 +777,11 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
                 ((UserInfoActivity) getActivity()).setUser(o);
                 getActivity().invalidateOptionsMenu();
             }
-            topicListTask = new TopicListTask();
-            topicListTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             for (MessageBean msg : bean.getItemList()) {
                 msg.setUser(o);
             }
             getAdapter().notifyDataSetChanged();
+            stopRefreshMenuAnimationIfPossible();
             super.onPostExecute(o);
         }
 
