@@ -529,6 +529,12 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     }
 
     @Override
+    protected void newMsgOnPostExecuteError(WeiboException exception) {
+        super.newMsgOnPostExecuteError(exception);
+        stopRefreshMenuAnimationIfPossible();
+    }
+
+    @Override
     protected void oldMsgOnPostExecute(MessageListBean newValue) {
 
     }
@@ -688,6 +694,12 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
                 cancel(true);
                 return null;
             }
+        }
+
+        @Override
+        protected void onCancelled(ArrayList<String> strings) {
+            super.onCancelled(strings);
+            stopRefreshMenuAnimationIfPossible();
         }
 
         @Override

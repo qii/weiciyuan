@@ -570,6 +570,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                     refreshLayout(getList());
                     if (Utility.isAllNotNull(exception)) {
                         newMsgTipBar.setError(exception.getError());
+                        newMsgOnPostExecuteError(exception);
                     } else
                         newMsgOnPostExecute(data, args);
                     break;
@@ -609,6 +610,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         }
     };
 
+    protected void newMsgOnPostExecuteError(WeiboException exception) {
+
+    }
 }
 
 
