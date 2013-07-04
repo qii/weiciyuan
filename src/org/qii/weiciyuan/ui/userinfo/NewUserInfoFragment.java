@@ -22,6 +22,7 @@ import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.database.MyStatusDBTask;
+import org.qii.weiciyuan.support.database.TopicDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -644,6 +645,9 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             }
             topicList = result;
             topicsCount.setText(Utility.convertStateNumberToString(getActivity(), String.valueOf(result.size())));
+            ArrayList<String> dbCache = new ArrayList<String>();
+            dbCache.addAll(topicList);
+            TopicDBTask.asyncReplace(userBean.getId(), dbCache);
         }
     }
 
@@ -728,13 +732,33 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     }
 
 
-    private class DBCacheTask extends MyAsyncTask<Void, MessageListBean, MessageListBean> {
+    private class DBCacheTask extends MyAsyncTask<Void, ArrayList<String>, MessageListBean> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressFooter.setVisibility(View.VISIBLE);
+
+        }
 
 
         @Override
         protected MessageListBean doInBackground(Void... params) {
-            progressFooter.setVisibility(View.VISIBLE);
+
+            ArrayList<String> topicList = TopicDBTask.get(userBean.getId());
+            publishProgress(topicList);
             return MyStatusDBTask.get(userBean.getId());
+        }
+
+        @Override
+        protected void onProgressUpdate(ArrayList<String>... values) {
+            super.onProgressUpdate(values);
+            ArrayList<String> result = values[0];
+            if (result == null || result.size() == 0) {
+                return;
+            }
+            topicList = result;
+            topicsCount.setText(Utility.convertStateNumberToString(getActivity(), String.valueOf(result.size())));
         }
 
         @Override
@@ -758,6 +782,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             }
         }
     }
+
 }
 
 

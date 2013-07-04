@@ -15,7 +15,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
-    private static final int DATABASE_VERSION = 33;
+    private static final int DATABASE_VERSION = 34;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -200,6 +200,13 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + AtUsersTable.JSONDATA + " text"
             + ");";
 
+    static final String CREATE_TOPICS_TABLE_SQL = "create table " + TopicTable.TABLE_NAME
+            + "("
+            + TopicTable.ID + " integer primary key autoincrement,"
+            + TopicTable.ACCOUNTID + " text,"
+            + TopicTable.TOPIC_NAME + " text"
+            + ");";
+
     private static final String CREATE_HOME_INDEX_SQL = "CREATE INDEX idx_"
             + HomeTable.HomeDataTable.TABLE_NAME
             + " ON "
@@ -334,6 +341,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_EMOTIONS_TABLE_SQL);
         db.execSQL(CREATE_DRAFTS_TABLE_SQL);
         db.execSQL(CREATE_ATUSERS_TABLE_SQL);
+        db.execSQL(CREATE_TOPICS_TABLE_SQL);
 
         db.execSQL(CREATE_HOME_INDEX_SQL);
         db.execSQL(CREATE_HOME_OTHER_GROUP_INDEX_SQL);
@@ -378,6 +386,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DraftTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DMTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + AtUsersTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TopicTable.TABLE_NAME);
 
     }
 
