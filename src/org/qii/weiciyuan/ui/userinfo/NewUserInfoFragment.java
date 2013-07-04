@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.userinfo;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
@@ -80,6 +81,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
     private View progressFooter;
     private View moreFooter;
+
+    private MenuItem refreshItem;
 
     private ArrayList<String> topicList;
 
@@ -501,18 +504,6 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         return getActivity() instanceof MainTimeLineActivity;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.menu_refresh:
-                getPullToRefreshListView().setRefreshing();
-                loadNewMsg();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
     @Override
     protected void newMsgOnPostExecute(MessageListBean newValue, Bundle loaderArgs) {
@@ -579,6 +570,48 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         Utility.stopListViewScrollingAndScrollToTop(getListView());
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (isMyself() && isOpenedFromMainPage()) {
+            inflater.inflate(R.menu.actionbar_menu_newuserinfofragment_main_page, menu);
+            MenuItem edit = menu.findItem(R.id.menu_edit);
+            edit.setVisible(GlobalContext.getInstance().getAccountBean().isBlack_magic());
+            refreshItem = menu.findItem(R.id.menu_refresh_my_profile);
+
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_refresh_my_profile:
+                startRefreshMenuAnimation();
+                return true;
+            case R.id.menu_edit:
+                if (isMyself() && isOpenedFromMainPage()) {
+                    Intent intent = new Intent(getActivity(), EditMyProfileActivity.class);
+                    intent.putExtra("userBean", GlobalContext.getInstance().getAccountBean().getInfo());
+                    startActivity(intent);
+                    return true;
+                } else {
+                    return super.onOptionsItemSelected(item);
+                }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void startRefreshMenuAnimation() {
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(R.layout.newuserinfofragment_refresh_actionbar_view_layout, null);
+        refreshItem.setActionView(v);
+    }
+
+    private void stopRefreshMenuAnimation() {
+        if (refreshItem.getActionView() != null) {
+            refreshItem.setActionView(null);
+        }
+    }
 
     class HeaderPagerAdapter extends PagerAdapter {
 
