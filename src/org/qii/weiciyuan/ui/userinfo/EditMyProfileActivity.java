@@ -260,7 +260,6 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
             super.onPostExecute(userBean);
             if (userBean != null) {
                 Toast.makeText(EditMyProfileActivity.this, R.string.edit_successfully, Toast.LENGTH_SHORT).show();
-                GlobalContext.getInstance().updateUserInfo(userBean);
                 new RefreshTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
