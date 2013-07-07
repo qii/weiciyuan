@@ -25,6 +25,7 @@ import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.dm.DMUserListActivity;
+import org.qii.weiciyuan.ui.dm.DMUserListFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
@@ -32,7 +33,9 @@ import org.qii.weiciyuan.ui.nearby.NearbyTimeLineActivity;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 import org.qii.weiciyuan.ui.search.SearchMainActivity;
 import org.qii.weiciyuan.ui.search.SearchMainParentFragment;
+import org.qii.weiciyuan.ui.userinfo.MyFavListFragment;
 import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
+import org.qii.weiciyuan.ui.userinfo.NewUserInfoFragment;
 
 import java.util.TreeSet;
 
@@ -475,7 +478,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.show(fragment);
         ft.commit();
 
-
+        ((DMUserListFragment) fragment).buildActionBarAndViewPagerTitles();
     }
 
     private boolean showFavPage(boolean reset) {
@@ -523,6 +526,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
         ft.show(fragment);
         ft.commit();
+        ((MyFavListFragment) fragment).buildActionBarAndViewPagerTitles();
     }
 
     private boolean showProfilePage(boolean reset) {
@@ -570,6 +574,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
         ft.show(fragment);
         ft.commit();
+        ((NewUserInfoFragment) fragment).buildActionBarAndViewPagerTitles();
     }
 
 

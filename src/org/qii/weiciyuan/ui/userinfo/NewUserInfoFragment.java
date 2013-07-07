@@ -277,13 +277,12 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         });
 
 
-        HeaderPagerAdapter adapter = new HeaderPagerAdapter();
-        viewPager.setAdapter(adapter);
-
-
     }
 
     private void setValue() {
+        HeaderPagerAdapter adapter = new HeaderPagerAdapter();
+        viewPager.setAdapter(adapter);
+
         friendsCount.setText(Utility.convertStateNumberToString(getActivity(), userBean.getFriends_count()));
         fansCount.setText(Utility.convertStateNumberToString(getActivity(), userBean.getFollowers_count()));
         weiboCount.setText(Utility.convertStateNumberToString(getActivity(), userBean.getStatuses_count()));
