@@ -634,6 +634,9 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             return;
         }
 
+        if (finishedWatcher == null)
+            return;
+
         finishedWatcher.getAndDecrement();
         if (finishedWatcher.get() == 0) {
             stopRefreshMenuAnimation();
