@@ -450,6 +450,7 @@ public class Utility {
         }
     }
 
+    //to do getChildAt(0)
     public static TimeLinePosition getCurrentPositionFromListView(ListView listView) {
         View view = listView.getChildAt(1);
         int top = (view != null ? view.getTop() : 0);

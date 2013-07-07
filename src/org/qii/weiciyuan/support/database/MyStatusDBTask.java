@@ -1,13 +1,17 @@
 package org.qii.weiciyuan.support.database;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.android.MyStatusTimeLineData;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.table.MyStatusTable;
 
 import java.util.ArrayList;
@@ -81,7 +85,7 @@ public class MyStatusDBTask {
         getWsd().execSQL(sql);
     }
 
-    public static MessageListBean get(String accountId) {
+    public static MyStatusTimeLineData get(String accountId) {
         Gson gson = new Gson();
         MessageListBean result = new MessageListBean();
 
@@ -103,8 +107,54 @@ public class MyStatusDBTask {
 
         result.setStatuses(msgList);
         c.close();
-        return result;
+        return new MyStatusTimeLineData(result, getPosition(accountId));
 
+    }
+
+    private static void updatePosition(TimeLinePosition position, String accountId) {
+        String sql = "select * from " + MyStatusTable.TABLE_NAME + " where " + MyStatusTable.ACCOUNTID + "  = "
+                + accountId;
+        Cursor c = getRsd().rawQuery(sql, null);
+        Gson gson = new Gson();
+        if (c.moveToNext()) {
+            try {
+                String[] args = {accountId};
+                ContentValues cv = new ContentValues();
+                cv.put(MyStatusTable.TIMELINEDATA, gson.toJson(position));
+                getWsd().update(MyStatusTable.TABLE_NAME, cv, MyStatusTable.ACCOUNTID + "=?", args);
+            } catch (JsonSyntaxException e) {
+
+            }
+        } else {
+
+            ContentValues cv = new ContentValues();
+            cv.put(MyStatusTable.ACCOUNTID, accountId);
+            cv.put(MyStatusTable.TIMELINEDATA, gson.toJson(position));
+            getWsd().insert(MyStatusTable.TABLE_NAME,
+                    MyStatusTable.ID, cv);
+        }
+    }
+
+    private static TimeLinePosition getPosition(String accountId) {
+        String sql = "select * from " + MyStatusTable.TABLE_NAME + " where " + MyStatusTable.ACCOUNTID + "  = "
+                + accountId;
+        Cursor c = getRsd().rawQuery(sql, null);
+        Gson gson = new Gson();
+        while (c.moveToNext()) {
+            String json = c.getString(c.getColumnIndex(MyStatusTable.TIMELINEDATA));
+            if (!TextUtils.isEmpty(json)) {
+                try {
+                    TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
+                    return value;
+
+                } catch (JsonSyntaxException e) {
+
+                }
+            }
+
+        }
+        c.close();
+        return new TimeLinePosition(0, 0);
     }
 
     public static void asyncReplace(final MessageListBean data, final String accountId) {
@@ -115,5 +165,19 @@ public class MyStatusDBTask {
                 add(data, accountId);
             }
         }).start();
+    }
+
+    public static void asyncUpdatePosition(final TimeLinePosition position, final String accountId) {
+        if (position == null)
+            return;
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updatePosition(position, accountId);
+            }
+        };
+
+        new Thread(runnable).start();
     }
 }

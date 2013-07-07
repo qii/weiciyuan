@@ -19,6 +19,8 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
+import org.qii.weiciyuan.bean.android.MyStatusTimeLineData;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
@@ -92,6 +94,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     private DBCacheTask dbTask;
 
     private AtomicInteger finishedWatcher;
+
+    private TimeLinePosition position;
 
 
     public NewUserInfoFragment() {
@@ -643,6 +647,44 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (!getActivity().isChangingConfigurations() && isMyself() && isOpenedFromMainPage()) {
+            savePositionToDB();
+        }
+    }
+
+    @Override
+    protected void onListViewScrollStop() {
+        savePositionToPositionsCache();
+
+    }
+
+    private void savePositionToDB() {
+        if (position == null) {
+            savePositionToPositionsCache();
+        }
+        MyStatusDBTask.asyncUpdatePosition(position, GlobalContext.getInstance().getCurrentAccountId());
+    }
+
+    private void savePositionToPositionsCache() {
+        position = Utility.getCurrentPositionFromListView(getListView());
+    }
+
+
+    private void setListViewPositionFromPositionsCache() {
+
+        TimeLinePosition p = position;
+        if (p != null)
+            getListView().setSelectionFromTop(p.position + 1, p.top);
+        else
+            getListView().setSelectionFromTop(0, 0);
+
+
+    }
+
+
     class HeaderPagerAdapter extends PagerAdapter {
 
         @Override
@@ -707,6 +749,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         @Override
         protected void onPostExecute(ArrayList<String> result) {
             super.onPostExecute(result);
+            stopRefreshMenuAnimationIfPossible();
+
             if (isCancelled())
                 return;
             if (result == null || result.size() == 0) {
@@ -717,7 +761,6 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             ArrayList<String> dbCache = new ArrayList<String>();
             dbCache.addAll(topicList);
             TopicDBTask.asyncReplace(userBean.getId(), dbCache);
-            stopRefreshMenuAnimationIfPossible();
         }
     }
 
@@ -802,7 +845,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     }
 
 
-    private class DBCacheTask extends MyAsyncTask<Void, ArrayList<String>, MessageListBean> {
+    private class DBCacheTask extends MyAsyncTask<Void, ArrayList<String>, MyStatusTimeLineData> {
 
         @Override
         protected void onPreExecute() {
@@ -813,7 +856,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
 
         @Override
-        protected MessageListBean doInBackground(Void... params) {
+        protected MyStatusTimeLineData doInBackground(Void... params) {
 
             ArrayList<String> topicList = TopicDBTask.get(userBean.getId());
             publishProgress(topicList);
@@ -832,14 +875,15 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         }
 
         @Override
-        protected void onPostExecute(MessageListBean result) {
+        protected void onPostExecute(MyStatusTimeLineData result) {
             super.onPostExecute(result);
 
             if (result != null) {
                 getListView().removeFooterView(progressFooter);
-                getList().addNewData(result);
+                getList().addNewData(result.msgList);
                 getAdapter().notifyDataSetChanged();
-                getListView().setSelectionAfterHeaderView();
+                position = result.position;
+                setListViewPositionFromPositionsCache();
                 getActivity().invalidateOptionsMenu();
                 moreFooter.setVisibility(View.VISIBLE);
 
