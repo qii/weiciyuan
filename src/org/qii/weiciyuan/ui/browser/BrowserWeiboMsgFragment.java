@@ -7,10 +7,7 @@ import android.os.Handler;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.*;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
@@ -43,6 +40,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private MsgDetailReadWorker picTask;
 
     private Handler handler = new Handler();
+
+    private ListView listView;
+    private DataAdapter adapter;
 
     private static class BrowserWeiboMsgLayout {
         TextView username;
@@ -154,16 +154,15 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (mRootview == null) {
-            mRootview = inflater.inflate(R.layout.browserweibomsgactivity_layout, container, false);
-            initView(mRootview, savedInstanceState);
-        } else {
-            View oldParent = (View) mRootview.getParent();
-            if (oldParent != container && oldParent != null) {
-                ((ViewGroup) oldParent).removeView(mRootview);
-            }
-        }
-        return mRootview;
+        listView = new ListView(getActivity());
+        View header = inflater.inflate(R.layout.browserweibomsgactivity_layout, listView, false);
+        listView.addHeaderView(header);
+
+        initView(header, savedInstanceState);
+        adapter = new DataAdapter();
+        listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        return listView;
     }
 
     private void initView(View view, Bundle savedInstanceState) {
@@ -396,4 +395,28 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             }
         }
     };
+
+
+    private class DataAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return 0;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return null;
+        }
+    }
 }
