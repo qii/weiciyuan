@@ -7,7 +7,10 @@ import android.os.Handler;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.*;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
@@ -17,6 +20,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.asyncdrawable.MsgDetailReadWorker;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.TimeLineImageView;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -51,19 +55,15 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         MapView mapView;
 
         ImageView avatar;
-        ImageView content_pic;
-        ImageView repost_pic;
+        TimeLineImageView content_pic;
+        TimeLineImageView repost_pic;
 
-        RelativeLayout repost_layout;
-        FrameLayout pic_layout;
-        FrameLayout repost_pic_layout;
+        LinearLayout repost_layout;
 
         TextView comment_count;
         TextView repost_count;
         View count_layout;
 
-        ProgressBar content_pic_pb;
-        ProgressBar repost_pic_pb;
     }
 
     public BrowserWeiboMsgFragment() {
@@ -192,15 +192,11 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         layout.count_layout = view.findViewById(R.id.count_layout);
 
         layout.avatar = (ImageView) view.findViewById(R.id.avatar);
-        layout.content_pic = (ImageView) view.findViewById(R.id.content_pic);
-        layout.repost_pic = (ImageView) view.findViewById(R.id.repost_content_pic);
+        layout.content_pic = (TimeLineImageView) view.findViewById(R.id.content_pic);
+        layout.repost_pic = (TimeLineImageView) view.findViewById(R.id.repost_content_pic);
 
-        layout.content_pic_pb = (ProgressBar) view.findViewById(R.id.content_pic_pb);
-        layout.repost_pic_pb = (ProgressBar) view.findViewById(R.id.repost_content_pic_pb);
 
-        layout.repost_layout = (RelativeLayout) view.findViewById(R.id.repost_layout);
-        layout.pic_layout = (FrameLayout) view.findViewById(R.id.pic_layout);
-        layout.repost_pic_layout = (FrameLayout) view.findViewById(R.id.repost_pic_layout);
+        layout.repost_layout = (LinearLayout) view.findViewById(R.id.repost_layout);
     }
 
     @Override
@@ -287,11 +283,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         //sina weibo official account can send repost message with picture, fuck sina weibo
         if (!TextUtils.isEmpty(msg.getBmiddle_pic()) && msg.getRetweeted_status() == null) {
             if (Utility.isTaskStopped(picTask)) {
-                layout.pic_layout.setVisibility(View.VISIBLE);
                 layout.content_pic.setVisibility(View.VISIBLE);
 
                 if (refreshPic) {
-                    picTask = new MsgDetailReadWorker(layout.content_pic, layout.content_pic_pb, msg);
+                    picTask = new MsgDetailReadWorker(layout.content_pic, msg);
                     picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
 
@@ -299,11 +294,12 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         }
 
         MessageBean repostMsg = msg.getRetweeted_status();
+
+        layout.repost_layout.setVisibility(repostMsg != null ? View.VISIBLE : View.GONE);
+
         if (repostMsg != null) {
             //sina weibo official account can send repost message with picture, fuck sina weibo
             layout.content_pic.setVisibility(View.GONE);
-            layout.content_pic_pb.setVisibility(View.GONE);
-            layout.pic_layout.setVisibility(View.GONE);
 
             layout.repost_layout.setVisibility(View.VISIBLE);
             layout.recontent.setVisibility(View.VISIBLE);
@@ -315,12 +311,11 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 layout.recontent.setText(repostMsg.getListViewSpannableString());
             }
             if (!TextUtils.isEmpty(repostMsg.getBmiddle_pic())) {
-                layout.repost_pic_layout.setVisibility(View.VISIBLE);
                 layout.repost_pic.setVisibility(View.VISIBLE);
                 if (Utility.isTaskStopped(picTask)) {
 
                     if (refreshPic) {
-                        picTask = new MsgDetailReadWorker(layout.repost_pic, layout.repost_pic_pb, msg.getRetweeted_status());
+                        picTask = new MsgDetailReadWorker(layout.repost_pic, msg.getRetweeted_status());
                         picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     }
 
@@ -329,8 +324,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             }
         }
 
-        Utility.buildTabCount(getActivity().getActionBar().getTabAt(1), getString(R.string.comments), msg.getComments_count());
-        Utility.buildTabCount(getActivity().getActionBar().getTabAt(2), getString(R.string.repost), msg.getReposts_count());
+//        Utility.buildTabCount(getActivity().getActionBar().getTabAt(1), getString(R.string.comments), msg.getComments_count());
+//        Utility.buildTabCount(getActivity().getActionBar().getTabAt(2), getString(R.string.repost), msg.getReposts_count());
     }
 
     private void buildRepostCount() {
@@ -391,10 +386,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                     picTask.cancel(true);
                 }
                 if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
-                    picTask = new MsgDetailReadWorker(layout.content_pic, layout.content_pic_pb, msg);
+                    picTask = new MsgDetailReadWorker(layout.content_pic, msg);
                     picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
-                    picTask = new MsgDetailReadWorker(layout.repost_pic, layout.repost_pic_pb, msg.getRetweeted_status());
+                    picTask = new MsgDetailReadWorker(layout.repost_pic, msg.getRetweeted_status());
                     picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 
                 }

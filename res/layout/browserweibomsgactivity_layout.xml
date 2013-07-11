@@ -5,7 +5,8 @@
             android:layout_height="fill_parent">
 
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/browser_msg_bg_padding">
@@ -27,50 +28,62 @@
                 android:layout_gravity="left|center_vertical"
                 android:layout_marginRight="5dp"/>
 
-            <TextView
+            <RelativeLayout
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="username"
-                android:ellipsize="end"
                 android:layout_marginLeft="8dp"
-                android:drawableEnd="?clickable_flag"
-                android:id="@+id/username"/>
+                android:gravity="center_vertical|left"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
 
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="weiciyuan"
+                    android:ellipsize="end"
+                    android:id="@+id/username"/>
+
+                <TextView
+                    android:layout_below="@id/username"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="w"
+                    android:gravity="left"
+                    android:textColor="?android:textColorTertiary"
+                    android:textIsSelectable="true"
+                    android:textSize="12sp"
+                    android:id="@+id/time"
+                    android:text="2013"/>
+
+                <TextView
+                    android:layout_below="@id/username"
+                    android:layout_toRightOf="@id/time"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="sina"
+                    android:textColor="?android:textColorTertiary"
+                    android:textIsSelectable="true"
+                    android:textSize="12sp"
+                    android:id="@+id/source"/>
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:src="?clickable_flag"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
         </LinearLayout>
 
-
-        <TextView
-            android:layout_below="@id/first"
-            android:layout_marginTop="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="w"
-            android:layout_alignParentLeft="true"
-            android:gravity="left"
-            android:textColor="?android:textColorTertiary"
-            android:textIsSelectable="true"
-            android:id="@+id/time"/>
-
-        <TextView
-            android:layout_below="@id/first"
-            android:layout_marginTop="5dp"
-            android:gravity="right"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="sina"
-            android:textColor="?android:textColorTertiary"
-            android:textIsSelectable="true"
-            android:id="@+id/source"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/time"
             android:orientation="vertical"
             android:id="@+id/second">
 
@@ -85,51 +98,41 @@
                 android:textIsSelectable="true"/>
 
 
-            <!-- hack to center progressbar when set indeterminate equal true -->
-
-            <FrameLayout
+            <org.qii.weiciyuan.support.lib.TimeLineImageView
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:layout_width="fill_parent"
+                android:id="@+id/content_pic"
+                android:padding="3dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:minWidth="200dp"
                 android:minHeight="200dp"
                 android:visibility="gone"
-                android:id="@+id/pic_layout">
+                android:clickable="true"
+                android:adjustViewBounds="true"
+                android:background="?android:selectableItemBackground"/>
 
-                <ProgressBar
-                    android:visibility="gone"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:id="@+id/content_pic_pb"/>
-
-                <ImageView
-                    android:id="@+id/content_pic"
-                    android:padding="3dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="200dp"
-                    android:minHeight="200dp"
-                    android:visibility="gone"
-                    android:clickable="true"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:background="?android:selectableItemBackground"/>
-            </FrameLayout>
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_below="@id/second"
-            android:layout_marginTop="8dp"
+
+        <LinearLayout
+            android:orientation="vertical"
             android:id="@+id/repost_layout"
             android:clickable="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/browser_msg_repost_line"
-            android:visibility="gone">
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/space"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/divider"
+                android:layout_height="1dp"
+                android:layout_width="match_parent"/>
 
             <TextView
                 android:background="?android:selectableItemBackground"
@@ -141,47 +144,29 @@
                 android:textSize="16sp"
                 android:lineSpacingMultiplier="1.2"/>
 
-            <FrameLayout
-                android:layout_below="@id/repost_content"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+
+            <org.qii.weiciyuan.support.lib.TimeLineImageView
                 android:layout_marginTop="8dp"
+                android:padding="3dp"
+                android:id="@+id/repost_content_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="200dp"
                 android:minHeight="200dp"
-                android:id="@+id/repost_pic_layout"
-                android:visibility="gone">
-
-                <ProgressBar
-                    android:visibility="gone"
-                    android:layout_gravity="center"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:id="@+id/repost_content_pic_pb"/>
-
-                <ImageView
-                    android:padding="3dp"
-                    android:id="@+id/repost_content_pic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="200dp"
-                    android:minHeight="200dp"
-                    android:visibility="gone"
-                    android:clickable="true"
-                    android:background="?android:selectableItemBackground"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    />
-            </FrameLayout>
+                android:visibility="gone"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
+                android:layout_gravity="center_horizontal"
+                android:adjustViewBounds="true"
+                />
 
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
+                android:layout_marginRight="5dp"
                 android:visibility="gone"
-                android:layout_below="@id/repost_pic_layout"
-                android:layout_alignParentRight="true"
                 android:id="@+id/count_layout">
 
                 <TextView
@@ -205,7 +190,7 @@
 
             </LinearLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
 
 
         <TextView
@@ -226,7 +211,7 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 </ScrollView>

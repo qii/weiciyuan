@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
@@ -14,6 +13,7 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.TimeLineImageView;
 
 import java.io.File;
 
@@ -25,16 +25,16 @@ import java.io.File;
  */
 public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, Bitmap> {
 
-    private ImageView view;
+    private TimeLineImageView view;
     private ProgressBar pb;
 
     private boolean pbFlag = false;
 
     private MessageBean msg;
 
-    public MsgDetailReadWorker(ImageView view, ProgressBar pb, MessageBean msg) {
+    public MsgDetailReadWorker(TimeLineImageView view, MessageBean msg) {
         this.view = view;
-        this.pb = pb;
+        this.pb = this.view.getProgressBar();
         this.msg = msg;
     }
 
@@ -118,6 +118,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, Bitmap> {
 
         if (bitmap != null) {
             view.setTag(true);
+            view.getImageView().setTag(true);
             view.setVisibility(View.VISIBLE);
             view.setImageBitmap(bitmap);
             view.setAlpha(0.0f);

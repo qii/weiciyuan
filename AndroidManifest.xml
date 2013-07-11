@@ -92,6 +92,7 @@
         <activity
             android:name=".ui.browser.BrowserWeiboMsgActivity"
             android:theme="@style/AppTheme_Dummy"
+            android:uiOptions="splitActionBarWhenNarrow"
             android:label="@string/detail"/>
         <activity
             android:name=".ui.browser.BrowserCommentActivity"
