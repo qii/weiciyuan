@@ -76,6 +76,7 @@
     <string name="something_error">发生故障</string>
     <string name="please_deleted_cache_dir">权限出错，无法读取存储空间，需要用户手动删除SD卡下的 /Android/data/org.qii.weiciyuan 目录</string>
 
+
     <!-- timeline -->
     <string name="refresh">刷新</string>
     <string name="refreshing">刷新中……</string>
@@ -221,6 +222,7 @@
     <string name="switch_to_middle_pic">中等图</string>
     <string name="switch_to_ori_pic">原图</string>
     <string name="cant_open_deleted_weibo">原微博已经被删除，看不懂中文吗？</string>
+    <string name="retry_download_pic">重新下载图片</string>
 
     <!--map-->
     <string name="browser_map">查看地图</string>

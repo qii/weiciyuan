@@ -95,7 +95,7 @@
             android:textIsSelectable="true"/>
 
 
-        <org.qii.weiciyuan.support.lib.TimeLineImageView
+        <org.qii.weiciyuan.support.lib.WeiboDetailImageView
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:id="@+id/content_pic"
@@ -103,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="200dp"
-            android:minHeight="200dp"
+            android:minHeight="0dp"
             android:visibility="gone"
             android:clickable="true"
             android:adjustViewBounds="true"
@@ -142,14 +142,14 @@
             android:lineSpacingMultiplier="1.2"/>
 
 
-        <org.qii.weiciyuan.support.lib.TimeLineImageView
+        <org.qii.weiciyuan.support.lib.WeiboDetailImageView
             android:layout_marginTop="8dp"
             android:padding="3dp"
             android:id="@+id/repost_content_pic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="200dp"
-            android:minHeight="200dp"
+            android:minHeight="0dp"
             android:visibility="visible"
             android:clickable="true"
             android:background="?android:selectableItemBackground"

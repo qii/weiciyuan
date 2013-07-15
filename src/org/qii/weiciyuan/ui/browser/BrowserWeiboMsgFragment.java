@@ -16,7 +16,7 @@ import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.support.asyncdrawable.MsgDetailReadWorker;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.TimeLineImageView;
+import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -54,8 +54,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         MapView mapView;
 
         ImageView avatar;
-        TimeLineImageView content_pic;
-        TimeLineImageView repost_pic;
+        WeiboDetailImageView content_pic;
+        WeiboDetailImageView repost_pic;
 
         LinearLayout repost_layout;
 
@@ -190,8 +190,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         layout.count_layout = view.findViewById(R.id.count_layout);
 
         layout.avatar = (ImageView) view.findViewById(R.id.avatar);
-        layout.content_pic = (TimeLineImageView) view.findViewById(R.id.content_pic);
-        layout.repost_pic = (TimeLineImageView) view.findViewById(R.id.repost_content_pic);
+        layout.content_pic = (WeiboDetailImageView) view.findViewById(R.id.content_pic);
+        layout.repost_pic = (WeiboDetailImageView) view.findViewById(R.id.repost_content_pic);
 
 
         layout.repost_layout = (LinearLayout) view.findViewById(R.id.repost_layout);
