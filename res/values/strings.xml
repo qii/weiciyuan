@@ -199,7 +199,7 @@
     <string name="email_cant_be_empty">登录邮箱不能为空</string>
     <string name="password_cant_be_empty">密码不能为空</string>
     <string name="login_email">登录邮箱</string>
-    <string name="login_password">密　码</string>
+    <string name="login_password">密码</string>
     <string name="app_key">尾巴</string>
 
 
