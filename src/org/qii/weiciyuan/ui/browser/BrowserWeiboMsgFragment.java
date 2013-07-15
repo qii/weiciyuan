@@ -12,8 +12,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.GeoBean;
-import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.support.asyncdrawable.MsgDetailReadWorker;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -261,7 +260,11 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
     public void buildViewData(final boolean refreshPic) {
         if (msg.getUser() != null) {
-            layout.username.setText(msg.getUser().getScreen_name());
+            if (TextUtils.isEmpty(msg.getUser().getRemark()))
+                layout.username.setText(msg.getUser().getScreen_name());
+            else
+                layout.username.setText(msg.getUser().getScreen_name() + "(" + msg.getUser().getRemark() + ")");
+
             ((AbstractAppActivity) getActivity()).getBitmapDownloader().downloadAvatar(layout.avatar, msg.getUser());
         }
         layout.content.setText(msg.getListViewSpannableString());
@@ -396,22 +399,26 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         }
     };
 
+    private volatile boolean isCommentFlag = true;
+    private CommentListBean commentList = new CommentListBean();
+    private RepostListBean repostList = new RepostListBean();
+
 
     private class DataAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return 0;
+            return isCommentFlag ? commentList.getSize() : repostList.getSize();
         }
 
         @Override
-        public Object getItem(int position) {
-            return null;
+        public ItemBean getItem(int position) {
+            return isCommentFlag ? commentList.getItem(position) : repostList.getItem(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return isCommentFlag ? commentList.getItem(position).getIdLong() : repostList.getItem(position).getIdLong();
         }
 
         @Override
