@@ -608,7 +608,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         @Override
         public void onLoadFinished(Loader<AsyncTaskLoaderResult<UserBean>> loader, AsyncTaskLoaderResult<UserBean> result) {
             UserBean data = result != null ? result.data : null;
-            WeiboException exception = result != null ? result.exception : null;
+            final WeiboException exception = result != null ? result.exception : null;
 
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
@@ -617,13 +617,15 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
                     if (dialog != null) {
                         dialog.dismiss();
                     }
+
+                    if (exception != null) {
+                        UserInfoActivityErrorDialog userInfoActivityErrorDialog = new UserInfoActivityErrorDialog(exception.getError());
+                        getSupportFragmentManager().beginTransaction().add(userInfoActivityErrorDialog, UserInfoActivityErrorDialog.class.getName()).commit();
+                    }
                 }
             });
 
-            if (exception != null) {
-                UserInfoActivityErrorDialog userInfoActivityErrorDialog = new UserInfoActivityErrorDialog(exception.getError());
-                getSupportFragmentManager().beginTransaction().show(userInfoActivityErrorDialog).commitAllowingStateLoss();
-            }
+
             if (data != null) {
                 bean = data;
                 buildContent();
