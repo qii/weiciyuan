@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.browser;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.*;
 import android.os.AsyncTask;
@@ -382,6 +381,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             invlidateTabText();
         } else if (newValue != null && newValue.getSize() == 0) {
             getList().clear();
+            getAdapter().notifyDataSetChanged();
             invlidateTabText();
         }
     }
@@ -399,8 +399,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     private void invlidateTabText() {
         Activity activity = getActivity();
         if (activity != null) {
-            ActionBar.Tab tab = activity.getActionBar().getTabAt(1);
-            Utility.buildTabCount(tab, getString(R.string.comments), bean.getTotal_number());
+//            ActionBar.Tab tab = activity.getActionBar().getTabAt(1);
+//            Utility.buildTabCount(tab, getString(R.string.comments), bean.getTotal_number());
             ((BrowserWeiboMsgActivity) activity).updateCommentCount(bean.getTotal_number());
         }
     }
