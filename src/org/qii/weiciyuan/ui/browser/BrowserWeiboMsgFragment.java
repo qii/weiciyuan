@@ -69,6 +69,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
     private boolean isCommentList = true;
 
+    private View progressHeader;
+
     private static class BrowserWeiboMsgLayout {
         TextView username;
         TextView content;
@@ -218,6 +220,11 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             }
         });
 
+        View progressHeaderLayout = inflater.inflate(R.layout.browserweibomsgfragment_progress_header, listView, false);
+        progressHeader = progressHeaderLayout.findViewById(R.id.progressbar);
+        progressHeader.setVisibility(View.GONE);
+        listView.addHeaderView(progressHeaderLayout);
+
         repostTab = (TextView) switchView.findViewById(R.id.repost);
         commentTab = (TextView) switchView.findViewById(R.id.comment);
 
@@ -249,7 +256,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         adapter = new BrowserWeiboMsgCommentAndRepostAdapter(this, listView, commentList.getItemList(), repostList.getItemList());
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        listView.setHeaderDividersEnabled(true);
+        listView.setHeaderDividersEnabled(false);
         return pullToRefreshListView;
     }
 
@@ -495,11 +502,13 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     };
 
     public void loadNewCommentData() {
+        progressHeader.setVisibility(View.VISIBLE);
         getLoaderManager().destroyLoader(OLD_COMMENT_LOADER_ID);
         getLoaderManager().restartLoader(NEW_COMMENT_LOADER_ID, null, commentMsgCallback);
     }
 
     public void loadNewRepostData() {
+        progressHeader.setVisibility(View.VISIBLE);
         getLoaderManager().destroyLoader(OLD_REPOST_LOADER_ID);
         getLoaderManager().restartLoader(NEW_REPOST_LOADER_ID, null, repostMsgCallback);
     }
@@ -548,7 +557,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
             switch (loader.getId()) {
                 case NEW_COMMENT_LOADER_ID:
-
+                    progressHeader.setVisibility(View.GONE);
                     if (Utility.isAllNotNull(exception)) {
                         Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
                     } else {
@@ -615,7 +624,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
             switch (loader.getId()) {
                 case NEW_REPOST_LOADER_ID:
-
+                    progressHeader.setVisibility(View.GONE);
                     if (Utility.isAllNotNull(exception)) {
                         Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
                     } else {
