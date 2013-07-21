@@ -152,7 +152,7 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
             bg.put(holder, drawable);
         }
 
-        if (listView.getCheckedItemPosition() == position + 1)
+        if (listView.getCheckedItemPosition() == position + listView.getHeaderViewsCount())
             holder.listview_root.setBackgroundColor(checkedBG);
 
         final CommentBean comment = (CommentBean) getItem(position);

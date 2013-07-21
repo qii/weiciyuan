@@ -21,6 +21,7 @@ import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserCommentActivity;
+import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgFragment;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
 import java.util.List;
@@ -176,7 +177,11 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         this.mode = null;
         listView.clearChoices();
         adapter.notifyDataSetChanged();
-        ((AbstractTimeLineFragment) fragment).setmActionMode(null);
+        if (fragment instanceof AbstractTimeLineFragment)
+            ((AbstractTimeLineFragment) fragment).setmActionMode(null);
+
+        if (fragment instanceof BrowserWeiboMsgFragment)
+            ((BrowserWeiboMsgFragment) fragment).setmActionMode(null);
 
     }
 }

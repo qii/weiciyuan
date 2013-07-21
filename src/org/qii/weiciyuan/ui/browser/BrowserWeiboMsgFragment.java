@@ -29,6 +29,8 @@ import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
+import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.BrowserWeiboMsgCommentAndRepostAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
@@ -73,6 +75,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
     private View progressHeader;
     private View footerView;
+
+    private ActionMode mActionMode;
+
 
     private static class BrowserWeiboMsgLayout {
         TextView username;
@@ -240,6 +245,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             @Override
             public void onClick(View v) {
                 listView.setOnItemClickListener(repostOnItemClickListener);
+                listView.setOnItemLongClickListener(repostOnItemLongClickListener);
+
                 dismissFooterView();
                 if (isCommentList) {
                     isCommentList = false;
@@ -266,6 +273,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             @Override
             public void onClick(View v) {
                 listView.setOnItemClickListener(commentOnItemClickListener);
+                listView.setOnItemLongClickListener(commentOnItemLongClickListener);
+
                 dismissFooterView();
                 if (!isCommentList) {
                     isCommentList = true;
@@ -289,6 +298,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             }
         });
         commentTab.setTextColor(getResources().getColor(R.color.orange));
+
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        listView.setOnItemClickListener(commentOnItemClickListener);
+        listView.setOnItemLongClickListener(commentOnItemLongClickListener);
 
         initView(header, savedInstanceState);
         adapter = new BrowserWeiboMsgCommentAndRepostAdapter(this, listView, commentList.getItemList(), repostList.getItemList());
@@ -564,6 +577,65 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 }
             }
         }
+    };
+
+    private ListView getListView() {
+        return listView;
+    }
+
+    public void setmActionMode(ActionMode mActionMode) {
+        this.mActionMode = mActionMode;
+    }
+
+    public boolean hasActionMode() {
+        return mActionMode != null;
+    }
+
+    private AdapterView.OnItemLongClickListener repostOnItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+            if (position - getListView().getHeaderViewsCount() < repostList.getSize()
+                    && position - getListView().getHeaderViewsCount() >= 0
+                    && adapter.getItem(position - getListView().getHeaderViewsCount()) != null) {
+                MessageBean msg = repostList.getItemList().get(position - getListView().getHeaderViewsCount());
+                StatusSingleChoiceModeListener choiceModeListener = new StatusSingleChoiceModeListener(getListView(), adapter, BrowserWeiboMsgFragment.this, msg);
+                if (mActionMode != null) {
+                    mActionMode.finish();
+                    mActionMode = null;
+                }
+
+                getListView().setItemChecked(position, true);
+                adapter.notifyDataSetChanged();
+                mActionMode = getActivity().startActionMode(choiceModeListener);
+                return true;
+
+            }
+            return false;
+        }
+    };
+
+    private AdapterView.OnItemLongClickListener commentOnItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            if (position - listView.getHeaderViewsCount() < commentList.getSize() && position - listView.getHeaderViewsCount() >= 0) {
+                if (mActionMode != null) {
+                    mActionMode.finish();
+                    mActionMode = null;
+                    getListView().setItemChecked(position, true);
+                    adapter.notifyDataSetChanged();
+                    mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), adapter, BrowserWeiboMsgFragment.this, commentList.getItemList().get(position - 1)));
+                    return true;
+                } else {
+                    getListView().setItemChecked(position, true);
+                    adapter.notifyDataSetChanged();
+                    mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), adapter, BrowserWeiboMsgFragment.this, commentList.getItemList().get(position - 1)));
+                    return true;
+                }
+            }
+            return false;
+        }
+
     };
 
     private AdapterView.OnItemClickListener repostOnItemClickListener = new AdapterView.OnItemClickListener() {

@@ -10,6 +10,7 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
@@ -18,8 +19,8 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgFragment;
 import org.qii.weiciyuan.ui.send.WriteCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteRepostActivity;
 import org.qii.weiciyuan.ui.task.FavAsyncTask;
@@ -32,7 +33,7 @@ import org.qii.weiciyuan.ui.task.UnFavAsyncTask;
 public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
     private ListView listView;
-    private StatusListAdapter adapter;
+    private BaseAdapter adapter;
     private Fragment fragment;
     private ActionMode mode;
     private MessageBean bean;
@@ -46,7 +47,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
             mode.finish();
     }
 
-    public StatusSingleChoiceModeListener(ListView listView, StatusListAdapter adapter, Fragment fragment, MessageBean bean) {
+    public StatusSingleChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment fragment, MessageBean bean) {
         this.listView = listView;
         this.fragment = fragment;
         this.adapter = adapter;
@@ -186,8 +187,11 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
         this.mode = null;
         listView.clearChoices();
         adapter.notifyDataSetChanged();
-        ((AbstractTimeLineFragment) fragment).setmActionMode(null);
+        if (fragment instanceof AbstractTimeLineFragment)
+            ((AbstractTimeLineFragment) fragment).setmActionMode(null);
 
+        if (fragment instanceof BrowserWeiboMsgFragment)
+            ((BrowserWeiboMsgFragment) fragment).setmActionMode(null);
     }
 
 
