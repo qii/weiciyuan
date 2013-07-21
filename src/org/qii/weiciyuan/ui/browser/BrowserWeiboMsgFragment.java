@@ -681,12 +681,12 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                     mActionMode = null;
                     getListView().setItemChecked(position, true);
                     adapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), adapter, BrowserWeiboMsgFragment.this, commentList.getItemList().get(position - 1)));
+                    mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), adapter, BrowserWeiboMsgFragment.this, commentList.getItemList().get(position - listView.getHeaderViewsCount())));
                     return true;
                 } else {
                     getListView().setItemChecked(position, true);
                     adapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), adapter, BrowserWeiboMsgFragment.this, commentList.getItemList().get(position - 1)));
+                    mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), adapter, BrowserWeiboMsgFragment.this, commentList.getItemList().get(position - listView.getHeaderViewsCount())));
                     return true;
                 }
             }
