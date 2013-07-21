@@ -9,6 +9,7 @@ import android.support.v4.content.Loader;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.*;
+import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.MapView;
@@ -71,6 +72,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private boolean isCommentList = true;
 
     private View progressHeader;
+    private View footerView;
 
     private static class BrowserWeiboMsgLayout {
         TextView username;
@@ -227,6 +229,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         progressHeader.setVisibility(View.GONE);
         listView.addHeaderView(progressHeaderLayout);
 
+        footerView = inflater.inflate(R.layout.listview_footer_layout, null);
+        listView.addFooterView(footerView);
+        dismissFooterView();
+
         repostTab = (TextView) switchView.findViewById(R.id.repost);
         commentTab = (TextView) switchView.findViewById(R.id.comment);
 
@@ -259,6 +265,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         commentTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                listView.setOnItemClickListener(commentOnItemClickListener);
+
                 if (!isCommentList) {
                     isCommentList = true;
                     adapter.switchToCommentType();
@@ -506,6 +514,30 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         return true;
     }
 
+    protected void showFooterView() {
+        TextView tv = ((TextView) footerView.findViewById(R.id.listview_footer));
+        tv.setVisibility(View.VISIBLE);
+        tv.setText(getString(R.string.loading));
+        View view = footerView.findViewById(R.id.refresh);
+        view.setVisibility(View.VISIBLE);
+        view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
+    }
+
+    protected void dismissFooterView() {
+        footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
+        footerView.findViewById(R.id.refresh).clearAnimation();
+        footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+    }
+
+    protected void showErrorFooterView() {
+        TextView tv = ((TextView) footerView.findViewById(R.id.listview_footer));
+        tv.setVisibility(View.VISIBLE);
+        tv.setText(getString(R.string.click_to_load_older_message));
+        View view = footerView.findViewById(R.id.refresh);
+        view.clearAnimation();
+        view.setVisibility(View.GONE);
+    }
+
     private View.OnClickListener picOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -537,10 +569,28 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private AdapterView.OnItemClickListener repostOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-            intent.putExtra("msg", repostList.getItemList().get(position - listView.getHeaderViewsCount()));
-            intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-            startActivity(intent);
+            if (position - listView.getHeaderViewsCount() < repostList.getSize()) {
+                Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
+                intent.putExtra("msg", repostList.getItemList().get(position - listView.getHeaderViewsCount()));
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                startActivity(intent);
+            } else {
+                loadOldRepostData();
+            }
+        }
+    };
+
+    private AdapterView.OnItemClickListener commentOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (position - listView.getHeaderViewsCount() < commentList.getSize()) {
+//                   Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
+//                   intent.putExtra("msg", repostList.getItemList().get(position - listView.getHeaderViewsCount()));
+//                   intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+//                   startActivity(intent);
+            } else {
+                loadOldCommentData();
+            }
         }
     };
 
@@ -587,6 +637,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     }
 
     public void loadOldCommentData() {
+        showFooterView();
         getLoaderManager().destroyLoader(NEW_COMMENT_LOADER_ID);
         getLoaderManager().restartLoader(OLD_COMMENT_LOADER_ID, null, commentMsgCallback);
     }
@@ -645,7 +696,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
                     if (Utility.isAllNotNull(exception)) {
                         Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
+                        showErrorFooterView();
                     } else {
+                        dismissFooterView();
                         commentList.addOldData(data);
                         adapter.notifyDataSetChanged();
                     }
