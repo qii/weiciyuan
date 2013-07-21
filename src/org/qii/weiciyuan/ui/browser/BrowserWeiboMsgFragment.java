@@ -249,6 +249,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
                 if (hasActionMode()) {
                     mActionMode.finish();
+                    mActionMode = null;
                 }
 
                 dismissFooterView();
@@ -281,6 +282,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
                 if (hasActionMode()) {
                     mActionMode.finish();
+                    mActionMode = null;
                 }
 
 
@@ -652,9 +654,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (hasActionMode()) {
                 mActionMode.finish();
+                mActionMode = null;
                 return;
             }
-            if (position - listView.getHeaderViewsCount() < repostList.getSize()) {
+            if (position - listView.getHeaderViewsCount() < repostList.getSize() && position >= listView.getHeaderViewsCount()) {
                 Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
                 intent.putExtra("msg", repostList.getItemList().get(position - listView.getHeaderViewsCount()));
                 intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
@@ -670,6 +673,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (hasActionMode()) {
                 mActionMode.finish();
+                mActionMode = null;
                 return;
             }
 
