@@ -240,7 +240,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             @Override
             public void onClick(View v) {
                 listView.setOnItemClickListener(repostOnItemClickListener);
-
+                dismissFooterView();
                 if (isCommentList) {
                     isCommentList = false;
                     adapter.switchToRepostType();
@@ -266,7 +266,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             @Override
             public void onClick(View v) {
                 listView.setOnItemClickListener(commentOnItemClickListener);
-
+                dismissFooterView();
                 if (!isCommentList) {
                     isCommentList = true;
                     adapter.switchToCommentType();
@@ -681,7 +681,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
             switch (loader.getId()) {
                 case NEW_COMMENT_LOADER_ID:
-                    progressHeader.setVisibility(View.GONE);
+                    if (isCommentList)
+                        progressHeader.setVisibility(View.GONE);
                     if (Utility.isAllNotNull(exception)) {
                         Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
                     } else {
@@ -750,7 +751,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
             switch (loader.getId()) {
                 case NEW_REPOST_LOADER_ID:
-                    progressHeader.setVisibility(View.GONE);
+                    if (!isCommentList)
+                        progressHeader.setVisibility(View.GONE);
                     if (Utility.isAllNotNull(exception)) {
                         Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
                     } else {
