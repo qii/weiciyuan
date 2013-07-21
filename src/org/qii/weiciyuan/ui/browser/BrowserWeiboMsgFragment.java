@@ -569,7 +569,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+            LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
         }
     };
 
