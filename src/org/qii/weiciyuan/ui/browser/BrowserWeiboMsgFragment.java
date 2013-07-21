@@ -83,7 +83,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
     private ActionMode mActionMode;
 
-    private BroadcastReceiver sendCompletedReceiver;
+    private BroadcastReceiver sendCommentCompletedReceiver;
+    private BroadcastReceiver sendRepostCompletedReceiver;
 
 
     private static class BrowserWeiboMsgLayout {
@@ -193,24 +194,35 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             layout.mapView.onResume();
 
 
-        sendCompletedReceiver = new BroadcastReceiver() {
+        sendCommentCompletedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (isCommentList)
                     loadNewCommentData();
-                else
-                    loadNewRepostData();
+
             }
         };
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(sendCompletedReceiver,
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(sendCommentCompletedReceiver,
                 new IntentFilter(AppEventAction.SEND_COMMENT_OR_REPLY_SUCCESSFULLY));
+
+        sendRepostCompletedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (!isCommentList)
+                    loadNewRepostData();
+
+            }
+        };
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(sendRepostCompletedReceiver,
+                new IntentFilter(AppEventAction.SEND_REPOST_SUCCESSFULLY));
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(sendCompletedReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(sendCommentCompletedReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(sendRepostCompletedReceiver);
     }
 
 
