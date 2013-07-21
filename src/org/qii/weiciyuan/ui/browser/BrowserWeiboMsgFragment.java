@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.*;
@@ -12,15 +14,25 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.GeoBean;
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.RepostListBean;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.asyncdrawable.MsgDetailReadWorker;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
+import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
+import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.adapter.BrowserWeiboMsgCommentAndRepostAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
+import org.qii.weiciyuan.ui.loader.CommentsByIdMsgLoader;
+import org.qii.weiciyuan.ui.loader.RepostByIdMsgLoader;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
@@ -41,7 +53,21 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private Handler handler = new Handler();
 
     private ListView listView;
-    private DataAdapter adapter;
+    private BrowserWeiboMsgCommentAndRepostAdapter adapter;
+
+    private CommentListBean commentList = new CommentListBean();
+    private RepostListBean repostList = new RepostListBean();
+
+    private TextView repostTab;
+    private TextView commentTab;
+
+    private static final int NEW_COMMENT_LOADER_ID = 1;
+    private static final int OLD_COMMENT_LOADER_ID = 2;
+
+    private static final int NEW_REPOST_LOADER_ID = 3;
+    private static final int OLD_REPOST_LOADER_ID = 4;
+
+    private boolean isCommentList = true;
 
     private static class BrowserWeiboMsgLayout {
         TextView username;
@@ -114,6 +140,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                     }, 2000);
                 }
                 buildViewData(true);
+                loadNewCommentData();
                 break;
             case SCREEN_ROTATE:
                 //nothing
@@ -122,6 +149,16 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 msg = (MessageBean) savedInstanceState.getParcelable("msg");
                 buildViewData(true);
                 break;
+        }
+
+        Loader loader = getLoaderManager().getLoader(NEW_COMMENT_LOADER_ID);
+        if (loader != null) {
+            getLoaderManager().initLoader(NEW_COMMENT_LOADER_ID, null, commentMsgCallback);
+        }
+
+        loader = getLoaderManager().getLoader(OLD_COMMENT_LOADER_ID);
+        if (loader != null) {
+            getLoaderManager().initLoader(OLD_COMMENT_LOADER_ID, null, commentMsgCallback);
         }
 
     }
@@ -153,15 +190,67 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        listView = new ListView(getActivity());
+        PullToRefreshListView pullToRefreshListView = new PullToRefreshListView(getActivity());
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
+        pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+            @Override
+            public void onLastItemVisible() {
+                if (isCommentList) {
+                    loadOldCommentData();
+                } else {
+                    loadOldRepostData();
+                }
+            }
+        });
+
+        listView = pullToRefreshListView.getRefreshableView();
+
         View header = inflater.inflate(R.layout.browserweibomsgactivity_layout, listView, false);
         listView.addHeaderView(header);
 
+        View switchView = inflater.inflate(R.layout.browserweibomsgfragment_switch_list_type_header, listView, false);
+        listView.addHeaderView(switchView);
+
+        switchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //empty
+            }
+        });
+
+        repostTab = (TextView) switchView.findViewById(R.id.repost);
+        commentTab = (TextView) switchView.findViewById(R.id.comment);
+
+        repostTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isCommentList = false;
+                adapter.switchToRepostType();
+                repostTab.setTextColor(getResources().getColor(R.color.orange));
+                commentTab.setTextColor(getResources().getColor(R.color.black));
+                if (repostList.getSize() == 0) {
+                    loadNewRepostData();
+                }
+            }
+        });
+
+        commentTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isCommentList = true;
+                adapter.switchToCommentType();
+                commentTab.setTextColor(getResources().getColor(R.color.orange));
+                repostTab.setTextColor(getResources().getColor(R.color.black));
+            }
+        });
+        commentTab.setTextColor(getResources().getColor(R.color.orange));
+
         initView(header, savedInstanceState);
-        adapter = new DataAdapter();
+        adapter = new BrowserWeiboMsgCommentAndRepostAdapter(this, listView, commentList.getItemList(), repostList.getItemList());
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        return listView;
+        listView.setHeaderDividersEnabled(true);
+        return pullToRefreshListView;
     }
 
     private void initView(View view, Bundle savedInstanceState) {
@@ -323,8 +412,13 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
 
                 }
+            } else {
+                layout.repost_pic.setVisibility(View.GONE);
             }
         }
+
+        Utility.buildTabCount(commentTab, getString(R.string.comments), msg.getComments_count());
+        Utility.buildTabCount(repostTab, getString(R.string.repost), msg.getReposts_count());
 
 //        Utility.buildTabCount(getActivity().getActionBar().getTabAt(1), getString(R.string.comments), msg.getComments_count());
 //        Utility.buildTabCount(getActivity().getActionBar().getTabAt(2), getString(R.string.repost), msg.getReposts_count());
@@ -365,6 +459,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                     updateMsgTask = new UpdateMessageTask(BrowserWeiboMsgFragment.this, layout.content, layout.recontent, msg, true);
                     updateMsgTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
+                loadNewCommentData();
                 break;
 
         }
@@ -399,31 +494,155 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         }
     };
 
-    private volatile boolean isCommentFlag = true;
-    private CommentListBean commentList = new CommentListBean();
-    private RepostListBean repostList = new RepostListBean();
+    public void loadNewCommentData() {
+        getLoaderManager().destroyLoader(OLD_COMMENT_LOADER_ID);
+        getLoaderManager().restartLoader(NEW_COMMENT_LOADER_ID, null, commentMsgCallback);
+    }
 
+    public void loadNewRepostData() {
+        getLoaderManager().destroyLoader(OLD_REPOST_LOADER_ID);
+        getLoaderManager().restartLoader(NEW_REPOST_LOADER_ID, null, repostMsgCallback);
+    }
 
-    private class DataAdapter extends BaseAdapter {
+    public void loadOldCommentData() {
+        getLoaderManager().destroyLoader(NEW_COMMENT_LOADER_ID);
+        getLoaderManager().restartLoader(OLD_COMMENT_LOADER_ID, null, commentMsgCallback);
+    }
+
+    public void loadOldRepostData() {
+        getLoaderManager().destroyLoader(NEW_REPOST_LOADER_ID);
+        getLoaderManager().restartLoader(OLD_REPOST_LOADER_ID, null, repostMsgCallback);
+    }
+
+    protected LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<CommentListBean>> commentMsgCallback = new LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<CommentListBean>>() {
 
         @Override
-        public int getCount() {
-            return isCommentFlag ? commentList.getSize() : repostList.getSize();
-        }
+        public Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateLoader(int id, Bundle args) {
+            String token = GlobalContext.getInstance().getSpecialToken();
 
-        @Override
-        public ItemBean getItem(int position) {
-            return isCommentFlag ? commentList.getItem(position) : repostList.getItem(position);
-        }
+            switch (id) {
+                case NEW_COMMENT_LOADER_ID:
+                    String sinceId = null;
+                    return new CommentsByIdMsgLoader(getActivity(), msg.getId(), token, sinceId, null);
+                case OLD_COMMENT_LOADER_ID:
+                    String maxId = null;
+                    if (commentList.getItemList().size() > 0) {
+                        maxId = commentList.getItemList().get(commentList.getItemList().size() - 1).getId();
+                    }
+                    return new CommentsByIdMsgLoader(getActivity(), msg.getId(), token, null, maxId);
+            }
 
-        @Override
-        public long getItemId(int position) {
-            return isCommentFlag ? commentList.getItem(position).getIdLong() : repostList.getItem(position).getIdLong();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
             return null;
         }
-    }
+
+        @Override
+        public void onLoadFinished(Loader<AsyncTaskLoaderResult<CommentListBean>> loader, AsyncTaskLoaderResult<CommentListBean> result) {
+
+            CommentListBean data = result != null ? result.data : null;
+            WeiboException exception = result != null ? result.exception : null;
+            Bundle args = result != null ? result.args : null;
+
+            if (data != null) {
+                Utility.buildTabCount(commentTab, getString(R.string.comments), data.getTotal_number());
+            }
+
+            switch (loader.getId()) {
+                case NEW_COMMENT_LOADER_ID:
+
+                    if (Utility.isAllNotNull(exception)) {
+                        Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (data != null && data.getSize() > 0) {
+                            commentList.replaceAll(data);
+                            adapter.notifyDataSetChanged();
+
+                        }
+                    }
+                    break;
+                case OLD_COMMENT_LOADER_ID:
+
+                    if (Utility.isAllNotNull(exception)) {
+                        Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        commentList.addOldData(data);
+                        adapter.notifyDataSetChanged();
+                    }
+                    break;
+            }
+            getLoaderManager().destroyLoader(loader.getId());
+        }
+
+        @Override
+        public void onLoaderReset(Loader<AsyncTaskLoaderResult<CommentListBean>> loader) {
+
+        }
+    };
+
+
+    protected LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<RepostListBean>> repostMsgCallback = new LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<RepostListBean>>() {
+
+        @Override
+        public Loader<AsyncTaskLoaderResult<RepostListBean>> onCreateLoader(int id, Bundle args) {
+            String token = GlobalContext.getInstance().getSpecialToken();
+
+            switch (id) {
+                case NEW_REPOST_LOADER_ID:
+                    String sinceId = null;
+                    return new RepostByIdMsgLoader(getActivity(), msg.getId(), token, sinceId, null);
+                case OLD_REPOST_LOADER_ID:
+                    String maxId = null;
+
+                    if (repostList.getSize() > 0) {
+                        maxId = repostList.getItemList().get(repostList.getSize() - 1).getId();
+                    }
+
+                    return new RepostByIdMsgLoader(getActivity(), msg.getId(), token, null, maxId);
+            }
+
+            return null;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<AsyncTaskLoaderResult<RepostListBean>> loader, AsyncTaskLoaderResult<RepostListBean> result) {
+
+            RepostListBean data = result != null ? result.data : null;
+            WeiboException exception = result != null ? result.exception : null;
+            Bundle args = result != null ? result.args : null;
+
+            if (data != null) {
+                Utility.buildTabCount(repostTab, getString(R.string.repost), data.getTotal_number());
+            }
+
+            switch (loader.getId()) {
+                case NEW_REPOST_LOADER_ID:
+
+                    if (Utility.isAllNotNull(exception)) {
+                        Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (data != null && data.getSize() > 0) {
+                            repostList.replaceAll(data);
+                            adapter.notifyDataSetChanged();
+
+                        }
+                    }
+                    break;
+                case OLD_REPOST_LOADER_ID:
+
+                    if (Utility.isAllNotNull(exception)) {
+                        Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        repostList.addOldData(data);
+                        adapter.notifyDataSetChanged();
+                    }
+                    break;
+            }
+            getLoaderManager().destroyLoader(loader.getId());
+        }
+
+        @Override
+        public void onLoaderReset(Loader<AsyncTaskLoaderResult<RepostListBean>> loader) {
+
+        }
+    };
+
 }

@@ -24,6 +24,7 @@ import android.util.TypedValue;
 import android.view.*;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
+import android.widget.TextView;
 import org.qii.weiciyuan.BuildConfig;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -448,6 +449,22 @@ public class Utility {
         if (value <= count) {
             tab.setText(tabStrRes + "(" + count + ")");
         }
+    }
+
+    public static void buildTabCount(TextView tab, String tabStrRes, int count) {
+        if (tab == null)
+            return;
+//        String content = tab.getText().toString();
+//        int value = 0;
+//        int start = content.indexOf("(");
+//        int end = content.lastIndexOf(")");
+//        if (start > 0) {
+//            String result = content.substring(start + 1, end);
+//            value = Integer.valueOf(result);
+//        }
+//        if (value <= count) {
+        tab.setText(" " + count + " " + tabStrRes);
+//        }
     }
 
     //to do getChildAt(0)
