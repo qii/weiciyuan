@@ -181,7 +181,7 @@ public class SendRepostService extends Service {
                 }
             }, 3000);
 
-            LocalBroadcastManager.getInstance(SendRepostService.this).sendBroadcast(new Intent(AppEventAction.SEND_REPOST_SUCCESSFULLY));
+            LocalBroadcastManager.getInstance(SendRepostService.this).sendBroadcast(new Intent(AppEventAction.buildSendRepostSuccessfullyAction(oriMsg)));
 
         }
 

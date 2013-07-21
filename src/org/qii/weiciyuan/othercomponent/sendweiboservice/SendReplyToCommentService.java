@@ -190,7 +190,7 @@ public class SendReplyToCommentService extends Service {
                 }
             }, 3000);
 
-            LocalBroadcastManager.getInstance(SendReplyToCommentService.this).sendBroadcast(new Intent(AppEventAction.SEND_COMMENT_OR_REPLY_SUCCESSFULLY));
+            LocalBroadcastManager.getInstance(SendReplyToCommentService.this).sendBroadcast(new Intent(AppEventAction.buildSendCommentOrReplySuccessfullyAction(oriMsg.getStatus())));
         }
 
         private void showFailedNotification(final WeiboSendTask task) {

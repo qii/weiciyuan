@@ -203,7 +203,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             }
         };
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(sendCommentCompletedReceiver,
-                new IntentFilter(AppEventAction.SEND_COMMENT_OR_REPLY_SUCCESSFULLY));
+                new IntentFilter(AppEventAction.buildSendCommentOrReplySuccessfullyAction(msg)));
 
         sendRepostCompletedReceiver = new BroadcastReceiver() {
             @Override
@@ -214,7 +214,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             }
         };
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(sendRepostCompletedReceiver,
-                new IntentFilter(AppEventAction.SEND_REPOST_SUCCESSFULLY));
+                new IntentFilter(AppEventAction.buildSendRepostSuccessfullyAction(msg)));
 
     }
 
