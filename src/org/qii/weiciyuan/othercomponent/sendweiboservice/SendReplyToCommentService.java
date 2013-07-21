@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -17,6 +18,7 @@ import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.ReplyDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
@@ -187,6 +189,8 @@ public class SendReplyToCommentService extends Service {
                     stopServiceIfTasksAreEnd(task);
                 }
             }, 3000);
+
+            LocalBroadcastManager.getInstance(SendReplyToCommentService.this).sendBroadcast(new Intent(AppEventAction.SEND_COMMENT_OR_REPLY_SUCCESSFULLY));
         }
 
         private void showFailedNotification(final WeiboSendTask task) {

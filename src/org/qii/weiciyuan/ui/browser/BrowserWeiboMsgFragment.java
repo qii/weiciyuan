@@ -1,11 +1,15 @@
 package org.qii.weiciyuan.ui.browser;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.*;
@@ -27,6 +31,7 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
@@ -77,6 +82,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private View footerView;
 
     private ActionMode mActionMode;
+
+    private BroadcastReceiver sendCompletedReceiver;
 
 
     private static class BrowserWeiboMsgLayout {
@@ -184,7 +191,28 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 //        buildViewData(false);
         if (hasGpsInfo())
             layout.mapView.onResume();
+
+
+        sendCompletedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (isCommentList)
+                    loadNewCommentData();
+                else
+                    loadNewRepostData();
+            }
+        };
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(sendCompletedReceiver,
+                new IntentFilter(AppEventAction.SEND_COMMENT_OR_REPLY_SUCCESSFULLY));
+
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(sendCompletedReceiver);
+    }
+
 
     @Override
     public void onDestroy() {

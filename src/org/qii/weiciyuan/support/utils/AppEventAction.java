@@ -38,4 +38,6 @@ public class AppEventAction {
     }
 
     public static final String SLIDING_MENU_CLOSED_BROADCAST = "org.qii.weiciyuan.slidingmenu_closed";
+
+    public static final String SEND_COMMENT_OR_REPLY_SUCCESSFULLY = "org.qii.weiciyuan.SEND.COMMENT.COMPLETED";
 }

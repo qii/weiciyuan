@@ -17,6 +17,7 @@ import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.CommentDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteCommentActivity;
@@ -183,7 +184,7 @@ public class SendCommentService extends Service {
                 }
             }, 3000);
 
-            LocalBroadcastManager.getInstance(SendCommentService.this).sendBroadcast(new Intent("org.qii.weiciyuan.SEND.COMMENT.COMPLETED"));
+            LocalBroadcastManager.getInstance(SendCommentService.this).sendBroadcast(new Intent(AppEventAction.SEND_COMMENT_OR_REPLY_SUCCESSFULLY));
         }
 
         private void showFailedNotification(final WeiboSendTask task) {
