@@ -31,6 +31,7 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.BrowserWeiboMsgCommentAndRepostAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
+import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.loader.CommentsByIdMsgLoader;
 import org.qii.weiciyuan.ui.loader.RepostByIdMsgLoader;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
@@ -204,6 +205,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 }
             }
         });
+        pullToRefreshListView.setOnScrollListener(listViewOnScrollListener);
 
         listView = pullToRefreshListView.getRefreshableView();
 
@@ -492,7 +494,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                     updateMsgTask = new UpdateMessageTask(BrowserWeiboMsgFragment.this, layout.content, layout.recontent, msg, true);
                     updateMsgTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
-                loadNewCommentData();
+                if (isCommentList)
+                    loadNewCommentData();
+                else
+                    loadNewRepostData();
                 break;
 
         }
@@ -526,6 +531,36 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             }
         }
     };
+
+    private AbsListView.OnScrollListener listViewOnScrollListener = new AbsListView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            switch (scrollState) {
+                case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+
+                    LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
+                    ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(false);
+                    ((ICommander) getActivity()).getBitmapDownloader().setPauseReadWork(false);
+
+                    break;
+                case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                    LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
+                    ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(true);
+                    ((ICommander) getActivity()).getBitmapDownloader().setPauseReadWork(true);
+                    break;
+                case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                    LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
+                    ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(true);
+                    break;
+            }
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+        }
+    };
+
 
     public void loadNewCommentData() {
         progressHeader.setVisibility(View.VISIBLE);
