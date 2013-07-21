@@ -27,6 +27,7 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.List;
@@ -179,6 +180,16 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
 
         holder.time.setTime(comment.getMills());
 
+        holder.reply.setVisibility(View.VISIBLE);
+        holder.reply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("msg", comment);
+                getActivity().startActivity(intent);
+            }
+        });
     }
 
     private void bindRepostData(ViewHolder holder, int position) {
@@ -225,6 +236,7 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
 
 
         holder.time.setTime(msg.getMills());
+        holder.reply.setVisibility(View.GONE);
 
 
     }
@@ -257,7 +269,7 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         holder.time = (TimeTextView) convertView.findViewById(R.id.time);
         holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
         holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
-        holder.replyIV = (ImageView) convertView.findViewById(R.id.replyIV);
+        holder.reply = (ImageView) convertView.findViewById(R.id.replyIV);
         return holder;
     }
 
@@ -340,12 +352,13 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
                 }
             }
 
-
-//            boolean hasActionMode = ((BrowserWeiboMsgFragment) fragment).hasActionMode();
+            //            boolean hasActionMode = ((BrowserWeiboMsgFragment) fragment).hasActionMode();
             boolean hasActionMode = false;
             if (result && !hasActionMode) {
                 return LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
             } else {
+                if (event.getActionMasked() == MotionEvent.ACTION_CANCEL)
+                    LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
                 return false;
             }
 
@@ -390,7 +403,7 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         TextView content;
         TimeTextView time;
         TimeLineAvatarImageView avatar;
-        ImageView replyIV;
+        ImageView reply;
     }
 
     protected void buildAvatar(TimeLineAvatarImageView view, int position, final UserBean user) {

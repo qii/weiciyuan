@@ -233,6 +233,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         repostTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                listView.setOnItemClickListener(repostOnItemClickListener);
+
                 if (isCommentList) {
                     isCommentList = false;
                     adapter.switchToRepostType();
@@ -529,6 +531,16 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
                 }
             }
+        }
+    };
+
+    private AdapterView.OnItemClickListener repostOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
+            intent.putExtra("msg", repostList.getItemList().get(position - listView.getHeaderViewsCount()));
+            intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+            startActivity(intent);
         }
     };
 
