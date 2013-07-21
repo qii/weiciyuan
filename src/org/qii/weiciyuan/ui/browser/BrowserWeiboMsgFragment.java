@@ -247,6 +247,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 listView.setOnItemClickListener(repostOnItemClickListener);
                 listView.setOnItemLongClickListener(repostOnItemLongClickListener);
 
+                if (hasActionMode()) {
+                    mActionMode.finish();
+                }
+
                 dismissFooterView();
                 if (isCommentList) {
                     isCommentList = false;
@@ -274,6 +278,11 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             public void onClick(View v) {
                 listView.setOnItemClickListener(commentOnItemClickListener);
                 listView.setOnItemLongClickListener(commentOnItemLongClickListener);
+
+                if (hasActionMode()) {
+                    mActionMode.finish();
+                }
+
 
                 dismissFooterView();
                 if (!isCommentList) {
@@ -641,6 +650,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private AdapterView.OnItemClickListener repostOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (hasActionMode()) {
+                mActionMode.finish();
+                return;
+            }
             if (position - listView.getHeaderViewsCount() < repostList.getSize()) {
                 Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
                 intent.putExtra("msg", repostList.getItemList().get(position - listView.getHeaderViewsCount()));
@@ -655,6 +668,11 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private AdapterView.OnItemClickListener commentOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (hasActionMode()) {
+                mActionMode.finish();
+                return;
+            }
+
             if (position - listView.getHeaderViewsCount() < commentList.getSize()) {
 //                   Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
 //                   intent.putExtra("msg", repostList.getItemList().get(position - listView.getHeaderViewsCount()));
