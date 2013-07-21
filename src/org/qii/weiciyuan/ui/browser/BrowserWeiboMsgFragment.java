@@ -247,10 +247,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 listView.setOnItemClickListener(repostOnItemClickListener);
                 listView.setOnItemLongClickListener(repostOnItemLongClickListener);
 
-                if (hasActionMode()) {
-                    mActionMode.finish();
-                    mActionMode = null;
-                }
+                resetActionMode();
 
                 dismissFooterView();
                 if (isCommentList) {
@@ -280,10 +277,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 listView.setOnItemClickListener(commentOnItemClickListener);
                 listView.setOnItemLongClickListener(commentOnItemLongClickListener);
 
-                if (hasActionMode()) {
-                    mActionMode.finish();
-                    mActionMode = null;
-                }
+                resetActionMode();
 
 
                 dismissFooterView();
@@ -602,6 +596,18 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         return mActionMode != null;
     }
 
+    private boolean resetActionMode() {
+        if (mActionMode != null) {
+            getListView().clearChoices();
+            mActionMode.finish();
+            mActionMode = null;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     private AdapterView.OnItemLongClickListener repostOnItemLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -652,11 +658,12 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private AdapterView.OnItemClickListener repostOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (hasActionMode()) {
-                mActionMode.finish();
-                mActionMode = null;
+            if (resetActionMode()) {
                 return;
             }
+
+            getListView().clearChoices();
+
             if (position - listView.getHeaderViewsCount() < repostList.getSize() && position >= listView.getHeaderViewsCount()) {
                 Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
                 intent.putExtra("msg", repostList.getItemList().get(position - listView.getHeaderViewsCount()));
@@ -671,11 +678,11 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private AdapterView.OnItemClickListener commentOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (hasActionMode()) {
-                mActionMode.finish();
-                mActionMode = null;
+            if (resetActionMode()) {
                 return;
             }
+
+            getListView().clearChoices();
 
             if (position - listView.getHeaderViewsCount() < commentList.getSize()) {
 //                   Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
