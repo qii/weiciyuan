@@ -231,11 +231,22 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         repostTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isCommentList = false;
-                adapter.switchToRepostType();
-                repostTab.setTextColor(getResources().getColor(R.color.orange));
-                commentTab.setTextColor(getResources().getColor(R.color.black));
-                if (repostList.getSize() == 0) {
+                if (isCommentList) {
+                    isCommentList = false;
+                    adapter.switchToRepostType();
+                    repostTab.setTextColor(getResources().getColor(R.color.orange));
+                    commentTab.setTextColor(getResources().getColor(R.color.black));
+                    if (repostList.getSize() == 0) {
+                        loadNewRepostData();
+                    } else {
+                        Loader loader = getLoaderManager().getLoader(NEW_REPOST_LOADER_ID);
+                        if (loader != null) {
+                            progressHeader.setVisibility(View.VISIBLE);
+                        } else {
+                            progressHeader.setVisibility(View.GONE);
+                        }
+                    }
+                } else {
                     loadNewRepostData();
                 }
             }
@@ -244,10 +255,25 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         commentTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isCommentList = true;
-                adapter.switchToCommentType();
-                commentTab.setTextColor(getResources().getColor(R.color.orange));
-                repostTab.setTextColor(getResources().getColor(R.color.black));
+                if (!isCommentList) {
+                    isCommentList = true;
+                    adapter.switchToCommentType();
+                    commentTab.setTextColor(getResources().getColor(R.color.orange));
+                    repostTab.setTextColor(getResources().getColor(R.color.black));
+
+                    if (commentList.getSize() == 0) {
+                        loadNewCommentData();
+                    } else {
+                        Loader loader = getLoaderManager().getLoader(NEW_COMMENT_LOADER_ID);
+                        if (loader != null) {
+                            progressHeader.setVisibility(View.VISIBLE);
+                        } else {
+                            progressHeader.setVisibility(View.GONE);
+                        }
+                    }
+                } else {
+                    loadNewCommentData();
+                }
             }
         });
         commentTab.setTextColor(getResources().getColor(R.color.orange));
