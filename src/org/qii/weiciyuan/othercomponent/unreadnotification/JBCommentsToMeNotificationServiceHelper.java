@@ -165,7 +165,7 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
         i.putExtra("comment", data);
         i.putExtra("unreadTabIndex", UnreadTabIndex.COMMENT_TO_ME);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), Long.valueOf(accountBean.getUid()).intValue(), i, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
     }
 }
