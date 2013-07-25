@@ -25,6 +25,11 @@ import java.io.IOException;
  */
 public class ImageTool {
 
+
+    public static final int WITH_UNDEFINED = -1;
+    public static final int HEIGHT_UNDEFINED = -1;
+
+
     /**
      * 1. convert gif to normal bitmap
      * 2. cut bitmap
@@ -355,7 +360,7 @@ public class ImageTool {
         }
     }
 
-    public static Bitmap getNormalPic(String filePath, int reqWidth, int reqHeight) {
+    public static Bitmap readNormalPic(String filePath, int reqWidth, int reqHeight) {
         try {
 
             if (!FileManager.isExternalStorageMounted()) {

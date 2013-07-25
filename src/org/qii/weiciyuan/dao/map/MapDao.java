@@ -55,7 +55,7 @@ public class MapDao {
         if (!downloaded)
             return null;
 
-        Bitmap bitmap = ImageTool.getNormalPic(filePath, -1, -1);
+        Bitmap bitmap = ImageTool.readNormalPic(filePath, -1, -1);
 
         return bitmap;
 
