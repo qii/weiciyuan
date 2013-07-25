@@ -199,12 +199,12 @@
         android:onClick="true"
         android:layout_marginTop="8dp"/>
 
-    <ViewStub
-        android:id="@+id/stub"
+    <ImageView
+        android:id="@+id/map"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
         android:layout_below="@id/location"
         android:layout_marginTop="4dp"
-        android:inflatedId="@+id/location_mv"
-        android:layout="@layout/browserweibomsgfragment_viewstub_mapview"
         android:layout_width="match_parent"
         android:layout_height="150dp"/>
 

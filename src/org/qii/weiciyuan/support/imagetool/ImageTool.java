@@ -363,7 +363,7 @@ public class ImageTool {
             }
 
 
-            if (!filePath.endsWith(".jpg") && !filePath.endsWith(".gif"))
+            if (!filePath.endsWith(".jpg") && !filePath.endsWith(".gif") && !filePath.endsWith(".png"))
                 filePath = filePath + ".jpg";
 
             boolean fileExist = new File(filePath).exists();
@@ -377,7 +377,8 @@ public class ImageTool {
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeFile(filePath, options);
 
-            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+            if (reqHeight > 0 && reqWidth > 0)
+                options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
             options.inJustDecodeBounds = false;
             options.inPurgeable = true;
             options.inInputShareable = true;
@@ -390,13 +391,14 @@ public class ImageTool {
                 return null;
             }
 
-
-            int[] size = calcResize(bitmap.getWidth(), bitmap.getHeight(), reqWidth, reqHeight);
-            if (size[0] > 0 && size[1] > 0) {
-                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size[0], size[1], true);
-                if (scaledBitmap != bitmap) {
-                    bitmap.recycle();
-                    bitmap = scaledBitmap;
+            if (reqHeight > 0 && reqWidth > 0) {
+                int[] size = calcResize(bitmap.getWidth(), bitmap.getHeight(), reqWidth, reqHeight);
+                if (size[0] > 0 && size[1] > 0) {
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size[0], size[1], true);
+                    if (scaledBitmap != bitmap) {
+                        bitmap.recycle();
+                        bitmap = scaledBitmap;
+                    }
                 }
             }
 

@@ -113,6 +113,9 @@ public class URLHelper {
     public static final String NEARBY_USER = URL_SINA_WEIBO + "place/nearby/users.json";
     public static final String NEARBY_STATUS = URL_SINA_WEIBO + "place/nearby_timeline.json";
 
+    //map
+    public static final String STATIC_MAP = URL_SINA_WEIBO + "location/base/get_map_image.json";
+
     /**
      * black magic
      */

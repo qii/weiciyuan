@@ -23,6 +23,7 @@ public class FileManager {
     private static final String PICTURE_THUMBNAIL = "picture_thumbnail";
     private static final String PICTURE_BMIDDLE = "picture_bmiddle";
     private static final String PICTURE_LARGE = "picture_large";
+    private static final String MAP = "map";
     private static final String COVER = "cover";
     private static final String EMOTION = "emotion";
     private static final String TXT2PIC = "txt2pic";
@@ -150,10 +151,13 @@ public class FileManager {
             case cover:
                 newRelativePath = COVER + oldRelativePath;
                 break;
+            case map:
+                newRelativePath = MAP + oldRelativePath;
+                break;
         }
 
         String result = getSdCardPath() + File.separator + newRelativePath;
-        if (!result.endsWith(".jpg") && !result.endsWith(".gif"))
+        if (!result.endsWith(".jpg") && !result.endsWith(".gif") && !result.endsWith(".png"))
             result = result + ".jpg";
 
         return result;

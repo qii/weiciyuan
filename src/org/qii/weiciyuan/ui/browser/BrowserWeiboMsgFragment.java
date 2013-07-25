@@ -16,7 +16,6 @@ import android.view.*;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentListBean;
@@ -56,7 +55,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private BrowserWeiboMsgLayout layout;
 
     private UpdateMessageTask updateMsgTask;
-    private GetGoogleLocationInfoTask geoTask;
+    private GetWeiboLocationInfoTask geoTask;
     private MsgDetailReadWorker picTask;
 
     private Handler handler = new Handler();
@@ -95,7 +94,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         TextView location;
         TextView source;
 
-        MapView mapView;
+        ImageView mapView;
 
         ImageView avatar;
         WeiboDetailImageView content_pic;
@@ -124,8 +123,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (hasGpsInfo())
-            layout.mapView.onSaveInstanceState(outState);
+//        if (hasGpsInfo())
+//            layout.mapView.onSaveInstanceState(outState);
         outState.putParcelable("msg", msg);
     }
 
@@ -190,8 +189,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     public void onResume() {
         super.onResume();
 //        buildViewData(false);
-        if (hasGpsInfo())
-            layout.mapView.onResume();
+//        if (hasGpsInfo())
+//            layout.mapView.onResume();
 
 
         sendCommentCompletedReceiver = new BroadcastReceiver() {
@@ -364,19 +363,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         layout.time = (TextView) view.findViewById(R.id.time);
         layout.location = (TextView) view.findViewById(R.id.location);
         layout.source = (TextView) view.findViewById(R.id.source);
-        if (hasGpsInfo()) {
-            ViewStub stub = (ViewStub) view.findViewById(R.id.stub);
-            View inflated = stub.inflate();
-            layout.mapView = (MapView) inflated.findViewById(R.id.location_mv);
-        }
-        if (savedInstanceState != null && hasGpsInfo()) {
-            MessageBean msg = (MessageBean) savedInstanceState.getParcelable("msg");
-            savedInstanceState.remove("msg");
-            layout.mapView.onCreate(savedInstanceState);
-            savedInstanceState.putParcelable("msg", msg);
-        } else if (hasGpsInfo()) {
-            layout.mapView.onCreate(savedInstanceState);
-        }
+
+
+        layout.mapView = (ImageView) view.findViewById(R.id.map);
+
         layout.comment_count = (TextView) view.findViewById(R.id.comment_count);
         layout.repost_count = (TextView) view.findViewById(R.id.repost_count);
         layout.count_layout = view.findViewById(R.id.count_layout);
@@ -465,10 +455,13 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         layout.time.setText(msg.getTimeInFormat());
 
         if (msg.getGeo() != null) {
+            layout.mapView.setVisibility(View.VISIBLE);
             if (Utility.isTaskStopped(geoTask)) {
-                geoTask = new GetGoogleLocationInfoTask(getActivity(), msg.getGeo(), layout.mapView, layout.location);
+                geoTask = new GetWeiboLocationInfoTask(getActivity(), msg.getGeo(), layout.mapView, layout.location);
                 geoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
+        } else {
+            layout.mapView.setVisibility(View.GONE);
         }
         if (!TextUtils.isEmpty(msg.getSource())) {
             layout.source.setText(Html.fromHtml(msg.getSource()).toString());
