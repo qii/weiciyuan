@@ -47,11 +47,39 @@ public class MessageBean extends ItemBean implements Parcelable {
     private UserBean user;
     private GeoBean geo;
 
-    private ArrayList<String> pic_urls;
+    private ArrayList<PicUrls> pic_urls;
 
 
     private transient SpannableString listViewSpannableString;
 
+
+    public static class PicUrls implements Parcelable {
+        public String thumbnail_pic;
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(thumbnail_pic);
+        }
+
+        public static final Parcelable.Creator<PicUrls> CREATOR =
+                new Parcelable.Creator<PicUrls>() {
+                    public PicUrls createFromParcel(Parcel in) {
+                        PicUrls picUrls = new PicUrls();
+                        picUrls.thumbnail_pic = in.readString();
+                        return picUrls;
+                    }
+
+                    public PicUrls[] newArray(int size) {
+                        return new PicUrls[size];
+                    }
+                };
+
+    }
 
     @Override
     public int describeContents() {
@@ -87,7 +115,7 @@ public class MessageBean extends ItemBean implements Parcelable {
         dest.writeParcelable(user, flags);
         dest.writeParcelable(geo, flags);
 
-        dest.writeStringList(pic_urls);
+        dest.writeTypedList(pic_urls);
 
     }
 
@@ -126,8 +154,8 @@ public class MessageBean extends ItemBean implements Parcelable {
                     messageBean.user = in.readParcelable(UserBean.class.getClassLoader());
                     messageBean.geo = in.readParcelable(GeoBean.class.getClassLoader());
 
-                    messageBean.pic_urls = new ArrayList<String>();
-                    in.readStringList(messageBean.pic_urls);
+                    messageBean.pic_urls = new ArrayList<PicUrls>();
+                    in.readTypedList(messageBean.pic_urls, PicUrls.CREATOR);
 
                     return messageBean;
                 }
@@ -359,6 +387,14 @@ public class MessageBean extends ItemBean implements Parcelable {
 
         MessageBean other = (MessageBean) otherObject;
         return getId().equals(other.getId());
+    }
+
+    public ArrayList<String> getPic_urls() {
+        ArrayList<String> urls = new ArrayList<String>();
+        for (PicUrls url : pic_urls) {
+            urls.add(url.thumbnail_pic);
+        }
+        return urls;
     }
 
     @Override
