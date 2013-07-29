@@ -10,6 +10,7 @@ import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -45,6 +46,8 @@ public class MessageBean extends ItemBean implements Parcelable {
     private MessageBean retweeted_status;
     private UserBean user;
     private GeoBean geo;
+
+    private ArrayList<String> pic_urls;
 
 
     private transient SpannableString listViewSpannableString;
@@ -84,6 +87,8 @@ public class MessageBean extends ItemBean implements Parcelable {
         dest.writeParcelable(user, flags);
         dest.writeParcelable(geo, flags);
 
+        dest.writeStringList(pic_urls);
+
     }
 
     public static final Parcelable.Creator<MessageBean> CREATOR =
@@ -120,6 +125,9 @@ public class MessageBean extends ItemBean implements Parcelable {
                     messageBean.retweeted_status = in.readParcelable(MessageBean.class.getClassLoader());
                     messageBean.user = in.readParcelable(UserBean.class.getClassLoader());
                     messageBean.geo = in.readParcelable(GeoBean.class.getClassLoader());
+
+                    messageBean.pic_urls = new ArrayList<String>();
+                    in.readStringList(messageBean.pic_urls);
 
                     return messageBean;
                 }
