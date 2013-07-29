@@ -389,7 +389,7 @@ public class MessageBean extends ItemBean implements Parcelable {
         return getId().equals(other.getId());
     }
 
-    public ArrayList<String> getPic_urls() {
+    public ArrayList<String> getPicUrls() {
         ArrayList<String> urls = new ArrayList<String>();
         for (PicUrls url : pic_urls) {
             urls.add(url.thumbnail_pic);
