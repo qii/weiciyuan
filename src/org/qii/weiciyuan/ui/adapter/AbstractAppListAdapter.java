@@ -22,13 +22,13 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.PictureBitmapDrawable;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.gallery.GalleryActivity;
 import org.qii.weiciyuan.support.lib.*;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.browser.BrowserBigPicActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.ArrayDeque;
@@ -493,7 +493,10 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
+//                    Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
+//                    intent.putExtra("msg", msg);
+//                    getActivity().startActivity(intent);
+                    Intent intent = new Intent(getActivity(), GalleryActivity.class);
                     intent.putExtra("msg", msg);
                     getActivity().startActivity(intent);
                 }

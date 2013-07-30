@@ -98,7 +98,7 @@ public class TaskCache {
             boolean localFileExist = new File(largePath).exists();
 
             if (downloadWorker == null) {
-                TaskCache.downloadTasks.get(middleUrl);
+                downloadWorker = TaskCache.downloadTasks.get(middleUrl);
             }
 
             if (downloadWorker == null) {
@@ -140,6 +140,57 @@ public class TaskCache {
                 return;
             } catch (CancellationException e) {
                 removeDownloadTask(middleUrl, downloadWorker);
+            }
+
+        }
+    }
+
+
+    public static void waitForMsgDetailPictureDownload(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+        while (true) {
+            DownloadWorker downloadWorker = null;
+
+
+            String largePath = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_large);
+
+
+            downloadWorker = TaskCache.downloadTasks.get(url);
+            boolean localFileExist = new File(largePath).exists();
+
+
+            if (downloadWorker == null) {
+                if (localFileExist) {
+                    return;
+                }
+
+                DownloadWorker newWorker = new DownloadWorker(url, FileLocationMethod.picture_large);
+                synchronized (backgroundWifiDownloadPicturesWorkLock) {
+                    downloadWorker = TaskCache.downloadTasks.putIfAbsent(url, newWorker);
+
+                }
+                if (downloadWorker == null) {
+                    downloadWorker = newWorker;
+                    downloadWorker.executeOnExecutor(MyAsyncTask.DOWNLOAD_THREAD_POOL_EXECUTOR);
+                }
+            }
+
+
+            try {
+                downloadWorker.addDownloadListener(downloadListener);
+                downloadWorker.get(30, TimeUnit.SECONDS);
+                return;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                Utility.printStackTrace(e);
+                return;
+            } catch (ExecutionException e) {
+                Utility.printStackTrace(e);
+                return;
+            } catch (TimeoutException e) {
+                Utility.printStackTrace(e);
+                return;
+            } catch (CancellationException e) {
+                removeDownloadTask(url, downloadWorker);
             }
 
         }

@@ -102,6 +102,10 @@
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar"
             android:launchMode="singleTop"/>
         <activity
+            android:name=".support.gallery.GalleryActivity"
+            android:theme="@style/GalleryTheme"
+            android:launchMode="singleTop"/>
+        <activity
             android:name=".ui.browser.BrowserLocalPicActivity"
             android:uiOptions="splitActionBarWhenNarrow"
             android:launchMode="singleTop"/>
