@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.support.gallery;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -40,8 +39,6 @@ public class GalleryActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.galleryactivity_layout);
-        ActionBar actionBar = getActionBar();
-        actionBar.hide();
 
         position = (TextView) findViewById(R.id.position);
         TextView sum = (TextView) findViewById(R.id.sum);
