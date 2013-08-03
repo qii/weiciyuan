@@ -115,7 +115,7 @@ public class GalleryActivity extends Activity {
                 ImageView imageView = (ImageView) imageLayout.findViewById(R.id.image);
                 Bitmap bitmap = ImageTool.decodeBitmapFromSDCard(path, -1, -1);
                 imageView.setImageBitmap(bitmap);
-                bindImageViewLongClickListener(imageView, position, path);
+                bindImageViewLongClickListener(imageView, urls.get(position), path);
             }
 
             ((ViewPager) view).addView(imageLayout, 0);
@@ -152,7 +152,7 @@ public class GalleryActivity extends Activity {
     }
 
 
-    private static class PicSimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, String> {
+    private class PicSimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, String> {
 
         private FileDownloaderHttpHelper.DownloadListener downloadListener = new FileDownloaderHttpHelper.DownloadListener() {
             @Override
@@ -214,6 +214,7 @@ public class GalleryActivity extends Activity {
             if (!TextUtils.isEmpty(bitmapPath) && iv != null) {
                 Bitmap bitmap = ImageTool.decodeBitmapFromSDCard(bitmapPath, -1, -1);
                 iv.setImageBitmap(bitmap);
+                bindImageViewLongClickListener(iv, url, bitmapPath);
 
             }
 
@@ -221,72 +222,8 @@ public class GalleryActivity extends Activity {
     }
 
 
-    private class PicSimpleBitmapReaderWorkerTask extends MyAsyncTask<String, Integer, String> {
+    private void bindImageViewLongClickListener(ImageView imageView, final String url, final String filePath) {
 
-        private ImageView iv;
-        private String url;
-        private CircleProgressView spinner;
-        private HashMap<String, PicSimpleBitmapWorkerTask> taskMap;
-        private int position;
-
-        public PicSimpleBitmapReaderWorkerTask(ImageView iv, CircleProgressView spinner, String url,
-                                               HashMap<String, PicSimpleBitmapWorkerTask> taskMap,
-                                               int position) {
-            this.iv = iv;
-            this.url = url;
-            this.spinner = spinner;
-            this.taskMap = taskMap;
-            this.position = position;
-        }
-
-
-        @Override
-        protected String doInBackground(String... dd) {
-            if (isCancelled()) {
-                return null;
-            }
-
-
-            String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_large);
-            return path;
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            int progress = values[0];
-            int max = values[1];
-            spinner.setMax(max);
-            spinner.setProgress(progress);
-        }
-
-        @Override
-        protected void onCancelled(String s) {
-            super.onCancelled(s);
-            taskMap.remove(url);
-        }
-
-        @Override
-        protected void onPostExecute(final String bitmapPath) {
-            if (isCancelled()) {
-                return;
-            }
-
-            taskMap.remove(url);
-
-            if (!TextUtils.isEmpty(bitmapPath) && iv != null) {
-                Bitmap bitmap = ImageTool.decodeBitmapFromSDCard(bitmapPath, -1, -1);
-                iv.setImageBitmap(bitmap);
-                bindImageViewLongClickListener(iv, position, bitmapPath);
-            }
-
-        }
-    }
-
-
-    private void bindImageViewLongClickListener(ImageView imageView, final int position, final String filePath) {
-        final String url = urls.get(position);
         imageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -315,7 +252,7 @@ public class GalleryActivity extends Activity {
                                         }
                                         break;
                                     case 2:
-                                        saveBitmapToPictureDir(position, filePath);
+                                        saveBitmapToPictureDir(filePath);
                                         break;
                                 }
                             }
@@ -327,7 +264,7 @@ public class GalleryActivity extends Activity {
     }
 
 
-    private void saveBitmapToPictureDir(int position, String filePath) {
+    private void saveBitmapToPictureDir(String filePath) {
         if (Utility.isTaskStopped(saveTask)) {
             saveTask = new PicSaveTask(filePath);
             saveTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
