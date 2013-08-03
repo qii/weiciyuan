@@ -22,6 +22,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.PictureBitmapDrawable;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.gallery.GalleryActivity;
 import org.qii.weiciyuan.support.lib.*;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -339,8 +340,12 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
         holder.time = (TimeTextView) convertView.findViewById(R.id.time);
         holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
+
         holder.content_pic = (TimeLineImageView) convertView.findViewById(R.id.content_pic);
+        holder.content_pic_multi = (GridLayout) convertView.findViewById(R.id.content_pic_multi);
         holder.repost_content_pic = (TimeLineImageView) convertView.findViewById(R.id.repost_content_pic);
+        holder.repost_content_pic_multi = (GridLayout) convertView.findViewById(R.id.repost_content__pic_multi);
+
         holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
         holder.repost_layout = convertView.findViewById(R.id.repost_layout);
         holder.repost_flag = (ImageView) convertView.findViewById(R.id.repost_flag);
@@ -487,6 +492,47 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         }
     }
 
+    protected void buildMultiPic(final MessageBean msg, GridLayout gridLayout) {
+        if (SettingUtility.isEnablePic()) {
+            gridLayout.setVisibility(View.VISIBLE);
+
+            int count = msg.getPicCount();
+            for (int i = 0; i < count; i++) {
+                ImageView pic = (ImageView) gridLayout.getChildAt(i);
+                pic.setVisibility(View.VISIBLE);
+                if (SettingUtility.getEnableBigPic()) {
+                    commander.downContentPic(pic, msg.getHighPicUrls().get(i), FileLocationMethod.picture_large, (AbstractTimeLineFragment) fragment);
+                } else {
+                    commander.downContentPic(pic, msg.getThumbnailPicUrls().get(i), FileLocationMethod.picture_thumbnail, (AbstractTimeLineFragment) fragment);
+                }
+
+                final int finalI = i;
+                pic.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), GalleryActivity.class);
+                        intent.putExtra("msg", msg);
+                        intent.putExtra("position", finalI);
+                        getActivity().startActivity(intent);
+                    }
+                });
+
+            }
+
+            if (count < 9) {
+                for (int i = count; i < 9; i++) {
+                    ImageView pic = (ImageView) gridLayout.getChildAt(i);
+                    pic.setVisibility(View.GONE);
+                }
+            }
+
+
+        } else {
+            gridLayout.setVisibility(View.GONE);
+        }
+
+    }
+
     protected void buildPic(final MessageBean msg, TimeLineImageView view, int position) {
         if (SettingUtility.isEnablePic()) {
             view.setVisibility(View.VISIBLE);
@@ -537,8 +583,12 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         TextView repost_content;
         TimeTextView time;
         TimeLineAvatarImageView avatar;
+
         TimeLineImageView content_pic;
+        GridLayout content_pic_multi;
         TimeLineImageView repost_content_pic;
+        GridLayout repost_content_pic_multi;
+
         RelativeLayout listview_root;
         View repost_layout;
         ImageView repost_flag;

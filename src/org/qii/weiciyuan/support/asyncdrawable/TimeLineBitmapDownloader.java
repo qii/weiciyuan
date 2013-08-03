@@ -136,6 +136,16 @@ public class TimeLineBitmapDownloader {
         }
     }
 
+
+    public void downContentPic(ImageView view, String picUrl, FileLocationMethod method, AbstractTimeLineFragment fragment) {
+
+        boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
+
+        display(view, picUrl, method, isFling);
+
+    }
+
+
     public void downContentPic(TimeLineImageView view, MessageBean msg, AbstractTimeLineFragment fragment) {
         String picUrl;
 

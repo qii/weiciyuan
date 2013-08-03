@@ -216,12 +216,19 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);
+        holder.repost_content_pic_multi.setVisibility(View.GONE);
+
         holder.content_pic.setVisibility(View.GONE);
+        holder.content_pic_multi.setVisibility(View.GONE);
 
 
         if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
-            buildPic(msg, holder.content_pic, position);
 
+            if (msg.isMultiPics()) {
+                buildMultiPic(msg, holder.content_pic_multi);
+            } else {
+                buildPic(msg, holder.content_pic, position);
+            }
         }
 
         MessageBean repost_msg = msg.getRetweeted_status();
@@ -279,8 +286,12 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         }
 
         if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {
-            holder.repost_content_pic.setVisibility(View.VISIBLE);
-            buildPic(repost_msg, holder.repost_content_pic, position);
+            if (repost_msg.isMultiPics()) {
+                buildMultiPic(repost_msg, holder.repost_content_pic_multi);
+            } else {
+                buildPic(repost_msg, holder.repost_content_pic, position);
+            }
+
         }
     }
 

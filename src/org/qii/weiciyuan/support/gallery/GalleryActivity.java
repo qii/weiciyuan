@@ -53,7 +53,7 @@ public class GalleryActivity extends Activity {
         TextView sum = (TextView) findViewById(R.id.sum);
 
         MessageBean msg = getIntent().getParcelableExtra("msg");
-        ArrayList<String> tmp = msg.getPicUrls();
+        ArrayList<String> tmp = msg.getThumbnailPicUrls();
         for (int i = 0; i < tmp.size(); i++) {
             urls.add(tmp.get(i).replace("thumbnail", "large"));
         }
@@ -68,7 +68,7 @@ public class GalleryActivity extends Activity {
                 GalleryActivity.this.position.setText(String.valueOf(position + 1));
             }
         });
-        pager.setCurrentItem(0);
+        pager.setCurrentItem(getIntent().getIntExtra("position", 0));
     }
 
     @Override

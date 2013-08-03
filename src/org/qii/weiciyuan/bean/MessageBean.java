@@ -389,12 +389,36 @@ public class MessageBean extends ItemBean implements Parcelable {
         return getId().equals(other.getId());
     }
 
-    public ArrayList<String> getPicUrls() {
-        ArrayList<String> urls = new ArrayList<String>();
+    private ArrayList<String> thumbnaiUrls = new ArrayList<String>();
+    private ArrayList<String> highUrls = new ArrayList<String>();
+
+
+    public ArrayList<String> getThumbnailPicUrls() {
+        if (thumbnaiUrls.size() > 0)
+            return thumbnaiUrls;
+
         for (PicUrls url : pic_urls) {
-            urls.add(url.thumbnail_pic);
+            thumbnaiUrls.add(url.thumbnail_pic);
         }
-        return urls;
+        return thumbnaiUrls;
+    }
+
+    public ArrayList<String> getHighPicUrls() {
+        if (highUrls.size() > 0)
+            return highUrls;
+
+        for (PicUrls url : pic_urls) {
+            highUrls.add(url.thumbnail_pic.replace("thumbnail", "large"));
+        }
+        return highUrls;
+    }
+
+    public boolean isMultiPics() {
+        return pic_urls.size() > 1;
+    }
+
+    public int getPicCount() {
+        return pic_urls.size();
     }
 
     @Override
