@@ -328,11 +328,9 @@ public class GalleryActivity extends Activity {
 
 
     private void saveBitmapToPictureDir(int position, String filePath) {
-        if (saveTask == null) {
+        if (Utility.isTaskStopped(saveTask)) {
             saveTask = new PicSaveTask(filePath);
             saveTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        } else if (saveTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            Toast.makeText(GalleryActivity.this, getString(R.string.already_saved), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -355,7 +353,6 @@ public class GalleryActivity extends Activity {
         @Override
         protected void onPostExecute(Boolean value) {
             super.onPostExecute(value);
-            saveTask = null;
             if (value)
                 Toast.makeText(GalleryActivity.this, getString(R.string.save_to_album_successfully), Toast.LENGTH_SHORT).show();
             else
