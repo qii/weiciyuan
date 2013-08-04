@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.support.utils;
 
+import android.content.Context;
 import android.content.res.TypedArray;
 
 /**
@@ -10,7 +11,10 @@ public class ThemeUtility {
 
     public static int getColor(int attr) {
         int[] attrs = new int[]{attr};
-        TypedArray ta = GlobalContext.getInstance().obtainStyledAttributes(attrs);
+        Context context = GlobalContext.getInstance().getActivity();
+//        if (context == null)
+//            context = GlobalContext.getInstance();
+        TypedArray ta = context.obtainStyledAttributes(attrs);
         return ta.getColor(0, 430);
 
     }

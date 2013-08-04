@@ -31,8 +31,8 @@ public class AbstractAppActivity extends FragmentActivity implements ICommander 
     @Override
     protected void onResume() {
         super.onResume();
-        GlobalContext.getInstance().setActivity(this);
         GlobalContext.getInstance().setCurrentRunningActivity(this);
+
 
         if (theme == SettingUtility.getAppTheme()) {
 
@@ -67,6 +67,7 @@ public class AbstractAppActivity extends FragmentActivity implements ICommander 
         super.onCreate(savedInstanceState);
         forceShowActionBarOverflowMenu();
         initNFC();
+        GlobalContext.getInstance().setActivity(this);
         commander = TimeLineBitmapDownloader.getInstance();
     }
 
@@ -87,8 +88,10 @@ public class AbstractAppActivity extends FragmentActivity implements ICommander 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        commander.totalStopLoadPicture();
-        commander = null;
+        if (commander != null) {
+            commander.totalStopLoadPicture();
+            commander = null;
+        }
     }
 
 
@@ -129,6 +132,7 @@ public class AbstractAppActivity extends FragmentActivity implements ICommander 
 
         overridePendingTransition(0, 0);
         startActivity(intent);
+        TimeLineBitmapDownloader.refreshThemePictureBackground();
     }
 
     public TimeLineBitmapDownloader getBitmapDownloader() {

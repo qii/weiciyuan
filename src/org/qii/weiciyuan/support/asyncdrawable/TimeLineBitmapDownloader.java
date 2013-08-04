@@ -28,7 +28,7 @@ import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
  */
 public class TimeLineBitmapDownloader {
 
-    private Drawable transPic;
+    private Drawable defaultBG;
 
     private Handler handler;
 
@@ -44,7 +44,7 @@ public class TimeLineBitmapDownloader {
 
     private TimeLineBitmapDownloader(Handler handler) {
         this.handler = handler;
-        this.transPic = new ColorDrawable(ThemeUtility.getColor(R.attr.listview_pic_bg));
+        this.defaultBG = new ColorDrawable(ThemeUtility.getColor(R.attr.listview_pic_bg));
     }
 
     public static TimeLineBitmapDownloader getInstance() {
@@ -54,6 +54,12 @@ public class TimeLineBitmapDownloader {
             }
         }
         return instance;
+    }
+
+    public static void refreshThemePictureBackground() {
+        synchronized (lock) {
+            instance = new TimeLineBitmapDownloader(new Handler(Looper.getMainLooper()));
+        }
     }
 
     /**
@@ -107,7 +113,7 @@ public class TimeLineBitmapDownloader {
     public void downloadAvatar(ImageView view, UserBean user, boolean isFling) {
 
         if (user == null) {
-            view.setImageDrawable(transPic);
+            view.setImageDrawable(defaultBG);
             return;
         }
 
@@ -178,7 +184,7 @@ public class TimeLineBitmapDownloader {
         } else {
 
             if (isFling) {
-                view.setImageDrawable(transPic);
+                view.setImageDrawable(defaultBG);
                 return;
             }
 
@@ -223,7 +229,7 @@ public class TimeLineBitmapDownloader {
         } else {
 
             if (isFling) {
-                view.setImageDrawable(transPic);
+                view.setImageDrawable(defaultBG);
                 view.getProgressBar().setVisibility(View.GONE);
                 return;
             }

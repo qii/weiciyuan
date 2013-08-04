@@ -32,7 +32,6 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity implemen
     @Override
     protected void onResume() {
         super.onResume();
-        GlobalContext.getInstance().setActivity(this);
         GlobalContext.getInstance().setCurrentRunningActivity(this);
 
 
@@ -69,6 +68,7 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity implemen
         super.onCreate(savedInstanceState);
         forceShowActionBarOverflowMenu();
         initNFC();
+        GlobalContext.getInstance().setActivity(this);
         commander = TimeLineBitmapDownloader.getInstance();
     }
 
@@ -89,8 +89,10 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity implemen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        commander.totalStopLoadPicture();
-        commander = null;
+        if (commander != null) {
+            commander.totalStopLoadPicture();
+            commander = null;
+        }
     }
 
 
@@ -131,6 +133,7 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity implemen
 
         overridePendingTransition(0, 0);
         startActivity(intent);
+        TimeLineBitmapDownloader.refreshThemePictureBackground();
     }
 
     public TimeLineBitmapDownloader getBitmapDownloader() {
