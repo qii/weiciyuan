@@ -123,7 +123,7 @@
             android:layout_below="@id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
+            android:visibility="gone"
             android:columnCount="3"
             android:rowCount="3"
             android:orientation="horizontal"
