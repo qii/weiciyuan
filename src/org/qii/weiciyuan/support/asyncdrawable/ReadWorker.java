@@ -19,6 +19,7 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TimeLineImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import java.lang.ref.WeakReference;
 
@@ -38,12 +39,13 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
     private FailedResult failedResult;
     private int mShortAnimationDuration;
     private WeakReference<ProgressBar> pbWeakReference;
+    private boolean isMultiPictures = false;
 
     public String getUrl() {
         return data;
     }
 
-    public ReadWorker(ImageView view, String url, FileLocationMethod method) {
+    public ReadWorker(ImageView view, String url, FileLocationMethod method, boolean isMultiPictures) {
 
         this.globalContext = GlobalContext.getInstance();
         this.lruCache = globalContext.getAvatarCache();
@@ -52,6 +54,11 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         this.method = method;
         this.mShortAnimationDuration = GlobalContext.getInstance().getResources().getInteger(
                 android.R.integer.config_shortAnimTime);
+        this.isMultiPictures = isMultiPictures;
+    }
+
+    public ReadWorker(ImageView view, String url, FileLocationMethod method) {
+        this(view, url, method, false);
     }
 
     public ReadWorker(TimeLineImageView view, String url, FileLocationMethod method) {
@@ -97,11 +104,8 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         int width = 0;
 
         switch (method) {
-            case avatar_large:
-                width = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width);
-                height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height);
-                break;
             case avatar_small:
+            case avatar_large:
                 width = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width);
                 height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height);
                 break;
@@ -112,13 +116,17 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
                 break;
 
             case picture_large:
-                DisplayMetrics metrics = globalContext.getDisplayMetrics();
+                if (!isMultiPictures) {
+                    DisplayMetrics metrics = globalContext.getDisplayMetrics();
 
-                float reSize = globalContext.getResources().getDisplayMetrics().density;
+                    float reSize = globalContext.getResources().getDisplayMetrics().density;
 
-                height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
-                //8 is  layout padding
-                width = (int) (metrics.widthPixels - (8 + 8) * reSize);
+                    height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
+                    //8 is  layout padding
+                    width = (int) (metrics.widthPixels - (8 + 8) * reSize);
+                } else {
+                    height = width = Utility.dip2px(120);
+                }
         }
 
         synchronized (TimeLineBitmapDownloader.pauseReadWorkLock) {

@@ -126,7 +126,7 @@ public class TimeLineBitmapDownloader {
             url = user.getProfile_image_url();
             method = FileLocationMethod.avatar_small;
         }
-        display(view, url, method, isFling);
+        display(view, url, method, isFling, false);
     }
 
     public void downContentPic(ImageView view, MessageBean msg, AbstractTimeLineFragment fragment) {
@@ -136,21 +136,21 @@ public class TimeLineBitmapDownloader {
 
         if (SettingUtility.getEnableBigPic()) {
             picUrl = msg.getOriginal_pic();
-            display(view, picUrl, FileLocationMethod.picture_large, isFling);
+            display(view, picUrl, FileLocationMethod.picture_large, isFling, false);
 
         } else {
             picUrl = msg.getThumbnail_pic();
-            display(view, picUrl, FileLocationMethod.picture_thumbnail, isFling);
+            display(view, picUrl, FileLocationMethod.picture_thumbnail, isFling, false);
 
         }
     }
 
 
-    public void downContentPic(ImageView view, String picUrl, FileLocationMethod method, AbstractTimeLineFragment fragment) {
+    public void displayMultiPicture(ImageView view, String picUrl, FileLocationMethod method, AbstractTimeLineFragment fragment) {
 
         boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
 
-        display(view, picUrl, method, isFling);
+        display(view, picUrl, method, isFling, true);
 
     }
 
@@ -172,7 +172,7 @@ public class TimeLineBitmapDownloader {
     }
 
 
-    private void display(final ImageView view, final String urlKey, final FileLocationMethod method, boolean isFling) {
+    private void display(final ImageView view, final String urlKey, final FileLocationMethod method, boolean isFling, boolean isMultiPictures) {
         view.clearAnimation();
         final Bitmap bitmap = getBitmapFromMemCache(urlKey);
         if (bitmap != null) {
@@ -192,7 +192,7 @@ public class TimeLineBitmapDownloader {
                 return;
             }
 
-            final ReadWorker newTask = new ReadWorker(view, urlKey, method);
+            final ReadWorker newTask = new ReadWorker(view, urlKey, method, isMultiPictures);
             PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(newTask);
             view.setImageDrawable(downloadedDrawable);
 

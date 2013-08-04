@@ -501,9 +501,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 ImageView pic = (ImageView) gridLayout.getChildAt(i);
                 pic.setVisibility(View.VISIBLE);
                 if (SettingUtility.getEnableBigPic()) {
-                    commander.downContentPic(pic, msg.getHighPicUrls().get(i), FileLocationMethod.picture_large, (AbstractTimeLineFragment) fragment);
+                    commander.displayMultiPicture(pic, msg.getHighPicUrls().get(i), FileLocationMethod.picture_large, (AbstractTimeLineFragment) fragment);
                 } else {
-                    commander.downContentPic(pic, msg.getThumbnailPicUrls().get(i), FileLocationMethod.picture_thumbnail, (AbstractTimeLineFragment) fragment);
+                    commander.displayMultiPicture(pic, msg.getThumbnailPicUrls().get(i), FileLocationMethod.picture_thumbnail, (AbstractTimeLineFragment) fragment);
                 }
 
                 final int finalI = i;
