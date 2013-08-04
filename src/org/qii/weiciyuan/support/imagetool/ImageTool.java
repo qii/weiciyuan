@@ -310,7 +310,7 @@ public class ImageTool {
             }
 
 
-            if (!filePath.endsWith(".jpg") && !filePath.endsWith(".gif"))
+            if (!filePath.endsWith(".jpg") && !filePath.endsWith(".gif") && !filePath.endsWith(".png"))
                 filePath = filePath + ".jpg";
 
             boolean fileExist = new File(filePath).exists();
