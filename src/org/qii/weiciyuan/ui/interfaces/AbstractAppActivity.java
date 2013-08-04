@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
  * User: Jiang Qi
  * Date: 12-7-31
  */
-public class AbstractAppActivity extends FragmentActivity implements ICommander {
+public class AbstractAppActivity extends FragmentActivity {
 
     protected int theme = 0;
 
