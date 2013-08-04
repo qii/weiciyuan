@@ -476,48 +476,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
         //sina weibo official account can send repost message with picture, fuck sina weibo
         if (!TextUtils.isEmpty(msg.getBmiddle_pic()) && msg.getRetweeted_status() == null) {
-
-            if (!msg.isMultiPics()) {
-
-                if (Utility.isTaskStopped(picTask)) {
-                    layout.content_pic.setVisibility(View.VISIBLE);
-
-                    if (refreshPic) {
-                        picTask = new MsgDetailReadWorker(layout.content_pic, msg);
-                        picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                    }
-
-                }
-            } else {
-                layout.content_pic_multi.setVisibility(View.VISIBLE);
-
-                int count = msg.getPicCount();
-                for (int i = 0; i < count; i++) {
-                    ImageView pic = (ImageView) layout.content_pic_multi.getChildAt(i);
-                    pic.setVisibility(View.VISIBLE);
-
-                    TimeLineBitmapDownloader.getInstance().displayMultiPicture(pic, msg.getMiddlePicUrls().get(i), FileLocationMethod.picture_bmiddle);
-
-                    final int finalI = i;
-                    pic.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(), GalleryActivity.class);
-                            intent.putExtra("msg", msg);
-                            intent.putExtra("position", finalI);
-                            getActivity().startActivity(intent);
-                        }
-                    });
-
-                }
-
-                if (count < 9) {
-                    for (int i = count; i < 9; i++) {
-                        ImageView pic = (ImageView) layout.content_pic_multi.getChildAt(i);
-                        pic.setVisibility(View.GONE);
-                    }
-                }
-            }
+            displayPictures(msg, layout.content_pic_multi, layout.content_pic, refreshPic);
         }
 
         final MessageBean repostMsg = msg.getRetweeted_status();
@@ -542,52 +501,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             layout.repost_pic_multi.setVisibility(View.GONE);
 
             if (!TextUtils.isEmpty(repostMsg.getBmiddle_pic())) {
-
-                if (!repostMsg.isMultiPics()) {
-
-                    if (Utility.isTaskStopped(picTask)) {
-                        layout.repost_pic.setVisibility(View.VISIBLE);
-
-                        if (refreshPic) {
-                            picTask = new MsgDetailReadWorker(layout.repost_pic, repostMsg);
-                            picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                        }
-
-                    }
-                } else {
-                    layout.repost_pic_multi.setVisibility(View.VISIBLE);
-
-                    int count = repostMsg.getPicCount();
-                    for (int i = 0; i < count; i++) {
-                        ImageView pic = (ImageView) layout.repost_pic_multi.getChildAt(i);
-                        pic.setVisibility(View.VISIBLE);
-
-                        TimeLineBitmapDownloader.getInstance().displayMultiPicture(pic, repostMsg.getMiddlePicUrls().get(i), FileLocationMethod.picture_bmiddle);
-
-                        final int finalI = i;
-                        pic.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(getActivity(), GalleryActivity.class);
-                                intent.putExtra("msg", repostMsg);
-                                intent.putExtra("position", finalI);
-                                getActivity().startActivity(intent);
-                            }
-                        });
-
-                    }
-
-                    if (count < 9) {
-                        for (int i = count; i < 9; i++) {
-                            ImageView pic = (ImageView) layout.repost_pic_multi.getChildAt(i);
-                            pic.setVisibility(View.GONE);
-                        }
-                    }
-                }
-
-
-            } else {
-                layout.repost_pic.setVisibility(View.GONE);
+                displayPictures(repostMsg, layout.repost_pic_multi, layout.repost_pic, refreshPic);
             }
         }
 
@@ -596,6 +510,53 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
 //        Utility.buildTabCount(getActivity().getActionBar().getTabAt(1), getString(R.string.comments), msg.getComments_count());
 //        Utility.buildTabCount(getActivity().getActionBar().getTabAt(2), getString(R.string.repost), msg.getReposts_count());
+    }
+
+
+    private void displayPictures(final MessageBean msg, GridLayout layout, WeiboDetailImageView view, boolean refreshPic) {
+
+        if (!msg.isMultiPics()) {
+
+            if (Utility.isTaskStopped(picTask)) {
+                layout.setVisibility(View.VISIBLE);
+
+                if (refreshPic) {
+                    picTask = new MsgDetailReadWorker(view, msg);
+                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
+
+            }
+        } else {
+            layout.setVisibility(View.VISIBLE);
+
+            int count = msg.getPicCount();
+            for (int i = 0; i < count; i++) {
+                ImageView pic = (ImageView) layout.getChildAt(i);
+                pic.setVisibility(View.VISIBLE);
+
+                TimeLineBitmapDownloader.getInstance().displayMultiPicture(pic, msg.getMiddlePicUrls().get(i), FileLocationMethod.picture_bmiddle);
+
+                final int finalI = i;
+                pic.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), GalleryActivity.class);
+                        intent.putExtra("msg", msg);
+                        intent.putExtra("position", finalI);
+                        getActivity().startActivity(intent);
+                    }
+                });
+
+            }
+
+            if (count < 9) {
+                for (int i = count; i < 9; i++) {
+                    ImageView pic = (ImageView) layout.getChildAt(i);
+                    pic.setVisibility(View.GONE);
+                }
+            }
+        }
+
     }
 
     private void buildRepostCount() {
