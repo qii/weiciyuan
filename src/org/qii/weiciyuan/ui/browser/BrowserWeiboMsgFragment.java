@@ -518,7 +518,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         if (!msg.isMultiPics()) {
 
             if (Utility.isTaskStopped(picTask)) {
-                layout.setVisibility(View.VISIBLE);
+                view.setVisibility(View.VISIBLE);
 
                 if (refreshPic) {
                     picTask = new MsgDetailReadWorker(view, msg);
