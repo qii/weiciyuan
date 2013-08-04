@@ -118,6 +118,74 @@
             android:visibility="gone"
             android:clickable="true"/>
 
+        <GridLayout
+            android:id="@+id/content_pic_multi"
+            android:layout_below="@id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:columnCount="3"
+            android:rowCount="3"
+            android:orientation="horizontal"
+            android:useDefaultMargins="true"
+            android:clickable="false">
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+        </GridLayout>
+
 
         <TextView
             android:layout_below="@id/content"
@@ -146,6 +214,76 @@
             android:padding="2dp"
             />
 
+        <GridLayout
+            android:id="@+id/repost_content__pic_multi"
+            android:layout_below="@id/repost_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="5dp"
+            android:columnCount="3"
+            android:rowCount="3"
+            android:orientation="horizontal"
+            android:useDefaultMargins="true"
+            android:clickable="false">
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:background="@color/transparent"
+                android:layout_height="90dp"
+                android:layout_width="90dp"/>
+
+        </GridLayout>
+
 
         <ImageView
             android:id="@+id/repost_flag"
@@ -164,6 +302,16 @@
             android:layout_alignLeft="@id/avatar"
             android:layout_alignTop="@id/repost_content"
             android:layout_alignBottom="@id/repost_content_pic"
+            android:layout_marginTop="3dp"
+            android:layout_below="@id/repost_flag"
+            android:background="@color/lightgray"/>
+
+        <ImageView
+            android:layout_width="6dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/avatar"
+            android:layout_alignTop="@id/repost_content"
+            android:layout_alignBottom="@id/repost_content__pic_multi"
             android:layout_marginTop="3dp"
             android:layout_below="@id/repost_flag"
             android:background="@color/lightgray"/>
