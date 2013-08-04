@@ -171,7 +171,6 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((MainTimeLineActivity) getActivity()).getBitmapDownloader();
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
@@ -322,7 +321,6 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     @Override
     protected void buildListAdapter() {
         CommentListAdapter adapter = new CommentListAdapter(this,
-                ((ICommander) getActivity()).getBitmapDownloader(),
                 getList().getItemList(),
                 getListView(), true, false);
         adapter.setTopTipBar(newMsgTipBar);

@@ -38,9 +38,9 @@ public class DMConversationAdapter extends BaseAdapter {
     private final int TYPE_MYSELF = 1;
 
 
-    public DMConversationAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<DMBean> bean, ListView listView) {
+    public DMConversationAdapter(Fragment fragment, List<DMBean> bean, ListView listView) {
         this.bean = bean;
-        this.commander = commander;
+        this.commander = TimeLineBitmapDownloader.getInstance();
         this.inflater = fragment.getActivity().getLayoutInflater();
         this.listView = listView;
         this.fragment = fragment;

@@ -12,6 +12,7 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.search.SearchDao;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.PerformanceImageView;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractFriendsFanListFragment;
@@ -144,7 +145,7 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
             PerformanceImageView avatar = (PerformanceImageView) convertView.findViewById(R.id.avatar);
             TextView username = (TextView) convertView.findViewById(R.id.username);
 
-            activity.getBitmapDownloader().downloadAvatar(avatar, getItem(position));
+            TimeLineBitmapDownloader.getInstance().downloadAvatar(avatar, getItem(position));
             username.setText(getItem(position).getScreen_name());
 
             return convertView;

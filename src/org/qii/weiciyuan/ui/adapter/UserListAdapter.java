@@ -30,9 +30,9 @@ public class UserListAdapter extends BaseAdapter {
     protected int checkedBG;
     protected int defaultBG;
 
-    public UserListAdapter(Fragment activity, TimeLineBitmapDownloader commander, List<UserBean> bean, ListView listView) {
+    public UserListAdapter(Fragment activity, List<UserBean> bean, ListView listView) {
         this.bean = bean;
-        this.commander = commander;
+        this.commander = TimeLineBitmapDownloader.getInstance();
         this.inflater = activity.getActivity().getLayoutInflater();
         this.listView = listView;
         this.activity = activity;

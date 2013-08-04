@@ -15,7 +15,6 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -44,12 +43,12 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
     private AbsListView.OnScrollListener onScrollListener;
 
-    public CommentListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
-        this(fragment, commander, bean, listView, showOriStatus, false);
+    public CommentListAdapter(Fragment fragment, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
+        this(fragment, bean, listView, showOriStatus, false);
     }
 
-    public CommentListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<CommentBean> bean, ListView listView, boolean showOriStatus, boolean pref) {
-        super(fragment, commander, bean, listView, showOriStatus, pref);
+    public CommentListAdapter(Fragment fragment, List<CommentBean> bean, ListView listView, boolean showOriStatus, boolean pref) {
+        super(fragment, bean, listView, showOriStatus, pref);
 
         int[] attrs = new int[]{R.attr.timeline_reply_flag};
         TypedArray ta = fragment.getActivity().obtainStyledAttributes(attrs);

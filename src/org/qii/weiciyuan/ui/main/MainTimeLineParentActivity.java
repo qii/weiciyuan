@@ -13,7 +13,6 @@ import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
@@ -22,11 +21,9 @@ import java.nio.charset.Charset;
  * User: qii
  * Date: 13-1-22
  */
-public class MainTimeLineParentActivity extends SlidingFragmentActivity implements ICommander {
+public class MainTimeLineParentActivity extends SlidingFragmentActivity {
 
     private int theme = 0;
-
-    protected TimeLineBitmapDownloader commander = null;
 
 
     @Override
@@ -69,7 +66,6 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity implemen
         forceShowActionBarOverflowMenu();
         initNFC();
         GlobalContext.getInstance().setActivity(this);
-        commander = TimeLineBitmapDownloader.getInstance();
     }
 
 
@@ -89,10 +85,7 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity implemen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (commander != null) {
-            commander.totalStopLoadPicture();
-            commander = null;
-        }
+
     }
 
 
@@ -136,9 +129,6 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity implemen
         TimeLineBitmapDownloader.refreshThemePictureBackground();
     }
 
-    public TimeLineBitmapDownloader getBitmapDownloader() {
-        return commander;
-    }
 
     protected void dealWithException(WeiboException e) {
         Toast.makeText(this, e.getError(), Toast.LENGTH_SHORT).show();

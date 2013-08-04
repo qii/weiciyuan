@@ -244,7 +244,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new DMConversationAdapter(this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView());
+        timeLineAdapter = new DMConversationAdapter(this, getList().getItemList(), getListView());
         getListView().setAdapter(timeLineAdapter);
     }
 

@@ -29,7 +29,6 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.CommentByIdSingleChoiceModeLinstener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 import org.qii.weiciyuan.ui.loader.CommentsByIdMsgLoader;
 import org.qii.weiciyuan.ui.widgets.QuickSendProgressFragment;
@@ -115,7 +114,6 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
@@ -204,7 +202,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new CommentListAdapter(this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), false, false);
+        timeLineAdapter = new CommentListAdapter(this, getList().getItemList(), getListView(), false, false);
         pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 

@@ -27,7 +27,6 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.RepostSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.loader.RepostByIdMsgLoader;
 import org.qii.weiciyuan.ui.widgets.QuickSendProgressFragment;
 
@@ -110,7 +109,6 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
@@ -243,7 +241,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
     }
 
     protected void buildListAdapter() {
-        timeLineAdapter = new StatusListAdapter(this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), false);
+        timeLineAdapter = new StatusListAdapter(this, getList().getItemList(), getListView(), false);
         pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 

@@ -19,7 +19,6 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.loader.MyFavMsgLoader;
 import org.qii.weiciyuan.ui.main.LeftMenuFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -69,7 +68,6 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
-        commander = ((ICommander) getActivity()).getBitmapDownloader();
         account = GlobalContext.getInstance().getAccountBean();
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:

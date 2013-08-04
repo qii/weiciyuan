@@ -32,7 +32,6 @@ import org.qii.weiciyuan.ui.adapter.AbstractAppListAdapter;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.loader.FriendsMsgLoader;
 import org.qii.weiciyuan.ui.main.LeftMenuFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -451,7 +450,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     @Override
     protected void buildListAdapter() {
         StatusListAdapter adapter = new StatusListAdapter(this,
-                ((ICommander) getActivity()).getBitmapDownloader(),
                 getList().getItemList(),
                 getListView(),
                 true, false);

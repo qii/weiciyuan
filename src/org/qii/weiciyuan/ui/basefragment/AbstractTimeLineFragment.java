@@ -27,7 +27,6 @@ import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.AbstractAppListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.loader.AbstractAsyncNetRequestTaskLoader;
 import org.qii.weiciyuan.ui.loader.DummyLoader;
 
@@ -52,7 +51,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     protected BaseAdapter timeLineAdapter;
 
     protected View footerView;
-    protected TimeLineBitmapDownloader commander;
 
 
     protected static final int DB_CACHE_LOADER_ID = 0;
@@ -295,21 +293,21 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                     }
                     onListViewScrollStop();
                     LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
-                    ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(false);
-                    ((ICommander) getActivity()).getBitmapDownloader().setPauseReadWork(false);
+                    TimeLineBitmapDownloader.getInstance().setPauseDownloadWork(false);
+                    TimeLineBitmapDownloader.getInstance().setPauseReadWork(false);
 
                     break;
                 case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
                     enableRefreshTime = false;
                     LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
-                    ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(true);
-                    ((ICommander) getActivity()).getBitmapDownloader().setPauseReadWork(true);
+                    TimeLineBitmapDownloader.getInstance().setPauseDownloadWork(true);
+                    TimeLineBitmapDownloader.getInstance().setPauseReadWork(true);
                     onListViewScrollStateFling();
                     break;
                 case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
                     enableRefreshTime = true;
                     LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
-                    ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(true);
+                    TimeLineBitmapDownloader.getInstance().setPauseDownloadWork(true);
                     onListViewScrollStateTouchScroll();
                     break;
             }
@@ -324,8 +322,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     @Override
     public void onPause() {
         super.onPause();
-        ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(false);
-        ((ICommander) getActivity()).getBitmapDownloader().setPauseReadWork(false);
+        TimeLineBitmapDownloader.getInstance().setPauseDownloadWork(false);
+        TimeLineBitmapDownloader.getInstance().setPauseReadWork(false);
 
     }
 
@@ -414,7 +412,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((ICommander) getActivity()).getBitmapDownloader();
 
         Loader<T> loader = getLoaderManager().getLoader(NEW_MSG_LOADER_ID);
         if (loader != null) {

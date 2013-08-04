@@ -82,16 +82,16 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         savedCurrentMiddleLoadingViewPosition = position;
     }
 
-    public AbstractAppListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<T> bean, ListView listView, boolean showOriStatus) {
-        this(fragment, commander, bean, listView, showOriStatus, false);
+    public AbstractAppListAdapter(Fragment fragment, List<T> bean, ListView listView, boolean showOriStatus) {
+        this(fragment, bean, listView, showOriStatus, false);
     }
 
-    public AbstractAppListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<T> bean, ListView listView, boolean showOriStatus, boolean pre) {
+    public AbstractAppListAdapter(Fragment fragment, List<T> bean, ListView listView, boolean showOriStatus, boolean pre) {
         if (showOriStatus && SettingUtility.getAppTheme() == R.style.AppTheme_Four)
             listView.setDivider(null);
 
         this.bean = bean;
-        this.commander = commander;
+        this.commander = TimeLineBitmapDownloader.getInstance();
         this.inflater = fragment.getActivity().getLayoutInflater();
         this.listView = listView;
         this.showOriStatus = showOriStatus;

@@ -24,6 +24,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.RepostListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.asyncdrawable.MsgDetailReadWorker;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -447,7 +448,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             else
                 layout.username.setText(msg.getUser().getScreen_name() + "(" + msg.getUser().getRemark() + ")");
 
-            ((AbstractAppActivity) getActivity()).getBitmapDownloader().downloadAvatar(layout.avatar, msg.getUser());
+            TimeLineBitmapDownloader.getInstance().downloadAvatar(layout.avatar, msg.getUser());
         }
         layout.content.setText(msg.getListViewSpannableString());
         layout.content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
@@ -735,18 +736,18 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
 
                     LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
-                    ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(false);
-                    ((ICommander) getActivity()).getBitmapDownloader().setPauseReadWork(false);
+                    TimeLineBitmapDownloader.getInstance().setPauseDownloadWork(false);
+                    TimeLineBitmapDownloader.getInstance().setPauseReadWork(false);
 
                     break;
                 case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
                     LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
-                    ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(true);
-                    ((ICommander) getActivity()).getBitmapDownloader().setPauseReadWork(true);
+                    TimeLineBitmapDownloader.getInstance().setPauseDownloadWork(true);
+                    TimeLineBitmapDownloader.getInstance().setPauseReadWork(true);
                     break;
                 case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
                     LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
-                    ((ICommander) getActivity()).getBitmapDownloader().setPauseDownloadWork(true);
+                    TimeLineBitmapDownloader.getInstance().setPauseDownloadWork(true);
                     break;
             }
         }

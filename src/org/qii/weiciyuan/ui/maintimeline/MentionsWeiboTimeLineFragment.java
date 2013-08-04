@@ -29,7 +29,6 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.loader.MentionsWeiboMsgLoader;
 import org.qii.weiciyuan.ui.loader.MentionsWeiboTimeDBLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -128,7 +127,6 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     @Override
     protected void buildListAdapter() {
         StatusListAdapter adapter = new StatusListAdapter(this,
-                ((ICommander) getActivity()).getBitmapDownloader(),
                 getList().getItemList(),
                 getListView(), true, false);
         adapter.setTopTipBar(newMsgTipBar);

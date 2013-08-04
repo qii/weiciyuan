@@ -42,9 +42,9 @@ public class DMUserListAdapter extends BaseAdapter {
     private TimeLineBitmapDownloader commander;
 
 
-    public DMUserListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<DMUserBean> bean, ListView listView) {
+    public DMUserListAdapter(Fragment fragment, List<DMUserBean> bean, ListView listView) {
         this.bean = bean;
-        this.commander = commander;
+        this.commander = TimeLineBitmapDownloader.getInstance();
         this.inflater = fragment.getActivity().getLayoutInflater();
         this.listView = listView;
         this.fragment = fragment;

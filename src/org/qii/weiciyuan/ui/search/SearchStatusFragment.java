@@ -10,7 +10,6 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.interfaces.ICommander;
 import org.qii.weiciyuan.ui.loader.SearchStatusLoader;
 
 /**
@@ -53,7 +52,6 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((ICommander) getActivity()).getBitmapDownloader();
         if (savedInstanceState != null && bean.getItemList().size() == 0) {
             clearAndReplaceValue((SearchStatusListBean) savedInstanceState.getParcelable("bean"));
             timeLineAdapter.notifyDataSetChanged();

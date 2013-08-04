@@ -129,7 +129,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         dismissFooterView();
 
 
-        userListAdapter = new UserListAdapter(AbstractUserListFragment.this, ((ICommander) getActivity()).getBitmapDownloader(), bean.getUsers(), getListView());
+        userListAdapter = new UserListAdapter(AbstractUserListFragment.this, bean.getUsers(), getListView());
         pullToRefreshListView.setAdapter(userListAdapter);
         pullToRefreshListView.setOnPullEventListener(getPullEventListener());
 

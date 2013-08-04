@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.lib.VelocityListView;
@@ -41,12 +40,12 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 
     private Handler handler = new Handler();
 
-    public StatusListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
-        this(fragment, commander, bean, listView, showOriStatus, false);
+    public StatusListAdapter(Fragment fragment, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
+        this(fragment, bean, listView, showOriStatus, false);
     }
 
-    public StatusListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<MessageBean> bean, ListView listView, boolean showOriStatus, boolean pre) {
-        super(fragment, commander, bean, listView, showOriStatus, pre);
+    public StatusListAdapter(Fragment fragment, List<MessageBean> bean, ListView listView, boolean showOriStatus, boolean pre) {
+        super(fragment, bean, listView, showOriStatus, pre);
     }
 
     public void setTopTipBar(TopTipBar bar) {

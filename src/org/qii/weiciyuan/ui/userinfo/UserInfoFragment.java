@@ -13,7 +13,6 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
 import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarReadWorker;
-import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -21,7 +20,6 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.topic.UserTopicListActivity;
@@ -37,7 +35,6 @@ public class UserInfoFragment extends AbstractAppFragment {
 
     private UserBean bean;
 
-    protected TimeLineBitmapDownloader commander;
 
     private Layout layout;
 
@@ -98,7 +95,6 @@ public class UserInfoFragment extends AbstractAppFragment {
                 break;
         }
 
-        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
         setValue();
 
     }
