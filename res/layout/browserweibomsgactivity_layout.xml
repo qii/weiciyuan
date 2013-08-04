@@ -107,7 +107,7 @@
             android:visibility="gone"
             android:clickable="true"
             android:adjustViewBounds="true"
-            android:background="?android:selectableItemBackground"/>
+            />
 
         <GridLayout
             android:id="@+id/content_pic_multi"
@@ -194,7 +194,6 @@
             android:minHeight="0dp"
             android:visibility="visible"
             android:clickable="true"
-            android:background="?android:selectableItemBackground"
             android:layout_gravity="center_horizontal"
             android:adjustViewBounds="true"
             />
