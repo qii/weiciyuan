@@ -338,20 +338,20 @@ public class ImageTool {
             }
 
 
-            int[] size = calcResize(bitmap.getWidth(), bitmap.getHeight(), reqWidth, reqHeight);
-            if (size[0] > 0 && size[1] > 0) {
-                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size[0], size[1], true);
-                if (scaledBitmap != bitmap) {
-                    bitmap.recycle();
-                    bitmap = scaledBitmap;
-                }
-            }
-
-            Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
-            if (roundedBitmap != bitmap) {
-                bitmap.recycle();
-                bitmap = roundedBitmap;
-            }
+//            int[] size = calcResize(bitmap.getWidth(), bitmap.getHeight(), reqWidth, reqHeight);
+//            if (size[0] > 0 && size[1] > 0) {
+//                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size[0], size[1], true);
+//                if (scaledBitmap != bitmap) {
+//                    bitmap.recycle();
+//                    bitmap = scaledBitmap;
+//                }
+//            }
+//
+//            Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
+//            if (roundedBitmap != bitmap) {
+//                bitmap.recycle();
+//                bitmap = roundedBitmap;
+//            }
 
             return bitmap;
         } catch (OutOfMemoryError ignored) {
