@@ -5,6 +5,7 @@
 
     <ImageView
         android:id="@+id/imageview"
+        android:adjustViewBounds="true"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
 
