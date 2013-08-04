@@ -26,6 +26,8 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.asyncdrawable.MsgDetailReadWorker;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.gallery.GalleryActivity;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
@@ -37,7 +39,6 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.BrowserWeiboMsgCommentAndRepostAdapter;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.loader.CommentsByIdMsgLoader;
 import org.qii.weiciyuan.ui.loader.RepostByIdMsgLoader;
@@ -98,7 +99,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
         ImageView avatar;
         WeiboDetailImageView content_pic;
+        GridLayout content_pic_multi;
         WeiboDetailImageView repost_pic;
+        GridLayout repost_pic_multi;
 
         LinearLayout repost_layout;
 
@@ -373,8 +376,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
         layout.avatar = (ImageView) view.findViewById(R.id.avatar);
         layout.content_pic = (WeiboDetailImageView) view.findViewById(R.id.content_pic);
+        layout.content_pic_multi = (GridLayout) view.findViewById(R.id.content_pic_multi);
         layout.repost_pic = (WeiboDetailImageView) view.findViewById(R.id.repost_content_pic);
-
+        layout.repost_pic_multi = (GridLayout) view.findViewById(R.id.repost_content_pic_multi);
 
         layout.repost_layout = (LinearLayout) view.findViewById(R.id.repost_layout);
     }
@@ -467,20 +471,56 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             layout.source.setText(Html.fromHtml(msg.getSource()).toString());
         }
 
+        layout.content_pic.setVisibility(View.GONE);
+        layout.content_pic_multi.setVisibility(View.GONE);
+
         //sina weibo official account can send repost message with picture, fuck sina weibo
         if (!TextUtils.isEmpty(msg.getBmiddle_pic()) && msg.getRetweeted_status() == null) {
-            if (Utility.isTaskStopped(picTask)) {
-                layout.content_pic.setVisibility(View.VISIBLE);
 
-                if (refreshPic) {
-                    picTask = new MsgDetailReadWorker(layout.content_pic, msg);
-                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            if (!msg.isMultiPics()) {
+
+                if (Utility.isTaskStopped(picTask)) {
+                    layout.content_pic.setVisibility(View.VISIBLE);
+
+                    if (refreshPic) {
+                        picTask = new MsgDetailReadWorker(layout.content_pic, msg);
+                        picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+
+                }
+            } else {
+                layout.content_pic_multi.setVisibility(View.VISIBLE);
+
+                int count = msg.getPicCount();
+                for (int i = 0; i < count; i++) {
+                    ImageView pic = (ImageView) layout.content_pic_multi.getChildAt(i);
+                    pic.setVisibility(View.VISIBLE);
+
+                    TimeLineBitmapDownloader.getInstance().displayMultiPicture(pic, msg.getMiddlePicUrls().get(i), FileLocationMethod.picture_bmiddle);
+
+                    final int finalI = i;
+                    pic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getActivity(), GalleryActivity.class);
+                            intent.putExtra("msg", msg);
+                            intent.putExtra("position", finalI);
+                            getActivity().startActivity(intent);
+                        }
+                    });
+
                 }
 
+                if (count < 9) {
+                    for (int i = count; i < 9; i++) {
+                        ImageView pic = (ImageView) layout.content_pic_multi.getChildAt(i);
+                        pic.setVisibility(View.GONE);
+                    }
+                }
             }
         }
 
-        MessageBean repostMsg = msg.getRetweeted_status();
+        final MessageBean repostMsg = msg.getRetweeted_status();
 
         layout.repost_layout.setVisibility(repostMsg != null ? View.VISIBLE : View.GONE);
 
@@ -497,17 +537,55 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             } else {
                 layout.recontent.setText(repostMsg.getListViewSpannableString());
             }
-            if (!TextUtils.isEmpty(repostMsg.getBmiddle_pic())) {
-                layout.repost_pic.setVisibility(View.VISIBLE);
-                if (Utility.isTaskStopped(picTask)) {
 
-                    if (refreshPic) {
-                        picTask = new MsgDetailReadWorker(layout.repost_pic, msg.getRetweeted_status());
-                        picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            layout.repost_pic.setVisibility(View.GONE);
+            layout.repost_pic_multi.setVisibility(View.GONE);
+
+            if (!TextUtils.isEmpty(repostMsg.getBmiddle_pic())) {
+
+                if (!repostMsg.isMultiPics()) {
+
+                    if (Utility.isTaskStopped(picTask)) {
+                        layout.repost_pic.setVisibility(View.VISIBLE);
+
+                        if (refreshPic) {
+                            picTask = new MsgDetailReadWorker(layout.repost_pic, repostMsg);
+                            picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                        }
+
+                    }
+                } else {
+                    layout.repost_pic_multi.setVisibility(View.VISIBLE);
+
+                    int count = repostMsg.getPicCount();
+                    for (int i = 0; i < count; i++) {
+                        ImageView pic = (ImageView) layout.repost_pic_multi.getChildAt(i);
+                        pic.setVisibility(View.VISIBLE);
+
+                        TimeLineBitmapDownloader.getInstance().displayMultiPicture(pic, repostMsg.getMiddlePicUrls().get(i), FileLocationMethod.picture_bmiddle);
+
+                        final int finalI = i;
+                        pic.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getActivity(), GalleryActivity.class);
+                                intent.putExtra("msg", repostMsg);
+                                intent.putExtra("position", finalI);
+                                getActivity().startActivity(intent);
+                            }
+                        });
+
                     }
 
-
+                    if (count < 9) {
+                        for (int i = count; i < 9; i++) {
+                            ImageView pic = (ImageView) layout.repost_pic_multi.getChildAt(i);
+                            pic.setVisibility(View.GONE);
+                        }
+                    }
                 }
+
+
             } else {
                 layout.repost_pic.setVisibility(View.GONE);
             }

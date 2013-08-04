@@ -154,6 +154,12 @@ public class TimeLineBitmapDownloader {
 
     }
 
+    public void displayMultiPicture(ImageView view, String picUrl, FileLocationMethod method) {
+
+        display(view, picUrl, method, false, true);
+
+    }
+
 
     public void downContentPic(TimeLineImageView view, MessageBean msg, AbstractTimeLineFragment fragment) {
         String picUrl;

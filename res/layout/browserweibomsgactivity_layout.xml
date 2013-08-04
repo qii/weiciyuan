@@ -109,6 +109,48 @@
             android:adjustViewBounds="true"
             android:background="?android:selectableItemBackground"/>
 
+        <GridLayout
+            android:id="@+id/content_pic_multi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:columnCount="3"
+            android:rowCount="3"
+            android:layout_gravity="center_horizontal"
+
+            android:orientation="horizontal"
+            android:useDefaultMargins="false"
+            android:clickable="false">
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+        </GridLayout>
+
 
     </LinearLayout>
 
@@ -157,6 +199,48 @@
             android:adjustViewBounds="true"
             />
 
+
+        <GridLayout
+            android:id="@+id/repost_content_pic_multi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:columnCount="3"
+            android:layout_gravity="center_horizontal"
+
+            android:rowCount="3"
+            android:orientation="horizontal"
+            android:useDefaultMargins="false"
+            android:clickable="false">
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+            <ImageView
+                style="@style/listViewMultiImageView"/>
+
+        </GridLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

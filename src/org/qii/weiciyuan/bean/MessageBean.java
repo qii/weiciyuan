@@ -390,6 +390,7 @@ public class MessageBean extends ItemBean implements Parcelable {
     }
 
     private ArrayList<String> thumbnaiUrls = new ArrayList<String>();
+    private ArrayList<String> middleUrls = new ArrayList<String>();
     private ArrayList<String> highUrls = new ArrayList<String>();
 
 
@@ -402,6 +403,17 @@ public class MessageBean extends ItemBean implements Parcelable {
         }
         return thumbnaiUrls;
     }
+
+    public ArrayList<String> getMiddlePicUrls() {
+        if (middleUrls.size() > 0)
+            return middleUrls;
+
+        for (PicUrls url : pic_urls) {
+            middleUrls.add(url.thumbnail_pic.replace("thumbnail", "bmiddle"));
+        }
+        return middleUrls;
+    }
+
 
     public ArrayList<String> getHighPicUrls() {
         if (highUrls.size() > 0)
