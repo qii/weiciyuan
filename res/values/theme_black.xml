@@ -58,6 +58,8 @@
         <item name="listview_item_bg">@drawable/bg_listview_item_dark</item>
 
 
+        <item name="listview_pic_bg">@color/transparent</item>
+
         <item name="backgroundSplit">@drawable/ab_bottom_transparent_dark_holo</item>
 
         <item name="android:actionDropDownStyle">@style/ActionBarDropDownStyle_Black</item>

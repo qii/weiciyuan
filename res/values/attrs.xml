@@ -58,5 +58,7 @@
     <attr name="listview_card_bg" format="reference"/>
     <attr name="listview_item_bg" format="reference"/>
 
+    <attr name="listview_pic_bg" format="integer"/>
+
     <attr name="backgroundSplit" format="reference"/>
 </resources>

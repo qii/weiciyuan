@@ -318,4 +318,6 @@
 
     <color name="list_divider_color">#ffe6e6e6</color>
 
+    <color name="listview_pic_background">#fff0f0f0</color>
+
 </resources>  

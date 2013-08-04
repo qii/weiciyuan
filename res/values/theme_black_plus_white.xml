@@ -55,6 +55,7 @@
         <item name="listview_card_bg">@drawable/bg_card_white</item>
         <item name="listview_item_bg">@drawable/bg_listview_item_light</item>
 
+        <item name="listview_pic_bg">@color/listview_pic_background</item>
 
         <item name="backgroundSplit">@drawable/ab_bottom_solid_inverse_holo</item>
 

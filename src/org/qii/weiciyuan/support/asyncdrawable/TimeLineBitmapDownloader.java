@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
@@ -18,6 +19,7 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TimeLineImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 
 /**
@@ -26,7 +28,7 @@ import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
  */
 public class TimeLineBitmapDownloader {
 
-    private Drawable transPic = new ColorDrawable(DebugColor.LISTVIEW_FLING);
+    private Drawable transPic;
 
     private Handler handler;
 
@@ -42,6 +44,7 @@ public class TimeLineBitmapDownloader {
 
     private TimeLineBitmapDownloader(Handler handler) {
         this.handler = handler;
+        this.transPic = new ColorDrawable(ThemeUtility.getColor(R.attr.listview_pic_bg));
     }
 
     public static TimeLineBitmapDownloader getInstance() {
