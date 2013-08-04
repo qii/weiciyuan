@@ -21,7 +21,6 @@ import org.qii.weiciyuan.R;
 public class TimeLineImageView extends FrameLayout {
 
     protected ImageView mImageView;
-    protected ImageView mCover;
     private ProgressBar pb;
 
     public TimeLineImageView(Context context) {
@@ -38,25 +37,14 @@ public class TimeLineImageView extends FrameLayout {
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflate.inflate(R.layout.timelineimageview_layout, null);
         mImageView = (ImageView) v.findViewById(R.id.imageview);
-        mCover = (ImageView) v.findViewById(R.id.imageview_cover);
         mImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
-        mCover.setImageDrawable(getResources().getDrawable(R.drawable.timelineimageview_cover));
-        mCover.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mImageView.onTouchEvent(event);
-                return false;
-            }
-        });
+
         pb = (ProgressBar) v.findViewById(R.id.imageview_pb);
         v.setBackgroundColor(Color.TRANSPARENT);
         addView(v, new FrameLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
-    public void setCoverDrawable(Drawable drawable) {
-        mCover.setImageDrawable(drawable);
-    }
 
     public void setImageDrawable(Drawable drawable) {
         mImageView.setImageDrawable(drawable);
@@ -69,7 +57,6 @@ public class TimeLineImageView extends FrameLayout {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         mImageView.onTouchEvent(event);
-        mCover.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
@@ -80,7 +67,6 @@ public class TimeLineImageView extends FrameLayout {
     @Override
     public void setOnClickListener(OnClickListener onClicker) {
         mImageView.setOnClickListener(onClicker);
-        mCover.setClickable(true);
     }
 
     @Override

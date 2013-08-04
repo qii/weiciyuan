@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:foreground="@drawable/timelineimageview_cover"
              android:layout_width="fill_parent"
+             android:addStatesFromChildren="true"
              android:layout_height="fill_parent">
 
     <org.qii.weiciyuan.support.lib.PerformanceImageView
@@ -14,8 +16,4 @@
         android:layout_height="fill_parent"/>
 
 
-    <org.qii.weiciyuan.support.lib.PerformanceImageView
-        android:id="@+id/imageview_cover"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
 </FrameLayout>
