@@ -248,9 +248,11 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
             @Override
             public void onLastItemVisible() {
                 if (isCommentList) {
-                    loadOldCommentData();
+                    if (msg.getComments_count() > 0 && commentList.getSize() > 0)
+                        loadOldCommentData();
                 } else {
-                    loadOldRepostData();
+                    if (msg.getReposts_count() > 0 && repostList.getSize() > 0)
+                        loadOldRepostData();
                 }
             }
         });
