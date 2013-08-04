@@ -22,7 +22,6 @@ import org.qii.weiciyuan.R;
 public class WeiboDetailImageView extends FrameLayout {
 
     protected ImageView mImageView;
-    protected ImageView mCover;
     private ProgressBar pb;
     private Button retry;
 
@@ -40,16 +39,8 @@ public class WeiboDetailImageView extends FrameLayout {
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflate.inflate(R.layout.weibodetailimageview_layout, null);
         mImageView = (ImageView) v.findViewById(R.id.imageview);
-        mCover = (ImageView) v.findViewById(R.id.imageview_cover);
         mImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
-        mCover.setImageDrawable(getResources().getDrawable(R.drawable.timelineimageview_cover));
-        mCover.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mImageView.onTouchEvent(event);
-                return false;
-            }
-        });
+
         pb = (ProgressBar) v.findViewById(R.id.imageview_pb);
         retry = (Button) v.findViewById(R.id.retry);
         v.setBackgroundColor(Color.TRANSPARENT);
@@ -57,9 +48,6 @@ public class WeiboDetailImageView extends FrameLayout {
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
-    public void setCoverDrawable(Drawable drawable) {
-        mCover.setImageDrawable(drawable);
-    }
 
     public void setImageDrawable(Drawable drawable) {
         mImageView.setImageDrawable(drawable);
@@ -72,7 +60,6 @@ public class WeiboDetailImageView extends FrameLayout {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         mImageView.onTouchEvent(event);
-        mCover.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
@@ -83,7 +70,6 @@ public class WeiboDetailImageView extends FrameLayout {
     @Override
     public void setOnClickListener(OnClickListener onClicker) {
         mImageView.setOnClickListener(onClicker);
-        mCover.setClickable(true);
     }
 
     @Override
