@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,9 +11,11 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.gallery.GalleryActivity;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.io.File;
 
@@ -133,6 +136,14 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, Bitmap> {
             view.setImageBitmap(bitmap);
             view.setAlpha(0.0f);
             view.animate().alpha(1.0f).setDuration(200);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(GlobalContext.getInstance(), GalleryActivity.class);
+                    intent.putExtra("msg", msg);
+                    GlobalContext.getInstance().getActivity().startActivity(intent);
+                }
+            });
         } else {
             view.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
             retry.setVisibility(View.VISIBLE);

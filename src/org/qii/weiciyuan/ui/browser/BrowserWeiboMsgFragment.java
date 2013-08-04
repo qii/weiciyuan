@@ -387,8 +387,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        layout.content_pic.setOnClickListener(picOnClickListener);
-        layout.repost_pic.setOnClickListener(picOnClickListener);
+//        layout.content_pic.setOnClickListener(picOnClickListener);
+//        layout.repost_pic.setOnClickListener(picOnClickListener);
 
         layout.location.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -628,33 +628,33 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         view.setVisibility(View.GONE);
     }
 
-    private View.OnClickListener picOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Object object = v.getTag();
-            if (object != null && (Boolean) object) {
-                Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
-                if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
-                    intent.putExtra("msg", msg);
-                } else {
-                    intent.putExtra("msg", msg.getRetweeted_status());
-                }
-                startActivity(intent);
-            } else {
-                if (picTask != null) {
-                    picTask.cancel(true);
-                }
-                if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
-                    picTask = new MsgDetailReadWorker(layout.content_pic, msg);
-                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                } else {
-                    picTask = new MsgDetailReadWorker(layout.repost_pic, msg.getRetweeted_status());
-                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-
-                }
-            }
-        }
-    };
+//    private View.OnClickListener picOnClickListener = new View.OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            Object object = v.getTag();
+//            if (object != null && (Boolean) object) {
+//                Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
+//                if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
+//                    intent.putExtra("msg", msg);
+//                } else {
+//                    intent.putExtra("msg", msg.getRetweeted_status());
+//                }
+//                startActivity(intent);
+//            } else {
+//                if (picTask != null) {
+//                    picTask.cancel(true);
+//                }
+//                if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
+//                    picTask = new MsgDetailReadWorker(layout.content_pic, msg);
+//                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+//                } else {
+//                    picTask = new MsgDetailReadWorker(layout.repost_pic, msg.getRetweeted_status());
+//                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+//
+//                }
+//            }
+//        }
+//    };
 
     private ListView getListView() {
         return listView;
