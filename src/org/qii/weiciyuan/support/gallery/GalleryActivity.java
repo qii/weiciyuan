@@ -25,6 +25,8 @@ import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.CircleProgressView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.Utility;
+import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -109,16 +111,25 @@ public class GalleryActivity extends Activity {
         public Object instantiateItem(ViewGroup view, int position) {
             View contentView = inflater.inflate(R.layout.galleryactivity_item, view, false);
 
+            PhotoView imageView = (PhotoView) contentView.findViewById(R.id.image);
+            imageView.setVisibility(View.INVISIBLE);
+
+            imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+                @Override
+                public void onPhotoTap(View view, float x, float y) {
+                    GalleryActivity.this.finish();
+                }
+            });
+
+
             String path = FileManager.getFilePathFromUrl(urls.get(position), FileLocationMethod.picture_large);
 
             if (ImageTool.isThisBitmapCanRead(path)) {
-                ImageView imageView = (ImageView) contentView.findViewById(R.id.image);
                 Bitmap bitmap = ImageTool.decodeBitmapFromSDCard(path, -1, -1);
                 imageView.setImageBitmap(bitmap);
+                imageView.setVisibility(View.VISIBLE);
                 bindImageViewLongClickListener(imageView, urls.get(position), path);
             } else if (Utility.isWifi(GalleryActivity.this)) {
-                ImageView imageView = (ImageView) contentView.findViewById(R.id.image);
-                imageView.setVisibility(View.INVISIBLE);
 
                 final CircleProgressView spinner = (CircleProgressView) contentView.findViewById(R.id.loading);
                 spinner.setVisibility(View.VISIBLE);
