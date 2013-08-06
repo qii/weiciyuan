@@ -505,11 +505,10 @@ public class ImageTool {
             return false;
         }
 
-        int largestHeight = Utility.getMaxLeftWidthOrHeightImageViewCanRead(width);
-        if (largestHeight > height) {
-            return false;
-        } else {
+        if (width > Utility.getBitmapMaxWidthAndMaxHeight() || height > Utility.getBitmapMaxWidthAndMaxHeight()) {
             return true;
+        } else {
+            return false;
         }
 
     }
