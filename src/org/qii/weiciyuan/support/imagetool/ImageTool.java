@@ -489,6 +489,31 @@ public class ImageTool {
         return true;
     }
 
+    public static boolean isThisBitmapTooLargeToRead(String path) {
+        File file = new File(path);
+
+        if (!file.exists()) {
+            return false;
+        }
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        int width = options.outWidth;
+        int height = options.outHeight;
+        if (width == -1 || height == -1) {
+            return false;
+        }
+
+        int largestHeight = Utility.getMaxLeftWidthOrHeightImageViewCanRead(width);
+        if (largestHeight > height) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
 
     public static int[] getBitmapSize(String path) {
         int[] result = {-1, -1};

@@ -357,6 +357,12 @@
     <string name="total_share_count">累计分享了%s次</string>
 
 
+    <!--gallery-->
+    <string name="download_finished_but_cant_read_picture_file">下载完成，但是无法读取图片</string>
+    <string name="picture_is_too_large_to_read_so_gallery_load_thumbnails_of_this_picture">原图太大无法显示，载入缩略图</string>
+    <string name="picture_is_too_large_so_enable_software_layer">图片太大，启用软件渲染模式，滚动会掉帧……</string>
+
+
     <!-- user dialog-->
     <string name="at_him">"@他"</string>
 

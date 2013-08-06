@@ -125,10 +125,9 @@ public class GalleryActivity extends Activity {
             String path = FileManager.getFilePathFromUrl(urls.get(position), FileLocationMethod.picture_large);
 
             if (ImageTool.isThisBitmapCanRead(path)) {
-                Bitmap bitmap = ImageTool.decodeBitmapFromSDCard(path, -1, -1);
-                imageView.setImageBitmap(bitmap);
-                imageView.setVisibility(View.VISIBLE);
-                bindImageViewLongClickListener(imageView, urls.get(position), path);
+
+                readPicture(imageView, urls.get(position), path);
+
             } else if (Utility.isWifi(GalleryActivity.this)) {
 
                 final CircleProgressView spinner = (CircleProgressView) contentView.findViewById(R.id.loading);
@@ -248,15 +247,50 @@ public class GalleryActivity extends Activity {
 
             taskMap.remove(url);
 
-            if (!TextUtils.isEmpty(bitmapPath) && iv != null) {
-                iv.setVisibility(View.VISIBLE);
-                Bitmap bitmap = ImageTool.decodeBitmapFromSDCard(bitmapPath, -1, -1);
-                iv.setImageBitmap(bitmap);
-                bindImageViewLongClickListener(iv, url, bitmapPath);
+            if (TextUtils.isEmpty(bitmapPath) || iv == null)
+                return;
 
+            if (!ImageTool.isThisBitmapCanRead(bitmapPath)) {
+                Toast.makeText(GalleryActivity.this, R.string.download_finished_but_cant_read_picture_file, Toast.LENGTH_SHORT).show();
             }
 
+            readPicture(iv, url, bitmapPath);
+
+
         }
+    }
+
+
+    private void readPicture(ImageView imageView, String url, String bitmapPath) {
+
+        if (!ImageTool.isThisBitmapCanRead(bitmapPath)) {
+            Toast.makeText(GalleryActivity.this, R.string.download_finished_but_cant_read_picture_file, Toast.LENGTH_SHORT).show();
+        }
+
+        imageView.setVisibility(View.VISIBLE);
+
+
+        boolean isThisBitmapTooLarge = ImageTool.isThisBitmapTooLargeToRead(bitmapPath);
+        if (isThisBitmapTooLarge) {
+            Toast.makeText(GalleryActivity.this, R.string.picture_is_too_large_so_enable_software_layer, Toast.LENGTH_LONG).show();
+        }
+
+        if (isThisBitmapTooLarge) {
+            imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            PhotoView photoView = (PhotoView) imageView;
+            photoView.setMaxScale(15);
+        }
+
+        Bitmap bitmap = null;
+        try {
+            bitmap = ImageTool.decodeBitmapFromSDCard(bitmapPath, -1, -1);
+        } catch (OutOfMemoryError ignored) {
+
+        }
+        imageView.setImageBitmap(bitmap);
+        bindImageViewLongClickListener(imageView, url, bitmapPath);
+
+
     }
 
 
