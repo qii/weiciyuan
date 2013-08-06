@@ -652,13 +652,13 @@ public class Utility {
     public static int getMaxLeftWidthOrHeightImageViewCanRead(int heightOrWidth) {
         //1pixel==4bytes http://stackoverflow.com/questions/13536042/android-bitmap-allocating-16-bytes-per-pixel
         //http://stackoverflow.com/questions/15313807/android-maximum-allowed-width-height-of-bitmap
-        //but android 4.3 return zero, strange
+        //but android 4.3 return zero, strange, so I regard 2mb bitmap as large, ImageView need to use Software Layer
         int[] maxSizeArray = new int[1];
         GLES10.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE, maxSizeArray, 0);
 //        int maxHeight = maxSizeArray[0];
 //        int maxWidth = maxSizeArray[0];
-        int maxHeight = 1280;
-        int maxWidth = 1280;
+        int maxHeight = 800;
+        int maxWidth = 800;
         return (maxHeight * maxWidth) / heightOrWidth;
     }
 }
