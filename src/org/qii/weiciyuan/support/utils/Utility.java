@@ -665,6 +665,7 @@ public class Utility {
         return (maxHeight * maxWidth) / heightOrWidth;
     }
 
+    //sometime can get value, sometime can't, so I define it is 2048x2048
     public static int getBitmapMaxWidthAndMaxHeight() {
         int[] maxSizeArray = new int[1];
         GLES10.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE, maxSizeArray, 0);
@@ -672,7 +673,8 @@ public class Utility {
         if (maxSizeArray[0] == 0) {
             GLES10.glGetIntegerv(GL11.GL_MAX_TEXTURE_SIZE, maxSizeArray, 0);
         }
-        return maxSizeArray[0];
+//        return maxSizeArray[0];
+        return 2048;
     }
 }
 
