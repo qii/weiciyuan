@@ -107,39 +107,59 @@ public class GalleryActivity extends Activity {
 
         @Override
         public Object instantiateItem(ViewGroup view, int position) {
-            View imageLayout = inflater.inflate(R.layout.galleryactivity_item, view, false);
+            View contentView = inflater.inflate(R.layout.galleryactivity_item, view, false);
 
             String path = FileManager.getFilePathFromUrl(urls.get(position), FileLocationMethod.picture_large);
 
             if (ImageTool.isThisBitmapCanRead(path)) {
-                ImageView imageView = (ImageView) imageLayout.findViewById(R.id.image);
+                ImageView imageView = (ImageView) contentView.findViewById(R.id.image);
                 Bitmap bitmap = ImageTool.decodeBitmapFromSDCard(path, -1, -1);
                 imageView.setImageBitmap(bitmap);
                 bindImageViewLongClickListener(imageView, urls.get(position), path);
+            } else if (Utility.isWifi(GalleryActivity.this)) {
+                ImageView imageView = (ImageView) contentView.findViewById(R.id.image);
+                imageView.setVisibility(View.INVISIBLE);
+
+                final CircleProgressView spinner = (CircleProgressView) contentView.findViewById(R.id.loading);
+                spinner.setVisibility(View.VISIBLE);
+
+                if (taskMap.get(urls.get(position)) == null) {
+                    PicSimpleBitmapWorkerTask task = new PicSimpleBitmapWorkerTask(imageView, spinner, urls.get(position), taskMap);
+                    taskMap.put(urls.get(position), task);
+                    task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    PicSimpleBitmapWorkerTask task = taskMap.get(urls.get(position));
+                    task.setWidget(imageView, spinner);
+                }
             }
 
-            ((ViewPager) view).addView(imageLayout, 0);
-            return imageLayout;
+            ((ViewPager) view).addView(contentView, 0);
+            return contentView;
         }
 
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
-            View imageLayout = (View) object;
-            if (imageLayout == null)
+            View contentView = (View) object;
+            if (contentView == null)
                 return;
-            ImageView imageView = (ImageView) imageLayout.findViewById(R.id.image);
+            ImageView imageView = (ImageView) contentView.findViewById(R.id.image);
 
             if (imageView.getDrawable() != null)
                 return;
 
-            final CircleProgressView spinner = (CircleProgressView) imageLayout.findViewById(R.id.loading);
+            imageView.setVisibility(View.INVISIBLE);
+
+            final CircleProgressView spinner = (CircleProgressView) contentView.findViewById(R.id.loading);
             spinner.setVisibility(View.VISIBLE);
 
             if (taskMap.get(urls.get(position)) == null) {
                 PicSimpleBitmapWorkerTask task = new PicSimpleBitmapWorkerTask(imageView, spinner, urls.get(position), taskMap);
                 taskMap.put(urls.get(position), task);
                 task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                PicSimpleBitmapWorkerTask task = taskMap.get(urls.get(position));
+                task.setWidget(imageView, spinner);
             }
         }
 
@@ -162,6 +182,12 @@ public class GalleryActivity extends Activity {
 
 
         };
+
+        public void setWidget(ImageView iv, CircleProgressView spinner) {
+            this.iv = iv;
+            this.spinner = spinner;
+        }
+
         private ImageView iv;
         private String url;
         private CircleProgressView spinner;
@@ -212,6 +238,7 @@ public class GalleryActivity extends Activity {
             taskMap.remove(url);
 
             if (!TextUtils.isEmpty(bitmapPath) && iv != null) {
+                iv.setVisibility(View.VISIBLE);
                 Bitmap bitmap = ImageTool.decodeBitmapFromSDCard(bitmapPath, -1, -1);
                 iv.setImageBitmap(bitmap);
                 bindImageViewLongClickListener(iv, url, bitmapPath);
