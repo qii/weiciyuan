@@ -717,7 +717,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         }
 
         View wantedView = listView.getChildAt(wantedChild);
-        ViewHolder holder = (ViewHolder) wantedView.getTag(R.drawable.ic_launcher + getItemViewType(position));
+        ViewHolder holder = (ViewHolder) wantedView.getTag(R.drawable.ic_launcher + getItemViewType(wantedPosition));
         return holder;
 
     }
