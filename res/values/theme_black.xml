@@ -77,11 +77,13 @@
     </style>
 
     <style name="ActionBarDropDownStyle_Black" parent="@android:style/Widget.Holo.Spinner">
+        <item name="android:background">@drawable/ab_dropdown_navigation_item_background_dark</item>
         <item name="android:gravity">center_vertical|left</item>
         <item name="android:spinnerMode">dropdown</item>
         <item name="android:dropDownWidth">200dp</item>
         <item name="android:dropDownVerticalOffset">0dip</item>
         <item name="android:dropDownHorizontalOffset">0dip</item>
+
     </style>
 
 
