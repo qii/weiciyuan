@@ -6,6 +6,9 @@
         <!--<item name="android:colorBackground">@android:color/black</item>-->
         <item name="android:windowBackground">@color/dark_theme_background</item>
 
+        <item name="android:actionBarStyle">@style/ActionBarStyle_Black</item>
+
+
     </style>
 
     <style name="AppTheme_Black" parent="@android:style/Theme.Holo">
@@ -81,4 +84,12 @@
         <item name="android:dropDownHorizontalOffset">0dip</item>
     </style>
 
+
+    <style name="ActionBarStyle_Black" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@drawable/abs__ab_solid_dark_holo</item>
+        <item name="android:backgroundSplit">@drawable/abs__ab_bottom_solid_dark_holo</item>
+        <item name="android:backgroundStacked">@drawable/abs__ab_stacked_solid_dark_holo</item>
+
+
+    </style>
 </resources>
