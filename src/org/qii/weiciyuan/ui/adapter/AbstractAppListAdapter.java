@@ -87,7 +87,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     }
 
     public AbstractAppListAdapter(Fragment fragment, List<T> bean, ListView listView, boolean showOriStatus, boolean pre) {
-        if (showOriStatus && SettingUtility.getAppTheme() == R.style.AppTheme_Four)
+        if (showOriStatus)
             listView.setDivider(null);
 
         this.bean = bean;

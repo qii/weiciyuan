@@ -64,7 +64,7 @@
         <item name="listview_pic_bg_border">@drawable/bg_border2_light</item>
         <item name="listview_middle_layout_bg">@color/white</item>
         <item name="listview_middle_layout_text_color">@color/listview_middle_layout_text_color_dark</item>
-        <item name="listview_card_bg">@null</item>
+        <item name="listview_card_bg">@drawable/listview_item_card_dark_background</item>
         <item name="listview_item_bg">@drawable/listview_item_background_normal_dark</item>
 
 
