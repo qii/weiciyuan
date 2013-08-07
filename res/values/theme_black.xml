@@ -4,6 +4,8 @@
     <style name="AppTheme_Pure_Black" parent="AppTheme_Black">
         <!--<item name="android:windowBackground">@android:color/black</item>-->
         <!--<item name="android:colorBackground">@android:color/black</item>-->
+        <item name="android:windowBackground">@color/dark_theme_background</item>
+
     </style>
 
     <style name="AppTheme_Black" parent="@android:style/Theme.Holo">

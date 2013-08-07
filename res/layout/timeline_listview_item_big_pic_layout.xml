@@ -100,7 +100,7 @@
             />
 
         <TextView
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="6dp"
             android:id="@+id/content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -113,6 +113,7 @@
 
         <org.qii.weiciyuan.support.lib.TimeLineImageView
             android:id="@+id/content_pic"
+            android:layout_marginTop="3dp"
             android:layout_below="@id/content"
             android:layout_width="match_parent"
             android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
@@ -120,6 +121,7 @@
             android:clickable="true"/>
 
         <GridLayout
+            android:layout_marginTop="3dp"
             android:id="@+id/content_pic_multi"
             android:layout_below="@id/content"
             android:layout_width="match_parent"
@@ -161,9 +163,21 @@
         </GridLayout>
 
 
-        <TextView
+        <ImageView
             android:layout_below="@id/content"
-            android:layout_marginLeft="14dp"
+
+            android:id="@+id/repost_flag"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/divider"
+            android:layout_height="1dp"
+            android:layout_width="match_parent"/>
+
+        <TextView
+            android:layout_below="@id/repost_flag"
+            android:layout_marginLeft="0dp"
             android:layout_marginTop="3dp"
             android:includeFontPadding="true"
             android:id="@+id/repost_content"
@@ -178,7 +192,7 @@
 
         <org.qii.weiciyuan.support.lib.TimeLineImageView
             android:layout_below="@id/repost_content"
-            android:layout_marginLeft="14dp"
+            android:layout_marginLeft="0dp"
             android:layout_marginTop="5dp"
             android:id="@+id/repost_content_pic"
             android:layout_width="match_parent"
@@ -194,7 +208,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:layout_marginLeft="14dp"
+            android:layout_marginLeft="0dp"
             android:layout_marginTop="5dp"
             android:columnCount="3"
             android:rowCount="3"
@@ -232,36 +246,36 @@
         </GridLayout>
 
 
-        <ImageView
-            android:id="@+id/repost_flag"
-            android:layout_width="6dp"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/avatar"
-            android:layout_alignTop="@id/repost_content"
-            android:layout_alignBottom="@id/repost_content"
-            android:layout_marginTop="3dp"
-            android:layout_below="@id/avatar"
-            android:background="@color/lightgray"/>
+        <!--<ImageView-->
+        <!--android:id="@+id/repost_flag"-->
+        <!--android:layout_width="6dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignLeft="@id/avatar"-->
+        <!--android:layout_alignTop="@id/repost_content"-->
+        <!--android:layout_alignBottom="@id/repost_content"-->
+        <!--android:layout_marginTop="3dp"-->
+        <!--android:layout_below="@id/avatar"-->
+        <!--android:background="@color/lightgray"/>-->
 
-        <ImageView
-            android:layout_width="6dp"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/avatar"
-            android:layout_alignTop="@id/repost_content"
-            android:layout_alignBottom="@id/repost_content_pic"
-            android:layout_marginTop="3dp"
-            android:layout_below="@id/repost_flag"
-            android:background="@color/lightgray"/>
+        <!--<ImageView-->
+        <!--android:layout_width="6dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignLeft="@id/avatar"-->
+        <!--android:layout_alignTop="@id/repost_content"-->
+        <!--android:layout_alignBottom="@id/repost_content_pic"-->
+        <!--android:layout_marginTop="3dp"-->
+        <!--android:layout_below="@id/repost_flag"-->
+        <!--android:background="@color/lightgray"/>-->
 
-        <ImageView
-            android:layout_width="6dp"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/avatar"
-            android:layout_alignTop="@id/repost_content"
-            android:layout_alignBottom="@id/repost_content__pic_multi"
-            android:layout_marginTop="3dp"
-            android:layout_below="@id/repost_flag"
-            android:background="@color/lightgray"/>
+        <!--<ImageView-->
+        <!--android:layout_width="6dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignLeft="@id/avatar"-->
+        <!--android:layout_alignTop="@id/repost_content"-->
+        <!--android:layout_alignBottom="@id/repost_content__pic_multi"-->
+        <!--android:layout_marginTop="3dp"-->
+        <!--android:layout_below="@id/repost_flag"-->
+        <!--android:background="@color/lightgray"/>-->
 
     </RelativeLayout>
 </RelativeLayout>

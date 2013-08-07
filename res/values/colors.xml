@@ -320,4 +320,8 @@
 
     <color name="listview_pic_background">#fff0f0f0</color>
 
+
+    <!--theme-->
+    <color name="dark_theme_background">#201E1C</color>
+
 </resources>  
