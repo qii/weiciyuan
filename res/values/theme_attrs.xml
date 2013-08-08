@@ -3,6 +3,8 @@
 
     <attr name="account" format="reference"/>
     <attr name="account_management" format="reference"/>
+
+    <!--actionbar action mode menu -->
     <attr name="add" format="reference"/>
     <attr name="remove" format="reference"/>
     <attr name="comment" format="reference"/>
@@ -21,17 +23,11 @@
     <attr name="refresh" format="reference"/>
     <attr name="copy" format="reference"/>
     <attr name="repost" format="reference"/>
-    <attr name="send" format="reference"/>
     <attr name="share" format="reference"/>
-    <attr name="statusnewactivity_camera" format="reference"/>
-    <attr name="statusnewactivity_gps" format="reference"/>
-    <attr name="statusnewactivity_send" format="reference"/>
-    <attr name="statusnewactivity_pic" format="reference"/>
+
     <attr name="error" format="reference"/>
     <attr name="location_map" format="reference"/>
-    <attr name="timeline_repost_flag" format="reference"/>
-    <attr name="timeline_comment_flag" format="reference"/>
-    <attr name="timeline_reply_flag" format="reference"/>
+
     <attr name="save" format="reference"/>
 
     <attr name="close" format="reference"/>
@@ -39,17 +35,33 @@
 
 
     <attr name="clickable_flag" format="reference"/>
-    <attr name="timeline_reply_to_comment" format="reference"/>
 
+
+    <attr name="listview_item_background_selector" format="reference"/>
+    <attr name="listview_item_refresh_animation" format="reference"/>
+    <attr name="line_drawable" format="reference"/>
+
+
+    <attr name="backgroundSplit" format="reference"/>
+
+
+    <!--write weibo or comment or dm-->
+    <attr name="statusnewactivity_camera" format="reference"/>
+    <attr name="statusnewactivity_gps" format="reference"/>
+    <attr name="statusnewactivity_send" format="reference"/>
+    <attr name="statusnewactivity_pic" format="reference"/>
+    <attr name="send" format="reference"/>
+
+
+    <!--textview link-->
+    <attr name="link_color" format="reference"/>
+
+
+    <!--timeline-->
     <attr name="timeline_gps_icon" format="reference"/>
     <attr name="timeline_pic_icon" format="reference"/>
 
     <attr name="timeline_load_more_background" format="reference"/>
-
-    <attr name="listview_item_background_selector" format="reference"/>
-    <attr name="listview_item_refresh_animation" format="reference"/>
-    <attr name="link_color" format="reference"/>
-    <attr name="line_drawable" format="reference"/>
     <attr name="listview_checked_color" format="reference"/>
     <attr name="listview_pic_bg_border" format="reference"/>
     <attr name="listview_middle_layout_bg" format="color"/>
@@ -57,7 +69,12 @@
     <attr name="listview_card_bg" format="reference"/>
     <attr name="listview_item_bg" format="reference"/>
 
+    <attr name="timeline_reply_to_comment" format="reference"/>
+
+    <attr name="timeline_repost_flag" format="reference"/>
+    <attr name="timeline_comment_flag" format="reference"/>
+
+
     <attr name="listview_pic_bg" format="integer"/>
 
-    <attr name="backgroundSplit" format="reference"/>
 </resources>

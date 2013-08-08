@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.ui.adapter;
 
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
@@ -32,8 +30,6 @@ import java.util.WeakHashMap;
  */
 public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
-    private Drawable replyPic = null;
-    private Drawable commentPic = null;
 
     private Map<ViewHolder, Drawable> bg = new WeakHashMap<ViewHolder, Drawable>();
 
@@ -50,13 +46,6 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
     public CommentListAdapter(Fragment fragment, List<CommentBean> bean, ListView listView, boolean showOriStatus, boolean pref) {
         super(fragment, bean, listView, showOriStatus, pref);
 
-        int[] attrs = new int[]{R.attr.timeline_reply_flag};
-        TypedArray ta = fragment.getActivity().obtainStyledAttributes(attrs);
-        replyPic = ta.getDrawable(0);
-
-        attrs = new int[]{R.attr.timeline_comment_flag};
-        ta = fragment.getActivity().obtainStyledAttributes(attrs);
-        commentPic = ta.getDrawable(0);
     }
 
     public void setTopTipBar(TopTipBar bar) {
