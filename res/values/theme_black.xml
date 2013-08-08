@@ -61,15 +61,15 @@
         <item name="line_drawable">@drawable/list_divider_holo_dark</item>
         <item name="listview_checked_color">@color/listview_checked_color_holo_dark</item>
         <item name="listview_pic_bg_border">@drawable/bg_timeline_picture_light</item>
-        <item name="listview_middle_layout_bg">@color/white</item>
-        <item name="listview_middle_layout_text_color">@color/timeline_item_middle_layout_text_color_dark</item>
+        <item name="timeline_middle_layout_background">@color/white</item>
+        <item name="timeline_middle_layout_text_color">@color/timeline_item_middle_layout_text_color_dark</item>
         <item name="listview_card_bg">@drawable/listview_item_card_dark_background</item>
         <item name="listview_item_bg">@drawable/listview_item_background_normal_dark</item>
 
 
         <item name="listview_pic_bg">@color/transparent</item>
 
-        <item name="backgroundSplit">@drawable/ab_bottom_transparent_dark_holo</item>
+        <item name="split_line_between_content_and_bottom_button_panel">@drawable/ab_bottom_transparent_dark_holo</item>
 
         <item name="android:actionDropDownStyle">@style/ActionBarDropDownStyle_Black</item>
 

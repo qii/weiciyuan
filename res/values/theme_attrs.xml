@@ -59,11 +59,16 @@
     <attr name="timeline_gps_icon" format="reference"/>
     <attr name="timeline_pic_icon" format="reference"/>
 
+    <!--timeline footer middle-->
+    <attr name="timeline_middle_layout_background" format="color"/>
+    <attr name="timeline_middle_layout_text_color" format="color"/>
     <attr name="timeline_load_more_background" format="reference"/>
+
     <attr name="listview_checked_color" format="reference"/>
+
+
     <attr name="listview_pic_bg_border" format="reference"/>
-    <attr name="listview_middle_layout_bg" format="color"/>
-    <attr name="listview_middle_layout_text_color" format="color"/>
+
     <attr name="listview_card_bg" format="reference"/>
     <attr name="listview_item_bg" format="reference"/>
 

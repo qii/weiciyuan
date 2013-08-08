@@ -3,14 +3,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="fill_parent"
              android:layout_height="55dp"
-             android:background="?listview_middle_layout_bg"
+             android:background="?attr/timeline_middle_layout_background"
              android:gravity="center">
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="55dp"
         android:text="@string/click_to_load_some_older_msg"
-        android:textColor="?listview_middle_layout_text_color"
+        android:textColor="?attr/timeline_middle_layout_text_color"
         android:id="@+id/tv_load_middle_msg"
         android:gravity="center"/>
 
