@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme_Pure_Black" parent="AppTheme_Black">
-        <!--<item name="android:windowBackground">@android:color/black</item>-->
-        <!--<item name="android:colorBackground">@android:color/black</item>-->
-        <item name="android:windowBackground">@color/dark_theme_background</item>
-
-        <item name="android:actionBarStyle">@style/ActionBarStyle_Black</item>
+    <!--if you want to modify holo theme, you should modify PrivateThemeHoloOnlyForInherit style instead of AppTheme_Dark style-->
 
 
-    </style>
-
-    <style name="AppTheme_Black" parent="@android:style/Theme.Holo">
+    <style name="AppTheme_Dark" parent="@style/PrivateThemeHoloOnlyForInherit">
 
         <item name="account">@drawable/account_light</item>
         <item name="account_management">@drawable/account_management_light</item>
@@ -71,6 +64,13 @@
 
         <item name="split_line_between_content_and_bottom_button_panel">@drawable/ab_bottom_transparent_dark_holo</item>
 
+
+    </style>
+
+
+    <style name="PrivateThemeHoloOnlyForInherit" parent="@android:style/Theme.Holo">
+        <item name="android:windowBackground">@color/dark_theme_background</item>
+        <item name="android:actionBarStyle">@style/ActionBarStyle_Black</item>
         <item name="android:actionDropDownStyle">@style/ActionBarDropDownStyle_Black</item>
 
     </style>

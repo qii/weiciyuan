@@ -21,7 +21,7 @@ public class LicenseActivity extends AbstractAppActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         switch (theme) {
-            case R.style.AppTheme_Four:
+            case R.style.AppTheme_Light:
                 setTheme(android.R.style.Theme_Holo_Light_DialogWhenLarge);
                 break;
             default:

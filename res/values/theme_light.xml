@@ -1,23 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--if you want to modify holo theme, you should modify PrivateThemeHoloLightOnlyForInherit style instead of AppTheme_Light style-->
 
-    <style name="AppTheme_Four" parent="@style/AppTheme_Black_White">
-
-
-        <!--<item name="android:textColorPrimary">@color/primary_text_color</item>-->
-        <!--<item name="android:textColorSecondary">@color/secondary_text_color</item>-->
-
-        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
-        <item name="android:actionDropDownStyle">@style/ActionBarDropDownStyle</item>
-        <item name="android:actionBarTabStyle">@style/ActionBarTabView</item>
-        <item name="android:actionBarWidgetTheme">@style/ActionBarTheme</item>
-        <item name="android:actionBarItemBackground">@drawable/action_bar_item_background</item>
-
-    </style>
-
-
-    <style name="AppTheme_Black_White" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="AppTheme_Light" parent="@style/PrivateThemeHoloLightOnlyForInherit">
 
         <item name="account">@drawable/account_dark</item>
         <item name="account_management">@drawable/account_management_light</item>
@@ -73,6 +59,16 @@
         <item name="listview_pic_bg">@color/listview_pic_background</item>
 
         <item name="split_line_between_content_and_bottom_button_panel">@drawable/ab_bottom_solid_inverse_holo</item>
+
+    </style>
+
+    <style name="PrivateThemeHoloLightOnlyForInherit" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+        <item name="android:actionDropDownStyle">@style/ActionBarDropDownStyle</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabView</item>
+        <item name="android:actionBarWidgetTheme">@style/ActionBarTheme</item>
+        <item name="android:actionBarItemBackground">@drawable/action_bar_item_background</item>
 
     </style>
 
