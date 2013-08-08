@@ -29,7 +29,6 @@
         <item name="emoticon">@drawable/emoticon_light</item>
         <item name="topic">@drawable/topic_light</item>
         <item name="settings">@drawable/maintimelineactivity_settings_light</item>
-        <item name="picture">@drawable/picture_light</item>
         <item name="refresh">@drawable/refresh_light</item>
         <item name="copy">@drawable/copy_light</item>
         <item name="repost">@drawable/repost_light</item>
