@@ -20,7 +20,7 @@
                 android:layout_width="@dimen/profile_avatar_width"
                 android:layout_height="@dimen/profile_avatar_height"
                 android:padding="1px"
-                android:background="@drawable/bg_border1"
+                android:background="@drawable/bg_timeline_avatar"
                 android:id="@+id/avatar"/>
 
             <LinearLayout

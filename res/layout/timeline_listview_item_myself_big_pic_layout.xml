@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:id="@+id/listview_root">
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:id="@+id/listview_root">
 
 
     <ImageView
@@ -12,11 +12,11 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:padding="1px"
-        android:background="@drawable/bg_border1"
+        android:background="@drawable/bg_timeline_avatar"
         android:layout_alignParentRight="true"
         android:layout_gravity="right|center_vertical"
         android:layout_marginLeft="8dp"
-        android:clickable="true" />
+        android:clickable="true"/>
 
 
     <TextView
@@ -38,7 +38,7 @@
         android:textStyle="bold"
         android:layout_toLeftOf="@id/time"
         android:singleLine="true"
-        android:ellipsize="end" />
+        android:ellipsize="end"/>
 
     <TextView
         android:id="@+id/content"
@@ -48,7 +48,7 @@
         android:textSize="15sp"
         android:layout_below="@id/username"
         android:layout_marginRight="48dp"
-        android:layerType="software" />
+        android:layerType="software"/>
 
     <FrameLayout
 
@@ -69,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
                 android:visibility="gone"
-                android:clickable="true" />
+                android:clickable="true"/>
         </LinearLayout>
 
         <LinearLayout
@@ -89,7 +89,7 @@
                 android:text="content"
                 android:textSize="15sp"
                 android:visibility="gone"
-                android:layerType="software" />
+                android:layerType="software"/>
 
             <LinearLayout
                 android:layout_height="wrap_content"
@@ -102,7 +102,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
                     android:visibility="gone"
-                    android:clickable="true" />
+                    android:clickable="true"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -116,5 +116,5 @@
         android:layout_alignLeft="@id/avatar"
         android:layout_alignTop="@id/repost_and_pic"
         android:layout_marginTop="3dp"
-        android:src="?timeline_repost_flag" />
+        android:src="?timeline_repost_flag"/>
 </RelativeLayout>

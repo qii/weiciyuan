@@ -10,7 +10,7 @@
         android:layout_width="@dimen/timeline_avatar_width"
         android:layout_height="@dimen/timeline_avatar_height"
         android:padding="1px"
-        android:background="@drawable/bg_border1"
+        android:background="@drawable/bg_timeline_avatar"
         android:layout_gravity="left|center_vertical"
         android:layout_marginRight="8dp"
         android:clickable="true"/>
