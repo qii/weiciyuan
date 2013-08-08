@@ -42,10 +42,8 @@
     <attr name="line_drawable" format="reference"/>
 
 
-    <attr name="backgroundSplit" format="reference"/>
-
-
     <!--write weibo or comment or dm-->
+    <attr name="split_line_between_content_and_bottom_button_panel" format="reference"/>
     <attr name="statusnewactivity_camera" format="reference"/>
     <attr name="statusnewactivity_gps" format="reference"/>
     <attr name="statusnewactivity_send" format="reference"/>
