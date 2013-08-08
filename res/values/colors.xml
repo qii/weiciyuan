@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--template-->
 
     <color name="transparent">#00000000</color>
     <color name="transparent_cover">#25000000</color>
