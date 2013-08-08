@@ -189,7 +189,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     private void configSlidingMenu(boolean phone) {
         SlidingMenu slidingMenu = getSlidingMenu();
         slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
-        slidingMenu.setShadowDrawable(R.drawable.shadow);
+        slidingMenu.setShadowDrawable(R.drawable.shadow_slidingmenu);
         if (phone)
             slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         else
