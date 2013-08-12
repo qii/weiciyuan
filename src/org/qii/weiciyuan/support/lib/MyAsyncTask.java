@@ -40,7 +40,7 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
     private static final BlockingQueue<Runnable> sPoolWorkQueue =
             new LinkedBlockingQueue<Runnable>(10);
     private static final BlockingQueue<Runnable> sDownloadPoolWorkQueue =
-            new LinkedBlockingQueue<Runnable>(10);
+            new LinkedBlockingQueue<Runnable>(5);
 
     /**
      * An {@link java.util.concurrent.Executor} that can be used to execute tasks in parallel.
@@ -50,7 +50,7 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
             TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
 
     public static final Executor DOWNLOAD_THREAD_POOL_EXECUTOR
-            = new ThreadPoolExecutor(4, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
+            = new ThreadPoolExecutor(4, 20, KEEP_ALIVE,
             TimeUnit.SECONDS, sDownloadPoolWorkQueue, sDownloadThreadFactory, new ThreadPoolExecutor.DiscardOldestPolicy());
 
     /**
