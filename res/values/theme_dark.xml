@@ -60,7 +60,7 @@
         <item name="listview_item_bg">@drawable/listview_item_background_normal_dark</item>
 
 
-        <item name="listview_pic_bg">@color/transparent</item>
+        <item name="listview_pic_bg">@color/listview_pic_background_dark</item>
 
         <item name="split_line_between_content_and_bottom_button_panel">@drawable/ab_bottom_transparent_dark_holo</item>
 
