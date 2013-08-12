@@ -51,7 +51,7 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
 
     public static final Executor DOWNLOAD_THREAD_POOL_EXECUTOR
             = new ThreadPoolExecutor(4, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
-            TimeUnit.SECONDS, sDownloadPoolWorkQueue, sDownloadThreadFactory);
+            TimeUnit.SECONDS, sDownloadPoolWorkQueue, sDownloadThreadFactory, new ThreadPoolExecutor.DiscardOldestPolicy());
 
     /**
      * An {@link Executor} that executes tasks one at a time in serial
