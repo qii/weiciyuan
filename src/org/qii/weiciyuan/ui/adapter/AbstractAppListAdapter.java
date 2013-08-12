@@ -46,7 +46,6 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     protected Fragment fragment;
     protected LayoutInflater inflater;
     protected ListView listView;
-    protected TimeLineBitmapDownloader commander;
     protected boolean showOriStatus = true;
     protected int checkedBG;
     protected int defaultBG;
@@ -91,7 +90,6 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             listView.setDivider(null);
 
         this.bean = bean;
-        this.commander = TimeLineBitmapDownloader.getInstance();
         this.inflater = fragment.getActivity().getLayoutInflater();
         this.listView = listView;
         this.showOriStatus = showOriStatus;
@@ -486,7 +484,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
             view.setVisibility(View.VISIBLE);
-            commander.downloadAvatar(view, user, (AbstractTimeLineFragment) fragment);
+            TimeLineBitmapDownloader.getInstance().downloadAvatar(view, user, (AbstractTimeLineFragment) fragment);
         } else {
             view.setVisibility(View.GONE);
         }
@@ -501,9 +499,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 ImageView pic = (ImageView) gridLayout.getChildAt(i);
                 pic.setVisibility(View.VISIBLE);
                 if (SettingUtility.getEnableBigPic()) {
-                    commander.displayMultiPicture(pic, msg.getHighPicUrls().get(i), FileLocationMethod.picture_large, (AbstractTimeLineFragment) fragment);
+                    TimeLineBitmapDownloader.getInstance().displayMultiPicture(pic, msg.getHighPicUrls().get(i), FileLocationMethod.picture_large, (AbstractTimeLineFragment) fragment);
                 } else {
-                    commander.displayMultiPicture(pic, msg.getThumbnailPicUrls().get(i), FileLocationMethod.picture_thumbnail, (AbstractTimeLineFragment) fragment);
+                    TimeLineBitmapDownloader.getInstance().displayMultiPicture(pic, msg.getThumbnailPicUrls().get(i), FileLocationMethod.picture_thumbnail, (AbstractTimeLineFragment) fragment);
                 }
 
                 final int finalI = i;
@@ -555,12 +553,12 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     private void buildPic(final MessageBean msg, ImageView view) {
         view.setVisibility(View.VISIBLE);
-        commander.downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
+        TimeLineBitmapDownloader.getInstance().downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
     }
 
     private void buildPic(final MessageBean msg, TimeLineImageView view) {
         view.setVisibility(View.VISIBLE);
-        commander.downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
+        TimeLineBitmapDownloader.getInstance().downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
     }
 
     protected void buildRepostContent(final MessageBean repost_msg, ViewHolder holder, int position) {

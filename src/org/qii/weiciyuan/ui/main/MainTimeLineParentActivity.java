@@ -66,6 +66,7 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity {
         forceShowActionBarOverflowMenu();
         initNFC();
         GlobalContext.getInstance().setActivity(this);
+        TimeLineBitmapDownloader.refreshThemePictureBackground();
     }
 
 
@@ -126,7 +127,6 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity {
 
         overridePendingTransition(0, 0);
         startActivity(intent);
-        TimeLineBitmapDownloader.refreshThemePictureBackground();
     }
 
 
