@@ -666,6 +666,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     loadNewMsg();
                 }
                 break;
+            case R.id.switch_theme:
+                SettingUtility.switchToAnotherTheme();
+                ((MainTimeLineActivity) getActivity()).reload();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

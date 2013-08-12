@@ -117,7 +117,7 @@ public class MainTimeLineParentActivity extends SlidingFragmentActivity {
         return mimeRecord;
     }
 
-    private void reload() {
+    public void reload() {
 
         Intent intent = getIntent();
         overridePendingTransition(0, 0);

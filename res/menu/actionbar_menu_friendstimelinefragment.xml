@@ -10,4 +10,9 @@
         android:showAsAction="always"/>
 
 
+    <item
+        android:id="@+id/switch_theme"
+        android:title="@string/switch_to_another_theme"
+        android:showAsAction="never"/>
+
 </menu>

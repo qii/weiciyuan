@@ -65,6 +65,22 @@ public class SettingUtility {
         }
     }
 
+    public static void switchToAnotherTheme() {
+        String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.THEME, "1");
+        switch (Integer.valueOf(value)) {
+            case 1:
+                SettingHelper.setEditor(getContext(), SettingActivity.THEME, "2");
+                break;
+            case 2:
+                SettingHelper.setEditor(getContext(), SettingActivity.THEME, "1");
+                break;
+            default:
+                SettingHelper.setEditor(getContext(), SettingActivity.THEME, "1");
+                break;
+
+        }
+    }
+
     public static int getHighPicMode() {
         String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.LIST_HIGH_PIC_MODE, "2");
         return Integer.valueOf(value);
