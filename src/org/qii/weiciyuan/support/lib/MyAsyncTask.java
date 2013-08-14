@@ -47,7 +47,7 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
      */
     public static final Executor THREAD_POOL_EXECUTOR
             = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
-            TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
+            TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory, new ThreadPoolExecutor.DiscardOldestPolicy());
 
     public static final Executor DOWNLOAD_THREAD_POOL_EXECUTOR
             = new ThreadPoolExecutor(4, 20, KEEP_ALIVE,
