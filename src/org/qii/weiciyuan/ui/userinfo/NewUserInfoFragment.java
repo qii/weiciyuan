@@ -878,7 +878,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         protected void onPostExecute(MyStatusTimeLineData result) {
             super.onPostExecute(result);
 
-            if (result != null) {
+            if (result != null && getActivity() != null) {
                 getListView().removeFooterView(progressFooter);
                 getList().addNewData(result.msgList);
                 getAdapter().notifyDataSetChanged();
