@@ -101,7 +101,7 @@
     </style>
 
     <style name="ActionBarTabViewLight" parent="@android:style/Widget.Holo.ActionBar.TabView">
-        <item name="android:background">@drawable/actionbar_tab_light</item>
+        <item name="android:background">@drawable/actionbar_tab_background_light</item>
     </style>
 
     <style name="ListViewDropdownStyle" parent="@android:style/Widget.ListView.DropDown">

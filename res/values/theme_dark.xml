@@ -97,6 +97,6 @@
 
 
     <style name="ActionBarTabViewDark" parent="@android:style/Widget.Holo.ActionBar.TabView">
-        <item name="android:background">@drawable/actionbar_bar_tab_dark</item>
+        <item name="android:background">@drawable/actionbar_tab_background_dark</item>
     </style>
 </resources>
