@@ -63,6 +63,10 @@
         <item name="listview_pic_bg">@color/listview_pic_background_dark</item>
         <item name="listview_repost_divider">@drawable/drawer_menu_divider</item>
 
+        <item name="profile_top_photo_background_color">@color/transparent</item>
+        <item name="profile_detail_count_divider_color">@color/transparent</item>
+        <item name="profile_detail_count_bottom_color">@color/transparent</item>
+
         <item name="split_line_between_content_and_bottom_button_panel">@drawable/bg_write_weibo_bottom</item>
 
 

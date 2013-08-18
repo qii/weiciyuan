@@ -84,4 +84,9 @@
 
     <attr name="listview_repost_divider" format="reference"/>
 
+
+    <!--profile-->
+    <attr name="profile_top_photo_background_color" format="color"/>
+    <attr name="profile_detail_count_divider_color" format="color"/>
+    <attr name="profile_detail_count_bottom_color" format="color"/>
 </resources>

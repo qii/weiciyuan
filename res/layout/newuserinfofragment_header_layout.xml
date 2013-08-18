@@ -17,7 +17,7 @@
             <ImageView
                 android:id="@+id/cover"
                 android:scaleType="centerCrop"
-                android:background="@color/black"
+                android:background="?profile_top_photo_background_color"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"/>
 
@@ -66,6 +66,7 @@
 
     </FrameLayout>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -100,7 +101,7 @@
         </LinearLayout>
 
         <View
-            android:background="@color/list_divider_color"
+            android:background="?profile_detail_count_divider_color"
             android:layout_width="1dp"
             android:layout_height="fill_parent"/>
 
@@ -132,7 +133,7 @@
         </LinearLayout>
 
         <View
-            android:background="@color/list_divider_color"
+            android:background="?profile_detail_count_divider_color"
             android:layout_width="1dp"
             android:layout_height="fill_parent"/>
 
@@ -164,7 +165,7 @@
         </LinearLayout>
 
         <View
-            android:background="@color/list_divider_color"
+            android:background="?profile_detail_count_divider_color"
             android:layout_width="1dp"
             android:layout_height="fill_parent"/>
 
@@ -198,7 +199,7 @@
     </LinearLayout>
 
     <View
-        android:background="@color/list_divider_color"
+        android:background="?profile_detail_count_bottom_color"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
 </LinearLayout>
