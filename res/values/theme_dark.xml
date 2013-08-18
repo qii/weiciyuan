@@ -72,6 +72,7 @@
         <item name="android:windowBackground">@color/dark_theme_background</item>
         <item name="android:actionBarStyle">@style/ActionBarStyle_Black</item>
         <item name="android:actionDropDownStyle">@style/ActionBarDropDownStyle_Black</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabViewDark</item>
 
     </style>
 
@@ -89,8 +90,13 @@
     <style name="ActionBarStyle_Black" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:background">@drawable/abs__ab_solid_dark_holo</item>
         <item name="android:backgroundSplit">@drawable/abs__ab_bottom_solid_dark_holo</item>
-        <item name="android:backgroundStacked">@drawable/abs__ab_stacked_solid_dark_holo</item>
+        <item name="android:backgroundStacked">#262626</item>
 
 
+    </style>
+
+
+    <style name="ActionBarTabViewDark" parent="@android:style/Widget.Holo.ActionBar.TabView">
+        <item name="android:background">@drawable/actionbar_bar_tab_dark</item>
     </style>
 </resources>
