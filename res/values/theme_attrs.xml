@@ -82,4 +82,6 @@
 
     <attr name="listview_text_color" format="reference"/>
 
+    <attr name="listview_repost_divider" format="reference"/>
+
 </resources>

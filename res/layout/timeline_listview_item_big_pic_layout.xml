@@ -174,7 +174,7 @@
             android:layout_marginRight="0dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/divider"
+            android:background="?listview_repost_divider"
             android:layout_height="1dp"
             android:layout_width="match_parent"/>
 
