@@ -80,4 +80,6 @@
 
     <attr name="listview_pic_bg" format="integer"/>
 
+    <attr name="listview_text_color" format="reference"/>
+
 </resources>

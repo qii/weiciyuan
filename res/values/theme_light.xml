@@ -55,7 +55,7 @@
         <item name="timeline_middle_layout_text_color">@color/timeline_item_middle_layout_text_color_light</item>
         <item name="listview_card_bg">@drawable/bg_tacos</item>
         <item name="listview_item_bg">@drawable/listview_item_background_normal_light</item>
-
+        <item name="listview_text_color">@color/timeline_item_text_color_light</item>
         <item name="listview_pic_bg">@color/listview_pic_background_light</item>
 
         <item name="split_line_between_content_and_bottom_button_panel">@drawable/ab_bottom_solid_inverse_holo</item>
