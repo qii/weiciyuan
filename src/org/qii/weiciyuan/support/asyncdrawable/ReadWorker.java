@@ -6,8 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import org.qii.weiciyuan.R;
@@ -263,59 +262,66 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
 
     private void playImageViewAnimation(final ImageView view, final Bitmap bitmap) {
 
-        final Animation anim_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_out);
-        final Animation anim_in = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_in);
+        view.setImageBitmap(bitmap);
+        resetProgressBarStatues();
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
+        alphaAnimation.setDuration(500);
+        view.startAnimation(alphaAnimation);
+        view.setTag(getUrl());
 
-        anim_out.setAnimationListener(new Animation.AnimationListener() {
-
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-                anim_in.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-
-                    //clear animation avoid memory leak
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        if (view.getAnimation() != null && view.getAnimation().hasEnded()) {
-                            view.clearAnimation();
-                        }
-                        resetProgressBarStatues();
-                    }
-                });
-
-                if (isImageViewDrawableBitmap(view)) {
-                    resetProgressBarStatues();
-                    return;
-                } else if (!canDisplay(view)) {
-                    return;
-                }
-
-
-                view.setImageBitmap(bitmap);
-                view.setTag(getUrl());
-                view.startAnimation(anim_in);
-
-            }
-        });
-
-        if (view.getAnimation() == null || view.getAnimation().hasEnded())
-            view.startAnimation(anim_out);
+//        final Animation anim_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_out);
+//        final Animation anim_in = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_in);
+//
+//        anim_out.setAnimationListener(new Animation.AnimationListener() {
+//
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//
+//                anim_in.setAnimationListener(new Animation.AnimationListener() {
+//                    @Override
+//                    public void onAnimationStart(Animation animation) {
+//                    }
+//
+//                    @Override
+//                    public void onAnimationRepeat(Animation animation) {
+//                    }
+//
+//                    //clear animation avoid memory leak
+//                    @Override
+//                    public void onAnimationEnd(Animation animation) {
+//                        if (view.getAnimation() != null && view.getAnimation().hasEnded()) {
+//                            view.clearAnimation();
+//                        }
+//                        resetProgressBarStatues();
+//                    }
+//                });
+//
+//                if (isImageViewDrawableBitmap(view)) {
+//                    resetProgressBarStatues();
+//                    return;
+//                } else if (!canDisplay(view)) {
+//                    return;
+//                }
+//
+//
+//                view.setImageBitmap(bitmap);
+//                view.setTag(getUrl());
+//                view.startAnimation(anim_in);
+//
+//            }
+//        });
+//
+//        if (view.getAnimation() == null || view.getAnimation().hasEnded())
+//            view.startAnimation(anim_out);
     }
 
     FileDownloaderHttpHelper.DownloadListener downloadListener = new FileDownloaderHttpHelper.DownloadListener() {
