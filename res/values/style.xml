@@ -44,7 +44,7 @@
     <style name="drawerMessageCount">
         <item name="android:background">@drawable/bg_message_count</item>
         <item name="android:textAppearance">?android:attr/textAppearance</item>
-        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">14sp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
