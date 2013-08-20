@@ -306,6 +306,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
 
 
                 view.setImageBitmap(bitmap);
+                view.setTag(getUrl());
                 view.startAnimation(anim_in);
 
             }

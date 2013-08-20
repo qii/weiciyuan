@@ -18,6 +18,7 @@ import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TimeLineImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -177,12 +178,35 @@ public class TimeLineBitmapDownloader {
         }
     }
 
+    /**
+     * when user open weibo detail, the activity will setResult to previous Activity,
+     * timeline will refresh at the time user press back button to display the latest repost count
+     * and comment count. But sometimes, weibo detail's pictures are very large that bitmap memory
+     * cache has cleared those timeline bitmap to save memory, app have to read bitmap from sd card
+     * again, then app play annoying animation , this method will check whether we should read again or not.
+     */
+    private boolean shouldReloadPicture(ImageView view, String urlKey) {
+        if (urlKey.equals(view.getTag()) && view.getDrawable() != null && ((BitmapDrawable) view.getDrawable() != null
+                && ((BitmapDrawable) view.getDrawable()).getBitmap() != null)) {
+            AppLogger.d("shouldReloadPicture=false");
+            return false;
+        } else {
+            view.setTag(null);
+            AppLogger.d("shouldReloadPicture=true");
+            return true;
+        }
+    }
 
     private void display(final ImageView view, final String urlKey, final FileLocationMethod method, boolean isFling, boolean isMultiPictures) {
         view.clearAnimation();
+
+        if (!shouldReloadPicture(view, urlKey))
+            return;
+
         final Bitmap bitmap = getBitmapFromMemCache(urlKey);
         if (bitmap != null) {
             view.setImageBitmap(bitmap);
+            view.setTag(urlKey);
             if (view.getAlpha() != 1.0f) {
                 view.setAlpha(1.0f);
             }
@@ -224,9 +248,14 @@ public class TimeLineBitmapDownloader {
 
     private void display(final TimeLineImageView view, final String urlKey, final FileLocationMethod method, boolean isFling) {
         view.clearAnimation();
+
+        if (!shouldReloadPicture(view.getImageView(), urlKey))
+            return;
+
         final Bitmap bitmap = getBitmapFromMemCache(urlKey);
         if (bitmap != null) {
             view.setImageBitmap(bitmap);
+            view.getImageView().setTag(urlKey);
             view.getProgressBar().setVisibility(View.GONE);
             if (view.getAlpha() != 1.0f) {
                 view.setAlpha(1.0f);
