@@ -116,6 +116,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
                 break;
 
             case picture_large:
+            case picture_bmiddle:
                 if (!isMultiPictures) {
                     DisplayMetrics metrics = globalContext.getDisplayMetrics();
 
@@ -127,6 +128,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
                 } else {
                     height = width = Utility.dip2px(120);
                 }
+                break;
         }
 
         synchronized (TimeLineBitmapDownloader.pauseReadWorkLock) {
