@@ -54,6 +54,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<MessageListBean> implements MainTimeLineActivity.ScrollableListFragment {
 
 
+    private static final String LIMITED_READ_MESSAGE_COUNT = "10";
+
     protected UserBean userBean;
     protected String token;
     private MessageListBean bean = new MessageListBean();
@@ -577,7 +579,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         if (getList().getItemList().size() > 0) {
             sinceId = getList().getItemList().get(0).getId();
         }
-        return new StatusesByIdLoader(getActivity(), uid, screenName, token, sinceId, null);
+        return new StatusesByIdLoader(getActivity(), uid, screenName, token, sinceId, null, LIMITED_READ_MESSAGE_COUNT);
     }
 
     @Override

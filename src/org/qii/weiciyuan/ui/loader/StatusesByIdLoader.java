@@ -23,6 +23,7 @@ public class StatusesByIdLoader extends AbstractAsyncNetRequestTaskLoader<Messag
     private String maxId;
     private String screenName;
     private String uid;
+    private String count;
 
     public StatusesByIdLoader(Context context, String uid, String screenName, String token, String sinceId, String maxId) {
         super(context);
@@ -34,12 +35,22 @@ public class StatusesByIdLoader extends AbstractAsyncNetRequestTaskLoader<Messag
 
     }
 
+    public StatusesByIdLoader(Context context, String uid, String screenName, String token, String sinceId, String maxId, String count) {
+        this(context, uid, screenName, token, sinceId, maxId);
+        this.count = count;
+
+    }
+
 
     public MessageListBean loadData() throws WeiboException {
         StatusesTimeLineDao dao = new StatusesTimeLineDao(token, uid);
 
         if (TextUtils.isEmpty(uid)) {
             dao.setScreen_name(screenName);
+        }
+
+        if (!TextUtils.isEmpty(count)) {
+            dao.setCount(count);
         }
 
         dao.setSince_id(sinceId);
