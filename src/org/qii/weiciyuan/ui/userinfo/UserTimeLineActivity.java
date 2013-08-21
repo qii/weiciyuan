@@ -25,6 +25,8 @@ public class UserTimeLineActivity extends AbstractAppActivity implements IUserIn
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(false);
         String token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getParcelableExtra("user");
         getActionBar().setTitle(bean.getScreen_name());
