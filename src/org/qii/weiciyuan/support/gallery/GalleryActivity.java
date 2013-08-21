@@ -31,6 +31,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * User: qii
@@ -47,6 +48,8 @@ public class GalleryActivity extends Activity {
     private PicSaveTask saveTask;
 
     private ViewPager pager;
+
+    private HashSet<ViewGroup> views = new HashSet<ViewGroup>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +87,10 @@ public class GalleryActivity extends Activity {
                 task.cancel(true);
         }
         Utility.recycleViewGroupAndChildViews(pager, true);
+        for (ViewGroup viewGroup : views) {
+            Utility.recycleViewGroupAndChildViews(viewGroup, true);
+        }
+        System.gc();
     }
 
     @Override
@@ -103,6 +110,7 @@ public class GalleryActivity extends Activity {
         public void destroyItem(ViewGroup container, int position, Object object) {
             if (object instanceof ViewGroup) {
                 ((ViewPager) container).removeView((View) object);
+                views.remove(object);
                 ViewGroup viewGroup = (ViewGroup) object;
                 Utility.recycleViewGroupAndChildViews(viewGroup, true);
 
@@ -153,6 +161,7 @@ public class GalleryActivity extends Activity {
             }
 
             ((ViewPager) view).addView(contentView, 0);
+            views.add((ViewGroup) contentView);
             return contentView;
         }
 
@@ -292,7 +301,7 @@ public class GalleryActivity extends Activity {
 
         Bitmap bitmap = null;
         try {
-            bitmap = ImageTool.decodeBitmapFromSDCard(bitmapPath, -1, -1);
+            bitmap = ImageTool.decodeBitmapFromSDCard(bitmapPath, 2000, 3000);
         } catch (OutOfMemoryError ignored) {
 
         }
