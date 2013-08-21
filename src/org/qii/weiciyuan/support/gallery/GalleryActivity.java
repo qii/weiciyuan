@@ -72,6 +72,7 @@ public class GalleryActivity extends Activity {
             }
         });
         pager.setCurrentItem(getIntent().getIntExtra("position", 0));
+        pager.setOffscreenPageLimit(3);
     }
 
     @Override
@@ -100,6 +101,12 @@ public class GalleryActivity extends Activity {
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
+            if (object instanceof ViewGroup) {
+                ((ViewPager) container).removeView((View) object);
+                ViewGroup viewGroup = (ViewGroup) object;
+                Utility.recycleViewGroupAndChildViews(viewGroup, true);
+
+            }
 //            ((ViewPager) container).removeView((View) object);
         }
 
