@@ -447,7 +447,10 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
                 //nothing
                 refreshLayout(getList());
                 setValue();
-
+                if (bean.getSize() > 0) {
+                    moreFooter.setVisibility(View.VISIBLE);
+                    getListView().removeFooterView(progressFooter);
+                }
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 getList().replaceData((MessageListBean) savedInstanceState.getParcelable("bean"));
