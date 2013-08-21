@@ -164,6 +164,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
                 break;
             case SCREEN_ROTATE:
                 //nothing
+                buildViewData(true);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
                 msg = (MessageBean) savedInstanceState.getParcelable("msg");
