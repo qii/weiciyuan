@@ -46,6 +46,7 @@ public class GalleryActivity extends Activity {
 
     private PicSaveTask saveTask;
 
+    private ViewPager pager;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +62,7 @@ public class GalleryActivity extends Activity {
         }
         sum.setText(String.valueOf(urls.size()));
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(new ImagePagerAdapter());
         pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -81,6 +82,7 @@ public class GalleryActivity extends Activity {
             if (task != null)
                 task.cancel(true);
         }
+        Utility.recycleViewGroupAndChildViews(pager, true);
     }
 
     @Override

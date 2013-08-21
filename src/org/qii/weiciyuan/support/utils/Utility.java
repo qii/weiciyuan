@@ -8,8 +8,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -22,6 +25,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.*;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
@@ -675,6 +679,38 @@ public class Utility {
         }
 //        return maxSizeArray[0];
         return 2048;
+    }
+
+    public static void recycleViewGroupAndChildViews(ViewGroup viewGroup, boolean recycleBitmap) {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+
+            View child = viewGroup.getChildAt(i);
+
+            if (child instanceof ViewGroup) {
+                recycleViewGroupAndChildViews((ViewGroup) child, true);
+                continue;
+            }
+
+            if (child instanceof ImageView) {
+                ImageView iv = (ImageView) child;
+                Drawable drawable = iv.getDrawable();
+                if (drawable instanceof BitmapDrawable) {
+                    BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                    Bitmap bitmap = bitmapDrawable.getBitmap();
+                    if (recycleBitmap && bitmap != null) {
+                        bitmap.recycle();
+                    }
+                }
+                iv.setImageBitmap(null);
+                iv.setBackground(null);
+                continue;
+            }
+
+            child.setBackground(null);
+
+        }
+
+        viewGroup.setBackground(null);
     }
 }
 
