@@ -49,7 +49,9 @@ public class GalleryActivity extends Activity {
 
     private ViewPager pager;
 
-    private HashSet<ViewGroup> views = new HashSet<ViewGroup>();
+    private HashSet<ViewGroup> unRecycledViews = new HashSet<ViewGroup>();
+
+    private boolean alreadyShowPicturesTooLargeHint = false;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,9 +89,10 @@ public class GalleryActivity extends Activity {
                 task.cancel(true);
         }
         Utility.recycleViewGroupAndChildViews(pager, true);
-        for (ViewGroup viewGroup : views) {
+        for (ViewGroup viewGroup : unRecycledViews) {
             Utility.recycleViewGroupAndChildViews(viewGroup, true);
         }
+
         System.gc();
     }
 
@@ -110,7 +113,7 @@ public class GalleryActivity extends Activity {
         public void destroyItem(ViewGroup container, int position, Object object) {
             if (object instanceof ViewGroup) {
                 ((ViewPager) container).removeView((View) object);
-                views.remove(object);
+                unRecycledViews.remove(object);
                 ViewGroup viewGroup = (ViewGroup) object;
                 Utility.recycleViewGroupAndChildViews(viewGroup, true);
 
@@ -161,7 +164,7 @@ public class GalleryActivity extends Activity {
             }
 
             ((ViewPager) view).addView(contentView, 0);
-            views.add((ViewGroup) contentView);
+            unRecycledViews.add((ViewGroup) contentView);
             return contentView;
         }
 
@@ -289,8 +292,9 @@ public class GalleryActivity extends Activity {
 
 
         boolean isThisBitmapTooLarge = ImageTool.isThisBitmapTooLargeToRead(bitmapPath);
-        if (isThisBitmapTooLarge) {
+        if (isThisBitmapTooLarge && !alreadyShowPicturesTooLargeHint) {
             Toast.makeText(GalleryActivity.this, R.string.picture_is_too_large_so_enable_software_layer, Toast.LENGTH_LONG).show();
+            alreadyShowPicturesTooLargeHint = true;
         }
 
         if (isThisBitmapTooLarge) {
