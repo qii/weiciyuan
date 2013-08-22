@@ -39,6 +39,9 @@ import java.util.HashSet;
  */
 public class GalleryActivity extends Activity {
 
+    private static final int IMAGEVIEW_SOFT_LAYER_MAX_WIDTH = 2000;
+    private static final int IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT = 3000;
+
     private ArrayList<String> urls = new ArrayList<String>();
 
     private TextView position;
@@ -301,7 +304,7 @@ public class GalleryActivity extends Activity {
 
         Bitmap bitmap = null;
         try {
-            bitmap = ImageTool.decodeBitmapFromSDCard(bitmapPath, 2000, 3000);
+            bitmap = ImageTool.decodeBitmapFromSDCard(bitmapPath, IMAGEVIEW_SOFT_LAYER_MAX_WIDTH, IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT);
         } catch (OutOfMemoryError ignored) {
 
         }
