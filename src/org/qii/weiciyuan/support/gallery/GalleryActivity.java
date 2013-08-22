@@ -131,37 +131,7 @@ public class GalleryActivity extends Activity {
         public Object instantiateItem(ViewGroup view, int position) {
             View contentView = inflater.inflate(R.layout.galleryactivity_item, view, false);
 
-            PhotoView imageView = (PhotoView) contentView.findViewById(R.id.image);
-            imageView.setVisibility(View.INVISIBLE);
-
-            imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-                @Override
-                public void onPhotoTap(View view, float x, float y) {
-                    GalleryActivity.this.finish();
-                }
-            });
-
-
-            String path = FileManager.getFilePathFromUrl(urls.get(position), FileLocationMethod.picture_large);
-
-            if (ImageTool.isThisBitmapCanRead(path)) {
-
-                readPicture(imageView, urls.get(position), path);
-
-            } else if (Utility.isWifi(GalleryActivity.this)) {
-
-                final CircleProgressView spinner = (CircleProgressView) contentView.findViewById(R.id.loading);
-                spinner.setVisibility(View.VISIBLE);
-
-                if (taskMap.get(urls.get(position)) == null) {
-                    PicSimpleBitmapWorkerTask task = new PicSimpleBitmapWorkerTask(imageView, spinner, urls.get(position), taskMap);
-                    taskMap.put(urls.get(position), task);
-                    task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                } else {
-                    PicSimpleBitmapWorkerTask task = taskMap.get(urls.get(position));
-                    task.setWidget(imageView, spinner);
-                }
-            }
+            handlePage(position, contentView);
 
             ((ViewPager) view).addView(contentView, 0);
             unRecycledViews.add((ViewGroup) contentView);
@@ -179,19 +149,7 @@ public class GalleryActivity extends Activity {
             if (imageView.getDrawable() != null)
                 return;
 
-            imageView.setVisibility(View.INVISIBLE);
-
-            final CircleProgressView spinner = (CircleProgressView) contentView.findViewById(R.id.loading);
-            spinner.setVisibility(View.VISIBLE);
-
-            if (taskMap.get(urls.get(position)) == null) {
-                PicSimpleBitmapWorkerTask task = new PicSimpleBitmapWorkerTask(imageView, spinner, urls.get(position), taskMap);
-                taskMap.put(urls.get(position), task);
-                task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-            } else {
-                PicSimpleBitmapWorkerTask task = taskMap.get(urls.get(position));
-                task.setWidget(imageView, spinner);
-            }
+            handlePage(position, contentView);
         }
 
         @Override
@@ -200,6 +158,43 @@ public class GalleryActivity extends Activity {
         }
 
 
+    }
+
+    private void handlePage(int position, View contentView) {
+
+        PhotoView imageView = (PhotoView) contentView.findViewById(R.id.image);
+        imageView.setVisibility(View.INVISIBLE);
+
+        imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(View view, float x, float y) {
+                GalleryActivity.this.finish();
+            }
+        });
+
+
+        TextView readError = (TextView) contentView.findViewById(R.id.error);
+
+        String path = FileManager.getFilePathFromUrl(urls.get(position), FileLocationMethod.picture_large);
+
+        if (ImageTool.isThisBitmapCanRead(path)) {
+
+            readPicture(imageView, readError, urls.get(position), path);
+
+        } else if (Utility.isWifi(GalleryActivity.this)) {
+
+            final CircleProgressView spinner = (CircleProgressView) contentView.findViewById(R.id.loading);
+            spinner.setVisibility(View.VISIBLE);
+
+            if (taskMap.get(urls.get(position)) == null) {
+                PicSimpleBitmapWorkerTask task = new PicSimpleBitmapWorkerTask(imageView, spinner, readError, urls.get(position), taskMap);
+                taskMap.put(urls.get(position), task);
+                task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                PicSimpleBitmapWorkerTask task = taskMap.get(urls.get(position));
+                task.setWidget(imageView, spinner);
+            }
+        }
     }
 
 
@@ -222,12 +217,15 @@ public class GalleryActivity extends Activity {
         private ImageView iv;
         private String url;
         private CircleProgressView spinner;
+        private TextView readError;
         private HashMap<String, PicSimpleBitmapWorkerTask> taskMap;
 
-        public PicSimpleBitmapWorkerTask(ImageView iv, CircleProgressView spinner, String url, HashMap<String, PicSimpleBitmapWorkerTask> taskMap) {
+        public PicSimpleBitmapWorkerTask(ImageView iv, CircleProgressView spinner,
+                                         TextView readError, String url, HashMap<String, PicSimpleBitmapWorkerTask> taskMap) {
             this.iv = iv;
             this.url = url;
             this.spinner = spinner;
+            this.readError = readError;
             this.taskMap = taskMap;
         }
 
@@ -275,14 +273,14 @@ public class GalleryActivity extends Activity {
                 Toast.makeText(GalleryActivity.this, R.string.download_finished_but_cant_read_picture_file, Toast.LENGTH_SHORT).show();
             }
 
-            readPicture(iv, url, bitmapPath);
+            readPicture(iv, readError, url, bitmapPath);
 
 
         }
     }
 
 
-    private void readPicture(ImageView imageView, String url, String bitmapPath) {
+    private void readPicture(ImageView imageView, TextView readError, String url, String bitmapPath) {
 
         if (!ImageTool.isThisBitmapCanRead(bitmapPath)) {
             Toast.makeText(GalleryActivity.this, R.string.download_finished_but_cant_read_picture_file, Toast.LENGTH_SHORT).show();
@@ -309,9 +307,14 @@ public class GalleryActivity extends Activity {
         } catch (OutOfMemoryError ignored) {
 
         }
-        imageView.setImageBitmap(bitmap);
-        bindImageViewLongClickListener(imageView, url, bitmapPath);
 
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap);
+            bindImageViewLongClickListener(imageView, url, bitmapPath);
+            readError.setVisibility(View.INVISIBLE);
+        } else {
+            readError.setVisibility(View.VISIBLE);
+        }
 
     }
 
