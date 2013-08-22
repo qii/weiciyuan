@@ -25,6 +25,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.*;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
@@ -686,6 +687,13 @@ public class Utility {
 
             View child = viewGroup.getChildAt(i);
 
+            if (child instanceof WebView) {
+                WebView webView = (WebView) child;
+                webView.loadUrl("about:blank");
+                webView.stopLoading();
+                continue;
+            }
+
             if (child instanceof ViewGroup) {
                 recycleViewGroupAndChildViews((ViewGroup) child, true);
                 continue;
@@ -705,6 +713,7 @@ public class Utility {
                 iv.setBackground(null);
                 continue;
             }
+
 
             child.setBackground(null);
 
