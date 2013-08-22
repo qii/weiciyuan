@@ -25,15 +25,21 @@ public class TaskCache {
     public static void removeDownloadTask(String url, DownloadWorker downloadWorker) {
         synchronized (TaskCache.backgroundWifiDownloadPicturesWorkLock) {
             downloadTasks.remove(url, downloadWorker);
-            if (TaskCache.isDownloadTaskFinish())
+            if (TaskCache.isDownloadTaskFinished())
                 TaskCache.backgroundWifiDownloadPicturesWorkLock.notifyAll();
         }
 
     }
 
-    public static boolean isDownloadTaskFinish() {
+
+    public static boolean isDownloadTaskFinished() {
         return TaskCache.downloadTasks.isEmpty();
     }
+
+    public static boolean isThisUrlTaskFinished(String url) {
+        return !downloadTasks.containsKey(url);
+    }
+
 
     public static boolean waitForPictureDownload(String url, FileDownloaderHttpHelper.DownloadListener downloadListener, String savedPath, FileLocationMethod method) {
         while (true) {

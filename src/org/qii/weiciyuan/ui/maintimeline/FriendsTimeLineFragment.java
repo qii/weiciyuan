@@ -183,7 +183,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     for (int i = position; i < list.getSize(); i++) {
                         //wait until other download tasks are finished
                         synchronized (TaskCache.backgroundWifiDownloadPicturesWorkLock) {
-                            while (!TaskCache.isDownloadTaskFinish() && !Thread.currentThread().isInterrupted()) {
+                            while (!TaskCache.isDownloadTaskFinished() && !Thread.currentThread().isInterrupted()) {
                                 try {
                                     AppLogger.i("WifiAutoDownloadPictureRunnable wait for lock");
                                     TaskCache.backgroundWifiDownloadPicturesWorkLock.wait();
@@ -217,7 +217,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                     for (int i = position; i >= 0; i--) {
                         //wait until other download tasks are finished
                         synchronized (TaskCache.backgroundWifiDownloadPicturesWorkLock) {
-                            while (!TaskCache.isDownloadTaskFinish() && !Thread.currentThread().isInterrupted()) {
+                            while (!TaskCache.isDownloadTaskFinished() && !Thread.currentThread().isInterrupted()) {
                                 try {
                                     AppLogger.i("WifiAutoDownloadPictureRunnable wait for lock");
                                     TaskCache.backgroundWifiDownloadPicturesWorkLock.wait();

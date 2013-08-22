@@ -183,7 +183,9 @@ public class GalleryActivity extends Activity {
         boolean shouldDownLoadPicture = !fromInstantiateItem || (fromInstantiateItem && Utility.isWifi(GalleryActivity.this));
 
         //sometime picture is not downloaded completely, but android already can read it....
-        if (ImageTool.isThisBitmapCanRead(path) && taskMap.get(urls.get(position)) == null) {
+        if (ImageTool.isThisBitmapCanRead(path)
+                && taskMap.get(urls.get(position)) == null
+                && TaskCache.isThisUrlTaskFinished(urls.get(position))) {
 
             readPicture(imageView, readError, urls.get(position), path);
 
