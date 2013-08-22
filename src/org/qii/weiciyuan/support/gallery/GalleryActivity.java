@@ -134,7 +134,7 @@ public class GalleryActivity extends Activity {
         public Object instantiateItem(ViewGroup view, int position) {
             View contentView = inflater.inflate(R.layout.galleryactivity_item, view, false);
 
-            handlePage(position, contentView);
+            handlePage(position, contentView, true);
 
             ((ViewPager) view).addView(contentView, 0);
             unRecycledViews.add((ViewGroup) contentView);
@@ -152,7 +152,7 @@ public class GalleryActivity extends Activity {
             if (imageView.getDrawable() != null)
                 return;
 
-            handlePage(position, contentView);
+            handlePage(position, contentView, false);
         }
 
         @Override
@@ -163,7 +163,7 @@ public class GalleryActivity extends Activity {
 
     }
 
-    private void handlePage(int position, View contentView) {
+    private void handlePage(int position, View contentView, boolean fromInstantiateItem) {
 
         PhotoView imageView = (PhotoView) contentView.findViewById(R.id.image);
         imageView.setVisibility(View.INVISIBLE);
@@ -180,11 +180,14 @@ public class GalleryActivity extends Activity {
 
         String path = FileManager.getFilePathFromUrl(urls.get(position), FileLocationMethod.picture_large);
 
-        if (ImageTool.isThisBitmapCanRead(path)) {
+        boolean shouldDownLoadPicture = !fromInstantiateItem || (fromInstantiateItem && Utility.isWifi(GalleryActivity.this));
+
+        //sometime picture is not downloaded completely, but android already can read it....
+        if (ImageTool.isThisBitmapCanRead(path) && taskMap.get(urls.get(position)) == null) {
 
             readPicture(imageView, readError, urls.get(position), path);
 
-        } else if (Utility.isWifi(GalleryActivity.this)) {
+        } else if (shouldDownLoadPicture) {
 
             final CircleProgressView spinner = (CircleProgressView) contentView.findViewById(R.id.loading);
             spinner.setVisibility(View.VISIBLE);
@@ -195,7 +198,7 @@ public class GalleryActivity extends Activity {
                 task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 PicSimpleBitmapWorkerTask task = taskMap.get(urls.get(position));
-                task.setWidget(imageView, spinner);
+                task.setWidget(imageView, spinner, readError);
             }
         }
     }
@@ -212,9 +215,10 @@ public class GalleryActivity extends Activity {
 
         };
 
-        public void setWidget(ImageView iv, CircleProgressView spinner) {
+        public void setWidget(ImageView iv, CircleProgressView spinner, TextView readError) {
             this.iv = iv;
             this.spinner = spinner;
+            this.readError = readError;
         }
 
         private ImageView iv;
@@ -230,6 +234,10 @@ public class GalleryActivity extends Activity {
             this.spinner = spinner;
             this.readError = readError;
             this.taskMap = taskMap;
+            this.readError.setVisibility(View.INVISIBLE);
+
+            this.spinner.setVisibility(View.VISIBLE);
+
         }
 
 
@@ -259,10 +267,14 @@ public class GalleryActivity extends Activity {
         protected void onCancelled(String s) {
             super.onCancelled(s);
             taskMap.remove(url);
+            this.spinner.setVisibility(View.INVISIBLE);
         }
 
         @Override
         protected void onPostExecute(final String bitmapPath) {
+
+            this.spinner.setVisibility(View.INVISIBLE);
+
             if (isCancelled()) {
                 return;
             }
