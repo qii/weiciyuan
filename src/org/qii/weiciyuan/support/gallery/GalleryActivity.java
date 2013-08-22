@@ -286,8 +286,6 @@ public class GalleryActivity extends Activity {
             Toast.makeText(GalleryActivity.this, R.string.download_finished_but_cant_read_picture_file, Toast.LENGTH_SHORT).show();
         }
 
-        imageView.setVisibility(View.VISIBLE);
-
 
         boolean isThisBitmapTooLarge = ImageTool.isThisBitmapTooLargeToRead(bitmapPath);
         if (isThisBitmapTooLarge && !alreadyShowPicturesTooLargeHint) {
@@ -309,10 +307,12 @@ public class GalleryActivity extends Activity {
         }
 
         if (bitmap != null) {
+            imageView.setVisibility(View.VISIBLE);
             imageView.setImageBitmap(bitmap);
             bindImageViewLongClickListener(imageView, url, bitmapPath);
             readError.setVisibility(View.INVISIBLE);
         } else {
+            imageView.setVisibility(View.INVISIBLE);
             readError.setVisibility(View.VISIBLE);
         }
 
