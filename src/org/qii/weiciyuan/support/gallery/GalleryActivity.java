@@ -10,7 +10,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -149,6 +148,14 @@ public class GalleryActivity extends Activity {
             View contentView = (View) object;
             if (contentView == null)
                 return;
+
+            contentView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+
             ImageView imageView = (ImageView) contentView.findViewById(R.id.image);
 
             if (imageView.getDrawable() != null)
@@ -348,6 +355,7 @@ public class GalleryActivity extends Activity {
 
     private void readGif(WebView webView, TextView readError, String url, String bitmapPath) {
         webView.setVisibility(View.VISIBLE);
+
 
         if (webView.getTag() != null)
             return;
