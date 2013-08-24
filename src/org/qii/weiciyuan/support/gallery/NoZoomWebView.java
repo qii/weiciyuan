@@ -30,4 +30,8 @@ public class NoZoomWebView extends WebView {
     public boolean onTouchEvent(MotionEvent event) {
         return false;
     }
+
+    public boolean canScrollHorizontally(int direction) {
+        return false;
+    }
 }
