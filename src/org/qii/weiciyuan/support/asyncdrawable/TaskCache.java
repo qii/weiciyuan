@@ -152,7 +152,7 @@ public class TaskCache {
     }
 
 
-    public static void waitForMsgDetailPictureDownload(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    public static boolean waitForMsgDetailPictureDownload(String url, FileDownloaderHttpHelper.DownloadListener downloadListener) {
         while (true) {
             DownloadWorker downloadWorker = null;
 
@@ -166,7 +166,7 @@ public class TaskCache {
 
             if (downloadWorker == null) {
                 if (localFileExist) {
-                    return;
+                    return true;
                 }
 
                 DownloadWorker newWorker = new DownloadWorker(url, FileLocationMethod.picture_large);
@@ -183,18 +183,18 @@ public class TaskCache {
 
             try {
                 downloadWorker.addDownloadListener(downloadListener);
-                downloadWorker.get(30, TimeUnit.SECONDS);
-                return;
+                return downloadWorker.get(30, TimeUnit.SECONDS);
+
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 Utility.printStackTrace(e);
-                return;
+                return false;
             } catch (ExecutionException e) {
                 Utility.printStackTrace(e);
-                return;
+                return false;
             } catch (TimeoutException e) {
                 Utility.printStackTrace(e);
-                return;
+                return false;
             } catch (CancellationException e) {
                 removeDownloadTask(url, downloadWorker);
             }

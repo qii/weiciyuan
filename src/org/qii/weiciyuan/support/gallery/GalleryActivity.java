@@ -262,10 +262,12 @@ public class GalleryActivity extends Activity {
                 return null;
             }
 
-            TaskCache.waitForMsgDetailPictureDownload(url, downloadListener);
-
-            String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_large);
-            return path;
+            boolean downloaded = TaskCache.waitForMsgDetailPictureDownload(url, downloadListener);
+            if (downloaded) {
+                return FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_large);
+            } else {
+                return null;
+            }
 
         }
 
@@ -296,8 +298,14 @@ public class GalleryActivity extends Activity {
 
             taskMap.remove(url);
 
-            if (TextUtils.isEmpty(bitmapPath) || iv == null)
+            if (TextUtils.isEmpty(bitmapPath) || iv == null) {
+
+                readError.setVisibility(View.VISIBLE);
+                readError.setText(getString(R.string.picture_cant_download_or_sd_cant_read));
                 return;
+            } else {
+                readError.setVisibility(View.INVISIBLE);
+            }
 
             if (!ImageTool.isThisBitmapCanRead(bitmapPath)) {
                 Toast.makeText(GalleryActivity.this, R.string.download_finished_but_cant_read_picture_file, Toast.LENGTH_SHORT).show();
@@ -347,6 +355,7 @@ public class GalleryActivity extends Activity {
             bindImageViewLongClickListener(imageView, url, bitmapPath);
             readError.setVisibility(View.INVISIBLE);
         } else {
+            readError.setText(getString(R.string.picture_read_failed));
             imageView.setVisibility(View.INVISIBLE);
             readError.setVisibility(View.VISIBLE);
         }
