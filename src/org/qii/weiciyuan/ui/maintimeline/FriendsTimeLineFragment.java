@@ -667,6 +667,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 }
                 break;
             case R.id.switch_theme:
+                //make sure activity has saved current left menu position
+                ((MainTimeLineActivity) getActivity()).saveNavigationPositionToDB();
                 SettingUtility.switchToAnotherTheme();
                 ((MainTimeLineActivity) getActivity()).reload();
                 break;

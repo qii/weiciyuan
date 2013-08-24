@@ -408,7 +408,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             saveNavigationPositionToDB();
     }
 
-    private void saveNavigationPositionToDB() {
+    public void saveNavigationPositionToDB() {
         int navPosition = getMenuFragment().getCurrentIndex() * 10;
         ActionBar actionBar = getActionBar();
         int second = 0;
