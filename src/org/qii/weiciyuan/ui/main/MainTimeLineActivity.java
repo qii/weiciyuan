@@ -502,13 +502,13 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         return fragment;
     }
 
-
+    //todo
     private class NewMsgInterruptBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             AccountBean newMsgAccountBean = (AccountBean) intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
             if (newMsgAccountBean.getUid().equals(MainTimeLineActivity.this.accountBean.getUid())) {
-                abortBroadcast();
+//                abortBroadcast();
             }
         }
     }

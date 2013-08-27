@@ -21,6 +21,7 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.CommentTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
+import org.qii.weiciyuan.othercomponent.unreadnotification.NotificationServiceHelper;
 import org.qii.weiciyuan.support.database.CommentToMeTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -347,7 +348,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         unreadBean = null;
         NotificationManager notificationManager = (NotificationManager) getActivity()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(Long.valueOf(GlobalContext.getInstance().getCurrentAccountId()).intValue());
+        notificationManager.cancel(NotificationServiceHelper.getCommentsToMeNotificationId(GlobalContext.getInstance().getAccountBean()));
     }
 
     private void addNewDataAndRememberPosition(CommentListBean newValue) {
