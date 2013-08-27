@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
 import android.app.ActionBar;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.CommentTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
+import org.qii.weiciyuan.othercomponent.unreadnotification.NotificationServiceHelper;
 import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -344,6 +346,10 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         }
 
         unreadBean = null;
+
+        NotificationManager notificationManager = (NotificationManager) getActivity()
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(NotificationServiceHelper.getMentionsCommentNotificationId(GlobalContext.getInstance().getAccountBean()));
     }
 
     private void addNewDataAndRememberPosition(CommentListBean newValue) {

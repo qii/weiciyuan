@@ -19,6 +19,7 @@ import org.qii.weiciyuan.bean.*;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.MentionTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
+import org.qii.weiciyuan.othercomponent.unreadnotification.NotificationServiceHelper;
 import org.qii.weiciyuan.support.database.MentionWeiboTimeLineDBTask;
 import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.lib.VelocityListView;
@@ -179,7 +180,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         unreadBean = null;
         NotificationManager notificationManager = (NotificationManager) getActivity()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(Long.valueOf(GlobalContext.getInstance().getCurrentAccountId()).intValue());
+        notificationManager.cancel(NotificationServiceHelper.getMentionsWeiboNotificationId(GlobalContext.getInstance().getAccountBean()));
 
 
     }
