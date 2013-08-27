@@ -47,7 +47,7 @@ public class MessageBean extends ItemBean implements Parcelable {
     private UserBean user;
     private GeoBean geo;
 
-    private ArrayList<PicUrls> pic_urls;
+    private ArrayList<PicUrls> pic_urls = new ArrayList<PicUrls>();
 
 
     private transient SpannableString listViewSpannableString;
