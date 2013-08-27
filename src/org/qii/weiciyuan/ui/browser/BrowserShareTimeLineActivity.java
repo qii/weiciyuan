@@ -6,7 +6,6 @@ import android.support.v4.content.Loader;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ShareListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -34,9 +33,10 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
                     .replace(android.R.id.content, new BrowserShareTimeLineFragment(url))
                     .commit();
         }
-        int count = getIntent().getIntExtra("count", 0);
-        String subTitle = String.format(getString(R.string.total_share_count), String.valueOf(count));
-        getActionBar().setSubtitle(subTitle);
+// 0.50 feature
+//        int count = getIntent().getIntExtra("count", 0);
+//        String subTitle = String.format(getString(R.string.total_share_count), String.valueOf(count));
+//        getActionBar().setSubtitle(subTitle);
 
     }
 
