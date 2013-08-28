@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import org.qii.weiciyuan.R;
 
@@ -30,14 +29,13 @@ public class TimeLineAvatarImageView extends TimeLineImageView {
         super(context, attrs, defStyle);
         LayoutInflater inflate = (LayoutInflater)
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflate.inflate(R.layout.timelineimageview_avatar_layout, null);
+        View v = inflate.inflate(R.layout.timelineimageview_avatar_layout, this, true);
         mImageView = (ImageView) v.findViewById(R.id.imageview);
         vImageView = (ImageView) v.findViewById(R.id.imageview_v);
         mImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        v.setBackgroundColor(Color.TRANSPARENT);
-        addView(v, new FrameLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        this.setForeground(getResources().getDrawable(R.drawable.timelineimageview_cover));
+        this.setAddStatesFromChildren(true);
     }
 
     public void isVerified() {

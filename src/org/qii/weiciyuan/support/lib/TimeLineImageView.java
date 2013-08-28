@@ -31,17 +31,21 @@ public class TimeLineImageView extends FrameLayout {
         this(context, attrs, 0);
     }
 
+
+    //todo need refactor
     public TimeLineImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        LayoutInflater inflate = (LayoutInflater)
-                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflate.inflate(R.layout.timelineimageview_layout, this, true);
-        mImageView = (ImageView) v.findViewById(R.id.imageview);
-        mImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
+        if (!(this instanceof TimeLineAvatarImageView)) {
+            LayoutInflater inflate = (LayoutInflater)
+                    context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View v = inflate.inflate(R.layout.timelineimageview_layout, this, true);
+            mImageView = (ImageView) v.findViewById(R.id.imageview);
+            mImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        pb = (ProgressBar) v.findViewById(R.id.imageview_pb);
-        this.setBackgroundResource(R.drawable.timelineimageview_cover);
-        this.setAddStatesFromChildren(true);
+            pb = (ProgressBar) v.findViewById(R.id.imageview_pb);
+            this.setForeground(getResources().getDrawable(R.drawable.timelineimageview_cover));
+            this.setAddStatesFromChildren(true);
+        }
     }
 
 
