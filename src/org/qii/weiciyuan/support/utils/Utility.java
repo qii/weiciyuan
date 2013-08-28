@@ -268,7 +268,7 @@ public class Utility {
 
     private static void configLed(Notification.Builder builder) {
         if (SettingUtility.allowLed()) {
-            builder.setLights(Color.WHITE, 300, 1000);
+            builder.setLights(Color.WHITE, 2000, 2000);
         }
 
     }
