@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:foreground="@drawable/timelineimageview_cover"
-             android:addStatesFromChildren="true"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       android:foreground="@drawable/timelineimageview_cover"
+       android:addStatesFromChildren="true"
 
-             android:layout_width="fill_parent"
-             android:layout_height="fill_parent">
+       android:layout_width="fill_parent"
+       android:layout_height="fill_parent">
 
     <ImageView
         android:id="@+id/imageview"
@@ -20,4 +20,4 @@
         android:layout_gravity="center"
         android:visibility="gone"
         style="?android:attr/progressBarStyleHorizontal"/>
-</FrameLayout>
+</merge>

@@ -35,14 +35,13 @@ public class TimeLineImageView extends FrameLayout {
         super(context, attrs, defStyle);
         LayoutInflater inflate = (LayoutInflater)
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflate.inflate(R.layout.timelineimageview_layout, null);
+        View v = inflate.inflate(R.layout.timelineimageview_layout, this, true);
         mImageView = (ImageView) v.findViewById(R.id.imageview);
         mImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         pb = (ProgressBar) v.findViewById(R.id.imageview_pb);
-        v.setBackgroundColor(Color.TRANSPARENT);
-        addView(v, new FrameLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        this.setBackgroundResource(R.drawable.timelineimageview_cover);
+        this.setAddStatesFromChildren(true);
     }
 
 
