@@ -44,7 +44,7 @@ public class MyViewPager extends ViewPager {
         this.activity = activity;
         this.gestureDetector = gestureDetector;
         this.topView = ((View) (activity.findViewById(android.R.id.content).getParent()));
-        this.max_motion_event_down_x_position = Utility.dip2px(20);
+        this.max_motion_event_down_x_position = Utility.dip2px(25);
 
     }
 
