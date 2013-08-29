@@ -43,7 +43,7 @@ public class WeiboDetailImageView extends FrameLayout {
         super(context, attrs, defStyle);
         LayoutInflater inflate = (LayoutInflater)
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflate.inflate(R.layout.weibodetailimageview_layout, null);
+        View v = inflate.inflate(R.layout.weibodetailimageview_layout, this, true);
         mImageView = (ImageView) v.findViewById(R.id.imageview);
         mImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -51,9 +51,7 @@ public class WeiboDetailImageView extends FrameLayout {
 
         pb = (ProgressBar) v.findViewById(R.id.imageview_pb);
         retry = (Button) v.findViewById(R.id.retry);
-        v.setBackgroundColor(Color.TRANSPARENT);
-        addView(v, new FrameLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
     }
 
 
@@ -69,7 +67,6 @@ public class WeiboDetailImageView extends FrameLayout {
     public ImageView getImageView() {
         return mImageView;
     }
-
 
 
     public void setProgress(int value, int max) {
