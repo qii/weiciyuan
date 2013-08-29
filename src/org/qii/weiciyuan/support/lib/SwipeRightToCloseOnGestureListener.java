@@ -42,7 +42,7 @@ public class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOn
                 return false;
             }
         }
-        final int MAX_MOTION_EVENT_DOWN__X_POSITION = Utility.dip2px(100);
+        final int MAX_MOTION_EVENT_DOWN__X_POSITION = Utility.dip2px(20);
         float s = e2.getRawX() - firstPosition[0];
         if ((this.viewPager == null || this.viewPager.getCurrentItem() == 0) && firstPosition[0] <= MAX_MOTION_EVENT_DOWN__X_POSITION) {
             this.topView.setTranslationX(s);
