@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -25,7 +26,7 @@ import java.io.File;
  * insert progress update listener into  download worker if it exists
  * or create a new download worker
  */
-public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, Bitmap> {
+public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
 
     private WeiboDetailImageView view;
     private ProgressBar pb;
@@ -41,9 +42,6 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, Bitmap> {
         this.msg = msg;
         this.retry = view.getRetryButton();
 
-        if (pb != null && pb.getVisibility() != View.VISIBLE) {
-            pb.setVisibility(View.VISIBLE);
-        }
 
         if (retry != null) {
             retry.setVisibility(View.INVISIBLE);
@@ -51,7 +49,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, Bitmap> {
     }
 
     @Override
-    protected Bitmap doInBackground(Void... arg) {
+    protected String doInBackground(Void... arg) {
         if (isCancelled()) {
             return null;
         }
@@ -63,17 +61,13 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, Bitmap> {
         String largePath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
         String data = "";
         if (new File(largePath).exists()) {
-            data = msg.getOriginal_pic();
-            method = FileLocationMethod.picture_large;
+            data = largePath;
         } else if (new File(middlePath).exists()) {
-            data = msg.getBmiddle_pic();
-            method = FileLocationMethod.picture_bmiddle;
-        } else {
-            data = msg.getBmiddle_pic();
-            method = FileLocationMethod.picture_bmiddle;
+            data = middlePath;
         }
 
-        return ImageTool.getMiddlePictureInBrowserMSGActivity(data, method, downloadListener);
+        return data;
+//        ImageTool.getMiddlePictureInBrowserMSGActivity(data, method, downloadListener);
 
     }
 
@@ -102,9 +96,8 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, Bitmap> {
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
         if (pb != null) {
-            if (pb.getVisibility() != View.VISIBLE) {
-                pb.setVisibility(View.VISIBLE);
-            }
+            pb.setVisibility(View.VISIBLE);
+
             if (!pbFlag) {
                 pb.setIndeterminate(false);
                 pbFlag = true;
@@ -117,7 +110,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, Bitmap> {
     }
 
     @Override
-    protected void onCancelled(Bitmap bitmap) {
+    protected void onCancelled(String bitmap) {
 
         if (pb != null)
             pb.setVisibility(View.INVISIBLE);
@@ -126,16 +119,18 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, Bitmap> {
     }
 
     @Override
-    protected void onPostExecute(Bitmap bitmap) {
+    protected void onPostExecute(String bitmap) {
+        retry.setVisibility(View.INVISIBLE);
         if (pb != null)
             pb.setVisibility(View.INVISIBLE);
-        if (bitmap != null) {
-            view.setTag(true);
-            view.getImageView().setTag(true);
-            view.setVisibility(View.VISIBLE);
-            view.setImageBitmap(bitmap);
-            view.setAlpha(0.0f);
-            view.animate().alpha(1.0f).setDuration(200);
+        if (!TextUtils.isEmpty(bitmap)) {
+
+            if (!bitmap.endsWith(".gif")) {
+                readNormalPic(bitmap);
+            } else {
+                view.setGif(bitmap);
+            }
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -157,6 +152,18 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, Bitmap> {
         }
 
 
+    }
+
+    private void readNormalPic(String path) {
+
+        Bitmap bitmap = ImageTool.readNormalPic(path, 2000, 2000);
+
+        view.setTag(true);
+        view.getImageView().setTag(true);
+        view.setVisibility(View.VISIBLE);
+        view.setImageBitmap(bitmap);
+        view.setAlpha(0.0f);
+        view.animate().alpha(1.0f).setDuration(200);
     }
 
 }

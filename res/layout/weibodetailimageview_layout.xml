@@ -16,6 +16,12 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>
 
+        <org.qii.weiciyuan.support.gallery.NoZoomWebView
+            android:id="@+id/gif"
+            android:visibility="gone"
+            android:layout_width="400dp"
+            android:layout_height="400dp"/>
+
 
     </FrameLayout>
 
