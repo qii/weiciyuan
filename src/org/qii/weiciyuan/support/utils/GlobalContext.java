@@ -73,6 +73,9 @@ public final class GlobalContext extends Application {
         return globalContext;
     }
 
+    public Handler getHandler() {
+        return handler;
+    }
 
     public GroupListBean getGroup() {
         if (group == null) {

@@ -31,8 +31,6 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
     private ProgressBar pb;
     private Button retry;
 
-    private boolean pbFlag = false;
-
     private MessageBean msg;
 
     public MsgDetailReadWorker(WeiboDetailImageView view, MessageBean msg) {
@@ -65,6 +63,15 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
                 && TaskCache.isThisUrlTaskFinished(msg.getBmiddle_pic())) {
             return middlePath;
         }
+
+        GlobalContext.getInstance().getHandler().post(new Runnable() {
+            @Override
+            public void run() {
+                pb.setVisibility(View.VISIBLE);
+                pb.setIndeterminate(false);
+
+            }
+        });
 
         if (Utility.isWifi(GlobalContext.getInstance())) {
             boolean result = TaskCache.waitForPictureDownload(msg.getOriginal_pic(), downloadListener, oriPath, FileLocationMethod.picture_large);
@@ -103,10 +110,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
         if (this.getStatus() == Status.RUNNING) {
             pb.setVisibility(View.VISIBLE);
 
-            if (!pbFlag) {
-                pb.setIndeterminate(false);
-                pbFlag = true;
-            }
+
             Integer progress = values[0];
             Integer max = values[1];
             pb.setMax(max);
