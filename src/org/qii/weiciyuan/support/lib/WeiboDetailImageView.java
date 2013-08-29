@@ -70,11 +70,8 @@ public class WeiboDetailImageView extends FrameLayout {
 
 
     public void setProgress(int value, int max) {
-        if (pb.getVisibility() != View.VISIBLE) {
-            pb.setVisibility(View.VISIBLE);
-        }
-        if (pb.getMax() != max)
-            pb.setMax(max);
+        pb.setVisibility(View.VISIBLE);
+        pb.setMax(max);
         pb.setProgress(value);
     }
 

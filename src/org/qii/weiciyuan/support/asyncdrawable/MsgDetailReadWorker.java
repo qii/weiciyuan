@@ -17,8 +17,7 @@ import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-
-import java.io.File;
+import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
@@ -41,11 +40,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
         this.pb = this.view.getProgressBar();
         this.msg = msg;
         this.retry = view.getRetryButton();
-
-
-        if (retry != null) {
-            retry.setVisibility(View.INVISIBLE);
-        }
+        retry.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -54,20 +49,30 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
             return null;
         }
 
-        TaskCache.waitForMsgDetailPictureDownload(msg, downloadListener);
 
-        FileLocationMethod method;
-        String middlePath = FileManager.getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
-        String largePath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
-        String data = "";
-        if (new File(largePath).exists()) {
-            data = largePath;
-        } else if (new File(middlePath).exists()) {
-            data = middlePath;
+        String oriPath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
+
+        if (ImageTool.isThisBitmapCanRead(oriPath)
+                && TaskCache.isThisUrlTaskFinished(msg.getOriginal_pic())) {
+
+            return oriPath;
         }
 
-        return data;
-//        ImageTool.getMiddlePictureInBrowserMSGActivity(data, method, downloadListener);
+
+        String middlePath = FileManager.getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
+
+        if (ImageTool.isThisBitmapCanRead(middlePath)
+                && TaskCache.isThisUrlTaskFinished(msg.getBmiddle_pic())) {
+            return middlePath;
+        }
+
+        if (Utility.isWifi(GlobalContext.getInstance())) {
+            boolean result = TaskCache.waitForPictureDownload(msg.getOriginal_pic(), downloadListener, oriPath, FileLocationMethod.picture_large);
+            return result ? oriPath : null;
+        } else {
+            boolean result = TaskCache.waitForPictureDownload(msg.getBmiddle_pic(), downloadListener, middlePath, FileLocationMethod.picture_bmiddle);
+            return result ? middlePath : null;
+        }
 
     }
 
@@ -95,7 +100,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        if (pb != null) {
+        if (this.getStatus() == Status.RUNNING) {
             pb.setVisibility(View.VISIBLE);
 
             if (!pbFlag) {
@@ -106,23 +111,21 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
             Integer max = values[1];
             pb.setMax(max);
             pb.setProgress(progress);
+
         }
     }
 
     @Override
     protected void onCancelled(String bitmap) {
-
-        if (pb != null)
-            pb.setVisibility(View.INVISIBLE);
-
+        pb.setVisibility(View.INVISIBLE);
         super.onCancelled(bitmap);
     }
 
     @Override
     protected void onPostExecute(String bitmap) {
         retry.setVisibility(View.INVISIBLE);
-        if (pb != null)
-            pb.setVisibility(View.INVISIBLE);
+        pb.setVisibility(View.INVISIBLE);
+
         if (!TextUtils.isEmpty(bitmap)) {
 
             if (!bitmap.endsWith(".gif")) {

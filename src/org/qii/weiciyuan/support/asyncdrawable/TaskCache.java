@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
-import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -77,75 +76,6 @@ public class TaskCache {
                 return false;
             } catch (CancellationException e) {
                 removeDownloadTask(url, downloadWorker);
-            }
-
-        }
-    }
-
-    /**
-     * todo
-     *
-     * @param msg
-     * @param downloadListener
-     */
-    public static void waitForMsgDetailPictureDownload(MessageBean msg, FileDownloaderHttpHelper.DownloadListener downloadListener) {
-        while (true) {
-            DownloadWorker downloadWorker = null;
-
-
-            FileLocationMethod method;
-            String middleUrl = msg.getBmiddle_pic();
-            String largeUrl = msg.getOriginal_pic();
-            String middlePath = FileManager.getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
-            String largePath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
-
-
-            downloadWorker = TaskCache.downloadTasks.get(largeUrl);
-            boolean localFileExist = new File(largePath).exists();
-
-            if (downloadWorker == null) {
-                downloadWorker = TaskCache.downloadTasks.get(middleUrl);
-            }
-
-            if (downloadWorker == null) {
-                if (localFileExist) {
-                    return;
-                } else {
-                    localFileExist = new File(middlePath).exists();
-                    if (localFileExist) {
-                        return;
-                    }
-                }
-
-
-                DownloadWorker newWorker = new DownloadWorker(middleUrl, FileLocationMethod.picture_bmiddle);
-                synchronized (backgroundWifiDownloadPicturesWorkLock) {
-                    downloadWorker = TaskCache.downloadTasks.putIfAbsent(middleUrl, newWorker);
-
-                }
-                if (downloadWorker == null) {
-                    downloadWorker = newWorker;
-                    downloadWorker.executeOnExecutor(MyAsyncTask.DOWNLOAD_THREAD_POOL_EXECUTOR);
-                }
-            }
-
-
-            try {
-                downloadWorker.addDownloadListener(downloadListener);
-                downloadWorker.get(30, TimeUnit.SECONDS);
-                return;
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                Utility.printStackTrace(e);
-                return;
-            } catch (ExecutionException e) {
-                Utility.printStackTrace(e);
-                return;
-            } catch (TimeoutException e) {
-                Utility.printStackTrace(e);
-                return;
-            } catch (CancellationException e) {
-                removeDownloadTask(middleUrl, downloadWorker);
             }
 
         }
