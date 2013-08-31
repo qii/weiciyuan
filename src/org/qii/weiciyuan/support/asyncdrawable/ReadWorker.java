@@ -39,6 +39,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
     private int mShortAnimationDuration;
     private WeakReference<ProgressBar> pbWeakReference;
     private boolean isMultiPictures = false;
+    private TimeLineImageView timeLineImageView;
 
     public String getUrl() {
         return data;
@@ -63,6 +64,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
     public ReadWorker(TimeLineImageView view, String url, FileLocationMethod method) {
 
         this(view.getImageView(), url, method);
+        this.timeLineImageView = view;
         this.pbWeakReference = new WeakReference<ProgressBar>(view.getProgressBar());
         if (SettingUtility.getEnableBigPic()) {
             view.getProgressBar().setVisibility(View.VISIBLE);
@@ -199,6 +201,8 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
                 }
 
                 if (bitmap != null) {
+                    if (timeLineImageView != null)
+                        timeLineImageView.setGifFlag(ImageTool.isThisPictureGif(getUrl()));
                     playImageViewAnimation(imageView, bitmap);
                     lruCache.put(data, bitmap);
                 } else if (failedResult != null) {
@@ -268,6 +272,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         alphaAnimation.setDuration(500);
         view.startAnimation(alphaAnimation);
         view.setTag(getUrl());
+
 
 //        final Animation anim_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_out);
 //        final Animation anim_in = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_in);

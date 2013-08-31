@@ -260,6 +260,7 @@ public class TimeLineBitmapDownloader {
             if (view.getAlpha() != 1.0f) {
                 view.setAlpha(1.0f);
             }
+            view.setGifFlag(ImageTool.isThisPictureGif(urlKey));
             cancelPotentialDownload(urlKey, view.getImageView());
         } else {
 
