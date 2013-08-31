@@ -256,7 +256,7 @@ public class TimeLineBitmapDownloader {
         if (bitmap != null) {
             view.setImageBitmap(bitmap);
             view.getImageView().setTag(urlKey);
-            view.getProgressBar().setVisibility(View.GONE);
+            view.getProgressBar().setVisibility(View.INVISIBLE);
             if (view.getAlpha() != 1.0f) {
                 view.setAlpha(1.0f);
             }
@@ -265,7 +265,7 @@ public class TimeLineBitmapDownloader {
 
             if (isFling) {
                 view.setImageDrawable(defaultBG);
-                view.getProgressBar().setVisibility(View.GONE);
+                view.getProgressBar().setVisibility(View.INVISIBLE);
                 return;
             }
 

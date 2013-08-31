@@ -68,7 +68,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
             view.getProgressBar().setVisibility(View.VISIBLE);
             view.getProgressBar().setProgress(0);
         } else {
-            view.getProgressBar().setVisibility(View.GONE);
+            view.getProgressBar().setVisibility(View.INVISIBLE);
             view.getProgressBar().setProgress(0);
         }
     }
@@ -194,7 +194,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
                 if (pbWeakReference != null) {
                     ProgressBar pb = pbWeakReference.get();
                     if (pb != null) {
-                        pb.setVisibility(View.GONE);
+                        pb.setVisibility(View.INVISIBLE);
                     }
                 }
 
@@ -231,7 +231,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
             return;
         ProgressBar pb = pbWeakReference.get();
         if (pb != null) {
-            pb.setVisibility(View.GONE);
+            pb.setVisibility(View.INVISIBLE);
         }
     }
 

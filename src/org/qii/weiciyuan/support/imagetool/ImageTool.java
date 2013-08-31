@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Rect;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
@@ -793,6 +794,10 @@ public class ImageTool {
             }
         }
         return tmp;
+    }
+
+    public static boolean isThisPictureGif(String url) {
+        return !TextUtils.isEmpty(url) && url.endsWith(".gif");
     }
 }
 
