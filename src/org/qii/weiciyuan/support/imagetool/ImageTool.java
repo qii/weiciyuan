@@ -304,6 +304,10 @@ public class ImageTool {
     }
 
     public static Bitmap getRoundedCornerPic(String filePath, int reqWidth, int reqHeight) {
+        return getRoundedCornerPic(filePath, reqWidth, reqHeight, 0);
+    }
+
+    public static Bitmap getRoundedCornerPic(String filePath, int reqWidth, int reqHeight, int cornerRadius) {
         try {
 
             if (!FileManager.isExternalStorageMounted()) {
@@ -338,22 +342,23 @@ public class ImageTool {
                 return null;
             }
 
+            if (cornerRadius > 0) {
+                int[] size = calcResize(bitmap.getWidth(), bitmap.getHeight(), reqWidth, reqHeight);
+                if (size[0] > 0 && size[1] > 0) {
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size[0], size[1], true);
+                    if (scaledBitmap != bitmap) {
+                        bitmap.recycle();
+                        bitmap = scaledBitmap;
+                    }
+                }
 
-//            int[] size = calcResize(bitmap.getWidth(), bitmap.getHeight(), reqWidth, reqHeight);
-//            if (size[0] > 0 && size[1] > 0) {
-//                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size[0], size[1], true);
-//                if (scaledBitmap != bitmap) {
-//                    bitmap.recycle();
-//                    bitmap = scaledBitmap;
-//                }
-//            }
-//
-//            Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(bitmap);
-//            if (roundedBitmap != bitmap) {
-//                bitmap.recycle();
-//                bitmap = roundedBitmap;
-//            }
+                Bitmap roundedBitmap = ImageEdit.getRoundedCornerBitmap(bitmap, cornerRadius);
+                if (roundedBitmap != bitmap) {
+                    bitmap.recycle();
+                    bitmap = roundedBitmap;
+                }
 
+            }
             return bitmap;
         } catch (OutOfMemoryError ignored) {
             ignored.printStackTrace();

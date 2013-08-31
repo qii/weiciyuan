@@ -145,7 +145,18 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         if (isCancelled())
             return null;
 
-        Bitmap bitmap = ImageTool.getRoundedCornerPic(path, width, height);
+        Bitmap bitmap;
+
+        switch (method) {
+            case avatar_small:
+            case avatar_large:
+                bitmap = ImageTool.getRoundedCornerPic(path, width, height, Utility.dip2px(2));
+                break;
+            default:
+                bitmap = ImageTool.getRoundedCornerPic(path, width, height, 0);
+                break;
+        }
+
         if (bitmap == null) {
             this.failedResult = FailedResult.readFailed;
         }
