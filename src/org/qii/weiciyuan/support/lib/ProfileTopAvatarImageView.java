@@ -35,8 +35,6 @@ public class ProfileTopAvatarImageView extends TimeLineAvatarImageView {
         vImageView = (ImageView) v.findViewById(R.id.imageview_v);
         mImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        this.setForeground(getResources().getDrawable(R.drawable.timelineimageview_cover));
-        this.setAddStatesFromChildren(true);
     }
 
 

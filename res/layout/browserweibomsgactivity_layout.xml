@@ -19,12 +19,10 @@
         android:layout_width="match_parent"
         android:rowOrderPreserved="false">
 
-        <ImageView
+        <org.qii.weiciyuan.support.lib.ProfileTopAvatarImageView
             android:layout_rowSpan="2"
             android:layout_width="@dimen/browser_msg_avatar_width"
             android:layout_height="@dimen/browser_msg_avatar_height"
-            android:padding="1px"
-            android:background="@drawable/bg_timeline_avatar"
             android:id="@+id/avatar"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="5dp"/>

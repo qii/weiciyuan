@@ -30,6 +30,7 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.gallery.GalleryActivity;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.ProfileTopAvatarImageView;
 import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
@@ -97,7 +98,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
         ImageView mapView;
 
-        ImageView avatar;
+        ProfileTopAvatarImageView avatar;
         WeiboDetailImageView content_pic;
         GridLayout content_pic_multi;
         WeiboDetailImageView repost_pic;
@@ -377,7 +378,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         layout.repost_count = (TextView) view.findViewById(R.id.repost_count);
         layout.count_layout = view.findViewById(R.id.count_layout);
 
-        layout.avatar = (ImageView) view.findViewById(R.id.avatar);
+        layout.avatar = (ProfileTopAvatarImageView) view.findViewById(R.id.avatar);
         layout.content_pic = (WeiboDetailImageView) view.findViewById(R.id.content_pic);
         layout.content_pic_multi = (GridLayout) view.findViewById(R.id.content_pic_multi);
         layout.repost_pic = (WeiboDetailImageView) view.findViewById(R.id.repost_content_pic);
@@ -448,13 +449,14 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     }
 
     public void buildViewData(final boolean refreshPic) {
+        layout.avatar.checkVerified(msg.getUser());
         if (msg.getUser() != null) {
             if (TextUtils.isEmpty(msg.getUser().getRemark()))
                 layout.username.setText(msg.getUser().getScreen_name());
             else
                 layout.username.setText(msg.getUser().getScreen_name() + "(" + msg.getUser().getRemark() + ")");
 
-            TimeLineBitmapDownloader.getInstance().downloadAvatar(layout.avatar, msg.getUser());
+            TimeLineBitmapDownloader.getInstance().downloadAvatar(layout.avatar.getImageView(), msg.getUser());
         }
         layout.content.setText(msg.getListViewSpannableString());
         layout.content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
