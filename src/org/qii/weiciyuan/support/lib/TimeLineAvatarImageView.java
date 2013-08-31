@@ -3,11 +3,13 @@ package org.qii.weiciyuan.support.lib;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
 
 /**
  * User: qii
@@ -15,7 +17,7 @@ import org.qii.weiciyuan.R;
  */
 public class TimeLineAvatarImageView extends TimeLineImageView {
 
-    private ImageView vImageView;
+    protected ImageView vImageView;
 
     public TimeLineAvatarImageView(Context context) {
         super(context);
@@ -27,6 +29,9 @@ public class TimeLineAvatarImageView extends TimeLineImageView {
 
     public TimeLineAvatarImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+    }
+
+    protected void initLayout(Context context) {
         LayoutInflater inflate = (LayoutInflater)
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflate.inflate(R.layout.timelineimageview_avatar_layout, this, true);
@@ -38,8 +43,24 @@ public class TimeLineAvatarImageView extends TimeLineImageView {
         this.setAddStatesFromChildren(true);
     }
 
-    public void isVerified() {
-        vImageView.setImageDrawable(getResources().getDrawable(R.drawable.portrait_v_yellow));
+    public void checkVerified(UserBean user) {
+        if (user.isVerified() && !TextUtils.isEmpty(user.getVerified_reason())) {
+            if (user.getVerified_type() == 0) {
+                isVerifiedPersonal();
+            } else {
+                isVerifiedEnterprise();
+            }
+        } else {
+            reset();
+        }
+    }
+
+    public void isVerifiedPersonal() {
+        vImageView.setImageDrawable(getResources().getDrawable(R.drawable.avatar_vip));
+    }
+
+    public void isVerifiedEnterprise() {
+        vImageView.setImageDrawable(getResources().getDrawable(R.drawable.avatar_enterprise_vip));
     }
 
     public void reset() {

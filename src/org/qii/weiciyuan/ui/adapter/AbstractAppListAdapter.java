@@ -480,11 +480,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 return true;
             }
         });
-        if (user.isVerified()) {
-            view.isVerified();
-        } else {
-            view.reset();
-        }
+        view.checkVerified(user);
         buildAvatar(view.getImageView(), position, user);
     }
 

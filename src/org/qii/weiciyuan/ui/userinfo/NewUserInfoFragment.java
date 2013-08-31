@@ -300,11 +300,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         else
             nickname.setText(userBean.getScreen_name() + "(" + userBean.getRemark() + ")");
 
-        if (userBean.isVerified()) {
-            avatar.isVerified();
-        } else {
-            avatar.reset();
-        }
+        avatar.checkVerified(userBean);
 
         if (!userBean.isVerified()) {
             rightPoint.setVisibility(View.GONE);

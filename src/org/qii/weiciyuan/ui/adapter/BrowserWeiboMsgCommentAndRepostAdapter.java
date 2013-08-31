@@ -425,11 +425,7 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
                 return true;
             }
         });
-        if (user.isVerified()) {
-            view.isVerified();
-        } else {
-            view.reset();
-        }
+        view.checkVerified(user);
         buildAvatar(view.getImageView(), position, user);
     }
 

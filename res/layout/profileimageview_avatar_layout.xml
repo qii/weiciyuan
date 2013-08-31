@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
        android:foreground="@drawable/timelineimageview_cover"
-       android:layout_width="wrap_content"
        android:addStatesFromChildren="true"
-       android:layout_height="wrap_content">
+    >
 
     <org.qii.weiciyuan.support.lib.PerformanceImageView
         android:id="@+id/imageview"
@@ -12,8 +11,8 @@
         android:layout_marginLeft="0dp"
         android:layout_marginTop="0dp"
         android:layout_gravity="right|bottom"
-        android:layout_width="@dimen/timeline_avatar_width"
-        android:layout_height="@dimen/timeline_avatar_height"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <org.qii.weiciyuan.support.lib.PerformanceImageView
         android:id="@+id/imageview_v"

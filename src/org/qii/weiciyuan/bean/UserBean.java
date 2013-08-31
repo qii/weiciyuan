@@ -202,6 +202,14 @@ public class UserBean implements Parcelable {
         this.verified_reason = verified_reason;
     }
 
+    public int getVerified_type() {
+        return verified_type;
+    }
+
+    public void setVerified_type(int verified_type) {
+        this.verified_type = verified_type;
+    }
+
     public String getOnline_status() {
         return online_status;
     }
@@ -241,6 +249,7 @@ public class UserBean implements Parcelable {
     private String allow_all_comment;
     private String avatar_large;
     private String verified_reason;
+    private int verified_type;
     private boolean follow_me;
     private String online_status;
     private String bi_followers_count;
@@ -297,6 +306,7 @@ public class UserBean implements Parcelable {
         dest.writeString(allow_all_comment);
         dest.writeString(avatar_large);
         dest.writeString(verified_reason);
+        dest.writeInt(verified_type);
         dest.writeString(online_status);
         dest.writeString(bi_followers_count);
         dest.writeString(followers_count);
@@ -330,6 +340,7 @@ public class UserBean implements Parcelable {
                     userBean.allow_all_comment = in.readString();
                     userBean.avatar_large = in.readString();
                     userBean.verified_reason = in.readString();
+                    userBean.verified_type = in.readInt();
                     userBean.online_status = in.readString();
                     userBean.bi_followers_count = in.readString();
                     userBean.followers_count = in.readString();
