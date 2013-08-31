@@ -1,6 +1,5 @@
 package org.qii.weiciyuan.ui.adapter;
 
-import android.content.res.TypedArray;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,7 +9,9 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
 
@@ -38,10 +39,7 @@ public class UserListAdapter extends BaseAdapter {
         this.activity = activity;
 
         defaultBG = activity.getResources().getColor(R.color.transparent);
-
-        int[] attrs = new int[]{R.attr.listview_checked_color};
-        TypedArray ta = activity.getActivity().obtainStyledAttributes(attrs);
-        checkedBG = ta.getColor(0, 430);
+        checkedBG = ThemeUtility.getColor(R.attr.listview_checked_color);
 
         listView.setRecyclerListener(new AbsListView.RecyclerListener() {
             @Override
@@ -49,7 +47,7 @@ public class UserListAdapter extends BaseAdapter {
                 ViewHolder holder = (ViewHolder) view.getTag();
                 if (holder == null)
                     return;
-                holder.avatar.setImageBitmap(null);
+                holder.avatar.setImageDrawable(null);
             }
         });
     }
@@ -87,7 +85,7 @@ public class UserListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.user_listview_item_layout, parent, false);
             holder.username = (TextView) convertView.findViewById(R.id.username);
             holder.content = (TextView) convertView.findViewById(R.id.content);
-            holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
+            holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
             holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
             convertView.setTag(holder);
         } else {
@@ -110,13 +108,12 @@ public class UserListAdapter extends BaseAdapter {
 
 
         UserBean user = getList().get(position);
-
-
+        holder.avatar.checkVerified(user);
         holder.username.setText(user.getScreen_name());
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
             boolean isFling = ((AbstractUserListFragment) activity).isListViewFling();
-            commander.downloadAvatar(holder.avatar, user, isFling);
+            commander.downloadAvatar(holder.avatar.getImageView(), user, isFling);
         }
         holder.content.setText(user.getDescription());
 
@@ -155,7 +152,7 @@ public class UserListAdapter extends BaseAdapter {
     private class ViewHolder {
         TextView username;
         TextView content;
-        ImageView avatar;
+        TimeLineAvatarImageView avatar;
         RelativeLayout listview_root;
     }
 
