@@ -2,7 +2,6 @@ package org.qii.weiciyuan.ui.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.text.Layout;
@@ -28,6 +27,7 @@ import org.qii.weiciyuan.support.lib.*;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
@@ -97,10 +97,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
 
         defaultBG = fragment.getResources().getColor(R.color.transparent);
-
-        int[] attrs = new int[]{R.attr.listview_checked_color};
-        TypedArray ta = fragment.getActivity().obtainStyledAttributes(attrs);
-        checkedBG = ta.getColor(0, 430);
+        checkedBG = ThemeUtility.getColor(R.attr.listview_checked_color);
 
         if (pre) {
             for (int i = 0; i < PREF_LISTVIEW_ITEM_VIEW_COUNT; i++) {
