@@ -176,6 +176,8 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
             holder.avatar.setVisibility(View.INVISIBLE);
         }
 
+        holder.avatar.checkVerified(user);
+
         holder.content.setText(comment.getListViewSpannableString());
 
         holder.time.setTime(comment.getMills());
@@ -234,6 +236,7 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
             holder.content.setText(msg.getListViewSpannableString());
         }
 
+        holder.avatar.checkVerified(user);
 
         holder.time.setTime(msg.getMills());
         holder.reply.setVisibility(View.GONE);

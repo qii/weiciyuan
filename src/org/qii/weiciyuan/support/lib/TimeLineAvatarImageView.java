@@ -44,7 +44,7 @@ public class TimeLineAvatarImageView extends TimeLineImageView {
     }
 
     public void checkVerified(UserBean user) {
-        if (user.isVerified() && !TextUtils.isEmpty(user.getVerified_reason())) {
+        if (user != null && user.isVerified() && !TextUtils.isEmpty(user.getVerified_reason())) {
             if (user.getVerified_type() == 0) {
                 isVerifiedPersonal();
             } else {
