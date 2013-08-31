@@ -137,6 +137,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                         drawable = holder.repost_content_pic.getImageView().getDrawable();
                         clearRepostPictureBitmap(holder, drawable);
 
+                        clearMultiPics(holder.content_pic_multi);
+                        clearMultiPics(holder.repost_content_pic_multi);
+
                         if (!tag.equals(index)) {
                             holder.listview_root.removeAllViewsInLayout();
                             holder.listview_root = null;
@@ -146,10 +149,21 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 }
             }
 
+            void clearMultiPics(GridLayout gridLayout) {
+                if (gridLayout == null)
+                    return;
+                for (int i = 0; i < gridLayout.getChildCount(); i++) {
+                    ImageView iv = (ImageView) gridLayout.getChildAt(i);
+                    if (iv != null) {
+                        iv.setImageDrawable(null);
+                    }
+                }
+            }
+
             void clearAvatarBitmap(ViewHolder holder, Drawable drawable) {
                 if (!(drawable instanceof PictureBitmapDrawable)) {
                     drawable.setCallback(null);
-                    holder.avatar.setImageBitmap(null);
+                    holder.avatar.setImageDrawable(null);
                     holder.avatar.getImageView().clearAnimation();
                 }
             }
@@ -157,7 +171,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             void clearPictureBitmap(ViewHolder holder, Drawable drawable) {
                 if (!(drawable instanceof PictureBitmapDrawable)) {
                     drawable.setCallback(null);
-                    holder.content_pic.setImageBitmap(null);
+                    holder.content_pic.setImageDrawable(null);
                     holder.content_pic.getImageView().clearAnimation();
                 }
             }
@@ -165,7 +179,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             void clearRepostPictureBitmap(ViewHolder holder, Drawable drawable) {
                 if (!(drawable instanceof PictureBitmapDrawable)) {
                     drawable.setCallback(null);
-                    holder.repost_content_pic.setImageBitmap(null);
+                    holder.repost_content_pic.setImageDrawable(null);
                     holder.repost_content_pic.getImageView().clearAnimation();
                 }
             }
