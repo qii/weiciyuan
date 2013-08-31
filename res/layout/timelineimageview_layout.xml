@@ -11,6 +11,14 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
 
+    <ImageView
+        android:id="@+id/gif_flag"
+        android:visibility="invisible"
+        android:src="@drawable/ic_play_gif"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 
     <ProgressBar
         android:id="@+id/imageview_pb"

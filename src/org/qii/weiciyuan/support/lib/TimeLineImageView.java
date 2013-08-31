@@ -17,10 +17,13 @@ import org.qii.weiciyuan.R;
 /**
  * User: qii
  * Date: 12-12-18
+ * todo
+ * this class and its child class need to be refactored
  */
 public class TimeLineImageView extends FrameLayout {
 
     protected ImageView mImageView;
+    private ImageView gifFlag;
     private ProgressBar pb;
 
     public TimeLineImageView(Context context) {
@@ -41,6 +44,7 @@ public class TimeLineImageView extends FrameLayout {
             View v = inflate.inflate(R.layout.timelineimageview_layout, this, true);
             mImageView = (ImageView) v.findViewById(R.id.imageview);
             mImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
+            gifFlag = (ImageView) v.findViewById(R.id.gif_flag);
 
             pb = (ProgressBar) v.findViewById(R.id.imageview_pb);
             this.setForeground(getResources().getDrawable(R.drawable.timelineimageview_cover));
@@ -87,7 +91,9 @@ public class TimeLineImageView extends FrameLayout {
         return pb;
     }
 
-
+    public void setGifFlag(boolean value) {
+        gifFlag.setVisibility(value ? VISIBLE : INVISIBLE);
+    }
 }
 
 
