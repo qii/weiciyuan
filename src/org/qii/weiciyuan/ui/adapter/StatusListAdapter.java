@@ -181,7 +181,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             boolean checkGps = (msg.getGeo() != null);
 
             if (!checkRepostsCount && !checkCommentsCount && !checkPic && !checkGps) {
-                holder.count_layout.setVisibility(View.GONE);
+                holder.count_layout.setVisibility(View.INVISIBLE);
             } else {
                 holder.count_layout.setVisibility(View.VISIBLE);
 
@@ -194,7 +194,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                 if (checkGps) {
                     holder.timeline_gps.setVisibility(View.VISIBLE);
                 } else {
-                    holder.timeline_gps.setVisibility(View.GONE);
+                    holder.timeline_gps.setVisibility(View.INVISIBLE);
                 }
 
                 if (checkRepostsCount) {
