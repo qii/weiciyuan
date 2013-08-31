@@ -212,7 +212,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:layout_marginLeft="14dp"
+            android:layout_marginLeft="0dp"
             android:layout_marginTop="5dp"
             android:columnCount="3"
             android:rowCount="3"
