@@ -15,10 +15,13 @@
 
         <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
             android:id="@+id/avatar"
-            android:layout_width="@dimen/timeline_avatar_width"
-            android:layout_height="@dimen/timeline_avatar_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:layout_marginRight="8dp"
+            android:layout_marginTop="-5dp"
+            android:layout_marginLeft="-5dp"
+            android:layout_marginBottom="-5dp"
+            android:layout_marginRight="3dp"
             android:clickable="true"/>
 
         <LinearLayout
