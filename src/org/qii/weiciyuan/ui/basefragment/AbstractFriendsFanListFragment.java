@@ -1,10 +1,12 @@
 package org.qii.weiciyuan.ui.basefragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.AbsListView;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 
 import java.util.List;
@@ -66,8 +68,17 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                pullToRefreshListView.setRefreshing();
-                loadNewMsg();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (getActivity() != null) {
+                            pullToRefreshListView.setRefreshing();
+                            loadNewMsg();
+                        }
+
+                    }
+                }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
+
                 break;
             case SCREEN_ROTATE:
                 //nothing
