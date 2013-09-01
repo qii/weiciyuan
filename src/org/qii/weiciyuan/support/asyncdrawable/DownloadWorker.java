@@ -61,6 +61,12 @@ public class DownloadWorker extends MyAsyncTask<String, Integer, Boolean> implem
             case picture_thumbnail:
                 actualDownloadUrl = url.replace("thumbnail", "webp180");
                 break;
+            case picture_bmiddle:
+                actualDownloadUrl = url.replace("bmiddle", "webp720");
+                break;
+            case picture_large:
+                actualDownloadUrl = url.replace("large", "woriginal");
+                break;
 
         }
 
