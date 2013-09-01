@@ -66,6 +66,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         this(view.getImageView(), url, method);
         this.timeLineImageView = view;
         this.pbWeakReference = new WeakReference<ProgressBar>(view.getProgressBar());
+        view.setGifFlag(false);
         if (SettingUtility.getEnableBigPic()) {
             view.getProgressBar().setVisibility(View.VISIBLE);
             view.getProgressBar().setProgress(0);
