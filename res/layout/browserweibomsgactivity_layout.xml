@@ -25,7 +25,10 @@
             android:layout_height="@dimen/browser_msg_avatar_height"
             android:id="@+id/avatar"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginLeft="-5dp"
+            android:layout_marginTop="-5dp"
+            android:layout_marginBottom="-5dp"
+            android:layout_marginRight="0dp"/>
 
 
         <TextView
