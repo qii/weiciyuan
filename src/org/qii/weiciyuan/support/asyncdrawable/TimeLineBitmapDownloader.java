@@ -267,6 +267,7 @@ public class TimeLineBitmapDownloader {
             if (isFling) {
                 view.setImageDrawable(defaultBG);
                 view.getProgressBar().setVisibility(View.INVISIBLE);
+                view.setGifFlag(ImageTool.isThisPictureGif(urlKey));
                 return;
             }
 
