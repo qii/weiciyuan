@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -25,6 +24,7 @@ public class TimeLineImageView extends FrameLayout {
     protected ImageView mImageView;
     private ImageView gifFlag;
     private ProgressBar pb;
+    private boolean parentPressState = true;
 
     public TimeLineImageView(Context context) {
         super(context);
@@ -54,6 +54,12 @@ public class TimeLineImageView extends FrameLayout {
         this.setAddStatesFromChildren(true);
     }
 
+    public void setParentPressStates(boolean value) {
+        if (parentPressState == value)
+            return;
+        setForeground(value ? getResources().getDrawable(R.drawable.timelineimageview_cover) : null);
+        parentPressState = value;
+    }
 
     public void setImageDrawable(Drawable drawable) {
         mImageView.setImageDrawable(drawable);
@@ -63,25 +69,11 @@ public class TimeLineImageView extends FrameLayout {
         mImageView.setImageBitmap(bm);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        mImageView.onTouchEvent(event);
-        return super.onTouchEvent(event);
-    }
 
     public ImageView getImageView() {
         return mImageView;
     }
 
-    @Override
-    public void setOnClickListener(OnClickListener onClicker) {
-        mImageView.setOnClickListener(onClicker);
-    }
-
-    @Override
-    public void setOnLongClickListener(OnLongClickListener onLongClickListener) {
-        mImageView.setOnLongClickListener(onLongClickListener);
-    }
 
     public void setProgress(int value, int max) {
         pb.setVisibility(View.VISIBLE);

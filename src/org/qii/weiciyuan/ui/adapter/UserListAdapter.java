@@ -109,6 +109,7 @@ public class UserListAdapter extends BaseAdapter {
 
         UserBean user = getList().get(position);
         holder.avatar.checkVerified(user);
+        holder.avatar.setParentPressStates(false);
         holder.username.setText(user.getScreen_name());
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {

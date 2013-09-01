@@ -27,9 +27,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="content"
+        android:textColor="?listview_text_color"
         android:layout_below="@id/username"
         android:layout_toRightOf="@id/avatar"
-        android:layerType="software"
         android:ellipsize="end"
         android:singleLine="true"/>
 
