@@ -20,7 +20,7 @@ import org.qii.weiciyuan.support.utils.Utility;
  * User: qii
  * Date: 12-12-19
  */
-public class TimeLineAvatarImageView extends ImageView implements IWeiciyuanDrawable {
+public class TimeLineAvatarImageView extends PerformanceImageView implements IWeiciyuanDrawable {
 
 //    protected ImageView vImageView;
 //    protected ImageView mImageView;
