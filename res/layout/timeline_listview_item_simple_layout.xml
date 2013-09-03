@@ -9,8 +9,8 @@
 
     <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
         android:id="@+id/avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/timeline_avatar_width"
+        android:layout_height="@dimen/timeline_avatar_height"
         android:layout_gravity="left|center_vertical"
         android:layout_marginTop="-5dp"
         android:layout_marginLeft="-5dp"

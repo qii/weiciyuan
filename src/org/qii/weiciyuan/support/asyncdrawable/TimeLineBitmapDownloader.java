@@ -16,7 +16,6 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.TimeLineImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -162,7 +161,7 @@ public class TimeLineBitmapDownloader {
     }
 
 
-    public void downContentPic(TimeLineImageView view, MessageBean msg, AbstractTimeLineFragment fragment) {
+    public void downContentPic(IWeiciyuanDrawable view, MessageBean msg, AbstractTimeLineFragment fragment) {
         String picUrl;
 
         boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
@@ -246,8 +245,8 @@ public class TimeLineBitmapDownloader {
     }
 
 
-    private void display(final TimeLineImageView view, final String urlKey, final FileLocationMethod method, boolean isFling) {
-        view.clearAnimation();
+    private void display(final IWeiciyuanDrawable view, final String urlKey, final FileLocationMethod method, boolean isFling) {
+        view.getImageView().clearAnimation();
 
         if (!shouldReloadPicture(view.getImageView(), urlKey))
             return;
@@ -257,8 +256,8 @@ public class TimeLineBitmapDownloader {
             view.setImageBitmap(bitmap);
             view.getImageView().setTag(urlKey);
             view.getProgressBar().setVisibility(View.INVISIBLE);
-            if (view.getAlpha() != 1.0f) {
-                view.setAlpha(1.0f);
+            if (view.getImageView().getAlpha() != 1.0f) {
+                view.getImageView().setAlpha(1.0f);
             }
             view.setGifFlag(ImageTool.isThisPictureGif(urlKey));
             cancelPotentialDownload(urlKey, view.getImageView());

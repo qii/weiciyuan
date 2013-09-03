@@ -15,7 +15,6 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.TimeLineImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -39,7 +38,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
     private int mShortAnimationDuration;
     private WeakReference<ProgressBar> pbWeakReference;
     private boolean isMultiPictures = false;
-    private TimeLineImageView timeLineImageView;
+    private IWeiciyuanDrawable IWeiciyuanDrawable;
 
     public String getUrl() {
         return data;
@@ -61,10 +60,10 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         this(view, url, method, false);
     }
 
-    public ReadWorker(TimeLineImageView view, String url, FileLocationMethod method) {
+    public ReadWorker(IWeiciyuanDrawable view, String url, FileLocationMethod method) {
 
         this(view.getImageView(), url, method);
-        this.timeLineImageView = view;
+        this.IWeiciyuanDrawable = view;
         this.pbWeakReference = new WeakReference<ProgressBar>(view.getProgressBar());
         view.setGifFlag(false);
         if (SettingUtility.getEnableBigPic()) {
@@ -108,8 +107,8 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         switch (method) {
             case avatar_small:
             case avatar_large:
-                width = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width);
-                height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height);
+                width = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width) - Utility.dip2px(5) * 2;
+                height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height) - Utility.dip2px(5) * 2;
                 break;
 
             case picture_thumbnail:
@@ -213,8 +212,8 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
                 }
 
                 if (bitmap != null) {
-                    if (timeLineImageView != null)
-                        timeLineImageView.setGifFlag(ImageTool.isThisPictureGif(getUrl()));
+                    if (IWeiciyuanDrawable != null)
+                        IWeiciyuanDrawable.setGifFlag(ImageTool.isThisPictureGif(getUrl()));
                     playImageViewAnimation(imageView, bitmap);
                     lruCache.put(data, bitmap);
                 } else if (failedResult != null) {

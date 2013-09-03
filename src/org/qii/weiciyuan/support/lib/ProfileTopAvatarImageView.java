@@ -1,13 +1,8 @@
 package org.qii.weiciyuan.support.lib;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
@@ -28,12 +23,14 @@ public class ProfileTopAvatarImageView extends TimeLineAvatarImageView {
     }
 
     protected void initLayout(Context context) {
-        LayoutInflater inflate = (LayoutInflater)
-                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflate.inflate(R.layout.profileimageview_avatar_layout, this, true);
-        mImageView = (ImageView) v.findViewById(R.id.imageview);
-        vImageView = (ImageView) v.findViewById(R.id.imageview_v);
-        mImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
+        setPadding(Utility.dip2px(5), Utility.dip2px(5), Utility.dip2px(5), Utility.dip2px(5));
+
+//        LayoutInflater inflate = (LayoutInflater)
+//                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View v = inflate.inflate(R.layout.profileimageview_avatar_layout, this, true);
+//        mImageView = (ImageView) v.findViewById(R.id.imageview);
+//        vImageView = (ImageView) v.findViewById(R.id.imageview_v);
+//        mImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
 
     }
 

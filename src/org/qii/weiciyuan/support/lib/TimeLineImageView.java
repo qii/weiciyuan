@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
 
 /**
  * User: qii
@@ -19,7 +21,7 @@ import org.qii.weiciyuan.R;
  * todo
  * this class and its child class need to be refactored
  */
-public class TimeLineImageView extends FrameLayout {
+public class TimeLineImageView extends FrameLayout implements IWeiciyuanDrawable {
 
     protected ImageView mImageView;
     private ImageView gifFlag;
@@ -54,12 +56,6 @@ public class TimeLineImageView extends FrameLayout {
         this.setAddStatesFromChildren(true);
     }
 
-    public void setParentPressStates(boolean value) {
-        if (parentPressState == value)
-            return;
-        setForeground(value ? getResources().getDrawable(R.drawable.timelineimageview_cover) : null);
-        parentPressState = value;
-    }
 
     public void setImageDrawable(Drawable drawable) {
         mImageView.setImageDrawable(drawable);
@@ -87,6 +83,19 @@ public class TimeLineImageView extends FrameLayout {
 
     public void setGifFlag(boolean value) {
         gifFlag.setVisibility(value ? VISIBLE : INVISIBLE);
+    }
+
+    @Override
+    public void checkVerified(UserBean user) {
+
+    }
+
+    @Override
+    public void setPressesStateVisibility(boolean value) {
+        if (parentPressState == value)
+            return;
+        setForeground(value ? getResources().getDrawable(R.drawable.timelineimageview_cover) : null);
+        parentPressState = value;
     }
 }
 

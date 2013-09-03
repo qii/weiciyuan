@@ -19,6 +19,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
 import org.qii.weiciyuan.support.asyncdrawable.PictureBitmapDrawable;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
@@ -347,9 +348,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.time = (TimeTextView) convertView.findViewById(R.id.time);
         holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
 
-        holder.content_pic = (TimeLineImageView) convertView.findViewById(R.id.content_pic);
+        holder.content_pic = (IWeiciyuanDrawable) convertView.findViewById(R.id.content_pic);
         holder.content_pic_multi = (GridLayout) convertView.findViewById(R.id.content_pic_multi);
-        holder.repost_content_pic = (TimeLineImageView) convertView.findViewById(R.id.repost_content_pic);
+        holder.repost_content_pic = (IWeiciyuanDrawable) convertView.findViewById(R.id.repost_content_pic);
         holder.repost_content_pic_multi = (GridLayout) convertView.findViewById(R.id.repost_content__pic_multi);
 
         holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
@@ -461,7 +462,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             return NO_ITEM_ID;
     }
 
-    protected void buildAvatar(TimeLineAvatarImageView view, int position, final UserBean user) {
+    protected void buildAvatar(IWeiciyuanDrawable view, int position, final UserBean user) {
         view.setVisibility(View.VISIBLE);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -535,7 +536,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     }
 
-    protected void buildPic(final MessageBean msg, TimeLineImageView view, int position) {
+    protected void buildPic(final MessageBean msg, IWeiciyuanDrawable view, int position) {
         if (SettingUtility.isEnablePic()) {
             view.setVisibility(View.VISIBLE);
             view.setOnClickListener(new View.OnClickListener() {
@@ -560,7 +561,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         TimeLineBitmapDownloader.getInstance().downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
     }
 
-    private void buildPic(final MessageBean msg, TimeLineImageView view) {
+    private void buildPic(final MessageBean msg, IWeiciyuanDrawable view) {
         view.setVisibility(View.VISIBLE);
         TimeLineBitmapDownloader.getInstance().downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
     }
@@ -584,11 +585,11 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         TextView content;
         TextView repost_content;
         TimeTextView time;
-        TimeLineAvatarImageView avatar;
+        IWeiciyuanDrawable avatar;
 
-        TimeLineImageView content_pic;
+        IWeiciyuanDrawable content_pic;
         GridLayout content_pic_multi;
-        TimeLineImageView repost_content_pic;
+        IWeiciyuanDrawable repost_content_pic;
         GridLayout repost_content_pic_multi;
 
         RelativeLayout listview_root;
