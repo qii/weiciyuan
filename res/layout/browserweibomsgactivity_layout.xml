@@ -123,31 +123,31 @@
             android:useDefaultMargins="false"
             android:clickable="false">
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
         </GridLayout>
@@ -215,31 +215,31 @@
             android:useDefaultMargins="false"
             android:clickable="false">
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
         </GridLayout>
