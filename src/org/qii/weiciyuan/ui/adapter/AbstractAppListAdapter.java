@@ -523,10 +523,61 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             }
 
             if (count < 9) {
-                for (int i = count; i < 9; i++) {
-                    ImageView pic = (ImageView) gridLayout.getChildAt(i);
-                    pic.setVisibility(View.GONE);
+                ImageView pic;
+                switch (count) {
+                    case 8:
+                        pic = (ImageView) gridLayout.getChildAt(8);
+                        pic.setVisibility(View.INVISIBLE);
+                        break;
+                    case 7:
+                        for (int i = 8; i > 6; i--) {
+                            pic = (ImageView) gridLayout.getChildAt(i);
+                            pic.setVisibility(View.INVISIBLE);
+                        }
+                        break;
+                    case 6:
+                        for (int i = 8; i > 5; i--) {
+                            pic = (ImageView) gridLayout.getChildAt(i);
+                            pic.setVisibility(View.GONE);
+                        }
+
+                        break;
+                    case 5:
+                        for (int i = 8; i > 5; i--) {
+                            pic = (ImageView) gridLayout.getChildAt(i);
+                            pic.setVisibility(View.GONE);
+                        }
+                        pic = (ImageView) gridLayout.getChildAt(5);
+                        pic.setVisibility(View.INVISIBLE);
+                        break;
+                    case 4:
+                        for (int i = 8; i > 5; i--) {
+                            pic = (ImageView) gridLayout.getChildAt(i);
+                            pic.setVisibility(View.GONE);
+                        }
+                        pic = (ImageView) gridLayout.getChildAt(5);
+                        pic.setVisibility(View.INVISIBLE);
+                        pic = (ImageView) gridLayout.getChildAt(4);
+                        pic.setVisibility(View.INVISIBLE);
+                        break;
+                    case 3:
+                        for (int i = 8; i > 2; i--) {
+                            pic = (ImageView) gridLayout.getChildAt(i);
+                            pic.setVisibility(View.GONE);
+                        }
+                        break;
+                    case 2:
+                        for (int i = 8; i > 2; i--) {
+                            pic = (ImageView) gridLayout.getChildAt(i);
+                            pic.setVisibility(View.GONE);
+                        }
+                        pic = (ImageView) gridLayout.getChildAt(2);
+                        pic.setVisibility(View.INVISIBLE);
+                        break;
+
+
                 }
+
             }
 
 
