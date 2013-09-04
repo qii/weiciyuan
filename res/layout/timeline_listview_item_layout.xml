@@ -137,31 +137,31 @@
             android:useDefaultMargins="false"
             android:clickable="false">
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
         </GridLayout>
@@ -223,31 +223,31 @@
             android:useDefaultMargins="false"
             android:clickable="false">
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.lib.PerformanceImageView
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
         </GridLayout>
