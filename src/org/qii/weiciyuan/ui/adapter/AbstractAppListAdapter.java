@@ -501,7 +501,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
             int count = msg.getPicCount();
             for (int i = 0; i < count; i++) {
-                ImageView pic = (ImageView) gridLayout.getChildAt(i);
+                IWeiciyuanDrawable pic = (IWeiciyuanDrawable) gridLayout.getChildAt(i);
                 pic.setVisibility(View.VISIBLE);
                 if (SettingUtility.getEnableBigPic()) {
                     TimeLineBitmapDownloader.getInstance().displayMultiPicture(pic, msg.getHighPicUrls().get(i), FileLocationMethod.picture_large, (AbstractTimeLineFragment) fragment);

@@ -24,7 +24,7 @@ public class TimeLineImageView extends FrameLayout implements IWeiciyuanDrawable
 
     private boolean showGif = false;
     private Paint paint = new Paint();
-
+    private Bitmap gif;
 
     protected ImageView mImageView;
     private ProgressBar pb;
@@ -44,6 +44,7 @@ public class TimeLineImageView extends FrameLayout implements IWeiciyuanDrawable
     }
 
     protected void initLayout(Context context) {
+        gif = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_gif);
         LayoutInflater inflate = (LayoutInflater)
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflate.inflate(R.layout.timelineimageview_layout, this, true);
@@ -60,7 +61,6 @@ public class TimeLineImageView extends FrameLayout implements IWeiciyuanDrawable
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
         if (showGif) {
-            Bitmap gif = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_gif);
             int bitmapHeight = gif.getHeight();
             int bitmapWidth = gif.getWidth();
             int x = (getWidth() - bitmapWidth) / 2;

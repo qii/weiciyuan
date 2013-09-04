@@ -60,19 +60,29 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         this(view, url, method, false);
     }
 
-    public ReadWorker(IWeiciyuanDrawable view, String url, FileLocationMethod method) {
+    public ReadWorker(IWeiciyuanDrawable view, String url, FileLocationMethod method, boolean isMultiPictures) {
 
         this(view.getImageView(), url, method);
         this.IWeiciyuanDrawable = view;
         this.pbWeakReference = new WeakReference<ProgressBar>(view.getProgressBar());
         view.setGifFlag(false);
         if (SettingUtility.getEnableBigPic()) {
-            view.getProgressBar().setVisibility(View.VISIBLE);
-            view.getProgressBar().setProgress(0);
+            if (view.getProgressBar() != null) {
+                view.getProgressBar().setVisibility(View.VISIBLE);
+                view.getProgressBar().setProgress(0);
+            }
         } else {
-            view.getProgressBar().setVisibility(View.INVISIBLE);
-            view.getProgressBar().setProgress(0);
+            if (view.getProgressBar() != null) {
+                view.getProgressBar().setVisibility(View.INVISIBLE);
+                view.getProgressBar().setProgress(0);
+            }
         }
+        this.isMultiPictures = isMultiPictures;
+
+    }
+
+    public ReadWorker(IWeiciyuanDrawable view, String url, FileLocationMethod method) {
+        this(view, url, method, false);
     }
 
 

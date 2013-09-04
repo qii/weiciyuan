@@ -126,7 +126,7 @@ public class TimeLineBitmapDownloader {
             url = user.getProfile_image_url();
             method = FileLocationMethod.avatar_small;
         }
-        display(view, url, method, isFling, false);
+        displayImageView(view, url, method, isFling, false);
     }
 
     public void downContentPic(ImageView view, MessageBean msg, AbstractTimeLineFragment fragment) {
@@ -136,17 +136,17 @@ public class TimeLineBitmapDownloader {
 
         if (SettingUtility.getEnableBigPic()) {
             picUrl = msg.getOriginal_pic();
-            display(view, picUrl, FileLocationMethod.picture_large, isFling, false);
+            displayImageView(view, picUrl, FileLocationMethod.picture_large, isFling, false);
 
         } else {
             picUrl = msg.getThumbnail_pic();
-            display(view, picUrl, FileLocationMethod.picture_thumbnail, isFling, false);
+            displayImageView(view, picUrl, FileLocationMethod.picture_thumbnail, isFling, false);
 
         }
     }
 
 
-    public void displayMultiPicture(ImageView view, String picUrl, FileLocationMethod method, AbstractTimeLineFragment fragment) {
+    public void displayMultiPicture(IWeiciyuanDrawable view, String picUrl, FileLocationMethod method, AbstractTimeLineFragment fragment) {
 
         boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
 
@@ -156,7 +156,7 @@ public class TimeLineBitmapDownloader {
 
     public void displayMultiPicture(ImageView view, String picUrl, FileLocationMethod method) {
 
-        display(view, picUrl, method, false, true);
+        displayImageView(view, picUrl, method, false, true);
 
     }
 
@@ -168,11 +168,11 @@ public class TimeLineBitmapDownloader {
 
         if (SettingUtility.getEnableBigPic()) {
             picUrl = msg.getOriginal_pic();
-            display(view, picUrl, FileLocationMethod.picture_large, isFling);
+            display(view, picUrl, FileLocationMethod.picture_large, isFling, false);
 
         } else {
             picUrl = msg.getThumbnail_pic();
-            display(view, picUrl, FileLocationMethod.picture_thumbnail, isFling);
+            display(view, picUrl, FileLocationMethod.picture_thumbnail, isFling, false);
 
         }
     }
@@ -196,7 +196,7 @@ public class TimeLineBitmapDownloader {
         }
     }
 
-    private void display(final ImageView view, final String urlKey, final FileLocationMethod method, boolean isFling, boolean isMultiPictures) {
+    private void displayImageView(final ImageView view, final String urlKey, final FileLocationMethod method, boolean isFling, boolean isMultiPictures) {
         view.clearAnimation();
 
         if (!shouldReloadPicture(view, urlKey))
@@ -245,7 +245,7 @@ public class TimeLineBitmapDownloader {
     }
 
 
-    private void display(final IWeiciyuanDrawable view, final String urlKey, final FileLocationMethod method, boolean isFling) {
+    private void display(final IWeiciyuanDrawable view, final String urlKey, final FileLocationMethod method, boolean isFling, boolean isMultiPictures) {
         view.getImageView().clearAnimation();
 
         if (!shouldReloadPicture(view.getImageView(), urlKey))
@@ -255,7 +255,8 @@ public class TimeLineBitmapDownloader {
         if (bitmap != null) {
             view.setImageBitmap(bitmap);
             view.getImageView().setTag(urlKey);
-            view.getProgressBar().setVisibility(View.INVISIBLE);
+            if (view.getProgressBar() != null)
+                view.getProgressBar().setVisibility(View.INVISIBLE);
             if (view.getImageView().getAlpha() != 1.0f) {
                 view.getImageView().setAlpha(1.0f);
             }
@@ -265,7 +266,8 @@ public class TimeLineBitmapDownloader {
 
             if (isFling) {
                 view.setImageDrawable(defaultBG);
-                view.getProgressBar().setVisibility(View.INVISIBLE);
+                if (view.getProgressBar() != null)
+                    view.getProgressBar().setVisibility(View.INVISIBLE);
                 view.setGifFlag(ImageTool.isThisPictureGif(urlKey));
                 return;
             }
@@ -274,7 +276,7 @@ public class TimeLineBitmapDownloader {
                 return;
             }
 
-            final ReadWorker newTask = new ReadWorker(view, urlKey, method);
+            final ReadWorker newTask = new ReadWorker(view, urlKey, method, isMultiPictures);
             PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(newTask);
             view.setImageDrawable(downloadedDrawable);
 
