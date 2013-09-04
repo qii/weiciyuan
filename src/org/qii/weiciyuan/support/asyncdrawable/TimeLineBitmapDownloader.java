@@ -154,9 +154,9 @@ public class TimeLineBitmapDownloader {
 
     }
 
-    public void displayMultiPicture(ImageView view, String picUrl, FileLocationMethod method) {
+    public void displayMultiPicture(IWeiciyuanDrawable view, String picUrl, FileLocationMethod method) {
 
-        displayImageView(view, picUrl, method, false, true);
+        display(view, picUrl, method, false, true);
 
     }
 
