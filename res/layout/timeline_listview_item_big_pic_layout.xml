@@ -137,31 +137,31 @@
             android:useDefaultMargins="false"
             android:clickable="false">
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
         </GridLayout>
@@ -221,31 +221,31 @@
             android:useDefaultMargins="false"
             android:clickable="false">
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
-            <ImageView
+            <org.qii.weiciyuan.support.lib.PerformanceImageView
                 style="@style/listViewMultiImageView"/>
 
         </GridLayout>
