@@ -522,15 +522,12 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
     private void displayPictures(final MessageBean msg, GridLayout layout, WeiboDetailImageView view, boolean refreshPic) {
 
         if (!msg.isMultiPics()) {
-
-            if (Utility.isTaskStopped(picTask)) {
-                view.setVisibility(View.VISIBLE);
-
-                if (refreshPic) {
-                    picTask = new MsgDetailReadWorker(view, msg);
-                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                }
-
+            view.setVisibility(View.VISIBLE);
+            if (Utility.isTaskStopped(picTask) && refreshPic) {
+                picTask = new MsgDetailReadWorker(view, msg);
+                picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                picTask.setView(view);
             }
         } else {
             layout.setVisibility(View.VISIBLE);

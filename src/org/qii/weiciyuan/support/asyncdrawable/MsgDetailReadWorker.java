@@ -33,10 +33,44 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
 
     private MessageBean msg;
 
+    private String oriPath;
+    private String middlePath;
+
     public MsgDetailReadWorker(WeiboDetailImageView view, MessageBean msg) {
         this.view = view;
         this.pb = this.view.getProgressBar();
         this.msg = msg;
+        this.retry = view.getRetryButton();
+        retry.setVisibility(View.INVISIBLE);
+
+        oriPath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
+
+        if (ImageTool.isThisBitmapCanRead(oriPath)
+                && TaskCache.isThisUrlTaskFinished(msg.getOriginal_pic())) {
+
+            onPostExecute(oriPath);
+            cancel(true);
+            return;
+        }
+
+
+        middlePath = FileManager.getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
+
+        if (ImageTool.isThisBitmapCanRead(middlePath)
+                && TaskCache.isThisUrlTaskFinished(msg.getBmiddle_pic())) {
+            onPostExecute(middlePath);
+            cancel(true);
+            return;
+        }
+
+        pb.setVisibility(View.VISIBLE);
+        pb.setIndeterminate(true);
+
+    }
+
+    public void setView(WeiboDetailImageView view) {
+        this.view = view;
+        this.pb = this.view.getProgressBar();
         this.retry = view.getRetryButton();
         retry.setVisibility(View.INVISIBLE);
     }
@@ -46,32 +80,6 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
         if (isCancelled()) {
             return null;
         }
-
-
-        String oriPath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
-
-        if (ImageTool.isThisBitmapCanRead(oriPath)
-                && TaskCache.isThisUrlTaskFinished(msg.getOriginal_pic())) {
-
-            return oriPath;
-        }
-
-
-        String middlePath = FileManager.getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
-
-        if (ImageTool.isThisBitmapCanRead(middlePath)
-                && TaskCache.isThisUrlTaskFinished(msg.getBmiddle_pic())) {
-            return middlePath;
-        }
-
-        GlobalContext.getInstance().getHandler().post(new Runnable() {
-            @Override
-            public void run() {
-                pb.setVisibility(View.VISIBLE);
-                pb.setIndeterminate(false);
-
-            }
-        });
 
         if (Utility.isWifi(GlobalContext.getInstance())) {
             boolean result = TaskCache.waitForPictureDownload(msg.getOriginal_pic(), downloadListener, oriPath, FileLocationMethod.picture_large);
@@ -85,36 +93,27 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
 
 
     FileDownloaderHttpHelper.DownloadListener downloadListener = new FileDownloaderHttpHelper.DownloadListener() {
+
         @Override
         public void pushProgress(int progress, int max) {
             publishProgress(progress, max);
         }
-
-        @Override
-        public void completed() {
-
-        }
-
-        @Override
-        public void cancel() {
-
-        }
     };
 
-    /**
-     * sometime picture has been cached in sd card,so only set indeterminate equal false to show progress when downloading
-     */
+
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
         if (this.getStatus() == Status.RUNNING) {
             pb.setVisibility(View.VISIBLE);
-
+            pb.setIndeterminate(false);
 
             Integer progress = values[0];
             Integer max = values[1];
+
             pb.setMax(max);
             pb.setProgress(progress);
+
 
         }
     }
@@ -126,18 +125,18 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
     }
 
     @Override
-    protected void onPostExecute(String bitmap) {
+    protected void onPostExecute(String path) {
         retry.setVisibility(View.INVISIBLE);
-        pb.setVisibility(View.INVISIBLE);
+        pb.setIndeterminate(true);
 
-        if (!TextUtils.isEmpty(bitmap)) {
+        if (!TextUtils.isEmpty(path)) {
 
-            if (!bitmap.endsWith(".gif")) {
-                readNormalPic(bitmap);
+            if (!path.endsWith(".gif")) {
+                readNormalPic(path);
             } else {
-                view.setGif(bitmap);
+                view.setGif(path);
             }
-
+            pb.setVisibility(View.INVISIBLE);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -147,6 +146,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
                 }
             });
         } else {
+            pb.setVisibility(View.INVISIBLE);
             view.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
             retry.setVisibility(View.VISIBLE);
             retry.setOnClickListener(new View.OnClickListener() {
