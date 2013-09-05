@@ -73,7 +73,7 @@ public class TimeLineAvatarImageView extends PerformanceImageView implements IWe
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if (!showPressedState)
+        if (!showPressedState || !isClickable() || !isLongClickable())
             return super.onTouchEvent(event);
 
         switch (event.getActionMasked()) {
