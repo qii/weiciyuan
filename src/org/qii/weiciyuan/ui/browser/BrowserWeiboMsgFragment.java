@@ -380,6 +380,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         layout.count_layout = view.findViewById(R.id.count_layout);
 
         layout.avatar = (ProfileTopAvatarImageView) view.findViewById(R.id.avatar);
+        layout.avatar.setPressesStateVisibility(false);
         layout.content_pic = (WeiboDetailImageView) view.findViewById(R.id.content_pic);
         layout.content_pic_multi = (GridLayout) view.findViewById(R.id.content_pic_multi);
         layout.repost_pic = (WeiboDetailImageView) view.findViewById(R.id.repost_content_pic);

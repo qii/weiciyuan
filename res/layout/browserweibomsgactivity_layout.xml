@@ -10,7 +10,7 @@
     <GridLayout
         android:id="@+id/first"
         android:background="?android:selectableItemBackground"
-        android:padding="3dp"
+        android:padding="5dp"
         android:clickable="true"
         android:columnCount="4"
         android:rowCount="2"
@@ -27,7 +27,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="-5dp"
             android:layout_marginTop="-5dp"
-            android:layout_marginBottom="-5dp"
+            android:layout_marginBottom="0dp"
             android:layout_marginRight="0dp"/>
 
 
