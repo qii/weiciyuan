@@ -516,7 +516,15 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     }
 
     private boolean isMyself() {
-        return userBean.getId().equals(GlobalContext.getInstance().getCurrentAccountId());
+
+        if (!TextUtils.isEmpty(userBean.getId()))
+            return userBean.getId().equals(GlobalContext.getInstance().getCurrentAccountId());
+
+        if (!TextUtils.isEmpty(userBean.getScreen_name()))
+            return userBean.getScreen_name().equals(GlobalContext.getInstance().getCurrentAccountName());
+
+        return false;
+
     }
 
     private boolean isOpenedFromMainPage() {
