@@ -89,4 +89,8 @@
     <attr name="profile_top_photo_background_color" format="color"/>
     <attr name="profile_detail_count_divider_color" format="color"/>
     <attr name="profile_detail_count_bottom_color" format="color"/>
+
+    <!--browser weibo detail -->
+    <attr name="browser_weibo_detail_background_color" format="color"/>
+
 </resources>

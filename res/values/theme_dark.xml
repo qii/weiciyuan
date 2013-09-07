@@ -67,6 +67,8 @@
         <item name="profile_detail_count_divider_color">@color/transparent</item>
         <item name="profile_detail_count_bottom_color">@color/transparent</item>
 
+        <item name="browser_weibo_detail_background_color">#cc333333</item>
+
         <item name="split_line_between_content_and_bottom_button_panel">@drawable/bg_write_weibo_bottom</item>
 
 

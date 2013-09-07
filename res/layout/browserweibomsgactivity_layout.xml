@@ -86,7 +86,7 @@
         android:id="@+id/second">
 
         <TextView
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:id="@+id/content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -159,22 +159,15 @@
     <LinearLayout
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
         android:orientation="vertical"
         android:id="@+id/repost_layout"
         android:clickable="true"
+        android:background="?browser_weibo_detail_background_color"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:visibility="visible">
-
-        <ImageView
-            android:id="@+id/space"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/divider"
-            android:layout_height="1dp"
-            android:layout_width="match_parent"/>
 
         <TextView
             android:background="?android:selectableItemBackground"
