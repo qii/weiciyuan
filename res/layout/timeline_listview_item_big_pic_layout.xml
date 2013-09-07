@@ -167,7 +167,7 @@
         </GridLayout>
 
 
-        <ImageView
+        <View
             android:layout_below="@id/content"
 
             android:id="@+id/repost_flag"
