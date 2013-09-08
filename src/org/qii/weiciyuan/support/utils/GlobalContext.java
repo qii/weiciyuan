@@ -7,26 +7,26 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.Display;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.android.MusicInfo;
+import org.qii.weiciyuan.support.crashmanager.CrashManager;
+import org.qii.weiciyuan.support.crashmanager.CrashManagerConstants;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.GroupDBTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.smileypicker.SmileyMap;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: Jiang Qi
@@ -39,6 +39,7 @@ public final class GlobalContext extends Application {
 
     //image size
     private Activity activity = null;
+    private Activity currentRunningActivity = null;
     private DisplayMetrics displayMetrics = null;
 
     //image memory cache
@@ -49,24 +50,32 @@ public final class GlobalContext extends Application {
 
     public boolean startedApp = false;
 
-
-    private Map<String, String> emotions = null;
-
-    private Map<String, Bitmap> emotionsPic = new HashMap<String, Bitmap>();
+    private Map<String, Bitmap> emotionsPic = new LinkedHashMap<String, Bitmap>();
 
     private GroupListBean group = null;
+
+    private MusicInfo musicInfo = new MusicInfo();
+
+    private Handler handler = new Handler();
+
+    public boolean tokenExpiredDialogIsShowing = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
         globalContext = this;
         buildCache();
+        CrashManagerConstants.loadFromContext(this);
+        CrashManager.registerHandler();
     }
 
     public static GlobalContext getInstance() {
         return globalContext;
     }
 
+    public Handler getHandler() {
+        return handler;
+    }
 
     public GroupListBean getGroup() {
         if (group == null) {
@@ -78,17 +87,6 @@ public final class GlobalContext extends Application {
     public void setGroup(GroupListBean group) {
         this.group = group;
     }
-
-    private Map<String, String> getEmotions() {
-        if (emotions == null) {
-            InputStream inputStream = getResources().openRawResource(R.raw.emotions);
-            emotions = new Gson().fromJson(new InputStreamReader(inputStream), new TypeToken<Map<String, String>>() {
-            }.getType());
-        }
-
-        return emotions;
-    }
-
 
     public DisplayMetrics getDisplayMetrics() {
         if (displayMetrics != null) {
@@ -111,8 +109,20 @@ public final class GlobalContext extends Application {
         }
     }
 
-    public void setAccountBean(AccountBean accountBean) {
+    public void setAccountBean(final AccountBean accountBean) {
         this.accountBean = accountBean;
+    }
+
+    public void updateUserInfo(final UserBean userBean) {
+        this.accountBean.setInfo(userBean);
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (MyProfileInfoChangeListener listener : profileListenerSet) {
+                    listener.onChange(userBean);
+                }
+            }
+        });
     }
 
     public AccountBean getAccountBean() {
@@ -129,6 +139,21 @@ public final class GlobalContext extends Application {
         }
 
         return accountBean;
+    }
+
+    private Set<MyProfileInfoChangeListener> profileListenerSet = new HashSet<MyProfileInfoChangeListener>();
+
+    public void registerForAccountChangeListener(MyProfileInfoChangeListener listener) {
+        if (listener != null)
+            profileListenerSet.add(listener);
+    }
+
+    public void unRegisterForAccountChangeListener(MyProfileInfoChangeListener listener) {
+        profileListenerSet.remove(listener);
+    }
+
+    public static interface MyProfileInfoChangeListener {
+        public void onChange(UserBean newUserBean);
     }
 
     public String getCurrentAccountId() {
@@ -164,6 +189,14 @@ public final class GlobalContext extends Application {
         this.activity = activity;
     }
 
+    public Activity getCurrentRunningActivity() {
+        return currentRunningActivity;
+    }
+
+    public void setCurrentRunningActivity(Activity currentRunningActivity) {
+        this.currentRunningActivity = currentRunningActivity;
+    }
+
     private void buildCache() {
         int memClass = ((ActivityManager) getSystemService(
                 Context.ACTIVITY_SERVICE)).getMemoryClass();
@@ -192,20 +225,21 @@ public final class GlobalContext extends Application {
 
 
     private void getEmotionsTask() {
-        Map<String, String> emotions = GlobalContext.getInstance().getEmotions();
+        Map<String, String> emotions = SmileyMap.getInstance().get();
         List<String> index = new ArrayList<String>();
         index.addAll(emotions.keySet());
         for (String str : index) {
-            String url = emotions.get(str);
-            int position = url.lastIndexOf("/");
-            String name = url.substring(position + 1);
+            String name = emotions.get(str);
             AssetManager assetManager = GlobalContext.getInstance().getAssets();
             InputStream inputStream;
             try {
                 inputStream = assetManager.open(name);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 if (bitmap != null) {
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, Utility.dip2px(20), Utility.dip2px(20), true);
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap,
+                            Utility.dip2px(getResources().getInteger(R.integer.emotion_size)),
+                            Utility.dip2px(getResources().getInteger(R.integer.emotion_size)),
+                            true);
                     if (bitmap != scaledBitmap) {
                         bitmap.recycle();
                         bitmap = scaledBitmap;
@@ -216,6 +250,14 @@ public final class GlobalContext extends Application {
 
             }
         }
+    }
+
+    public void updateMusicInfo(MusicInfo musicInfo) {
+        this.musicInfo = musicInfo;
+    }
+
+    public MusicInfo getMusicInfo() {
+        return musicInfo;
     }
 }
 

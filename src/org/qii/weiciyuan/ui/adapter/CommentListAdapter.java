@@ -1,27 +1,23 @@
 package org.qii.weiciyuan.ui.adapter;
 
-import android.app.Fragment;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.SystemClock;
-import android.text.SpannableString;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
-import org.qii.weiciyuan.support.lib.MyLinkMovementMethod;
+import org.qii.weiciyuan.support.lib.AutoScrollListView;
+import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.actionmenu.CommentFloatingMenu;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
 import java.util.List;
@@ -34,21 +30,74 @@ import java.util.WeakHashMap;
  */
 public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
-    private Drawable replyPic = null;
-    private Drawable commentPic = null;
 
     private Map<ViewHolder, Drawable> bg = new WeakHashMap<ViewHolder, Drawable>();
 
-    public CommentListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
-        super(fragment, commander, bean, listView, showOriStatus);
+    private TopTipBar topTipBar;
 
-        int[] attrs = new int[]{R.attr.timeline_reply_flag};
-        TypedArray ta = fragment.getActivity().obtainStyledAttributes(attrs);
-        replyPic = ta.getDrawable(0);
+    private Handler handler = new Handler();
 
-        attrs = new int[]{R.attr.timeline_comment_flag};
-        ta = fragment.getActivity().obtainStyledAttributes(attrs);
-        commentPic = ta.getDrawable(0);
+    private AbsListView.OnScrollListener onScrollListener;
+
+    public CommentListAdapter(Fragment fragment, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
+        this(fragment, bean, listView, showOriStatus, false);
+    }
+
+    public CommentListAdapter(Fragment fragment, List<CommentBean> bean, ListView listView, boolean showOriStatus, boolean pref) {
+        super(fragment, bean, listView, showOriStatus, pref);
+
+    }
+
+    public void setTopTipBar(TopTipBar bar) {
+        this.topTipBar = bar;
+        AutoScrollListView autoScrollListView = (AutoScrollListView) listView;
+        autoScrollListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                VelocityListView velocityListView = (VelocityListView) view;
+//                if (velocityListView.getVelocity() < 0) {
+//                    topTipBar.hideCount();
+//                } else if (velocityListView.getVelocity() > 0) {
+//                    if (topTipBar.getValues().size() == 0) {
+//                        return;
+//                    }
+
+                View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
+
+                if (childView == null) {
+                    return;
+                }
+
+                int position = firstVisibleItem - ((ListView) view).getHeaderViewsCount();
+
+                if (childView.getTop() == 0 && position <= 0) {
+                    topTipBar.clearAndReset();
+                } else {
+                    handle(position + 1);
+                }
+            }
+//            }
+
+            private void handle(int position) {
+                if (position > 0 && topTipBar != null && position < bean.size()) {
+                    CommentBean next = bean.get(position);
+                    if (next != null) {
+                        CommentBean helperMsg = bean.get(position - 1);
+                        long helperId = 0L;
+                        if (helperMsg != null) {
+                            helperId = helperMsg.getIdLong();
+                        }
+                        topTipBar.handle(next.getIdLong(), helperId);
+                    }
+                }
+
+            }
+        });
     }
 
     @Override
@@ -90,23 +139,21 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         holder.content.setText(comment.getListViewSpannableString());
 
         holder.time.setTime(comment.getMills());
+        if (holder.source != null)
+            holder.source.setText(Html.fromHtml(comment.getSource()).toString());
 
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);
-
-        if (holder.content.getMovementMethod() != MyLinkMovementMethod.getInstance())
-            holder.content.setMovementMethod(MyLinkMovementMethod.getInstance());
-        if (holder.repost_content.getMovementMethod() != MyLinkMovementMethod.getInstance())
-            holder.repost_content.setMovementMethod(MyLinkMovementMethod.getInstance());
 
         CommentBean reply = comment.getReply_comment();
         if (holder.replyIV != null)
             holder.replyIV.setVisibility(View.GONE);
         if (reply != null && showOriStatus) {
-            holder.repost_layout.setVisibility(View.VISIBLE);
+            if (holder.repost_layout != null)
+                holder.repost_layout.setVisibility(View.VISIBLE);
             holder.repost_flag.setVisibility(View.VISIBLE);
             holder.repost_content.setVisibility(View.VISIBLE);
-            holder.repost_content.setText(reply.getListViewReplySpannableString());
+            holder.repost_content.setText(reply.getListViewSpannableString());
         } else {
 
             MessageBean repost_msg = comment.getStatus();
@@ -114,7 +161,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             if (repost_msg != null && showOriStatus) {
                 buildRepostContent(repost_msg, holder, position);
             } else {
-                holder.repost_layout.setVisibility(View.GONE);
+                if (holder.repost_layout != null)
+                    holder.repost_layout.setVisibility(View.GONE);
                 holder.repost_flag.setVisibility(View.GONE);
                 if (holder.replyIV != null) {
                     holder.replyIV.setVisibility(View.VISIBLE);
@@ -132,57 +180,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
         }
 
-        if (showOriStatus) {
-            holder.listview_root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!((AbstractTimeLineFragment) fragment).clearActionModeIfOpen()) {
-                        CommentFloatingMenu menu = new CommentFloatingMenu(comment);
-                        menu.show(fragment.getFragmentManager(), "");
-                    }
-                }
-            });
 
-
-            holder.username.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    holder.listview_root.onTouchEvent(event);
-                    return false;
-                }
-            });
-            holder.time.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    holder.listview_root.onTouchEvent(event);
-                    return false;
-                }
-            });
-
-            holder.content.setMovementMethod(MyLinkMovementMethod.getInstance());
-            holder.repost_content.setMovementMethod(MyLinkMovementMethod.getInstance());
-
-            //onTouchListener has some strange problem, when user click link, holder.listview_root may also receive a MotionEvent.ACTION_DOWN event
-            //the background then changed
-            View.OnClickListener onClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    TextView tv = (TextView) v;
-                    int start = tv.getSelectionStart();
-                    int end = tv.getSelectionEnd();
-                    SpannableString completeText = (SpannableString) ((TextView) v).getText();
-                    boolean isNotLink = start == -1 || end == -1;
-                    if (isNotLink && completeText.getSpanStart(this) == -1) {
-                        holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0, 0, 0));
-                        holder.listview_root.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
-
-                    }
-                }
-            };
-
-            holder.content.setOnClickListener(onClickListener);
-            holder.repost_content.setOnClickListener(onClickListener);
-        }
     }
 
 }

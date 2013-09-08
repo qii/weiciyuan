@@ -1,50 +1,31 @@
 package org.qii.weiciyuan.bean;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 /**
  * User: Jiang Qi
  * Date: 12-7-30
  */
-public class AccountBean implements Serializable {
+public class AccountBean implements Parcelable {
+
+    private String access_token;
+    private long expires_time;
+    private UserBean info;
+    private boolean black_magic;
+    private int navigationPosition;
+
     public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+        return (info != null ? info.getId() : "");
     }
 
     public String getUsernick() {
-        return usernick;
-    }
-
-    public void setUsernick(String usernick) {
-        this.usernick = usernick;
+        return (info != null ? info.getScreen_name() : "");
     }
 
     public String getAvatar_url() {
-        return avatar_url;
-    }
-
-    public void setAvatar_url(String avatar_url) {
-        this.avatar_url = avatar_url;
-    }
-
-    public String getPortrait() {
-        return portrait;
-    }
-
-    public void setPortrait(String portrait) {
-        this.portrait = portrait;
+        return (info != null ? info.getProfile_image_url() : "");
     }
 
     public String getAccess_token() {
@@ -55,6 +36,14 @@ public class AccountBean implements Serializable {
         this.access_token = access_token;
     }
 
+    public long getExpires_time() {
+        return expires_time;
+    }
+
+    public void setExpires_time(long expires_time) {
+        this.expires_time = expires_time;
+    }
+
     public UserBean getInfo() {
         return info;
     }
@@ -63,19 +52,61 @@ public class AccountBean implements Serializable {
         this.info = info;
     }
 
-    private String uid;
+    public boolean isBlack_magic() {
+        return black_magic;
+    }
 
-    private String username;
-
-    private String usernick;
-
-    private String avatar_url;
-
-    private String portrait;
-
-    private String access_token;
-
-    private UserBean info;
+    public void setBlack_magic(boolean black_magic) {
+        this.black_magic = black_magic;
+    }
 
 
+    public int getNavigationPosition() {
+        return navigationPosition;
+    }
+
+    public void setNavigationPosition(int navigationPosition) {
+        this.navigationPosition = navigationPosition;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(access_token);
+        dest.writeLong(expires_time);
+        dest.writeInt(navigationPosition);
+        dest.writeBooleanArray(new boolean[]{this.black_magic});
+        dest.writeParcelable(info, flags);
+    }
+
+    public static final Parcelable.Creator<AccountBean> CREATOR =
+            new Parcelable.Creator<AccountBean>() {
+                public AccountBean createFromParcel(Parcel in) {
+                    AccountBean accountBean = new AccountBean();
+                    accountBean.access_token = in.readString();
+                    accountBean.expires_time = in.readLong();
+                    accountBean.navigationPosition = in.readInt();
+
+                    boolean[] booleans = new boolean[1];
+                    in.readBooleanArray(booleans);
+                    accountBean.black_magic = booleans[0];
+
+                    accountBean.info = in.readParcelable(UserBean.class.getClassLoader());
+
+                    return accountBean;
+                }
+
+                public AccountBean[] newArray(int size) {
+                    return new AccountBean[size];
+                }
+            };
 }

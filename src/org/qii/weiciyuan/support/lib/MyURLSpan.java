@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.support.lib;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -13,9 +12,12 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.view.View;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.adapter.LongClickLinkDialog;
+import org.qii.weiciyuan.ui.browser.BrowserWebActivity;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
  * User: qii
@@ -52,10 +54,28 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
     public void onClick(View widget) {
         Uri uri = Uri.parse(getURL());
         Context context = widget.getContext();
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
-        context.startActivity(intent);
+        if (uri.getScheme().startsWith("http")) {
+            String url = uri.toString();
+            if (Utility.isWeiboAccountIdLink(url)) {
+                Intent intent = new Intent(context, UserInfoActivity.class);
+                intent.putExtra("id", Utility.getIdFromWeiboAccountLink(url));
+                context.startActivity(intent);
+            } else if (Utility.isWeiboAccountDomainLink(url)) {
+                Intent intent = new Intent(context, UserInfoActivity.class);
+                intent.putExtra("domain", Utility.getDomainFromWeiboAccountLink(url));
+                context.startActivity(intent);
+            } else {
+                Intent intent = new Intent(context, BrowserWebActivity.class);
+                intent.putExtra("url", uri.toString());
+                context.startActivity(intent);
+            }
+        } else {
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+            context.startActivity(intent);
+        }
     }
+
 
     public void onLongClick(View widget) {
         Uri data = Uri.parse(getURL());
@@ -69,10 +89,12 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
                 newValue = d;
             }
             if (!TextUtils.isEmpty(newValue)) {
-                ClipboardManager cm = (ClipboardManager) widget.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", newValue));
-                Toast.makeText(widget.getContext(), String.format(widget.getContext().getString(R.string.have_copied), newValue), Toast.LENGTH_SHORT).show();
+                Utility.vibrate(widget.getContext(), widget);
+                LongClickLinkDialog dialog = new LongClickLinkDialog(data);
+                dialog.show(((Activity) widget.getContext()).getFragmentManager(), "");
+
             }
+
         }
     }
 

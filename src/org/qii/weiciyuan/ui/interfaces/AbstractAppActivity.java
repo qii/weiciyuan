@@ -1,13 +1,12 @@
 package org.qii.weiciyuan.ui.interfaces;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.view.ViewConfiguration;
 import android.widget.Toast;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
@@ -22,9 +21,9 @@ import java.nio.charset.Charset;
  * User: Jiang Qi
  * Date: 12-7-31
  */
-public class AbstractAppActivity extends Activity {
+public class AbstractAppActivity extends FragmentActivity {
 
-    private int theme = 0;
+    protected int theme = 0;
 
     protected TimeLineBitmapDownloader commander = null;
 
@@ -32,12 +31,21 @@ public class AbstractAppActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        GlobalContext.getInstance().setActivity(this);
+        GlobalContext.getInstance().setCurrentRunningActivity(this);
+
 
         if (theme == SettingUtility.getAppTheme()) {
 
         } else {
             reload();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (GlobalContext.getInstance().getCurrentRunningActivity() == this) {
+            GlobalContext.getInstance().setCurrentRunningActivity(null);
         }
     }
 
@@ -59,7 +67,8 @@ public class AbstractAppActivity extends Activity {
         super.onCreate(savedInstanceState);
         forceShowActionBarOverflowMenu();
         initNFC();
-        commander = new TimeLineBitmapDownloader(new Handler());
+        GlobalContext.getInstance().setActivity(this);
+        commander = TimeLineBitmapDownloader.getInstance();
     }
 
 
@@ -79,8 +88,10 @@ public class AbstractAppActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        commander.totalStopLoadPicture();
-        commander = null;
+        if (commander != null) {
+            commander.totalStopLoadPicture();
+            commander = null;
+        }
     }
 
 
@@ -121,6 +132,7 @@ public class AbstractAppActivity extends Activity {
 
         overridePendingTransition(0, 0);
         startActivity(intent);
+        TimeLineBitmapDownloader.refreshThemePictureBackground();
     }
 
     public TimeLineBitmapDownloader getBitmapDownloader() {

@@ -5,44 +5,40 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.widget.TextView;
 import org.qii.weiciyuan.bean.*;
-import org.qii.weiciyuan.support.lib.MyLinkify;
+import org.qii.weiciyuan.support.database.FilterDBTask;
+import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
+import org.qii.weiciyuan.support.lib.MyURLSpan;
+import org.qii.weiciyuan.support.lib.WeiboPatterns;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * User: qii
  * Date: 12-8-29
+ * build emotions and clickable string in other threads except UI thread, improve listview scroll performance
  */
 public class ListViewTool {
 
     private ListViewTool() {
-        // Forbidden being instantiated.
-    }
-
-    public static void addJustHighLightLinks(TextView view) {
-        MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
-            public final String transformUrl(final Matcher match, String url) {
-                return match.group(1);
-            }
-        };
-
-        // Match @mentions and capture just the username portion of the text.
-        Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)");
-        String scheme = "org.qii.weiciyuan://";
-        MyLinkify.addJustHighLightLinks(view, pattern, scheme, null, mentionFilter);
-
-        MyLinkify.addJUstHighLightLinks(view, MyLinkify.WEB_URLS);
-
-        Pattern dd = Pattern.compile("#([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)#");
-        MyLinkify.addJustHighLightLinks(view, dd, scheme, null, mentionFilter);
     }
 
 
-    public static SpannableString getJustHighLightLinks(String txt) {
+    public static void addLinks(TextView view) {
+        CharSequence content = view.getText();
+        view.setText(convertNormalStringToSpannableString(content.toString()));
+        if (view.getLinksClickable()) {
+            view.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
+        }
+    }
+
+    private static SpannableString convertNormalStringToSpannableString(String txt) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
         String hackTxt;
@@ -51,76 +47,68 @@ public class ListViewTool {
         } else {
             hackTxt = txt;
         }
-        SpannableString value;
-        MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
-            public final String transformUrl(final Matcher match, String url) {
-                return match.group(1);
-            }
-        };
+        SpannableString value = SpannableString.valueOf(hackTxt);
+        Linkify.addLinks(value, WeiboPatterns.MENTION_URL, WeiboPatterns.MENTION_SCHEME);
+        Linkify.addLinks(value, WeiboPatterns.WEB_URL, WeiboPatterns.WEB_SCHEME);
+        Linkify.addLinks(value, WeiboPatterns.TOPIC_URL, WeiboPatterns.TOPIC_SCHEME);
 
-        // Match @mentions and capture just the username portion of the text.
-        Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)");
-        String scheme = "org.qii.weiciyuan://";
-        value = MyLinkify.getJustHighLightLinks(hackTxt, pattern, scheme, null, mentionFilter);
-
-        value = MyLinkify.addJUstHighLightLinks(value, MyLinkify.WEB_URLS);
-
-        scheme = "org.qii.weiciyuan.topic://";
-        Pattern dd = Pattern.compile("#([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)#");
-        value = MyLinkify.getJustHighLightLinks(value, dd, scheme, null, mentionFilter);
+        URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
+        MyURLSpan weiboSpan = null;
+        for (URLSpan urlSpan : urlSpans) {
+            weiboSpan = new MyURLSpan(urlSpan.getURL());
+            int start = value.getSpanStart(urlSpan);
+            int end = value.getSpanEnd(urlSpan);
+            value.removeSpan(urlSpan);
+            value.setSpan(weiboSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
 
         ListViewTool.addEmotions(value);
-
         return value;
     }
 
     public static void addJustHighLightLinks(MessageBean bean) {
+        bean.setListViewSpannableString(convertNormalStringToSpannableString(bean.getText()));
+        bean.getSourceString();
 
-        bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
         if (bean.getRetweeted_status() != null) {
-            String name = "";
-            UserBean reUser = bean.getRetweeted_status().getUser();
-            if (reUser != null) {
-                name = reUser.getScreen_name();
-            }
-
-            SpannableString value;
-
-            if (!TextUtils.isEmpty(name)) {
-                value = ListViewTool.getJustHighLightLinks("@" + name + "：" + bean.getRetweeted_status().getText());
-            } else {
-                value = ListViewTool.getJustHighLightLinks(bean.getRetweeted_status().getText());
-            }
-
-            bean.getRetweeted_status().setListViewSpannableString(value);
+            bean.getRetweeted_status().setListViewSpannableString(buildOriWeiboSpannalString(bean.getRetweeted_status()));
+            bean.getRetweeted_status().getSourceString();
         }
+    }
+
+    private static SpannableString buildOriWeiboSpannalString(MessageBean oriMsg) {
+        String name = "";
+        UserBean oriUser = oriMsg.getUser();
+        if (oriUser != null) {
+            name = oriUser.getScreen_name();
+            if (TextUtils.isEmpty(name)) {
+                name = oriUser.getId();
+            }
+        }
+
+        SpannableString value;
+
+        if (!TextUtils.isEmpty(name)) {
+            value = ListViewTool.convertNormalStringToSpannableString("@" + name + "：" + oriMsg.getText());
+        } else {
+            value = ListViewTool.convertNormalStringToSpannableString(oriMsg.getText());
+        }
+        return value;
     }
 
     public static void addJustHighLightLinks(CommentBean bean) {
 
-        bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
+        bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
         if (bean.getStatus() != null) {
-            String name = "";
-            UserBean reUser = bean.getStatus().getUser();
-            if (reUser != null) {
-                name = reUser.getScreen_name();
-            }
+            bean.getStatus().setListViewSpannableString(buildOriWeiboSpannalString(bean.getStatus()));
+        }
 
-            SpannableString value;
-
-            if (!TextUtils.isEmpty(name)) {
-                value = ListViewTool.getJustHighLightLinks("@" + name + "：" + bean.getStatus().getText());
-            } else {
-                value = ListViewTool.getJustHighLightLinks(bean.getStatus().getText());
-            }
-
-            bean.getStatus().setListViewSpannableString(value);
+        if (bean.getReply_comment() != null) {
+            addJustHighLightLinksOnlyReplyComment(bean.getReply_comment());
         }
     }
 
-    public static void addJustHighLightLinksOnlyReplyComment(CommentBean bean) {
-
-
+    private static void addJustHighLightLinksOnlyReplyComment(CommentBean bean) {
         String name = "";
         UserBean reUser = bean.getUser();
         if (reUser != null) {
@@ -130,89 +118,144 @@ public class ListViewTool {
         SpannableString value;
 
         if (!TextUtils.isEmpty(name)) {
-            value = ListViewTool.getJustHighLightLinks("@" + name + "：" + bean.getText());
+            value = ListViewTool.convertNormalStringToSpannableString("@" + name + "：" + bean.getText());
         } else {
-            value = ListViewTool.getJustHighLightLinks(bean.getText());
+            value = ListViewTool.convertNormalStringToSpannableString(bean.getText());
         }
 
-        bean.setListViewReplySpannableString(value);
+        bean.setListViewSpannableString(value);
     }
 
     public static void addJustHighLightLinks(DMUserBean bean) {
-        bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
+        bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
     }
 
     public static void addJustHighLightLinks(DMBean bean) {
-        bean.setListViewSpannableString(ListViewTool.getJustHighLightLinks(bean.getText()));
+        bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
     }
 
+    public static void filterMessage(MessageListBean value) {
 
-    public static void addLinks(TextView view) {
-        MyLinkify.TransformFilter mentionFilter = new MyLinkify.TransformFilter() {
-            public final String transformUrl(final Matcher match, String url) {
-                return match.group(1);
+        List<MessageBean> msgList = value.getItemList();
+        Iterator<MessageBean> iterator = msgList.iterator();
+
+        List<String> keywordFilter = FilterDBTask.getFilterKeywordList(FilterDBTask.TYPE_KEYWORD);
+        List<String> userFilter = FilterDBTask.getFilterKeywordList(FilterDBTask.TYPE_USER);
+        List<String> topicFilter = FilterDBTask.getFilterKeywordList(FilterDBTask.TYPE_TOPIC);
+        List<String> sourceFilter = FilterDBTask.getFilterKeywordList(FilterDBTask.TYPE_SOURCE);
+
+
+        while (iterator.hasNext()) {
+            MessageBean msg = iterator.next();
+            if (msg.getUser() == null) {
+                iterator.remove();
+                value.removedCountPlus();
+            } else if (SettingUtility.isEnableFilter() && ListViewTool.haveFilterWord(msg, keywordFilter, userFilter, topicFilter, sourceFilter)) {
+                iterator.remove();
+                value.removedCountPlus();
+            } else {
+                msg.getListViewSpannableString();
+                TimeTool.dealMills(msg);
             }
-        };
-
-
-//
-//        // Match @mentions and capture just the username portion of the text.
-        Pattern pattern = Pattern.compile("@([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)");
-        String scheme = "org.qii.weiciyuan://";
-        MyLinkify.addLinks(view, pattern, scheme, null, mentionFilter);
-
-
-        pattern = Pattern.compile("#([a-zA-Z0-9_\\-\\u4e00-\\u9fa5]+)#");
-        scheme = "org.qii.weiciyuan.topic://";
-        MyLinkify.addLinks(view, pattern, scheme, null, mentionFilter);
-
-        MyLinkify.addLinks(view, MyLinkify.WEB_URLS);
-        CharSequence content = view.getText();
-        SpannableString value = SpannableString.valueOf(content);
-        ListViewTool.addEmotions(value, view.getTextSize());
-        view.setText(value);
-
+        }
     }
 
+    public static boolean haveFilterWord(MessageBean content, List<String> keywordFilter
+            , List<String> userFilter, List<String> topicFilter, List<String> sourceFilter) {
 
-    public static boolean haveFilterWord(MessageBean content, List<String> filterWordList) {
-
+        //if this message is sent myself, ignore it;
         if (content.getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
             return false;
         }
 
-        for (String filterWord : filterWordList) {
+        boolean hasOriMessage = content.getRetweeted_status() != null;
+        MessageBean oriMessage = content.getRetweeted_status();
 
-            if (content.getUser() != null && content.getUser().getScreen_name().contains(filterWord)) {
-                return true;
-            }
+        for (String filterWord : keywordFilter) {
 
             if (content.getText().contains(filterWord)) {
                 return true;
             }
 
-            if (content.getRetweeted_status() != null && content.getRetweeted_status().getText().contains(filterWord)) {
+            if (hasOriMessage && oriMessage.getText().contains(filterWord)) {
                 return true;
             }
 
-            if (content.getRetweeted_status() != null && content.getRetweeted_status().getUser() != null
-                    && content.getRetweeted_status().getUser().getScreen_name().contains(filterWord)) {
+        }
+
+        for (String filterWord : userFilter) {
+
+            if (content.getUser() != null && content.getUser().getScreen_name().equals(filterWord)) {
+                return true;
+            }
+
+
+            if (hasOriMessage && oriMessage.getUser() != null
+                    && oriMessage.getUser().getScreen_name().equals(filterWord)) {
                 return true;
             }
         }
+
+        for (String filterWord : topicFilter) {
+
+
+            Matcher localMatcher = WeiboPatterns.TOPIC_URL.matcher(content.getText());
+
+            while (localMatcher.find()) {
+                String str2 = localMatcher.group(0);
+                if (TextUtils.isEmpty(str2) || str2.length() < 3) {
+                    continue;
+                }
+
+                if (filterWord.equals(str2.substring(1, str2.length() - 1))) {
+                    return true;
+                }
+
+            }
+
+
+            if (content.getRetweeted_status() != null) {
+
+                localMatcher = WeiboPatterns.TOPIC_URL.matcher(content.getRetweeted_status().getText());
+
+                while (localMatcher.find()) {
+                    String str2 = localMatcher.group(0);
+                    if (TextUtils.isEmpty(str2) || str2.length() < 3) {
+                        continue;
+                    }
+
+                    if (filterWord.equals(str2.substring(1, str2.length() - 1))) {
+                        return true;
+                    }
+
+                }
+            }
+
+        }
+
+        for (String filterWord : sourceFilter) {
+
+            if (filterWord.equals(content.getSourceString())) {
+                return true;
+            }
+
+
+            if (hasOriMessage && filterWord.equals(content.getRetweeted_status().getSourceString())) {
+                return true;
+            }
+        }
+
         return false;
     }
 
 
-    public static void addEmotions(SpannableString value) {
-        Matcher localMatcher = Pattern.compile("\\[(\\S+?)\\]").matcher(value);
+    private static void addEmotions(SpannableString value) {
+        Matcher localMatcher = WeiboPatterns.EMOTION_URL.matcher(value);
         while (localMatcher.find()) {
             String str2 = localMatcher.group(0);
-
             int k = localMatcher.start();
             int m = localMatcher.end();
             if (m - k < 8) {
-
                 Bitmap bitmap = GlobalContext.getInstance().getEmotionsPics().get(str2);
                 if (bitmap != null) {
                     ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), bitmap, ImageSpan.ALIGN_BASELINE);
@@ -222,25 +265,4 @@ public class ListViewTool {
             }
         }
     }
-
-    public static void addEmotions(SpannableString value, float height) {
-        Matcher localMatcher = Pattern.compile("\\[(\\S+?)\\]").matcher(value);
-        while (localMatcher.find()) {
-            String str2 = localMatcher.group(0);
-
-            int k = localMatcher.start();
-            int m = localMatcher.end();
-            if (m - k < 8) {
-
-                Bitmap bitmap = GlobalContext.getInstance().getEmotionsPics().get(str2);
-                if (bitmap != null) {
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) (height * 1.5), (int) (height * 1.5), true);
-                    ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), scaledBitmap, ImageSpan.ALIGN_BASELINE);
-                    value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-            }
-        }
-    }
-
-
 }

@@ -1,8 +1,8 @@
 package org.qii.weiciyuan.ui.actionmenu;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -89,7 +89,7 @@ public class NormalFriendShipSingleChoiceModeListener implements ActionMode.Call
         switch (item.getItemId()) {
             case R.id.menu_at:
                 Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
-                intent.putExtra("token",GlobalContext.getInstance().getSpecialToken());
+                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                 intent.putExtra("content", "@" + bean.getScreen_name());
                 intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
                 getActivity().startActivity(intent);

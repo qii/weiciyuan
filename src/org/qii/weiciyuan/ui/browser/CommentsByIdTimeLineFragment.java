@@ -1,10 +1,11 @@
 package org.qii.weiciyuan.ui.browser;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.content.DialogInterface;
+import android.content.*;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -16,22 +17,21 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.dao.send.CommentNewMsgDao;
-import org.qii.weiciyuan.dao.timeline.CommentsTimeLineByIdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
-import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.actionmenu.CommentByIdFloatingMenu;
 import org.qii.weiciyuan.ui.actionmenu.CommentByIdSingleChoiceModeLinstener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
-import org.qii.weiciyuan.ui.widgets.SendProgressFragment;
+import org.qii.weiciyuan.ui.loader.CommentsByIdMsgLoader;
+import org.qii.weiciyuan.ui.widgets.QuickSendProgressFragment;
 
 /**
  * User: qii
@@ -41,21 +41,22 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     private LinearLayout quick_repost;
     private RemoveTask removeTask;
-
     private CommentListBean bean = new CommentListBean();
+    private EditText et;
+    private String token;
+    private MessageBean msg;
+
+    private BroadcastReceiver sendCompletedReceiver;
+
 
     @Override
     public CommentListBean getList() {
         return bean;
     }
 
-    private EditText et;
-    private String token;
-    private String id;
-
-    public CommentsByIdTimeLineFragment(String token, String id) {
+    public CommentsByIdTimeLineFragment(String token, MessageBean msg) {
         this.token = token;
-        this.id = id;
+        this.msg = msg;
     }
 
     public CommentsByIdTimeLineFragment() {
@@ -66,18 +67,18 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("bean", bean);
-        outState.putString("id", id);
+        outState.putParcelable("bean", bean);
+        outState.putParcelable("msg", msg);
         outState.putString("token", token);
     }
 
     //restore from activity destroy
     public void load() {
         String sss = token;
-        if ((bean == null || bean.getItemList().size() == 0) && newTask == null) {
+        if ((bean == null || bean.getItemList().size() == 0)) {
             if (pullToRefreshListView != null) {
-                pullToRefreshListView.startRefreshNow();
-                refresh();
+                pullToRefreshListView.setRefreshing();
+                loadNewMsg();
             }
         }
     }
@@ -113,51 +114,34 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                getPullToRefreshListView().startRefreshNow();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (getActivity() != null) {
+                            getPullToRefreshListView().setRefreshing();
+                            loadNewMsg();
+                        }
+
+                    }
+                }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
                 break;
             case SCREEN_ROTATE:
                 //nothing
                 refreshLayout(bean);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                getList().replaceAll((CommentListBean) savedInstanceState.getSerializable("bean"));
+                getList().replaceAll((CommentListBean) savedInstanceState.getParcelable("bean"));
                 token = savedInstanceState.getString("token");
-                id = savedInstanceState.getString("id");
+                msg = (MessageBean) savedInstanceState.getParcelable("msg");
                 timeLineAdapter.notifyDataSetChanged();
                 refreshLayout(bean);
                 break;
         }
 
 
-        getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position - 1 < getList().getSize() && position - 1 >= 0) {
-                    if (mActionMode != null) {
-                        mActionMode.finish();
-                        mActionMode = null;
-                        getListView().setItemChecked(position, true);
-                        timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(getListView(), timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
-                        return true;
-                    } else {
-                        getListView().setItemChecked(position, true);
-                        timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(getListView(), timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-        }
-
-        );
     }
 
 
@@ -166,7 +150,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         super.onCreate(savedInstanceState);
         bean = new CommentListBean();
         setHasOptionsMenu(true);
-        setRetainInstance(true);
+        setRetainInstance(false);
     }
 
 
@@ -174,70 +158,58 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.commentsbyidtimelinefragment_layout, container, false);
-        empty = (TextView) view.findViewById(R.id.empty);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        buildLayout(inflater, view);
         quick_repost = (LinearLayout) view.findViewById(R.id.quick_repost);
-        pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
-        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
-            @Override
-            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                refresh();
-
-            }
-        });
-        pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
-            @Override
-            public void onLastItemVisible() {
-                listViewFooterViewClick(null);
-            }
-        });
-        getListView().setScrollingCacheEnabled(false);
-
-        getListView().setHeaderDividersEnabled(false);
-
-        footerView = inflater.inflate(R.layout.listview_footer_layout, null);
-        getListView().addFooterView(footerView);
-        dismissFooterView();
-
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mActionMode != null) {
-                    getListView().clearChoices();
-                    mActionMode.finish();
-                    mActionMode = null;
-                    return;
-                }
-                getListView().clearChoices();
-                if (position - 1 < getList().getItemList().size() && position - 1 >= 0) {
-                    listViewItemClick(parent, view, position - 1, id);
-                } else if (position - 1 >= getList().getItemList().size()) {
-                    listViewFooterViewClick(view);
-                }
-            }
-        });
-
         et = (EditText) view.findViewById(R.id.content);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendComment();
             }
         });
-        buildListAdapter();
-        return view;
+        getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        getListView().setOnItemLongClickListener(onItemLongClickListener);
     }
+
+    private AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            if (position - 1 < getList().getSize() && position - 1 >= 0) {
+                if (mActionMode != null) {
+                    mActionMode.finish();
+                    mActionMode = null;
+                    getListView().setItemChecked(position, true);
+                    timeLineAdapter.notifyDataSetChanged();
+                    mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(getListView(), timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
+                    return true;
+                } else {
+                    getListView().setItemChecked(position, true);
+                    timeLineAdapter.notifyDataSetChanged();
+                    mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(getListView(), timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    };
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new CommentListAdapter(this, ((AbstractAppActivity) getActivity()).getBitmapDownloader(), getList().getItemList(), getListView(), false);
+        timeLineAdapter = new CommentListAdapter(this, getList().getItemList(), getListView(), false, false);
         pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 
     private void sendComment() {
 
         if (canSend()) {
-            new QuickCommentTask().execute();
+            new QuickCommentTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -253,6 +225,27 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     @Override
     public void removeCancel() {
         clearActionMode();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sendCompletedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                getPullToRefreshListView().setRefreshing();
+                loadNewMsg();
+            }
+        };
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(sendCompletedReceiver,
+                new IntentFilter("org.qii.weiciyuan.SEND.COMMENT.COMPLETED"));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(sendCompletedReceiver);
     }
 
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
@@ -300,7 +293,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     private class QuickCommentTask extends AsyncTask<Void, Void, CommentBean> {
         WeiboException e;
-        SendProgressFragment progressFragment = new SendProgressFragment();
+        QuickSendProgressFragment progressFragment = new QuickSendProgressFragment();
 
         @Override
         protected void onPreExecute() {
@@ -323,7 +316,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
         @Override
         protected CommentBean doInBackground(Void... params) {
-            CommentNewMsgDao dao = new CommentNewMsgDao(token, id, et.getText().toString());
+            CommentNewMsgDao dao = new CommentNewMsgDao(token, msg.getId(), et.getText().toString());
             try {
                 return dao.sendNewMsg();
             } catch (WeiboException e) {
@@ -348,7 +341,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             progressFragment.dismissAllowingStateLoss();
             if (s != null) {
                 et.setText("");
-                refresh();
+                loadNewMsg();
             } else {
                 Toast.makeText(getActivity(), getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
             }
@@ -360,8 +353,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
 
-        CommentByIdFloatingMenu menu = new CommentByIdFloatingMenu(getList().getItem(position));
-        menu.show(getFragmentManager(), "");
+//        CommentByIdFloatingMenu menu = new CommentByIdFloatingMenu(getList().getItem(position));
+//        menu.show(getFragmentManager(), "");
     }
 
 
@@ -369,7 +362,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                getPullToRefreshListView().startRefreshNow();
+                getPullToRefreshListView().setRefreshing();
+                loadNewMsg();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -377,28 +371,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
 
     @Override
-    protected CommentListBean getDoInBackgroundNewData() throws WeiboException {
-        CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
-        return dao.getGSONMsgList();
-    }
-
-    @Override
-    protected CommentListBean getDoInBackgroundOldData() throws WeiboException {
-        CommentsTimeLineByIdDao dao = new CommentsTimeLineByIdDao(token, id);
-        if (getList().getItemList().size() > 0) {
-            dao.setMax_id(getList().getItemList().get(getList().getItemList().size() - 1).getId());
-        }
-        CommentListBean result = dao.getGSONMsgList();
-        return result;
-    }
-
-    @Override
-    protected CommentListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        throw new UnsupportedOperationException("comment by id list dont support this operation");
-    }
-
-    @Override
-    protected void newMsgOnPostExecute(CommentListBean newValue) {
+    protected void newMsgOnPostExecute(CommentListBean newValue, Bundle loaderArgs) {
         if (newValue != null && newValue.getSize() > 0) {
             getList().replaceAll(newValue);
             getAdapter().notifyDataSetChanged();
@@ -406,6 +379,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             invlidateTabText();
         } else if (newValue != null && newValue.getSize() == 0) {
             getList().clear();
+            getAdapter().notifyDataSetChanged();
             invlidateTabText();
         }
     }
@@ -423,11 +397,66 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     private void invlidateTabText() {
         Activity activity = getActivity();
         if (activity != null) {
-            ActionBar.Tab tab = activity.getActionBar().getTabAt(1);
-            String num = getString(R.string.comments) + "(" + bean.getTotal_number() + ")";
-            tab.setText(num);
-
+//            ActionBar.Tab tab = activity.getActionBar().getTabAt(1);
+//            Utility.buildTabCount(tab, getString(R.string.comments), bean.getTotal_number());
+            ((BrowserWeiboMsgActivity) activity).updateCommentCount(bean.getTotal_number());
         }
     }
 
+    @Override
+    public void loadMiddleMsg(String beginId, String endId, int position) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        dismissFooterView();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("beginId", beginId);
+        bundle.putString("endId", endId);
+        bundle.putInt("position", position);
+        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
+
+    }
+
+    @Override
+    public void loadNewMsg() {
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        dismissFooterView();
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+    }
+
+    @Override
+    protected void loadOldMsg(View view) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+    }
+
+
+    protected android.support.v4.content.Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateNewMsgLoader(int loaderId, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+
+        String sinceId = null;
+//        if (getList().getItemList().size() > 0) {
+//            sinceId = getList().getItemList().get(0).getId();
+//        }
+        return new CommentsByIdMsgLoader(getActivity(), msg.getId(), token, sinceId, null);
+    }
+
+    protected android.support.v4.content.Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateMiddleMsgLoader(int loaderId, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+
+        return new CommentsByIdMsgLoader(getActivity(), msg.getId(), token, middleBeginId, middleEndId);
+    }
+
+    protected android.support.v4.content.Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateOldMsgLoader(int loaderId, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String maxId = null;
+        if (getList().getItemList().size() > 0) {
+            maxId = getList().getItemList().get(getList().getItemList().size() - 1).getId();
+        }
+        return new CommentsByIdMsgLoader(getActivity(), msg.getId(), token, null, maxId);
+    }
 }

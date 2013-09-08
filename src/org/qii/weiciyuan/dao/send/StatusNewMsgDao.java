@@ -59,7 +59,7 @@ public class StatusNewMsgDao {
     }
 
     private boolean sendNewMsgWithPic(String str, FileUploaderHttpHelper.ProgressListener listener) throws WeiboException {
-        String url =  URLHelper.STATUSES_UPLOAD;
+        String url = URLHelper.STATUSES_UPLOAD;
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         map.put("status", str);
@@ -68,7 +68,7 @@ public class StatusNewMsgDao {
             map.put("long", String.valueOf(geoBean.getLon()));
         }
 
-        return HttpUtility.getInstance().executeUploadTask(url, map, pic, listener);
+        return HttpUtility.getInstance().executeUploadTask(url, map, pic, "pic", listener);
 
     }
 }

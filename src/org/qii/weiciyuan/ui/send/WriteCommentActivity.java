@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.dao.send.RepostNewMsgDao;
@@ -17,7 +18,6 @@ import org.qii.weiciyuan.othercomponent.sendweiboservice.SendCommentService;
 import org.qii.weiciyuan.othercomponent.sendweiboservice.SendRepostService;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.CommentDraftBean;
-import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
@@ -27,6 +27,9 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
  * Date: 12-8-2
  */
 public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
+
+    public static final String ACTION_DRAFT = "org.qii.weiciyuan.DRAFT";
+    public static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
 
     private String token;
     private MessageBean msg;
@@ -46,23 +49,76 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         getActionBar().setTitle(R.string.comments);
         getActionBar().setSubtitle(GlobalContext.getInstance().getCurrentAccountName());
 
+        if (savedInstanceState == null) {
+
+            Intent intent = getIntent();
+            String action = intent.getAction();
+            if (!TextUtils.isEmpty(action)) {
+                if (action.equals(WriteReplyToCommentActivity.ACTION_DRAFT)) {
+                    handleDraftOperation(intent);
+                } else if (action.equals(WriteReplyToCommentActivity.ACTION_SEND_FAILED)) {
+                    handleFailedOperation(intent);
+                }
+            } else {
+                handleNormalOperation(intent);
+            }
+        }
+
+    }
+
+    public static Intent startBecauseSendFailed(Context context,
+                                                AccountBean account,
+                                                String content,
+                                                MessageBean oriMsg,
+                                                CommentDraftBean draft,
+                                                boolean comment_ori,
+                                                String failedReason) {
+        Intent intent = new Intent(context, WriteCommentActivity.class);
+        intent.setAction(WriteCommentActivity.ACTION_SEND_FAILED);
+        intent.putExtra("account", account);
+        intent.putExtra("content", content);
+        intent.putExtra("oriMsg", oriMsg);
+        intent.putExtra("comment_ori", comment_ori);
+        intent.putExtra("failedReason", failedReason);
+        intent.putExtra("draft", draft);
+        return intent;
+    }
+
+    private void handleFailedOperation(Intent intent) {
+        token = ((AccountBean) intent.getParcelableExtra("account")).getAccess_token();
+        msg = (MessageBean) getIntent().getParcelableExtra("oriMsg");
+
+        getEditTextView().setError(intent.getStringExtra("failedReason"));
+        getEditTextView().setText(intent.getStringExtra("content"));
+        commentDraftBean = (CommentDraftBean) intent.getParcelableExtra("draft");
+        getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+
+        savedEnableRepost = intent.getBooleanExtra("comment_ori", false);
+
+    }
+
+    private void handleNormalOperation(Intent intent) {
+
         token = getIntent().getStringExtra("token");
         if (TextUtils.isEmpty(token))
             token = GlobalContext.getInstance().getSpecialToken();
 
-        msg = (MessageBean) getIntent().getSerializableExtra("msg");
-        if (msg == null) {
-            commentDraftBean = (CommentDraftBean) getIntent().getSerializableExtra("draft");
-            msg = commentDraftBean.getMessageBean();
-            getEditTextView().setText(commentDraftBean.getContent());
+        msg = (MessageBean) getIntent().getParcelableExtra("msg");
+        getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
+    }
 
-        }
+    private void handleDraftOperation(Intent intent) {
+
+        token = getIntent().getStringExtra("token");
+        if (TextUtils.isEmpty(token))
+            token = GlobalContext.getInstance().getSpecialToken();
+
+
+        commentDraftBean = (CommentDraftBean) getIntent().getParcelableExtra("draft");
+        msg = commentDraftBean.getMessageBean();
+        getEditTextView().setText(commentDraftBean.getContent());
 
         getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
-        if (savedInstanceState != null) {
-            savedEnableCommentOri = savedInstanceState.getBoolean("commentOri");
-            savedEnableRepost = savedInstanceState.getBoolean("repost");
-        }
     }
 
     @Override
@@ -70,6 +126,21 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         super.onSaveInstanceState(outState);
         outState.putBoolean("commentOri", enableCommentOri.isChecked());
         outState.putBoolean("repost", enableRepost.isChecked());
+        outState.putString("token", token);
+        outState.putParcelable("msg", msg);
+        outState.putParcelable("commentDraftBean", commentDraftBean);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            savedEnableCommentOri = savedInstanceState.getBoolean("commentOri");
+            savedEnableRepost = savedInstanceState.getBoolean("repost");
+            token = savedInstanceState.getString("token");
+            msg = (MessageBean) savedInstanceState.getParcelable("msg");
+            commentDraftBean = (CommentDraftBean) savedInstanceState.getParcelable("commentDraftBean");
+        }
     }
 
     @Override
@@ -111,6 +182,12 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (msg != null && msg.getRetweeted_status() != null) {
             enableCommentOri.setVisible(true);
+        }
+        String contentStr = getEditTextView().getText().toString();
+        if (!TextUtils.isEmpty(contentStr)) {
+            menu.findItem(R.id.menu_clear).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_clear).setVisible(false);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -174,6 +251,9 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
                 Intent intent = new Intent(WriteCommentActivity.this, AtUserActivity.class);
                 intent.putExtra("token", token);
                 startActivityForResult(intent, AT_USER);
+                break;
+            case R.id.menu_clear:
+                clearContentMenu();
                 break;
         }
         return true;

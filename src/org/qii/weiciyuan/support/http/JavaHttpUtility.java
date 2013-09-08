@@ -3,7 +3,9 @@ package org.qii.weiciyuan.support.http;
 import android.text.TextUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.qii.weiciyuan.BuildConfig;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -12,12 +14,13 @@ import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 
+import javax.net.ssl.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
@@ -35,6 +38,46 @@ public class JavaHttpUtility {
 
     private static final int UPLOAD_CONNECT_TIMEOUT = 15 * 1000;
     private static final int UPLOAD_READ_TIMEOUT = 5 * 60 * 1000;
+
+    public class NullHostNameVerifier implements HostnameVerifier {
+
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
+    }
+
+    private TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+    };
+
+    public JavaHttpUtility() {
+
+        //allow Android to use an untrusted certificate for SSL/HTTPS connection
+        //so that when you debug app, you can use Fiddler http://fiddler2.com to logs all HTTPS traffic
+        try {
+            if (BuildConfig.DEBUG) {
+                HttpsURLConnection.setDefaultHostnameVerifier(new NullHostNameVerifier());
+                SSLContext sc = SSLContext.getInstance("SSL");
+                sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            }
+        } catch (Exception e) {
+        }
+
+    }
+
 
     public String executeNormalTask(HttpMethod httpMethod, String url, Map<String, String> param) throws WeiboException {
         switch (httpMethod) {
@@ -62,11 +105,11 @@ public class JavaHttpUtility {
         try {
             URL url = new URL(urlAddress);
             Proxy proxy = getProxy();
-            HttpURLConnection uRLConnection;
+            HttpsURLConnection uRLConnection;
             if (proxy != null)
-                uRLConnection = (HttpURLConnection) url.openConnection(proxy);
+                uRLConnection = (HttpsURLConnection) url.openConnection(proxy);
             else
-                uRLConnection = (HttpURLConnection) url.openConnection();
+                uRLConnection = (HttpsURLConnection) url.openConnection();
 
             uRLConnection.setDoInput(true);
             uRLConnection.setDoOutput(true);
@@ -126,6 +169,11 @@ public class JavaHttpUtility {
             WeiboException exception = new WeiboException();
             exception.setError_code(errCode);
             exception.setOriError(err);
+
+            if (errCode == ErrorCode.EXPIRED_TOKEN) {
+                Utility.showExpiredTokenDialogOrNotification();
+            }
+
             throw exception;
 
         } catch (JSONException e) {
@@ -254,7 +302,7 @@ public class JavaHttpUtility {
             return false;
         }
 
-        FileOutputStream out = null;
+        BufferedOutputStream out = null;
         InputStream in = null;
         HttpURLConnection urlConnection = null;
         try {
@@ -287,8 +335,8 @@ public class JavaHttpUtility {
             int bytetotal = (int) urlConnection.getContentLength();
             int bytesum = 0;
             int byteread = 0;
-            out = new FileOutputStream(file);
-            in = urlConnection.getInputStream();
+            out = new BufferedOutputStream(new FileOutputStream(file));
+            in = new BufferedInputStream(urlConnection.getInputStream());
 
             final Thread thread = Thread.currentThread();
             byte[] buffer = new byte[1444];
@@ -303,6 +351,9 @@ public class JavaHttpUtility {
                 if (downloadListener != null && bytetotal > 0) {
                     downloadListener.pushProgress(bytesum, bytetotal);
                 }
+            }
+            if (downloadListener != null) {
+                downloadListener.completed();
             }
             return true;
 
@@ -333,16 +384,52 @@ public class JavaHttpUtility {
         return _sb.toString();
     }
 
-    public boolean doUploadFile(String urlStr, Map<String, String> param, String path, final FileUploaderHttpHelper.ProgressListener listener) throws WeiboException {
+    private String getBoundaryMessage(String boundary, Map params, String fileField, String fileName, String fileType) {
+        StringBuffer res = new StringBuffer("--").append(boundary).append("\r\n");
+
+        Iterator keys = params.keySet().iterator();
+
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            String value = (String) params.get(key);
+            res.append("Content-Disposition: form-data; name=\"")
+                    .append(key).append("\"\r\n").append("\r\n")
+                    .append(value).append("\r\n").append("--")
+                    .append(boundary).append("\r\n");
+        }
+        res.append("Content-Disposition: form-data; name=\"").append(fileField)
+                .append("\"; filename=\"").append(fileName)
+                .append("\"\r\n").append("Content-Type: ")
+                .append(fileType).append("\r\n\r\n");
+
+        return res.toString();
+    }
+
+    public boolean doUploadFile(String urlStr, Map<String, String> param, String path, String imageParamName, final FileUploaderHttpHelper.ProgressListener listener) throws WeiboException {
         String BOUNDARYSTR = getBoundry();
-        String BOUNDARY = "--" + BOUNDARYSTR + "\r\n";
+
+        File targetFile = new File(path);
+
+        byte[] barry = null;
+        int contentLength = 0;
+        String sendStr = "";
+        try {
+            barry = ("--" + BOUNDARYSTR + "--\r\n").getBytes("UTF-8");
+
+            sendStr = getBoundaryMessage(BOUNDARYSTR, param, imageParamName, new File(path).getName(), "image/png");
+            contentLength = sendStr.getBytes("UTF-8").length + (int) targetFile.length() + 2 * barry.length;
+        } catch (UnsupportedEncodingException e) {
+
+        }
+        int totalSent = 0;
+        String lenstr = Integer.toString(contentLength);
+
         HttpURLConnection urlConnection = null;
         BufferedOutputStream out = null;
         FileInputStream fis = null;
         GlobalContext globalContext = GlobalContext.getInstance();
         String errorStr = globalContext.getString(R.string.timeout);
         globalContext = null;
-        InputStream is = null;
         try {
             URL url = null;
 
@@ -363,40 +450,16 @@ public class JavaHttpUtility {
             urlConnection.setRequestProperty("Connection", "Keep-Alive");
             urlConnection.setRequestProperty("Charset", "UTF-8");
             urlConnection.setRequestProperty("Content-type", "multipart/form-data;boundary=" + BOUNDARYSTR);
+            urlConnection.setRequestProperty("Content-Length", lenstr);
+            ((HttpURLConnection) urlConnection).setFixedLengthStreamingMode(contentLength);
             urlConnection.connect();
 
             out = new BufferedOutputStream(urlConnection.getOutputStream());
+            out.write(sendStr.getBytes("UTF-8"));
+            totalSent += sendStr.getBytes("UTF-8").length;
 
-            StringBuilder sb = new StringBuilder();
 
-            Map<String, String> paramMap = new HashMap<String, String>();
-
-            for (String key : param.keySet()) {
-                if (param.get(key) != null) {
-                    paramMap.put(key, param.get(key));
-                }
-            }
-
-            for (String str : paramMap.keySet()) {
-                sb.append(BOUNDARY);
-                sb.append("Content-Disposition:form-data;name=\"");
-                sb.append(str);
-                sb.append("\"\r\n\r\n");
-                sb.append(param.get(str));
-                sb.append("\r\n");
-            }
-
-            out.write(sb.toString().getBytes());
-
-            File file = new File(path);
-            out.write(BOUNDARY.getBytes());
-            StringBuilder filenamesb = new StringBuilder();
-            filenamesb.append("Content-Disposition:form-data;Content-Type:application/octet-stream;name=\"pic");
-            filenamesb.append("\";filename=\"");
-            filenamesb.append(file.getName() + "\"\r\n\r\n");
-            out.write(filenamesb.toString().getBytes());
-
-            fis = new FileInputStream(file);
+            fis = new FileInputStream(targetFile);
 
             int bytesRead;
             int bytesAvailable;
@@ -413,7 +476,7 @@ public class JavaHttpUtility {
             while (bytesRead > 0) {
 
                 if (thread.isInterrupted()) {
-                    file.delete();
+                    targetFile.delete();
                     throw new InterruptedIOException();
                 }
                 out.write(buffer, 0, bufferSize);
@@ -428,10 +491,11 @@ public class JavaHttpUtility {
 
             }
 
-            out.write("\r\n\r\n".getBytes());
-            fis.close();
 
-            out.write(("--" + BOUNDARYSTR + "--\r\n").getBytes());
+            out.write(barry);
+            totalSent += barry.length;
+            out.write(barry);
+            totalSent += barry.length;
             out.flush();
             out.close();
             if (listener != null) {

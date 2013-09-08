@@ -16,8 +16,10 @@ import android.widget.SearchView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AtUserBean;
 import org.qii.weiciyuan.dao.search.AtUserDao;
+import org.qii.weiciyuan.support.database.AtUsersDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,10 +84,16 @@ public class AtUserFragment extends ListFragment {
                 Intent intent = new Intent();
                 intent.putExtra("name", "@" + atList.get(position).getNickname() + " ");
                 getActivity().setResult(Activity.RESULT_OK, intent);
+                AtUsersDBTask.add(atList.get(position), GlobalContext.getInstance().getCurrentAccountId());
                 getActivity().finish();
             }
         });
 
+        atList = AtUsersDBTask.get(GlobalContext.getInstance().getCurrentAccountId());
+        for (AtUserBean b : atList) {
+            result.add(b.getNickname());
+        }
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -112,13 +120,21 @@ public class AtUserFragment extends ListFragment {
                     task = new AtUserTask(newText);
                     task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
-                    result.clear();
+                    if (task != null) {
+                        task.cancel(true);
+                    }
                     atList.clear();
+                    result.clear();
+                    atList = AtUsersDBTask.get(GlobalContext.getInstance().getCurrentAccountId());
+                    for (AtUserBean b : atList) {
+                        result.add(b.getNickname());
+                    }
                     adapter.notifyDataSetChanged();
                 }
                 return false;
             }
         });
+        searchView.requestFocus();
     }
 
 
@@ -147,7 +163,7 @@ public class AtUserFragment extends ListFragment {
             super.onPostExecute(atUserBeans);
             if (isCancelled())
                 return;
-            if (atUserBeans == null||atUserBeans.size() == 0) {
+            if (atUserBeans == null || atUserBeans.size() == 0) {
                 result.clear();
                 atList.clear();
                 adapter.notifyDataSetChanged();

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/btn_home"
+        android:background="@drawable/btn_drawer_menu"
+        android:layout_height="wrap_content">
+
+        <Button
+            style="@style/drawerMenuButton"
+            android:background="@null"
+            android:text="@string/home"
+            android:clickable="false"
+            android:drawableLeft="@drawable/ic_menu_home"
+            />
+
+        <TextView
+            android:id="@+id/tv_home_count"
+            style="@style/drawerMessageCount"
+            android:layout_marginRight="8dp"
+            android:text="0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/btn_mention"
+        android:background="@drawable/btn_drawer_menu"
+        android:layout_height="wrap_content">
+
+        <Button
+            style="@style/drawerMenuButton"
+            android:text="@string/mentions"
+            android:background="@null"
+            android:clickable="false"
+            android:drawableLeft="@drawable/repost_light"
+            />
+
+        <TextView
+            android:layout_marginRight="8dp"
+            android:id="@+id/tv_mention_count"
+            style="@style/drawerMessageCount"
+            android:text="0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:freezesText="false"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/btn_comment"
+        android:background="@drawable/btn_drawer_menu"
+        android:clickable="true"
+        android:addStatesFromChildren="true"
+        android:layout_height="wrap_content">
+
+        <Button
+            style="@style/drawerMenuButton"
+            android:text="@string/comments"
+            android:background="@null"
+            android:clickable="false"
+            android:drawableLeft="@drawable/comment_light"
+            />
+
+        <TextView
+            android:layout_marginRight="8dp"
+            android:id="@+id/tv_comment_count"
+            style="@style/drawerMessageCount"
+            android:text="0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:freezesText="false"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <Button
+        style="@style/drawerMenuButton"
+        android:id="@+id/btn_dm"
+        android:text="@string/dm"
+        android:drawableLeft="@drawable/ic_menu_message"
+        android:layout_weight="0"
+        android:layout_width="match_parent"
+        />
+
+
+    <Button
+        style="@style/drawerMenuButton"
+        android:id="@+id/btn_favourite"
+        android:text="@string/favourite"
+        android:drawableLeft="@drawable/ic_menu_fav"
+        android:layout_weight="0"
+        android:layout_width="match_parent"
+        />
+
+
+    <Button
+        style="@style/drawerMenuButton"
+        android:id="@+id/btn_search"
+        android:text="@string/search"
+        android:drawableLeft="@drawable/ic_menu_search"
+        android:layout_weight="0"
+        android:layout_width="match_parent"
+        />
+
+
+    <Button
+        style="@style/drawerMenuButton"
+        android:id="@+id/btn_location"
+        android:text="@string/nearby"
+        android:drawableLeft="@drawable/ic_menu_location"
+        android:layout_weight="0"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        />
+
+
+    <Button
+        style="@style/drawerMenuButton"
+        android:id="@+id/btn_profile"
+        android:text="@string/profile"
+        android:drawableLeft="@drawable/ic_menu_profile"
+        android:layout_weight="0"
+        android:layout_width="match_parent"
+        />
+
+
+    <Button
+        style="@style/drawerMenuButton"
+        android:id="@+id/btn_logout"
+        android:text="@string/logout"
+        android:drawableLeft="@drawable/ic_menu_logout"
+        android:layout_weight="0"
+        android:layout_width="match_parent"
+        />
+
+
+    <Button
+        style="@style/drawerMenuButton"
+        android:id="@+id/btn_setting"
+        android:text="@string/setting"
+        android:drawableLeft="@drawable/ic_menu_settings"
+        android:layout_weight="0"
+        android:layout_width="match_parent"
+        />
+
+</merge>

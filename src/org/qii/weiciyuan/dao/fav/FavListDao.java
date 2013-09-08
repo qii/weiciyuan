@@ -20,7 +20,7 @@ import java.util.*;
  * Date: 12-8-18
  */
 public class FavListDao {
-    private String getMsgListJson() {
+    private String getMsgListJson() throws WeiboException {
         String url = URLHelper.MYFAV_LIST;
 
         Map<String, String> map = new HashMap<String, String>();
@@ -29,17 +29,12 @@ public class FavListDao {
         map.put("page", page);
 
 
-        String jsonData = null;
-        try {
-            jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
-        } catch (WeiboException e) {
-            e.printStackTrace();
-        }
+        String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
         return jsonData;
     }
 
-    public FavListBean getGSONMsgList() {
+    public FavListBean getGSONMsgList() throws WeiboException {
 
         String json = getMsgListJson();
         Gson gson = new Gson();

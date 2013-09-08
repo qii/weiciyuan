@@ -18,8 +18,10 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayShowHomeEnabled(false);
+        getActionBar().setDisplayShowTitleEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(getString(R.string.appearance));
+        getActionBar().setTitle(getString(R.string.pref_appearance_title));
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
@@ -52,22 +54,14 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
         if (key.equals(SettingActivity.THEME)) {
 
             Intent intent = new Intent(this, AppearanceActivity.class);
-            //        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
 
+            finish();
             overridePendingTransition(0, 0);
 
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             overridePendingTransition(R.anim.stay, R.anim.alphaout);
-
-
-//            finish();
-//            overridePendingTransition(0, 0);
-//            startActivity(new Intent(this, AppearanceActivity.class));
-//            overridePendingTransition(R.anim.stay, R.anim.alphaout);
         }
-
 
 
     }

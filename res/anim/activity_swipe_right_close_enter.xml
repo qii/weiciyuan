@@ -1,0 +1,14 @@
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+     android:zAdjustment="bottom">
+
+    <scale
+        android:interpolator="@android:interpolator/decelerate_cubic"
+        android:fromXScale="0.9"
+        android:toXScale="1.0"
+        android:fromYScale="0.9"
+        android:toYScale="1.0"
+        android:pivotX="50%p"
+        android:pivotY="50%p"
+        android:startOffset="300"
+        android:duration="300"/>
+</set>

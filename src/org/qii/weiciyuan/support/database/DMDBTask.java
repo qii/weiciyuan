@@ -49,6 +49,16 @@ public class DMDBTask {
                 DMTable.ID, cv);
     }
 
+    public static void asyncReplace(final DMUserListBean list, final String accountId) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                clear(accountId);
+                add(list, accountId);
+            }
+        }).start();
+    }
+
     public static void clear(String accountId) {
         String sql = "delete from " + DMTable.TABLE_NAME + " where " + DMTable.ACCOUNTID + " in " + "(" + accountId + ")";
 

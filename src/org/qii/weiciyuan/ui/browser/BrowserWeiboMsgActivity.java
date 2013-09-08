@@ -1,16 +1,14 @@
 package org.qii.weiciyuan.ui.browser;
 
 import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.*;
 import android.widget.ShareActionProvider;
@@ -21,7 +19,8 @@ import org.qii.weiciyuan.dao.destroy.DestroyStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.lib.MyViewPager;
+import org.qii.weiciyuan.support.lib.SwipeRightToCloseOnGestureListener;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -30,6 +29,7 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteRepostActivity;
 import org.qii.weiciyuan.ui.task.FavAsyncTask;
+import org.qii.weiciyuan.ui.task.UnFavAsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +47,11 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     private String comment_sum = "";
     private String retweet_sum = "";
 
-    private ViewPager mViewPager = null;
+    private MyViewPager mViewPager = null;
 
     private FavAsyncTask favTask = null;
+
+    private UnFavAsyncTask unFavTask = null;
 
     private ShareActionProvider mShareActionProvider;
 
@@ -60,7 +62,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("msg", msg);
+        outState.putParcelable("msg", msg);
         outState.putString("token", token);
     }
 
@@ -68,14 +70,14 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            msg = (MessageBean) savedInstanceState.getSerializable("msg");
+            msg = (MessageBean) savedInstanceState.getParcelable("msg");
             token = savedInstanceState.getString("token");
         } else {
             Intent intent = getIntent();
             token = intent.getStringExtra("token");
-            msg = (MessageBean) intent.getSerializableExtra("msg");
+            msg = (MessageBean) intent.getParcelableExtra("msg");
         }
-        setContentView(R.layout.viewpager_layout);
+        setContentView(R.layout.viewpager_with_bg_layout);
 
         buildViewPager();
         buildActionBarAndViewPagerTitles();
@@ -88,45 +90,46 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     }
 
     private void buildViewPager() {
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
+        mViewPager = (MyViewPager) findViewById(R.id.viewpager);
+        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getSupportFragmentManager());
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
-        gestureDetector = new GestureDetector(BrowserWeiboMsgActivity.this, new MyOnGestureListener());
-        mViewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
-            }
-        });
+        gestureDetector = new GestureDetector(BrowserWeiboMsgActivity.this
+                , new SwipeRightToCloseOnGestureListener(BrowserWeiboMsgActivity.this, mViewPager));
+        mViewPager.setGestureDetector(this, gestureDetector);
+        getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
+
     }
+
 
     private void buildActionBarAndViewPagerTitles() {
         ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.detail));
 
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.weibo))
-                .setTabListener(tabListener));
-
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.comments))
-                .setTabListener(tabListener));
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.repost))
-                .setTabListener(tabListener));
-
+//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//
+//        actionBar.addTab(actionBar.newTab()
+//                .setText(getString(R.string.weibo))
+//                .setTabListener(tabListener));
+//
+//        actionBar.addTab(actionBar.newTab()
+//                .setText(getString(R.string.comments))
+//                .setTabListener(tabListener));
+//        actionBar.addTab(actionBar.newTab()
+//                .setText(getString(R.string.repost))
+//                .setTabListener(tabListener));
+//        Utility.buildTabCount(getActionBar().getTabAt(1), getString(R.string.comments), msg.getComments_count());
+//        Utility.buildTabCount(getActionBar().getTabAt(2), getString(R.string.repost), msg.getReposts_count());
     }
 
     ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
-            getActionBar().setSelectedNavigationItem(position);
+//            getActionBar().setSelectedNavigationItem(position);
             switch (position) {
 
                 case 2:
@@ -139,17 +142,17 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
 
 
     private AbstractTimeLineFragment getRepostFragment() {
-        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
+        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 RepostsByIdTimeLineFragment.class.getName()));
     }
 
     private AbstractTimeLineFragment getCommentFragment() {
-        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
+        return ((AbstractTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 CommentsByIdTimeLineFragment.class.getName()));
     }
 
     private Fragment getBrowserWeiboMsgFragment() {
-        return getFragmentManager().findFragmentByTag(BrowserWeiboMsgFragment.class.getName());
+        return getSupportFragmentManager().findFragmentByTag(BrowserWeiboMsgFragment.class.getName());
     }
 
     ActionBar.TabListener tabListener = new ActionBar.TabListener() {
@@ -223,7 +226,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
 
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
-        buildShareActionMenu();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -262,11 +264,16 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
                 Toast.makeText(this, getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_fav:
-                if (favTask == null || favTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                if (Utility.isTaskStopped(favTask) && Utility.isTaskStopped(unFavTask)) {
                     favTask = new FavAsyncTask(getToken(), msg.getId());
                     favTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
-
+                return true;
+            case R.id.menu_unfav:
+                if (Utility.isTaskStopped(favTask) && Utility.isTaskStopped(unFavTask)) {
+                    unFavTask = new UnFavAsyncTask(getToken(), msg.getId());
+                    unFavTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                }
                 return true;
             case R.id.menu_delete:
                 RemoveWeiboMsgDialog dialog = new RemoveWeiboMsgDialog(msg.getId());
@@ -277,17 +284,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     }
 
     private void buildShareActionMenu() {
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        if (msg != null) {
-            sharingIntent.putExtra(Intent.EXTRA_TEXT, msg.getText());
-            PackageManager packageManager = getPackageManager();
-            List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
-            boolean isIntentSafe = activities.size() > 0;
-            if (isIntentSafe && mShareActionProvider != null) {
-                mShareActionProvider.setShareIntent(sharingIntent);
-            }
-        }
+        Utility.setShareIntent(BrowserWeiboMsgActivity.this, mShareActionProvider, msg);
     }
 
     @Override
@@ -312,7 +309,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
                 list.add(getBrowserWeiboMsgFragment());
             }
             if (getCommentFragment() == null) {
-                list.add(new CommentsByIdTimeLineFragment(token, msg.getId()));
+                list.add(new CommentsByIdTimeLineFragment(token, msg));
             } else {
                 list.add(getCommentFragment());
             }
@@ -339,10 +336,24 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
 
         @Override
         public int getCount() {
-            return list.size();
+//            return list.size();
+            return 1;
         }
     }
 
+    public void updateCommentCount(int count) {
+        msg.setComments_count(count);
+        Intent intent = new Intent();
+        intent.putExtra("msg", msg);
+        setResult(0, intent);
+    }
+
+    public void updateRepostCount(int count) {
+        msg.setReposts_count(count);
+        Intent intent = new Intent();
+        intent.putExtra("msg", msg);
+        setResult(0, intent);
+    }
 
     public String getToken() {
         return token;
@@ -352,18 +363,12 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
         return msg;
     }
 
-
-    class MyOnGestureListener extends GestureDetector.SimpleOnGestureListener {
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
-            if (velocityX > AppConfig.SWIPE_MIN_DISTANCE && mViewPager.getCurrentItem() == 0) {
-                finish();
-                return true;
-            }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (gestureDetector.onTouchEvent(event))
+            return true;
+        else
             return false;
-        }
     }
 
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {

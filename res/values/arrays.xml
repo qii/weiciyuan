@@ -56,10 +56,8 @@
         <item>4</item>
     </string-array>
     <string-array name="theme">
-        <item>四次元</item>
-        <!--<item>黑白</item>-->
-        <item>夜间纯黑</item>
-        <!--<item>白色</item>-->
+        <item>白色</item>
+        <item>暗色</item>
     </string-array>
     <string-array name="theme_value">
         <item>1</item>
@@ -69,17 +67,18 @@
     </string-array>
     <string-array name="font">
         <item>小</item>
-        <item>较小</item>
+        <!--<item>较小</item>-->
         <item>中等</item>
         <item>大</item>
-        <item>很大</item>
+        <!--<item>很大</item>-->
     </string-array>
     <string-array name="font_value">
-        <item>12</item>
+        <!--<item>12</item>-->
         <item>13</item>
         <item>15</item>
-        <item>18</item>
-        <item>20</item>
+        <item>17</item>
+        <!--<item>18</item>-->
+        <!--<item>20</item>-->
     </string-array>
     <string-array name="notification_style">
         <item>一行一条</item>
@@ -108,5 +107,13 @@
         <item>1</item>
         <item>2</item>
         <item>3</item>
+    </string-array>
+    <string-array name="read_style_mode">
+        <item>滚动到第一条（新浪微博）</item>
+        <item>保留阅读位置（Twitter）</item>
+    </string-array>
+    <string-array name="read_style_mode_value">
+        <item>1</item>
+        <item>2</item>
     </string-array>
 </resources>

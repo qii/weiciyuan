@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.dao.show;
 
+import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.UserBean;
@@ -19,11 +20,12 @@ import java.util.Map;
 public class ShowUserDao {
 
     public UserBean getUserInfo() throws WeiboException {
-        String url = URLHelper.USER_SHOW;
+        String url = (!TextUtils.isEmpty(domain) ? URLHelper.USER_DOMAIN_SHOW : URLHelper.USER_SHOW);
         Map<String, String> map = new HashMap<String, String>();
         map.put("access_token", access_token);
         map.put("uid", uid);
         map.put("screen_name", screen_name);
+        map.put("domain", domain);
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
@@ -46,6 +48,7 @@ public class ShowUserDao {
     private String access_token;
     private String uid;
     private String screen_name;
+    private String domain;
 
     public ShowUserDao(String access_token) {
 
@@ -60,5 +63,9 @@ public class ShowUserDao {
     public ShowUserDao setUid(String uid) {
         this.uid = uid;
         return this;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 }

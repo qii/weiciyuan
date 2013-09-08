@@ -1,11 +1,16 @@
 package org.qii.weiciyuan.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -13,7 +18,152 @@ import java.util.Date;
  * Date: 12-7-29
  */
 
-public class MessageBean extends ItemBean {
+public class MessageBean extends ItemBean implements Parcelable {
+
+    private String created_at;
+    private long id;
+    private String idstr;
+    private String text;
+    private String source;
+    private boolean favorited;
+    private String truncated;
+    private String in_reply_to_status_id;
+    private String in_reply_to_user_id;
+    private String in_reply_to_screen_name;
+    private String mid;
+    private int reposts_count = 0;
+    private int comments_count = 0;
+    //    private Object annotations;
+
+    private String thumbnail_pic;
+    private String bmiddle_pic;
+    private String original_pic;
+
+    private String sourceString;
+
+    private long mills;
+
+    private MessageBean retweeted_status;
+    private UserBean user;
+    private GeoBean geo;
+
+    private ArrayList<PicUrls> pic_urls = new ArrayList<PicUrls>();
+
+
+    private transient SpannableString listViewSpannableString;
+
+
+    public static class PicUrls implements Parcelable {
+        public String thumbnail_pic;
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(thumbnail_pic);
+        }
+
+        public static final Parcelable.Creator<PicUrls> CREATOR =
+                new Parcelable.Creator<PicUrls>() {
+                    public PicUrls createFromParcel(Parcel in) {
+                        PicUrls picUrls = new PicUrls();
+                        picUrls.thumbnail_pic = in.readString();
+                        return picUrls;
+                    }
+
+                    public PicUrls[] newArray(int size) {
+                        return new PicUrls[size];
+                    }
+                };
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(created_at);
+        dest.writeLong(id);
+
+        dest.writeString(idstr);
+        dest.writeString(text);
+        dest.writeString(source);
+        dest.writeBooleanArray(new boolean[]{this.favorited});
+        dest.writeString(truncated);
+        dest.writeString(in_reply_to_status_id);
+        dest.writeString(in_reply_to_user_id);
+        dest.writeString(in_reply_to_screen_name);
+        dest.writeString(mid);
+        dest.writeInt(reposts_count);
+        dest.writeInt(comments_count);
+
+        dest.writeString(thumbnail_pic);
+        dest.writeString(bmiddle_pic);
+        dest.writeString(original_pic);
+
+        dest.writeString(sourceString);
+
+        dest.writeLong(mills);
+
+        dest.writeParcelable(retweeted_status, flags);
+        dest.writeParcelable(user, flags);
+        dest.writeParcelable(geo, flags);
+
+        dest.writeTypedList(pic_urls);
+
+    }
+
+    public static final Parcelable.Creator<MessageBean> CREATOR =
+            new Parcelable.Creator<MessageBean>() {
+                public MessageBean createFromParcel(Parcel in) {
+                    MessageBean messageBean = new MessageBean();
+                    messageBean.created_at = in.readString();
+                    messageBean.id = in.readLong();
+                    messageBean.idstr = in.readString();
+                    messageBean.text = in.readString();
+                    messageBean.source = in.readString();
+
+                    boolean[] booleans = new boolean[1];
+                    in.readBooleanArray(booleans);
+                    messageBean.favorited = booleans[0];
+
+
+                    messageBean.truncated = in.readString();
+                    messageBean.in_reply_to_status_id = in.readString();
+                    messageBean.in_reply_to_user_id = in.readString();
+                    messageBean.in_reply_to_screen_name = in.readString();
+                    messageBean.mid = in.readString();
+
+
+                    messageBean.reposts_count = in.readInt();
+                    messageBean.comments_count = in.readInt();
+
+                    messageBean.thumbnail_pic = in.readString();
+                    messageBean.bmiddle_pic = in.readString();
+                    messageBean.original_pic = in.readString();
+                    messageBean.sourceString = in.readString();
+                    messageBean.mills = in.readLong();
+
+                    messageBean.retweeted_status = in.readParcelable(MessageBean.class.getClassLoader());
+                    messageBean.user = in.readParcelable(UserBean.class.getClassLoader());
+                    messageBean.geo = in.readParcelable(GeoBean.class.getClassLoader());
+
+                    messageBean.pic_urls = new ArrayList<PicUrls>();
+                    in.readTypedList(messageBean.pic_urls, PicUrls.CREATOR);
+
+                    return messageBean;
+                }
+
+                public MessageBean[] newArray(int size) {
+                    return new MessageBean[size];
+                }
+            };
 
 
     public String getCreated_at() {
@@ -36,11 +186,11 @@ public class MessageBean extends ItemBean {
     }
 
     public String getId() {
-        return id;
+        return idstr;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.idstr = id;
     }
 
     public String getText() {
@@ -131,13 +281,6 @@ public class MessageBean extends ItemBean {
         this.comments_count = comments_count;
     }
 
-//    public String getAnnotations() {
-//        return annotations;
-//    }
-//
-//    public void setAnnotations(String annotations) {
-//        this.annotations = annotations;
-//    }
 
     public UserBean getUser() {
         return user;
@@ -159,41 +302,10 @@ public class MessageBean extends ItemBean {
         return TimeTool.getListTime(this);
     }
 
-    public void setListviewItemShowTime(String listviewItemShowTime) {
-        this.listviewItemShowTime = listviewItemShowTime;
+    public long getIdLong() {
+        return this.id;
     }
 
-    public String getIdstr() {
-        return idstr;
-    }
-
-    public void setIdstr(String idstr) {
-        this.idstr = idstr;
-    }
-
-    private String created_at;
-    private String id;
-    private String idstr;
-    private String text;
-    private String source;
-    private boolean favorited;
-    private String truncated;
-    private String in_reply_to_status_id;
-    private String in_reply_to_user_id;
-    private String in_reply_to_screen_name;
-    private String mid;
-    private int reposts_count = 0;
-    private int comments_count = 0;
-    //    private Object annotations;
-    private UserBean user;
-    private MessageBean retweeted_status;
-    private GeoBean geo;
-
-    private String thumbnail_pic;
-    private String bmiddle_pic;
-    private String original_pic;
-
-    private transient SpannableString listViewSpannableString;
 
     public SpannableString getListViewSpannableString() {
         if (!TextUtils.isEmpty(listViewSpannableString)) {
@@ -208,9 +320,25 @@ public class MessageBean extends ItemBean {
         this.listViewSpannableString = listViewSpannableString;
     }
 
-    private long mills;
+    public String getSourceString() {
+        if (!TextUtils.isEmpty(sourceString)) {
+            return sourceString;
+        } else {
+            if (!TextUtils.isEmpty(source))
+                sourceString = Html.fromHtml(this.source).toString();
+            return sourceString;
+        }
+    }
+
+    public void setSourceString(String sourceString) {
+        this.sourceString = sourceString;
+    }
+
 
     public long getMills() {
+        if (mills == 0L) {
+            TimeTool.dealMills(this);
+        }
         return mills;
     }
 
@@ -242,7 +370,6 @@ public class MessageBean extends ItemBean {
         this.original_pic = original_pic;
     }
 
-    private String listviewItemShowTime;
 
     @Override
     public boolean equals(Object otherObject) {
@@ -259,12 +386,61 @@ public class MessageBean extends ItemBean {
         }
 
         MessageBean other = (MessageBean) otherObject;
-        return getIdstr().equals(other.getIdstr());
+        return getId().equals(other.getId());
+    }
+
+    private ArrayList<String> thumbnaiUrls = new ArrayList<String>();
+    private ArrayList<String> middleUrls = new ArrayList<String>();
+    private ArrayList<String> highUrls = new ArrayList<String>();
+
+
+    public ArrayList<String> getThumbnailPicUrls() {
+        if (thumbnaiUrls.size() > 0)
+            return thumbnaiUrls;
+
+        for (PicUrls url : pic_urls) {
+            thumbnaiUrls.add(url.thumbnail_pic);
+        }
+        return thumbnaiUrls;
+    }
+
+    public ArrayList<String> getMiddlePicUrls() {
+        if (middleUrls.size() > 0)
+            return middleUrls;
+
+        for (PicUrls url : pic_urls) {
+            middleUrls.add(url.thumbnail_pic.replace("thumbnail", "bmiddle"));
+        }
+        return middleUrls;
+    }
+
+
+    public ArrayList<String> getHighPicUrls() {
+        if (highUrls.size() > 0)
+            return highUrls;
+
+        for (PicUrls url : pic_urls) {
+            highUrls.add(url.thumbnail_pic.replace("thumbnail", "large"));
+        }
+        return highUrls;
+    }
+
+    public boolean isMultiPics() {
+        return pic_urls.size() > 1;
+    }
+
+    public int getPicCount() {
+        return pic_urls.size();
     }
 
     @Override
     public int hashCode() {
-        return getIdstr().hashCode();
+        return getId().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 
 

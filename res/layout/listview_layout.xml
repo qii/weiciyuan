@@ -7,10 +7,11 @@
 
 
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:visibility="gone"
         android:gravity="center"
+        android:layout_gravity="center"
         android:id="@+id/empty"
         android:text="@string/empty"/>
 
@@ -37,6 +38,16 @@
         android:id="@+id/progressbar"
         android:visibility="visible"/>
 
-
+    <org.qii.weiciyuan.support.lib.TopTipBar
+        android:visibility="invisible"
+        android:id="@+id/tv_unread_new_message_count_tip_bar"
+        android:layout_height="30dp"
+        android:textSize="14sp"
+        android:layout_gravity="top"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:freezesText="true"
+        android:background="@color/top_tip_bar_tip"/>
 </FrameLayout>
 

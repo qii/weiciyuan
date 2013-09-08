@@ -20,13 +20,13 @@ public class SearchTopicByNameActivity extends AbstractAppActivity {
         if (TextUtils.isEmpty(q)) {
             Uri data = getIntent().getData();
             String d = data.toString();
-            int index = d.lastIndexOf("/");
-            q = d.substring(index + 1);
+            int index = d.indexOf("#");
+            q = d.substring(index + 1, d.length() - 1);
         }
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle("#" + q + "#");
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content, new SearchTopicByNameFragment(q))
                     .commit();
         }

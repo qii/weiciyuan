@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:textColorLink="@color/white"
+        android:ellipsize="none"
+        android:gravity="center"
+        android:id="@+id/bio"
+        android:visibility="gone"
+        android:maxLines="4"
+        android:singleLine="false"
+        style="@style/profileHeaderText"
+        />
+
+    <TextView
+        android:id="@+id/url"
+        android:visibility="gone"
+        android:layout_marginTop="4.0dip"
+        style="@style/profileHeaderText.Bold"/>
+</LinearLayout>

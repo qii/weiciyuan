@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--if you want to modify holo theme, you should modify PrivateThemeHoloLightOnlyForInherit style instead of AppTheme_Light style-->
+
+    <style name="AppTheme_Light" parent="@style/PrivateThemeHoloLightOnlyForInherit">
+
+        <item name="account">@drawable/account_dark</item>
+        <item name="account_management">@drawable/account_management_light</item>
+        <item name="add">@drawable/accountactivity_new_light</item>
+        <item name="remove">@drawable/accountactivity_remove_light</item>
+        <item name="comment">@drawable/comment_light</item>
+        <item name="reply_to_comment">@drawable/reply_to_comment_light</item>
+        <item name="edit">@drawable/edit_light</item>
+        <item name="fav_en">@drawable/fav_en_light</item>
+        <item name="fav_un">@drawable/fav_un_light</item>
+        <item name="write_weibo">@drawable/friendstimelinefragment_write_light</item>
+        <item name="write_dm">@drawable/write_dm_light</item>
+        <item name="location_place">@drawable/location_place_light</item>
+        <item name="at">@drawable/at_light</item>
+        <item name="emoticon">@drawable/emoticon_light</item>
+        <item name="topic">@drawable/topic_light</item>
+        <item name="settings">@drawable/maintimelineactivity_settings_dark</item>
+        <item name="refresh">@drawable/refresh_light</item>
+        <item name="copy">@drawable/copy_light</item>
+        <item name="repost">@drawable/repost_light</item>
+        <item name="search">@drawable/search_light</item>
+        <item name="share">@drawable/share_light</item>
+        <item name="send">@drawable/send_dark</item>
+        <item name="statusnewactivity_camera">@drawable/camera_light</item>
+        <item name="statusnewactivity_gps">@drawable/statusnewactivity_gps_light</item>
+        <item name="statusnewactivity_send">@drawable/statusnewactivity_send_light</item>
+        <item name="statusnewactivity_pic">@drawable/picture_light</item>
+        <item name="error">@drawable/error_dark</item>
+        <item name="location_map">@drawable/location_map_light</item>
+        <item name="timeline_repost_flag">@drawable/timeline_repost_dark</item>
+        <item name="timeline_comment_flag">@drawable/timeline_comment_dark</item>
+        <item name="save">@drawable/save_light</item>
+        <item name="web">@drawable/web_light</item>
+        <item name="close">@drawable/close_light</item>
+        <item name="clickable_flag">@drawable/clickable_flag_dark</item>
+        <item name="timeline_reply_to_comment">@drawable/reply_to_comment_dark</item>
+
+        <item name="timeline_gps_icon">@drawable/timeline_gps_dark</item>
+        <item name="timeline_pic_icon">@drawable/timeline_pic_dark</item>
+        <item name="timeline_load_more_background">@drawable/timeline_load_more_light</item>
+
+        <item name="listview_item_background_selector">@drawable/listview_item_background_selector_light</item>
+        <item name="listview_item_refresh_animation">@drawable/refresh_dark</item>
+        <item name="link_color">@color/dark_blue</item>
+        <item name="line_drawable">@drawable/list_divider_holo_light</item>
+        <item name="listview_checked_color">@color/listview_checked_color_holo_light</item>
+        <item name="listview_pic_bg_border">@drawable/bg_timeline_picture_dark</item>
+        <item name="timeline_middle_layout_background">@color/black</item>
+        <item name="timeline_middle_layout_text_color">@color/timeline_item_middle_layout_text_color_light</item>
+        <item name="listview_card_bg">@drawable/bg_tacos</item>
+        <item name="listview_item_bg">@drawable/listview_item_background_normal_light</item>
+        <item name="listview_text_color">@color/timeline_item_text_color_light</item>
+        <item name="listview_pic_bg">@color/listview_pic_background_light</item>
+        <item name="listview_repost_divider">@drawable/divider</item>
+
+
+        <item name="profile_top_photo_background_color">@color/black</item>
+        <item name="profile_detail_count_divider_color">@color/list_divider_color</item>
+        <item name="profile_detail_count_bottom_color">@color/list_divider_color</item>
+
+
+        <item name="browser_weibo_detail_background_color">#fcfcfc</item>
+
+        <item name="split_line_between_content_and_bottom_button_panel">@drawable/ab_bottom_solid_inverse_holo</item>
+
+    </style>
+
+    <style name="PrivateThemeHoloLightOnlyForInherit" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/host_background</item>
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+        <item name="android:actionDropDownStyle">@style/ActionBarDropDownStyle</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabViewLight</item>
+        <item name="android:actionBarWidgetTheme">@style/ActionBarTheme</item>
+        <item name="android:actionBarItemBackground">@drawable/action_bar_item_background</item>
+
+    </style>
+
+
+    <style name="ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/ab_solid_custom_blue_inverse_holo</item>
+
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_inverse_holo</item>
+
+        <item name="android:titleTextStyle">@style/ActionBar.Title.Text</item>
+        <item name="android:subtitleTextStyle">@style/ActionBar.Subtitle.Text</item>
+
+    </style>
+
+
+    <style name="ActionBarDropDownStyle" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:background">@drawable/actionbar_dropdown_navigation_item_background_light</item>
+        <item name="android:gravity">center_vertical|left</item>
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:dropDownWidth">200dp</item>
+        <item name="android:dropDownVerticalOffset">0dip</item>
+        <item name="android:dropDownHorizontalOffset">0dip</item>
+    </style>
+
+    <style name="ActionBarTheme" parent="@android:style/Theme.Holo.Light">
+        <!--<item name="android:dropDownListViewStyle">@style/ListViewDropdownStyle</item>-->
+        <!--<item name="android:textColor">@android:color/black</item>-->
+        <!--<item name="android:textColorHint">#ffcccccc</item>-->
+        <!--<item name="android:popupMenuStyle">@android:style/Widget.Holo.Light.PopupMenu</item>-->
+    </style>
+
+    <style name="ActionBarTabViewLight" parent="@android:style/Widget.Holo.ActionBar.TabView">
+        <item name="android:background">@drawable/actionbar_tab_background_light</item>
+    </style>
+
+    <style name="ListViewDropdownStyle" parent="@android:style/Widget.ListView.DropDown">
+        <item name="android:listSelector">?android:listChoiceBackgroundIndicator</item>
+    </style>
+
+    <style name="ActionBar.Title.Text" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title.Inverse">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ActionBar.Subtitle.Text" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle.Inverse">
+        <item name="android:textColor">@color/white</item>
+    </style>
+</resources>

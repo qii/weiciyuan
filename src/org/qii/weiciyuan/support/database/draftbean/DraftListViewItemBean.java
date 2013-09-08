@@ -1,18 +1,54 @@
 package org.qii.weiciyuan.support.database.draftbean;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * User: qii
  * Date: 12-10-21
  */
-public class DraftListViewItemBean implements Serializable{
+public class DraftListViewItemBean implements Parcelable {
     private CommentDraftBean commentDraftBean;
     private ReplyDraftBean replyDraftBean;
     private RepostDraftBean repostDraftBean;
     private StatusDraftBean statusDraftBean;
     private int type;
     private String id;
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(commentDraftBean, flags);
+        dest.writeParcelable(replyDraftBean, flags);
+        dest.writeParcelable(repostDraftBean, flags);
+        dest.writeParcelable(statusDraftBean, flags);
+        dest.writeInt(type);
+        dest.writeString(id);
+    }
+
+    public static final Parcelable.Creator<DraftListViewItemBean> CREATOR =
+            new Parcelable.Creator<DraftListViewItemBean>() {
+                public DraftListViewItemBean createFromParcel(Parcel in) {
+                    DraftListViewItemBean draftListViewItemBean = new DraftListViewItemBean();
+                    draftListViewItemBean.commentDraftBean = in.readParcelable(CommentDraftBean.class.getClassLoader());
+                    draftListViewItemBean.replyDraftBean = in.readParcelable(ReplyDraftBean.class.getClassLoader());
+                    draftListViewItemBean.repostDraftBean = in.readParcelable(RepostDraftBean.class.getClassLoader());
+                    draftListViewItemBean.statusDraftBean = in.readParcelable(StatusDraftBean.class.getClassLoader());
+
+                    draftListViewItemBean.type = in.readInt();
+                    draftListViewItemBean.id = in.readString();
+                    return draftListViewItemBean;
+                }
+
+                public DraftListViewItemBean[] newArray(int size) {
+                    return new DraftListViewItemBean[size];
+                }
+            };
 
     public String getId() {
         return id;

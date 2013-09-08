@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--template-->
 
     <color name="transparent">#00000000</color>
     <color name="transparent_cover">#25000000</color>
@@ -305,5 +306,24 @@
 
     <color name="listview_checked_color_holo_dark">#002E3E</color>
     <color name="listview_checked_color_holo_light">#33add6</color>
+
+    <color name="progress_horizontal_progress">#0099CC</color>
+
+    <color name="ics_blue_semi">#6633b5e5</color>
+
+    <color name="host_background">#ffe5e5e5</color>
+
+    <!--TopTipBar error color-->
+    <color name="top_tip_bar_error">#FF4444</color>
+    <color name="top_tip_bar_tip">#1E90FF</color>
+
+    <color name="list_divider_color">#ffe6e6e6</color>
+
+    <color name="listview_pic_background_light">#fff0f0f0</color>
+    <color name="listview_pic_background_dark">#ff454545</color>
+
+
+    <!--theme-->
+    <color name="dark_theme_background">#201E1C</color>
 
 </resources>  

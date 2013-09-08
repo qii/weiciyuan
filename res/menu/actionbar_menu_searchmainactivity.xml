@@ -9,7 +9,7 @@
         android:title="@string/search"
         android:actionViewClass="android.widget.SearchView"
         android:showAsAction="withText|ifRoom"
-        android:voiceSearchMode="showVoiceSearchButton|launchRecognizer" />
+        />
 
 
 </menu>

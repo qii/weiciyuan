@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--browser picture-->
+    <dimen name="browser_pic_bottom_button_layout_padding">150dp</dimen>
+    <dimen name="browser_pic_activity_width">800dp</dimen>
+
+    <!--Toptipbar-->
+    <dimen name="toptipbar_layout_margin">20dp</dimen>
+</resources>

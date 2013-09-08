@@ -1,7 +1,8 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.ThemeUtility;
 
 import java.lang.ref.WeakReference;
 
@@ -10,15 +11,15 @@ import java.lang.ref.WeakReference;
  * Date: 12-9-5
  */
 public class PictureBitmapDrawable extends ColorDrawable {
-    private final WeakReference<PictureBitmapWorkerTask> bitmapDownloaderTaskReference;
+    private final WeakReference<IPictureWorker> bitmapDownloaderTaskReference;
 
-    public PictureBitmapDrawable(PictureBitmapWorkerTask bitmapDownloaderTask) {
-        super(Color.TRANSPARENT);
+    public PictureBitmapDrawable(IPictureWorker bitmapDownloaderTask) {
+        super(ThemeUtility.getColor(R.attr.listview_pic_bg));
         bitmapDownloaderTaskReference =
-                new WeakReference<PictureBitmapWorkerTask>(bitmapDownloaderTask);
+                new WeakReference<IPictureWorker>(bitmapDownloaderTask);
     }
 
-    public PictureBitmapWorkerTask getBitmapDownloaderTask() {
+    public IPictureWorker getBitmapDownloaderTask() {
         return bitmapDownloaderTaskReference.get();
     }
 }

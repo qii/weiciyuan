@@ -21,6 +21,9 @@ public class ClearCacheTask implements Runnable {
 
     @Override
     public void run() {
+
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+
         AppLogger.d("clear cache task start");
 
         if (Utility.isWifi(GlobalContext.getInstance())) {
@@ -38,17 +41,33 @@ public class ClearCacheTask implements Runnable {
         }
     }
 
+    private void clearEmptyDir(File file) {
+        File[] fileArray = file.listFiles();
+        if (fileArray == null)
+            return;
+
+        if (fileArray.length == 0) {
+            if (file.delete()) {
+                clearEmptyDir(file.getParentFile());
+            }
+        }
+    }
+
     private void handleDir(File file) {
         File[] fileArray = file.listFiles();
-        if (fileArray != null && fileArray.length != 0) {
-            for (File fileSI : fileArray) {
-                if (fileSI.isDirectory()) {
-                    handleDir(fileSI);
-                }
+        if (fileArray != null) {
+            if (fileArray.length != 0) {
+                for (File fileSI : fileArray) {
+                    if (fileSI.isDirectory()) {
+                        handleDir(fileSI);
+                    }
 
-                if (fileSI.isFile()) {
-                    handleFile(fileSI);
+                    if (fileSI.isFile()) {
+                        handleFile(fileSI);
+                    }
                 }
+            } else {
+                clearEmptyDir(file);
             }
         }
     }
@@ -59,7 +78,8 @@ public class ClearCacheTask implements Runnable {
         long day = TimeUnit.MILLISECONDS.toDays(calcMills);
         if (day > AppConfig.SAVED_DAYS) {
             AppLogger.d(file.getAbsolutePath());
-            file.delete();
+            if (file.delete())
+                clearEmptyDir(file.getParentFile());
         }
     }
 }

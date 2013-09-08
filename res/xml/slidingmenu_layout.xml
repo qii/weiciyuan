@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <Preference
+        android:key="a"
+        android:title="首页"
+        />
+
+    <Preference
+        android:key="b"
+        android:title="提及"
+        />
+
+    <Preference
+        android:key="c"
+        android:title="评论"
+        />
+
+    <Preference
+        android:key="d"
+        android:title="私信"
+        />
+
+    <Preference
+        android:key="e"
+        android:title="搜索"
+        />
+
+    <Preference
+        android:key="f"
+        android:title="设置"
+        />
+
+    <Preference
+        android:key="g"
+        android:title="登出"
+        />
+
+
+    <Preference
+        android:key="i"
+        android:title="个人资料"
+        />
+
+    <Preference
+        android:key="j"
+        android:title="周边"
+        />
+
+
+</PreferenceScreen>

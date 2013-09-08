@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_close"
+        android:icon="?close"
+        android:title="@string/close"
+        android:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_refresh"
+        android:icon="?refresh"
+        android:title="@string/refresh"
+        android:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_open_with_other_app"
+        android:icon="?web"
+        android:title="@string/open_with_other_app"
+        android:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_copy"
+        android:title="@string/copy_link_to_clipboard"
+        android:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_share"
+        android:title="@string/share_link"
+        android:actionProviderClass="android.widget.ShareActionProvider"
+        android:showAsAction="never"/>
+
+</menu>

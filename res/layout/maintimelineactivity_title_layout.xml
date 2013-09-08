@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:gravity="center_vertical">
+
+
+    <TextView
+        style="@style/ActionBar.Title.Text"
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:text="@string/app_name"
+        android:visibility="gone"
+        android:ellipsize="end"/>
+
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/tv_click_to_top"
+        android:visibility="visible"
+        android:clickable="true"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:actionButtonStyle"
+        android:src="?write_weibo"
+        android:layout_marginRight="0dp"
+        android:id="@+id/btn_write"
+        android:visibility="gone"
+        android:clickable="true"/>
+</LinearLayout>

@@ -1,26 +1,41 @@
 package org.qii.weiciyuan.support.lib;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
+import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
  * Date: 12-12-19
  */
-public class TimeLineAvatarImageView extends TimeLineImageView {
+public class TimeLineAvatarImageView extends PerformanceImageView implements IWeiciyuanDrawable {
 
-    private ImageView vImageView;
+    private Paint paint = new Paint();
+
+    private boolean showPressedState = true;
+    private boolean pressed = false;
+
+    private static final int V_TYPE_NONE = -1;
+    private static final int V_TYPE_PERSONAL = 0;
+    private static final int V_TYPE_ENTERPRISE = 1;
+
+    private int vType = V_TYPE_NONE;
+
 
     public TimeLineAvatarImageView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public TimeLineAvatarImageView(Context context, AttributeSet attrs) {
@@ -29,31 +44,128 @@ public class TimeLineAvatarImageView extends TimeLineImageView {
 
     public TimeLineAvatarImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        LayoutInflater inflate = (LayoutInflater)
-                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflate.inflate(R.layout.timelineimageview_avatar_layout, null);
-        mImageView = (ImageView) v.findViewById(R.id.imageview);
-        mCover = (ImageView) v.findViewById(R.id.imageview_cover);
-        vImageView = (ImageView) v.findViewById(R.id.imageview_v);
-        mImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
-        mCover.setImageDrawable(context.getResources().getDrawable(R.drawable.timelineimageview_cover));
-        mCover.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mImageView.onTouchEvent(event);
-                return false;
+        initLayout(context);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        Bitmap bitmap;
+        switch (vType) {
+            case V_TYPE_PERSONAL:
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_vip);
+                canvas.drawBitmap(bitmap, getWidth() - bitmap.getWidth(), getHeight() - bitmap.getHeight(), paint);
+                break;
+            case V_TYPE_ENTERPRISE:
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_enterprise_vip);
+                canvas.drawBitmap(bitmap, getWidth() - bitmap.getWidth(), getHeight() - bitmap.getHeight(), paint);
+                break;
+            default:
+                break;
+        }
+
+        if (pressed) {
+            canvas.drawColor(getResources().getColor(R.color.transparent_cover));
+        }
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if (!showPressedState || !isClickable() || !isLongClickable())
+            return super.onTouchEvent(event);
+
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                pressed = true;
+                invalidate();
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                pressed = false;
+                invalidate();
+                break;
+        }
+        return super.onTouchEvent(event);
+    }
+
+    protected void initLayout(Context context) {
+        setPadding(Utility.dip2px(5), Utility.dip2px(5), Utility.dip2px(5), Utility.dip2px(5));
+    }
+
+    @Override
+    public void setImageDrawable(Drawable drawable) {
+        super.setImageDrawable(drawable);
+    }
+
+    @Override
+    public void setImageBitmap(Bitmap bm) {
+        super.setImageBitmap(bm);
+    }
+
+    @Override
+    public ImageView getImageView() {
+        return this;
+    }
+
+    @Override
+    public void setProgress(int value, int max) {
+
+    }
+
+    @Override
+    public ProgressBar getProgressBar() {
+        return null;
+    }
+
+    @Override
+    public void setGifFlag(boolean value) {
+
+    }
+
+    public void checkVerified(UserBean user) {
+        if (user != null && user.isVerified() && !TextUtils.isEmpty(user.getVerified_reason())) {
+            if (user.getVerified_type() == 0) {
+                verifiedPersonal();
+            } else {
+                verifiedEnterprise();
             }
-        });
-        v.setBackgroundColor(Color.TRANSPARENT);
-        addView(v, new FrameLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        } else {
+            reset();
+        }
     }
 
-    public void isVerified() {
-        vImageView.setImageDrawable(getResources().getDrawable(R.drawable.portrait_v_yellow));
+    private void verifiedPersonal() {
+        if (vType != V_TYPE_PERSONAL) {
+            vType = V_TYPE_PERSONAL;
+            invalidate();
+        }
+
     }
 
-    public void reset() {
-        vImageView.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
+    private void verifiedEnterprise() {
+        if (vType != V_TYPE_ENTERPRISE) {
+            vType = V_TYPE_ENTERPRISE;
+            invalidate();
+        }
+
+    }
+
+    private void reset() {
+        if (vType != V_TYPE_NONE) {
+            vType = V_TYPE_NONE;
+            invalidate();
+        }
+
+    }
+
+
+    @Override
+    public void setPressesStateVisibility(boolean value) {
+        if (showPressedState == value)
+            return;
+        showPressedState = value;
+        invalidate();
     }
 }

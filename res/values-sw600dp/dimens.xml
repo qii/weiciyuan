@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="timeline_avatar_height">60dp</dimen>
+    <dimen name="timeline_avatar_width">60dp</dimen>
+
+
+    <dimen name="timeline_pic_high_thumbnail_height">260dp</dimen>
+    <dimen name="timeline_pic_thumbnail_height">100dp</dimen>
+    <dimen name="timeline_pic_thumbnail_width">100dp</dimen>
+
+    <dimen name="profile_avatar_height">90dp</dimen>
+    <dimen name="profile_avatar_width">90dp</dimen>
+
+    <!--browser weibo-->
+    <dimen name="browser_msg_bg_padding">20dp</dimen>
+    <dimen name="browser_msg_avatar_height">68dp</dimen>
+    <dimen name="browser_msg_avatar_width">68dp</dimen>
+
+    <!--user info-->
+    <dimen name="profile_bg_padding">20dp</dimen>
+
+    <!--write weibo emotion size-->
+    <dimen name="emotion_size">30dp</dimen>
+    <dimen name="emotion_bg_size">50dp</dimen>
+
+</resources>

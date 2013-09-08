@@ -37,14 +37,13 @@ public class AccountDBTask {
         return databaseHelper.getReadableDatabase();
     }
 
-    public static OAuthActivity.DBResult addOrUpdateAccount(AccountBean account) {
+    public static OAuthActivity.DBResult addOrUpdateAccount(AccountBean account, boolean blackMagic) {
 
         ContentValues cv = new ContentValues();
         cv.put(AccountTable.UID, account.getUid());
         cv.put(AccountTable.OAUTH_TOKEN, account.getAccess_token());
-        cv.put(AccountTable.USERNAME, account.getUsername());
-        cv.put(AccountTable.USERNICK, account.getUsernick());
-        cv.put(AccountTable.AVATAR_URL, account.getAvatar_url());
+        cv.put(AccountTable.OAUTH_TOKEN_EXPIRES_TIME, String.valueOf(account.getExpires_time()));
+        cv.put(AccountTable.BLACK_MAGIC, blackMagic);
 
         String json = new Gson().toJson(account.getInfo());
         cv.put(AccountTable.INFOJSON, json);
@@ -65,21 +64,28 @@ public class AccountDBTask {
 
     }
 
-    public static void updateAccountMyInfo(AccountBean account, UserBean myUserBean) {
+    public static void updateMyProfile(AccountBean account, UserBean value) {
         String uid = account.getUid();
-        String json = new Gson().toJson(myUserBean);
+        String json = new Gson().toJson(value);
 
         ContentValues cv = new ContentValues();
         cv.put(AccountTable.UID, uid);
         cv.put(AccountTable.INFOJSON, json);
-        cv.put(AccountTable.USERNAME, myUserBean.getScreen_name());
-        cv.put(AccountTable.USERNICK, myUserBean.getScreen_name());
-        cv.put(AccountTable.AVATAR_URL, myUserBean.getAvatar_large());
 
         int c = getWsd().update(AccountTable.TABLE_NAME, cv, AccountTable.UID + "=?",
                 new String[]{uid});
     }
 
+    public static void updateNavigationPosition(AccountBean account, int position) {
+        String uid = account.getUid();
+
+        ContentValues cv = new ContentValues();
+        cv.put(AccountTable.UID, uid);
+        cv.put(AccountTable.NAVIGATION_POSITION, position);
+
+        int c = getWsd().update(AccountTable.TABLE_NAME, cv, AccountTable.UID + "=?",
+                new String[]{uid});
+    }
 
     public static List<AccountBean> getAccountList() {
         List<AccountBean> accountList = new ArrayList<AccountBean>();
@@ -90,14 +96,14 @@ public class AccountDBTask {
             int colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN);
             account.setAccess_token(c.getString(colid));
 
-            colid = c.getColumnIndex(AccountTable.USERNICK);
-            account.setUsernick(c.getString(colid));
+            colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN_EXPIRES_TIME);
+            account.setExpires_time(Long.valueOf(c.getString(colid)));
 
-            colid = c.getColumnIndex(AccountTable.UID);
-            account.setUid(c.getString(colid));
+            colid = c.getColumnIndex(AccountTable.BLACK_MAGIC);
+            account.setBlack_magic(c.getInt(colid) == 1);
 
-            colid = c.getColumnIndex(AccountTable.AVATAR_URL);
-            account.setAvatar_url(c.getString(colid));
+            colid = c.getColumnIndex(AccountTable.NAVIGATION_POSITION);
+            account.setNavigationPosition(c.getInt(colid));
 
             Gson gson = new Gson();
             String json = c.getString(c.getColumnIndex(AccountTable.INFOJSON));
@@ -117,20 +123,20 @@ public class AccountDBTask {
     public static AccountBean getAccount(String id) {
 
         String sql = "select * from " + AccountTable.TABLE_NAME + " where " + AccountTable.UID + " = " + id;
-        Cursor c = getWsd().rawQuery(sql, null);
+        Cursor c = getRsd().rawQuery(sql, null);
         if (c.moveToNext()) {
             AccountBean account = new AccountBean();
             int colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN);
             account.setAccess_token(c.getString(colid));
 
-            colid = c.getColumnIndex(AccountTable.USERNICK);
-            account.setUsernick(c.getString(colid));
+            colid = c.getColumnIndex(AccountTable.OAUTH_TOKEN_EXPIRES_TIME);
+            account.setExpires_time(Long.valueOf(c.getString(colid)));
 
-            colid = c.getColumnIndex(AccountTable.UID);
-            account.setUid(c.getString(colid));
+            colid = c.getColumnIndex(AccountTable.BLACK_MAGIC);
+            account.setBlack_magic(c.getInt(colid) == 1);
 
-            colid = c.getColumnIndex(AccountTable.AVATAR_URL);
-            account.setAvatar_url(c.getString(colid));
+            colid = c.getColumnIndex(AccountTable.NAVIGATION_POSITION);
+            account.setNavigationPosition(c.getInt(colid));
 
             Gson gson = new Gson();
             String json = c.getString(c.getColumnIndex(AccountTable.INFOJSON));
@@ -159,9 +165,11 @@ public class AccountDBTask {
 
         for (String id : args) {
             FriendsTimeLineDBTask.deleteAllHomes(id);
-            MentionsTimeLineDBTask.deleteAllReposts(id);
-            CommentsTimeLineDBTask.deleteAllComments(id);
+            MentionWeiboTimeLineDBTask.deleteAllReposts(id);
+            CommentToMeTimeLineDBTask.deleteAllComments(id);
             MyStatusDBTask.clear(id);
+            AtUsersDBTask.clear(id);
+            FavouriteDBTask.deleteAllFavourites(id);
         }
 
         return getAccountList();

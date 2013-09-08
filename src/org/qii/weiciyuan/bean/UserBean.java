@@ -1,12 +1,14 @@
 package org.qii.weiciyuan.bean;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 /**
  * User: qii
  * Date: 12-7-29
  */
-public class UserBean implements Serializable {
+public class UserBean implements Parcelable {
 
     public String getId() {
         return id;
@@ -176,6 +178,14 @@ public class UserBean implements Serializable {
         this.allow_all_comment = allow_all_comment;
     }
 
+    public String getCover_image() {
+        return cover_image;
+    }
+
+    public void setCover_image(String cover_image) {
+        this.cover_image = cover_image;
+    }
+
     public String getAvatar_large() {
         return avatar_large;
     }
@@ -190,6 +200,14 @@ public class UserBean implements Serializable {
 
     public void setVerified_reason(String verified_reason) {
         this.verified_reason = verified_reason;
+    }
+
+    public int getVerified_type() {
+        return verified_type;
+    }
+
+    public void setVerified_type(int verified_type) {
+        this.verified_type = verified_type;
     }
 
     public String getOnline_status() {
@@ -217,10 +235,11 @@ public class UserBean implements Serializable {
     private String description;
     private String url;
     private String profile_image_url;
+    private String cover_image;
     private String domain;
     private String gender;
     private String statuses_count = "0";
-    private String favourites_count= "0";
+    private String favourites_count = "0";
     private String created_at;
     private boolean following;
     private String allow_all_act_msg;
@@ -230,9 +249,12 @@ public class UserBean implements Serializable {
     private String allow_all_comment;
     private String avatar_large;
     private String verified_reason;
+    private int verified_type;
     private boolean follow_me;
     private String online_status;
     private String bi_followers_count;
+    private String followers_count = "0";
+    private String friends_count = "0";
 
     public String getFollowers_count() {
         return followers_count;
@@ -250,7 +272,91 @@ public class UserBean implements Serializable {
         this.friends_count = friends_count;
     }
 
-    private String followers_count= "0";
-    private String friends_count= "0";
 
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(screen_name);
+        dest.writeString(name);
+        dest.writeString(province);
+        dest.writeString(city);
+        dest.writeString(location);
+        dest.writeString(description);
+        dest.writeString(url);
+        dest.writeString(profile_image_url);
+        dest.writeString(cover_image);
+        dest.writeString(domain);
+        dest.writeString(gender);
+        dest.writeString(statuses_count);
+        dest.writeString(favourites_count);
+        dest.writeString(created_at);
+        dest.writeString(allow_all_act_msg);
+        dest.writeString(remark);
+        dest.writeString(geo_enabled);
+        dest.writeString(allow_all_comment);
+        dest.writeString(avatar_large);
+        dest.writeString(verified_reason);
+        dest.writeInt(verified_type);
+        dest.writeString(online_status);
+        dest.writeString(bi_followers_count);
+        dest.writeString(followers_count);
+        dest.writeString(friends_count);
+
+        dest.writeBooleanArray(new boolean[]{this.following, this.follow_me, this.verified});
+    }
+
+    public static final Parcelable.Creator<UserBean> CREATOR =
+            new Parcelable.Creator<UserBean>() {
+                public UserBean createFromParcel(Parcel in) {
+                    UserBean userBean = new UserBean();
+                    userBean.id = in.readString();
+                    userBean.screen_name = in.readString();
+                    userBean.name = in.readString();
+                    userBean.province = in.readString();
+                    userBean.city = in.readString();
+                    userBean.location = in.readString();
+                    userBean.description = in.readString();
+                    userBean.url = in.readString();
+                    userBean.profile_image_url = in.readString();
+                    userBean.cover_image = in.readString();
+                    userBean.domain = in.readString();
+                    userBean.gender = in.readString();
+                    userBean.statuses_count = in.readString();
+                    userBean.favourites_count = in.readString();
+                    userBean.created_at = in.readString();
+                    userBean.allow_all_act_msg = in.readString();
+                    userBean.remark = in.readString();
+                    userBean.geo_enabled = in.readString();
+                    userBean.allow_all_comment = in.readString();
+                    userBean.avatar_large = in.readString();
+                    userBean.verified_reason = in.readString();
+                    userBean.verified_type = in.readInt();
+                    userBean.online_status = in.readString();
+                    userBean.bi_followers_count = in.readString();
+                    userBean.followers_count = in.readString();
+                    userBean.friends_count = in.readString();
+
+                    boolean[] booleans = new boolean[3];
+                    in.readBooleanArray(booleans);
+                    userBean.following = booleans[0];
+                    userBean.follow_me = booleans[1];
+                    userBean.verified = booleans[2];
+
+                    return userBean;
+                }
+
+                public UserBean[] newArray(int size) {
+                    return new UserBean[size];
+                }
+            };
 }

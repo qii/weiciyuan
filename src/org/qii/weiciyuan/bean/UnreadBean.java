@@ -1,12 +1,14 @@
 package org.qii.weiciyuan.bean;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 /**
  * User: qii
  * Date: 12-9-26
  */
-public class UnreadBean implements Serializable{
+public class UnreadBean implements Parcelable {
     private int status;
     private int follower;
     private int cmt;
@@ -18,6 +20,49 @@ public class UnreadBean implements Serializable{
     private int invite;
     private int badge;
     private int photo;
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(status);
+        dest.writeInt(follower);
+        dest.writeInt(cmt);
+        dest.writeInt(dm);
+        dest.writeInt(mention_status);
+        dest.writeInt(mention_cmt);
+        dest.writeInt(group);
+        dest.writeInt(notice);
+        dest.writeInt(invite);
+        dest.writeInt(badge);
+        dest.writeInt(photo);
+    }
+
+    public static final Parcelable.Creator<UnreadBean> CREATOR =
+            new Parcelable.Creator<UnreadBean>() {
+                public UnreadBean createFromParcel(Parcel in) {
+                    UnreadBean unreadBean = new UnreadBean();
+                    unreadBean.status = in.readInt();
+                    unreadBean.follower = in.readInt();
+                    unreadBean.cmt = in.readInt();
+                    unreadBean.dm = in.readInt();
+                    unreadBean.mention_status = in.readInt();
+                    unreadBean.mention_cmt = in.readInt();
+                    unreadBean.group = in.readInt();
+                    unreadBean.notice = in.readInt();
+                    unreadBean.invite = in.readInt();
+                    unreadBean.badge = in.readInt();
+                    unreadBean.photo = in.readInt();
+                    return unreadBean;
+                }
+
+                public UnreadBean[] newArray(int size) {
+                    return new UnreadBean[size];
+                }
+            };
 
     public int getStatus() {
         return status;
@@ -105,5 +150,10 @@ public class UnreadBean implements Serializable{
 
     public void setPhoto(int photo) {
         this.photo = photo;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.preference;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -26,6 +27,8 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String SHOW_BIG_PIC = "show_big_pic";
     public static final String SHOW_BIG_AVATAR = "show_big_avatar";
 
+    //read
+    public static final String READ_STYLE = "read_style";
 
     //notification
     public static final String FREQUENCY = "frequency";
@@ -50,9 +53,11 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String SHOW_COMMENT_REPOST_AVATAR = "show_comment_repost_list_avatar";
     public static final String DISABLE_DOWNLOAD_AVATAR_PIC = "disable_download";
     public static final String MSG_COUNT = "msg_count";
+    public static final String WIFI_UNLIMITED_MSG_COUNT = "enable_wifi_unlimited_msg_count";
+    public static final String WIFI_AUTO_DOWNLOAD_PIC = "enable_wifi_auto_download_pic";
 
     //performance
-    public static final String HARDWARE_ACCELERATED = "pref_hardware_accelerated_key";
+    public static final String DISABLE_HARDWARE_ACCELERATED = "pref_disable_hardware_accelerated_key";
 
     //about
     public static final String OFFICIAL_WEIBO = "pref_official_weibo_key";
@@ -62,12 +67,15 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String DONATE = "pref_donate_key";
     public static final String CACHE_PATH = "pref_cache_path_key";
     public static final String SAVED_PIC_PATH = "pref_saved_pic_path_key";
+    public static final String AUTHOR = "pref_author_key";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayShowHomeEnabled(false);
+        getActionBar().setDisplayShowTitleEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.setting));
 
@@ -93,6 +101,14 @@ public class SettingActivity extends AbstractAppActivity {
         return false;
     }
 
+    public static class SettingsFragment extends PreferenceFragment {
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref);
+        }
+    }
 
 }
 

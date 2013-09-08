@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/smiley_grid"
+    android:background="?attr/split_line_between_content_and_bottom_button_panel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:numColumns="7"/>

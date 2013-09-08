@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<view xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:map="http://schemas.android.com/apk/res-auto"
+      class="com.google.android.gms.maps.MapView"
+      android:layout_width="match_parent"
+      android:layout_height="150dp"
+      android:layout_below="@id/location"
+      android:id="@+id/location_mv"
+      android:visibility="gone"
+      android:layout_marginTop="4dp"
+      map:cameraZoom="14"
+      map:mapType="normal"
+      map:uiCompass="false"
+      map:uiRotateGestures="false"
+      map:uiScrollGestures="false"
+      map:uiTiltGestures="false"
+      map:uiZoomControls="false"
+      map:uiZoomGestures="false"/>

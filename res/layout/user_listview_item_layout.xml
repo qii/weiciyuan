@@ -6,14 +6,16 @@
                 android:padding="8dp"
                 android:id="@+id/listview_root">
 
-    <org.qii.weiciyuan.support.lib.PerformanceImageView
+    <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
         android:id="@+id/avatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:padding="1px"
-        android:background="@drawable/bg_border1"
+        android:layout_marginTop="-5dp"
+        android:layout_marginLeft="-5dp"
+        android:layout_marginBottom="-5dp"
+        android:layout_marginRight="3dp"
+        android:layout_width="@dimen/timeline_avatar_width"
+        android:layout_height="@dimen/timeline_avatar_height"
         android:layout_gravity="left|center_vertical"
-        android:layout_marginRight="8dp"/>
+        />
 
 
     <TextView
@@ -21,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="username"
+        android:textColor="?listview_text_color"
         android:layout_toRightOf="@id/avatar"/>
 
 
@@ -29,9 +32,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="content"
+        android:textColor="?listview_text_color"
         android:layout_below="@id/username"
         android:layout_toRightOf="@id/avatar"
-        android:layerType="software"
         android:ellipsize="end"
         android:singleLine="true"/>
 

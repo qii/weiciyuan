@@ -21,12 +21,12 @@ public class DMActivity extends AbstractAppActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        UserBean bean = (UserBean) getIntent().getSerializableExtra("user");
+        UserBean bean = (UserBean) getIntent().getParcelableExtra("user");
 
         setTitle(bean.getScreen_name());
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new DMConversationListFragment(bean))
+            getSupportFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new DMConversationListFragment(bean), DMConversationListFragment.class.getName())
                     .commit();
         }
     }
@@ -46,4 +46,18 @@ public class DMActivity extends AbstractAppActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        DMConversationListFragment fragment = (DMConversationListFragment) getSupportFragmentManager()
+                .findFragmentByTag(DMConversationListFragment.class.getName());
+        if (fragment != null) {
+            if (!fragment.isSmileyPanelClosed()) {
+                fragment.closeSmileyPanel();
+            } else {
+                super.onBackPressed();
+            }
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

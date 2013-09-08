@@ -1,21 +1,59 @@
 package org.qii.weiciyuan.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
 /**
  * User: qii
  * Date: 12-11-14
  */
-public class DMUserBean extends ItemBean {
+public class DMUserBean extends ItemBean implements Parcelable {
+    private int unread_count;
+    private long mills;
+
     private UserBean user;
     private DMBean direct_message;
-    private int unread_count;
 
-    private long mills;
     private transient SpannableString listViewSpannableString;
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(unread_count);
+        dest.writeLong(mills);
+
+        dest.writeParcelable(user, flags);
+        dest.writeParcelable(direct_message, flags);
+
+    }
+
+    public static final Parcelable.Creator<DMUserBean> CREATOR =
+            new Parcelable.Creator<DMUserBean>() {
+                public DMUserBean createFromParcel(Parcel in) {
+                    DMUserBean dmUserBean = new DMUserBean();
+
+                    dmUserBean.unread_count = in.readInt();
+                    dmUserBean.mills = in.readLong();
+
+                    dmUserBean.user = in.readParcelable(UserBean.class.getClassLoader());
+                    dmUserBean.direct_message = in.readParcelable(DMBean.class.getClassLoader());
+
+                    return dmUserBean;
+                }
+
+                public DMUserBean[] newArray(int size) {
+                    return new DMUserBean[size];
+                }
+            };
 
     @Override
     public SpannableString getListViewSpannableString() {
@@ -60,6 +98,11 @@ public class DMUserBean extends ItemBean {
         return direct_message.getId();
     }
 
+    @Override
+    public long getIdLong() {
+        return Long.valueOf(getId());
+    }
+
     public UserBean getUser() {
         return user;
     }
@@ -82,5 +125,10 @@ public class DMUserBean extends ItemBean {
 
     public void setUnread_count(int unread_count) {
         this.unread_count = unread_count;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

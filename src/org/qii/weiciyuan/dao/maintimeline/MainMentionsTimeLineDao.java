@@ -57,14 +57,6 @@ public class MainMentionsTimeLineDao {
             AppLogger.e(e.getMessage());
         }
 
-
-        return value;
-    }
-
-    public MessageListBean getGSONMsgList() throws WeiboException {
-
-
-        MessageListBean value = getGSONMsgListWithoutClearUnread();
         /**
          * sometime sina weibo may delete message,so data don't have any user information
          */
@@ -83,6 +75,14 @@ public class MainMentionsTimeLineDao {
             }
 
         }
+
+        return value;
+    }
+
+    public MessageListBean getGSONMsgList() throws WeiboException {
+
+        MessageListBean value = getGSONMsgListWithoutClearUnread();
+
         try {
             new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_STATUS).clearUnread();
         } catch (WeiboException ignored) {

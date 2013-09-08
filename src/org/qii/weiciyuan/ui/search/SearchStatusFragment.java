@@ -2,15 +2,15 @@ package org.qii.weiciyuan.ui.search;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.AdapterView;
 import org.qii.weiciyuan.bean.SearchStatusListBean;
-import org.qii.weiciyuan.dao.search.SearchDao;
-import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.loader.SearchStatusLoader;
 
 /**
  * User: qii
@@ -32,22 +32,28 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
     }
 
     public void search() {
-        pullToRefreshListView.startRefreshNow();
+        pullToRefreshListView.setRefreshing();
+        loadNewMsg();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(false);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("bean", bean);
+        outState.putParcelable("bean", bean);
     }
 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        commander = ((AbstractAppActivity) getActivity()).getBitmapDownloader();
         if (savedInstanceState != null && bean.getItemList().size() == 0) {
-            clearAndReplaceValue((SearchStatusListBean) savedInstanceState.getSerializable("bean"));
+            clearAndReplaceValue((SearchStatusListBean) savedInstanceState.getParcelable("bean"));
             timeLineAdapter.notifyDataSetChanged();
 
         }
@@ -67,33 +73,40 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
 
 
     @Override
-    protected SearchStatusListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        return null;
+    public void loadNewMsg() {
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        dismissFooterView();
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
     }
 
 
     @Override
-    protected SearchStatusListBean getDoInBackgroundNewData() throws WeiboException {
+    protected void loadOldMsg(View view) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+    }
+
+    @Override
+    protected Loader<AsyncTaskLoaderResult<SearchStatusListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String word = ((SearchMainParentFragment) getParentFragment()).getSearchWord();
         page = 1;
-        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainActivity) getActivity()).getSearchWord());
-        SearchStatusListBean result = dao.getStatusList();
-
-        return result;
+        return new SearchStatusLoader(getActivity(), token, word, String.valueOf(page));
     }
 
     @Override
-    protected SearchStatusListBean getDoInBackgroundOldData() throws WeiboException {
-
-        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), ((SearchMainActivity) getActivity()).getSearchWord());
-        dao.setPage(String.valueOf(page + 1));
-
-        SearchStatusListBean result = dao.getStatusList();
-
-        return result;
+    protected Loader<AsyncTaskLoaderResult<SearchStatusListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String word = ((SearchMainParentFragment) getParentFragment()).getSearchWord();
+        return new SearchStatusLoader(getActivity(), token, word, String.valueOf(page + 1));
     }
 
+
     @Override
-    protected void newMsgOnPostExecute(SearchStatusListBean newValue) {
+    protected void newMsgOnPostExecute(SearchStatusListBean newValue, Bundle loaderArgs) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();

@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
@@ -15,6 +16,7 @@ import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.RepostDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteRepostActivity;
@@ -49,12 +51,12 @@ public class SendRepostService extends Service {
         }
 
         String token = intent.getStringExtra("token");
-        AccountBean account = (AccountBean) intent.getSerializableExtra("account");
+        AccountBean account = (AccountBean) intent.getParcelableExtra("account");
         String content = intent.getStringExtra("content");
-        MessageBean oriMsg = (MessageBean) intent.getSerializableExtra("oriMsg");
+        MessageBean oriMsg = (MessageBean) intent.getParcelableExtra("oriMsg");
         String is_comment = intent.getStringExtra("is_comment");
 
-        RepostDraftBean repostDraftBean = (RepostDraftBean) intent.getSerializableExtra("draft");
+        RepostDraftBean repostDraftBean = (RepostDraftBean) intent.getParcelableExtra("draft");
 
         WeiboSendTask task = new WeiboSendTask(token, account, content, oriMsg, is_comment, repostDraftBean);
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
@@ -178,6 +180,9 @@ public class SendRepostService extends Service {
                     stopServiceIfTasksAreEnd(task);
                 }
             }, 3000);
+
+            LocalBroadcastManager.getInstance(SendRepostService.this).sendBroadcast(new Intent(AppEventAction.buildSendRepostSuccessfullyAction(oriMsg)));
+
         }
 
         private void showFailedNotification(final WeiboSendTask task) {

@@ -5,7 +5,10 @@
     <item
         android:id="@+id/menu_add_gps"
         android:title="@string/add_gps"/>
-
+    <item
+        android:id="@+id/menu_add_now_playing"
+        android:visible="false"
+        />
 
     <item
         android:id="@+id/menu_topic"

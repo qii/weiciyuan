@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="account" format="reference"/>
+    <attr name="account_management" format="reference"/>
+
+    <!--actionbar action mode menu -->
+    <attr name="add" format="reference"/>
+    <attr name="remove" format="reference"/>
+    <attr name="comment" format="reference"/>
+    <attr name="reply_to_comment" format="reference"/>
+    <attr name="edit" format="reference"/>
+    <attr name="fav_en" format="reference"/>
+    <attr name="fav_un" format="reference"/>
+    <attr name="search" format="reference"/>
+    <attr name="write_weibo" format="reference"/>
+    <attr name="write_dm" format="reference"/>
+    <attr name="location_place" format="reference"/>
+    <attr name="at" format="reference"/>
+    <attr name="emoticon" format="reference"/>
+    <attr name="topic" format="reference"/>
+    <attr name="settings" format="reference"/>
+    <attr name="refresh" format="reference"/>
+    <attr name="copy" format="reference"/>
+    <attr name="repost" format="reference"/>
+    <attr name="share" format="reference"/>
+
+    <attr name="error" format="reference"/>
+    <attr name="location_map" format="reference"/>
+
+    <attr name="save" format="reference"/>
+
+    <attr name="close" format="reference"/>
+    <attr name="web" format="reference"/>
+
+
+    <attr name="clickable_flag" format="reference"/>
+
+
+    <attr name="listview_item_background_selector" format="reference"/>
+    <attr name="listview_item_refresh_animation" format="reference"/>
+    <attr name="line_drawable" format="reference"/>
+
+
+    <!--write weibo or comment or dm-->
+    <attr name="split_line_between_content_and_bottom_button_panel" format="reference"/>
+    <attr name="statusnewactivity_camera" format="reference"/>
+    <attr name="statusnewactivity_gps" format="reference"/>
+    <attr name="statusnewactivity_send" format="reference"/>
+    <attr name="statusnewactivity_pic" format="reference"/>
+    <attr name="send" format="reference"/>
+
+
+    <!--textview link-->
+    <attr name="link_color" format="reference"/>
+
+
+    <!--timeline-->
+    <attr name="timeline_gps_icon" format="reference"/>
+    <attr name="timeline_pic_icon" format="reference"/>
+
+    <!--timeline footer middle-->
+    <attr name="timeline_middle_layout_background" format="color"/>
+    <attr name="timeline_middle_layout_text_color" format="color"/>
+    <attr name="timeline_load_more_background" format="reference"/>
+
+    <attr name="listview_checked_color" format="reference"/>
+
+
+    <attr name="listview_pic_bg_border" format="reference"/>
+
+    <attr name="listview_card_bg" format="reference"/>
+    <attr name="listview_item_bg" format="reference"/>
+
+    <attr name="timeline_reply_to_comment" format="reference"/>
+
+    <attr name="timeline_repost_flag" format="reference"/>
+    <attr name="timeline_comment_flag" format="reference"/>
+
+
+    <attr name="listview_pic_bg" format="integer"/>
+
+    <attr name="listview_text_color" format="reference"/>
+
+    <attr name="listview_repost_divider" format="reference"/>
+
+
+    <!--profile-->
+    <attr name="profile_top_photo_background_color" format="color"/>
+    <attr name="profile_detail_count_divider_color" format="color"/>
+    <attr name="profile_detail_count_bottom_color" format="color"/>
+
+    <!--browser weibo detail -->
+    <attr name="browser_weibo_detail_background_color" format="color"/>
+
+</resources>

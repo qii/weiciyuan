@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--browser picture-->
+    <dimen name="browser_pic_bottom_button_layout_padding">50dp</dimen>
+</resources>

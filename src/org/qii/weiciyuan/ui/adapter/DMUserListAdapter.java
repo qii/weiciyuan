@@ -1,11 +1,14 @@
 package org.qii.weiciyuan.ui.adapter;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.text.Layout;
+import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -16,9 +19,12 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMUserBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
+import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
@@ -36,9 +42,9 @@ public class DMUserListAdapter extends BaseAdapter {
     private TimeLineBitmapDownloader commander;
 
 
-    public DMUserListAdapter(Fragment fragment, TimeLineBitmapDownloader commander, List<DMUserBean> bean, ListView listView) {
+    public DMUserListAdapter(Fragment fragment, List<DMUserBean> bean, ListView listView) {
         this.bean = bean;
-        this.commander = commander;
+        this.commander = TimeLineBitmapDownloader.getInstance();
         this.inflater = fragment.getActivity().getLayoutInflater();
         this.listView = listView;
         this.fragment = fragment;
@@ -94,10 +100,23 @@ public class DMUserListAdapter extends BaseAdapter {
     }
 
     private void configViewFont(DMViewHolder holder) {
-        holder.time.setTextSize(SettingUtility.getFontSize() - 3);
-        holder.content.setTextSize(SettingUtility.getFontSize());
-        holder.username.setTextSize(SettingUtility.getFontSize());
 
+        int prefFontSizeSp = SettingUtility.getFontSize();
+        float currentWidgetTextSizePx;
+
+        currentWidgetTextSizePx = holder.time.getTextSize();
+
+        if (Utility.sp2px(prefFontSizeSp - 3) != currentWidgetTextSizePx) {
+            holder.time.setTextSize(prefFontSizeSp - 3);
+        }
+
+        currentWidgetTextSizePx = holder.content.getTextSize();
+
+        if (Utility.sp2px(prefFontSizeSp) != currentWidgetTextSizePx) {
+            holder.content.setTextSize(prefFontSizeSp);
+            holder.username.setTextSize(prefFontSizeSp);
+
+        }
     }
 
     protected void bindViewData(DMViewHolder holder, int position) {
@@ -121,6 +140,9 @@ public class DMUserListAdapter extends BaseAdapter {
             ListViewTool.addJustHighLightLinks(msg);
             holder.content.setText(msg.getListViewSpannableString());
         }
+
+        bindOnTouchListener(holder);
+
         String time = msg.getListviewItemShowTime();
 
         if (!holder.time.getText().toString().equals(time)) {
@@ -139,6 +161,15 @@ public class DMUserListAdapter extends BaseAdapter {
         }
     }
 
+    private void bindOnTouchListener(DMViewHolder holder) {
+        holder.username.setClickable(false);
+        holder.time.setClickable(false);
+        holder.content.setClickable(false);
+
+        if (holder.content != null)
+            holder.content.setOnTouchListener(onTouchListener);
+
+    }
 
     protected List<DMUserBean> getList() {
         return bean;
@@ -202,4 +233,76 @@ public class DMUserListAdapter extends BaseAdapter {
 
     }
 
+    private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            DMViewHolder holder = getViewHolderByView(v);
+
+            if (holder == null) {
+                return false;
+            }
+
+            Layout layout = ((TextView) v).getLayout();
+
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+            int offset = 0;
+            if (layout != null) {
+
+                int line = layout.getLineForVertical(y);
+                offset = layout.getOffsetForHorizontal(line, x);
+            }
+
+            TextView tv = (TextView) v;
+            SpannableString value = SpannableString.valueOf(tv.getText());
+            MyURLSpan[] urlSpans = value.getSpans(0, value.length(), MyURLSpan.class);
+            boolean result = false;
+            for (MyURLSpan urlSpan : urlSpans) {
+                int start = value.getSpanStart(urlSpan);
+                int end = value.getSpanEnd(urlSpan);
+                if (start <= offset && offset <= end) {
+                    result = true;
+                    break;
+                }
+            }
+
+            boolean hasActionMode = ((AbstractTimeLineFragment) fragment).hasActionMode();
+            if (result && !hasActionMode) {
+                return LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
+            } else {
+                return false;
+            }
+
+        }
+    };
+
+    private DMViewHolder getViewHolderByView(View view) {
+        try {
+            final int position = listView.getPositionForView(view);
+            if (position == ListView.INVALID_POSITION) {
+                return null;
+            }
+            return getViewHolderByView(position);
+        } catch (NullPointerException e) {
+
+        }
+        return null;
+    }
+
+    private DMViewHolder getViewHolderByView(int position) {
+
+        int wantedPosition = position - 1;
+        int firstPosition = listView.getFirstVisiblePosition() - listView.getHeaderViewsCount();
+        int wantedChild = wantedPosition - firstPosition;
+
+        if (wantedChild < 0 || wantedChild >= listView.getChildCount()) {
+            return null;
+        }
+
+        View wantedView = listView.getChildAt(wantedChild);
+        DMViewHolder holder = (DMViewHolder) wantedView.getTag(R.drawable.ic_launcher + getItemViewType(position));
+        return holder;
+
+    }
 }

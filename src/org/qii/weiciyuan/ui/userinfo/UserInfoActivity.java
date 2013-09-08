@@ -1,42 +1,48 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.text.TextUtils;
-import android.view.*;
+import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.group.ModifyGroupMemberDao;
 import org.qii.weiciyuan.dao.relationship.FanDao;
 import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
+import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.user.RemarkDao;
 import org.qii.weiciyuan.support.database.FilterDBTask;
 import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.lib.MyViewPager;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
+import org.qii.weiciyuan.ui.loader.AbstractAsyncNetRequestTaskLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,13 +54,16 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
     private UserBean bean;
 
-    private ViewPager mViewPager = null;
+    private MyViewPager mViewPager = null;
 
     private MyAsyncTask<Void, UserBean, UserBean> followOrUnfollowTask;
 
     private ModifyGroupMemberTask modifyGroupMemberTask;
 
     private GestureDetector gestureDetector;
+
+
+    private static final int REFRESH_LOADER_ID = 0;
 
 
     public String getToken() {
@@ -68,79 +77,112 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         return bean;
     }
 
+    public void setUser(UserBean bean) {
+        this.bean = bean;
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
-        if (followOrUnfollowTask != null)
-            followOrUnfollowTask.cancel(true);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Utility.cancelTasks(followOrUnfollowTask, modifyGroupMemberTask);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initLayout();
         token = getIntent().getStringExtra("token");
-        bean = (UserBean) getIntent().getSerializableExtra("user");
+        bean = getIntent().getParcelableExtra("user");
         if (bean == null) {
-            Uri data = getIntent().getData();
-            if (data != null) {
-                String d = data.toString();
-                int index = d.lastIndexOf("/");
-                String newValue = d.substring(index + 1);
+            String id = getIntent().getStringExtra("id");
+            if (!TextUtils.isEmpty(id)) {
                 bean = new UserBean();
-                bean.setScreen_name(newValue);
-            } else if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-                processIntent(getIntent());
+                bean.setId(id);
+            } else {
+                String domain = getIntent().getStringExtra("domain");
+                if (!TextUtils.isEmpty(domain)) {
+                    bean = new UserBean();
+                    bean.setDomain(domain);
+                } else {
+                    Uri data = getIntent().getData();
+                    if (data != null) {
+                        String d = data.toString();
+                        int index = d.lastIndexOf("@");
+                        String newValue = d.substring(index + 1);
+                        bean = new UserBean();
+                        bean.setScreen_name(newValue);
+                    } else if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+                        processIntent(getIntent());
+                    }
+                }
             }
+            fetchUserInfoFromServer();
+        } else {
+            buildContent();
         }
 
-        if (bean.getScreen_name().equals(GlobalContext.getInstance().getCurrentAccountName())
-                || (bean.getId() != null && bean.getId().equals(GlobalContext.getInstance().getCurrentAccountId()))) {
+
+        if (isMyselfProfile()) {
+            if (getClass() == MyInfoActivity.class) {
+                return;
+            }
             Intent intent = new Intent(this, MyInfoActivity.class);
             intent.putExtra("token", getToken());
 
-            AccountBean accountBean = new AccountBean();
-            accountBean.setAccess_token(token);
-            accountBean.setUsernick(GlobalContext.getInstance().getCurrentAccountName());
-            accountBean.setUid(GlobalContext.getInstance().getCurrentAccountId());
             UserBean userBean = new UserBean();
             userBean.setId(GlobalContext.getInstance().getCurrentAccountId());
             intent.putExtra("user", bean);
-            intent.putExtra("account", accountBean);
+            intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
             startActivity(intent);
             finish();
         }
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(getString(R.string.personal_info));
-        setContentView(R.layout.viewpager_layout);
-
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        TimeLinePagerAdapter adapter = new TimeLinePagerAdapter(getFragmentManager());
-        mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setAdapter(adapter);
-        mViewPager.setOnPageChangeListener(onPageChangeListener);
-        gestureDetector = new GestureDetector(UserInfoActivity.this, new MyOnGestureListener());
-        mViewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
-            }
-        });
-
-        ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.info))
-                .setTabListener(tabListener));
-
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.weibo))
-                .setTabListener(tabListener));
-
 
     }
 
+    private boolean isMyselfProfile() {
+        boolean screenNameEqualCurrentAccount = bean.getScreen_name() != null
+                && bean.getScreen_name().equals(GlobalContext.getInstance().getCurrentAccountName());
+        boolean idEqualCurrentAccount = bean.getId() != null && bean.getId().equals(GlobalContext.getInstance().getCurrentAccountId());
+        return screenNameEqualCurrentAccount || idEqualCurrentAccount;
+    }
+
+    private void fetchUserInfoFromServer() {
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle(bean.getScreen_name());
+        FetchingDataDialog dialog = new FetchingDataDialog();
+        getSupportFragmentManager().beginTransaction().add(dialog, FetchingDataDialog.class.getName()).commit();
+        getSupportLoaderManager().initLoader(REFRESH_LOADER_ID, null, refreshCallback);
+    }
+
+    private void initLayout() {
+//        getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(false);
+        getActionBar().setTitle(getString(R.string.personal_info));
+    }
+
+    private void buildContent() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (getSupportFragmentManager().findFragmentByTag(NewUserInfoFragment.class.getName()) == null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(android.R.id.content, new NewUserInfoFragment(getUser(), getToken()), NewUserInfoFragment.class.getName())
+                            .commit();
+                }
+            }
+        });
+
+
+    }
 
     private void processIntent(Intent intent) {
         Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
@@ -152,59 +194,33 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         bean.setScreen_name(new String(msg.getRecords()[0].getPayload()));
     }
 
-    ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-        boolean status = false;
-
-        public void onTabSelected(ActionBar.Tab tab,
-                                  FragmentTransaction ft) {
-            if (mViewPager.getCurrentItem() != tab.getPosition())
-                mViewPager.setCurrentItem(tab.getPosition());
-
-            switch (tab.getPosition()) {
-
-                case 1:
-                    status = true;
-                    break;
-
-            }
-        }
-
-        public void onTabUnselected(ActionBar.Tab tab,
-                                    FragmentTransaction ft) {
-            switch (tab.getPosition()) {
-
-                case 1:
-                    status = false;
-                    break;
-
-            }
-        }
-
-        public void onTabReselected(ActionBar.Tab tab,
-                                    FragmentTransaction ft) {
-            switch (tab.getPosition()) {
-
-                case 1:
-                    if (status) {
-                        Utility.stopListViewScrollingAndScrollToTop(getStatusFragment().getListView());
-                    }
-                    break;
-
-            }
-        }
-    };
-
-    ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
-        @Override
-        public void onPageSelected(int position) {
-            getActionBar().setSelectedNavigationItem(position);
-        }
-    };
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.actionbar_menu_infofragment, menu);
+
+        if (isMyselfProfile()) {
+
+            getMenuInflater().inflate(R.menu.actionbar_menu_myinfoactivity, menu);
+            MenuItem edit = menu.findItem(R.id.menu_edit);
+            edit.setVisible(GlobalContext.getInstance().getAccountBean().isBlack_magic());
+        } else {
+            getMenuInflater().inflate(R.menu.actionbar_menu_infofragment, menu);
+            if (bean.isFollowing()) {
+                menu.findItem(R.id.menu_follow).setVisible(false);
+                menu.findItem(R.id.menu_unfollow).setVisible(true);
+                menu.findItem(R.id.menu_manage_group).setVisible(true);
+            } else {
+                menu.findItem(R.id.menu_follow).setVisible(true);
+                menu.findItem(R.id.menu_unfollow).setVisible(false);
+                menu.findItem(R.id.menu_manage_group).setVisible(false);
+            }
+
+            if (!bean.isFollowing() && bean.isFollow_me()) {
+                menu.findItem(R.id.menu_remove_fan).setVisible(true);
+            } else {
+                menu.findItem(R.id.menu_remove_fan).setVisible(false);
+            }
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -216,6 +232,11 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             case android.R.id.home:
                 intent = new Intent(this, MainTimeLineActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                return true;
+            case R.id.menu_edit:
+                intent = new Intent(this, EditMyProfileActivity.class);
+                intent.putExtra("userBean", GlobalContext.getInstance().getAccountBean().getInfo());
                 startActivity(intent);
                 return true;
             case R.id.menu_at:
@@ -249,7 +270,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
                 break;
             case R.id.menu_add_to_app_filter:
                 if (!TextUtils.isEmpty(bean.getScreen_name())) {
-                    FilterDBTask.addFilterKeyword(bean.getScreen_name());
+                    FilterDBTask.addFilterKeyword(FilterDBTask.TYPE_USER, bean.getScreen_name());
                     Toast.makeText(this, getString(R.string.filter_successfully), Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -265,25 +286,20 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         new UpdateRemarkTask(remark).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private AbstractTimeLineFragment getStatusFragment() {
-        return ((AbstractTimeLineFragment) getFragmentManager().findFragmentByTag(
-                StatusesByIdTimeLineFragment.class.getName()));
-    }
 
-
-    private UserInfoFragment getInfoFragment() {
-        return ((UserInfoFragment) getFragmentManager().findFragmentByTag(
-                UserInfoFragment.class.getName()));
+    private NewUserInfoFragment getInfoFragment() {
+        return ((NewUserInfoFragment) getSupportFragmentManager().findFragmentByTag(
+                NewUserInfoFragment.class.getName()));
     }
 
     private void manageGroup() {
         ManageGroupDialog dialog = new ManageGroupDialog(GlobalContext.getInstance().getGroup(), bean.getId());
-        dialog.show(getFragmentManager(), "");
+        dialog.show(getSupportFragmentManager(), "");
 
     }
 
     public void handleGroup(List<String> add, List<String> remove) {
-        if (modifyGroupMemberTask == null || modifyGroupMemberTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+        if (Utility.isTaskStopped(modifyGroupMemberTask)) {
             modifyGroupMemberTask = new ModifyGroupMemberTask(add, remove);
             modifyGroupMemberTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -365,7 +381,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             super.onPostExecute(o);
             Toast.makeText(UserInfoActivity.this, getString(R.string.unfollow_successfully), Toast.LENGTH_SHORT).show();
             bean = o;
-            getInfoFragment().forceReloadData(o);
+            bean.setFollowing(false);
+            invalidateOptionsMenu();
         }
     }
 
@@ -416,7 +433,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             super.onPostExecute(o);
             Toast.makeText(UserInfoActivity.this, getString(R.string.follow_successfully), Toast.LENGTH_SHORT).show();
             bean = o;
-            getInfoFragment().forceReloadData(o);
+            bean.setFollowing(true);
+            invalidateOptionsMenu();
             manageGroup();
         }
     }
@@ -504,55 +522,135 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         }
     }
 
-    class TimeLinePagerAdapter extends
-            AppFragmentPagerAdapter {
 
-        List<Fragment> list = new ArrayList<Fragment>();
+    public static class UserInfoActivityErrorDialog extends DialogFragment {
 
+        private String error;
 
-        public TimeLinePagerAdapter(FragmentManager fm) {
-            super(fm);
-            if (getInfoFragment() == null) {
-                list.add(new UserInfoFragment());
-            } else {
-                list.add(getInfoFragment());
+        public UserInfoActivityErrorDialog() {
+
+        }
+
+        public UserInfoActivityErrorDialog(String error) {
+            this.error = error;
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putString("error", error);
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            if (savedInstanceState != null) {
+                this.error = savedInstanceState.getString("error");
             }
-            if (getStatusFragment() == null) {
-                list.add(new StatusesByIdTimeLineFragment(getUser(), getToken()));
-            } else {
-                list.add(getStatusFragment());
-            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                    .setTitle(getString(R.string.something_wrong))
+                    .setMessage(this.error)
+                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getActivity().finish();
+                        }
+                    });
+            return builder.create();
         }
 
         @Override
-        public Fragment getItem(int i) {
-            return list.get(i);
-        }
-
-        @Override
-        protected String getTag(int position) {
-            List<String> tagList = new ArrayList<String>();
-            tagList.add(UserInfoFragment.class.getName());
-            tagList.add(StatusesByIdTimeLineFragment.class.getName());
-            return tagList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
+        public void onCancel(DialogInterface dialog) {
+            super.onCancel(dialog);
+            getActivity().finish();
         }
     }
 
-    class MyOnGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+    private static class RefreshLoader extends AbstractAsyncNetRequestTaskLoader<UserBean> {
+
+        private UserBean bean;
+
+        public RefreshLoader(Context context, UserBean userBean) {
+            super(context);
+            this.bean = userBean;
+        }
 
         @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        protected UserBean loadData() throws WeiboException {
+            ShowUserDao dao = new ShowUserDao(GlobalContext.getInstance().getSpecialToken());
+            boolean haveId = !TextUtils.isEmpty(bean.getId());
+            boolean haveName = !TextUtils.isEmpty(bean.getScreen_name());
+            boolean haveDomain = !TextUtils.isEmpty(bean.getDomain());
 
-            if (velocityX > AppConfig.SWIPE_MIN_DISTANCE && mViewPager.getCurrentItem() == 0) {
-                finish();
-                return true;
+            if (haveId) {
+                dao.setUid(bean.getId());
+            } else if (haveName) {
+                dao.setScreen_name(bean.getScreen_name());
+            } else if (haveDomain) {
+                dao.setDomain(bean.getDomain());
+            } else {
+                return null;
             }
-            return false;
+
+            return dao.getUserInfo();
+        }
+    }
+
+
+    private LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserBean>> refreshCallback = new LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserBean>>() {
+        @Override
+        public Loader<AsyncTaskLoaderResult<UserBean>> onCreateLoader(int id, Bundle args) {
+            return new RefreshLoader(UserInfoActivity.this, bean);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<AsyncTaskLoaderResult<UserBean>> loader, AsyncTaskLoaderResult<UserBean> result) {
+            UserBean data = result != null ? result.data : null;
+            final WeiboException exception = result != null ? result.exception : null;
+
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    FetchingDataDialog dialog = (FetchingDataDialog) getSupportFragmentManager().findFragmentByTag(FetchingDataDialog.class.getName());
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+
+                    if (exception != null) {
+                        UserInfoActivityErrorDialog userInfoActivityErrorDialog = new UserInfoActivityErrorDialog(exception.getError());
+                        getSupportFragmentManager().beginTransaction().add(userInfoActivityErrorDialog, UserInfoActivityErrorDialog.class.getName()).commit();
+                    }
+                }
+            });
+
+
+            if (data != null) {
+                bean = data;
+                buildContent();
+            }
+            getLoaderManager().destroyLoader(loader.getId());
+        }
+
+        @Override
+        public void onLoaderReset(Loader<AsyncTaskLoaderResult<UserBean>> loader) {
+
+        }
+    };
+
+    public static class FetchingDataDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            ProgressDialog dialog = new ProgressDialog(getActivity());
+            dialog.setMessage(getString(R.string.fetching_user_info));
+            return dialog;
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            super.onCancel(dialog);
+            getActivity().finish();
         }
     }
 }

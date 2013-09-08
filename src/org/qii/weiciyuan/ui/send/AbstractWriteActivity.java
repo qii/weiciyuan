@@ -6,14 +6,16 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.lib.CheatSheet;
+import org.qii.weiciyuan.support.lib.SmileyPicker;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
@@ -30,7 +32,9 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
 
     protected abstract boolean canSend();
 
-    private EditText et;
+    private AutoCompleteTextView et;
+    private SmileyPicker smiley = null;
+    private RelativeLayout container = null;
 
     public static final int AT_USER = 3;
 
@@ -76,7 +80,7 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         setContentView(R.layout.abstractwriteactivity_layout);
 
         ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
@@ -94,32 +98,86 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
 
         token = getIntent().getStringExtra("token");
 
+        View title = getLayoutInflater().inflate(R.layout.writeweiboactivity_title_layout, null);
+        actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
 
-        et = ((EditText) findViewById(R.id.status_new_content));
+        et = ((AutoCompleteTextView) findViewById(R.id.status_new_content));
         et.addTextChangedListener(new TextNumLimitWatcher((TextView) findViewById(R.id.menu_send), et, this));
-
+        AutoCompleteAdapter adapter = new AutoCompleteAdapter(this, et, (ProgressBar) title.findViewById(R.id.have_suggest_progressbar));
+        et.setAdapter(adapter);
 
         findViewById(R.id.menu_topic).setOnClickListener(this);
         findViewById(R.id.menu_at).setOnClickListener(this);
         findViewById(R.id.menu_emoticon).setOnClickListener(this);
         findViewById(R.id.menu_send).setOnClickListener(this);
 
-        View.OnLongClickListener onLongClickListener = new BottomButtonLongClickListener();
-        findViewById(R.id.menu_at).setOnLongClickListener(onLongClickListener);
-        findViewById(R.id.menu_emoticon).setOnLongClickListener(onLongClickListener);
-        findViewById(R.id.menu_topic).setOnLongClickListener(onLongClickListener);
-        findViewById(R.id.menu_send).setOnLongClickListener(onLongClickListener);
+        CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_at), R.string.at_other);
+        CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_emoticon), R.string.add_emoticon);
+        CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_topic), R.string.add_topic);
+        CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_send), R.string.send);
 
+        smiley = (SmileyPicker) findViewById(R.id.smiley_picker);
+        smiley.setEditText(AbstractWriteActivity.this, ((LinearLayout) findViewById(R.id.root_layout)), et);
+        container = (RelativeLayout) findViewById(R.id.container);
+        et.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSmileyPicker(true);
+            }
+        });
+    }
+
+    private void showSmileyPicker(boolean showAnimation) {
+        this.smiley.show(AbstractWriteActivity.this, showAnimation);
+        lockContainerHeight(SmileyPickerUtility.getAppContentHeight(AbstractWriteActivity.this));
 
     }
 
+    public void hideSmileyPicker(boolean showKeyBoard) {
+        if (this.smiley.isShown()) {
+            if (showKeyBoard) {
+                //this time softkeyboard is hidden
+                LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.container.getLayoutParams();
+                localLayoutParams.height = smiley.getTop();
+                localLayoutParams.weight = 0.0F;
+                this.smiley.hide(AbstractWriteActivity.this);
+
+                SmileyPickerUtility.showKeyBoard(et);
+                et.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        unlockContainerHeightDelayed();
+                    }
+                }, 200L);
+            } else {
+                this.smiley.hide(AbstractWriteActivity.this);
+                unlockContainerHeightDelayed();
+            }
+        }
+
+    }
+
+    private void lockContainerHeight(int paramInt) {
+        LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.container.getLayoutParams();
+        localLayoutParams.height = paramInt;
+        localLayoutParams.weight = 0.0F;
+    }
+
+    public void unlockContainerHeightDelayed() {
+
+        ((LinearLayout.LayoutParams) AbstractWriteActivity.this.container.getLayoutParams()).weight = 1.0F;
+
+    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.menu_emoticon:
-                EmotionsGridDialog dialog = new EmotionsGridDialog();
-                dialog.show(getFragmentManager(), "");
+                if (smiley.isShown()) {
+                    hideSmileyPicker(true);
+                } else {
+                    showSmileyPicker(SmileyPickerUtility.isKeyBoardShow(AbstractWriteActivity.this));
+                }
                 break;
 
             case R.id.menu_send:
@@ -150,7 +208,9 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
 
     @Override
     public void onBackPressed() {
-        if (!TextUtils.isEmpty(et.getText().toString()) && canShowSaveDraftDialog()) {
+        if (smiley.isShown()) {
+            hideSmileyPicker(false);
+        } else if (!TextUtils.isEmpty(et.getText().toString()) && canShowSaveDraftDialog()) {
             SaveDraftDialog dialog = new SaveDraftDialog();
             dialog.show(getFragmentManager(), "");
         } else {
@@ -184,25 +244,4 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
     }
 
 
-    private class BottomButtonLongClickListener implements View.OnLongClickListener {
-
-        @Override
-        public boolean onLongClick(View v) {
-            switch (v.getId()) {
-                case R.id.menu_emoticon:
-                    Toast.makeText(AbstractWriteActivity.this, getString(R.string.add_emoticon), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.menu_at:
-                    Toast.makeText(AbstractWriteActivity.this, getString(R.string.at_other), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.menu_topic:
-                    Toast.makeText(AbstractWriteActivity.this, getString(R.string.add_topic), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.menu_send:
-                    Toast.makeText(AbstractWriteActivity.this, getString(R.string.send), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-            return true;
-        }
-    }
 }

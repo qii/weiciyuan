@@ -62,10 +62,10 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
     }
 
     private void handleDraftOperation(Intent intent) {
-        AccountBean account = (AccountBean) intent.getSerializableExtra("account");
+        AccountBean account = (AccountBean) intent.getParcelableExtra("account");
         token = account.getAccess_token();
 
-        repostDraftBean = (RepostDraftBean) intent.getSerializableExtra("draft");
+        repostDraftBean = (RepostDraftBean) intent.getParcelableExtra("draft");
         getEditTextView().setText(repostDraftBean.getContent());
         msg = repostDraftBean.getMessageBean();
 
@@ -93,9 +93,9 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
     }
 
     private void handleFailedOperation(Intent intent) {
-        token = ((AccountBean) intent.getSerializableExtra("account")).getAccess_token();
+        token = ((AccountBean) intent.getParcelableExtra("account")).getAccess_token();
 
-        msg = (MessageBean) intent.getSerializableExtra("oriMsg");
+        msg = (MessageBean) intent.getParcelableExtra("oriMsg");
         getEditTextView().setText(intent.getStringExtra("content"));
 
         if (msg.getRetweeted_status() != null) {
@@ -104,7 +104,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
             getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
         }
         getEditTextView().setError(intent.getStringExtra("failedReason"));
-        repostDraftBean = (RepostDraftBean) intent.getSerializableExtra("repostDraftBean");
+        repostDraftBean = (RepostDraftBean) intent.getParcelableExtra("repostDraftBean");
     }
 
     private void handleNormalOperation(Intent intent) {
@@ -113,7 +113,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         if (TextUtils.isEmpty(token))
             token = GlobalContext.getInstance().getSpecialToken();
 
-        msg = (MessageBean) intent.getSerializableExtra("msg");
+        msg = (MessageBean) intent.getParcelableExtra("msg");
 
         if (msg.getRetweeted_status() != null) {
             getEditTextView().setText("//@" + msg.getUser().getScreen_name() + ": " + msg.getText());
@@ -121,6 +121,7 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         } else {
             getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
         }
+        getEditTextView().setSelection(0);
     }
 
 
@@ -132,8 +133,8 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
             savedEnableOriComment = savedInstanceState.getBoolean("oriComment");
 
             token = savedInstanceState.getString("token");
-            msg = (MessageBean) savedInstanceState.getSerializable("msg");
-            repostDraftBean = (RepostDraftBean) savedInstanceState.getSerializable("repostDraftBean");
+            msg = (MessageBean) savedInstanceState.getParcelable("msg");
+            repostDraftBean = (RepostDraftBean) savedInstanceState.getParcelable("repostDraftBean");
         }
     }
 
@@ -144,8 +145,8 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         outState.putBoolean("oriComment", menuEnableOriComment.isChecked());
 
         outState.putString("token", token);
-        outState.putSerializable("msg", msg);
-        outState.putSerializable("repostDraftBean", repostDraftBean);
+        outState.putParcelable("msg", msg);
+        outState.putParcelable("repostDraftBean", repostDraftBean);
     }
 
     @Override
@@ -193,7 +194,6 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         menuEnableComment.setChecked(savedEnableComment);
         menuEnableOriComment.setChecked(savedEnableOriComment);
 
-        menu.findItem(R.id.menu_short).setVisible(true);
         return true;
     }
 
@@ -204,6 +204,22 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
         if (msg.getRetweeted_status() != null) {
             menuEnableOriComment.setVisible(true);
         }
+
+        String contentStr = getEditTextView().getText().toString();
+        if (Utility.countWord(contentStr, "//@", 0) > 2) {
+            menu.findItem(R.id.menu_short_right).setVisible(true);
+            menu.findItem(R.id.menu_short_middle).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_short_right).setVisible(false);
+            menu.findItem(R.id.menu_short_middle).setVisible(false);
+        }
+
+        if (!TextUtils.isEmpty(contentStr)) {
+            menu.findItem(R.id.menu_clear).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_clear).setVisible(false);
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -238,8 +254,11 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
             case R.id.menu_clear:
                 clearContentMenu();
                 break;
-            case R.id.menu_short:
+            case R.id.menu_short_right:
                 shortContent();
+                break;
+            case R.id.menu_short_middle:
+                shortMiddleContent();
                 break;
         }
         return true;
@@ -254,6 +273,23 @@ public class WriteRepostActivity extends AbstractWriteActivity<MessageBean> {
             getEditTextView().setText(result);
             if (index <= result.length())
                 getEditTextView().setSelection(index);
+        }
+    }
+
+    private void shortMiddleContent() {
+        String content = getEditTextView().getText().toString();
+        int index = getEditTextView().getSelectionStart();
+        int a = content.lastIndexOf("//@");
+        if (a >= 0) {
+            String result = content.substring(0, a);
+            int b = result.lastIndexOf("//@");
+            if (b >= 0) {
+                String startPart = content.substring(0, b);
+                String endPart = content.substring(a);
+                getEditTextView().setText(startPart + endPart);
+                if (index <= result.length())
+                    getEditTextView().setSelection(index);
+            }
         }
     }
 

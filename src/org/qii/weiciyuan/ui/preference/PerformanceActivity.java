@@ -9,13 +9,15 @@ import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
 /**
  * User: qii
- * Date: 13-1-1
+ * Date: 13-2-14
  */
 public class PerformanceActivity extends AbstractAppActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayShowHomeEnabled(false);
+        getActionBar().setDisplayShowTitleEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.pref_performance_title));
 

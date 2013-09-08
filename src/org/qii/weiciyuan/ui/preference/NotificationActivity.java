@@ -15,13 +15,15 @@ public class NotificationActivity extends AbstractAppActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayShowHomeEnabled(false);
+        getActionBar().setDisplayShowTitleEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.notification));
 
         if (savedInstanceState == null) {
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new NotificationFragment())
-                .commit();
+            getFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new NotificationFragment())
+                    .commit();
         }
     }
 

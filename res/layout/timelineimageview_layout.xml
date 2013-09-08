@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="fill_parent"
-             android:layout_height="fill_parent">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       android:foreground="@drawable/timelineimageview_cover"
+       android:addStatesFromChildren="true"
 
-    <ImageView
+       android:layout_width="fill_parent"
+       android:layout_height="fill_parent">
+
+    <org.qii.weiciyuan.support.lib.PerformanceImageView
         android:id="@+id/imageview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
 
-    <ImageView
-        android:id="@+id/imageview_cover"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
-</FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/imageview_pb"
+        android:indeterminate="false"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        style="?android:attr/progressBarStyleHorizontal"/>
+</merge>

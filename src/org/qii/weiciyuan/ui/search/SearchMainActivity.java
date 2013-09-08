@@ -1,9 +1,14 @@
 package org.qii.weiciyuan.ui.search;
 
-import android.app.*;
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -33,14 +38,31 @@ public class SearchMainActivity extends AbstractAppActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewpager_layout);
-
         buildViewPager();
         buildActionBarAndViewPagerTitles();
+
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                    SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE);
+            suggestions.saveRecentQuery(query, null);
+            search(query);
+        }
     }
 
     private void buildViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        SearchTabPagerAdapter adapter = new SearchTabPagerAdapter(getFragmentManager());
+        SearchTabPagerAdapter adapter = new SearchTabPagerAdapter(getSupportFragmentManager());
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
@@ -98,23 +120,7 @@ public class SearchMainActivity extends AbstractAppActivity {
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         searchView.setIconifiedByDefault(false);
         searchView.setSubmitButtonEnabled(false);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                search(query);
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm.isActive())
-                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
+        searchView.requestFocus();
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -128,10 +134,12 @@ public class SearchMainActivity extends AbstractAppActivity {
     private void search(final String q) {
         if (!TextUtils.isEmpty(q)) {
             this.q = q;
-            switch (mViewPager.getCurrentItem()){
-                case 0: ((SearchStatusFragment) getSearchStatusFragment()).search();
+            switch (mViewPager.getCurrentItem()) {
+                case 0:
+                    ((SearchStatusFragment) getSearchStatusFragment()).search();
                     break;
-                case 1: ((SearchUserFragment) getSearchUserFragment()).search();
+                case 1:
+                    ((SearchUserFragment) getSearchUserFragment()).search();
                     break;
             }
         }
@@ -160,12 +168,12 @@ public class SearchMainActivity extends AbstractAppActivity {
     }
 
     private Fragment getSearchUserFragment() {
-        return getFragmentManager().findFragmentByTag(
+        return getSupportFragmentManager().findFragmentByTag(
                 SearchUserFragment.class.getName());
     }
 
     private AbstractMessageTimeLineFragment getSearchStatusFragment() {
-        return (AbstractMessageTimeLineFragment) getFragmentManager().findFragmentByTag(
+        return (AbstractMessageTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
                 SearchStatusFragment.class.getName());
     }
 
@@ -175,7 +183,6 @@ public class SearchMainActivity extends AbstractAppActivity {
             getActionBar().setSelectedNavigationItem(position);
         }
     };
-
 
 
     private class SearchTabPagerAdapter extends AppFragmentPagerAdapter {

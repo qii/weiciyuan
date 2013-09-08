@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.*;
@@ -21,14 +22,19 @@ import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GeoBean;
+import org.qii.weiciyuan.bean.android.MusicInfo;
 import org.qii.weiciyuan.othercomponent.sendweiboservice.SendWeiboService;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageEdit;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.lib.CheatSheet;
+import org.qii.weiciyuan.support.lib.KeyboardControlEditText;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.SmileyPicker;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.browser.AppMapActivity;
 import org.qii.weiciyuan.ui.browser.BrowserLocalPicActivity;
@@ -48,7 +54,7 @@ import java.util.Map;
  * Date: 12-7-29
  */
 public class WriteWeiboActivity extends AbstractAppActivity implements DialogInterface.OnClickListener,
-        IAccountInfo, ClearContentDialog.IClear, EmotionsGridDialog.IEmotions, SaveDraftDialog.IDraft {
+        IAccountInfo, ClearContentDialog.IClear, SaveDraftDialog.IDraft {
 
     private static final int CAMERA_RESULT = 0;
     private static final int PIC_RESULT = 1;
@@ -68,7 +74,9 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private String location;
 
     private ImageView haveGPS = null;
-    private EditText content = null;
+    private KeyboardControlEditText content = null;
+    private SmileyPicker smiley = null;
+    private RelativeLayout container = null;
 
     private String2PicTask string2PicTask;
     private GetGoogleLocationInfo locationTask;
@@ -92,7 +100,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     private void handleFailedOperation(Intent intent) {
-        accountBean = (AccountBean) intent.getSerializableExtra("account");
+        accountBean = (AccountBean) intent.getParcelableExtra("account");
         token = accountBean.getAccess_token();
         getActionBar().setSubtitle(accountBean.getUsernick());
         String stringExtra = intent.getStringExtra("content");
@@ -107,7 +115,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         if (geoBean != null)
             enableGeo();
 
-        statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("statusDraftBean");
+        statusDraftBean = (StatusDraftBean) intent.getParcelableExtra("statusDraftBean");
     }
 
 
@@ -116,18 +124,46 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
         switch (which) {
             case 0:
+                String[] projection = new String[]{MediaStore.Images.ImageColumns._ID,
+                        MediaStore.Images.ImageColumns.DATA,
+                        MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+                        MediaStore.Images.ImageColumns.DATE_TAKEN,
+                        MediaStore.Images.ImageColumns.MIME_TYPE
+                };
+                final Cursor cursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        projection, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+                if (cursor.moveToFirst()) {
+                    String path = cursor.getString(1);
+                    if (!TextUtils.isEmpty(path)) {
+                        picPath = path;
+                        enablePicture();
+                        if (TextUtils.isEmpty(content.getText().toString())) {
+                            content.setText(getString(R.string.share_pic));
+                            content.setSelection(content.getText().toString().length());
+                        }
+                        break;
+                    }
+                }
+                Toast.makeText(WriteWeiboActivity.this, getString(R.string.dont_have_the_last_picture), Toast.LENGTH_SHORT).show();
+
+                break;
+            case 1:
 
                 imageFileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         new ContentValues());
                 if (imageFileUri != null) {
                     Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageFileUri);
-                    startActivityForResult(i, CAMERA_RESULT);
+                    if (Utility.isIntentSafe(WriteWeiboActivity.this, i)) {
+                        startActivityForResult(i, CAMERA_RESULT);
+                    } else {
+                        Toast.makeText(WriteWeiboActivity.this, getString(R.string.dont_have_camera_app), Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(WriteWeiboActivity.this, getString(R.string.cant_insert_album), Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case 1:
+            case 2:
                 Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(choosePictureIntent, PIC_RESULT);
@@ -136,11 +172,15 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     private void enablePicture() {
-        ((ImageButton) findViewById(R.id.menu_add_pic)).setImageLevel(1);
+
+        Bitmap bitmap = ImageTool.getWriteWeiboPictureThumblr(picPath);
+        if (bitmap != null) {
+            ((ImageButton) findViewById(R.id.menu_add_pic)).setImageBitmap(bitmap);
+        }
     }
 
     private void disablePicture() {
-        ((ImageButton) findViewById(R.id.menu_add_pic)).setImageLevel(0);
+        ((ImageButton) findViewById(R.id.menu_add_pic)).setImageDrawable(getResources().getDrawable(R.drawable.camera_light));
     }
 
 
@@ -215,8 +255,9 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
     @Override
     public void onBackPressed() {
-
-        if (!TextUtils.isEmpty(content.getText().toString()) && canShowSaveDraftDialog()) {
+        if (smiley.isShown()) {
+            hideSmileyPicker(false);
+        } else if (!TextUtils.isEmpty(content.getText().toString()) && canShowSaveDraftDialog()) {
             SaveDraftDialog dialog = new SaveDraftDialog();
             dialog.show(getFragmentManager(), "");
         } else {
@@ -228,11 +269,11 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("picPath", picPath);
-        outState.putSerializable("geoBean", geoBean);
+        outState.putParcelable("geoBean", geoBean);
         outState.putString("location", location);
         outState.putParcelable("imageFileUri", imageFileUri);
-        outState.putSerializable("statusDraftBean", statusDraftBean);
-        outState.putSerializable("accountBean", accountBean);
+        outState.putParcelable("statusDraftBean", statusDraftBean);
+        outState.putParcelable("accountBean", accountBean);
     }
 
     @Override
@@ -242,7 +283,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             picPath = savedInstanceState.getString("picPath");
             if (!TextUtils.isEmpty(picPath))
                 enablePicture();
-            geoBean = (GeoBean) savedInstanceState.getSerializable("geoBean");
+            geoBean = (GeoBean) savedInstanceState.getParcelable("geoBean");
             location = savedInstanceState.getString("location");
             if (geoBean != null && !TextUtils.isEmpty(location))
                 enableGeo();
@@ -250,8 +291,12 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 disableGeo();
 
             imageFileUri = savedInstanceState.getParcelable("imageFileUri");
-            statusDraftBean = (StatusDraftBean) savedInstanceState.getSerializable("statusDraftBean");
-            accountBean = (AccountBean) savedInstanceState.getSerializable("accountBean");
+            statusDraftBean = (StatusDraftBean) savedInstanceState.getParcelable("statusDraftBean");
+            accountBean = (AccountBean) savedInstanceState.getParcelable("accountBean");
+            token = accountBean.getAccess_token();
+
+            getActionBar().setSubtitle(getAccount().getUsernick());
+
         }
     }
 
@@ -284,11 +329,11 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
 
     private void handleDraftOperation(Intent intent) {
-        accountBean = (AccountBean) intent.getSerializableExtra("account");
+        accountBean = (AccountBean) intent.getParcelableExtra("account");
         token = accountBean.getAccess_token();
         getActionBar().setSubtitle(accountBean.getUsernick());
 
-        statusDraftBean = (StatusDraftBean) intent.getSerializableExtra("draft");
+        statusDraftBean = (StatusDraftBean) intent.getParcelableExtra("draft");
         if (statusDraftBean != null) {
             content.setText(statusDraftBean.getContent());
             picPath = statusDraftBean.getPic();
@@ -307,10 +352,14 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     private void handleNormalOperation(Intent intent) {
-        accountBean = (AccountBean) intent.getSerializableExtra("account");
+        accountBean = (AccountBean) intent.getParcelableExtra("account");
         token = accountBean.getAccess_token();
         getActionBar().setSubtitle(accountBean.getUsernick());
-
+        String contentStr = intent.getStringExtra("content");
+        if (!TextUtils.isEmpty(contentStr)) {
+            content.setText(contentStr + " ");
+            content.setSelection(content.getText().toString().length());
+        }
     }
 
 
@@ -323,7 +372,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         setContentView(R.layout.writeweiboactivity_layout);
 
         ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle(R.string.write_weibo);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
@@ -342,44 +391,61 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         View title = getLayoutInflater().inflate(R.layout.writeweiboactivity_title_layout, null);
         TextView contentNumber = (TextView) title.findViewById(R.id.content_number);
         contentNumber.setVisibility(View.GONE);
+
+
         haveGPS = (ImageView) title.findViewById(R.id.have_gps);
+        final PopupMenu popupMenu = new PopupMenu(this, haveGPS);
+        popupMenu.inflate(R.menu.popmenu_gps);
         haveGPS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utility.isGooglePlaySafe(WriteWeiboActivity.this)) {
-                    Intent intent = new Intent(WriteWeiboActivity.this, AppMapActivity.class);
-                    intent.putExtra("lat", geoBean.getLat());
-                    intent.putExtra("lon", geoBean.getLon());
-                    intent.putExtra("locationStr", location);
-                    startActivity(intent);
-                } else {
-                    StringBuilder geoUriString = new StringBuilder().append("geo:" + geoBean.getLat() + "," + geoBean.getLon());
-                    if (!TextUtils.isEmpty(location)) {
-                        geoUriString.append("?q=").append(location);
-                    }
-                    Uri geoUri = Uri.parse(geoUriString.toString());
-                    Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
-                    if (Utility.isIntentSafe(WriteWeiboActivity.this, mapCall)) {
-                        startActivity(mapCall);
-                    }
+                popupMenu.show();
+            }
+        });
 
-                }
-            }
-        });
-        haveGPS.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                haveGPS.setVisibility(View.GONE);
-                geoBean = null;
-                return true;
-            }
-        });
+        popupMenu.setOnMenuItemClickListener(
+                new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_view:
+                                if (Utility.isGooglePlaySafe(WriteWeiboActivity.this)) {
+                                    Intent intent = new Intent(WriteWeiboActivity.this, AppMapActivity.class);
+                                    intent.putExtra("lat", geoBean.getLat());
+                                    intent.putExtra("lon", geoBean.getLon());
+                                    intent.putExtra("locationStr", location);
+                                    startActivity(intent);
+                                } else {
+                                    StringBuilder geoUriString = new StringBuilder().append("geo:" + geoBean.getLat() + "," + geoBean.getLon());
+                                    if (!TextUtils.isEmpty(location)) {
+                                        geoUriString.append("?q=").append(location);
+                                    }
+                                    Uri geoUri = Uri.parse(geoUriString.toString());
+                                    Intent mapCall = new Intent(Intent.ACTION_VIEW, geoUri);
+                                    if (Utility.isIntentSafe(WriteWeiboActivity.this, mapCall)) {
+                                        startActivity(mapCall);
+                                    }
+
+                                }
+                                break;
+                            case R.id.menu_delete:
+                                haveGPS.setVisibility(View.GONE);
+                                geoBean = null;
+                                break;
+
+                        }
+
+                        return true;
+                    }
+                });
 
         actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
         actionBar.setDisplayShowCustomEnabled(true);
-        content = ((EditText) findViewById(R.id.status_new_content));
+        content = ((KeyboardControlEditText) findViewById(R.id.status_new_content));
         content.addTextChangedListener(new TextNumLimitWatcher((TextView) findViewById(R.id.menu_send), content, this));
         content.setDrawingCacheEnabled(true);
+        AutoCompleteAdapter adapter = new AutoCompleteAdapter(this, content, (ProgressBar) title.findViewById(R.id.have_suggest_progressbar));
+        content.setAdapter(adapter);
 
         View.OnClickListener onClickListener = new BottomButtonClickListener();
         findViewById(R.id.menu_at).setOnClickListener(onClickListener);
@@ -387,11 +453,20 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         findViewById(R.id.menu_add_pic).setOnClickListener(onClickListener);
         findViewById(R.id.menu_send).setOnClickListener(onClickListener);
 
-        View.OnLongClickListener onLongClickListener = new BottomButtonLongClickListener();
-        findViewById(R.id.menu_at).setOnLongClickListener(onLongClickListener);
-        findViewById(R.id.menu_emoticon).setOnLongClickListener(onLongClickListener);
-        findViewById(R.id.menu_add_pic).setOnLongClickListener(onLongClickListener);
-        findViewById(R.id.menu_send).setOnLongClickListener(onLongClickListener);
+        CheatSheet.setup(WriteWeiboActivity.this, findViewById(R.id.menu_at), R.string.at_other);
+        CheatSheet.setup(WriteWeiboActivity.this, findViewById(R.id.menu_emoticon), R.string.add_emoticon);
+        CheatSheet.setup(WriteWeiboActivity.this, findViewById(R.id.menu_add_pic), R.string.add_pic);
+        CheatSheet.setup(WriteWeiboActivity.this, findViewById(R.id.menu_send), R.string.send);
+
+        smiley = (SmileyPicker) findViewById(R.id.smiley_picker);
+        smiley.setEditText(WriteWeiboActivity.this, ((LinearLayout) findViewById(R.id.root_layout)), content);
+        container = (RelativeLayout) findViewById(R.id.container);
+        content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSmileyPicker(true);
+            }
+        });
     }
 
 
@@ -418,13 +493,18 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
 
     private void handleSendImage(Intent intent) {
+
+        handleSendText(intent);
+
         getAccountInfo();
 
         Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUri != null) {
             picPath = Utility.getPicPathFromUri(imageUri, this);
-            content.setText(getString(R.string.share_pic));
-            content.setSelection(content.getText().toString().length());
+            if (TextUtils.isEmpty(content.getText().toString())) {
+                content.setText(getString(R.string.share_pic));
+                content.setSelection(content.getText().toString().length());
+            }
             enablePicture();
         }
     }
@@ -468,6 +548,27 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        String contentStr = content.getText().toString();
+        if (!TextUtils.isEmpty(contentStr)) {
+            menu.findItem(R.id.menu_txt_to_pic).setVisible(true);
+            menu.findItem(R.id.menu_clear).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_txt_to_pic).setVisible(false);
+            menu.findItem(R.id.menu_clear).setVisible(false);
+        }
+
+        MusicInfo musicInfo = GlobalContext.getInstance().getMusicInfo();
+        if (!musicInfo.isEmpty()) {
+            MenuItem musicMenu = menu.findItem(R.id.menu_add_now_playing);
+            musicMenu.setVisible(true);
+            musicMenu.setTitle(musicInfo.toString());
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
@@ -501,6 +602,11 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                 break;
             case R.id.menu_add_gps:
                 addLocation();
+                break;
+            case R.id.menu_add_now_playing:
+                MusicInfo musicInfo = GlobalContext.getInstance().getMusicInfo();
+                if (!musicInfo.isEmpty())
+                    content.append(musicInfo.toString());
                 break;
 
         }
@@ -580,6 +686,15 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (locationListener != null) {
+            ((LocationManager) WriteWeiboActivity.this
+                    .getSystemService(Context.LOCATION_SERVICE)).removeUpdates(locationListener);
+        }
+    }
+
+    @Override
     public AccountBean getAccount() {
         return accountBean;
     }
@@ -593,20 +708,23 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     addLocation();
                     break;
                 case R.id.menu_add_pic:
-                    ImageButton imageButton = (ImageButton) findViewById(R.id.menu_add_pic);
-                    if (imageButton.getDrawable().getLevel() == 0)
+                    if (TextUtils.isEmpty(picPath))
                         addPic();
                     else
                         showPic();
                     break;
 
                 case R.id.menu_emoticon:
-                    EmotionsGridDialog dialog = new EmotionsGridDialog();
-                    dialog.show(getFragmentManager(), "");
+                    if (smiley.isShown()) {
+                        hideSmileyPicker(true);
+                    } else {
+                        showSmileyPicker(SmileyPickerUtility.isKeyBoardShow(WriteWeiboActivity.this));
+                    }
                     break;
 
                 case R.id.menu_send:
                     send();
+
                     break;
                 case R.id.menu_at:
                     Intent intent = new Intent(WriteWeiboActivity.this, AtUserActivity.class);
@@ -618,35 +736,47 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         }
     }
 
-    private class BottomButtonLongClickListener implements View.OnLongClickListener {
 
-        @Override
-        public boolean onLongClick(View v) {
-            switch (v.getId()) {
-                case R.id.menu_emoticon:
-                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.add_emoticon), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.menu_at:
-                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.at_other), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.menu_add_pic:
-                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.add_pic), Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.menu_send:
-                    Toast.makeText(WriteWeiboActivity.this, getString(R.string.send), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-            return true;
-        }
+    private void showSmileyPicker(boolean showAnimation) {
+        this.smiley.show(WriteWeiboActivity.this, showAnimation);
+        lockContainerHeight(SmileyPickerUtility.getAppContentHeight(WriteWeiboActivity.this));
+
     }
 
-    public void insertEmotion(String emotionChar) {
-        String ori = content.getText().toString();
-        int index = content.getSelectionStart();
-        StringBuilder stringBuilder = new StringBuilder(ori);
-        stringBuilder.insert(index, emotionChar);
-        content.setText(stringBuilder.toString());
-        content.setSelection(index + emotionChar.length());
+    public void hideSmileyPicker(boolean showKeyBoard) {
+        if (this.smiley.isShown()) {
+            if (showKeyBoard) {
+                //this time softkeyboard is hidden
+                LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.container.getLayoutParams();
+                localLayoutParams.height = smiley.getTop();
+                localLayoutParams.weight = 0.0F;
+                this.smiley.hide(WriteWeiboActivity.this);
+
+                SmileyPickerUtility.showKeyBoard(content);
+                content.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        unlockContainerHeightDelayed();
+                    }
+                }, 200L);
+            } else {
+                this.smiley.hide(WriteWeiboActivity.this);
+                unlockContainerHeightDelayed();
+            }
+        }
+
+    }
+
+    private void lockContainerHeight(int paramInt) {
+        LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.container.getLayoutParams();
+        localLayoutParams.height = paramInt;
+        localLayoutParams.weight = 0.0F;
+    }
+
+    public void unlockContainerHeightDelayed() {
+
+        ((LinearLayout.LayoutParams) WriteWeiboActivity.this.container.getLayoutParams()).weight = 1.0F;
+
     }
 
 
@@ -749,6 +879,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
     private void enableGeo() {
         haveGPS.setVisibility(View.VISIBLE);
+        CheatSheet.setup(WriteWeiboActivity.this, haveGPS, location);
     }
 
     private void disableGeo() {

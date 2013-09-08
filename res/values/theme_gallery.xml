@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="GalleryTheme" parent="@android:style/Theme.Holo.NoActionBar.Fullscreen">
+        <item name="android:actionBarStyle">@style/GalleryTheme.ActionBarStyle</item>
+    </style>
+
+    <style name="GalleryTheme.ActionBarStyle" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:titleTextStyle">@style/GalleryTheme.ActionBar.TitleTextStyle</item>
+    </style>
+
+    <style name="GalleryTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+</resources>

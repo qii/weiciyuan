@@ -19,7 +19,7 @@ public class UserTopicListActivity extends AbstractAppActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UserBean userBean = (UserBean) getIntent().getSerializableExtra("userBean");
+        UserBean userBean = (UserBean) getIntent().getParcelableExtra("userBean");
         ArrayList<String> topicList = getIntent().getStringArrayListExtra("topicList");
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(getString(R.string.topic));

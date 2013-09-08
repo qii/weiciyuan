@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -40,6 +40,9 @@ public class AppMapActivity extends AbstractAppActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
+        getActionBar().setDisplayShowHomeEnabled(false);
+        getActionBar().setDisplayShowTitleEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(false);
         getActionBar().setTitle(getString(R.string.browser_map));
         lat = getIntent().getDoubleExtra("lat", 0);
         lon = getIntent().getDoubleExtra("lon", 0);
@@ -70,7 +73,7 @@ public class AppMapActivity extends AbstractAppActivity {
 
     private void setUpMapIfNeeded() {
         if (mMap == null) {
-            mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             if (mMap != null) {
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);

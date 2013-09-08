@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+    >
 
     <FrameLayout
         android:layout_width="match_parent"
         android:minWidth="100dp"
         android:minHeight="200dp"
+        android:layout_gravity="center"
         android:layout_height="match_parent"
         android:id="@+id/fl">
 
@@ -26,4 +27,90 @@
             android:id="@+id/iv"/>
 
     </FrameLayout>
-</LinearLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:id="@+id/image_options"
+        android:background="#77000000"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:layout_gravity="bottom"
+        >
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/image_options_buttons"
+            android:layout_width="fill_parent"
+            android:paddingLeft="@dimen/browser_pic_bottom_button_layout_padding"
+            android:paddingRight="@dimen/browser_pic_bottom_button_layout_padding"
+            android:layout_height="48.0dip">
+
+            <ImageButton
+                android:id="@+id/ib_refresh"
+                android:tag="external"
+                android:background="@drawable/actionbar_item_blue"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:clickable="true"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/refresh_light"
+                android:scaleType="centerInside"
+                android:layout_weight="1.0"/>
+
+            <ImageButton
+                android:id="@+id/ib_copy"
+                android:tag="copy"
+                android:background="@drawable/actionbar_item_blue"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:clickable="true"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_menu_copy"
+                android:scaleType="centerInside"
+                android:layout_weight="1.0"/>
+
+            <ImageButton
+                android:id="@+id/ib_share"
+                android:tag="share"
+                android:background="@drawable/actionbar_item_blue"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:clickable="true"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_menu_share"
+                android:scaleType="centerInside"
+                android:layout_weight="1.0"/>
+
+            <ImageButton
+                android:id="@+id/ib_save"
+                android:tag="save"
+                android:background="@drawable/actionbar_item_blue"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:clickable="true"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_menu_download"
+                android:scaleType="centerInside"
+                android:layout_weight="1.0"/>
+
+            <ImageButton
+                android:id="@+id/ib_hd"
+                android:tag="hd"
+                android:background="@drawable/actionbar_item_blue"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:clickable="true"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/ic_menu_large_image"
+                android:scaleType="centerInside"
+                android:layout_weight="1.0"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</FrameLayout>

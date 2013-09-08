@@ -1,7 +1,7 @@
 package org.qii.weiciyuan.support.lib;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -27,11 +27,12 @@ public class PerformanceImageView extends ImageView {
     }
 
     @Override
-    public void setImageBitmap(Bitmap bm) {
+    public void setImageDrawable(Drawable drawable) {
         mBlockMeasurement = true;
-        super.setImageBitmap(bm);
+        super.setImageDrawable(drawable);
         mBlockMeasurement = false;
     }
+
 
     @Override
     public void requestLayout() {

@@ -1,23 +1,81 @@
 package org.qii.weiciyuan.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
 /**
  * User: Jiang Qi
  * Date: 12-8-2
  */
-public class CommentBean extends ItemBean {
+public class CommentBean extends ItemBean implements Parcelable {
     private String created_at;
-    private String id;
+    private long id;
+    private String idstr;
     private String text;
     private String source;
     private String mid;
+    private long mills;
+
     private UserBean user;
     private MessageBean status;
     private CommentBean reply_comment;
+
+    private transient SpannableString listViewSpannableString;
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(created_at);
+        dest.writeLong(id);
+
+        dest.writeString(idstr);
+        dest.writeString(text);
+        dest.writeString(source);
+        dest.writeString(mid);
+        dest.writeLong(mills);
+
+
+        dest.writeParcelable(user, flags);
+        dest.writeParcelable(status, flags);
+        dest.writeParcelable(reply_comment, flags);
+
+    }
+
+    public static final Parcelable.Creator<CommentBean> CREATOR =
+            new Parcelable.Creator<CommentBean>() {
+                public CommentBean createFromParcel(Parcel in) {
+                    CommentBean commentBean = new CommentBean();
+                    commentBean.created_at = in.readString();
+                    commentBean.id = in.readLong();
+                    commentBean.idstr = in.readString();
+                    commentBean.text = in.readString();
+                    commentBean.source = in.readString();
+                    commentBean.mid = in.readString();
+
+                    commentBean.mills = in.readLong();
+
+                    commentBean.user = in.readParcelable(UserBean.class.getClassLoader());
+                    commentBean.status = in.readParcelable(MessageBean.class.getClassLoader());
+                    commentBean.reply_comment = in.readParcelable(CommentBean.class.getClassLoader());
+
+                    return commentBean;
+                }
+
+                public CommentBean[] newArray(int size) {
+                    return new CommentBean[size];
+                }
+            };
+
 
     public CommentBean getReply_comment() {
         return reply_comment;
@@ -27,24 +85,6 @@ public class CommentBean extends ItemBean {
         this.reply_comment = reply_comment;
     }
 
-    private transient SpannableString listViewSpannableString;
-
-    private transient SpannableString listViewReplySpannableString;
-
-    //comment timeline show the comment content which is replied to
-    public SpannableString getListViewReplySpannableString() {
-        if (!TextUtils.isEmpty(listViewReplySpannableString)) {
-            return listViewReplySpannableString;
-        } else {
-            ListViewTool.addJustHighLightLinksOnlyReplyComment(this);
-
-            return listViewReplySpannableString;
-        }
-    }
-
-    public void setListViewReplySpannableString(SpannableString listViewReplySpannableString) {
-        this.listViewReplySpannableString = listViewReplySpannableString;
-    }
 
     //comment timeline show comment
     public SpannableString getListViewSpannableString() {
@@ -52,8 +92,6 @@ public class CommentBean extends ItemBean {
             return listViewSpannableString;
         } else {
             ListViewTool.addJustHighLightLinks(this);
-            if (reply_comment != null)
-                reply_comment.getListViewReplySpannableString();
             return listViewSpannableString;
         }
     }
@@ -62,9 +100,11 @@ public class CommentBean extends ItemBean {
         this.listViewSpannableString = listViewSpannableString;
     }
 
-    private long mills;
 
     public long getMills() {
+        if (mills == 0L) {
+            TimeTool.dealMills(this);
+        }
         return mills;
     }
 
@@ -87,12 +127,17 @@ public class CommentBean extends ItemBean {
     }
 
     public String getId() {
-        return id;
+        return idstr;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.idstr = id;
     }
+
+    public long getIdLong() {
+        return this.id;
+    }
+
 
     public String getText() {
         return text;
@@ -132,5 +177,10 @@ public class CommentBean extends ItemBean {
 
     public void setStatus(MessageBean status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
     }
 }

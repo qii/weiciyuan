@@ -23,6 +23,8 @@ public class URLHelper {
     public static final String COMMENTS_TO_ME_TIMELINE = URL_SINA_WEIBO + "comments/to_me.json";
     public static final String COMMENTS_BY_ME_TIMELINE = URL_SINA_WEIBO + "comments/by_me.json";
     public static final String BILATERAL_TIMELINE = URL_SINA_WEIBO + "statuses/bilateral_timeline.json";
+    public static final String TIMELINE_RE_CMT_COUNT = URL_SINA_WEIBO + "statuses/count.json";
+
 
     //group timeline
     public static final String FRIENDSGROUP_INFO = URL_SINA_WEIBO + "friendships/groups.json";
@@ -35,10 +37,15 @@ public class URLHelper {
     //user profile
     public static final String STATUSES_TIMELINE_BY_ID = URL_SINA_WEIBO + "statuses/user_timeline.json";
     public static final String USER_SHOW = URL_SINA_WEIBO + "users/show.json";
+    public static final String USER_DOMAIN_SHOW = URL_SINA_WEIBO + "users/domain_show.json";
 
 
     //browser
     public static final String STATUSES_SHOW = URL_SINA_WEIBO + "statuses/show.json";
+
+    //short url
+    public static final String SHORT_URL_SHARE_COUNT = URL_SINA_WEIBO + "short_url/share/counts.json";
+    public static final String SHORT_URL_SHARE_TIMELINE = URL_SINA_WEIBO + "short_url/share/statuses.json";
 
     //send weibo
     public static final String STATUSES_UPDATE = URL_SINA_WEIBO + "statuses/update.json";
@@ -97,6 +104,17 @@ public class URLHelper {
     public static final String GROUP_MEMBER_ADD = URL_SINA_WEIBO + "friendships/groups/members/add.json";
     public static final String GROUP_MEMBER_DESTROY = URL_SINA_WEIBO + "friendships/groups/members/destroy.json";
 
+    public static final String GROUP_CREATE = URL_SINA_WEIBO + "friendships/groups/create.json";
+    public static final String GROUP_DESTROY = URL_SINA_WEIBO + "friendships/groups/destroy.json";
+    public static final String GROUP_UPDATE = URL_SINA_WEIBO + "friendships/groups/update.json";
+
+
+    //nearby
+    public static final String NEARBY_USER = URL_SINA_WEIBO + "place/nearby/users.json";
+    public static final String NEARBY_STATUS = URL_SINA_WEIBO + "place/nearby_timeline.json";
+
+    //map
+    public static final String STATIC_MAP = URL_SINA_WEIBO + "location/base/get_map_image.json";
 
     /**
      * black magic
@@ -111,10 +129,14 @@ public class URLHelper {
 
     //direct message
     public static final String DM_RECEIVED = URL_SINA_WEIBO + "direct_messages.json";
-    public static final String DM_SENT = URL_SINA_WEIBO + "direct_messages/sent.json";
+    public static final String DM_SENT = URL_SINA_WEIBO + "direct_messages/new.json";
     public static final String DM_USERLIST = URL_SINA_WEIBO + "direct_messages/user_list.json";
     public static final String DM_CONVERSATION = URL_SINA_WEIBO + "direct_messages/conversation.json";
     public static final String DM_CREATE = URL_SINA_WEIBO + "direct_messages/new.json";
     public static final String DM_DESTROY = URL_SINA_WEIBO + "direct_messages/destroy.json";
     public static final String DM_BATH_DESTROY = URL_SINA_WEIBO + "direct_messages/destroy_batch";
+
+    //edit my profile
+    public static final String MYPROFILE_EDIT = URL_SINA_WEIBO + "account/profile/basic_update.json";
+    public static final String AVATAR_UPLOAD = URL_SINA_WEIBO + "account/avatar/upload.json";
 }

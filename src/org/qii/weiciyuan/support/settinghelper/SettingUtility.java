@@ -14,6 +14,7 @@ import org.qii.weiciyuan.ui.preference.SettingActivity;
 public class SettingUtility {
 
     private static final String FIRSTSTART = "firststart";
+    private static final String LAST_FOUND_WEIBO_ACCOUNT_LINK = "last_found_weibo_account_link";
 
     private SettingUtility() {
 
@@ -53,19 +54,35 @@ public class SettingUtility {
 
         switch (Integer.valueOf(value)) {
             case 1:
-                return R.style.AppTheme_Four;
+                return R.style.AppTheme_Light;
 
             case 2:
-                return R.style.AppTheme_Pure_Black;
+                return R.style.AppTheme_Dark;
 
             default:
-                return R.style.AppTheme_Four;
+                return R.style.AppTheme_Light;
+
+        }
+    }
+
+    public static void switchToAnotherTheme() {
+        String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.THEME, "1");
+        switch (Integer.valueOf(value)) {
+            case 1:
+                SettingHelper.setEditor(getContext(), SettingActivity.THEME, "2");
+                break;
+            case 2:
+                SettingHelper.setEditor(getContext(), SettingActivity.THEME, "1");
+                break;
+            default:
+                SettingHelper.setEditor(getContext(), SettingActivity.THEME, "1");
+                break;
 
         }
     }
 
     public static int getHighPicMode() {
-        String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.LIST_HIGH_PIC_MODE, "1");
+        String value = SettingHelper.getSharedPreferences(getContext(), SettingActivity.LIST_HIGH_PIC_MODE, "2");
         return Integer.valueOf(value);
     }
 
@@ -182,7 +199,7 @@ public class SettingUtility {
     }
 
     public static boolean allowFastScroll() {
-        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.LIST_FAST_SCROLL, false);
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.LIST_FAST_SCROLL, true);
 
     }
 
@@ -227,8 +244,8 @@ public class SettingUtility {
 
     }
 
-    public static boolean enableHardwareAccelerated() {
-        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.HARDWARE_ACCELERATED, false);
+    public static boolean disableHardwareAccelerated() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.DISABLE_HARDWARE_ACCELERATED, false);
 
     }
 
@@ -237,4 +254,31 @@ public class SettingUtility {
         return Integer.valueOf(result);
     }
 
+    public static void setDefaultSoftKeyBoardHeight(int height) {
+        SettingHelper.setEditor(getContext(), "default_softkeyboard_height", height);
+    }
+
+    public static int getDefaultSoftKeyBoardHeight() {
+        return SettingHelper.getSharedPreferences(getContext(), "default_softkeyboard_height", 400);
+    }
+
+    public static String getLastFoundWeiboAccountLink() {
+        return SettingHelper.getSharedPreferences(getContext(), LAST_FOUND_WEIBO_ACCOUNT_LINK, "");
+    }
+
+    public static void setLastFoundWeiboAccountLink(String url) {
+        SettingHelper.setEditor(getContext(), LAST_FOUND_WEIBO_ACCOUNT_LINK, url);
+    }
+
+    public static boolean isReadStyleEqualWeibo() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.READ_STYLE, "1").equals("1");
+    }
+
+    public static boolean isWifiUnlimitedMsgCount() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.WIFI_UNLIMITED_MSG_COUNT, true);
+    }
+
+    public static boolean isWifiAutoDownloadPic() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.WIFI_AUTO_DOWNLOAD_PIC, true);
+    }
 }

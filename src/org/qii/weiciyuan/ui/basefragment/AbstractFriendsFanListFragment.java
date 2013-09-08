@@ -1,10 +1,12 @@
 package org.qii.weiciyuan.ui.basefragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.AbsListView;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
         this.uid = uid;
     }
 
+    //this api has bug, check cursor before add data
     @Override
     protected void oldUserOnPostExecute(UserListBean newValue) {
         if (newValue != null && newValue.getUsers().size() > 0 && newValue.getPrevious_cursor() != bean.getPrevious_cursor()) {
@@ -43,7 +46,7 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
         buildActionBarSubtitle();
     }
 
-    private void buildActionBarSubtitle() {
+    protected void buildActionBarSubtitle() {
         if (!TextUtils.isEmpty(currentUser.getFriends_count())) {
 
             int size = Integer.valueOf(currentUser.getFriends_count());
@@ -65,16 +68,26 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                pullToRefreshListView.startRefreshNow();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (getActivity() != null) {
+                            pullToRefreshListView.setRefreshing();
+                            loadNewMsg();
+                        }
+
+                    }
+                }, AppConfig.REFRESH_DELAYED_MILL_SECOND_TIME);
+
                 break;
             case SCREEN_ROTATE:
                 //nothing
                 refreshLayout(bean);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                currentUser = (UserBean) savedInstanceState.getSerializable("currentUser");
+                currentUser = savedInstanceState.getParcelable("currentUser");
                 uid = savedInstanceState.getString("uid");
-                clearAndReplaceValue((UserListBean) savedInstanceState.getSerializable("bean"));
+                clearAndReplaceValue((UserListBean) savedInstanceState.getParcelable("bean"));
                 getAdapter().notifyDataSetChanged();
                 break;
         }
@@ -96,7 +109,7 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("currentUser", currentUser);
+        outState.putParcelable("currentUser", currentUser);
         outState.putString("uid", uid);
     }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <PreferenceCategory
+        android:title="@string/home"
+        >
+
+        <CheckBoxPreference
+            android:key="auto_refresh"
+            android:title="@string/pref_auto_refresh_title"
+            android:summary="@string/pref_auto_refresh_summary"
+            android:defaultValue="false"/>
+
+        <ListPreference
+            android:key="read_style"
+            android:title="@string/pref_read_style_title"
+            android:dialogTitle="@string/pref_read_style_title"
+            android:entries="@array/read_style_mode"
+            android:entryValues="@array/read_style_mode_value"
+            android:defaultValue="1"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

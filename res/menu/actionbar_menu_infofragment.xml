@@ -5,33 +5,35 @@
     <item
         android:id="@+id/menu_at"
         android:title="@string/at"
-        android:showAsAction="ifRoom|withText" />
+        android:showAsAction="ifRoom|withText"/>
     <item
         android:id="@+id/menu_manage_group"
         android:title="@string/manage_group"
-        android:visible="false" />
+        android:visible="false"/>
     <item
         android:id="@+id/menu_follow"
-        android:title="@string/follow_he"
-        android:visible="false" />
+        android:title="@string/follow_him"
+        android:showAsAction="ifRoom|withText"
+        android:visible="false"/>
     <item
         android:id="@+id/menu_unfollow"
-        android:title="@string/unfollow_he"
-        android:visible="false" />
+        android:title="@string/unfollow_him"
+        android:showAsAction="ifRoom|withText"
+        android:visible="false"/>
     <item
         android:id="@+id/menu_remove_fan"
         android:title="@string/remove_fan"
-        android:visible="false" />
+        android:visible="false"/>
     <item
         android:id="@+id/menu_modify_remark"
-        android:title="@string/modify_remark" />
+        android:title="@string/modify_remark"/>
     <item
         android:id="@+id/menu_add_to_app_filter"
-        android:title="@string/add_to_app_filter" />
-    <item
-        android:id="@+id/menu_refresh"
-        android:icon="?refresh"
-        android:title="@string/refresh" />
+        android:title="@string/add_to_app_filter"/>
+    <!--<item-->
+    <!--android:id="@+id/menu_refresh"-->
+    <!--android:icon="?refresh"-->
+    <!--android:title="@string/refresh"/>-->
 
 
 </menu>

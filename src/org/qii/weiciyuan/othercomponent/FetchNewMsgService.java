@@ -1,21 +1,27 @@
 package org.qii.weiciyuan.othercomponent;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.bean.android.CommentTimeLineData;
+import org.qii.weiciyuan.bean.android.MentionTimeLineData;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MentionsCommentTimeLineDao;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
-import org.qii.weiciyuan.othercomponent.unreadnotification.UnreadMsgReceiver;
 import org.qii.weiciyuan.support.database.AccountDBTask;
+import org.qii.weiciyuan.support.database.CommentToMeTimeLineDBTask;
+import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
+import org.qii.weiciyuan.support.database.MentionWeiboTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.AppEventAction;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 
 import java.util.Calendar;
 import java.util.List;
@@ -24,11 +30,16 @@ import java.util.List;
  * User: Jiang Qi
  * Date: 12-7-31
  */
-public class FetchNewMsgService extends Service {
+public class FetchNewMsgService extends IntentService {
 
     //close service between 1 clock and 8 clock
     private static final int NIGHT_START_TIME_HOUR = 1;
     private static final int NIGHT_END_TIME_HOUR = 7;
+
+
+    public FetchNewMsgService() {
+        super("FetchNewMsgService");
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -36,15 +47,24 @@ public class FetchNewMsgService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
+    protected void onHandleIntent(Intent intent) {
         if (SettingUtility.disableFetchAtNight() && isNowNight()) {
-            stopSelf();
-        } else {
-            startFetchNewMsg();
+            return;
         }
-        return super.onStartCommand(intent, flags, startId);
+
+        List<AccountBean> accountBeanList = AccountDBTask.getAccountList();
+        if (accountBeanList.size() == 0) {
+            return;
+        }
+        for (AccountBean account : accountBeanList) {
+            try {
+                fetchMsg(account);
+            } catch (WeiboException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
 
     private boolean isNowNight() {
         Calendar cal = Calendar.getInstance();
@@ -52,122 +72,86 @@ public class FetchNewMsgService extends Service {
         return hour >= NIGHT_START_TIME_HOUR && hour <= NIGHT_END_TIME_HOUR;
     }
 
-    private void startFetchNewMsg() {
-        new GetAccountDBTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-    }
+
+    private void fetchMsg(AccountBean accountBean) throws WeiboException {
+        CommentListBean commentResult = null;
+        MessageListBean mentionStatusesResult = null;
+        CommentListBean mentionCommentsResult = null;
+        UnreadBean unreadBean = null;
 
 
-    private class GetAccountDBTask extends MyAsyncTask<Void, Void, List<AccountBean>> {
+        String token = accountBean.getAccess_token();
 
-        @Override
-        protected List<AccountBean> doInBackground(Void... params) {
-            List<AccountBean> accountBeanList = AccountDBTask.getAccountList();
-            if (accountBeanList.size() > 0) {
-                return accountBeanList;
-            } else {
-                cancel(true);
-                return null;
+        UnreadDao unreadDao = new UnreadDao(token, accountBean.getUid());
+        unreadBean = unreadDao.getCount();
+        if (unreadBean == null) {
+            return;
+        }
+        int unreadCommentCount = unreadBean.getCmt();
+        int unreadMentionStatusCount = unreadBean.getMention_status();
+        int unreadMentionCommentCount = unreadBean.getMention_cmt();
+
+        if (unreadCommentCount > 0 && SettingUtility.allowCommentToMe()) {
+            MainCommentsTimeLineDao dao = new MainCommentsTimeLineDao(token);
+            CommentListBean oldData = null;
+            CommentTimeLineData commentTimeLineData = CommentToMeTimeLineDBTask.getCommentLineMsgList(accountBean.getUid());
+            if (commentTimeLineData != null) {
+                oldData = commentTimeLineData.cmtList;
             }
-        }
-
-        @Override
-        protected void onCancelled(List<AccountBean> accountBeans) {
-            super.onCancelled(accountBeans);
-            stopSelf();
-        }
-
-        @Override
-        protected void onPostExecute(List<AccountBean> accountBeans) {
-            for (AccountBean account : accountBeans) {
-                new SimpleTask(account).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            if (oldData != null && oldData.getSize() > 0) {
+                dao.setSince_id(oldData.getItem(0).getId());
             }
-        }
-    }
-
-
-    class SimpleTask extends MyAsyncTask<Void, Void, Void> {
-        WeiboException e;
-        AccountBean accountBean;
-        CommentListBean commentResult;
-        MessageListBean mentionStatusesResult;
-        CommentListBean mentionCommentsResult;
-        UnreadBean unreadBean;
-
-        public SimpleTask(AccountBean bean) {
-            accountBean = bean;
+            commentResult = dao.getGSONMsgListWithoutClearUnread();
         }
 
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            String token = accountBean.getAccess_token();
-            try {
-                UnreadDao unreadDao = new UnreadDao(token, accountBean.getUid());
-                unreadBean = unreadDao.getCount();
-                if (unreadBean == null) {
-                    cancel(true);
-                    return null;
-                }
-                int unreadCommentCount = unreadBean.getCmt();
-                int unreadMentionStatusCount = unreadBean.getMention_status();
-                int unreadMentionCommentCount = unreadBean.getMention_cmt();
-
-                if (unreadCommentCount > 0 && SettingUtility.allowCommentToMe()) {
-                    MainCommentsTimeLineDao commentDao = new MainCommentsTimeLineDao(token).setCount(String.valueOf(unreadCommentCount));
-                    commentResult = commentDao.getGSONMsgListWithoutClearUnread();
-                }
-
-                if (unreadMentionStatusCount > 0 && SettingUtility.allowMentionToMe()) {
-                    MainMentionsTimeLineDao mentionDao = new MainMentionsTimeLineDao(token).setCount(String.valueOf(unreadMentionStatusCount));
-                    mentionStatusesResult = mentionDao.getGSONMsgListWithoutClearUnread();
-                }
-
-                if (unreadMentionCommentCount > 0 && SettingUtility.allowMentionCommentToMe()) {
-                    MainCommentsTimeLineDao dao = new MentionsCommentTimeLineDao(token).setCount(String.valueOf(unreadMentionCommentCount));
-                    mentionCommentsResult = dao.getGSONMsgListWithoutClearUnread();
-                }
-
-            } catch (WeiboException e) {
-                this.e = e;
-                cancel(true);
-                return null;
+        if (unreadMentionStatusCount > 0 && SettingUtility.allowMentionToMe()) {
+            MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
+            MessageListBean oldData = null;
+            MentionTimeLineData commentTimeLineData = MentionWeiboTimeLineDBTask.getRepostLineMsgList(accountBean.getUid());
+            if (commentTimeLineData != null) {
+                oldData = commentTimeLineData.msgList;
             }
-            if (unreadBean == null) {
-                cancel(true);
+            if (oldData != null && oldData.getSize() > 0) {
+                dao.setSince_id(oldData.getItem(0).getId());
             }
-
-
-            return null;
-
+            mentionStatusesResult = dao.getGSONMsgListWithoutClearUnread();
         }
 
-        @Override
-        protected void onPostExecute(Void sum) {
-
-            sendNewMsgBroadcast();
-
-            stopSelf();
-            super.onPostExecute(sum);
+        if (unreadMentionCommentCount > 0 && SettingUtility.allowMentionCommentToMe()) {
+            MainCommentsTimeLineDao dao = new MentionsCommentTimeLineDao(token);
+            CommentListBean oldData = null;
+            CommentTimeLineData commentTimeLineData = MentionCommentsTimeLineDBTask.getCommentLineMsgList(accountBean.getUid());
+            if (commentTimeLineData != null) {
+                oldData = commentTimeLineData.cmtList;
+            }
+            if (oldData != null && oldData.getSize() > 0) {
+                dao.setSince_id(oldData.getItem(0).getId());
+            }
+            mentionCommentsResult = dao.getGSONMsgListWithoutClearUnread();
         }
 
-        @Override
-        protected void onCancelled(Void stringIntegerMap) {
-            stopSelf();
-            super.onCancelled(stringIntegerMap);
-        }
-
-        private void sendNewMsgBroadcast() {
-
-            Intent intent = new Intent(UnreadMsgReceiver.ACTION);
-            intent.putExtra("account", accountBean);
-            intent.putExtra("comment", commentResult);
-            intent.putExtra("repost", mentionStatusesResult);
-            intent.putExtra("mention_comment", mentionCommentsResult);
-            intent.putExtra("unread", unreadBean);
-            sendOrderedBroadcast(intent, null);
-
+        boolean mentionsWeibo = (mentionStatusesResult != null && mentionStatusesResult.getSize() > 0);
+        boolean menttinosComment = (mentionCommentsResult != null && mentionCommentsResult.getSize() > 0);
+        boolean commentsToMe = (commentResult != null && commentResult.getSize() > 0);
+        if (mentionsWeibo || menttinosComment || commentsToMe) {
+            sendTwoKindsOfBroadcast(accountBean, commentResult, mentionStatusesResult, mentionCommentsResult, unreadBean);
         }
     }
 
+    private void sendTwoKindsOfBroadcast(AccountBean accountBean,
+                                         CommentListBean commentResult,
+                                         MessageListBean mentionStatusesResult,
+                                         CommentListBean mentionCommentsResult,
+                                         UnreadBean unreadBean) {
+        Intent intent = new Intent(AppEventAction.NEW_MSG_PRIORITY_BROADCAST);
+        intent.putExtra(BundleArgsConstants.ACCOUNT_EXTRA, accountBean);
+        intent.putExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA, commentResult);
+        intent.putExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA, mentionStatusesResult);
+        intent.putExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA, mentionCommentsResult);
+        intent.putExtra(BundleArgsConstants.UNREAD_EXTRA, unreadBean);
+        sendOrderedBroadcast(intent, null);
 
+        intent.setAction(AppEventAction.NEW_MSG_BROADCAST);
+        LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(intent);
+    }
 }

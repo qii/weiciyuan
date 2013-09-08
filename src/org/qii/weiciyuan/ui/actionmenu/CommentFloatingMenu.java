@@ -2,10 +2,10 @@ package org.qii.weiciyuan.ui.actionmenu;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -23,7 +23,7 @@ public class CommentFloatingMenu extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("bean", bean);
+        outState.putParcelable("bean", bean);
     }
 
     public CommentFloatingMenu() {
@@ -39,7 +39,7 @@ public class CommentFloatingMenu extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
-            bean = (CommentBean) savedInstanceState.get("bean");
+            bean = (CommentBean) savedInstanceState.getParcelable("bean");
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

@@ -1,62 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="top"
-    android:padding="8dp">
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            android:columnCount="2"
+            android:alignmentMode="alignBounds"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:columnOrderPreserved="false"
+            android:useDefaultMargins="true">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+
+    <TextView
+        android:gravity="right"
+        android:layout_gravity="right"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:text="@string/app_key"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="尾　巴" />
-
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinner" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <Spinner
+        android:layout_marginLeft="5dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:id="@+id/spinner"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="用户名" />
 
-        <EditText
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/username" />
-    </LinearLayout>
+    <TextView
+        android:gravity="right"
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:text="@string/login_email"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="密　码" />
-
-        <EditText
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/password" />
-    </LinearLayout>
+    <EditText
+        android:layout_marginLeft="5dp"
+        android:layout_width="wrap_content"
+        android:ems="10"
+        android:layout_height="wrap_content"
+        android:id="@+id/username"/>
 
 
-</LinearLayout>
+    <TextView
+        android:gravity="right"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_password"
+        android:layout_gravity="right"/>
+
+    <EditText
+        android:layout_marginLeft="5dp"
+        android:layout_width="wrap_content"
+        android:ems="10"
+        android:layout_height="wrap_content"
+        android:id="@+id/password"/>
+
+
+</GridLayout>

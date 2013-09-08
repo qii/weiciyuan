@@ -2,13 +2,18 @@ package org.qii.weiciyuan.othercomponent.unreadnotification;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -30,6 +35,9 @@ public class JBBigTextNotification {
 
     private UnreadBean unreadBean;
 
+    //only leave one broadcast receiver
+    private static BroadcastReceiver clearNotificationEventReceiver;
+
     public JBBigTextNotification(Context context,
                                  AccountBean accountBean,
                                  CommentListBean comment,
@@ -49,6 +57,7 @@ public class JBBigTextNotification {
         i.putExtra("account", accountBean);
         i.putExtra("comment", comment);
         i.putExtra("repost", repost);
+        i.putExtra("mentionsComment", mentionCommentsResult);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, Long.valueOf(accountBean.getUid()).intValue(), i, PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
@@ -67,6 +76,43 @@ public class JBBigTextNotification {
 
         builder.setNumber(1);
 
+        if (clearNotificationEventReceiver != null) {
+            GlobalContext.getInstance().unregisterReceiver(clearNotificationEventReceiver);
+            JBBigTextNotification.clearNotificationEventReceiver = null;
+        }
+
+        clearNotificationEventReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            new ClearUnreadDao(accountBean.getAccess_token()).clearMentionStatusUnread(unreadBean, accountBean.getUid());
+                            new ClearUnreadDao(accountBean.getAccess_token()).clearMentionCommentUnread(unreadBean, accountBean.getUid());
+                            new ClearUnreadDao(accountBean.getAccess_token()).clearCommentUnread(unreadBean, accountBean.getUid());
+                        } catch (WeiboException ignored) {
+
+                        } finally {
+                            GlobalContext.getInstance().unregisterReceiver(clearNotificationEventReceiver);
+                            JBBigTextNotification.clearNotificationEventReceiver = null;
+                        }
+
+                    }
+                }).start();
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter("org.qii.weiciyuan.Notification.unread");
+
+        GlobalContext.getInstance().registerReceiver(clearNotificationEventReceiver, intentFilter);
+
+        Intent broadcastIntent = new Intent("org.qii.weiciyuan.Notification.unread");
+
+        PendingIntent deletedPendingIntent = PendingIntent.getBroadcast(GlobalContext.getInstance(), 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setDeleteIntent(deletedPendingIntent);
+
+
         Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(builder);
 
         if (unreadBean.getMention_status() == 1) {
@@ -80,6 +126,8 @@ public class JBBigTextNotification {
 
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             builder.addAction(R.drawable.comment_light, context.getString(R.string.comments), pendingIntent);
+
+
         }
 
         if (unreadBean.getCmt() == 1) {
@@ -91,6 +139,7 @@ public class JBBigTextNotification {
             intent.putExtra("msg", comment.getItem(0));
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             builder.addAction(R.drawable.reply_to_comment_light, context.getString(R.string.reply_to_comment), pendingIntent);
+
         }
 
         if (unreadBean.getMention_cmt() == 1) {

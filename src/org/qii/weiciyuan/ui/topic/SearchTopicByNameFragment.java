@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.topic;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TopicResultListBean;
-import org.qii.weiciyuan.dao.topic.SearchTopicDao;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.topic.TopicDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -18,6 +19,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
+import org.qii.weiciyuan.ui.loader.SearchTopicByNameLoader;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 /**
@@ -60,7 +62,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
         super.onSaveInstanceState(outState);
         outState.putString("q", q);
         outState.putInt("page", page);
-        outState.putSerializable("bean", bean);
+        outState.putParcelable("bean", bean);
     }
 
     @Override
@@ -69,7 +71,8 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
 
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
-                getPullToRefreshListView().startRefreshNow();
+                getPullToRefreshListView().setRefreshing();
+                loadNewMsg();
                 break;
             case SCREEN_ROTATE:
                 //nothing
@@ -78,7 +81,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
             case ACTIVITY_DESTROY_AND_CREATE:
                 q = savedInstanceState.getString("q");
                 page = savedInstanceState.getInt("page");
-                getList().addNewData((TopicResultListBean) savedInstanceState.getSerializable("bean"));
+                getList().addNewData((TopicResultListBean) savedInstanceState.getParcelable("bean"));
                 getAdapter().notifyDataSetChanged();
                 refreshLayout(getList());
                 break;
@@ -86,7 +89,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
     }
 
     @Override
-    protected void newMsgOnPostExecute(TopicResultListBean newValue) {
+    protected void newMsgOnPostExecute(TopicResultListBean newValue, Bundle loaderArgs) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();
@@ -123,7 +126,8 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
                 break;
 
             case R.id.menu_refresh:
-                pullToRefreshListView.startRefreshNow();
+                pullToRefreshListView.setRefreshing();
+                loadNewMsg();
                 break;
             case R.id.menu_follow_topic:
                 if (Utility.isTaskStopped(followTopicTask)) {
@@ -150,22 +154,6 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
         startActivity(intent);
     }
 
-    @Override
-    protected TopicResultListBean getDoInBackgroundNewData() throws WeiboException {
-
-        page = 1;
-        SearchTopicDao dao = new SearchTopicDao(GlobalContext.getInstance().getSpecialToken(), q);
-        dao.setPage(String.valueOf(page));
-        TopicResultListBean result = dao.getGSONMsgList();
-
-        return result;
-    }
-
-    @Override
-    protected TopicResultListBean getDoInBackgroundMiddleData(String beginId, String endId) throws WeiboException {
-        return null;
-    }
-
 
     private void buildActionBatSubtitle() {
         int newSize = bean.getTotal_number();
@@ -173,13 +161,6 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
         getActivity().getActionBar().setSubtitle(number);
     }
 
-    @Override
-    protected TopicResultListBean getDoInBackgroundOldData() throws WeiboException {
-        SearchTopicDao dao = new SearchTopicDao(GlobalContext.getInstance().getSpecialToken(), q);
-        dao.setPage(String.valueOf(page + 1));
-        TopicResultListBean result = dao.getGSONMsgList();
-        return result;
-    }
 
     private class FollowTopicTask extends MyAsyncTask<Void, Boolean, Boolean> {
         WeiboException e;
@@ -248,5 +229,38 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
                 Toast.makeText(getActivity(), getString(R.string.unfollow_topic_failed), Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+
+    @Override
+    public void loadNewMsg() {
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
+        dismissFooterView();
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+    }
+
+
+    @Override
+    protected void loadOldMsg(View view) {
+        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
+        getPullToRefreshListView().onRefreshComplete();
+        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+    }
+
+    @Override
+    protected Loader<AsyncTaskLoaderResult<TopicResultListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String word = this.q;
+        page = 1;
+        return new SearchTopicByNameLoader(getActivity(), token, word, String.valueOf(page));
+    }
+
+    @Override
+    protected Loader<AsyncTaskLoaderResult<TopicResultListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+        String token = GlobalContext.getInstance().getSpecialToken();
+        String word = this.q;
+        return new SearchTopicByNameLoader(getActivity(), token, word, String.valueOf(page + 1));
     }
 }

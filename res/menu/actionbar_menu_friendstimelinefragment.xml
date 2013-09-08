@@ -2,22 +2,17 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+
     <item
         android:id="@+id/write_weibo"
         android:icon="?write_weibo"
-        android:showAsAction="always"
-        android:title="@string/write_weibo" />
+        android:title="@string/write_weibo"
+        android:showAsAction="always"/>
+
 
     <item
-        android:id="@+id/group_name"
-        android:title="name"
-        android:showAsAction="always" />
-
-    <item
-        android:id="@+id/refresh"
-        android:icon="?refresh"
-        android:title="@string/refresh"
-        android:showAsAction="always" />
-
+        android:id="@+id/switch_theme"
+        android:title="@string/switch_to_another_theme"
+        android:showAsAction="never"/>
 
 </menu>

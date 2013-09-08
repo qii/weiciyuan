@@ -2,6 +2,7 @@ package org.qii.weiciyuan.dao.unread;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
@@ -28,7 +29,9 @@ public class ClearUnreadDao {
         return URLHelper.UNREAD_CLEAR;
     }
 
-    private String getMsgListJson() throws WeiboException {
+
+    public boolean clearUnread() throws WeiboException {
+
         String url = getUrl();
 
         Map<String, String> map = new HashMap<String, String>();
@@ -38,16 +41,8 @@ public class ClearUnreadDao {
 
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
 
-
-        return jsonData;
-    }
-
-    public boolean clearUnread() throws WeiboException {
-
-        String json = getMsgListJson();
-
         try {
-            JSONObject jsonObject = new JSONObject(json);
+            JSONObject jsonObject = new JSONObject(jsonData);
             return jsonObject.optBoolean("result", false);
         } catch (JSONException e) {
             AppLogger.e(e.getMessage());
@@ -56,10 +51,56 @@ public class ClearUnreadDao {
         return false;
     }
 
+    /**
+     * first check server unread status,if unread count is the same,reset unread count
+     */
+    public boolean clearMentionStatusUnread(UnreadBean unreadBean, String accountId) throws WeiboException {
+        int count = unreadBean.getMention_status();
+        UnreadBean currentCount = new UnreadDao(access_token, accountId).getCount();
+        if (currentCount == null) {
+            return false;
+        }
+        //already reset or have new unread message
+        if (count != currentCount.getMention_status()) {
+            return false;
+        }
+        return new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_STATUS).clearUnread();
+    }
+
+    public boolean clearMentionCommentUnread(UnreadBean unreadBean, String accountId) throws WeiboException {
+        int count = unreadBean.getMention_cmt();
+        UnreadBean currentCount = new UnreadDao(access_token, accountId).getCount();
+        if (currentCount == null) {
+            return false;
+        }
+        //already reset or have new unread message
+        if (count != currentCount.getMention_cmt()) {
+            return false;
+        }
+        return new ClearUnreadDao(access_token, ClearUnreadDao.MENTION_CMT).clearUnread();
+    }
+
+    public boolean clearCommentUnread(UnreadBean unreadBean, String accountId) throws WeiboException {
+        int count = unreadBean.getCmt();
+        UnreadBean currentCount = new UnreadDao(access_token, accountId).getCount();
+        if (currentCount == null) {
+            return false;
+        }
+        //already reset or have new unread message
+        if (count != currentCount.getCmt()) {
+            return false;
+        }
+        return new ClearUnreadDao(access_token, ClearUnreadDao.CMT).clearUnread();
+    }
+
 
     private String access_token;
     private String type;
 
+    public ClearUnreadDao(String access_token) {
+
+        this.access_token = access_token;
+    }
 
     public ClearUnreadDao(String access_token, String type) {
 

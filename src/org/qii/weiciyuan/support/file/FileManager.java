@@ -1,6 +1,10 @@
 package org.qii.weiciyuan.support.file;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Environment;
+import android.text.TextUtils;
+import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
@@ -19,16 +23,52 @@ public class FileManager {
     private static final String PICTURE_THUMBNAIL = "picture_thumbnail";
     private static final String PICTURE_BMIDDLE = "picture_bmiddle";
     private static final String PICTURE_LARGE = "picture_large";
+    private static final String MAP = "map";
+    private static final String COVER = "cover";
     private static final String EMOTION = "emotion";
     private static final String TXT2PIC = "txt2pic";
+    private static final String WEBVIEW_FAVICON = "favicon";
+    private static final String LOG = "log";
 
+    /**
+     * install weiciyuan, open app and login in, Android system will create cache dir.
+     * then open cache dir (/sdcard dir/Android/data/org.qii.weiciyuan) with Root Explorer,
+     * uninstall weiciyuan and reinstall it, the new weiciyuan app will have the bug it can't
+     * read cache dir again, so I have to tell user to delete that cache dir
+     */
+    private static volatile boolean cantReadBecauseOfAndroidBugPermissionProblem = false;
 
     private static String getSdCardPath() {
         if (isExternalStorageMounted()) {
-            return GlobalContext.getInstance().getExternalCacheDir().getAbsolutePath();
+            File path = GlobalContext.getInstance().getExternalCacheDir();
+            if (path != null)
+                return path.getAbsolutePath();
+            else {
+                if (!cantReadBecauseOfAndroidBugPermissionProblem) {
+                    cantReadBecauseOfAndroidBugPermissionProblem = true;
+                    GlobalContext.getInstance().getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            new AlertDialog.Builder(GlobalContext.getInstance().getActivity())
+                                    .setTitle(R.string.something_error)
+                                    .setMessage(R.string.please_deleted_cache_dir)
+                                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    })
+                                    .show();
+
+                        }
+                    });
+                }
+            }
         } else {
             return "";
         }
+
+        return "";
     }
 
     public File getAlbumStorageDir(String albumName) {
@@ -61,9 +101,24 @@ public class FileManager {
             return getSdCardPath() + File.separator + "upload.jpg";
     }
 
+    public static String getLogDir() {
+        if (!isExternalStorageMounted())
+            return "";
+        else {
+            String path = getSdCardPath() + File.separator + LOG;
+            if (!new File(path).exists()) {
+                new File(path).mkdirs();
+            }
+            return path;
+        }
+    }
+
     public static String getFilePathFromUrl(String url, FileLocationMethod method) {
 
         if (!isExternalStorageMounted())
+            return "";
+
+        if (TextUtils.isEmpty(url))
             return "";
 
         int index = url.indexOf("//");
@@ -75,28 +130,37 @@ public class FileManager {
         String newRelativePath = "";
         switch (method) {
             case avatar_small:
-                newRelativePath = File.separator + AVATAR_SMAll + oldRelativePath;
+                newRelativePath = AVATAR_SMAll + oldRelativePath;
                 break;
             case avatar_large:
-                newRelativePath = File.separator + AVATAR_LARGE + oldRelativePath;
+                newRelativePath = AVATAR_LARGE + oldRelativePath;
                 break;
             case picture_thumbnail:
-                newRelativePath = File.separator + PICTURE_THUMBNAIL + oldRelativePath;
+                newRelativePath = PICTURE_THUMBNAIL + oldRelativePath;
                 break;
             case picture_bmiddle:
-                newRelativePath = File.separator + PICTURE_BMIDDLE + oldRelativePath;
+                newRelativePath = PICTURE_BMIDDLE + oldRelativePath;
                 break;
             case picture_large:
-                newRelativePath = File.separator + PICTURE_LARGE + oldRelativePath;
+                newRelativePath = PICTURE_LARGE + oldRelativePath;
                 break;
             case emotion:
                 String name = new File(oldRelativePath).getName();
-                newRelativePath = File.separator + EMOTION + File.separator + name;
+                newRelativePath = EMOTION + File.separator + name;
+                break;
+            case cover:
+                newRelativePath = COVER + oldRelativePath;
+                break;
+            case map:
+                newRelativePath = MAP + oldRelativePath;
                 break;
         }
 
-        return getSdCardPath() + File.separator + newRelativePath;
+        String result = getSdCardPath() + File.separator + newRelativePath;
+        if (!result.endsWith(".jpg") && !result.endsWith(".gif") && !result.endsWith(".png"))
+            result = result + ".jpg";
 
+        return result;
     }
 
     public static String getTxt2picPath() {
@@ -140,6 +204,18 @@ public class FileManager {
         }
         return null;
 
+    }
+
+    public static String getWebViewFaviconDirPath() {
+        if (!TextUtils.isEmpty(getSdCardPath())) {
+            String path = getSdCardPath() + File.separator + WEBVIEW_FAVICON + File.separator;
+            File file = new File(path);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            return path;
+        }
+        return "";
     }
 
     public static String getCacheSize() {

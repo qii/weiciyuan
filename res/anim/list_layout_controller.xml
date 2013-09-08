@@ -1,0 +1,3 @@
+<layoutAnimation xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:delay="0.0"
+                 android:animation="@anim/list_layut_alpha"/>

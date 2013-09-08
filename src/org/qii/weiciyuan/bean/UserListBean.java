@@ -1,14 +1,61 @@
 package org.qii.weiciyuan.bean;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * User: Jiang Qi
  * Date: 12-8-16
-  */
-public class UserListBean implements Serializable{
+ */
+public class UserListBean implements Parcelable {
+
+    private List<UserBean> users = new ArrayList<UserBean>();
+    private int previous_cursor = 0;
+    private int next_cursor = 0;
+    private int total_number = 0;
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(total_number);
+        dest.writeInt(previous_cursor);
+        dest.writeInt(next_cursor);
+
+        dest.writeTypedList(users);
+    }
+
+    public static final Parcelable.Creator<UserListBean> CREATOR =
+            new Parcelable.Creator<UserListBean>() {
+                public UserListBean createFromParcel(Parcel in) {
+                    UserListBean userListBean = new UserListBean();
+
+                    userListBean.total_number = in.readInt();
+                    userListBean.previous_cursor = in.readInt();
+                    userListBean.next_cursor = in.readInt();
+
+                    userListBean.users = new ArrayList<UserBean>();
+                    in.readTypedList(userListBean.users, UserBean.CREATOR);
+
+
+                    return userListBean;
+                }
+
+                public UserListBean[] newArray(int size) {
+                    return new UserListBean[size];
+                }
+            };
+
+
     public List<UserBean> getUsers() {
         return users;
     }
@@ -41,8 +88,9 @@ public class UserListBean implements Serializable{
         this.total_number = total_number;
     }
 
-    private List<UserBean> users = new ArrayList<UserBean>();
-    private int previous_cursor = 0;
-    private int next_cursor = 0;
-    private int total_number = 0;
+
+    @Override
+    public String toString() {
+        return ObjectToStringUtility.toString(this);
+    }
 }
