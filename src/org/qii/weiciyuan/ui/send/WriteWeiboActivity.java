@@ -294,6 +294,9 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             statusDraftBean = (StatusDraftBean) savedInstanceState.getParcelable("statusDraftBean");
             accountBean = (AccountBean) savedInstanceState.getParcelable("accountBean");
             token = accountBean.getAccess_token();
+
+            getActionBar().setSubtitle(getAccount().getUsernick());
+
         }
     }
 
