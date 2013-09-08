@@ -99,6 +99,8 @@ public class ListViewTool {
     public static void addJustHighLightLinks(CommentBean bean) {
 
         bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
+        bean.getSourceString();
+
         if (bean.getStatus() != null) {
             bean.getStatus().setListViewSpannableString(buildOriWeiboSpannalString(bean.getStatus()));
         }

@@ -2,6 +2,7 @@ package org.qii.weiciyuan.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -24,6 +25,8 @@ public class CommentBean extends ItemBean implements Parcelable {
     private UserBean user;
     private MessageBean status;
     private CommentBean reply_comment;
+
+    private String sourceString;
 
     private transient SpannableString listViewSpannableString;
 
@@ -49,6 +52,9 @@ public class CommentBean extends ItemBean implements Parcelable {
         dest.writeParcelable(status, flags);
         dest.writeParcelable(reply_comment, flags);
 
+        dest.writeString(sourceString);
+
+
     }
 
     public static final Parcelable.Creator<CommentBean> CREATOR =
@@ -68,6 +74,7 @@ public class CommentBean extends ItemBean implements Parcelable {
                     commentBean.status = in.readParcelable(MessageBean.class.getClassLoader());
                     commentBean.reply_comment = in.readParcelable(CommentBean.class.getClassLoader());
 
+                    commentBean.sourceString = in.readString();
                     return commentBean;
                 }
 
@@ -154,6 +161,21 @@ public class CommentBean extends ItemBean implements Parcelable {
     public void setSource(String source) {
         this.source = source;
     }
+
+    public String getSourceString() {
+        if (!TextUtils.isEmpty(sourceString)) {
+            return sourceString;
+        } else {
+            if (!TextUtils.isEmpty(source))
+                sourceString = Html.fromHtml(this.source).toString();
+            return sourceString;
+        }
+    }
+
+    public void setSourceString(String sourceString) {
+        this.sourceString = sourceString;
+    }
+
 
     public String getMid() {
         return mid;

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AbsListView;
@@ -140,7 +139,7 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
         holder.time.setTime(comment.getMills());
         if (holder.source != null)
-            holder.source.setText(Html.fromHtml(comment.getSource()).toString());
+            holder.source.setText(comment.getSourceString());
 
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);
