@@ -122,7 +122,30 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
         intent.putExtra("msg", bean.getItem(position));
-        startActivity(intent);
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //use Up instead of Back to reach this fragment
+        if (data == null)
+            return;
+        final MessageBean msg = (MessageBean) data.getParcelableExtra("msg");
+        if (msg != null) {
+            for (int i = 0; i < getList().getSize(); i++) {
+                if (msg.equals(getList().getItem(i))) {
+                    MessageBean ori = getList().getItem(i);
+                    if (ori.getComments_count() != msg.getComments_count()
+                            || ori.getReposts_count() != msg.getReposts_count()) {
+                        ori.setReposts_count(msg.getReposts_count());
+                        ori.setComments_count(msg.getComments_count());
+                        FavouriteDBTask.asyncUpdatePosition(position, account.getUid());
+                        getAdapter().notifyDataSetChanged();
+                    }
+                    break;
+                }
+            }
+        }
     }
 
 

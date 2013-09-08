@@ -514,6 +514,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         Utility.buildTabCount(commentTab, getString(R.string.comments), msg.getComments_count());
         Utility.buildTabCount(repostTab, getString(R.string.repost), msg.getReposts_count());
 
+        ((BrowserWeiboMsgActivity) getActivity()).updateCommentCount(msg.getComments_count());
+        ((BrowserWeiboMsgActivity) getActivity()).updateRepostCount(msg.getReposts_count());
+
 //        Utility.buildTabCount(getActivity().getActionBar().getTabAt(1), getString(R.string.comments), msg.getComments_count());
 //        Utility.buildTabCount(getActivity().getActionBar().getTabAt(2), getString(R.string.repost), msg.getReposts_count());
     }
@@ -853,6 +856,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
             if (data != null) {
                 Utility.buildTabCount(commentTab, getString(R.string.comments), data.getTotal_number());
+                ((BrowserWeiboMsgActivity) getActivity()).updateCommentCount(data.getTotal_number());
             }
 
             switch (loader.getId()) {
@@ -923,6 +927,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
             if (data != null) {
                 Utility.buildTabCount(repostTab, getString(R.string.repost), data.getTotal_number());
+                ((BrowserWeiboMsgActivity) getActivity()).updateRepostCount(data.getTotal_number());
             }
 
             switch (loader.getId()) {
