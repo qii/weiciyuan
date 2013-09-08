@@ -647,7 +647,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("msg", getList().getItem(position));
         intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-        startActivityForResult(intent, 0);
+        startActivityForResult(intent, MainTimeLineActivity.REQUEST_CODE_UPDATE_FRIENDS_TIMELINE_COMMENT_REPOST_COUNT);
     }
 
     @Override

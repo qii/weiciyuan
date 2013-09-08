@@ -1,13 +1,12 @@
 package org.qii.weiciyuan.ui.interfaces;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 /**
  * User: qii
  * Date: 12-12-30
  */
-public class AbstractAppFragment extends Fragment {
+public class AbstractAppFragment extends FixedOnActivityResultBugFragment {
     /**
      * when activity is recycled by system, isFirstTimeStartFlag will be reset to default true,
      * when activity is recreated because a configuration change for example screen rotate, isFirstTimeStartFlag will stay false

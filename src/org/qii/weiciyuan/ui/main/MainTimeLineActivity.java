@@ -45,6 +45,10 @@ import java.util.concurrent.TimeUnit;
 public class MainTimeLineActivity extends MainTimeLineParentActivity implements IUserInfo,
         IAccountInfo {
 
+    public static final int REQUEST_CODE_UPDATE_FRIENDS_TIMELINE_COMMENT_REPOST_COUNT = 0;
+    public static final int REQUEST_CODE_UPDATE_MENTIONS_WEIBO_TIMELINE_COMMENT_REPOST_COUNT = 1;
+    public static final int REQUEST_CODE_UPDATE_MY_FAV_TIMELINE_COMMENT_REPOST_COUNT = 2;
+
     private AccountBean accountBean;
     private NewMsgInterruptBroadcastReceiver newMsgInterruptBroadcastReceiver;
     private MusicReceiver musicReceiver;

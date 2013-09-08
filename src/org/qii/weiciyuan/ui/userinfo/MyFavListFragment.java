@@ -122,7 +122,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
         intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
         intent.putExtra("msg", bean.getItem(position));
-        startActivityForResult(intent, 0);
+        startActivityForResult(intent, MainTimeLineActivity.REQUEST_CODE_UPDATE_MY_FAV_TIMELINE_COMMENT_REPOST_COUNT);
     }
 
     @Override
@@ -139,7 +139,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
                             || ori.getReposts_count() != msg.getReposts_count()) {
                         ori.setReposts_count(msg.getReposts_count());
                         ori.setComments_count(msg.getComments_count());
-                        FavouriteDBTask.asyncUpdatePosition(position, account.getUid());
+                        FavouriteDBTask.asyncReplace(getList(), page, account.getUid());
                         getAdapter().notifyDataSetChanged();
                     }
                     break;
@@ -360,8 +360,9 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
                     msg.setComments_count(count.getComments());
                 }
             }
+            FavouriteDBTask.asyncReplace(getList(), page, account.getUid());
             getAdapter().notifyDataSetChanged();
-            FavouriteDBTask.asyncUpdatePosition(position, account.getUid());
+
         }
 
     }
