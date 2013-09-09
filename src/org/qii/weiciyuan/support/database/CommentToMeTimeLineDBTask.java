@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
@@ -43,21 +44,29 @@ public class CommentToMeTimeLineDBTask {
     public static void addCommentLineMsg(CommentListBean list, String accountId) {
         Gson gson = new Gson();
         List<CommentBean> msgList = list.getItemList();
+
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), CommentsTable.CommentsDataTable.TABLE_NAME);
+        final int mblogidColumn = ih.getColumnIndex(CommentsTable.CommentsDataTable.MBLOGID);
+        final int accountidColumn = ih.getColumnIndex(CommentsTable.CommentsDataTable.ACCOUNTID);
+        final int jsondataColumn = ih.getColumnIndex(CommentsTable.CommentsDataTable.JSONDATA);
+
         try {
             getWsd().beginTransaction();
             for (CommentBean msg : msgList) {
-                ContentValues cv = new ContentValues();
-                cv.put(CommentsTable.CommentsDataTable.MBLOGID, msg.getId());
-                cv.put(CommentsTable.CommentsDataTable.ACCOUNTID, accountId);
+
+                ih.prepareForInsert();
+                ih.bind(mblogidColumn, msg.getId());
+                ih.bind(accountidColumn, accountId);
                 String json = gson.toJson(msg);
-                cv.put(CommentsTable.CommentsDataTable.JSONDATA, json);
-                getWsd().insert(CommentsTable.CommentsDataTable.TABLE_NAME,
-                        CommentsTable.CommentsDataTable.ID, cv);
+                ih.bind(jsondataColumn, json);
+                ih.execute();
+
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
         } finally {
             getWsd().endTransaction();
+            ih.close();
         }
         reduceCommentTable(accountId);
     }
