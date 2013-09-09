@@ -44,7 +44,6 @@ public class CommentByMeTimeLineDBTask {
     public static void addCommentLineMsg(CommentListBean list, String accountId) {
         Gson gson = new Gson();
         List<CommentBean> msgList = list.getItemList();
-        long now = System.currentTimeMillis();
 
         DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), CommentByMeTable.CommentByMeDataTable.TABLE_NAME);
         final int mblogidColumn = ih.getColumnIndex(CommentByMeTable.CommentByMeDataTable.MBLOGID);
@@ -69,7 +68,6 @@ public class CommentByMeTimeLineDBTask {
             getWsd().endTransaction();
             ih.close();
         }
-        AppLogger.e("time=" + (System.currentTimeMillis() - now));
         reduceCommentTable(accountId);
     }
 
