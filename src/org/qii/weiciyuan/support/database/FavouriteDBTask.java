@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
@@ -41,45 +42,52 @@ public class FavouriteDBTask {
     public static void add(FavListBean list, int page, String accountId) {
         Gson gson = new Gson();
         List<FavBean> msgList = list.getFavorites();
+
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), FavouriteTable.FavouriteDataTable.TABLE_NAME);
+        final int mblogidColumn = ih.getColumnIndex(FavouriteTable.FavouriteDataTable.MBLOGID);
+        final int accountidColumn = ih.getColumnIndex(FavouriteTable.FavouriteDataTable.ACCOUNTID);
+        final int jsondataColumn = ih.getColumnIndex(FavouriteTable.FavouriteDataTable.JSONDATA);
+
         try {
             getWsd().beginTransaction();
             for (FavBean msg : msgList) {
-                ContentValues cv = new ContentValues();
-                cv.put(FavouriteTable.FavouriteDataTable.MBLOGID, msg.getStatus().getId());
-                cv.put(FavouriteTable.FavouriteDataTable.ACCOUNTID, accountId);
+                ih.prepareForInsert();
+                ih.bind(mblogidColumn, msg.getStatus().getId());
+                ih.bind(accountidColumn, accountId);
                 String json = gson.toJson(msg);
-                cv.put(FavouriteTable.FavouriteDataTable.JSONDATA, json);
-                getWsd().insert(FavouriteTable.FavouriteDataTable.TABLE_NAME,
-                        FavouriteTable.FavouriteDataTable.ID, cv);
+                ih.bind(jsondataColumn, json);
+                ih.execute();
             }
-
-            String sql = "select * from " + FavouriteTable.TABLE_NAME + " where " + FavouriteTable.ACCOUNTID + "  = "
-                    + accountId;
-            Cursor c = getRsd().rawQuery(sql, null);
-            if (c.moveToNext()) {
-                try {
-                    String[] args = {accountId};
-                    ContentValues cv = new ContentValues();
-                    cv.put(FavouriteTable.PAGE, page);
-                    getWsd().update(FavouriteTable.TABLE_NAME, cv, FavouriteTable.ACCOUNTID + "=?", args);
-                } catch (JsonSyntaxException e) {
-
-                }
-            } else {
-
-                ContentValues cv = new ContentValues();
-                cv.put(FavouriteTable.ACCOUNTID, accountId);
-                cv.put(FavouriteTable.PAGE, page);
-                getWsd().insert(FavouriteTable.TABLE_NAME,
-                        FavouriteTable.ID, cv);
-            }
-
 
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
+
         } finally {
             getWsd().endTransaction();
+            ih.close();
         }
+
+        String sql = "select * from " + FavouriteTable.TABLE_NAME + " where " + FavouriteTable.ACCOUNTID + "  = "
+                + accountId;
+        Cursor c = getRsd().rawQuery(sql, null);
+        if (c.moveToNext()) {
+            try {
+                String[] args = {accountId};
+                ContentValues cv = new ContentValues();
+                cv.put(FavouriteTable.PAGE, page);
+                getWsd().update(FavouriteTable.TABLE_NAME, cv, FavouriteTable.ACCOUNTID + "=?", args);
+            } catch (JsonSyntaxException e) {
+
+            }
+        } else {
+
+            ContentValues cv = new ContentValues();
+            cv.put(FavouriteTable.ACCOUNTID, accountId);
+            cv.put(FavouriteTable.PAGE, page);
+            getWsd().insert(FavouriteTable.TABLE_NAME,
+                    FavouriteTable.ID, cv);
+        }
+
         reduceFavouriteTable(accountId);
     }
 
