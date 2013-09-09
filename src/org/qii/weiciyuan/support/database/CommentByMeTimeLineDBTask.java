@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
@@ -43,22 +44,32 @@ public class CommentByMeTimeLineDBTask {
     public static void addCommentLineMsg(CommentListBean list, String accountId) {
         Gson gson = new Gson();
         List<CommentBean> msgList = list.getItemList();
+        long now = System.currentTimeMillis();
+
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), CommentByMeTable.CommentByMeDataTable.TABLE_NAME);
+        final int mblogidColumn = ih.getColumnIndex(CommentByMeTable.CommentByMeDataTable.MBLOGID);
+        final int accountidColumn = ih.getColumnIndex(CommentByMeTable.CommentByMeDataTable.ACCOUNTID);
+        final int jsondataColumn = ih.getColumnIndex(CommentByMeTable.CommentByMeDataTable.JSONDATA);
+
         try {
             getWsd().beginTransaction();
             for (CommentBean msg : msgList) {
-                ContentValues cv = new ContentValues();
-                cv.put(CommentByMeTable.CommentByMeDataTable.MBLOGID, msg.getId());
-                cv.put(CommentByMeTable.CommentByMeDataTable.ACCOUNTID, accountId);
+
+                ih.prepareForInsert();
+                ih.bind(mblogidColumn, msg.getId());
+                ih.bind(accountidColumn, accountId);
                 String json = gson.toJson(msg);
-                cv.put(CommentByMeTable.CommentByMeDataTable.JSONDATA, json);
-                getWsd().insert(CommentByMeTable.CommentByMeDataTable.TABLE_NAME,
-                        CommentByMeTable.CommentByMeDataTable.ID, cv);
+                ih.bind(jsondataColumn, json);
+                ih.execute();
+
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
         } finally {
             getWsd().endTransaction();
+            ih.close();
         }
+        AppLogger.e("time=" + (System.currentTimeMillis() - now));
         reduceCommentTable(accountId);
     }
 
