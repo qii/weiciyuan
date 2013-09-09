@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
@@ -43,21 +44,30 @@ public class MentionCommentsTimeLineDBTask {
     public static void addCommentLineMsg(CommentListBean list, String accountId) {
         Gson gson = new Gson();
         List<CommentBean> msgList = list.getItemList();
+
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME);
+        final int mblogidColumn = ih.getColumnIndex(MentionCommentsTable.MentionCommentsDataTable.MBLOGID);
+        final int accountidColumn = ih.getColumnIndex(MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID);
+        final int jsondataColumn = ih.getColumnIndex(MentionCommentsTable.MentionCommentsDataTable.JSONDATA);
+
         try {
             getWsd().beginTransaction();
             for (CommentBean msg : msgList) {
-                ContentValues cv = new ContentValues();
-                cv.put(MentionCommentsTable.MentionCommentsDataTable.MBLOGID, msg.getId());
-                cv.put(MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID, accountId);
+
+                ih.prepareForInsert();
+                ih.bind(mblogidColumn, msg.getId());
+                ih.bind(accountidColumn, accountId);
                 String json = gson.toJson(msg);
-                cv.put(MentionCommentsTable.MentionCommentsDataTable.JSONDATA, json);
-                getWsd().insert(MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME,
-                        MentionCommentsTable.MentionCommentsDataTable.ID, cv);
+                ih.bind(jsondataColumn, json);
+                ih.execute();
+
+
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
         } finally {
             getWsd().endTransaction();
+            ih.close();
         }
         reduceCommentTable(accountId);
     }

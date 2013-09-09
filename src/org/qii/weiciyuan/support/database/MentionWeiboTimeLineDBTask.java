@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
@@ -77,31 +78,37 @@ public class MentionWeiboTimeLineDBTask {
         Gson gson = new Gson();
         List<MessageBean> msgList = list.getItemList();
         int size = msgList.size();
+
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), RepostsTable.RepostDataTable.TABLE_NAME);
+        final int mblogidColumn = ih.getColumnIndex(RepostsTable.RepostDataTable.MBLOGID);
+        final int accountidColumn = ih.getColumnIndex(RepostsTable.RepostDataTable.ACCOUNTID);
+        final int jsondataColumn = ih.getColumnIndex(RepostsTable.RepostDataTable.JSONDATA);
+
         try {
             getWsd().beginTransaction();
             for (int i = 0; i < size; i++) {
+
                 MessageBean msg = msgList.get(i);
+                ih.prepareForInsert();
                 if (msg != null) {
-                    ContentValues cv = new ContentValues();
-                    cv.put(RepostsTable.RepostDataTable.MBLOGID, msg.getId());
-                    cv.put(RepostsTable.RepostDataTable.ACCOUNTID, accountId);
+                    ih.bind(mblogidColumn, msg.getId());
+                    ih.bind(accountidColumn, accountId);
                     String json = gson.toJson(msg);
-                    cv.put(RepostsTable.RepostDataTable.JSONDATA, json);
-                    getWsd().insert(RepostsTable.RepostDataTable.TABLE_NAME,
-                            RepostsTable.RepostDataTable.ID, cv);
+                    ih.bind(jsondataColumn, json);
                 } else {
-                    ContentValues cv = new ContentValues();
-                    cv.put(RepostsTable.RepostDataTable.MBLOGID, "-1");
-                    cv.put(RepostsTable.RepostDataTable.ACCOUNTID, accountId);
-                    cv.put(RepostsTable.RepostDataTable.JSONDATA, "");
-                    getWsd().insert(RepostsTable.RepostDataTable.TABLE_NAME,
-                            RepostsTable.RepostDataTable.ID, cv);
+                    ih.bind(mblogidColumn, "-1");
+                    ih.bind(accountidColumn, accountId);
+                    ih.bind(jsondataColumn, "");
                 }
+                ih.execute();
+
+
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
         } finally {
             getWsd().endTransaction();
+            ih.close();
         }
         reduceRepostTable(accountId);
     }
