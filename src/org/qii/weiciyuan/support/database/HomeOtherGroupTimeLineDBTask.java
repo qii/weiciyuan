@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
@@ -48,33 +49,40 @@ public class HomeOtherGroupTimeLineDBTask {
 
         Gson gson = new Gson();
         List<MessageBean> msgList = list.getItemList();
+
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), HomeOtherGroupTable.HomeOtherGroupDataTable.TABLE_NAME);
+        final int mblogidColumn = ih.getColumnIndex(HomeOtherGroupTable.HomeOtherGroupDataTable.MBLOGID);
+        final int accountidColumn = ih.getColumnIndex(HomeOtherGroupTable.HomeOtherGroupDataTable.ACCOUNTID);
+        final int jsondataColumn = ih.getColumnIndex(HomeOtherGroupTable.HomeOtherGroupDataTable.JSONDATA);
+        final int groupidColumn = ih.getColumnIndex(HomeOtherGroupTable.HomeOtherGroupDataTable.GROUPID);
+
+
         try {
             getWsd().beginTransaction();
             for (int i = 0; i < msgList.size(); i++) {
+
                 MessageBean msg = msgList.get(i);
+                ih.prepareForInsert();
                 if (msg != null) {
-                    ContentValues cv = new ContentValues();
-                    cv.put(HomeOtherGroupTable.HomeOtherGroupDataTable.MBLOGID, msg.getId());
-                    cv.put(HomeOtherGroupTable.HomeOtherGroupDataTable.ACCOUNTID, accountId);
+                    ih.bind(mblogidColumn, msg.getId());
+                    ih.bind(accountidColumn, accountId);
                     String json = gson.toJson(msg);
-                    cv.put(HomeOtherGroupTable.HomeOtherGroupDataTable.JSONDATA, json);
-                    cv.put(HomeOtherGroupTable.HomeOtherGroupDataTable.GROUPID, groupId);
-                    getWsd().insert(HomeOtherGroupTable.HomeOtherGroupDataTable.TABLE_NAME,
-                            HomeOtherGroupTable.HomeOtherGroupDataTable.ID, cv);
+                    ih.bind(jsondataColumn, json);
+                    ih.bind(groupidColumn, groupId);
                 } else {
-                    ContentValues cv = new ContentValues();
-                    cv.put(HomeOtherGroupTable.HomeOtherGroupDataTable.MBLOGID, "-1");
-                    cv.put(HomeOtherGroupTable.HomeOtherGroupDataTable.ACCOUNTID, accountId);
-                    cv.put(HomeOtherGroupTable.HomeOtherGroupDataTable.JSONDATA, "");
-                    cv.put(HomeOtherGroupTable.HomeOtherGroupDataTable.GROUPID, groupId);
-                    getWsd().insert(HomeOtherGroupTable.HomeOtherGroupDataTable.TABLE_NAME,
-                            HomeOtherGroupTable.HomeOtherGroupDataTable.ID, cv);
+                    ih.bind(mblogidColumn, "-1");
+                    ih.bind(accountidColumn, accountId);
+                    ih.bind(jsondataColumn, "");
+                    ih.bind(groupidColumn, groupId);
                 }
+                ih.execute();
+
             }
             getWsd().setTransactionSuccessful();
         } catch (SQLException e) {
         } finally {
             getWsd().endTransaction();
+            ih.close();
         }
         reduceHomeOtherGroupTable(accountId, groupId);
     }
