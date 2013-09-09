@@ -13,7 +13,6 @@ import org.qii.weiciyuan.bean.FavListBean;
 import org.qii.weiciyuan.bean.android.FavouriteTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.table.FavouriteTable;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.AppLogger;
 
 import java.util.ArrayList;
@@ -88,7 +87,6 @@ public class FavouriteDBTask {
                     FavouriteTable.ID, cv);
         }
 
-        reduceFavouriteTable(accountId);
     }
 
     public static FavouriteTimeLineData getFavouriteMsgList(String accountId) {
@@ -125,33 +123,6 @@ public class FavouriteDBTask {
         c.close();
         return new FavouriteTimeLineData(result, page, getPosition(accountId));
 
-    }
-
-
-    private static void reduceFavouriteTable(String accountId) {
-        String searchCount = "select count(" + FavouriteTable.FavouriteDataTable.ID + ") as total" + " from " + FavouriteTable.FavouriteDataTable.TABLE_NAME + " where " + FavouriteTable.FavouriteDataTable.ACCOUNTID
-                + " = " + accountId;
-        int total = 0;
-        Cursor c = getRsd().rawQuery(searchCount, null);
-        if (c.moveToNext()) {
-            total = c.getInt(c.getColumnIndex("total"));
-        }
-
-        c.close();
-
-        AppLogger.e("total=" + total);
-
-        int needDeletedNumber = total - AppConfig.DEFAULT_FAVOURITE_DB_CACHE_COUNT;
-
-        if (needDeletedNumber > 0) {
-            AppLogger.e("" + needDeletedNumber);
-            String sql = " delete from " + FavouriteTable.FavouriteDataTable.TABLE_NAME + " where " + FavouriteTable.FavouriteDataTable.ID + " in "
-                    + "( select " + FavouriteTable.FavouriteDataTable.ID + " from " + FavouriteTable.FavouriteDataTable.TABLE_NAME + " where "
-                    + FavouriteTable.FavouriteDataTable.ACCOUNTID
-                    + " in " + "(" + accountId + ") order by " + FavouriteTable.FavouriteDataTable.ID + " asc limit " + needDeletedNumber + " ) ";
-
-            getWsd().execSQL(sql);
-        }
     }
 
 
