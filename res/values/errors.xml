@@ -31,7 +31,7 @@
     <string name="code10013">不合法的微博用户</string>
     <string name="code10014">第三方应用访问api接口权限受限制</string>
     <string name="code10016">错误:缺失必选参数:%s，请参考API文档</string>
-    <string name="code10017">错误:参数值非法,希望得到 (%s),实际得到 (%s)，请参考API文档</string>
+    <string name="code10017" formatted="false">错误:参数值非法,希望得到 (%s),实际得到 (%s)，请参考API文档</string>
     <string name="code10018">请求长度超过限制</string>
     <string name="code10020">接口不存在</string>
     <string name="code10021">请求的HTTP METHOD不支持</string>
@@ -254,7 +254,7 @@
     <string name="code21611">非法appkey</string>
     <string name="code21612">无效IP</string>
     <string name="code21613">参数错误，需要通知id或者标题内容参数</string>
-    <string name="code21620">参数错误，uid参数必须与登录用户一致，授权用户uid %s 参数uid %s</string>
+    <string name="code21620" formatted="false">参数错误，uid参数必须与登录用户一致，授权用户uid %s 参数uid %s</string>
     <string name="code21621">appkey62无效</string>
     <string name="code21631">添加屏蔽达到上限</string>
     <string name="code21632">禁止添加未授权的应用</string>
