@@ -1,13 +1,6 @@
 <resources>
 
-    <!--if you want to modify error words, please create new string value with same name here-->
-    <string name="code20101">该微博已经被删掉了</string>
-    <string name="code21327">授权过期，请重新登录一次</string>
-    <string name="code21321">应用还没通过审核，登录用户受限制</string>
-    <string name="code20506">已经关注了，不要重复操作</string>
-    <string name="code21332">授权信息错误</string>
-    <string name="code10006">授权信息丢失</string>
-    <string name="code20019">内容重复！</string>
+    <!--if you want to modify error words, please create new string value with same name at the end-->
 
 
     <!--these following values are defined by sina -->
@@ -313,4 +306,15 @@
     <string name="code21965">地理信息接口位置ID非法</string>
     <string name="code21966">地理信息接口缺少参数coordinates</string>
     <string name="code21971">地理信息接口中心坐标超出范围</string>
+
+
+    <!--you can defined here to override above content-->
+
+    <string name="code20101">该微博已经被删掉了</string>
+    <string name="code21327">授权过期，请重新登录一次</string>
+    <string name="code21321">应用还没通过审核，登录用户受限制</string>
+    <string name="code20506">已经关注了，不要重复操作</string>
+    <string name="code21332">授权信息错误</string>
+    <string name="code10006">授权信息丢失</string>
+    <string name="code20019">内容重复！</string>
 </resources>
