@@ -1,5 +1,5 @@
 <resources>
-    <!--if you want modify error words, please create new string value with same name here-->
+    <!--if you want to modify error words, please create new string value with same name here-->
     <string name="code20101">target weibo does not exist!</string>
     <string name="code21327">expired_token!</string>
     <string name="code21321">applications over the unaudited use restrictions!</string>
