@@ -25,9 +25,6 @@ import java.util.List;
  */
 public class CommentByMeTimeLineDBTask {
 
-    private static final int DB_CACHE_COUNT_OFFSET = 10;
-
-
     private CommentByMeTimeLineDBTask() {
 
     }
@@ -79,7 +76,7 @@ public class CommentByMeTimeLineDBTask {
 
         CommentListBean result = new CommentListBean();
 
-        int limit = position.position + DB_CACHE_COUNT_OFFSET > AppConfig.DEFAULT_MSG_COUNT_50 ? position.position + DB_CACHE_COUNT_OFFSET : AppConfig.DEFAULT_MSG_COUNT_50;
+        int limit = position.position + AppConfig.DB_CACHE_COUNT_OFFSET > AppConfig.DEFAULT_MSG_COUNT_50 ? position.position + AppConfig.DB_CACHE_COUNT_OFFSET : AppConfig.DEFAULT_MSG_COUNT_50;
 
         List<CommentBean> msgList = new ArrayList<CommentBean>();
         String sql = "select * from " + CommentByMeTable.CommentByMeDataTable.TABLE_NAME + " where " + CommentByMeTable.CommentByMeDataTable.ACCOUNTID + "  = "

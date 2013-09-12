@@ -21,6 +21,7 @@ public class AppConfig {
     public static final int DEFAULT_COMMENTS_BY_ME_DB_CACHE_COUNT = 100;
     public static final int DEFAULT_HOME_DB_CACHE_COUNT = 500;
 
+    public static final int DB_CACHE_COUNT_OFFSET = 10;
 
     //friend timeline
     public static final long AUTO_REFRESH_INITIALDELAY = 9L;

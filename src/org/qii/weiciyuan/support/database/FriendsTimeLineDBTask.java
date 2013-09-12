@@ -35,7 +35,6 @@ public class FriendsTimeLineDBTask {
      * weiciyuan will save 1000 messages to database, but at the next time when
      * app need to read database, app will read only 60+ DB_CACHE_COUNT_OFFSET =70 messages.
      */
-    private static final int DB_CACHE_COUNT_OFFSET = 10;
 
     private FriendsTimeLineDBTask() {
 
@@ -304,7 +303,7 @@ public class FriendsTimeLineDBTask {
         TimeLinePosition position;
         if (groupId.equals("0")) {
             position = getPosition(accountId);
-            msgList = getHomeLineMsgList(accountId, position.position + DB_CACHE_COUNT_OFFSET);
+            msgList = getHomeLineMsgList(accountId, position.position + AppConfig.DB_CACHE_COUNT_OFFSET);
         } else {
             msgList = HomeOtherGroupTimeLineDBTask.get(accountId, groupId);
             position = HomeOtherGroupTimeLineDBTask.getPosition(accountId, groupId);
@@ -317,7 +316,7 @@ public class FriendsTimeLineDBTask {
         List<MessageTimeLineData> data = new ArrayList<MessageTimeLineData>();
 
         TimeLinePosition position = getPosition(accountId);
-        MessageListBean msgList = getHomeLineMsgList(accountId, position.position + DB_CACHE_COUNT_OFFSET);
+        MessageListBean msgList = getHomeLineMsgList(accountId, position.position + AppConfig.DB_CACHE_COUNT_OFFSET);
         MessageTimeLineData home = new MessageTimeLineData("0", msgList, position);
         data.add(home);
 

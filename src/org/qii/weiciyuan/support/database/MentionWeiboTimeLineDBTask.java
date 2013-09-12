@@ -25,9 +25,6 @@ import java.util.List;
  */
 public class MentionWeiboTimeLineDBTask {
 
-    private static final int DB_CACHE_COUNT_OFFSET = 10;
-
-
     private MentionWeiboTimeLineDBTask() {
 
     }
@@ -50,7 +47,7 @@ public class MentionWeiboTimeLineDBTask {
         Gson gson = new Gson();
         MessageListBean result = new MessageListBean();
 
-        int limit = position.position + DB_CACHE_COUNT_OFFSET > AppConfig.DEFAULT_MSG_COUNT_50 ? position.position + DB_CACHE_COUNT_OFFSET : AppConfig.DEFAULT_MSG_COUNT_50;
+        int limit = position.position + AppConfig.DB_CACHE_COUNT_OFFSET > AppConfig.DEFAULT_MSG_COUNT_50 ? position.position + AppConfig.DB_CACHE_COUNT_OFFSET : AppConfig.DEFAULT_MSG_COUNT_50;
 
         List<MessageBean> msgList = new ArrayList<MessageBean>();
         String sql = "select * from " + RepostsTable.RepostDataTable.TABLE_NAME + " where " + RepostsTable.RepostDataTable.ACCOUNTID + "  = "
