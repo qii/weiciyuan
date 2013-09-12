@@ -268,6 +268,7 @@
     <string name="edit_my_profile">编辑个人资料</string>
     <string name="edit_successfully">编辑资料成功</string>
     <string name="nickname_cant_be_empty">昵称不能为空</string>
+    <string name="nickname_cant_have_space">昵称不能有空格</string>
     <string name="user_not_exists">用户不存在</string>
     <string name="network_error">网络有问题</string>
     <string name="fetching_user_info">获取用户信息……</string>

@@ -135,8 +135,16 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
         return sum == 0;
     }
 
+    private boolean doesNicknameHaveSpace() {
+        boolean result = layout.nickname.getText().toString().contains(" ");
+        if (result) {
+            layout.nickname.setError(getString(R.string.nickname_cant_have_space));
+        }
+        return result;
+    }
+
     private void save() {
-        if (Utility.isTaskStopped(saveAsyncTask) && !isNicknameEmpty()) {
+        if (Utility.isTaskStopped(saveAsyncTask) && !isNicknameEmpty() && !doesNicknameHaveSpace()) {
             saveAsyncTask = new SaveAsyncTask();
             saveAsyncTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
