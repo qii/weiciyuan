@@ -317,4 +317,7 @@
     <string name="code21332">授权信息错误</string>
     <string name="code10006">授权信息丢失</string>
     <string name="code20019">内容重复！</string>
+    <string name="code10016">缺失必选参数</string>
+    <string name="code10017" formatted="false">参数值非法</string>
+
 </resources>
