@@ -233,6 +233,7 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     protected void oldMsgOnPostExecute(MessageListBean newValue) {
         if (newValue != null && newValue.getSize() > 1) {
             getList().addOldData(newValue);
+            MentionWeiboTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
         } else {
             Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
         }
