@@ -619,7 +619,10 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     protected void buildRepostContent(final MessageBean repost_msg, ViewHolder holder, int position) {
         holder.repost_content.setVisibility(View.VISIBLE);
-        if (!repost_msg.getId().equals((String) holder.repost_content.getTag())) {
+
+        boolean isSameTag = repost_msg.getId().equals((String) holder.repost_content.getTag());
+
+        if (!isSameTag) {
             holder.repost_content.setText(repost_msg.getListViewSpannableString());
             holder.repost_content.setTag(repost_msg.getId());
         }
