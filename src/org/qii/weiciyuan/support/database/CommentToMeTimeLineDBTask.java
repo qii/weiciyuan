@@ -101,7 +101,7 @@ public class CommentToMeTimeLineDBTask {
 
         result.setComments(msgList);
         c.close();
-        return new CommentTimeLineData(result, getPosition(accountId));
+        return new CommentTimeLineData(result, position);
 
     }
 

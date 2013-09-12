@@ -400,6 +400,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         if (newValue != null && newValue.getItemList().size() > 1) {
             getList().addOldData(newValue);
             getAdapter().notifyDataSetChanged();
+            MentionCommentsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
         }
     }
 

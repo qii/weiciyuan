@@ -74,11 +74,15 @@ public class MentionCommentsTimeLineDBTask {
 
     public static CommentTimeLineData getCommentLineMsgList(String accountId) {
 
+        TimeLinePosition position = getPosition(accountId);
+
+        int limit = position.position + AppConfig.DB_CACHE_COUNT_OFFSET > AppConfig.DEFAULT_MSG_COUNT_50 ? position.position + AppConfig.DB_CACHE_COUNT_OFFSET : AppConfig.DEFAULT_MSG_COUNT_50;
+
         CommentListBean result = new CommentListBean();
 
         List<CommentBean> msgList = new ArrayList<CommentBean>();
         String sql = "select * from " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME + " where " + MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID + "  = "
-                + accountId + " order by " + MentionCommentsTable.MentionCommentsDataTable.MBLOGID + " desc";
+                + accountId + " order by " + MentionCommentsTable.MentionCommentsDataTable.MBLOGID + " desc limit " + limit;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
         while (c.moveToNext()) {
@@ -98,7 +102,7 @@ public class MentionCommentsTimeLineDBTask {
 
         result.setComments(msgList);
         c.close();
-        CommentTimeLineData mentionTimeLineData = new CommentTimeLineData(result, getPosition(accountId));
+        CommentTimeLineData mentionTimeLineData = new CommentTimeLineData(result, position);
 
         return mentionTimeLineData;
 
@@ -106,29 +110,29 @@ public class MentionCommentsTimeLineDBTask {
 
 
     private static void reduceCommentTable(String accountId) {
-        String searchCount = "select count(" + MentionCommentsTable.MentionCommentsDataTable.ID + ") as total" + " from " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME + " where " + MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID
-                + " = " + accountId;
-        int total = 0;
-        Cursor c = getRsd().rawQuery(searchCount, null);
-        if (c.moveToNext()) {
-            total = c.getInt(c.getColumnIndex("total"));
-        }
-
-        c.close();
-
-        AppLogger.e("total=" + total);
-
-        int needDeletedNumber = total - AppConfig.DEFAULT_MENTIONS_COMMENT_DB_CACHE_COUNT;
-
-        if (needDeletedNumber > 0) {
-            AppLogger.e("" + needDeletedNumber);
-            String sql = " delete from " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME + " where " + MentionCommentsTable.MentionCommentsDataTable.ID + " in "
-                    + "( select " + MentionCommentsTable.MentionCommentsDataTable.ID + " from " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME + " where "
-                    + MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID
-                    + " in " + "(" + accountId + ") order by " + MentionCommentsTable.MentionCommentsDataTable.ID + " asc limit " + needDeletedNumber + " ) ";
-
-            getWsd().execSQL(sql);
-        }
+//        String searchCount = "select count(" + MentionCommentsTable.MentionCommentsDataTable.ID + ") as total" + " from " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME + " where " + MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID
+//                + " = " + accountId;
+//        int total = 0;
+//        Cursor c = getRsd().rawQuery(searchCount, null);
+//        if (c.moveToNext()) {
+//            total = c.getInt(c.getColumnIndex("total"));
+//        }
+//
+//        c.close();
+//
+//        AppLogger.e("total=" + total);
+//
+//        int needDeletedNumber = total - AppConfig.DEFAULT_MENTIONS_COMMENT_DB_CACHE_COUNT;
+//
+//        if (needDeletedNumber > 0) {
+//            AppLogger.e("" + needDeletedNumber);
+//            String sql = " delete from " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME + " where " + MentionCommentsTable.MentionCommentsDataTable.ID + " in "
+//                    + "( select " + MentionCommentsTable.MentionCommentsDataTable.ID + " from " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME + " where "
+//                    + MentionCommentsTable.MentionCommentsDataTable.ACCOUNTID
+//                    + " in " + "(" + accountId + ") order by " + MentionCommentsTable.MentionCommentsDataTable.ID + " asc limit " + needDeletedNumber + " ) ";
+//
+//            getWsd().execSQL(sql);
+//        }
     }
 
     public static void asyncReplace(final CommentListBean list, final String accountId) {
