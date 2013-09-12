@@ -364,7 +364,7 @@ public class GalleryActivity extends Activity {
 
     private void readGif(WebView webView, TextView readError, String url, String bitmapPath) {
         webView.setVisibility(View.VISIBLE);
-
+        bindImageViewLongClickListener(((View) webView.getParent()), url, bitmapPath);
 
         if (webView.getTag() != null)
             return;
@@ -390,9 +390,9 @@ public class GalleryActivity extends Activity {
     }
 
 
-    private void bindImageViewLongClickListener(ImageView imageView, final String url, final String filePath) {
+    private void bindImageViewLongClickListener(View view, final String url, final String filePath) {
 
-        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+        view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
 
