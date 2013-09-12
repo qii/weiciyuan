@@ -136,6 +136,21 @@ public class ListViewTool {
         bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
     }
 
+    public static void filterHomeTimeLineSinaWeiboAd(MessageListBean value) {
+
+        List<MessageBean> msgList = value.getItemList();
+        Iterator<MessageBean> iterator = msgList.iterator();
+
+        while (iterator.hasNext()) {
+            MessageBean msg = iterator.next();
+            UserBean user = msg.getUser();
+            if (user != null && !user.isFollowing()) {
+                iterator.remove();
+                value.removedCountPlus();
+            }
+        }
+    }
+
     public static void filterMessage(MessageListBean value) {
 
         List<MessageBean> msgList = value.getItemList();

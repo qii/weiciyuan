@@ -62,6 +62,7 @@ public class MainFriendsTimeLineDao {
         }
         if (value != null && value.getItemList().size() > 0) {
             ListViewTool.filterMessage(value);
+            ListViewTool.filterHomeTimeLineSinaWeiboAd(value);
         }
 
 
