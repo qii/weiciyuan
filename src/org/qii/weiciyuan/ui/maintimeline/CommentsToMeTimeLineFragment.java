@@ -375,6 +375,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         if (newValue != null && newValue.getItemList().size() > 1) {
             getList().addOldData(newValue);
             getAdapter().notifyDataSetChanged();
+            CommentToMeTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
         }
     }
 
