@@ -118,7 +118,7 @@ public class TimeTool {
 
         long calMonth = calDay / 31;
 
-        if (calMonth < 12) {
+        if (calMonth < 12 && isSameYear(nowCalendar, msgCalendar)) {
             if (dateFormat == null)
                 dateFormat = new java.text.SimpleDateFormat(DATE_FORMAT);
 
@@ -166,6 +166,13 @@ public class TimeTool {
         int msgDay = msg.get(Calendar.DAY_OF_YEAR);
 
         return (nowDay - msgDay) == 2;
+    }
+
+    private static boolean isSameYear(Calendar now, Calendar msg) {
+        int nowYear = now.get(Calendar.YEAR);
+        int msgYear = msg.get(Calendar.YEAR);
+
+        return nowYear == msgYear;
     }
 
     public static void dealMills(ItemBean bean) {
