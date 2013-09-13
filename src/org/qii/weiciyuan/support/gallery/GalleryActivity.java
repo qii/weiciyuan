@@ -185,6 +185,7 @@ public class GalleryActivity extends Activity {
         });
 
         WebView gif = (WebView) contentView.findViewById(R.id.gif);
+        gif.setBackgroundColor(getResources().getColor(R.color.transparent));
         gif.setVisibility(View.INVISIBLE);
 
         TextView readError = (TextView) contentView.findViewById(R.id.error);
@@ -369,7 +370,6 @@ public class GalleryActivity extends Activity {
         if (webView.getTag() != null)
             return;
 
-        webView.setBackgroundColor(getResources().getColor(R.color.transparent));
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setLoadWithOverviewMode(true);
