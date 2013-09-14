@@ -188,6 +188,10 @@ public class GalleryActivity extends Activity {
         gif.setBackgroundColor(getResources().getColor(R.color.transparent));
         gif.setVisibility(View.INVISIBLE);
 
+        WebView large = (WebView) contentView.findViewById(R.id.large);
+        large.setBackgroundColor(getResources().getColor(R.color.transparent));
+        large.setVisibility(View.INVISIBLE);
+
         TextView readError = (TextView) contentView.findViewById(R.id.error);
 
         String path = FileManager.getFilePathFromUrl(urls.get(position), FileLocationMethod.picture_large);
@@ -199,7 +203,7 @@ public class GalleryActivity extends Activity {
                 && taskMap.get(urls.get(position)) == null
                 && TaskCache.isThisUrlTaskFinished(urls.get(position))) {
 
-            readPicture(imageView, gif, readError, urls.get(position), path);
+            readPicture(imageView, gif, large, readError, urls.get(position), path);
 
         } else if (shouldDownLoadPicture) {
 
@@ -207,7 +211,7 @@ public class GalleryActivity extends Activity {
             spinner.setVisibility(View.VISIBLE);
 
             if (taskMap.get(urls.get(position)) == null) {
-                PicSimpleBitmapWorkerTask task = new PicSimpleBitmapWorkerTask(imageView, gif, spinner, readError, urls.get(position), taskMap);
+                PicSimpleBitmapWorkerTask task = new PicSimpleBitmapWorkerTask(imageView, gif, large, spinner, readError, urls.get(position), taskMap);
                 taskMap.put(urls.get(position), task);
                 task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             } else {
@@ -238,12 +242,13 @@ public class GalleryActivity extends Activity {
 
         private ImageView iv;
         private WebView gif;
+        private WebView large;
         private String url;
         private CircleProgressView spinner;
         private TextView readError;
         private HashMap<String, PicSimpleBitmapWorkerTask> taskMap;
 
-        public PicSimpleBitmapWorkerTask(ImageView iv, WebView gif, CircleProgressView spinner,
+        public PicSimpleBitmapWorkerTask(ImageView iv, WebView gif, WebView large, CircleProgressView spinner,
                                          TextView readError, String url, HashMap<String, PicSimpleBitmapWorkerTask> taskMap) {
             this.iv = iv;
             this.url = url;
@@ -251,6 +256,7 @@ public class GalleryActivity extends Activity {
             this.readError = readError;
             this.taskMap = taskMap;
             this.gif = gif;
+            this.large = large;
             this.readError.setVisibility(View.INVISIBLE);
             this.spinner.setVisibility(View.VISIBLE);
 
@@ -312,14 +318,14 @@ public class GalleryActivity extends Activity {
                 Toast.makeText(GalleryActivity.this, R.string.download_finished_but_cant_read_picture_file, Toast.LENGTH_SHORT).show();
             }
 
-            readPicture(iv, gif, readError, url, bitmapPath);
+            readPicture(iv, gif, large, readError, url, bitmapPath);
 
 
         }
     }
 
 
-    private void readPicture(ImageView imageView, WebView gif, TextView readError, String url, String bitmapPath) {
+    private void readPicture(ImageView imageView, WebView gif, WebView large, TextView readError, String url, String bitmapPath) {
 
         if (bitmapPath.endsWith(".gif")) {
             readGif(gif, readError, url, bitmapPath);
@@ -338,9 +344,13 @@ public class GalleryActivity extends Activity {
         }
 
         if (isThisBitmapTooLarge) {
-            imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            PhotoView photoView = (PhotoView) imageView;
-            photoView.setMaxScale(15);
+
+            readLarge(large, bitmapPath);
+
+            return;
+//            imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//            PhotoView photoView = (PhotoView) imageView;
+//            photoView.setMaxScale(15);
         }
 
         Bitmap bitmap = null;
@@ -387,6 +397,33 @@ public class GalleryActivity extends Activity {
         webView.loadDataWithBaseURL("file:///android_asset/", str2, "text/html", "utf-8", null);
 
         webView.setTag(new Object());
+    }
+
+    private void readLarge(WebView large, String bitmapPath) {
+        large.setVisibility(View.VISIBLE);
+
+        if (large.getTag() != null)
+            return;
+
+
+        large.getSettings().setJavaScriptEnabled(true);
+        large.getSettings().setUseWideViewPort(true);
+        large.getSettings().setLoadWithOverviewMode(true);
+        large.getSettings().setBuiltInZoomControls(true);
+        large.getSettings().setDisplayZoomControls(false);
+
+        large.setVerticalScrollBarEnabled(false);
+        large.setHorizontalScrollBarEnabled(false);
+
+
+        File file = new File(bitmapPath);
+
+        String str1 = "file://" + file.getAbsolutePath().replace("/mnt/sdcard/", "/sdcard/");
+        String str2 = "<html>\n<head>\n     <style>\n          html,body{background:transparent;margin:0;padding:0;}          *{-webkit-tap-highlight-color:rgba(0, 0, 0, 0);}\n     </style>\n     <script type=\"text/javascript\">\n     var imgUrl = \"" + str1 + "\";" + "     var objImage = new Image();\n" + "     var realWidth = 0;\n" + "     var realHeight = 0;\n" + "\n" + "     function onLoad() {\n" + "          objImage.onload = function() {\n" + "               realWidth = objImage.width;\n" + "               realHeight = objImage.height;\n" + "\n" + "               document.gagImg.src = imgUrl;\n" + "               onResize();\n" + "          }\n" + "          objImage.src = imgUrl;\n" + "     }\n" + "\n" + "     function onResize() {\n" + "          var scale = 1;\n" + "          var newWidth = document.gagImg.width;\n" + "          if (realWidth > newWidth) {\n" + "               scale = realWidth / newWidth;\n" + "          } else {\n" + "               scale = newWidth / realWidth;\n" + "          }\n" + "\n" + "          hiddenHeight = Math.ceil(30 * scale);\n" + "          document.getElementById('hiddenBar').style.height = hiddenHeight + \"px\";\n" + "          document.getElementById('hiddenBar').style.marginTop = -hiddenHeight + \"px\";\n" + "     }\n" + "     </script>\n" + "</head>\n" + "<body onload=\"onLoad()\" onresize=\"onResize()\" onclick=\"Android.toggleOverlayDisplay();\">\n" + "     <table style=\"width: 100%;height:100%;\">\n" + "          <tr style=\"width: 100%;\">\n" + "               <td valign=\"middle\" align=\"center\" style=\"width: 100%;\">\n" + "                    <div style=\"display:block\">\n" + "                         <img name=\"gagImg\" src=\"\" width=\"100%\" style=\"\" />\n" + "                    </div>\n" + "                    <div id=\"hiddenBar\" style=\"position:absolute; width: 100%; background: transparent;\"></div>\n" + "               </td>\n" + "          </tr>\n" + "     </table>\n" + "</body>\n" + "</html>";
+        large.loadDataWithBaseURL("file:///android_asset/", str2, "text/html", "utf-8", null);
+        large.setVisibility(View.VISIBLE);
+
+        large.setTag(new Object());
     }
 
 
