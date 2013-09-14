@@ -145,8 +145,10 @@ public class ListViewTool {
             MessageBean msg = iterator.next();
             UserBean user = msg.getUser();
             if (user != null && !user.isFollowing()) {
-                iterator.remove();
-                value.removedCountPlus();
+                if (!user.getId().equalsIgnoreCase(GlobalContext.getInstance().getCurrentAccountId())) {
+                    iterator.remove();
+                    value.removedCountPlus();
+                }
             }
         }
     }
