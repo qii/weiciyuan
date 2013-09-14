@@ -82,6 +82,7 @@ public class GalleryActivity extends Activity {
         });
         pager.setCurrentItem(getIntent().getIntExtra("position", 0));
         pager.setOffscreenPageLimit(3);
+        pager.setPageTransformer(true, new ZoomOutPageTransformer());
     }
 
     @Override
