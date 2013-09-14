@@ -48,6 +48,7 @@ public class MessageBean extends ItemBean implements Parcelable {
     private GeoBean geo;
 
     private ArrayList<PicUrls> pic_urls = new ArrayList<PicUrls>();
+    private ArrayList<String> pic_ids = new ArrayList<String>();
 
 
     private transient SpannableString listViewSpannableString;
@@ -116,6 +117,7 @@ public class MessageBean extends ItemBean implements Parcelable {
         dest.writeParcelable(geo, flags);
 
         dest.writeTypedList(pic_urls);
+        dest.writeStringList(pic_ids);
 
     }
 
@@ -157,6 +159,8 @@ public class MessageBean extends ItemBean implements Parcelable {
                     messageBean.pic_urls = new ArrayList<PicUrls>();
                     in.readTypedList(messageBean.pic_urls, PicUrls.CREATOR);
 
+                    messageBean.pic_ids = new ArrayList<String>();
+                    in.readStringList(messageBean.pic_ids);
                     return messageBean;
                 }
 
@@ -401,6 +405,14 @@ public class MessageBean extends ItemBean implements Parcelable {
         for (PicUrls url : pic_urls) {
             thumbnaiUrls.add(url.thumbnail_pic);
         }
+
+        if (thumbnaiUrls.size() == 0) {
+            String prefStr = "http://ww4.sinaimg.cn/thumbnail/";
+            for (String url : pic_ids) {
+                thumbnaiUrls.add(prefStr + url + ".jpg");
+            }
+        }
+
         return thumbnaiUrls;
     }
 
@@ -411,6 +423,14 @@ public class MessageBean extends ItemBean implements Parcelable {
         for (PicUrls url : pic_urls) {
             middleUrls.add(url.thumbnail_pic.replace("thumbnail", "bmiddle"));
         }
+
+        if (middleUrls.size() == 0) {
+            String prefStr = "http://ww4.sinaimg.cn/bmiddle/";
+            for (String url : pic_ids) {
+                middleUrls.add(prefStr + url + ".jpg");
+            }
+        }
+
         return middleUrls;
     }
 
@@ -422,15 +442,23 @@ public class MessageBean extends ItemBean implements Parcelable {
         for (PicUrls url : pic_urls) {
             highUrls.add(url.thumbnail_pic.replace("thumbnail", "large"));
         }
+
+        if (highUrls.size() == 0) {
+            String prefStr = "http://ww4.sinaimg.cn/large/";
+            for (String url : pic_ids) {
+                highUrls.add(prefStr + url + ".jpg");
+            }
+        }
+
         return highUrls;
     }
 
     public boolean isMultiPics() {
-        return pic_urls.size() > 1;
+        return pic_urls.size() > 1 || pic_ids.size() > 1;
     }
 
     public int getPicCount() {
-        return pic_urls.size();
+        return pic_urls.size() > 1 ? pic_urls.size() : pic_ids.size();
     }
 
     @Override
