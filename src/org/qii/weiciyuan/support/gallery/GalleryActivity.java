@@ -192,6 +192,8 @@ public class GalleryActivity extends Activity {
         large.setBackgroundColor(getResources().getColor(R.color.transparent));
         large.setVisibility(View.INVISIBLE);
 
+        TextView wait = (TextView) contentView.findViewById(R.id.wait);
+
         TextView readError = (TextView) contentView.findViewById(R.id.error);
 
         String path = FileManager.getFilePathFromUrl(urls.get(position), FileLocationMethod.picture_large);
@@ -202,7 +204,7 @@ public class GalleryActivity extends Activity {
         if (ImageTool.isThisBitmapCanRead(path)
                 && taskMap.get(urls.get(position)) == null
                 && TaskCache.isThisUrlTaskFinished(urls.get(position))) {
-
+            wait.setVisibility(View.INVISIBLE);
             readPicture(imageView, gif, large, readError, urls.get(position), path);
 
         } else if (shouldDownLoadPicture) {
@@ -211,12 +213,13 @@ public class GalleryActivity extends Activity {
             spinner.setVisibility(View.VISIBLE);
 
             if (taskMap.get(urls.get(position)) == null) {
-                PicSimpleBitmapWorkerTask task = new PicSimpleBitmapWorkerTask(imageView, gif, large, spinner, readError, urls.get(position), taskMap);
+                wait.setVisibility(View.VISIBLE);
+                PicSimpleBitmapWorkerTask task = new PicSimpleBitmapWorkerTask(imageView, gif, large, spinner, wait, readError, urls.get(position), taskMap);
                 taskMap.put(urls.get(position), task);
                 task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 PicSimpleBitmapWorkerTask task = taskMap.get(urls.get(position));
-                task.setWidget(imageView, gif, spinner, readError);
+                task.setWidget(imageView, gif, spinner, wait, readError);
             }
         }
     }
@@ -233,9 +236,10 @@ public class GalleryActivity extends Activity {
 
         };
 
-        public void setWidget(ImageView iv, WebView gif, CircleProgressView spinner, TextView readError) {
+        public void setWidget(ImageView iv, WebView gif, CircleProgressView spinner, TextView wait, TextView readError) {
             this.iv = iv;
             this.spinner = spinner;
+            this.wait = wait;
             this.readError = readError;
             this.gif = gif;
         }
@@ -243,12 +247,13 @@ public class GalleryActivity extends Activity {
         private ImageView iv;
         private WebView gif;
         private WebView large;
+        private TextView wait;
         private String url;
         private CircleProgressView spinner;
         private TextView readError;
         private HashMap<String, PicSimpleBitmapWorkerTask> taskMap;
 
-        public PicSimpleBitmapWorkerTask(ImageView iv, WebView gif, WebView large, CircleProgressView spinner,
+        public PicSimpleBitmapWorkerTask(ImageView iv, WebView gif, WebView large, CircleProgressView spinner, TextView wait,
                                          TextView readError, String url, HashMap<String, PicSimpleBitmapWorkerTask> taskMap) {
             this.iv = iv;
             this.url = url;
@@ -257,6 +262,7 @@ public class GalleryActivity extends Activity {
             this.taskMap = taskMap;
             this.gif = gif;
             this.large = large;
+            this.wait = wait;
             this.readError.setVisibility(View.INVISIBLE);
             this.spinner.setVisibility(View.VISIBLE);
 
@@ -281,6 +287,7 @@ public class GalleryActivity extends Activity {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
+            this.wait.setVisibility(View.INVISIBLE);
             int progress = values[0];
             int max = values[1];
             spinner.setMax(max);
@@ -292,12 +299,14 @@ public class GalleryActivity extends Activity {
             super.onCancelled(s);
             taskMap.remove(url);
             this.spinner.setVisibility(View.INVISIBLE);
+            this.wait.setVisibility(View.INVISIBLE);
         }
 
         @Override
         protected void onPostExecute(final String bitmapPath) {
 
             this.spinner.setVisibility(View.INVISIBLE);
+            this.wait.setVisibility(View.INVISIBLE);
 
             if (isCancelled()) {
                 return;
