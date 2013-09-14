@@ -346,7 +346,7 @@ public class GalleryActivity extends Activity {
 
         if (isThisBitmapTooLarge) {
 
-            readLarge(large, bitmapPath);
+            readLarge(large, url, bitmapPath);
 
             return;
 //            imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -400,8 +400,9 @@ public class GalleryActivity extends Activity {
         webView.setTag(new Object());
     }
 
-    private void readLarge(WebView large, String bitmapPath) {
+    private void readLarge(WebView large, String url, String bitmapPath) {
         large.setVisibility(View.VISIBLE);
+        bindImageViewLongClickListener(large, url, bitmapPath);
 
         if (large.getTag() != null)
             return;
