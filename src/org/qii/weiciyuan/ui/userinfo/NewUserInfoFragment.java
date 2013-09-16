@@ -909,7 +909,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
             refreshLayout(getList());
 
-            if (getList().getSize() == 0) {
+            if (getList().getSize() == 0 && getActivity() != null) {
                 loadNewMsg();
             }
         }
