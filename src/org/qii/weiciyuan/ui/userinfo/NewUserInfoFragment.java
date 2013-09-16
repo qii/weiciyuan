@@ -895,6 +895,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         @Override
         protected void onPostExecute(MyStatusTimeLineData result) {
             super.onPostExecute(result);
+            if (getActivity() == null)
+                return;
 
             if (result != null && getActivity() != null) {
                 getListView().removeFooterView(progressFooter);
@@ -909,7 +911,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
             refreshLayout(getList());
 
-            if (getList().getSize() == 0 && getActivity() != null) {
+            if (getList().getSize() == 0) {
                 loadNewMsg();
             }
         }

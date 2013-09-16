@@ -596,6 +596,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         @Override
         protected void onPostExecute(List<MessageTimeLineData> result) {
             super.onPostExecute(result);
+            if (getActivity() == null)
+                return;
             if (result != null) {
                 for (MessageTimeLineData single : result) {
                     putToGroupDataMemoryCache(single.groupId, single.msgList);
@@ -607,6 +609,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         @Override
         protected void onProgressUpdate(MessageTimeLineData... result) {
             super.onProgressUpdate(result);
+
+            if (getActivity() == null)
+                return;
+
             if (result != null && result.length > 0) {
                 MessageTimeLineData recentData = result[0];
                 getList().replaceData(recentData.msgList);
