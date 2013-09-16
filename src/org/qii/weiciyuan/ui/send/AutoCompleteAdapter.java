@@ -89,7 +89,14 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
     private Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            pb.setVisibility(View.GONE);
+
+            activity.runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    pb.setVisibility(View.GONE);
+                }
+            });
 
             FilterResults filterResults = new FilterResults();
             //AutoCompleteTextView is empty, return empty;
