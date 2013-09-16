@@ -153,6 +153,18 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
             filterResults.values = data;
             filterResults.count = data.size();
 
+
+            if (!contentStr.equals(content.getText().toString())) {
+                activity.runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        pb.setVisibility(View.GONE);
+                    }
+                });
+                return filterResults;
+            }
+
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
