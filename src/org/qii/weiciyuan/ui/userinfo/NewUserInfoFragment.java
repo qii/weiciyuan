@@ -24,6 +24,7 @@ import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.topic.UserTopicListDao;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.MyStatusDBTask;
 import org.qii.weiciyuan.support.database.TopicDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -847,6 +848,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
         @Override
         protected void onPostExecute(UserBean o) {
+            if (o == null || getActivity() == null)
+                return;
             setValue();
             if (getActivity() instanceof UserInfoActivity) {
                 ((UserInfoActivity) getActivity()).setUser(o);
@@ -855,6 +858,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             for (MessageBean msg : bean.getItemList()) {
                 msg.setUser(o);
             }
+            GlobalContext.getInstance().updateUserInfo(o);
+            AccountDBTask.asyncUpdateMyProfile(GlobalContext.getInstance().getAccountBean(), o);
             getAdapter().notifyDataSetChanged();
             stopRefreshMenuAnimationIfPossible();
             super.onPostExecute(o);

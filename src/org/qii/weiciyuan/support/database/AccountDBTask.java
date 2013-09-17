@@ -64,6 +64,15 @@ public class AccountDBTask {
 
     }
 
+    public static void asyncUpdateMyProfile(final AccountBean accountBean, final UserBean value) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                updateMyProfile(accountBean, value);
+            }
+        }).start();
+    }
+
     public static void updateMyProfile(AccountBean account, UserBean value) {
         String uid = account.getUid();
         String json = new Gson().toJson(value);
