@@ -444,6 +444,7 @@
     <string name="filter">首页过滤</string>
     <string name="add_filter">添加过滤词</string>
     <string name="add">添加</string>
+    <string name="filter_is_empty">没有内容</string>
     <string name="input_filter_word">输入过滤词</string>
     <string name="modify_filter_word">修改过滤词</string>
     <string name="filter_keyword">关键词</string>

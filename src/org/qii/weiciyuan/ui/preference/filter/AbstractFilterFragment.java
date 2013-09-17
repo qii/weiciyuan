@@ -58,6 +58,7 @@ public abstract class AbstractFilterFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         adapter = new FilterAdapter(getActivity(), getListView(), list);
         setListAdapter(adapter);
+        setEmptyText(getString(R.string.filter_is_empty));
         if (task == null || task.getStatus() == MyAsyncTask.Status.FINISHED) {
             task = new DBTask();
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
