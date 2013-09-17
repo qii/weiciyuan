@@ -107,7 +107,7 @@ public class ICSNotification {
                 .setTicker(getTicker())
                 .setContentTitle(getTicker())
                 .setContentText(accountBean.getUsernick())
-                .setSmallIcon(R.drawable.notification)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setAutoCancel(true)
                 .setContentIntent(getPendingIntent())
                 .setOnlyAlertOnce(true);

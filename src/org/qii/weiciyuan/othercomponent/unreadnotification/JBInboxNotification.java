@@ -64,7 +64,7 @@ public class JBInboxNotification {
         Notification.Builder builder = new Notification.Builder(context)
                 .setTicker(NotificationUtility.getTicker(unreadBean))
                 .setContentText(accountBean.getUsernick())
-                .setSmallIcon(R.drawable.notification)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setAutoCancel(true)
                 .setContentIntent(getPendingIntent())
                 .setOnlyAlertOnce(true);

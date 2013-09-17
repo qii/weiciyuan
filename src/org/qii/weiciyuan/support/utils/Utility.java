@@ -640,7 +640,7 @@ public class Utility {
             Notification.Builder builder = new Notification.Builder(GlobalContext.getInstance())
                     .setContentTitle(GlobalContext.getInstance().getString(R.string.login_again))
                     .setContentText(GlobalContext.getInstance().getString(R.string.have_account_whose_token_is_expired))
-                    .setSmallIcon(R.drawable.notification)
+                    .setSmallIcon(R.drawable.ic_notification)
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)
                     .setOnlyAlertOnce(true);
