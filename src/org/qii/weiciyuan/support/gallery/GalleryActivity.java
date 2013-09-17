@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.*;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -342,7 +343,7 @@ public class GalleryActivity extends Activity {
     private void readPicture(ImageView imageView, WebView gif, WebView large, TextView readError, String url, String bitmapPath) {
 
         if (bitmapPath.endsWith(".gif")) {
-            readGif(gif, readError, url, bitmapPath);
+            readGif(gif, large, readError, url, bitmapPath);
             return;
         }
 
@@ -387,7 +388,16 @@ public class GalleryActivity extends Activity {
 
     }
 
-    private void readGif(WebView webView, TextView readError, String url, String bitmapPath) {
+    private void readGif(WebView webView, WebView large, TextView readError, String url, String bitmapPath) {
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(bitmapPath, options);
+        if (options.outWidth >= Utility.getScreenWidth() || options.outHeight >= Utility.getScreenHeight()) {
+            readLarge(large, url, bitmapPath);
+            return;
+        }
+
         webView.setVisibility(View.VISIBLE);
         bindImageViewLongClickListener(((View) webView.getParent()), url, bitmapPath);
 
