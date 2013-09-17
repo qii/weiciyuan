@@ -217,7 +217,9 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
             String ori = content.getText().toString();
             String result = ((AtUserBean) resultValue).getNickname();
             String left = ori.substring(0, atSignPosition + 1);
-            String right = ori.substring(selectPosition);
+            String right = "";
+            if (selectPosition <= ori.length() - 1)
+                right = ori.substring(selectPosition);
             ori = left + result + " " + right;
             return ori;
         }
