@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.send;
 
 import android.R;
 import android.app.Activity;
+import android.os.SystemClock;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.view.View;
@@ -138,6 +139,21 @@ public class AutoCompleteAdapter extends ArrayAdapter<AtUserBean> implements Fil
             }
 
             if (!canDoSearch) {
+                return filterResults;
+            }
+
+
+            SystemClock.sleep(500);
+
+            if (!contentStr.equals(content.getText().toString())) {
+                activity.runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        pb.setVisibility(View.GONE);
+                    }
+                });
+
                 return filterResults;
             }
 
