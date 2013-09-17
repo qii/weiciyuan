@@ -207,6 +207,7 @@
             android:uiOptions="splitActionBarWhenNarrow"/>
         <activity android:name=".ui.preference.ReadActivity"/>
         <activity android:name=".ui.preference.PerformanceActivity"/>
+        <activity android:name=".ui.preference.OtherActivity"/>
         <activity android:name=".ui.preference.AboutActivity"/>
         <activity
             android:name=".ui.preference.LicenseActivity"

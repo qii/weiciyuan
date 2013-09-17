@@ -11,7 +11,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.browser.BrowserWebActivity;
+import org.qii.weiciyuan.support.utils.WebBrowserSelector;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 /**
@@ -68,9 +68,7 @@ public class LongClickLinkDialog extends DialogFragment {
                                         intent.putExtra("domain", Utility.getDomainFromWeiboAccountLink(url));
                                         context.startActivity(intent);
                                     } else {
-                                        Intent intent = new Intent(context, BrowserWebActivity.class);
-                                        intent.putExtra("url", uri.toString());
-                                        context.startActivity(intent);
+                                        WebBrowserSelector.openLink(context, uri);
                                     }
                                 } else {
                                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);

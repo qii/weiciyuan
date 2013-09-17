@@ -24,6 +24,7 @@ import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imagetool.ImageTool;
 import org.qii.weiciyuan.support.lib.CircleProgressView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -149,12 +150,14 @@ public class GalleryActivity extends Activity {
             if (contentView == null)
                 return;
 
-            contentView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
+            if (SettingUtility.allowClickToCloseGallery()) {
+                contentView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
+            }
 
             ImageView imageView = (ImageView) contentView.findViewById(R.id.image);
 
@@ -177,12 +180,14 @@ public class GalleryActivity extends Activity {
         PhotoView imageView = (PhotoView) contentView.findViewById(R.id.image);
         imageView.setVisibility(View.INVISIBLE);
 
-        imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(View view, float x, float y) {
-                GalleryActivity.this.finish();
-            }
-        });
+        if (SettingUtility.allowClickToCloseGallery()) {
+            imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+                @Override
+                public void onPhotoTap(View view, float x, float y) {
+                    GalleryActivity.this.finish();
+                }
+            });
+        }
 
         WebView gif = (WebView) contentView.findViewById(R.id.gif);
         gif.setBackgroundColor(getResources().getColor(R.color.transparent));
@@ -411,7 +416,9 @@ public class GalleryActivity extends Activity {
     private void readLarge(WebView large, String url, String bitmapPath) {
         large.setVisibility(View.VISIBLE);
         bindImageViewLongClickListener(large, url, bitmapPath);
-        large.setOnTouchListener(largeOnTouchListener);
+        if (SettingUtility.allowClickToCloseGallery()) {
+            large.setOnTouchListener(largeOnTouchListener);
+        }
 
         if (large.getTag() != null)
             return;

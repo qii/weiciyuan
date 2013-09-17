@@ -281,4 +281,14 @@ public class SettingUtility {
     public static boolean isWifiAutoDownloadPic() {
         return SettingHelper.getSharedPreferences(getContext(), SettingActivity.WIFI_AUTO_DOWNLOAD_PIC, true);
     }
+
+    public static boolean allowInternalWebBrowser() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_INTERNAL_WEB_BROWSER, true);
+
+    }
+
+    public static boolean allowClickToCloseGallery() {
+        return SettingHelper.getSharedPreferences(getContext(), SettingActivity.ENABLE_CLICK_TO_CLOSE_GALLERY, true);
+
+    }
 }

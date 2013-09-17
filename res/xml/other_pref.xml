@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_web_browser_title">
+
+
+        <CheckBoxPreference
+            android:key="enable_internal_web_browser"
+            android:title="@string/pref_enable_internal_web_browser"
+            android:summary="@string/pref_web_browser_summary"
+            android:defaultValue="true"/>
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_gallery_title">
+
+        <CheckBoxPreference
+            android:key="enable_click_to_close_gallery"
+            android:title="@string/pref_enable_click_to_close_gallery"
+            android:defaultValue="true"/>
+
+    </PreferenceCategory>
+</PreferenceScreen>

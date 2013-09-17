@@ -382,7 +382,6 @@
     <string name="pref_auto_refresh_summary">仅在 Wifi 网络下有效，新消息提示条会保持显示状态</string>
     <string name="pref_advanced_title">高级</string>
     <string name="have_selected">已经选择了%s项</string>
-    <string name="pref_other_title">其它</string>
 
     <!--Setting Appearance-->
     <string name="pref_appearance_title">显示</string>
@@ -462,6 +461,15 @@
     <string name="pref_performance_title">性能</string>
     <string name="disable_hardware_accelerated">禁用列表硬件加速</string>
     <string name="pref_disable_hardware_accelerated_summary">勾选后部分设备会提升流畅度，修改后请手动退出应用重进</string>
+
+
+    <!--Setting Other-->
+    <string name="pref_other_title">其他</string>
+    <string name="pref_web_browser_title">浏览器</string>
+    <string name="pref_enable_internal_web_browser">启用内置浏览器</string>
+    <string name="pref_web_browser_summary">内置浏览器可以查阅分享该网页链接的微博</string>
+    <string name="pref_gallery_title">图片</string>
+    <string name="pref_enable_click_to_close_gallery">启用点击关闭图片</string>
 
 
     <!--Setting About-->

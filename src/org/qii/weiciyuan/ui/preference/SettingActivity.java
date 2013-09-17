@@ -59,6 +59,10 @@ public class SettingActivity extends AbstractAppActivity {
     //performance
     public static final String DISABLE_HARDWARE_ACCELERATED = "pref_disable_hardware_accelerated_key";
 
+    //other
+    public static final String ENABLE_INTERNAL_WEB_BROWSER = "enable_internal_web_browser";
+    public static final String ENABLE_CLICK_TO_CLOSE_GALLERY = "enable_click_to_close_gallery";
+
     //about
     public static final String OFFICIAL_WEIBO = "pref_official_weibo_key";
     public static final String SUGGEST = "pref_suggest_key";
