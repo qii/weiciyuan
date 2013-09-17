@@ -286,17 +286,13 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        switch (oldVersion) {
-            case 19:
-            case 26:
-            case 30:
-                deleteAllTable(db);
-                onCreate(db);
-            default:
-                deleteAllTableExceptAccount(db);
-                createOtherTable(db);
+        if (oldVersion < 34) {
+            deleteAllTable(db);
+            onCreate(db);
+        } else {
+            deleteAllTableExceptAccount(db);
+            createOtherTable(db);
         }
-
 
     }
 
