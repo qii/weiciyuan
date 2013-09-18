@@ -96,7 +96,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
 
         @Override
         public void pushProgress(int progress, int max) {
-            publishProgress(progress, max);
+            onProgressUpdate(progress, max);
         }
     };
 

@@ -353,7 +353,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
     FileDownloaderHttpHelper.DownloadListener downloadListener = new FileDownloaderHttpHelper.DownloadListener() {
         @Override
         public void pushProgress(int progress, int max) {
-            publishProgress(progress, max);
+            onProgressUpdate(progress, max);
         }
 
         @Override
