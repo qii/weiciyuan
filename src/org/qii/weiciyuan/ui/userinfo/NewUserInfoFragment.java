@@ -858,8 +858,10 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             for (MessageBean msg : bean.getItemList()) {
                 msg.setUser(o);
             }
-            GlobalContext.getInstance().updateUserInfo(o);
-            AccountDBTask.asyncUpdateMyProfile(GlobalContext.getInstance().getAccountBean(), o);
+            if (isMyself()) {
+                GlobalContext.getInstance().updateUserInfo(o);
+                AccountDBTask.asyncUpdateMyProfile(GlobalContext.getInstance().getAccountBean(), o);
+            }
             getAdapter().notifyDataSetChanged();
             stopRefreshMenuAnimationIfPossible();
             super.onPostExecute(o);
