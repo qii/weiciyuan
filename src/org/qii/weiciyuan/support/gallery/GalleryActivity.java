@@ -58,8 +58,6 @@ public class GalleryActivity extends Activity {
 
     private boolean alreadyShowPicturesTooLargeHint = false;
 
-    private HashSet<Integer> largePicsPositions = new HashSet<Integer>();
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.galleryactivity_layout);
@@ -432,7 +430,6 @@ public class GalleryActivity extends Activity {
     }
 
     private void readLarge(WebView large, String url, String bitmapPath) {
-        largePicsPositions.add(GalleryActivity.this.urls.indexOf(url));
         large.setVisibility(View.VISIBLE);
         bindImageViewLongClickListener(large, url, bitmapPath);
         if (SettingUtility.allowClickToCloseGallery()) {
