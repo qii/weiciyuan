@@ -58,6 +58,8 @@ public class GalleryActivity extends Activity {
 
     private boolean alreadyShowPicturesTooLargeHint = false;
 
+    private HashSet<Integer> largePicsPositions = new HashSet<Integer>();
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.galleryactivity_layout);
@@ -197,6 +199,7 @@ public class GalleryActivity extends Activity {
         WebView large = (WebView) contentView.findViewById(R.id.large);
         large.setBackgroundColor(getResources().getColor(R.color.transparent));
         large.setVisibility(View.INVISIBLE);
+        large.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         TextView wait = (TextView) contentView.findViewById(R.id.wait);
 
@@ -340,7 +343,7 @@ public class GalleryActivity extends Activity {
     }
 
 
-    private void readPicture(ImageView imageView, WebView gif, WebView large, TextView readError, String url, String bitmapPath) {
+    private void readPicture(final ImageView imageView, WebView gif, WebView large, final TextView readError, final String url, final String bitmapPath) {
 
         if (bitmapPath.endsWith(".gif")) {
             readGif(gif, large, readError, url, bitmapPath);
@@ -359,33 +362,38 @@ public class GalleryActivity extends Activity {
         }
 
         if (isThisBitmapTooLarge) {
-
             readLarge(large, url, bitmapPath);
-
             return;
-//            imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-//            PhotoView photoView = (PhotoView) imageView;
-//            photoView.setMaxScale(15);
         }
+        new MyAsyncTask<Void, Bitmap, Bitmap>() {
 
-        Bitmap bitmap = null;
-        try {
-            bitmap = ImageTool.decodeBitmapFromSDCard(bitmapPath, IMAGEVIEW_SOFT_LAYER_MAX_WIDTH, IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT);
-        } catch (OutOfMemoryError ignored) {
+            @Override
+            protected Bitmap doInBackground(Void... params) {
+                Bitmap bitmap = null;
+                try {
+                    bitmap = ImageTool.decodeBitmapFromSDCard(bitmapPath, IMAGEVIEW_SOFT_LAYER_MAX_WIDTH, IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT);
+                } catch (OutOfMemoryError ignored) {
 
-        }
+                }
 
-        if (bitmap != null) {
-            imageView.setVisibility(View.VISIBLE);
-            imageView.setImageBitmap(bitmap);
-            bindImageViewLongClickListener(imageView, url, bitmapPath);
-            readError.setVisibility(View.INVISIBLE);
-        } else {
-            readError.setText(getString(R.string.picture_read_failed));
-            imageView.setVisibility(View.INVISIBLE);
-            readError.setVisibility(View.VISIBLE);
-        }
+                return bitmap;
+            }
 
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                super.onPostExecute(bitmap);
+                if (bitmap != null) {
+                    imageView.setVisibility(View.VISIBLE);
+                    imageView.setImageBitmap(bitmap);
+                    bindImageViewLongClickListener(imageView, url, bitmapPath);
+                    readError.setVisibility(View.INVISIBLE);
+                } else {
+                    readError.setText(getString(R.string.picture_read_failed));
+                    imageView.setVisibility(View.INVISIBLE);
+                    readError.setVisibility(View.VISIBLE);
+                }
+            }
+        }.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void readGif(WebView webView, WebView large, TextView readError, String url, String bitmapPath) {
@@ -424,6 +432,7 @@ public class GalleryActivity extends Activity {
     }
 
     private void readLarge(WebView large, String url, String bitmapPath) {
+        largePicsPositions.add(GalleryActivity.this.urls.indexOf(url));
         large.setVisibility(View.VISIBLE);
         bindImageViewLongClickListener(large, url, bitmapPath);
         if (SettingUtility.allowClickToCloseGallery()) {
