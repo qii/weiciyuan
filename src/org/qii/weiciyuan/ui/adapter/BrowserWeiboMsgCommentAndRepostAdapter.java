@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
@@ -24,6 +26,7 @@ import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.lib.TimeTextView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -439,6 +442,46 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
             TimeLineBitmapDownloader.getInstance().downloadAvatar(view, user, false);
         } else {
             view.setVisibility(View.GONE);
+        }
+    }
+
+
+    public void removeCommentItem(final int postion) {
+        if (postion >= 0 && postion < commentListBean.size()) {
+            Animation anim = AnimationUtils.loadAnimation(
+                    fragment.getActivity(), R.anim.account_delete_slide_out_right
+            );
+
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    commentListBean.remove(postion);
+                    BrowserWeiboMsgCommentAndRepostAdapter.this.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            int positonInListView = postion + 1;
+            int start = listView.getFirstVisiblePosition();
+            int end = listView.getLastVisiblePosition();
+
+            if (positonInListView >= start && positonInListView <= end) {
+                int positionInCurrentScreen = postion - start;
+                listView.getChildAt(positionInCurrentScreen + 1).startAnimation(anim);
+            } else {
+                commentListBean.remove(postion);
+                BrowserWeiboMsgCommentAndRepostAdapter.this.notifyDataSetChanged();
+            }
+
         }
     }
 }

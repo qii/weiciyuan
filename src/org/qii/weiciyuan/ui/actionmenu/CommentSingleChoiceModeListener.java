@@ -159,7 +159,7 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
                 break;
             case R.id.menu_remove:
 
-                int position = listView.getCheckedItemPosition() - 1;
+                int position = listView.getCheckedItemPosition() - listView.getHeaderViewsCount();
                 RemoveDialog dialog = new RemoveDialog(position);
                 dialog.setTargetFragment(fragment, 0);
                 dialog.show(fragment.getFragmentManager(), "");

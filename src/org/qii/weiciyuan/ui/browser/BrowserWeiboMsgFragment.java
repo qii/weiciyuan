@@ -23,6 +23,7 @@ import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.RepostListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
+import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
 import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
 import org.qii.weiciyuan.support.asyncdrawable.MsgDetailReadWorker;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
@@ -42,6 +43,7 @@ import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.BrowserWeiboMsgCommentAndRepostAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
+import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 import org.qii.weiciyuan.ui.loader.CommentsByIdMsgLoader;
 import org.qii.weiciyuan.ui.loader.RepostByIdMsgLoader;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
@@ -50,7 +52,7 @@ import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
  * User: qii
  * Date: 12-9-1
  */
-public class BrowserWeiboMsgFragment extends AbstractAppFragment {
+public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRemoveItem {
 
     private MessageBean msg;
 
@@ -87,6 +89,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
     private BroadcastReceiver sendCommentCompletedReceiver;
     private BroadcastReceiver sendRepostCompletedReceiver;
+
+
+    private RemoveTask removeTask;
 
 
     private static class BrowserWeiboMsgLayout {
@@ -634,33 +639,31 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
         view.setVisibility(View.GONE);
     }
 
-//    private View.OnClickListener picOnClickListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            Object object = v.getTag();
-//            if (object != null && (Boolean) object) {
-//                Intent intent = new Intent(getActivity(), BrowserBigPicActivity.class);
-//                if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
-//                    intent.putExtra("msg", msg);
-//                } else {
-//                    intent.putExtra("msg", msg.getRetweeted_status());
-//                }
-//                startActivity(intent);
-//            } else {
-//                if (picTask != null) {
-//                    picTask.cancel(true);
-//                }
-//                if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
-//                    picTask = new MsgDetailReadWorker(layout.content_pic, msg);
-//                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-//                } else {
-//                    picTask = new MsgDetailReadWorker(layout.repost_pic, msg.getRetweeted_status());
-//                    picTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-//
-//                }
-//            }
-//        }
-//    };
+    public void clearActionMode() {
+        if (mActionMode != null) {
+
+            mActionMode.finish();
+            mActionMode = null;
+        }
+        if (getListView() != null && getListView().getCheckedItemCount() > 0) {
+            getListView().clearChoices();
+            if (adapter != null) adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void removeItem(int position) {
+        clearActionMode();
+        if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+            removeTask = new RemoveTask(GlobalContext.getInstance().getSpecialToken(), commentList.getItemList().get(position).getId(), position);
+            removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    @Override
+    public void removeCancel() {
+        clearActionMode();
+    }
 
     private ListView getListView() {
         return listView;
@@ -962,5 +965,48 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment {
 
         }
     };
+
+    class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
+
+        String token;
+        String id;
+        int positon;
+        WeiboException e;
+
+        public RemoveTask(String token, String id, int positon) {
+            this.token = token;
+            this.id = id;
+            this.positon = positon;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            DestroyCommentDao dao = new DestroyCommentDao(token, id);
+            try {
+                return dao.destroy();
+            } catch (WeiboException e) {
+                this.e = e;
+                cancel(true);
+                return false;
+            }
+        }
+
+        @Override
+        protected void onCancelled(Boolean aBoolean) {
+            super.onCancelled(aBoolean);
+            if (Utility.isAllNotNull(getActivity(), this.e)) {
+                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (aBoolean) {
+                adapter.removeCommentItem(positon);
+
+            }
+        }
+    }
 
 }
