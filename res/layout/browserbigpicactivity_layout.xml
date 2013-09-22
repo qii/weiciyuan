@@ -29,6 +29,7 @@
     </FrameLayout>
 
     <RelativeLayout
+        android:visibility="gone"
         android:orientation="vertical"
         android:id="@+id/image_options"
         android:background="#77000000"
