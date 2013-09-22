@@ -651,9 +651,12 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
         }
     }
 
+    //only can remove comment
     @Override
     public void removeItem(int position) {
         clearActionMode();
+        if (!isCommentList)
+            return;
         if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
             removeTask = new RemoveTask(GlobalContext.getInstance().getSpecialToken(), commentList.getItemList().get(position).getId(), position);
             removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
