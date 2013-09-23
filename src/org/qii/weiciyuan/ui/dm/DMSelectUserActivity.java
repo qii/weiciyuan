@@ -1,8 +1,10 @@
 package org.qii.weiciyuan.ui.dm;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,7 @@ import java.util.List;
 public class DMSelectUserActivity extends AbstractAppActivity implements IUserInfo {
 
     private List<UserBean> data;
+    private ProgressBar suggestProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,12 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setDisplayShowTitleEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        View title = getLayoutInflater().inflate(R.layout.dmselectuseractivity_title_layout, null);
+        suggestProgressBar = (ProgressBar) title.findViewById(R.id.have_suggest_progressbar);
+        getActionBar().setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
+        getActionBar().setDisplayShowCustomEnabled(true);
+
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -68,6 +77,10 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
         return GlobalContext.getInstance().getAccountBean().getInfo();
     }
 
+    public ProgressBar getSuggestProgressBar() {
+        return suggestProgressBar;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
@@ -84,11 +97,13 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
     private class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filterable {
 
         private DMSelectUserActivity activity;
+        private ProgressBar suggestProgressBar;
 
         public AutoCompleteAdapter(DMSelectUserActivity context, int textViewResourceId) {
             super(context, textViewResourceId);
             data = new ArrayList<UserBean>();
             this.activity = context;
+            this.suggestProgressBar = this.activity.getSuggestProgressBar();
         }
 
         @Override
@@ -108,6 +123,14 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
                 protected FilterResults performFiltering(CharSequence constraint) {
                     FilterResults filterResults = new FilterResults();
                     if (constraint != null) {
+
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                suggestProgressBar.setVisibility(View.VISIBLE);
+                            }
+                        });
+
                         SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), constraint.toString());
 
                         try {
@@ -118,6 +141,14 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
                         filterResults.values = data;
                         filterResults.count = data.size();
                     }
+
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            suggestProgressBar.setVisibility(View.INVISIBLE);
+                        }
+                    });
+
                     return filterResults;
                 }
 
