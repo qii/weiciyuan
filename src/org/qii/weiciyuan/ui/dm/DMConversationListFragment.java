@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
 import org.qii.weiciyuan.R;
@@ -243,6 +244,12 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
 
 
     private void send() {
+
+        if (TextUtils.isEmpty(et.getText().toString())) {
+            et.setError(getString(R.string.content_cant_be_empty));
+            return;
+        }
+
         new QuickCommentTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 
