@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearance"
-                android:textStyle="bold"/>
+                android:textStyle="normal"/>
 
             <TextView
                 android:id="@+id/pull_to_refresh_sub_text"

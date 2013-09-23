@@ -37,6 +37,7 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.lib.pulltorefresh.ILoadingLayout;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
+import org.qii.weiciyuan.support.utils.Utility;
 
 
 @SuppressLint("ViewConstructor")
@@ -194,10 +195,10 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
     public final int getContentSize() {
         switch (mScrollDirection) {
             case HORIZONTAL:
-                return mInnerLayout.getWidth();
+                return mInnerLayout.getWidth() > 0 ? mInnerLayout.getWidth() : Utility.dip2px(49);
             case VERTICAL:
             default:
-                return mInnerLayout.getHeight();
+                return mInnerLayout.getHeight() > 0 ? mInnerLayout.getHeight() : Utility.dip2px(49);
         }
     }
 
