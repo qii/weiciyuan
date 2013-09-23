@@ -9,9 +9,10 @@
         android:id="@+id/avatar"
         android:layout_width="@dimen/timeline_avatar_width"
         android:layout_height="@dimen/timeline_avatar_height"
-        android:padding="1px"
-        android:background="@drawable/bg_timeline_avatar"
-        android:layout_marginRight="0dp"
+        android:layout_marginTop="-5dp"
+        android:layout_marginLeft="-5dp"
+        android:layout_marginBottom="-5dp"
+        android:layout_marginRight="3dp"
         android:layout_alignParentRight="true"
         android:clickable="true"/>
 
