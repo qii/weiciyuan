@@ -2,6 +2,9 @@ package org.qii.weiciyuan.support.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 /**
  * User: qii
@@ -16,6 +19,14 @@ public class ThemeUtility {
 //            context = GlobalContext.getInstance();
         TypedArray ta = context.obtainStyledAttributes(attrs);
         return ta.getColor(0, 430);
+
+    }
+
+    //can't find a public theme attr to modify actionbar searchview text color
+    public static void customActionBarSearchViewTextColor(SearchView searchView) {
+        int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        TextView textView = (TextView) searchView.findViewById(id);
+        textView.setTextColor(Color.WHITE);
 
     }
 

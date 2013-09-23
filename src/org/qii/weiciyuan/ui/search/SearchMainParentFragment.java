@@ -17,6 +17,7 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
+import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
@@ -166,6 +167,7 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
         searchView.setIconifiedByDefault(false);
         searchView.setSubmitButtonEnabled(false);
         searchView.setMaxWidth(Utility.dip2px(250));
+        ThemeUtility.customActionBarSearchViewTextColor(searchView);
         searchView.requestFocus();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
