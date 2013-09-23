@@ -18,9 +18,11 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMUserBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyURLSpan;
+import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ListViewTool;
@@ -95,7 +97,7 @@ public class DMUserListAdapter extends BaseAdapter {
         tp.setFakeBoldText(true);
         holder.content = (TextView) convertView.findViewById(R.id.content);
         holder.time = (TextView) convertView.findViewById(R.id.time);
-        holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
+        holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
         return holder;
     }
 
@@ -205,6 +207,7 @@ public class DMUserListAdapter extends BaseAdapter {
     }
 
     protected void buildAvatar(ImageView view, int position, final UserBean user) {
+        ((IWeiciyuanDrawable) view).checkVerified(user);
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
             view.setVisibility(View.VISIBLE);
@@ -229,7 +232,7 @@ public class DMUserListAdapter extends BaseAdapter {
         TextView username;
         TextView content;
         TextView time;
-        ImageView avatar;
+        TimeLineAvatarImageView avatar;
 
     }
 
