@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -204,6 +205,7 @@ public class DMConversationAdapter extends BaseAdapter {
     }
 
     protected void buildAvatar(TimeLineAvatarImageView view, int position, final UserBean user) {
+        ((IWeiciyuanDrawable) view).checkVerified(user);
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
             view.setVisibility(View.VISIBLE);
