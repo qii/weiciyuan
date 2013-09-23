@@ -25,8 +25,6 @@ import org.qii.weiciyuan.ui.main.LeftMenuFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.main.SimpleTwoTabsListener;
 
-import java.util.ArrayList;
-
 /**
  * User: qii
  * Date: 13-5-11
@@ -167,6 +165,7 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         searchView.setIconifiedByDefault(false);
         searchView.setSubmitButtonEnabled(false);
+        searchView.setMaxWidth(Utility.dip2px(250));
         searchView.requestFocus();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
