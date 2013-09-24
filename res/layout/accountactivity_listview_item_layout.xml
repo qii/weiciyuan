@@ -13,7 +13,6 @@
         android:layout_height="50dp"
         android:id="@+id/imageView_avatar"
         android:layout_gravity="center"
-        android:background="@drawable/bg_timeline_avatar"
         android:layout_marginRight="5dp"/>
 
     <LinearLayout
