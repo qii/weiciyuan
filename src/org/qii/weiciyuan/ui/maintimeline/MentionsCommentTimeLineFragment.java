@@ -353,19 +353,26 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     }
 
     private void addNewDataAndRememberPosition(CommentListBean newValue) {
-        newMsgTipBar.setValue(newValue, false);
 
         int size = newValue.getSize();
 
         if (getActivity() != null && newValue.getSize() > 0) {
-            getList().addNewData(newValue);
-            int index = getListView().getFirstVisiblePosition();
+            boolean jumpToTop = getList().getSize() == 0;
+            newMsgTipBar.setValue(newValue, jumpToTop);
 
-            View v = getListView().getChildAt(1);
-            int top = (v == null) ? 0 : v.getTop();
-            getAdapter().notifyDataSetChanged();
-            int ss = index + size;
-            getListView().setSelectionFromTop(ss + 1, top);
+            getList().addNewData(newValue);
+            if (!jumpToTop) {
+                int index = getListView().getFirstVisiblePosition();
+                View v = getListView().getChildAt(1);
+                int top = (v == null) ? 0 : v.getTop();
+                getAdapter().notifyDataSetChanged();
+                int ss = index + size;
+                getListView().setSelectionFromTop(ss + 1, top);
+            } else {
+                newMsgTipBar.clearAndReset();
+                getAdapter().notifyDataSetChanged();
+                getListView().setSelection(0);
+            }
             MentionCommentsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
             saveTimeLinePositionToDB();
         }

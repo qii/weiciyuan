@@ -23,6 +23,7 @@ import java.util.*;
  */
 public class TopTipBar extends TextView {
 
+    //always show toptipbar, or hide itself when handling out of date data (for example user scroll down listview)
     public enum Type {
         ALWAYS, AUTO
     }
