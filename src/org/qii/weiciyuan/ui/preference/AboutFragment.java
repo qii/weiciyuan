@@ -17,6 +17,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.changelogdialog.ChangeLogDialog;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -104,6 +105,7 @@ public class AboutFragment extends PreferenceFragment {
         });
 
         buildCacheSummary();
+        buildLogSummary();
 
         findPreference(SettingActivity.SAVED_PIC_PATH).setSummary(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES).getAbsolutePath());
@@ -117,6 +119,7 @@ public class AboutFragment extends PreferenceFragment {
             @Override
             public void onReceive(Context context, Intent intent) {
                 buildCacheSummary();
+                buildLogSummary();
             }
         };
 
@@ -134,6 +137,15 @@ public class AboutFragment extends PreferenceFragment {
             findPreference(SettingActivity.CACHE_PATH).setSummary(cachedDir.getAbsolutePath());
         } else {
             findPreference(SettingActivity.CACHE_PATH).setSummary(getString(R.string.sd_card_in_not_mounted));
+        }
+    }
+
+    private void buildLogSummary() {
+        File cachedDir = GlobalContext.getInstance().getExternalCacheDir();
+        if (cachedDir != null) {
+            findPreference(SettingActivity.SAVED_LOG_PATH).setSummary(FileManager.getLogDir());
+        } else {
+            findPreference(SettingActivity.SAVED_LOG_PATH).setSummary(getString(R.string.sd_card_in_not_mounted));
         }
     }
 

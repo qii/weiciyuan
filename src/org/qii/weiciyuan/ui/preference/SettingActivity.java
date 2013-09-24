@@ -71,6 +71,7 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String DONATE = "pref_donate_key";
     public static final String CACHE_PATH = "pref_cache_path_key";
     public static final String SAVED_PIC_PATH = "pref_saved_pic_path_key";
+    public static final String SAVED_LOG_PATH = "pref_saved_log_path_key";
     public static final String AUTHOR = "pref_author_key";
 
 

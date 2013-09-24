@@ -113,6 +113,13 @@
 
         </Preference>
 
+        <Preference
+            android:key="pref_saved_log_path_key"
+            android:title="@string/pref_saved_log_path_title"
+            >
+
+        </Preference>
+
 
     </PreferenceCategory>
 
