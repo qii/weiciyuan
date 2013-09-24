@@ -12,15 +12,15 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
 import com.slidingmenu.lib.SlidingMenu;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.database.CommentToMeTimeLineDBTask;
 import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
 import org.qii.weiciyuan.support.database.MentionWeiboTimeLineDBTask;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -121,6 +121,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
         switchCategory(currentIndex);
 
+        layout.nickname.setText(GlobalContext.getInstance().getCurrentAccountName());
+        TimeLineBitmapDownloader.getInstance().display(layout.avatar, -1, -1, GlobalContext.getInstance().getAccountBean().getInfo().getAvatar_large(), FileLocationMethod.avatar_large);
     }
 
     public void switchCategory(int position) {
@@ -586,8 +588,13 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.slidingdrawer_contents, container, false);
+        final ScrollView view = (ScrollView) inflater.inflate(R.layout.slidingdrawer_contents, container, false);
+
         layout = new Layout();
+
+        layout.avatar = (ImageView) view.findViewById(R.id.avatar);
+        layout.nickname = (TextView) view.findViewById(R.id.nickname);
+
         layout.home = (LinearLayout) view.findViewById(R.id.btn_home);
         layout.mention = (LinearLayout) view.findViewById(R.id.btn_mention);
         layout.comment = (LinearLayout) view.findViewById(R.id.btn_comment);
@@ -772,6 +779,10 @@ public class LeftMenuFragment extends AbstractAppFragment {
     }
 
     private class Layout {
+
+        ImageView avatar;
+        TextView nickname;
+
         LinearLayout home;
         LinearLayout mention;
         LinearLayout comment;

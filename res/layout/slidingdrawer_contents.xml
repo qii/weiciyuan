@@ -18,6 +18,39 @@
         android:paddingBottom="8dp"
         android:baselineAligned="false">
 
+        <LinearLayout
+            android:visibility="visible"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:padding="6dp"
+                android:src="#ff2f2f2f"
+                android:background="@color/white"/>
+
+            <TextView
+                android:id="@+id/nickname"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+
+        </LinearLayout>
+
         <include layout="@layout/drawer_contents"/>
     </LinearLayout>
 </ScrollView>
