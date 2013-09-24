@@ -27,8 +27,7 @@ import android.util.Log;
 import android.view.*;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.lib.pulltorefresh.internal.LoadingLayout;
 import org.qii.weiciyuan.support.lib.pulltorefresh.internal.RotateLoadingLayout;
@@ -350,7 +349,33 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
                     // If we're already refreshing, just scroll back to the top
                     if (isRefreshing()) {
+                        if (getRefreshableView() instanceof AdapterView) {
+                            int count = 0;
+                            Adapter adapter = ((AdapterView) getRefreshableView()).getAdapter();
+                            if (adapter instanceof HeaderViewListAdapter) {
+                                count = ((HeaderViewListAdapter) adapter).getWrappedAdapter().getCount();
+                            }
+
+                            if (count > 0) {
+                                smoothScrollTo(0);
+                                return true;
+                            }
+
+                            switch (mCurrentMode) {
+                                case MANUAL_REFRESH_ONLY:
+                                case PULL_FROM_END:
+                                    smoothScrollTo(getFooterSize(), null);
+                                    break;
+                                default:
+                                case PULL_FROM_START:
+                                    smoothScrollTo(-getHeaderSize(), null);
+                                    break;
+                            }
+                            return true;
+                        }
                         smoothScrollTo(0);
+
+
                         return true;
                     }
 
@@ -1171,7 +1196,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
      *         change
      */
     private void pullEvent() {
-        final int newScrollValue;
+        int newScrollValue;
         final int itemDimension;
         final float initialMotionValue, lastMotionValue;
 
@@ -1197,6 +1222,31 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
                 newScrollValue = Math.round(Math.min(initialMotionValue - lastMotionValue, 0) / FRICTION);
                 itemDimension = getHeaderSize();
                 break;
+        }
+
+
+        if (getRefreshableView() instanceof AdapterView && isRefreshing()) {
+            int count = 0;
+            Adapter adapter = ((AdapterView) getRefreshableView()).getAdapter();
+            if (adapter instanceof HeaderViewListAdapter) {
+                count = ((HeaderViewListAdapter) adapter).getWrappedAdapter().getCount();
+            }
+
+            if (count == 0) {
+
+
+                switch (mCurrentMode) {
+                    case MANUAL_REFRESH_ONLY:
+                    case PULL_FROM_END:
+                        newScrollValue += getFooterSize();
+                        break;
+                    default:
+                    case PULL_FROM_START:
+                        newScrollValue += -getHeaderSize();
+                        break;
+                }
+
+            }
         }
 
         setHeaderScroll(newScrollValue);
