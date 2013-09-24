@@ -198,6 +198,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
             if (getActivity() == null) {
                 return;
             }
+
+            if (getLoaderManager().getLoader(OLD_MSG_LOADER_ID) != null)
+                return;
+
             loadOldMsg(null);
         }
     };
@@ -208,6 +212,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
             if (getActivity() == null) {
                 return;
             }
+
+            if (getLoaderManager().getLoader(NEW_MSG_LOADER_ID) != null)
+                return;
+
             loadNewMsg();
         }
     };
