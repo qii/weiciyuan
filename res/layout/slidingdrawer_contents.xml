@@ -26,10 +26,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="155dp"
             >
 
-            <ImageView
+            <Spinner
                 android:id="@+id/avatar"
                 android:layout_marginTop="8dp"
                 android:layout_gravity="center_horizontal"
@@ -38,6 +38,7 @@
                 android:padding="6dp"
                 android:src="#ff2f2f2f"
                 android:background="@color/white"/>
+
 
             <TextView
                 android:id="@+id/nickname"
