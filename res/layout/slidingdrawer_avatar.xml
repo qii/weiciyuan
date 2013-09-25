@@ -3,6 +3,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:orientation="vertical"
              android:padding="0dp"
+             android:foreground="@drawable/slindingdrawer_avatar"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
@@ -12,6 +13,12 @@
         android:layout_height="match_parent">
 
     </ImageView>
+
+    <ImageView
+        android:layout_height="18dp"
+        android:layout_width="18dp"
+        android:src="@drawable/account_spinner_icon"
+        android:layout_gravity="right|bottom"/>
 
 </FrameLayout>
 

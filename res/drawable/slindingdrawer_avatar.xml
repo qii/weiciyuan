@@ -1,0 +1,7 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true"
+          android:drawable="@drawable/action_bar_item_pressed"/>
+
+    <item android:drawable="@color/transparent"/>
+</selector>
