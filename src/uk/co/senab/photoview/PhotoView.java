@@ -50,6 +50,10 @@ public class PhotoView extends ImageView implements IPhotoView {
         }
     }
 
+    public PhotoViewAttacher getAttacher() {
+        return mAttacher;
+    }
+
     @Override
     public boolean canZoom() {
         return mAttacher.canZoom();

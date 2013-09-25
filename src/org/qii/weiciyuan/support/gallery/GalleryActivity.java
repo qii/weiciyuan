@@ -1,10 +1,15 @@
 package org.qii.weiciyuan.support.gallery;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.*;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +17,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.*;
+import android.view.animation.DecelerateInterpolator;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -58,12 +64,20 @@ public class GalleryActivity extends Activity {
 
     private boolean alreadyShowPicturesTooLargeHint = false;
 
+    private ImageView animationView;
+
+    private Rect rect;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.galleryactivity_layout);
 
+        animationView = (ImageView) findViewById(R.id.animation);
+
         position = (TextView) findViewById(R.id.position);
         TextView sum = (TextView) findViewById(R.id.sum);
+
+        rect = getIntent().getParcelableExtra("rect");
 
         MessageBean msg = getIntent().getParcelableExtra("msg");
         ArrayList<String> tmp = msg.getThumbnailPicUrls();
@@ -178,14 +192,72 @@ public class GalleryActivity extends Activity {
 
     private void handlePage(int position, View contentView, boolean fromInstantiateItem) {
 
-        PhotoView imageView = (PhotoView) contentView.findViewById(R.id.image);
+        final PhotoView imageView = (PhotoView) contentView.findViewById(R.id.image);
         imageView.setVisibility(View.INVISIBLE);
 
         if (SettingUtility.allowClickToCloseGallery()) {
             imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
                 @Override
                 public void onPhotoTap(View view, float x, float y) {
-                    GalleryActivity.this.finish();
+
+                    if (rect == null
+                            || imageView.getAttacher().getImageView() == null
+                            || (!(imageView.getAttacher().getImageView().getDrawable() instanceof BitmapDrawable))) {
+                        GalleryActivity.this.finish();
+                        return;
+                    }
+
+                    animationView.setImageDrawable(imageView.getAttacher().getImageView().getDrawable());
+
+                    pager.setVisibility(View.INVISIBLE);
+
+                    final Rect startBounds = rect;
+                    final Rect finalBounds = new Rect();
+                    final Point globalOffset = new Point();
+
+
+                    animationView.getGlobalVisibleRect(finalBounds, globalOffset);
+
+                    startBounds.offset(-globalOffset.x, -globalOffset.y);
+                    finalBounds.offset(-globalOffset.x, -globalOffset.y);
+
+
+                    float startScale;
+                    if ((float) finalBounds.width() / finalBounds.height()
+                            > (float) startBounds.width() / startBounds.height()) {
+                        // Extend start bounds horizontally
+                        startScale = (float) startBounds.height() / finalBounds.height();
+                        float startWidth = startScale * finalBounds.width();
+                        float deltaWidth = (startWidth - startBounds.width()) / 2;
+                        startBounds.left -= deltaWidth;
+                        startBounds.right += deltaWidth;
+                    } else {
+                        // Extend start bounds vertically
+                        startScale = (float) startBounds.width() / finalBounds.width();
+                        float startHeight = startScale * finalBounds.height();
+                        float deltaHeight = (startHeight - startBounds.height()) / 2;
+                        startBounds.top -= deltaHeight;
+                        startBounds.bottom += deltaHeight;
+                    }
+
+
+                    animationView.setPivotX(0f);
+                    animationView.setPivotY(0f);
+
+                    final float startScaleFinal = startScale;
+
+
+                    animationView.animate().setInterpolator(new DecelerateInterpolator()).x(startBounds.left)
+                            .y(startBounds.top).scaleY(startScaleFinal).scaleX(startScaleFinal).setDuration(300)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    GalleryActivity.this.finish();
+                                    overridePendingTransition(0, 0);
+                                }
+                            }).start();
+
                 }
             });
         }
