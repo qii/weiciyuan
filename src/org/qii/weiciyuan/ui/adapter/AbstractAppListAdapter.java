@@ -650,7 +650,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                     Intent intent = new Intent(getActivity(), GalleryActivity.class);
                     intent.putExtra("msg", msg);
 
-                    if (!clipped)
+                    if (!clipped && bitmap != null)
                         intent.putExtra("rect", rect);
 
                     getActivity().startActivity(intent);
