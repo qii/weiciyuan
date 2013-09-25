@@ -50,6 +50,8 @@ public class GalleryActivity extends Activity {
     private static final int IMAGEVIEW_SOFT_LAYER_MAX_WIDTH = 2000;
     private static final int IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT = 3000;
 
+    private static final String CURRENT_VISIBLE_PAGE = "currentPage";
+
     private ArrayList<String> urls = new ArrayList<String>();
 
     private TextView position;
@@ -101,6 +103,27 @@ public class GalleryActivity extends Activity {
     }
 
     @Override
+    public void onBackPressed() {
+
+        if (rect == null) {
+            super.onBackPressed();
+            return;
+        }
+
+        View view = pager.findViewWithTag(CURRENT_VISIBLE_PAGE);
+
+        final PhotoView imageView = (PhotoView) view.findViewById(R.id.image);
+
+        if (imageView.getAttacher().getImageView() == null
+                || (!(imageView.getAttacher().getImageView().getDrawable() instanceof BitmapDrawable))) {
+            super.onBackPressed();
+            return;
+        }
+
+        animateClose(imageView);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         for (String url : urls) {
@@ -115,6 +138,61 @@ public class GalleryActivity extends Activity {
 
         System.gc();
     }
+
+
+    private void animateClose(PhotoView imageView) {
+        animationView.setImageDrawable(imageView.getAttacher().getImageView().getDrawable());
+
+        pager.setVisibility(View.INVISIBLE);
+
+        final Rect startBounds = rect;
+        final Rect finalBounds = new Rect();
+        final Point globalOffset = new Point();
+
+
+        animationView.getGlobalVisibleRect(finalBounds, globalOffset);
+
+        startBounds.offset(-globalOffset.x, -globalOffset.y);
+        finalBounds.offset(-globalOffset.x, -globalOffset.y);
+
+
+        float startScale;
+        if ((float) finalBounds.width() / finalBounds.height()
+                > (float) startBounds.width() / startBounds.height()) {
+            // Extend start bounds horizontally
+            startScale = (float) startBounds.height() / finalBounds.height();
+            float startWidth = startScale * finalBounds.width();
+            float deltaWidth = (startWidth - startBounds.width()) / 2;
+            startBounds.left -= deltaWidth;
+            startBounds.right += deltaWidth;
+        } else {
+            // Extend start bounds vertically
+            startScale = (float) startBounds.width() / finalBounds.width();
+            float startHeight = startScale * finalBounds.height();
+            float deltaHeight = (startHeight - startBounds.height()) / 2;
+            startBounds.top -= deltaHeight;
+            startBounds.bottom += deltaHeight;
+        }
+
+
+        animationView.setPivotX(0f);
+        animationView.setPivotY(0f);
+
+        final float startScaleFinal = startScale;
+
+
+        animationView.animate().setInterpolator(new DecelerateInterpolator()).x(startBounds.left)
+                .y(startBounds.top).scaleY(startScaleFinal).scaleX(startScaleFinal).setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        GalleryActivity.this.finish();
+                        overridePendingTransition(0, 0);
+                    }
+                }).start();
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -165,6 +243,8 @@ public class GalleryActivity extends Activity {
             if (contentView == null)
                 return;
 
+            contentView.setTag(CURRENT_VISIBLE_PAGE);
+
             if (SettingUtility.allowClickToCloseGallery()) {
                 contentView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -207,58 +287,10 @@ public class GalleryActivity extends Activity {
                         return;
                     }
 
-                    animationView.setImageDrawable(imageView.getAttacher().getImageView().getDrawable());
-
-                    pager.setVisibility(View.INVISIBLE);
-
-                    final Rect startBounds = rect;
-                    final Rect finalBounds = new Rect();
-                    final Point globalOffset = new Point();
-
-
-                    animationView.getGlobalVisibleRect(finalBounds, globalOffset);
-
-                    startBounds.offset(-globalOffset.x, -globalOffset.y);
-                    finalBounds.offset(-globalOffset.x, -globalOffset.y);
-
-
-                    float startScale;
-                    if ((float) finalBounds.width() / finalBounds.height()
-                            > (float) startBounds.width() / startBounds.height()) {
-                        // Extend start bounds horizontally
-                        startScale = (float) startBounds.height() / finalBounds.height();
-                        float startWidth = startScale * finalBounds.width();
-                        float deltaWidth = (startWidth - startBounds.width()) / 2;
-                        startBounds.left -= deltaWidth;
-                        startBounds.right += deltaWidth;
-                    } else {
-                        // Extend start bounds vertically
-                        startScale = (float) startBounds.width() / finalBounds.width();
-                        float startHeight = startScale * finalBounds.height();
-                        float deltaHeight = (startHeight - startBounds.height()) / 2;
-                        startBounds.top -= deltaHeight;
-                        startBounds.bottom += deltaHeight;
-                    }
-
-
-                    animationView.setPivotX(0f);
-                    animationView.setPivotY(0f);
-
-                    final float startScaleFinal = startScale;
-
-
-                    animationView.animate().setInterpolator(new DecelerateInterpolator()).x(startBounds.left)
-                            .y(startBounds.top).scaleY(startScaleFinal).scaleX(startScaleFinal).setDuration(300)
-                            .setListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    super.onAnimationEnd(animation);
-                                    GalleryActivity.this.finish();
-                                    overridePendingTransition(0, 0);
-                                }
-                            }).start();
+                    animateClose(imageView);
 
                 }
+
             });
         }
 
