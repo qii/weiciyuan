@@ -105,7 +105,7 @@ public class GalleryActivity extends Activity {
     @Override
     public void onBackPressed() {
 
-        if (rect == null) {
+        if (rect == null || urls.size() > 1) {
             super.onBackPressed();
             return;
         }
