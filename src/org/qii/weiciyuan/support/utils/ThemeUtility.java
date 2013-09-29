@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.widget.SearchView;
 import android.widget.TextView;
+import org.qii.weiciyuan.R;
 
 /**
  * User: qii
@@ -28,6 +29,11 @@ public class ThemeUtility {
         TextView textView = (TextView) searchView.findViewById(id);
         textView.setTextColor(Color.WHITE);
 
+    }
+
+    //android:actionModeShareDrawalbe is not a public attr
+    public static int getActionBarShareItemIcon() {
+        return R.drawable.ic_menu_share_holo_dark;
     }
 
 }

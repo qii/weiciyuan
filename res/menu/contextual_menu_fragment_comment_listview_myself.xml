@@ -5,30 +5,30 @@
         android:id="@+id/menu_view"
         android:title="@string/view"
         android:showAsAction="ifRoom|withText"
-        android:visible="false" />
+        android:visible="false"/>
 
     <item
         android:id="@+id/menu_comment"
         android:icon="?reply_to_comment"
         android:title="@string/reply_to_comment"
-        android:showAsAction="ifRoom|withText" />
+        android:showAsAction="ifRoom|withText"/>
 
     <item
         android:id="@+id/menu_share"
         android:title="@string/share"
         android:icon="?share"
         android:showAsAction="never"
-        android:actionProviderClass="android.widget.ShareActionProvider" />
+        android:actionProviderClass="org.qii.weiciyuan.support.lib.ModifiedIconShareActionProvider"/>
 
     <item
         android:id="@+id/menu_copy"
         android:title="@string/copy_to_clipboard"
         android:icon="?copy"
-        android:showAsAction="never" />
+        android:showAsAction="never"/>
 
     <item
         android:id="@+id/menu_remove"
         android:icon="?remove"
         android:title="@string/delete"
-        android:showAsAction="ifRoom|withText" />
+        android:showAsAction="ifRoom|withText"/>
 </menu>

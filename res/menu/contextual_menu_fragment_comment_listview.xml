@@ -18,7 +18,7 @@
         android:title="@string/share"
         android:icon="?share"
         android:showAsAction="ifRoom"
-        android:actionProviderClass="android.widget.ShareActionProvider"/>
+        android:actionProviderClass="org.qii.weiciyuan.support.lib.ModifiedIconShareActionProvider"/>
 
     <item
         android:id="@+id/menu_copy"
