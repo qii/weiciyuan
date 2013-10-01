@@ -2,7 +2,7 @@ package org.qii.weiciyuan.ui.loader;
 
 import android.content.Context;
 import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
+import org.qii.weiciyuan.dao.maintimeline.MentionsWeiboTimeLineDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 
 import java.util.concurrent.locks.Lock;
@@ -31,7 +31,7 @@ public class MentionsWeiboMsgLoader extends AbstractAsyncNetRequestTaskLoader<Me
 
 
     public MessageListBean loadData() throws WeiboException {
-        MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
+        MentionsWeiboTimeLineDao dao = new MentionsWeiboTimeLineDao(token);
         dao.setSince_id(sinceId);
         dao.setMax_id(maxId);
         MessageListBean result = null;

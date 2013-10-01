@@ -22,7 +22,7 @@ import java.util.Map;
  * User: qii
  * Date: 12-7-28
  */
-public class MainMentionsTimeLineDao {
+public class MentionsWeiboTimeLineDao {
 
     private String getMsgListJson() throws WeiboException {
         String url = URLHelper.STATUSES_MENTIONS_TIMELINE;
@@ -103,47 +103,47 @@ public class MainMentionsTimeLineDao {
     private String filter_by_type;
     private String trim_user;
 
-    public MainMentionsTimeLineDao(String access_token) {
+    public MentionsWeiboTimeLineDao(String access_token) {
         this.access_token = access_token;
         this.count = SettingUtility.getMsgCount();
     }
 
-    public MainMentionsTimeLineDao setSince_id(String since_id) {
+    public MentionsWeiboTimeLineDao setSince_id(String since_id) {
         this.since_id = since_id;
         return this;
     }
 
-    public MainMentionsTimeLineDao setMax_id(String max_id) {
+    public MentionsWeiboTimeLineDao setMax_id(String max_id) {
         this.max_id = max_id;
         return this;
     }
 
-    public MainMentionsTimeLineDao setCount(String count) {
+    public MentionsWeiboTimeLineDao setCount(String count) {
         this.count = count;
         return this;
     }
 
-    public MainMentionsTimeLineDao setPage(String page) {
+    public MentionsWeiboTimeLineDao setPage(String page) {
         this.page = page;
         return this;
     }
 
-    public MainMentionsTimeLineDao setFilter_by_author(String filter_by_author) {
+    public MentionsWeiboTimeLineDao setFilter_by_author(String filter_by_author) {
         this.filter_by_author = filter_by_author;
         return this;
     }
 
-    public MainMentionsTimeLineDao setFilter_by_source(String filter_by_source) {
+    public MentionsWeiboTimeLineDao setFilter_by_source(String filter_by_source) {
         this.filter_by_source = filter_by_source;
         return this;
     }
 
-    public MainMentionsTimeLineDao setFilter_by_type(String filter_by_type) {
+    public MentionsWeiboTimeLineDao setFilter_by_type(String filter_by_type) {
         this.filter_by_type = filter_by_type;
         return this;
     }
 
-    public MainMentionsTimeLineDao setTrim_user(String trim_user) {
+    public MentionsWeiboTimeLineDao setTrim_user(String trim_user) {
         this.trim_user = trim_user;
         return this;
     }

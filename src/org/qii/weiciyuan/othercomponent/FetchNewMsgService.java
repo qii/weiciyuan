@@ -11,7 +11,7 @@ import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.android.CommentTimeLineData;
 import org.qii.weiciyuan.bean.android.MentionTimeLineData;
 import org.qii.weiciyuan.dao.maintimeline.MainCommentsTimeLineDao;
-import org.qii.weiciyuan.dao.maintimeline.MainMentionsTimeLineDao;
+import org.qii.weiciyuan.dao.maintimeline.MentionsWeiboTimeLineDao;
 import org.qii.weiciyuan.dao.maintimeline.MentionsCommentTimeLineDao;
 import org.qii.weiciyuan.dao.unread.UnreadDao;
 import org.qii.weiciyuan.support.database.AccountDBTask;
@@ -105,7 +105,7 @@ public class FetchNewMsgService extends IntentService {
         }
 
         if (unreadMentionStatusCount > 0 && SettingUtility.allowMentionToMe()) {
-            MainMentionsTimeLineDao dao = new MainMentionsTimeLineDao(token);
+            MentionsWeiboTimeLineDao dao = new MentionsWeiboTimeLineDao(token);
             MessageListBean oldData = null;
             MentionTimeLineData commentTimeLineData = MentionWeiboTimeLineDBTask.getRepostLineMsgList(accountBean.getUid());
             if (commentTimeLineData != null) {
