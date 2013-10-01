@@ -47,13 +47,13 @@ public class FriendsMsgLoader extends AbstractAsyncNetRequestTaskLoader<MessageL
         result = tmp;
         if (isLoadNewData() && Utility.isWifi(getContext()) && SettingUtility.isWifiUnlimitedMsgCount()) {
             int retryCount = 0;
-            while (tmp.getReceivedNumber() == Integer.valueOf(SettingUtility.getMsgCount()) && retryCount < MAX_RETRY_COUNT) {
+            while (tmp.getReceivedCount() >= Integer.valueOf(SettingUtility.getMsgCount()) && retryCount < MAX_RETRY_COUNT) {
                 String tmpMaxId = tmp.getItemList().get(tmp.getItemList().size() - 1).getId();
                 tmp = get(token, currentGroupId, sinceId, tmpMaxId);
                 result.addOldData(tmp);
                 retryCount++;
             }
-            if (tmp.getReceivedNumber() == Integer.valueOf(SettingUtility.getMsgCount())) {
+            if (tmp.getReceivedCount() >= Integer.valueOf(SettingUtility.getMsgCount())) {
                 result.getItemList().add(null);
             }
         } else {

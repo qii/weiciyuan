@@ -83,7 +83,7 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
     }
 
 
-    public int getReceivedNumber() {
+    public int getReceivedCount() {
         return getSize() + removedCount;
     }
 
@@ -98,8 +98,8 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
             return;
         }
 
-        boolean receivedCountBelowRequestCount = newValue.getReceivedNumber() < Integer.valueOf(SettingUtility.getMsgCount());
-        boolean receivedCountEqualRequestCount = newValue.getReceivedNumber() >= Integer.valueOf(SettingUtility.getMsgCount());
+        boolean receivedCountBelowRequestCount = newValue.getReceivedCount() < Integer.valueOf(SettingUtility.getMsgCount());
+        boolean receivedCountEqualRequestCount = newValue.getReceivedCount() >= Integer.valueOf(SettingUtility.getMsgCount());
         if (receivedCountEqualRequestCount && this.getSize() > 0) {
             newValue.getItemList().add(null);
         }
