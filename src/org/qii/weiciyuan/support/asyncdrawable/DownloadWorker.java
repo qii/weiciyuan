@@ -3,7 +3,7 @@ package org.qii.weiciyuan.support.asyncdrawable;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.imagetool.ImageUtility;
+import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 
 import java.util.concurrent.CopyOnWriteArrayList;

@@ -28,7 +28,7 @@ import org.qii.weiciyuan.dao.user.EditMyProfileDao;
 import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarReadWorker;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.imagetool.ImageUtility;
+import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;

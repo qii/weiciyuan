@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.support.imagetool;
+package org.qii.weiciyuan.support.imageutility;
 
 import android.content.Context;
 import android.graphics.Bitmap;

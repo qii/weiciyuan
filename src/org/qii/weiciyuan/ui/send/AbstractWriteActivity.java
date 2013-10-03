@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.imagetool.ImageUtility;
+import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.CheatSheet;
 import org.qii.weiciyuan.support.lib.SmileyPicker;
 import org.qii.weiciyuan.support.utils.GlobalContext;

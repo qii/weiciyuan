@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.imagetool.ImageUtility;
+import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 

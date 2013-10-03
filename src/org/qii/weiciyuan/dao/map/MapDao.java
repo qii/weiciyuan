@@ -12,7 +12,7 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.imagetool.ImageUtility;
+import org.qii.weiciyuan.support.imageutility.ImageUtility;
 
 import java.util.HashMap;
 import java.util.Map;
