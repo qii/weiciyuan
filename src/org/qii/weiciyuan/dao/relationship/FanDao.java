@@ -7,7 +7,7 @@ import org.qii.weiciyuan.dao.URLHelper;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class FanDao {
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Post, url, map);
         try {
             UserBean value = new Gson().fromJson(jsonData, UserBean.class);
-            if (value != null ) {
+            if (value != null) {
                 return value;
             }
         } catch (JsonSyntaxException e) {

@@ -4,7 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.io.Serializable;
 

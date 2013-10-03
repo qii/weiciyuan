@@ -16,7 +16,7 @@ import org.qii.weiciyuan.dao.group.GroupListDao;
 import org.qii.weiciyuan.dao.group.ModifyGroupMemberDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.friendgroup.ManageGroupActivity;
 

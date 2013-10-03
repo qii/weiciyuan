@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.qii.weiciyuan.bean.AtUserBean;
 import org.qii.weiciyuan.support.database.table.AtUsersTable;
-import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.util.ArrayList;
 import java.util.List;

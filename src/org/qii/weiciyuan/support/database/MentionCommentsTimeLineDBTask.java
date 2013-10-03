@@ -14,7 +14,7 @@ import org.qii.weiciyuan.bean.android.CommentTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.table.MentionCommentsTable;
 import org.qii.weiciyuan.support.utils.AppConfig;
-import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.util.ArrayList;
 import java.util.List;

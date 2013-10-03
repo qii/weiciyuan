@@ -3,7 +3,7 @@ package org.qii.weiciyuan.othercomponent;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.utils.AppConfig;
-import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 

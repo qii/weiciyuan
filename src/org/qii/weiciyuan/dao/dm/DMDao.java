@@ -9,7 +9,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class DMDao {
 
     private String access_token;
     private String cursor = "0";
-    private String count ;
+    private String count;
 
     public DMDao(String token) {
         this.access_token = token;

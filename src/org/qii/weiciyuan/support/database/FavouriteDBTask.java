@@ -13,7 +13,7 @@ import org.qii.weiciyuan.bean.FavListBean;
 import org.qii.weiciyuan.bean.android.FavouriteTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.table.FavouriteTable;
-import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.util.ArrayList;
 import java.util.List;

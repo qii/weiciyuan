@@ -16,7 +16,7 @@ import org.qii.weiciyuan.bean.android.MessageTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.table.HomeTable;
 import org.qii.weiciyuan.support.utils.AppConfig;
-import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
 import java.util.ArrayList;

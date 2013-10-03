@@ -1,4 +1,4 @@
-package org.qii.weiciyuan.support.utils;
+package org.qii.weiciyuan.support.debug;
 
 /**
  * User: Jiang Qi

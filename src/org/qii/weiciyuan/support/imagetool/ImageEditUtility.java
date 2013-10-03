@@ -5,7 +5,7 @@ import android.graphics.*;
 import android.view.View;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.utils.AppLogger;
+import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.io.File;
 import java.io.FileOutputStream;

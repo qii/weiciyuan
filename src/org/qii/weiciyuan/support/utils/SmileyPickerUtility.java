@@ -8,6 +8,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 /**
