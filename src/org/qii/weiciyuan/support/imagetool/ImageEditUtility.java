@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
  * User: Jiang Qi
  * Date: 12-8-14
  */
-public class ImageEdit {
+public class ImageEditUtility {
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         return getRoundedCornerBitmap(bitmap, 3);
     }

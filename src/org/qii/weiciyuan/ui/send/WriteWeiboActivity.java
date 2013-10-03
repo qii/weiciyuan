@@ -27,7 +27,7 @@ import org.qii.weiciyuan.othercomponent.sendweiboservice.SendWeiboService;
 import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.imagetool.ImageEdit;
+import org.qii.weiciyuan.support.imagetool.ImageEditUtility;
 import org.qii.weiciyuan.support.imagetool.ImageUtility;
 import org.qii.weiciyuan.support.lib.CheatSheet;
 import org.qii.weiciyuan.support.lib.KeyboardControlEditText;
@@ -897,7 +897,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
         @Override
         protected String doInBackground(Void... params) {
-            return ImageEdit.convertStringToBitmap(WriteWeiboActivity.this, content);
+            return ImageEditUtility.convertStringToBitmap(WriteWeiboActivity.this, content);
 
         }
 
