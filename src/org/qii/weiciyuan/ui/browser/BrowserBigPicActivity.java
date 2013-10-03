@@ -22,7 +22,7 @@
 //import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 //import org.qii.weiciyuan.support.file.FileLocationMethod;
 //import org.qii.weiciyuan.support.file.FileManager;
-//import org.qii.weiciyuan.support.imagetool.ImageTool;
+//import org.qii.weiciyuan.support.imagetool.ImageUtility;
 //import org.qii.weiciyuan.support.lib.CheatSheet;
 //import org.qii.weiciyuan.support.lib.CircleProgressView;
 //import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -283,7 +283,7 @@
 //            } else {
 //                String data = (this.hd ? msg.getOriginal_pic() : msg.getBmiddle_pic());
 //                FileLocationMethod method = (this.hd ? FileLocationMethod.picture_large : FileLocationMethod.picture_bmiddle);
-//                return ImageTool.getLargePictureWithoutRoundedCorner(data, downloadListener, method);
+//                return ImageUtility.getLargePictureWithoutRoundedCorner(data, downloadListener, method);
 //
 //            }
 //

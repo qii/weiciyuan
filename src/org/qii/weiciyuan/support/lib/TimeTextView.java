@@ -3,7 +3,7 @@ package org.qii.weiciyuan.support.lib;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import org.qii.weiciyuan.support.utils.TimeTool;
+import org.qii.weiciyuan.support.utils.TimeUtility;
 
 /**
  * User: qii
@@ -25,7 +25,7 @@ public class TimeTextView extends TextView {
 
     public void setTime(long mills) {
 
-        String time = TimeTool.getListTime(mills);
+        String time = TimeUtility.getListTime(mills);
         if (!getText().toString().equals(time))
             setText(time);
 

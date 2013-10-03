@@ -28,7 +28,7 @@ import org.qii.weiciyuan.dao.user.EditMyProfileDao;
 import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarReadWorker;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.imagetool.ImageUtility;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -327,7 +327,7 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
             int avatarWidth = getResources().getDimensionPixelSize(R.dimen.profile_avatar_width);
             int avatarHeight = getResources().getDimensionPixelSize(R.dimen.profile_avatar_height);
 
-            return ImageTool.getRoundedCornerPic(picPath, avatarWidth, avatarHeight);
+            return ImageUtility.getRoundedCornerPic(picPath, avatarWidth, avatarHeight);
 
         }
 

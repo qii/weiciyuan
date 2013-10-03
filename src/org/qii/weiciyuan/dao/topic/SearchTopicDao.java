@@ -10,7 +10,7 @@ import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
-import org.qii.weiciyuan.support.utils.TimeTool;
+import org.qii.weiciyuan.support.utils.TimeUtility;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -56,7 +56,7 @@ public class SearchTopicDao {
             AppLogger.e(e.getMessage());
             return null;
         }
-        if (value != null && value.getStatuses()!=null&&value.getStatuses().size() > 0) {
+        if (value != null && value.getStatuses() != null && value.getStatuses().size() > 0) {
             List<MessageBean> msgList = value.getStatuses();
             Iterator<MessageBean> iterator = msgList.iterator();
 
@@ -67,7 +67,7 @@ public class SearchTopicDao {
                     iterator.remove();
                 } else {
                     msg.getListViewSpannableString();
-                    TimeTool.dealMills(msg);
+                    TimeUtility.dealMills(msg);
                 }
             }
 

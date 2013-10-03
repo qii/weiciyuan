@@ -13,7 +13,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.imagetool.ImageUtility;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -160,10 +160,10 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         switch (method) {
             case avatar_small:
             case avatar_large:
-                bitmap = ImageTool.getRoundedCornerPic(path, width, height, Utility.dip2px(2));
+                bitmap = ImageUtility.getRoundedCornerPic(path, width, height, Utility.dip2px(2));
                 break;
             default:
-                bitmap = ImageTool.getRoundedCornerPic(path, width, height, 0);
+                bitmap = ImageUtility.getRoundedCornerPic(path, width, height, 0);
                 break;
         }
 
@@ -223,7 +223,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
 
                 if (bitmap != null) {
                     if (IWeiciyuanDrawable != null)
-                        IWeiciyuanDrawable.setGifFlag(ImageTool.isThisPictureGif(getUrl()));
+                        IWeiciyuanDrawable.setGifFlag(ImageUtility.isThisPictureGif(getUrl()));
                     playImageViewAnimation(imageView, bitmap);
                     lruCache.put(data, bitmap);
                 } else if (failedResult != null) {

@@ -19,7 +19,7 @@ import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileUploaderHttpHelper;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.imagetool.ImageUtility;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -199,7 +199,7 @@ public class SendWeiboService extends Service {
 
             try {
                 if (!TextUtils.isEmpty(picPath)) {
-                    String uploadPicPath = ImageTool.compressPic(SendWeiboService.this, picPath);
+                    String uploadPicPath = ImageUtility.compressPic(SendWeiboService.this, picPath);
                     size = new File(uploadPicPath).length();
                     result = sendPic(uploadPicPath);
                 } else {
@@ -325,7 +325,7 @@ public class SendWeiboService extends Service {
                     bigTextStyle.setSummaryText(account.getUsernick());
                     builder.setStyle(bigTextStyle);
                 } else {
-                    Bitmap bitmap = ImageTool.getNotificationSendFailedPic(picPath);
+                    Bitmap bitmap = ImageUtility.getNotificationSendFailedPic(picPath);
                     if (bitmap != null) {
                         Notification.BigPictureStyle bigPictureStyle = new Notification.BigPictureStyle(builder);
                         bigPictureStyle.setBigContentTitle(getString(R.string.send_faile_click_to_open));

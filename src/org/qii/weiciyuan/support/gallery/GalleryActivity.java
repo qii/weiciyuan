@@ -28,7 +28,7 @@ import org.qii.weiciyuan.support.asyncdrawable.TaskCache;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.imagetool.ImageUtility;
 import org.qii.weiciyuan.support.lib.CircleProgressView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -312,7 +312,7 @@ public class GalleryActivity extends Activity {
         boolean shouldDownLoadPicture = !fromInstantiateItem || (fromInstantiateItem && Utility.isWifi(GalleryActivity.this));
 
         //sometime picture is not downloaded completely, but android already can read it....
-        if (ImageTool.isThisBitmapCanRead(path)
+        if (ImageUtility.isThisBitmapCanRead(path)
                 && taskMap.get(urls.get(position)) == null
                 && TaskCache.isThisUrlTaskFinished(urls.get(position))) {
             wait.setVisibility(View.INVISIBLE);
@@ -434,7 +434,7 @@ public class GalleryActivity extends Activity {
                 readError.setVisibility(View.INVISIBLE);
             }
 
-            if (!ImageTool.isThisBitmapCanRead(bitmapPath)) {
+            if (!ImageUtility.isThisBitmapCanRead(bitmapPath)) {
                 Toast.makeText(GalleryActivity.this, R.string.download_finished_but_cant_read_picture_file, Toast.LENGTH_SHORT).show();
             }
 
@@ -452,12 +452,12 @@ public class GalleryActivity extends Activity {
             return;
         }
 
-        if (!ImageTool.isThisBitmapCanRead(bitmapPath)) {
+        if (!ImageUtility.isThisBitmapCanRead(bitmapPath)) {
             Toast.makeText(GalleryActivity.this, R.string.download_finished_but_cant_read_picture_file, Toast.LENGTH_SHORT).show();
         }
 
 
-        boolean isThisBitmapTooLarge = ImageTool.isThisBitmapTooLargeToRead(bitmapPath);
+        boolean isThisBitmapTooLarge = ImageUtility.isThisBitmapTooLargeToRead(bitmapPath);
         if (isThisBitmapTooLarge && !alreadyShowPicturesTooLargeHint) {
             Toast.makeText(GalleryActivity.this, R.string.picture_is_too_large_so_enable_software_layer, Toast.LENGTH_LONG).show();
             alreadyShowPicturesTooLargeHint = true;
@@ -473,7 +473,7 @@ public class GalleryActivity extends Activity {
             protected Bitmap doInBackground(Void... params) {
                 Bitmap bitmap = null;
                 try {
-                    bitmap = ImageTool.decodeBitmapFromSDCard(bitmapPath, IMAGEVIEW_SOFT_LAYER_MAX_WIDTH, IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT);
+                    bitmap = ImageUtility.decodeBitmapFromSDCard(bitmapPath, IMAGEVIEW_SOFT_LAYER_MAX_WIDTH, IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT);
                 } catch (OutOfMemoryError ignored) {
 
                 }

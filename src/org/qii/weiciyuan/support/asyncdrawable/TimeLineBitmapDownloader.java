@@ -14,7 +14,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.imagetool.ImageUtility;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
@@ -260,7 +260,7 @@ public class TimeLineBitmapDownloader {
             if (view.getImageView().getAlpha() != 1.0f) {
                 view.getImageView().setAlpha(1.0f);
             }
-            view.setGifFlag(ImageTool.isThisPictureGif(urlKey));
+            view.setGifFlag(ImageUtility.isThisPictureGif(urlKey));
             cancelPotentialDownload(urlKey, view.getImageView());
         } else {
 
@@ -268,7 +268,7 @@ public class TimeLineBitmapDownloader {
                 view.setImageDrawable(defaultBG);
                 if (view.getProgressBar() != null)
                     view.getProgressBar().setVisibility(View.INVISIBLE);
-                view.setGifFlag(ImageTool.isThisPictureGif(urlKey));
+                view.setGifFlag(ImageUtility.isThisPictureGif(urlKey));
                 return;
             }
 
@@ -345,7 +345,7 @@ public class TimeLineBitmapDownloader {
                 boolean downloaded = TaskCache.waitForPictureDownload(
                         url, null, FileManager.getFilePathFromUrl(url, method), method);
                 if (downloaded)
-                    bitmap = ImageTool.readNormalPic(FileManager.getFilePathFromUrl(url, method), width, height);
+                    bitmap = ImageUtility.readNormalPic(FileManager.getFilePathFromUrl(url, method), width, height);
                 return bitmap;
             }
 

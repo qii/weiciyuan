@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.imagetool.ImageUtility;
 import org.qii.weiciyuan.support.lib.CheatSheet;
 import org.qii.weiciyuan.support.lib.SmileyPicker;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -88,9 +88,9 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         int avatarWidth = getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width);
         int avatarHeight = getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height);
 
-        Bitmap bitmap = ImageTool.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getAvatar_large(), avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
+        Bitmap bitmap = ImageUtility.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getAvatar_large(), avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
         if (bitmap == null) {
-            bitmap = ImageTool.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getProfile_image_url(), avatarWidth, avatarHeight, FileLocationMethod.avatar_small);
+            bitmap = ImageUtility.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getProfile_image_url(), avatarWidth, avatarHeight, FileLocationMethod.avatar_small);
         }
         if (bitmap != null) {
             actionBar.setIcon(new BitmapDrawable(getResources(), bitmap));

@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.imagetool.ImageUtility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -52,8 +52,8 @@ public class BrowserLocalPicActivity extends AbstractAppActivity {
 
         if (!TextUtils.isEmpty(path)) {
 
-            if (ImageTool.isThisBitmapCanRead(path)) {
-                int[] size = ImageTool.getBitmapSize(path);
+            if (ImageUtility.isThisBitmapCanRead(path)) {
+                int[] size = ImageUtility.getBitmapSize(path);
                 getActionBar().setSubtitle(String.valueOf(size[0]) + "x" + String.valueOf(size[1]));
             }
 

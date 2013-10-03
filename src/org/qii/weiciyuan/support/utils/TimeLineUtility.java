@@ -174,7 +174,7 @@ public class TimeLineUtility {
                 value.removedCountPlus();
             } else {
                 msg.getListViewSpannableString();
-                TimeTool.dealMills(msg);
+                TimeUtility.dealMills(msg);
             }
         }
     }

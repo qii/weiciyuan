@@ -19,7 +19,7 @@ public class ObjectToStringUtility {
     public static String toString(CommentBean comment) {
         UserBean userBean = comment.getUser();
         String username = (userBean != null ? userBean.getScreen_name() : "user is null");
-        return String.format("%s @%s:%s", TimeTool.getListTime(comment.getMills()), username, comment.getText());
+        return String.format("%s @%s:%s", TimeUtility.getListTime(comment.getMills()), username, comment.getText());
     }
 
     public static String toString(CommentListBean commentList) {
@@ -41,19 +41,19 @@ public class ObjectToStringUtility {
     public static String toString(MessageBean msg) {
         UserBean userBean = msg.getUser();
         String username = (userBean != null ? userBean.getScreen_name() : "user is null");
-        return String.format("%s @%s:%s", TimeTool.getListTime(msg.getMills()), username, msg.getText());
+        return String.format("%s @%s:%s", TimeUtility.getListTime(msg.getMills()), username, msg.getText());
     }
 
     public static String toString(DMBean dm) {
         UserBean userBean = dm.getUser();
         String username = (userBean != null ? userBean.getScreen_name() : "user is null");
-        return String.format("%s @%s:%s", TimeTool.getListTime(dm.getMills()), username, dm.getText());
+        return String.format("%s @%s:%s", TimeUtility.getListTime(dm.getMills()), username, dm.getText());
     }
 
     public static String toString(DMUserBean dm) {
         UserBean userBean = dm.getUser();
         String username = (userBean != null ? userBean.getScreen_name() : "user is null");
-        return String.format("%s @%s:%s", TimeTool.getListTime(dm.getMills()), username, dm.getText());
+        return String.format("%s @%s:%s", TimeUtility.getListTime(dm.getMills()), username, dm.getText());
     }
 
     public static String toString(DMUserListBean listBean) {

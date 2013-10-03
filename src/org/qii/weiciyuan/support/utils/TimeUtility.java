@@ -10,7 +10,7 @@ import java.util.Date;
  * User: qii
  * Date: 12-8-28
  */
-public class TimeTool {
+public class TimeUtility {
 
     private static int MILL_MIN = 1000 * 60;
     private static int MILL_HOUR = MILL_MIN * 60;
@@ -36,7 +36,7 @@ public class TimeTool {
     private static java.text.SimpleDateFormat yearFormat = null;
 
 
-    private TimeTool() {
+    private TimeUtility() {
 
     }
 
@@ -46,7 +46,7 @@ public class TimeTool {
         if (bean.getMills() != 0) {
             msg = bean.getMills();
         } else {
-            TimeTool.dealMills(bean);
+            TimeUtility.dealMills(bean);
             msg = bean.getMills();
         }
         return getListTime(msg);

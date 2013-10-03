@@ -28,7 +28,7 @@ import org.qii.weiciyuan.support.database.DraftDBManager;
 import org.qii.weiciyuan.support.database.draftbean.StatusDraftBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imagetool.ImageEdit;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.imagetool.ImageUtility;
 import org.qii.weiciyuan.support.lib.CheatSheet;
 import org.qii.weiciyuan.support.lib.KeyboardControlEditText;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -173,7 +173,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
     private void enablePicture() {
 
-        Bitmap bitmap = ImageTool.getWriteWeiboPictureThumblr(picPath);
+        Bitmap bitmap = ImageUtility.getWriteWeiboPictureThumblr(picPath);
         if (bitmap != null) {
             ((ImageButton) findViewById(R.id.menu_add_pic)).setImageBitmap(bitmap);
         }
@@ -380,9 +380,9 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         int avatarWidth = getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width);
         int avatarHeight = getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height);
 
-        Bitmap bitmap = ImageTool.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getAvatar_large(), avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
+        Bitmap bitmap = ImageUtility.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getAvatar_large(), avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
         if (bitmap == null) {
-            bitmap = ImageTool.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getProfile_image_url(), avatarWidth, avatarHeight, FileLocationMethod.avatar_small);
+            bitmap = ImageUtility.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getProfile_image_url(), avatarWidth, avatarHeight, FileLocationMethod.avatar_small);
         }
         if (bitmap != null) {
             actionBar.setIcon(new BitmapDrawable(getResources(), bitmap));

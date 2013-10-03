@@ -7,7 +7,7 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
-import org.qii.weiciyuan.support.utils.TimeTool;
+import org.qii.weiciyuan.support.utils.TimeUtility;
 
 /**
  * User: Jiang Qi
@@ -110,7 +110,7 @@ public class CommentBean extends ItemBean implements Parcelable {
 
     public long getMills() {
         if (mills == 0L) {
-            TimeTool.dealMills(this);
+            TimeUtility.dealMills(this);
         }
         return mills;
     }
@@ -125,7 +125,7 @@ public class CommentBean extends ItemBean implements Parcelable {
     }
 
     public String getListviewItemShowTime() {
-        return TimeTool.getListTime(this);
+        return TimeUtility.getListTime(this);
     }
 
 

@@ -11,7 +11,7 @@ import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.TimeLineUtility;
-import org.qii.weiciyuan.support.utils.TimeTool;
+import org.qii.weiciyuan.support.utils.TimeUtility;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +54,7 @@ public class StatusesTimeLineDao {
 
         if (value != null && value.getSize() > 0) {
             for (MessageBean b : value.getItemList()) {
-                TimeTool.dealMills(b);
+                TimeUtility.dealMills(b);
                 TimeLineUtility.addJustHighLightLinks(b);
 
             }

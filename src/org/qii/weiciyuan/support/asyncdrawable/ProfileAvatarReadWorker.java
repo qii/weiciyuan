@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.imagetool.ImageUtility;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
@@ -45,7 +45,7 @@ public class ProfileAvatarReadWorker extends MyAsyncTask<String, Integer, Bitmap
         int avatarWidth = globalContext.getResources().getDimensionPixelSize(R.dimen.profile_avatar_width);
         int avatarHeight = globalContext.getResources().getDimensionPixelSize(R.dimen.profile_avatar_height);
 
-        return ImageTool.getRoundedCornerPic(path, avatarWidth, avatarHeight);
+        return ImageUtility.getRoundedCornerPic(path, avatarWidth, avatarHeight);
 
     }
 

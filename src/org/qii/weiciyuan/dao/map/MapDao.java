@@ -12,7 +12,7 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.imagetool.ImageUtility;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class MapDao {
         if (!downloaded)
             return null;
 
-        Bitmap bitmap = ImageTool.readNormalPic(filePath, -1, -1);
+        Bitmap bitmap = ImageUtility.readNormalPic(filePath, -1, -1);
 
         return bitmap;
 

@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.imagetool.ImageUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 
 /**
@@ -41,7 +41,7 @@ public class BrowserPictureDialog extends DialogFragment {
             this.path = savedInstanceState.getString("path");
         }
 
-        Bitmap bitmap = ImageTool.decodeBitmapFromSDCard(path, Utility.dip2px(250), Utility.dip2px(250));
+        Bitmap bitmap = ImageUtility.decodeBitmapFromSDCard(path, Utility.dip2px(250), Utility.dip2px(250));
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View customView = getActivity().getLayoutInflater().inflate(R.layout.browserpicturedialog_layout, null);
         ((ImageView) customView.findViewById(R.id.imageview)).setImageBitmap(bitmap);

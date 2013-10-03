@@ -13,7 +13,7 @@ import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.gallery.GalleryActivity;
-import org.qii.weiciyuan.support.imagetool.ImageTool;
+import org.qii.weiciyuan.support.imagetool.ImageUtility;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -45,7 +45,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
 
         oriPath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
 
-        if (ImageTool.isThisBitmapCanRead(oriPath)
+        if (ImageUtility.isThisBitmapCanRead(oriPath)
                 && TaskCache.isThisUrlTaskFinished(msg.getOriginal_pic())) {
 
             onPostExecute(oriPath);
@@ -56,7 +56,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
 
         middlePath = FileManager.getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
 
-        if (ImageTool.isThisBitmapCanRead(middlePath)
+        if (ImageUtility.isThisBitmapCanRead(middlePath)
                 && TaskCache.isThisUrlTaskFinished(msg.getBmiddle_pic())) {
             onPostExecute(middlePath);
             cancel(true);
@@ -163,7 +163,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
 
     private void readNormalPic(String path) {
 
-        Bitmap bitmap = ImageTool.readNormalPic(path, 2000, 2000);
+        Bitmap bitmap = ImageUtility.readNormalPic(path, 2000, 2000);
 
         view.setTag(true);
         view.getImageView().setTag(true);

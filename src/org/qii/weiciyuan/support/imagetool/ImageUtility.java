@@ -24,7 +24,7 @@ import java.io.IOException;
  * User: Jiang Qi
  * Date: 12-8-3
  */
-public class ImageTool {
+public class ImageUtility {
 
 
     public static final int WITH_UNDEFINED = -1;
