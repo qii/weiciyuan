@@ -27,11 +27,7 @@ public class TimeLineAvatarImageView extends PerformanceImageView implements IWe
     private boolean showPressedState = true;
     private boolean pressed = false;
 
-    private static final int V_TYPE_NONE = -1;
-    private static final int V_TYPE_PERSONAL = 0;
-    private static final int V_TYPE_ENTERPRISE = 1;
-
-    private int vType = V_TYPE_NONE;
+    private int vType = UserBean.V_TYPE_NONE;
 
 
     public TimeLineAvatarImageView(Context context) {
@@ -52,11 +48,11 @@ public class TimeLineAvatarImageView extends PerformanceImageView implements IWe
         super.onDraw(canvas);
         Bitmap bitmap;
         switch (vType) {
-            case V_TYPE_PERSONAL:
+            case UserBean.V_TYPE_PERSONAL:
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_vip);
                 canvas.drawBitmap(bitmap, getWidth() - bitmap.getWidth(), getHeight() - bitmap.getHeight(), paint);
                 break;
-            case V_TYPE_ENTERPRISE:
+            case UserBean.V_TYPE_ENTERPRISE:
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_enterprise_vip);
                 canvas.drawBitmap(bitmap, getWidth() - bitmap.getWidth(), getHeight() - bitmap.getHeight(), paint);
                 break;
@@ -126,7 +122,7 @@ public class TimeLineAvatarImageView extends PerformanceImageView implements IWe
 
     public void checkVerified(UserBean user) {
         if (user != null && user.isVerified() && !TextUtils.isEmpty(user.getVerified_reason())) {
-            if (user.getVerified_type() == 0) {
+            if (user.isPersonalV()) {
                 verifiedPersonal();
             } else {
                 verifiedEnterprise();
@@ -137,24 +133,24 @@ public class TimeLineAvatarImageView extends PerformanceImageView implements IWe
     }
 
     private void verifiedPersonal() {
-        if (vType != V_TYPE_PERSONAL) {
-            vType = V_TYPE_PERSONAL;
+        if (vType != UserBean.V_TYPE_PERSONAL) {
+            vType = UserBean.V_TYPE_PERSONAL;
             invalidate();
         }
 
     }
 
     private void verifiedEnterprise() {
-        if (vType != V_TYPE_ENTERPRISE) {
-            vType = V_TYPE_ENTERPRISE;
+        if (vType != UserBean.V_TYPE_ENTERPRISE) {
+            vType = UserBean.V_TYPE_ENTERPRISE;
             invalidate();
         }
 
     }
 
     private void reset() {
-        if (vType != V_TYPE_NONE) {
-            vType = V_TYPE_NONE;
+        if (vType != UserBean.V_TYPE_NONE) {
+            vType = UserBean.V_TYPE_NONE;
             invalidate();
         }
 

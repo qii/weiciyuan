@@ -10,6 +10,18 @@ import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
  */
 public class UserBean implements Parcelable {
 
+    public static final int V_TYPE_NONE = -1;
+    public static final int V_TYPE_PERSONAL = 0;
+    public static final int V_TYPE_ENTERPRISE = 1;
+
+    public boolean isEnterpriseV() {
+        return verified_type == V_TYPE_ENTERPRISE;
+    }
+
+    public boolean isPersonalV() {
+        return verified_type == V_TYPE_PERSONAL;
+    }
+
     public String getId() {
         return id;
     }

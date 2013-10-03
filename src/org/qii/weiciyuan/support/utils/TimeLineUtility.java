@@ -144,7 +144,9 @@ public class TimeLineUtility {
         while (iterator.hasNext()) {
             MessageBean msg = iterator.next();
             UserBean user = msg.getUser();
-            if (user != null && !user.isFollowing()) {
+            if (user == null)
+                continue;
+            if (user.isEnterpriseV() && !user.isFollowing()) {
                 if (!user.getId().equalsIgnoreCase(GlobalContext.getInstance().getCurrentAccountId())) {
                     iterator.remove();
                     value.removedCountPlus();
