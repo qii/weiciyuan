@@ -26,9 +26,8 @@ import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.lib.TimeTextView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
@@ -235,7 +234,7 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
             holder.content.setText(msg.getListViewSpannableString());
 
         } else {
-            ListViewTool.addJustHighLightLinks(msg);
+            TimeLineUtility.addJustHighLightLinks(msg);
             holder.content.setText(msg.getListViewSpannableString());
         }
 

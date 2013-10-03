@@ -24,9 +24,9 @@ import java.util.regex.Matcher;
  * Date: 12-8-29
  * build emotions and clickable string in other threads except UI thread, improve listview scroll performance
  */
-public class ListViewTool {
+public class TimeLineUtility {
 
-    private ListViewTool() {
+    private TimeLineUtility() {
     }
 
 
@@ -62,7 +62,7 @@ public class ListViewTool {
             value.setSpan(weiboSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        ListViewTool.addEmotions(value);
+        TimeLineUtility.addEmotions(value);
         return value;
     }
 
@@ -89,16 +89,16 @@ public class ListViewTool {
         SpannableString value;
 
         if (!TextUtils.isEmpty(name)) {
-            value = ListViewTool.convertNormalStringToSpannableString("@" + name + "：" + oriMsg.getText());
+            value = TimeLineUtility.convertNormalStringToSpannableString("@" + name + "：" + oriMsg.getText());
         } else {
-            value = ListViewTool.convertNormalStringToSpannableString(oriMsg.getText());
+            value = TimeLineUtility.convertNormalStringToSpannableString(oriMsg.getText());
         }
         return value;
     }
 
     public static void addJustHighLightLinks(CommentBean bean) {
 
-        bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
+        bean.setListViewSpannableString(TimeLineUtility.convertNormalStringToSpannableString(bean.getText()));
         bean.getSourceString();
 
         if (bean.getStatus() != null) {
@@ -120,20 +120,20 @@ public class ListViewTool {
         SpannableString value;
 
         if (!TextUtils.isEmpty(name)) {
-            value = ListViewTool.convertNormalStringToSpannableString("@" + name + "：" + bean.getText());
+            value = TimeLineUtility.convertNormalStringToSpannableString("@" + name + "：" + bean.getText());
         } else {
-            value = ListViewTool.convertNormalStringToSpannableString(bean.getText());
+            value = TimeLineUtility.convertNormalStringToSpannableString(bean.getText());
         }
 
         bean.setListViewSpannableString(value);
     }
 
     public static void addJustHighLightLinks(DMUserBean bean) {
-        bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
+        bean.setListViewSpannableString(TimeLineUtility.convertNormalStringToSpannableString(bean.getText()));
     }
 
     public static void addJustHighLightLinks(DMBean bean) {
-        bean.setListViewSpannableString(ListViewTool.convertNormalStringToSpannableString(bean.getText()));
+        bean.setListViewSpannableString(TimeLineUtility.convertNormalStringToSpannableString(bean.getText()));
     }
 
     public static void filterHomeTimeLineSinaWeiboAd(MessageListBean value) {
@@ -169,7 +169,7 @@ public class ListViewTool {
             if (msg.getUser() == null) {
                 iterator.remove();
                 value.removedCountPlus();
-            } else if (SettingUtility.isEnableFilter() && ListViewTool.haveFilterWord(msg, keywordFilter, userFilter, topicFilter, sourceFilter)) {
+            } else if (SettingUtility.isEnableFilter() && TimeLineUtility.haveFilterWord(msg, keywordFilter, userFilter, topicFilter, sourceFilter)) {
                 iterator.remove();
                 value.removedCountPlus();
             } else {

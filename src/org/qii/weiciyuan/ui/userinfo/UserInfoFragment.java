@@ -18,7 +18,7 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
@@ -137,7 +137,7 @@ public class UserInfoFragment extends AbstractAppFragment {
         if (!TextUtils.isEmpty(bean.getUrl())) {
 
             layout.blog_url.setText(bean.getUrl());
-            ListViewTool.addLinks(layout.blog_url);
+            TimeLineUtility.addLinks(layout.blog_url);
             layout.blog_url_layout.setVisibility(View.VISIBLE);
             layout.blog_url.setVisibility(View.VISIBLE);
         } else {

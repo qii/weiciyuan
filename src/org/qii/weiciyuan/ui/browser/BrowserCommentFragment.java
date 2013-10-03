@@ -17,7 +17,7 @@ import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
@@ -119,7 +119,7 @@ public class BrowserCommentFragment extends Fragment {
 
         }
         content.setText(msg.getText());
-        ListViewTool.addLinks(content);
+        TimeLineUtility.addLinks(content);
 
         time.setText(msg.getListviewItemShowTime());
 

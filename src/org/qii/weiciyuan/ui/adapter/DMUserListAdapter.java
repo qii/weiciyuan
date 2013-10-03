@@ -25,7 +25,7 @@ import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
@@ -139,7 +139,7 @@ public class DMUserListAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(msg.getListViewSpannableString())) {
             holder.content.setText(msg.getListViewSpannableString());
         } else {
-            ListViewTool.addJustHighLightLinks(msg);
+            TimeLineUtility.addJustHighLightLinks(msg);
             holder.content.setText(msg.getListViewSpannableString());
         }
 

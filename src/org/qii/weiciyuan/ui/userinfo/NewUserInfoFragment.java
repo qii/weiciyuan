@@ -34,7 +34,7 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
@@ -353,7 +353,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
         if (!TextUtils.isEmpty(userBean.getUrl())) {
             url.setText(userBean.getUrl());
-            ListViewTool.addLinks(url);
+            TimeLineUtility.addLinks(url);
             url.setVisibility(View.VISIBLE);
         } else {
             url.setVisibility(View.GONE);

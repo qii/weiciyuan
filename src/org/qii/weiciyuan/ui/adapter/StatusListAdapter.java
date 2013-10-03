@@ -16,7 +16,7 @@ import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 
 import java.util.List;
@@ -162,7 +162,7 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
                 msgWidths.append(msg.getIdLong(), layoutParams.width);
             }
         } else {
-            ListViewTool.addJustHighLightLinks(msg);
+            TimeLineUtility.addJustHighLightLinks(msg);
             holder.content.setText(msg.getListViewSpannableString());
         }
 

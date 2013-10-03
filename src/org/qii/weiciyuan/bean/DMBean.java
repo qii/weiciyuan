@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import org.qii.weiciyuan.support.utils.ListViewTool;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 import org.qii.weiciyuan.support.utils.TimeTool;
 
@@ -139,7 +139,7 @@ public class DMBean extends ItemBean implements Parcelable {
         if (!TextUtils.isEmpty(listViewSpannableString)) {
             return listViewSpannableString;
         } else {
-            ListViewTool.addJustHighLightLinks(this);
+            TimeLineUtility.addJustHighLightLinks(this);
 
             return listViewSpannableString;
         }
