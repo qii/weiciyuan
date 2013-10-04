@@ -34,6 +34,7 @@ import org.qii.weiciyuan.ui.widgets.QuickSendProgressFragment;
  * User: qii
  * Date: 12-8-13
  */
+@Deprecated
 public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment<RepostListBean> {
 
 

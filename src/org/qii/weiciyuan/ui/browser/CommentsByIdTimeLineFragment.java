@@ -37,6 +37,7 @@ import org.qii.weiciyuan.ui.widgets.QuickSendProgressFragment;
  * User: qii
  * Date: 12-7-29
  */
+@Deprecated
 public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<CommentListBean> implements IRemoveItem {
 
     private LinearLayout quick_repost;
