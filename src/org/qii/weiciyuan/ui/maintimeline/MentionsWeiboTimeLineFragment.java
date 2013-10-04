@@ -20,6 +20,7 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.MentionTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.maintimeline.TimeLineReCmtCountDao;
+import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
 import org.qii.weiciyuan.othercomponent.unreadnotification.NotificationServiceHelper;
 import org.qii.weiciyuan.support.database.MentionWeiboTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -148,12 +149,14 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
             return;
         }
         Intent intent = getActivity().getIntent();
-        MessageListBean mentionsWeibo = (MessageListBean) intent.getParcelableExtra("repost");
+        MessageListBean mentionsWeibo = intent.getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
+        UnreadBean unreadBeanFromNotification = intent.getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
 
         if (mentionsWeibo != null) {
             addUnreadMessage(mentionsWeibo);
+            clearUnreadMentions(unreadBeanFromNotification);
             MessageListBean nullObject = null;
-            intent.putExtra("repost", nullObject);
+            intent.putExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA, nullObject);
             getActivity().setIntent(intent);
         }
     }
@@ -451,12 +454,14 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     private BroadcastReceiver newBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            AccountBean account = (AccountBean) intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+            AccountBean account = intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+            final UnreadBean unreadBean = intent.getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
             if (account == null || !account.getUid().equals(account.getUid())) {
                 return;
             }
-            MessageListBean data = (MessageListBean) intent.getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
+            MessageListBean data = intent.getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
             addUnreadMessage(data);
+            clearUnreadMentions(unreadBean);
         }
     };
 
@@ -513,6 +518,22 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
         }
 
+    }
+
+    private void clearUnreadMentions(final UnreadBean data) {
+        new MyAsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    new ClearUnreadDao(GlobalContext.getInstance().getAccountBean().getAccess_token())
+                            .clearMentionStatusUnread(data, GlobalContext.getInstance().getAccountBean().getUid());
+                } catch (WeiboException ignored) {
+
+                }
+                return null;
+            }
+        }.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 }
 

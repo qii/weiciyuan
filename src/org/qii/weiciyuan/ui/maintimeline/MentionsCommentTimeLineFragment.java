@@ -21,6 +21,7 @@ import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.CommentTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
+import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
 import org.qii.weiciyuan.othercomponent.unreadnotification.NotificationServiceHelper;
 import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -143,12 +144,14 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
             return;
         }
         Intent intent = getActivity().getIntent();
-        CommentListBean mentionsWeibo = (CommentListBean) intent.getParcelableExtra("mentionsComment");
+        CommentListBean mentionsComment = intent.getParcelableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
+        UnreadBean unreadBeanFromNotification = intent.getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
 
-        if (mentionsWeibo != null) {
-            addUnreadMessage(mentionsWeibo);
+        if (mentionsComment != null) {
+            addUnreadMessage(mentionsComment);
+            clearUnreadMentions(unreadBeanFromNotification);
             CommentListBean nullObject = null;
-            intent.putExtra("mentionsComment", nullObject);
+            intent.putExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA, nullObject);
             getActivity().setIntent(intent);
         }
     }
@@ -513,12 +516,14 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     private BroadcastReceiver newBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            AccountBean account = (AccountBean) intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+            AccountBean account = intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+            final UnreadBean unreadBean = intent.getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
             if (account == null || !account.getUid().equals(account.getUid())) {
                 return;
             }
-            CommentListBean data = (CommentListBean) intent.getParcelableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
+            CommentListBean data = intent.getParcelableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
             addUnreadMessage(data);
+            clearUnreadMentions(unreadBean);
         }
     };
 
@@ -529,5 +534,21 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
             if (!dup)
                 addNewDataAndRememberPosition(data);
         }
+    }
+
+    private void clearUnreadMentions(final UnreadBean data) {
+        new MyAsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    new ClearUnreadDao(GlobalContext.getInstance().getAccountBean().getAccess_token())
+                            .clearMentionCommentUnread(data, GlobalContext.getInstance().getAccountBean().getUid());
+                } catch (WeiboException ignored) {
+
+                }
+                return null;
+            }
+        }.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 }

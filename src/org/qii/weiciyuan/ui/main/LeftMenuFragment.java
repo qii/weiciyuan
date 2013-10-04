@@ -24,6 +24,7 @@ import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
 import org.qii.weiciyuan.support.database.MentionWeiboTimeLineDBTask;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.utils.AppEventAction;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.dm.DMUserListActivity;
@@ -846,7 +847,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
                     public void onClick(View v) {
 
                         Intent start = new Intent(getActivity(), MainTimeLineActivity.class);
-                        start.putExtra("account", accountBean);
+                        start.putExtra(BundleArgsConstants.ACCOUNT_EXTRA, accountBean);
                         getActivity().startActivity(start);
                         getActivity().finish();
 

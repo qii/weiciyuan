@@ -27,6 +27,7 @@ public class NotificationServiceHelper extends Service {
     public static final String MENTIONS_WEIBO_ARG = "repost";
     public static final String MENTIONS_COMMENT_ARG = "mentionsComment";
     public static final String COMMENTS_TO_ME_ARG = "comment";
+    public static final String PENDING_INTENT_INNER_ARG = "pendingIntentInner";
 
 
     public static int getMentionsWeiboNotificationId(AccountBean accountBean) {

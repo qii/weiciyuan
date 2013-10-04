@@ -10,7 +10,9 @@ import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
  * User: Jiang Qi
@@ -67,12 +69,24 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
             Notification notification = new ICSNotification(context, accountBean, commentsToMeData, mentionsWeiboData, mentionsCommentData, unreadBean).get();
             notificationManager.notify(Integer.valueOf(accountBean.getUid()), notification);
         } else {
+
+
+            Intent clickNotificationToOpenAppPendingIntentInner = new Intent(GlobalContext.getInstance(), MainTimeLineActivity.class);
+            clickNotificationToOpenAppPendingIntentInner.putExtra(BundleArgsConstants.ACCOUNT_EXTRA, accountBean);
+            clickNotificationToOpenAppPendingIntentInner.putExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA, mentionsWeiboData);
+            clickNotificationToOpenAppPendingIntentInner.putExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA, mentionsCommentData);
+            clickNotificationToOpenAppPendingIntentInner.putExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA, commentsToMeData);
+            clickNotificationToOpenAppPendingIntentInner.putExtra(BundleArgsConstants.UNREAD_EXTRA, unreadBean);
+            clickNotificationToOpenAppPendingIntentInner.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+
             if (mentionsWeiboData != null && mentionsWeiboData.getSize() > 0) {
                 Intent intent = new Intent(context, JBMentionsWeiboNotificationServiceHelper.class);
                 intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
                 intent.putExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG, mentionsWeiboData);
                 intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
                 intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
+                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG, clickNotificationToOpenAppPendingIntentInner);
                 context.startService(intent);
             }
 
@@ -82,6 +96,7 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
                 intent.putExtra(NotificationServiceHelper.MENTIONS_COMMENT_ARG, mentionsCommentData);
                 intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
                 intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
+                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG, clickNotificationToOpenAppPendingIntentInner);
                 context.startService(intent);
             }
 
@@ -91,6 +106,7 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
                 intent.putExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG, commentsToMeData);
                 intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
                 intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
+                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG, clickNotificationToOpenAppPendingIntentInner);
                 context.startService(intent);
             }
         }

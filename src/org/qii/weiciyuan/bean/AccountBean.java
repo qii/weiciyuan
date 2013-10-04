@@ -2,6 +2,7 @@ package org.qii.weiciyuan.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 /**
@@ -109,4 +110,14 @@ public class AccountBean implements Parcelable {
                     return new AccountBean[size];
                 }
             };
+
+
+    @Override
+    public boolean equals(Object o) {
+
+        return o instanceof AccountBean
+                && !TextUtils.isEmpty(((AccountBean) o).getUid())
+                && ((AccountBean) o).getUid().equalsIgnoreCase(getUid());
+
+    }
 }

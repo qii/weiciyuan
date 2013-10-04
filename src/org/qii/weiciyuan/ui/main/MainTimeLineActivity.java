@@ -25,7 +25,10 @@ import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.*;
+import org.qii.weiciyuan.support.utils.AppEventAction;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.dm.DMUserListFragment;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
@@ -284,6 +287,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         } else {
             finish();
             overridePendingTransition(0, 0);
+            intent.putExtra("account", newAccountBean);
             startActivity(intent);
             overridePendingTransition(0, 0);
         }
