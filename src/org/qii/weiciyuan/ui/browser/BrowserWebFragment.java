@@ -216,7 +216,8 @@ public class BrowserWebFragment extends Fragment {
             ActionBar actionBar = getActivity().getActionBar();
             if (actionBar == null)
                 return;
-            actionBar.setTitle(view.getTitle());
+            if (!TextUtils.isEmpty(view.getTitle()))
+                actionBar.setTitle(view.getTitle());
             finishRefreshAnimation();
         }
     }
@@ -231,7 +232,8 @@ public class BrowserWebFragment extends Fragment {
                 ActionBar actionBar = getActivity().getActionBar();
                 if (actionBar == null)
                     return;
-                actionBar.setTitle(view.getTitle());
+                if (!TextUtils.isEmpty(view.getTitle()))
+                    actionBar.setTitle(view.getTitle());
             }
         }
 
