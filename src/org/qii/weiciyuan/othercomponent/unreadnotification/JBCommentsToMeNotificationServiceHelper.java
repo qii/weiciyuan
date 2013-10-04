@@ -16,6 +16,7 @@ import org.qii.weiciyuan.bean.android.UnreadTabIndex;
 import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -164,8 +165,9 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
     private PendingIntent getPendingIntent() {
         Intent i = new Intent(getBaseContext(), MainTimeLineActivity.class);
         i.putExtra("account", accountBean);
-        i.putExtra("comment", data);
+        i.putExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA, data);
         i.putExtra("unreadTabIndex", UnreadTabIndex.COMMENT_TO_ME);
+        i.putExtra(BundleArgsConstants.UNREAD_EXTRA, unreadBean);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
