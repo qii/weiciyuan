@@ -36,6 +36,7 @@ public class NotificationUtility {
 
     }
 
+    @Deprecated
     public static String getTicker(UnreadBean unreadBean) {
         int mentionCmt = unreadBean.getMention_cmt();
         int mentionStatus = unreadBean.getMention_status();

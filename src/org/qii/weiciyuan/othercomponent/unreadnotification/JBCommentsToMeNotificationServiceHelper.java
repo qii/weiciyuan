@@ -15,8 +15,8 @@ import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.android.UnreadTabIndex;
 import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
@@ -54,15 +54,18 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
 
     private void buildNotification() {
 
+        int count = (data.getSize() >= Integer.valueOf(SettingUtility.getMsgCount()) ? unreadBean.getCmt() : data.getSize());
+
+        String tickerString = String.format(GlobalContext.getInstance().getString(R.string.new_comments), String.valueOf(count));
+
         Notification.Builder builder = new Notification.Builder(getBaseContext())
-                .setTicker(NotificationUtility.getTicker(unreadBean))
+                .setTicker(tickerString)
                 .setContentText(accountBean.getUsernick())
                 .setSmallIcon(R.drawable.ic_notification)
                 .setAutoCancel(true)
                 .setContentIntent(getPendingIntent())
                 .setOnlyAlertOnce(true);
 
-        int count = (unreadBean.getCmt() > data.getSize() ? unreadBean.getCmt() : data.getSize());
         builder.setContentTitle(String.format(GlobalContext.getInstance().getString(R.string.new_comments), String.valueOf(count)));
 
         if (data.getSize() > 1)
