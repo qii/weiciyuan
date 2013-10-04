@@ -272,7 +272,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        AccountBean newAccountBean = (AccountBean) intent.getParcelableExtra("account");
+        AccountBean newAccountBean = (AccountBean) intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
         if (newAccountBean == null) {
             return;
         }

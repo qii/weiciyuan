@@ -151,7 +151,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             addUnreadMessage(commentsToMe);
             clearUnreadComment(unreadBeanFromNotification);
             CommentListBean nullObject = null;
-            intent.putExtra("comment", nullObject);
+            intent.putExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA, nullObject);
             getActivity().setIntent(intent);
         }
     }

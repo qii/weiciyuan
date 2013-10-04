@@ -15,6 +15,7 @@ import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.android.UnreadTabIndex;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -87,14 +88,14 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
         Intent intent = getActivity().getIntent();
         if (intent == null)
             return;
-        UnreadTabIndex unreadTabIndex = (UnreadTabIndex) intent.getSerializableExtra("unreadTabIndex");
+        UnreadTabIndex unreadTabIndex = (UnreadTabIndex) intent.getSerializableExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA);
         if (unreadTabIndex == null)
             return;
         switch (unreadTabIndex) {
             case COMMENT_TO_ME:
-                ((MainTimeLineActivity) getActivity()).getMenuFragment().switchCategory(2);
+                ((MainTimeLineActivity) getActivity()).getMenuFragment().switchCategory(LeftMenuFragment.COMMENTS_INDEX);
                 viewPager.setCurrentItem(0);
-                intent.putExtra("unreadTabIndex", UnreadTabIndex.NONE);
+                intent.putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA, UnreadTabIndex.NONE);
                 break;
         }
 

@@ -163,13 +163,13 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
     }
 
     private PendingIntent getPendingIntent() {
-        Intent i = new Intent(getBaseContext(), MainTimeLineActivity.class);
-        i.putExtra("account", accountBean);
-        i.putExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA, data);
-        i.putExtra("unreadTabIndex", UnreadTabIndex.COMMENT_TO_ME);
-        i.putExtra(BundleArgsConstants.UNREAD_EXTRA, unreadBean);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent = new Intent(getBaseContext(), MainTimeLineActivity.class);
+        intent.putExtra(BundleArgsConstants.ACCOUNT_EXTRA, accountBean);
+        intent.putExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA, data);
+        intent.putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA, UnreadTabIndex.COMMENT_TO_ME);
+        intent.putExtra(BundleArgsConstants.UNREAD_EXTRA, unreadBean);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
     }
 }
