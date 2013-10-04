@@ -27,17 +27,14 @@ import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.dm.DMUserListActivity;
 import org.qii.weiciyuan.ui.dm.DMUserListFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.nearby.NearbyTimeLineActivity;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
-import org.qii.weiciyuan.ui.search.SearchMainActivity;
 import org.qii.weiciyuan.ui.search.SearchMainParentFragment;
 import org.qii.weiciyuan.ui.userinfo.MyFavListFragment;
-import org.qii.weiciyuan.ui.userinfo.MyInfoActivity;
 import org.qii.weiciyuan.ui.userinfo.NewUserInfoFragment;
 
 import java.util.ArrayList;
@@ -77,11 +74,6 @@ public class LeftMenuFragment extends AbstractAppFragment {
     public static final int LOGOUT_INDEX = 7;
     public static final int SETTING_INDEX = 8;
 
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -187,14 +179,6 @@ public class LeftMenuFragment extends AbstractAppFragment {
         setCommentUnreadCount(commentsToMeUnreadCount);
     }
 
-    private void openMyProfile() {
-        Intent intent = new Intent(getActivity(), MyInfoActivity.class);
-        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-        intent.putExtra("user", GlobalContext.getInstance().getAccountBean().getInfo());
-        intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
-        startActivity(intent);
-    }
-
 
     private void showAccountSwitchPage() {
         Intent intent = new Intent(getActivity(), AccountActivity.class);
@@ -205,14 +189,6 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     private void showSettingPage() {
         startActivity(new Intent(getActivity(), SettingActivity.class));
-    }
-
-    private void showSearchPage() {
-        startActivity(new Intent(getActivity(), SearchMainActivity.class));
-    }
-
-    private void showDMPage() {
-        startActivity(new Intent(getActivity(), DMUserListActivity.class));
     }
 
 
@@ -654,12 +630,10 @@ public class LeftMenuFragment extends AbstractAppFragment {
                     drawButtonsBackground(COMMENTS_INDEX);
                     break;
                 case R.id.btn_search:
-//                    showSearchPage();
                     showSearchPage(false);
                     drawButtonsBackground(SEARCH_INDEX);
                     break;
                 case R.id.btn_profile:
-//                    openMyProfile();
                     showProfilePage(false);
                     drawButtonsBackground(PROFILE_INDEX);
                     break;
