@@ -22,6 +22,7 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
  * User: qii
  * Date: 12-12-5
  */
+@Deprecated
 public class ICSNotification {
 
     private Context context;

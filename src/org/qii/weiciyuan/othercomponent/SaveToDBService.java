@@ -12,6 +12,7 @@ import java.io.Serializable;
  * User: qii
  * Date: 12-12-16
  */
+@Deprecated
 public class SaveToDBService extends IntentService {
 
     public static final int TYPE_STATUS = 0;

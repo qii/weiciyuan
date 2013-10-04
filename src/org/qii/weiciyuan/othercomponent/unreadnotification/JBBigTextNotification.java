@@ -24,6 +24,7 @@ import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
  * User: qii
  * Date: 12-12-5
  */
+@Deprecated
 public class JBBigTextNotification {
     private Context context;
 

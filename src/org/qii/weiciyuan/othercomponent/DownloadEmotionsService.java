@@ -22,6 +22,7 @@ import java.util.List;
  * User: qii
  * Date: 12-9-24
  */
+@Deprecated
 public class DownloadEmotionsService extends Service {
     private String token;
 
