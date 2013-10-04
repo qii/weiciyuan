@@ -31,6 +31,7 @@ import java.util.ArrayList;
  * User: Jiang Qi
  * Date: 12-8-14
  */
+@Deprecated
 public class UserInfoFragment extends AbstractAppFragment {
 
     private UserBean bean;
