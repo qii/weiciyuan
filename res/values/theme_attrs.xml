@@ -53,6 +53,7 @@
 
     <!--textview link-->
     <attr name="link_color" format="reference"/>
+    <attr name="link_pressed_background_color" format="reference"/>
 
 
     <!--timeline-->

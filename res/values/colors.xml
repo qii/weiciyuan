@@ -326,4 +326,9 @@
     <!--theme-->
     <color name="dark_theme_background">#201E1C</color>
 
+
+    <!--link-->
+    <color name="link_pressed_background_color_light">#33B5E5</color>
+    <color name="link_pressed_background_color_dark">#ff454545</color>
+
 </resources>  

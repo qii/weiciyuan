@@ -3,7 +3,6 @@ package org.qii.weiciyuan.ui.adapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -820,7 +819,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                     }
 
                     if (result) {
-                        BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(Color.parseColor("#33B5E5"));
+                        BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(ThemeUtility.getColor(R.attr.link_pressed_background_color));
                         value.setSpan(backgroundColorSpan, findStart, findEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         ((TextView) v).setText(value);
                     }
