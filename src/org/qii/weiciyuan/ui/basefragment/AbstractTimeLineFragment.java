@@ -349,7 +349,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
     protected void onListViewScroll() {
 
-        LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
 
         if (hasActionMode()) {
             int position = getListView().getCheckedItemPosition();
