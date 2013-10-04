@@ -27,7 +27,7 @@ import java.util.Map;
  * Date: 12-9-25
  */
 public abstract class AbstractWriteActivity<T> extends AbstractAppActivity implements View.OnClickListener, ClearContentDialog.IClear
-        , EmotionsGridDialog.IEmotions, SaveDraftDialog.IDraft {
+        , SaveDraftDialog.IDraft {
 
 
     protected abstract boolean canSend();
@@ -53,7 +53,6 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
 
     protected abstract void send();
 
-    @Override
     public void insertEmotion(String emotionChar) {
         String ori = getEditTextView().getText().toString();
         int index = getEditTextView().getSelectionStart();
