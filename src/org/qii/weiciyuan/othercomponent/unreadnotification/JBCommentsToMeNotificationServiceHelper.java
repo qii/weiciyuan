@@ -42,9 +42,9 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        this.accountBean = (AccountBean) intent.getParcelableExtra(NotificationServiceHelper.ACCOUNT_ARG);
-        this.data = (CommentListBean) intent.getParcelableExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG);
-        this.unreadBean = (UnreadBean) intent.getParcelableExtra(NotificationServiceHelper.UNREAD_ARG);
+        this.accountBean = intent.getParcelableExtra(NotificationServiceHelper.ACCOUNT_ARG);
+        this.data = intent.getParcelableExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG);
+        this.unreadBean = intent.getParcelableExtra(NotificationServiceHelper.UNREAD_ARG);
         this.currentIndex = intent.getIntExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
         this.clickToOpenAppPendingIntentInner = intent.getParcelableExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG);
 
