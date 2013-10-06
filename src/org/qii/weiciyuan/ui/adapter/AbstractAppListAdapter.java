@@ -1,11 +1,13 @@
 package org.qii.weiciyuan.ui.adapter;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.*;
 import android.text.style.BackgroundColorSpan;
@@ -517,7 +519,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                         Intent intent = new Intent(getActivity(), GalleryActivity.class);
                         intent.putExtra("msg", msg);
                         intent.putExtra("position", finalI);
-                        getActivity().startActivity(intent);
+                        Bundle scaleBundle = ActivityOptions.makeScaleUpAnimation(
+                                v, 0, 0, v.getWidth(), v.getHeight()).toBundle();
+                        getActivity().startActivity(intent, scaleBundle);
                     }
                 });
 
@@ -651,7 +655,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                     if (!clipped && bitmap != null)
                         intent.putExtra("rect", rect);
 
-                    getActivity().startActivity(intent);
+                    Bundle scaleBundle = ActivityOptions.makeScaleUpAnimation(
+                            v, 0, 0, v.getWidth(), v.getHeight()).toBundle();
+                    getActivity().startActivity(intent, scaleBundle);
                 }
             });
             buildPic(msg, view);
