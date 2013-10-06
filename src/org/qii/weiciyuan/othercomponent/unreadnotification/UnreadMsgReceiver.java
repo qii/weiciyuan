@@ -11,6 +11,7 @@ import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -79,6 +80,7 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
             clickNotificationToOpenAppPendingIntentInner.putExtra(BundleArgsConstants.UNREAD_EXTRA, unreadBean);
             clickNotificationToOpenAppPendingIntentInner.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
+            String ticker = NotificationUtility.getTicker(unreadBean, mentionsWeiboData, mentionsCommentData, commentsToMeData);
 
             if (mentionsWeiboData != null && mentionsWeiboData.getSize() > 0) {
                 Intent intent = new Intent(context, JBMentionsWeiboNotificationServiceHelper.class);
@@ -87,6 +89,7 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
                 intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
                 intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
                 intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG, clickNotificationToOpenAppPendingIntentInner);
+                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
                 context.startService(intent);
             }
 
@@ -97,6 +100,7 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
                 intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
                 intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
                 intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG, clickNotificationToOpenAppPendingIntentInner);
+                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
                 context.startService(intent);
             }
 
@@ -107,6 +111,7 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
                 intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
                 intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
                 intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG, clickNotificationToOpenAppPendingIntentInner);
+                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
                 context.startService(intent);
             }
         }

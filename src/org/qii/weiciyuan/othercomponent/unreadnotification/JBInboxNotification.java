@@ -63,14 +63,14 @@ public class JBInboxNotification {
     public Notification get() {
 
         Notification.Builder builder = new Notification.Builder(context)
-                .setTicker(NotificationUtility.getTicker(unreadBean))
+                .setTicker(NotificationUtility.getTicker(unreadBean, null, null, null))
                 .setContentText(accountBean.getUsernick())
                 .setSmallIcon(R.drawable.ic_notification)
                 .setAutoCancel(true)
                 .setContentIntent(getPendingIntent())
                 .setOnlyAlertOnce(true);
 
-        builder.setContentTitle(NotificationUtility.getTicker(unreadBean));
+        builder.setContentTitle(NotificationUtility.getTicker(unreadBean, null, null, null));
 
         if (NotificationUtility.getCount(unreadBean) > 1) {
             builder.setNumber(NotificationUtility.getCount(unreadBean));
@@ -113,7 +113,7 @@ public class JBInboxNotification {
         builder.setDeleteIntent(deletedPendingIntent);
 
         Notification.InboxStyle inboxStyle = new Notification.InboxStyle(builder);
-        inboxStyle.setBigContentTitle(NotificationUtility.getTicker(unreadBean));
+        inboxStyle.setBigContentTitle(NotificationUtility.getTicker(unreadBean, null, null, null));
         if (comment != null) {
             for (CommentBean c : comment.getItemList()) {
                 inboxStyle.addLine(c.getUser().getScreen_name() + ":" + c.getText());

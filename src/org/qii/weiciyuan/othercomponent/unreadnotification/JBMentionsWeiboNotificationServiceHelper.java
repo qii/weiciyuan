@@ -17,7 +17,6 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteCommentActivity;
 
@@ -31,6 +30,7 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
     private UnreadBean unreadBean;
     private int currentIndex;
     private Intent clickToOpenAppPendingIntentInner;
+    private String ticker;
 
     private static BroadcastReceiver clearNotificationEventReceiver;
 
@@ -43,6 +43,7 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
         this.unreadBean = intent.getParcelableExtra(NotificationServiceHelper.UNREAD_ARG);
         this.currentIndex = intent.getIntExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
         this.clickToOpenAppPendingIntentInner = intent.getParcelableExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG);
+        this.ticker = intent.getStringExtra(NotificationServiceHelper.TICKER);
 
         buildNotification();
 
@@ -58,7 +59,7 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
 
 
         Notification.Builder builder = new Notification.Builder(getBaseContext())
-                .setTicker(NotificationUtility.getTicker(unreadBean))
+                .setTicker(ticker)
                 .setContentText(accountBean.getUsernick())
                 .setSmallIcon(R.drawable.ic_notification)
                 .setAutoCancel(true)
@@ -120,6 +121,7 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
             nextIntent.putExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG, data);
             nextIntent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
             nextIntent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG, clickToOpenAppPendingIntentInner);
+            nextIntent.putExtra(NotificationServiceHelper.TICKER, ticker);
 
             String actionName;
             int nextIndex;

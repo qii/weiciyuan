@@ -66,14 +66,14 @@ public class JBBigTextNotification {
 
     public Notification get() {
         Notification.Builder builder = new Notification.Builder(context)
-                .setTicker(NotificationUtility.getTicker(unreadBean))
+                .setTicker(NotificationUtility.getTicker(unreadBean, null, null, null))
                 .setContentText(accountBean.getUsernick())
                 .setSmallIcon(R.drawable.ic_notification)
                 .setAutoCancel(true)
                 .setContentIntent(getPendingIntent())
                 .setOnlyAlertOnce(true);
 
-        builder.setContentTitle(NotificationUtility.getTicker(unreadBean));
+        builder.setContentTitle(NotificationUtility.getTicker(unreadBean, null, null, null));
 
         builder.setNumber(1);
 
