@@ -494,7 +494,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
 
             layout.repost_layout.setVisibility(View.VISIBLE);
             layout.recontent.setVisibility(View.VISIBLE);
-            layout.recontent.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
+            layout.recontent.setOnTouchListener(new ClickableTextViewMentionOnTouchListener());
             if (repostMsg.getUser() != null) {
                 layout.recontent.setText(repostMsg.getListViewSpannableString());
                 buildRepostCount();
