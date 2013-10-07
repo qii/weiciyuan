@@ -522,8 +522,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
         ((BrowserWeiboMsgActivity) getActivity()).updateCommentCount(msg.getComments_count());
         ((BrowserWeiboMsgActivity) getActivity()).updateRepostCount(msg.getReposts_count());
 
-//        Utility.buildTabCount(getActivity().getActionBar().getTabAt(1), getString(R.string.comments), msg.getComments_count());
-//        Utility.buildTabCount(getActivity().getActionBar().getTabAt(2), getString(R.string.repost), msg.getReposts_count());
     }
 
 
