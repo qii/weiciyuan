@@ -394,9 +394,6 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        layout.content_pic.setOnClickListener(picOnClickListener);
-//        layout.repost_pic.setOnClickListener(picOnClickListener);
-
         layout.location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
