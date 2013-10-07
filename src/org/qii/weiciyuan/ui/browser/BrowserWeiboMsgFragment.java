@@ -30,10 +30,7 @@ import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.gallery.GalleryActivity;
-import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.ProfileTopAvatarImageView;
-import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
+import org.qii.weiciyuan.support.lib.*;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.utils.AppEventAction;
@@ -465,7 +462,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
             TimeLineBitmapDownloader.getInstance().downloadAvatar(layout.avatar.getImageView(), msg.getUser());
         }
         layout.content.setText(msg.getListViewSpannableString());
-        layout.content.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
+        layout.content.setOnTouchListener(new ClickableTextViewMentionOnTouchListener());
 
         layout.time.setText(msg.getTimeInFormat());
 
