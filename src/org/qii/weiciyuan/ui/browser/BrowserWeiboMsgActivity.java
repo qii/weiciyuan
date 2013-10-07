@@ -252,10 +252,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (gestureDetector.onTouchEvent(event))
-            return true;
-        else
-            return false;
+        return gestureDetector.onTouchEvent(event);
     }
 
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
