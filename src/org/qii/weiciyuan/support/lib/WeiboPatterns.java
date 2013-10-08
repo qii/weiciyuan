@@ -13,7 +13,7 @@ public class WeiboPatterns {
 
     public static final Pattern TOPIC_URL = Pattern.compile("#[\\p{Print}\\p{InCJKUnifiedIdeographs}&&[^#]]+#");
 
-    public static final Pattern MENTION_URL = Pattern.compile("@[\\w\\p{InCJKUnifiedIdeographs}-]{1,22}");
+    public static final Pattern MENTION_URL = Pattern.compile("@[\\w\\p{InCJKUnifiedIdeographs}-]{1,26}");
 
     public static final Pattern EMOTION_URL = Pattern.compile("\\[(\\S+?)\\]");
 
