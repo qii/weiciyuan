@@ -59,8 +59,8 @@ public class ClickableTextViewMentionOnTouchListener implements View.OnTouchList
 
                 if (find && !result) {
                     BackgroundColorSpan[] backgroundColorSpans = value.getSpans(0, value.length(), BackgroundColorSpan.class);
-                    for (BackgroundColorSpan urlSpan : backgroundColorSpans) {
-                        value.removeSpan(urlSpan);
+                    for (BackgroundColorSpan backgroundColorSpan : backgroundColorSpans) {
+                        value.removeSpan(backgroundColorSpan);
                         ((TextView) v).setText(value);
                     }
                 }
