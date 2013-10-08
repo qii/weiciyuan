@@ -223,14 +223,10 @@ public class LongClickableLinkMovementMethod extends ScrollingMovementMethod {
                     lastEvent[0] = event.getX();
                     lastEvent[1] = event.getY();
                     checkForLongClick(link, widget);
-                    Selection.setSelection(buffer,
-                            buffer.getSpanStart(link[0]),
-                            buffer.getSpanEnd(link[0]));
+
                 }
 
                 return true;
-            } else {
-                Selection.removeSelection(buffer);
             }
         } else if (action == MotionEvent.ACTION_MOVE) {
             float[] position = {event.getX(), event.getY()};
