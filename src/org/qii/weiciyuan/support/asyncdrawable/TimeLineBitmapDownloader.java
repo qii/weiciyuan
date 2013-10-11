@@ -2,7 +2,6 @@ package org.qii.weiciyuan.support.asyncdrawable;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,7 +27,7 @@ import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
  */
 public class TimeLineBitmapDownloader {
 
-    private Drawable defaultBG;
+    private int defaultPictureResId;
 
     private Handler handler;
 
@@ -44,7 +43,7 @@ public class TimeLineBitmapDownloader {
 
     private TimeLineBitmapDownloader(Handler handler) {
         this.handler = handler;
-        this.defaultBG = new ColorDrawable(ThemeUtility.getColor(R.attr.listview_pic_bg));
+        this.defaultPictureResId = ThemeUtility.getResourceId(R.attr.listview_pic_bg);
     }
 
     public static TimeLineBitmapDownloader getInstance() {
@@ -113,7 +112,7 @@ public class TimeLineBitmapDownloader {
     public void downloadAvatar(ImageView view, UserBean user, boolean isFling) {
 
         if (user == null) {
-            view.setImageDrawable(defaultBG);
+            view.setImageResource(defaultPictureResId);
             return;
         }
 
@@ -216,7 +215,7 @@ public class TimeLineBitmapDownloader {
         } else {
 
             if (isFling) {
-                view.setImageDrawable(defaultBG);
+                view.setImageResource(defaultPictureResId);
                 return;
             }
 
@@ -268,7 +267,7 @@ public class TimeLineBitmapDownloader {
         } else {
 
             if (isFling) {
-                view.setImageDrawable(defaultBG);
+                view.getImageView().setImageResource(defaultPictureResId);
                 if (view.getProgressBar() != null)
                     view.getProgressBar().setVisibility(View.INVISIBLE);
                 view.setGifFlag(ImageUtility.isThisPictureGif(urlKey));

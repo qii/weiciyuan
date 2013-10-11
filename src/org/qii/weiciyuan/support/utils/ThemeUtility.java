@@ -23,6 +23,14 @@ public class ThemeUtility {
 
     }
 
+    public static int getResourceId(int attr) {
+        int[] attrs = new int[]{attr};
+        Context context = GlobalContext.getInstance().getActivity();
+        TypedArray ta = context.obtainStyledAttributes(attrs);
+        return ta.getResourceId(0, 430);
+
+    }
+
     //can't find a public theme attr to modify actionbar searchview text color
     public static void customActionBarSearchViewTextColor(SearchView searchView) {
         int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
