@@ -201,9 +201,7 @@ public final class GlobalContext extends Application {
         int memClass = ((ActivityManager) getSystemService(
                 Context.ACTIVITY_SERVICE)).getMemoryClass();
 
-//        int cacheSize = 1024 * 1024 * memClass / 5;
-
-        int cacheSize = 1024 * 1024 * 8;
+        int cacheSize = Math.max(1024 * 1024 * 8, 1024 * 1024 * memClass / 5);
 
         avatarCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
