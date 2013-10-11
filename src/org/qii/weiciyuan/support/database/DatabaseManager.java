@@ -29,12 +29,14 @@ public class DatabaseManager {
 
     private SQLiteDatabase rsd = null;
 
+    private DatabaseHelper databaseHelper = null;
+
 
     private DatabaseManager() {
 
     }
 
-    public static DatabaseManager getInstance() {
+    public synchronized static DatabaseManager getInstance() {
 
         if (singleton == null) {
             DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
@@ -44,11 +46,17 @@ public class DatabaseManager {
             singleton = new DatabaseManager();
             singleton.wsd = wsd;
             singleton.rsd = rsd;
+            singleton.databaseHelper = databaseHelper;
         }
 
         return singleton;
     }
 
+    public static void close() {
+        if (singleton != null) {
+            singleton.databaseHelper.close();
+        }
+    }
 
     public OAuthActivity.DBResult addEmotions(List<EmotionBean> word) {
 

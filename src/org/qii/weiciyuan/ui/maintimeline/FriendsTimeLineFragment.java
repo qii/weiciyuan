@@ -28,7 +28,10 @@ import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TopTipBar;
 import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.*;
+import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.adapter.AbstractAppListAdapter;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
@@ -380,7 +383,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 if (Utility.isTaskStopped(dbTask) && getList().getSize() == 0) {
                     dbTask = new DBCacheTask();
                     dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                    GroupInfoTask groupInfoTask = new GroupInfoTask(GlobalContext.getInstance().getSpecialToken());
+                    GroupInfoTask groupInfoTask = new GroupInfoTask(GlobalContext.getInstance().getSpecialToken(), GlobalContext.getInstance().getCurrentAccountId());
                     groupInfoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     getAdapter().notifyDataSetChanged();
@@ -403,23 +406,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 setListViewPositionFromPositionsCache();
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                userBean = (UserBean) savedInstanceState.getParcelable("userBean");
-                accountBean = (AccountBean) savedInstanceState.getParcelable("account");
+                userBean = savedInstanceState.getParcelable("userBean");
+                accountBean = savedInstanceState.getParcelable("account");
                 token = savedInstanceState.getString("token");
-
-//                groupDataCache = (HashMap) savedInstanceState.getSerializable("groupDataCache");
-//                currentGroupId = savedInstanceState.getString("currentGroupId");
-//
-//                getList().replaceData((MessageListBean) savedInstanceState.getSerializable("bean"));
-//                timeLineAdapter.notifyDataSetChanged();
-//
-//                refreshLayout(getList());
-//                buildActionBarNav();
 
                 if (Utility.isTaskStopped(dbTask) && getList().getSize() == 0) {
                     dbTask = new DBCacheTask();
                     dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-                    GroupInfoTask groupInfoTask = new GroupInfoTask(GlobalContext.getInstance().getSpecialToken());
+                    GroupInfoTask groupInfoTask = new GroupInfoTask(GlobalContext.getInstance().getSpecialToken(), GlobalContext.getInstance().getCurrentAccountId());
                     groupInfoTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     getAdapter().notifyDataSetChanged();

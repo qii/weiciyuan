@@ -22,6 +22,7 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.MusicInfo;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
 import org.qii.weiciyuan.support.database.AccountDBTask;
+import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -103,7 +104,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         if (accountBean == null)
             accountBean = GlobalContext.getInstance().getAccountBean();
 
-
+        GlobalContext.getInstance().setGroup(null);
         GlobalContext.getInstance().setAccountBean(accountBean);
         SettingUtility.setDefaultAccountId(accountBean.getUid());
 
@@ -270,6 +271,12 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
     public void setCurrentFragment(ScrollableListFragment fragment) {
         this.currentFragment = fragment;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DatabaseManager.close();
     }
 
     @Override
