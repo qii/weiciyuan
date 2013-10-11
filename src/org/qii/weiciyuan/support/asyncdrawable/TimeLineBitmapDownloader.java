@@ -12,12 +12,12 @@ import android.widget.ImageView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
@@ -185,7 +185,10 @@ public class TimeLineBitmapDownloader {
      * again, then app play annoying animation , this method will check whether we should read again or not.
      */
     private boolean shouldReloadPicture(ImageView view, String urlKey) {
-        if (urlKey.equals(view.getTag()) && view.getDrawable() != null && ((BitmapDrawable) view.getDrawable() != null
+        if (urlKey.equals(view.getTag())
+                && view.getDrawable() != null
+                && view.getDrawable() instanceof BitmapDrawable
+                && ((BitmapDrawable) view.getDrawable() != null
                 && ((BitmapDrawable) view.getDrawable()).getBitmap() != null)) {
             AppLogger.d("shouldReloadPicture=false");
             return false;
