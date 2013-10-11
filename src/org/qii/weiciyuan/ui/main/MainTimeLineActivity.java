@@ -146,8 +146,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         Fragment friend = getFriendsTimeLineFragment();
         Fragment mentions = getMentionsTimeLineFragment();
         Fragment comments = getCommentsTimeLineFragment();
-        Fragment search = getSearchFragment();
-        Fragment dm = getDMFragment();
+
         Fragment fav = getFavFragment();
         Fragment myself = getMyProfileFragment();
 
@@ -166,17 +165,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             fragmentTransaction.hide(comments);
 
         }
-        if (!search.isAdded()) {
-            fragmentTransaction.add(R.id.menu_right_fl, search, SearchMainParentFragment.class.getName());
-            fragmentTransaction.hide(search);
-
-        }
-
-        if (!dm.isAdded()) {
-            fragmentTransaction.add(R.id.menu_right_fl, dm, DMUserListFragment.class.getName());
-            fragmentTransaction.hide(dm);
-
-        }
 
         if (!fav.isAdded()) {
             fragmentTransaction.add(R.id.menu_right_fl, fav, MyFavListFragment.class.getName());
@@ -188,6 +176,22 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             fragmentTransaction.hide(myself);
         }
 
+        if (GlobalContext.getInstance().getAccountBean().isBlack_magic()) {
+            Fragment search = getSearchFragment();
+            Fragment dm = getDMFragment();
+
+            if (!search.isAdded()) {
+                fragmentTransaction.add(R.id.menu_right_fl, search, SearchMainParentFragment.class.getName());
+                fragmentTransaction.hide(search);
+
+            }
+
+            if (!dm.isAdded()) {
+                fragmentTransaction.add(R.id.menu_right_fl, dm, DMUserListFragment.class.getName());
+                fragmentTransaction.hide(dm);
+
+            }
+        }
 
         if (!fragmentTransaction.isEmpty()) {
             fragmentTransaction.commit();
