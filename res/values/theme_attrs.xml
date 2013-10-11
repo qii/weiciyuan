@@ -93,5 +93,8 @@
 
     <!--browser weibo detail -->
     <attr name="browser_weibo_detail_background_color" format="color"/>
+    <attr name="browser_weibo_detail_comments_reposts_category_color_selected" format="color"/>
+    <attr name="browser_weibo_detail_comments_reposts_category_color_unselected" format="color"/>
+
 
 </resources>

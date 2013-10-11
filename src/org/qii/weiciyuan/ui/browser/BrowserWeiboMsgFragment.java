@@ -35,6 +35,7 @@ import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.actionmenu.StatusSingleChoiceModeListener;
@@ -302,8 +303,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
                 if (isCommentList) {
                     isCommentList = false;
                     adapter.switchToRepostType();
-                    repostTab.setTextColor(getResources().getColor(R.color.orange));
-                    commentTab.setTextColor(getResources().getColor(R.color.black));
+                    repostTab.setTextColor(ThemeUtility.getColor(R.attr.browser_weibo_detail_comments_reposts_category_color_selected));
+                    commentTab.setTextColor(ThemeUtility.getColor(R.attr.browser_weibo_detail_comments_reposts_category_color_unselected));
                     if (repostList.getSize() == 0) {
                         loadNewRepostData();
                     } else {
@@ -333,8 +334,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
                 if (!isCommentList) {
                     isCommentList = true;
                     adapter.switchToCommentType();
-                    commentTab.setTextColor(getResources().getColor(R.color.orange));
-                    repostTab.setTextColor(getResources().getColor(R.color.black));
+                    commentTab.setTextColor(ThemeUtility.getColor(R.attr.browser_weibo_detail_comments_reposts_category_color_selected));
+                    repostTab.setTextColor(ThemeUtility.getColor(R.attr.browser_weibo_detail_comments_reposts_category_color_unselected));
 
                     if (commentList.getSize() == 0) {
                         loadNewCommentData();
