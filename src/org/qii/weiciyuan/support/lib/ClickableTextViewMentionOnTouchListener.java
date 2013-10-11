@@ -56,6 +56,9 @@ public class ClickableTextViewMentionOnTouchListener implements View.OnTouchList
                 if (find) {
                     BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(ThemeUtility.getColor(R.attr.link_pressed_background_color));
                     value.setSpan(backgroundColorSpan, findStart, findEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                    //Android has a bug, sometime TextView wont change its value when you modify SpannableString,
+                    // so you must setText again, test on Android 4.3 Nexus4
+                    tv.setText(value);
                 }
 
                 return find;
@@ -66,6 +69,7 @@ public class ClickableTextViewMentionOnTouchListener implements View.OnTouchList
                 for (BackgroundColorSpan backgroundColorSpan : backgroundColorSpans) {
                     value.removeSpan(backgroundColorSpan);
                 }
+                tv.setText(value);
                 break;
         }
 
