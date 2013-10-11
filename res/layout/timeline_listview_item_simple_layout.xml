@@ -12,7 +12,7 @@
         android:layout_width="@dimen/timeline_avatar_width"
         android:layout_height="@dimen/timeline_avatar_height"
         android:layout_gravity="left|center_vertical"
-        android:layout_marginTop="-5dp"
+        android:layout_marginTop="-3dp"
         android:layout_marginLeft="-5dp"
         android:layout_marginBottom="-5dp"
         android:layout_marginRight="3dp"

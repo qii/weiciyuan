@@ -25,18 +25,12 @@ public class AbstractAppActivity extends FragmentActivity {
 
     protected int theme = 0;
 
-    protected TimeLineBitmapDownloader commander = null;
-
-
     @Override
     protected void onResume() {
         super.onResume();
         GlobalContext.getInstance().setCurrentRunningActivity(this);
 
-
-        if (theme == SettingUtility.getAppTheme()) {
-
-        } else {
+        if (theme != SettingUtility.getAppTheme()) {
             reload();
         }
     }
@@ -68,7 +62,6 @@ public class AbstractAppActivity extends FragmentActivity {
         forceShowActionBarOverflowMenu();
         initNFC();
         GlobalContext.getInstance().setActivity(this);
-        commander = TimeLineBitmapDownloader.getInstance();
     }
 
 
@@ -82,15 +75,6 @@ public class AbstractAppActivity extends FragmentActivity {
             }
         } catch (Exception ignored) {
 
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (commander != null) {
-            commander.totalStopLoadPicture();
-            commander = null;
         }
     }
 
@@ -136,7 +120,7 @@ public class AbstractAppActivity extends FragmentActivity {
     }
 
     public TimeLineBitmapDownloader getBitmapDownloader() {
-        return commander;
+        return TimeLineBitmapDownloader.getInstance();
     }
 
     protected void dealWithException(WeiboException e) {

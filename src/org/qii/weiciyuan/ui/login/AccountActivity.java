@@ -286,7 +286,7 @@ public class AccountActivity extends AbstractAppActivity implements LoaderManage
             ImageView imageView = (ImageView) mView.findViewById(R.id.imageView_avatar);
 
             if (!TextUtils.isEmpty(accountList.get(i).getAvatar_url())) {
-                commander.downloadAvatar(imageView, accountList.get(i).getInfo(), false);
+                getBitmapDownloader().downloadAvatar(imageView, accountList.get(i).getInfo(), false);
             }
 
             TextView token = (TextView) mView.findViewById(R.id.token_expired);
