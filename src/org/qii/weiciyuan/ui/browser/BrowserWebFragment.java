@@ -36,6 +36,9 @@ public class BrowserWebFragment extends Fragment {
     private ShareActionProvider mShareActionProvider;
     private MenuItem refreshItem;
 
+    public BrowserWebFragment() {
+        super();
+    }
 
     public BrowserWebFragment(String url) {
         super();
