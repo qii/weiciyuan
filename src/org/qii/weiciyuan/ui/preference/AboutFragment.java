@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.ui.preference;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -17,9 +19,9 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.changelogdialog.ChangeLogDialog;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
@@ -77,14 +79,20 @@ public class AboutFragment extends PreferenceFragment {
             }
         });
 
+        if (getResources().getBoolean(R.bool.blackmagic)) {
+            Runtime rt = Runtime.getRuntime();
+            long vmAlloc = rt.totalMemory() - rt.freeMemory();
+            long nativeAlloc = Debug.getNativeHeapAllocatedSize();
 
-//        findPreference(SettingActivity.DONATE).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-//            @Override
-//            public boolean onPreferenceClick(Preference preference) {
-//                Toast.makeText(getActivity(), getString(R.string.donate_summary2), Toast.LENGTH_SHORT).show();
-//                return true;
-//            }
-//        });
+            String vmAllocStr = "VM Allocated " + formatMemoryText(vmAlloc);
+            String nativeAllocStr = "Native Allocated " + formatMemoryText(nativeAlloc);
+
+            ActivityManager am = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+            int memoryClass = am.getMemoryClass();
+            String result = "VM Max " + Integer.toString(memoryClass) + "MB";
+            findPreference(SettingActivity.DEBUG_MEM_INFO).setSummary(vmAllocStr + "," + nativeAllocStr + "," + result);
+        }
+
 
         findPreference(SettingActivity.AUTHOR).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -206,5 +214,10 @@ public class AboutFragment extends PreferenceFragment {
         return "@四次元App #四次元App反馈# " + android.os.Build.MANUFACTURER
                 + " " + android.os.Build.MODEL + ",Android "
                 + android.os.Build.VERSION.RELEASE + "," + network + " version:" + buildVersionInfo();
+    }
+
+    private String formatMemoryText(long memory) {
+        float memoryInMB = memory * 1f / 1024 / 1024;
+        return String.format("%.1f MB", memoryInMB);
     }
 }

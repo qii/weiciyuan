@@ -74,6 +74,8 @@ public class SettingActivity extends AbstractAppActivity {
     public static final String SAVED_LOG_PATH = "pref_saved_log_path_key";
     public static final String AUTHOR = "pref_author_key";
 
+    public static final String DEBUG_MEM_INFO = "pref_mem_key";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

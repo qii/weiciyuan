@@ -114,6 +114,7 @@
         </Preference>
 
         <Preference
+
             android:key="pref_saved_log_path_key"
             android:title="@string/pref_saved_log_path_title"
             >
@@ -122,5 +123,21 @@
 
 
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:enabled="@bool/blackmagic"
+        android:title="@string/pref_debug_title"
+        >
+
+        <Preference
+            android:key="pref_mem_key"
+            android:title="@string/pref_debug_mem_title"
+            >
+
+        </Preference>
+
+
+    </PreferenceCategory>
+
 
 </PreferenceScreen>
