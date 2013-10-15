@@ -1,7 +1,5 @@
 package org.qii.weiciyuan.support.lib;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,6 +7,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.OverScroller;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -31,6 +30,8 @@ public class SwipeFrameLayout extends FrameLayout {
 
     private GestureDetector gestureDetector;
 
+    private OverScroller scroller;
+
     public SwipeFrameLayout(Context context) {
         this(context, null);
     }
@@ -45,6 +46,7 @@ public class SwipeFrameLayout extends FrameLayout {
     }
 
     private void init() {
+        scroller = new OverScroller(getContext());
         setBackground(ThemeUtility.getDrawable(android.R.attr.windowBackground));
         this.activity = (Activity) getContext();
         this.topView = ((View) (activity.findViewById(android.R.id.content).getParent()));
@@ -55,11 +57,14 @@ public class SwipeFrameLayout extends FrameLayout {
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
 
+        if (scroller.computeScrollOffset()) {
+            scroller.abortAnimation();
+        }
+
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 initPointLocation[0] = ev.getRawX();
                 initPointLocation[1] = ev.getRawY();
-
                 return false;
             case MotionEvent.ACTION_MOVE:
                 if (isDragging) {
@@ -141,14 +146,23 @@ public class SwipeFrameLayout extends FrameLayout {
 
     private void restoreActivity() {
 
-        topView.animate().translationX(0)
-                .setDuration(300L).withLayer().setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                topView.animate().setListener(null);
+        scroller.startScroll(topView.getScrollX(), 0, -topView.getScrollX(), 0);
+        post(new ScrollRunnable());
+
+    }
+
+    private class ScrollRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            if (scroller.computeScrollOffset()) {
+                int currentValue = scroller.getCurrX();
+                topView.scrollTo(currentValue, 0);
+                topView.invalidate();
+                post(this);
             }
-        });
+
+        }
     }
 
     private class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -167,9 +181,9 @@ public class SwipeFrameLayout extends FrameLayout {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             if (e2.getRawX() < initPointLocation[0]) {
-                float y = topView.getTranslationX();
+                float y = topView.getScaleX();
                 if (y != 0f) {
-                    topView.setTranslationX(0);
+                    restoreActivity();
                     return super.onScroll(e1, e2, distanceX, distanceY);
                 } else {
                     return false;
@@ -178,7 +192,8 @@ public class SwipeFrameLayout extends FrameLayout {
             final int MAX_MOTION_EVENT_DOWN__X_POSITION = Utility.dip2px(25);
             float s = e2.getRawX() - initPointLocation[0];
             if (initPointLocation[0] <= MAX_MOTION_EVENT_DOWN__X_POSITION) {
-                topView.setTranslationX(s);
+                topView.scrollTo((int) -s, 0);
+                topView.invalidate();
                 return true;
             } else {
                 return false;
