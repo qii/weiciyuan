@@ -31,6 +31,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.SwipeFrameLayout;
 import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -221,7 +222,16 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             }
         });
 
-        return view;
+        View result = view;
+
+        if (!isOpenedFromMainPage()) {
+            SwipeFrameLayout swipeFrameLayout = new SwipeFrameLayout(getActivity());
+            swipeFrameLayout.addView(result,
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            result = swipeFrameLayout;
+        }
+
+        return result;
     }
 
     @Override

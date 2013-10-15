@@ -17,7 +17,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -30,11 +29,10 @@ import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
 import org.qii.weiciyuan.dao.show.ShowUserDao;
 import org.qii.weiciyuan.dao.user.RemarkDao;
 import org.qii.weiciyuan.support.database.FilterDBTask;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.MyViewPager;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -50,18 +48,14 @@ import java.util.List;
  * Date: 12-8-14
  */
 public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
+
     private String token;
 
     private UserBean bean;
 
-    private MyViewPager mViewPager = null;
-
     private MyAsyncTask<Void, UserBean, UserBean> followOrUnfollowTask;
 
     private ModifyGroupMemberTask modifyGroupMemberTask;
-
-    private GestureDetector gestureDetector;
-
 
     private static final int REFRESH_LOADER_ID = 0;
 
@@ -162,7 +156,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     }
 
     private void initLayout() {
-//        getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
+        setContentView(R.layout.userinfoactivity_layout);
+        getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setDisplayShowHomeEnabled(false);
@@ -175,8 +170,10 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             public void run() {
                 if (getSupportFragmentManager().findFragmentByTag(NewUserInfoFragment.class.getName()) == null) {
                     getSupportFragmentManager().beginTransaction()
-                            .replace(android.R.id.content, new NewUserInfoFragment(getUser(), getToken()), NewUserInfoFragment.class.getName())
+                            .replace(R.id.content, new NewUserInfoFragment(getUser(), getToken()), NewUserInfoFragment.class.getName())
                             .commit();
+                    getSupportFragmentManager().executePendingTransactions();
+
                 }
             }
         });

@@ -247,7 +247,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        SwipeFrameLayout swipeFrameLayout = new SwipeFrameLayout(getActivity());
         PullToRefreshListView pullToRefreshListView = new PullToRefreshListView(getActivity());
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
         pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
@@ -363,7 +363,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         listView.setHeaderDividersEnabled(false);
-        return pullToRefreshListView;
+
+        swipeFrameLayout.addView(pullToRefreshListView,
+                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        return swipeFrameLayout;
     }
 
     private void initView(View view, Bundle savedInstanceState) {

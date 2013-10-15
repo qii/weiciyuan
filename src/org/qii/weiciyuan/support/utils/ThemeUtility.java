@@ -3,6 +3,7 @@ package org.qii.weiciyuan.support.utils;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.widget.SearchView;
 import android.widget.TextView;
 import org.qii.weiciyuan.R;
@@ -20,6 +21,14 @@ public class ThemeUtility {
 //            context = GlobalContext.getInstance();
         TypedArray ta = context.obtainStyledAttributes(attrs);
         return ta.getColor(0, 430);
+
+    }
+
+    public static Drawable getDrawable(int attr) {
+        int[] attrs = new int[]{attr};
+        Context context = GlobalContext.getInstance().getActivity();
+        TypedArray ta = context.obtainStyledAttributes(attrs);
+        return ta.getDrawable(0);
 
     }
 
