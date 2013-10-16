@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
 import org.qii.weiciyuan.R;
@@ -46,7 +47,7 @@ public class SwipeFrameLayout extends FrameLayout {
     }
 
     private void init() {
-        scroller = new OverScroller(getContext());
+        scroller = new OverScroller(getContext(), new DecelerateInterpolator());
         setBackground(ThemeUtility.getDrawable(android.R.attr.windowBackground));
         this.activity = (Activity) getContext();
         this.topView = ((View) (activity.findViewById(android.R.id.content).getParent()));
