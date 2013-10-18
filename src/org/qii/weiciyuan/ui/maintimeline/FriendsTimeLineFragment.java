@@ -263,12 +263,34 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
 
         private void startDownload(MessageBean msg) {
-            String url = msg.getOriginal_pic();
-            if (TextUtils.isEmpty(url) && msg.getRetweeted_status() != null) {
-                url = msg.getRetweeted_status().getOriginal_pic();
+
+            if (!msg.isMultiPics()) {
+                String url = msg.getOriginal_pic();
+                if (!TextUtils.isEmpty(url))
+                    downloadPic(url);
+            } else {
+                ArrayList<String> urls = msg.getHighPicUrls();
+                for (String url : urls) {
+                    downloadPic(url);
+                }
             }
 
-            downloadPic(url);
+            MessageBean reTweetedMsg = msg.getRetweeted_status();
+
+            if (reTweetedMsg != null) {
+                if (!reTweetedMsg.isMultiPics()) {
+                    String url = reTweetedMsg.getOriginal_pic();
+                    if (!TextUtils.isEmpty(url))
+                        downloadPic(url);
+                } else {
+                    ArrayList<String> urls = reTweetedMsg.getHighPicUrls();
+                    for (String url : urls) {
+                        downloadPic(url);
+                    }
+                }
+            }
+
+
             UserBean user = msg.getUser();
             if (user != null) {
                 downloadAvatar(user.getAvatar_large());
