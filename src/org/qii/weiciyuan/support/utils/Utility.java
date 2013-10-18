@@ -481,13 +481,13 @@ public class Utility {
     }
 
     public static String getIdFromWeiboAccountLink(String url) {
-        String id = url.substring(19);
+        String id = url.substring("http://weibo.com/u/".length());
         id = id.replace("/", "");
         return id;
     }
 
     public static String getDomainFromWeiboAccountLink(String url) {
-        String domain = url.substring(17);
+        String domain = url.substring("http://weibo.com/".length());
         domain = domain.replace("/", "");
         return domain;
     }
@@ -496,13 +496,26 @@ public class Utility {
         return !TextUtils.isEmpty(url) && url.startsWith("http://weibo.com/u/");
     }
 
+    //todo need refactor...
     public static boolean isWeiboAccountDomainLink(String url) {
         if (TextUtils.isEmpty(url)) {
             return false;
         } else {
             boolean a = url.startsWith("http://weibo.com/");
             boolean b = !url.contains("?");
-            return a && b;
+
+            String tmp = url;
+            if (tmp.endsWith("/"))
+                tmp = tmp.substring(0, tmp.lastIndexOf("/"));
+
+            int count = 0;
+            char[] value = tmp.toCharArray();
+            for (char c : value) {
+                if ("/".equalsIgnoreCase(String.valueOf(c))) {
+                    count++;
+                }
+            }
+            return a && b && count == 3;
         }
     }
 

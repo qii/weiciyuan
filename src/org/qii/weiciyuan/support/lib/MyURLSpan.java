@@ -65,7 +65,11 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
                 intent.putExtra("domain", Utility.getDomainFromWeiboAccountLink(url));
                 context.startActivity(intent);
             } else {
-                WebBrowserSelector.openLink(context, uri);
+                //otherwise some urls cant be opened, will be redirected to sina error page
+                String openUrl = url;
+                if (openUrl.endsWith("/"))
+                    openUrl = openUrl.substring(0, openUrl.lastIndexOf("/"));
+                WebBrowserSelector.openLink(context, Uri.parse(openUrl));
             }
         } else {
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
