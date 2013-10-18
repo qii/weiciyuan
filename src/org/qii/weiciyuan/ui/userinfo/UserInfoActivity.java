@@ -149,7 +149,16 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
     private void fetchUserInfoFromServer() {
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(bean.getScreen_name());
+        getActionBar().setDisplayShowHomeEnabled(false);
+
+        String title = bean.getScreen_name();
+        if (TextUtils.isEmpty(title))
+            title = bean.getDomain();
+        if (TextUtils.isEmpty(title))
+            title = bean.getId();
+
+        getActionBar().setTitle(title);
+
         FetchingDataDialog dialog = new FetchingDataDialog();
         getSupportFragmentManager().beginTransaction().add(dialog, FetchingDataDialog.class.getName()).commit();
         getSupportLoaderManager().initLoader(REFRESH_LOADER_ID, null, refreshCallback);
@@ -165,6 +174,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     }
 
     private void buildContent() {
+        //if you open this activity with user id, must set title with nickname agagin
+        getActionBar().setTitle(bean.getScreen_name());
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
