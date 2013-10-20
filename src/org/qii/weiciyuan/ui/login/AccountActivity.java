@@ -14,6 +14,7 @@ import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.lib.changelogdialog.ChangeLogDialog;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.blackmagic.BlackMagicActivity;
@@ -79,7 +80,7 @@ public class AccountActivity extends AbstractAppActivity implements LoaderManage
                     AccountBean bean = AccountDBTask.getAccount(id);
                     if (bean != null) {
                         Intent start = new Intent(AccountActivity.this, MainTimeLineActivity.class);
-                        start.putExtra("account", bean);
+                        start.putExtra(BundleArgsConstants.ACCOUNT_EXTRA, bean);
                         startActivity(start);
                         finish();
                     }
