@@ -18,3 +18,6 @@ weiciyuan.iml
 .idea
 ant.properties
 proguard-project.txt
+build.xml
+project.properties
+weiciyuan.iml
