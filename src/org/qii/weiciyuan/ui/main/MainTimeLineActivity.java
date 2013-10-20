@@ -99,6 +99,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         } else {
             Intent intent = getIntent();
             accountBean = (AccountBean) intent.getParcelableExtra("account");
+            if (accountBean == null)
+                accountBean = (AccountBean) intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
         }
 
         if (accountBean == null)

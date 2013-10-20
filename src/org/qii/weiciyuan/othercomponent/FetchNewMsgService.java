@@ -107,9 +107,9 @@ public class FetchNewMsgService extends IntentService {
         if (unreadMentionStatusCount > 0 && SettingUtility.allowMentionToMe()) {
             MentionsWeiboTimeLineDao dao = new MentionsWeiboTimeLineDao(token);
             MessageListBean oldData = null;
-            MentionTimeLineData commentTimeLineData = MentionWeiboTimeLineDBTask.getRepostLineMsgList(accountBean.getUid());
-            if (commentTimeLineData != null) {
-                oldData = commentTimeLineData.msgList;
+            MentionTimeLineData mentionStatusTimeLineData = MentionWeiboTimeLineDBTask.getRepostLineMsgList(accountBean.getUid());
+            if (mentionStatusTimeLineData != null) {
+                oldData = mentionStatusTimeLineData.msgList;
             }
             if (oldData != null && oldData.getSize() > 0) {
                 dao.setSince_id(oldData.getItem(0).getId());
