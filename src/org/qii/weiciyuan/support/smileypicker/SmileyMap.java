@@ -115,7 +115,7 @@ public class SmileyMap {
         huahua.put("[羞嗒嗒]", "lxh_xiudada.png");
         huahua.put("[得意地笑]", "lxh_deyidexiao.png");
         huahua.put("[纠结]", "lxh_jiujie.png");
-        huahua.put("[给劲]", "lazu_org.png");
+        huahua.put("[给劲]", "lxh_feijin.png");
         huahua.put("[悲催]", "lxh_beicui.png");
         huahua.put("[甩甩手]", "lxh_shuaishuaishou.png");
         huahua.put("[好棒]", "lxh_haobang.png");
