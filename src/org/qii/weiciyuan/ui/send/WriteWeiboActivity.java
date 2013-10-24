@@ -32,7 +32,7 @@ import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.CheatSheet;
 import org.qii.weiciyuan.support.lib.KeyboardControlEditText;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.SmileyPicker;
+import org.qii.weiciyuan.support.smileypicker.SmileyPicker;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -47,7 +47,6 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * User: qii
@@ -360,11 +359,6 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             content.setText(contentStr + " ");
             content.setSelection(content.getText().toString().length());
         }
-    }
-
-
-    public Map<String, Bitmap> getEmotionsPic() {
-        return GlobalContext.getInstance().getEmotionsPics();
     }
 
 

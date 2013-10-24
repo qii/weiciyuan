@@ -50,7 +50,7 @@ public final class GlobalContext extends Application {
 
     public boolean startedApp = false;
 
-    private Map<String, Bitmap> emotionsPic = new LinkedHashMap<String, Bitmap>();
+    private LinkedHashMap<Integer, LinkedHashMap<String, Bitmap>> emotionsPic = new LinkedHashMap<Integer, LinkedHashMap<String, Bitmap>>();
 
     private GroupListBean group = null;
 
@@ -214,20 +214,36 @@ public final class GlobalContext extends Application {
 
     public synchronized Map<String, Bitmap> getEmotionsPics() {
         if (emotionsPic != null && emotionsPic.size() > 0) {
-            return emotionsPic;
+            return emotionsPic.get(0);
         } else {
             getEmotionsTask();
-            return emotionsPic;
+            return emotionsPic.get(0);
+        }
+    }
+
+    public synchronized Map<String, Bitmap> getHuahuaPics() {
+        if (emotionsPic != null && emotionsPic.size() > 0) {
+            return emotionsPic.get(2);
+        } else {
+            getEmotionsTask();
+            return emotionsPic.get(2);
         }
     }
 
 
     private void getEmotionsTask() {
-        Map<String, String> emotions = SmileyMap.getInstance().get();
+        Map<String, String> general = SmileyMap.getInstance().getGeneral();
+        emotionsPic.put(0, getEmotionsTask(general));
+        Map<String, String> huahua = SmileyMap.getInstance().getHuahua();
+        emotionsPic.put(2, getEmotionsTask(huahua));
+    }
+
+    private LinkedHashMap<String, Bitmap> getEmotionsTask(Map<String, String> emotionMap) {
         List<String> index = new ArrayList<String>();
-        index.addAll(emotions.keySet());
+        index.addAll(emotionMap.keySet());
+        LinkedHashMap<String, Bitmap> bitmapMap = new LinkedHashMap<String, Bitmap>();
         for (String str : index) {
-            String name = emotions.get(str);
+            String name = emotionMap.get(str);
             AssetManager assetManager = GlobalContext.getInstance().getAssets();
             InputStream inputStream;
             try {
@@ -242,12 +258,14 @@ public final class GlobalContext extends Application {
                         bitmap.recycle();
                         bitmap = scaledBitmap;
                     }
-                    emotionsPic.put(str, bitmap);
+                    bitmapMap.put(str, bitmap);
                 }
             } catch (IOException ignored) {
 
             }
         }
+
+        return bitmapMap;
     }
 
     public void updateMusicInfo(MusicInfo musicInfo) {

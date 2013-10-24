@@ -1,9 +1,12 @@
-package org.qii.weiciyuan.support.lib;
+package org.qii.weiciyuan.support.smileypicker;
 
 import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +17,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: qii
@@ -27,10 +28,12 @@ public class SmileyPicker extends LinearLayout {
     private int mPickerHeight;
     private EditText mEditText;
     private LayoutInflater mInflater;
-    private List<String> keys;
     private Activity activity;
     private final LayoutTransition transitioner = new LayoutTransition();
-
+    private ViewPager viewPager;
+    private ImageView centerPoint;
+    private ImageView leftPoint;
+    private ImageView rightPoint;
 
     public SmileyPicker(Context paramContext) {
         super(paramContext);
@@ -39,9 +42,38 @@ public class SmileyPicker extends LinearLayout {
     public SmileyPicker(Context paramContext, AttributeSet paramAttributeSet) {
         super(paramContext, paramAttributeSet);
         this.mInflater = LayoutInflater.from(paramContext);
-        GridView gridView = (GridView) this.mInflater.inflate(R.layout.writeweiboactivity_smileypicker, null);
-        addView(gridView);
-        gridView.setAdapter(new SmileyAdapter(paramContext));
+        View view = this.mInflater.inflate(R.layout.writeweiboactivity_smileypicker, null);
+        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        viewPager.setAdapter(new SmileyPagerAdapter());
+        leftPoint = (ImageView) view.findViewById(R.id.left_point);
+        centerPoint = (ImageView) view.findViewById(R.id.center_point);
+        rightPoint = (ImageView) view.findViewById(R.id.right_point);
+        leftPoint.getDrawable().setLevel(1);
+        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                switch (position) {
+                    case 0:
+                        leftPoint.getDrawable().setLevel(1);
+                        centerPoint.getDrawable().setLevel(0);
+                        rightPoint.getDrawable().setLevel(0);
+                        break;
+                    case 1:
+                        leftPoint.getDrawable().setLevel(0);
+                        centerPoint.getDrawable().setLevel(1);
+                        rightPoint.getDrawable().setLevel(0);
+                        break;
+                    case 2:
+                        leftPoint.getDrawable().setLevel(0);
+                        centerPoint.getDrawable().setLevel(0);
+                        rightPoint.getDrawable().setLevel(1);
+                        break;
+
+                }
+            }
+        });
+        addView(view);
     }
 
     public void setEditText(Activity activity, ViewGroup rootLayout, EditText paramEditText) {
@@ -76,21 +108,83 @@ public class SmileyPicker extends LinearLayout {
 
     }
 
+
+    private class SmileyPagerAdapter extends PagerAdapter {
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            View view = (View) object;
+            container.removeView(view);
+
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+
+            View view = activity.getLayoutInflater().inflate(R.layout.smileypicker_gridview, container, false);
+
+            GridView gridView = (GridView) view.findViewById(R.id.smiley_grid);
+
+            gridView.setAdapter(new SmileyAdapter(activity, position));
+            container.addView(view, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+
+            return view;
+        }
+
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            super.setPrimaryItem(container, position, object);
+
+
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view.equals(object);
+        }
+    }
+
     private final class SmileyAdapter extends BaseAdapter {
 
         private LayoutInflater mInflater;
+        private List<String> keys;
+        private Map<String, Bitmap> bitmapMap;
 
-        public SmileyAdapter(Context context) {
+        public SmileyAdapter(Context context, int emotionPosition) {
 
             this.mInflater = LayoutInflater.from(context);
-            Set<String> keySet = GlobalContext.getInstance().getEmotionsPics().keySet();
-            keys = new ArrayList<String>();
-            keys.addAll(keySet);
+            this.keys = new ArrayList<String>();
+            Set<String> keySet;
+            switch (emotionPosition) {
+                case 0:
+                    keySet = GlobalContext.getInstance().getEmotionsPics().keySet();
+                    keys.addAll(keySet);
+                    bitmapMap = GlobalContext.getInstance().getEmotionsPics();
+                    break;
+                case 1:
+                    bitmapMap = new LinkedHashMap<String, Bitmap>();
+                    keys = new ArrayList<String>();
+                    break;
+                case 2:
+                    keySet = GlobalContext.getInstance().getHuahuaPics().keySet();
+                    keys.addAll(keySet);
+                    bitmapMap = GlobalContext.getInstance().getHuahuaPics();
+                    break;
+                default:
+                    throw new IllegalArgumentException("emotion position is invalid");
+            }
+
         }
 
         private void bindView(final int position, View paramView) {
             ImageView imageView = ((ImageView) paramView.findViewById(R.id.smiley_item));
-            imageView.setImageBitmap(GlobalContext.getInstance().getEmotionsPics().get(keys.get(position)));
+            imageView.setImageBitmap(bitmapMap.get(keys.get(position)));
             paramView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -105,7 +199,7 @@ public class SmileyPicker extends LinearLayout {
         }
 
         public int getCount() {
-            return GlobalContext.getInstance().getEmotionsPics().size();
+            return bitmapMap.size();
         }
 
         public Object getItem(int paramInt) {

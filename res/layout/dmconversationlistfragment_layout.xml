@@ -93,7 +93,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <org.qii.weiciyuan.support.lib.SmileyPicker
+    <org.qii.weiciyuan.support.smileypicker.SmileyPicker
         android:id="@+id/smiley_picker"
         android:visibility="gone"
         android:layout_width="fill_parent"

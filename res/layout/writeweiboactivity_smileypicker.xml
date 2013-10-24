@@ -1,8 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/smiley_grid"
+    android:orientation="vertical"
     android:background="?attr/split_line_between_content_and_bottom_button_panel"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:numColumns="7"/>
+    android:layout_height="match_parent">
+
+
+    <org.qii.weiciyuan.support.gallery.ViewPagerFixed
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:id="@+id/left_point"
+            android:paddingTop="15dp"
+            android:layout_marginRight="1dp"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_profile_info_viewpager_point"/>
+
+        <ImageView
+            android:id="@+id/center_point"
+            android:layout_marginLeft="1dp"
+            android:paddingTop="15dp"
+            android:layout_marginRight="1dp"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_profile_info_viewpager_point"/>
+
+        <ImageView
+            android:id="@+id/right_point"
+            android:layout_marginLeft="1dp"
+            android:paddingTop="15dp"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_profile_info_viewpager_point"/>
+    </LinearLayout>
+
+</LinearLayout>

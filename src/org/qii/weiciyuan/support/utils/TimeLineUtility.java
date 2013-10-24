@@ -278,6 +278,8 @@ public class TimeLineUtility {
             int m = localMatcher.end();
             if (m - k < 8) {
                 Bitmap bitmap = GlobalContext.getInstance().getEmotionsPics().get(str2);
+                if (bitmap == null)
+                    bitmap = GlobalContext.getInstance().getHuahuaPics().get(str2);
                 if (bitmap != null) {
                     ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), bitmap, ImageSpan.ALIGN_BASELINE);
                     value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

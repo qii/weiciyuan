@@ -13,14 +13,12 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.CheatSheet;
-import org.qii.weiciyuan.support.lib.SmileyPicker;
+import org.qii.weiciyuan.support.smileypicker.SmileyPicker;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
-
-import java.util.Map;
 
 /**
  * User: qii
@@ -62,9 +60,6 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         getEditTextView().setSelection(index + emotionChar.length());
     }
 
-    public Map<String, Bitmap> getEmotionsPic() {
-        return GlobalContext.getInstance().getEmotionsPics();
-    }
 
     @Override
     protected void onDestroy() {
