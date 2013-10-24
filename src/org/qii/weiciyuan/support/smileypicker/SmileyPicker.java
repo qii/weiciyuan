@@ -162,16 +162,16 @@ public class SmileyPicker extends LinearLayout {
             this.keys = new ArrayList<String>();
             Set<String> keySet;
             switch (emotionPosition) {
-                case 0:
+                case SmileyMap.GENERAL_EMOTION_POSITION:
                     keySet = GlobalContext.getInstance().getEmotionsPics().keySet();
                     keys.addAll(keySet);
                     bitmapMap = GlobalContext.getInstance().getEmotionsPics();
                     break;
-                case 1:
+                case SmileyMap.EMOJI_EMOTION_POSITION:
                     bitmapMap = new LinkedHashMap<String, Bitmap>();
                     keys = new ArrayList<String>();
                     break;
-                case 2:
+                case SmileyMap.HUAHUA_EMOTION_POSITION:
                     keySet = GlobalContext.getInstance().getHuahuaPics().keySet();
                     keys.addAll(keySet);
                     bitmapMap = GlobalContext.getInstance().getHuahuaPics();

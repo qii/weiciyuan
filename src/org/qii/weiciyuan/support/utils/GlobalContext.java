@@ -214,28 +214,28 @@ public final class GlobalContext extends Application {
 
     public synchronized Map<String, Bitmap> getEmotionsPics() {
         if (emotionsPic != null && emotionsPic.size() > 0) {
-            return emotionsPic.get(0);
+            return emotionsPic.get(SmileyMap.GENERAL_EMOTION_POSITION);
         } else {
             getEmotionsTask();
-            return emotionsPic.get(0);
+            return emotionsPic.get(SmileyMap.GENERAL_EMOTION_POSITION);
         }
     }
 
     public synchronized Map<String, Bitmap> getHuahuaPics() {
         if (emotionsPic != null && emotionsPic.size() > 0) {
-            return emotionsPic.get(2);
+            return emotionsPic.get(SmileyMap.HUAHUA_EMOTION_POSITION);
         } else {
             getEmotionsTask();
-            return emotionsPic.get(2);
+            return emotionsPic.get(SmileyMap.HUAHUA_EMOTION_POSITION);
         }
     }
 
 
     private void getEmotionsTask() {
         Map<String, String> general = SmileyMap.getInstance().getGeneral();
-        emotionsPic.put(0, getEmotionsTask(general));
+        emotionsPic.put(SmileyMap.GENERAL_EMOTION_POSITION, getEmotionsTask(general));
         Map<String, String> huahua = SmileyMap.getInstance().getHuahua();
-        emotionsPic.put(2, getEmotionsTask(huahua));
+        emotionsPic.put(SmileyMap.HUAHUA_EMOTION_POSITION, getEmotionsTask(huahua));
     }
 
     private LinkedHashMap<String, Bitmap> getEmotionsTask(Map<String, String> emotionMap) {

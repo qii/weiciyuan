@@ -9,6 +9,11 @@ import java.util.Map;
  * 42+6=48
  */
 public class SmileyMap {
+
+    public static final int GENERAL_EMOTION_POSITION = 0;
+    public static final int EMOJI_EMOTION_POSITION = 1;
+    public static final int HUAHUA_EMOTION_POSITION = 2;
+
     private static SmileyMap instance = new SmileyMap();
     private Map<String, String> general = new LinkedHashMap<String, String>();
     private Map<String, String> huahua = new LinkedHashMap<String, String>();
