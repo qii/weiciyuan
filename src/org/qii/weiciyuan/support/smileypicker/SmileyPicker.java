@@ -17,7 +17,10 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * User: qii
@@ -155,9 +158,11 @@ public class SmileyPicker extends LinearLayout {
         private LayoutInflater mInflater;
         private List<String> keys;
         private Map<String, Bitmap> bitmapMap;
+        private int emotionPosition;
+        private int count;
 
         public SmileyAdapter(Context context, int emotionPosition) {
-
+            this.emotionPosition = emotionPosition;
             this.mInflater = LayoutInflater.from(context);
             this.keys = new ArrayList<String>();
             Set<String> keySet;
@@ -166,15 +171,19 @@ public class SmileyPicker extends LinearLayout {
                     keySet = GlobalContext.getInstance().getEmotionsPics().keySet();
                     keys.addAll(keySet);
                     bitmapMap = GlobalContext.getInstance().getEmotionsPics();
+                    count = bitmapMap.size();
                     break;
                 case SmileyMap.EMOJI_EMOTION_POSITION:
-                    bitmapMap = new LinkedHashMap<String, Bitmap>();
-                    keys = new ArrayList<String>();
+                    keySet = EmojiMap.getInstance().getMap().keySet();
+                    keys.addAll(keySet);
+                    bitmapMap = null;
+                    count = keys.size();
                     break;
                 case SmileyMap.HUAHUA_EMOTION_POSITION:
                     keySet = GlobalContext.getInstance().getHuahuaPics().keySet();
                     keys.addAll(keySet);
                     bitmapMap = GlobalContext.getInstance().getHuahuaPics();
+                    count = bitmapMap.size();
                     break;
                 default:
                     throw new IllegalArgumentException("emotion position is invalid");
@@ -182,10 +191,21 @@ public class SmileyPicker extends LinearLayout {
 
         }
 
-        private void bindView(final int position, View paramView) {
-            ImageView imageView = ((ImageView) paramView.findViewById(R.id.smiley_item));
-            imageView.setImageBitmap(bitmapMap.get(keys.get(position)));
-            paramView.setOnClickListener(new OnClickListener() {
+        private void bindView(final int position, View contentView) {
+            ImageView imageView = ((ImageView) contentView.findViewById(R.id.smiley_item));
+            TextView textView = (TextView) contentView.findViewById(R.id.smiley_text_item);
+            if (emotionPosition != SmileyMap.EMOJI_EMOTION_POSITION) {
+                imageView.setVisibility(View.VISIBLE);
+                textView.setVisibility(View.INVISIBLE);
+                imageView.setImageBitmap(bitmapMap.get(keys.get(position)));
+
+            } else {
+                imageView.setVisibility(View.INVISIBLE);
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(keys.get(position));
+            }
+
+            contentView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String ori = mEditText.getText().toString();
@@ -199,7 +219,7 @@ public class SmileyPicker extends LinearLayout {
         }
 
         public int getCount() {
-            return bitmapMap.size();
+            return count;
         }
 
         public Object getItem(int paramInt) {

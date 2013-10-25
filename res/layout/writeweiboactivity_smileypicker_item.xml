@@ -11,8 +11,18 @@
     >
 
     <ImageView
+        android:visibility="invisible"
         android:layout_gravity="center"
         android:id="@+id/smiley_item"
+        android:layout_width="@dimen/emotion_size"
+        android:layout_height="@dimen/emotion_size"/>
+
+    <TextView
+        android:visibility="invisible"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:layout_gravity="center"
+        android:id="@+id/smiley_text_item"
         android:layout_width="@dimen/emotion_size"
         android:layout_height="@dimen/emotion_size"/>
 </org.qii.weiciyuan.support.lib.SquareFrameLayout>
