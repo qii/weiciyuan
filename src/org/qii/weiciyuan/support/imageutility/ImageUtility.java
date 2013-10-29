@@ -1,10 +1,8 @@
 package org.qii.weiciyuan.support.imageutility;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapRegionDecoder;
-import android.graphics.Rect;
+import android.graphics.*;
+import android.media.ExifInterface;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -19,6 +17,8 @@ import org.qii.weiciyuan.support.utils.Utility;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import static android.media.ExifInterface.*;
 
 /**
  * User: Jiang Qi
@@ -680,6 +680,18 @@ public class ImageUtility {
                 bitmap = roundedBitmap;
             }
 
+            int exifRotation = ImageUtility.getFileExifRotation(filePath);
+            if (exifRotation != 0) {
+                Matrix mtx = new Matrix();
+                mtx.postRotate(exifRotation);
+                Bitmap adjustedBitmap = Bitmap.createBitmap(roundedBitmap, 0, 0,
+                        bitmap.getWidth(), bitmap.getHeight(), mtx, true);
+                if (adjustedBitmap != bitmap) {
+                    bitmap.recycle();
+                    bitmap = adjustedBitmap;
+                }
+            }
+
             return bitmap;
         } catch (OutOfMemoryError ignored) {
             ignored.printStackTrace();
@@ -779,6 +791,18 @@ public class ImageUtility {
         }
 
         Bitmap bitmap = BitmapFactory.decodeFile(picPath, options);
+        int exifRotation = ImageUtility.getFileExifRotation(picPath);
+        if (exifRotation != 0) {
+            //TODO write EXIF instead of rotating bitmap.
+            Matrix mtx = new Matrix();
+            mtx.postRotate(exifRotation);
+            Bitmap adjustedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
+                    bitmap.getWidth(), bitmap.getHeight(), mtx, true);
+            if (adjustedBitmap != bitmap) {
+                bitmap.recycle();
+                bitmap = adjustedBitmap;
+            }
+        }
         FileOutputStream stream = null;
         String tmp = FileManager.getUploadPicTempFile();
         try {
@@ -804,6 +828,25 @@ public class ImageUtility {
     public static boolean isThisPictureGif(String url) {
         return !TextUtils.isEmpty(url) && url.endsWith(".gif");
     }
-}
 
+    public static int getFileExifRotation(String filePath) {
+        try {
+            ExifInterface exifInterface = new ExifInterface(filePath);
+            int orientation = exifInterface.getAttributeInt(TAG_ORIENTATION,
+                    ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ORIENTATION_ROTATE_90:
+                    return 90;
+                case ORIENTATION_ROTATE_180:
+                    return 180;
+                case ORIENTATION_ROTATE_270:
+                    return 270;
+                default:
+                    return 0;
+            }
+        } catch (IOException e) {
+            return 0;
+        }
+    }
+}
 
