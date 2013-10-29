@@ -41,7 +41,7 @@
             android:value="AIzaSyA_Ozn9WNG58ImFlmOFOItHvn1JShWvIpE"/>
 
         <activity
-            android:name=".ui.login.DummyActivity"
+            android:name=".ui.login.AccountActivity"
             android:uiOptions="splitActionBarWhenNarrow">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -50,17 +50,14 @@
         </activity>
 
         <!-- login activity -->
-        <activity
-            android:name=".ui.login.AccountActivity"
-            android:uiOptions="splitActionBarWhenNarrow"/>
+
         <activity android:name=".ui.login.OAuthActivity"/>
         <activity android:name=".ui.login.SSOActivity"/>
 
         <!--main activity -->
         <activity
             android:name=".ui.main.MainTimeLineActivity"
-
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTask"/>
 
         <!--send activity -->
         <activity
