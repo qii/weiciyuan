@@ -65,6 +65,7 @@
         <!--send activity -->
         <activity
             android:name=".ui.send.WriteWeiboActivity"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="stateVisible|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
@@ -106,7 +107,7 @@
             android:theme="@style/GalleryTheme"
             android:launchMode="singleTop"/>
         <activity
-            android:name=".ui.browser.BrowserLocalPicActivity"
+            android:name=".ui.browser.BrowserWriteWeiboLocalPicActivity"
             android:uiOptions="splitActionBarWhenNarrow"
             android:launchMode="singleTop"/>
         <activity

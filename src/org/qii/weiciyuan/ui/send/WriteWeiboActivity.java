@@ -37,7 +37,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.browser.AppMapActivity;
-import org.qii.weiciyuan.ui.browser.BrowserLocalPicActivity;
+import org.qii.weiciyuan.ui.browser.BrowserWriteWeiboLocalPicActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -661,7 +661,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     private void showPic() {
-        Intent intent = new Intent(WriteWeiboActivity.this, BrowserLocalPicActivity.class);
+        Intent intent = new Intent(WriteWeiboActivity.this, BrowserWriteWeiboLocalPicActivity.class);
         intent.putExtra("path", picPath);
         startActivityForResult(intent, BROWSER_PIC);
     }

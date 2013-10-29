@@ -11,7 +11,7 @@ import android.webkit.WebView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 import java.io.File;
 
@@ -19,7 +19,7 @@ import java.io.File;
  * User: qii
  * Date: 12-12-30
  */
-public class BrowserLocalPicActivity extends AbstractAppActivity {
+public class BrowserWriteWeiboLocalPicActivity extends AbstractAppActivity {
 
     private WebView webView;
     private String path;
@@ -78,7 +78,7 @@ public class BrowserLocalPicActivity extends AbstractAppActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent intent = new Intent(this, MainTimeLineActivity.class);
+                Intent intent = new Intent(this, WriteWeiboActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
