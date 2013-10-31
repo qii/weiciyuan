@@ -32,6 +32,7 @@ import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.CircleProgressView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -503,7 +504,17 @@ public class GalleryActivity extends Activity {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(bitmapPath, options);
-        if (options.outWidth >= Utility.getScreenWidth() || options.outHeight >= Utility.getScreenHeight()) {
+
+        int picWidth = options.outWidth;
+        int picHeight = options.outHeight;
+        int availableWidth = Utility.getScreenWidth()
+                - getResources().getDimensionPixelOffset(R.dimen.normal_gif_webview_margin_left)
+                - getResources().getDimensionPixelOffset(R.dimen.normal_gif_webview_margin_right);
+        int availableHeight = SmileyPickerUtility.getAppHeight(GalleryActivity.this);
+
+        int maxPossibleResizeHeight = availableWidth * availableHeight / picWidth;
+
+        if (picWidth >= availableWidth || picHeight >= availableHeight || maxPossibleResizeHeight >= availableHeight) {
             readLarge(large, url, bitmapPath);
             return;
         }

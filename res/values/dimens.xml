@@ -32,4 +32,8 @@
 
     <!--Toptipbar-->
     <dimen name="toptipbar_layout_margin">10dp</dimen>
+
+    <!--gallery-->
+    <dimen name="normal_gif_webview_margin_left">40dp</dimen>
+    <dimen name="normal_gif_webview_margin_right">40dp</dimen>
 </resources>
