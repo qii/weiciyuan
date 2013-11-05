@@ -29,7 +29,7 @@ public class SmileyMap {
         general.put("[晕]", "dizzya_org.png");
         general.put("[可爱]", "tza_org.png");
         general.put("[花心]", "hsa_org.png");
-        general.put("[汗]", "sweata_org.png");
+        general.put("[汗]", "han.png");
         general.put("[衰]", "cry.png");
         general.put("[偷笑]", "heia_org.png");
         general.put("[打哈欠]", "k_org.png");
