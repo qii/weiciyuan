@@ -257,5 +257,10 @@ public final class GlobalContext extends Application {
     public MusicInfo getMusicInfo() {
         return musicInfo;
     }
+
+    public boolean checkUserIsLogin() {
+        return getInstance().getAccountBean() != null;
+    }
+
 }
 
