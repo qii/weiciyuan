@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -767,6 +768,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     //the background then changed
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
 
+        private boolean find = false;
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -779,24 +781,25 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
             Layout layout = ((TextView) v).getLayout();
 
+            if (layout == null)
+                return false;
+
             int x = (int) event.getX();
             int y = (int) event.getY();
             int offset = 0;
-            if (layout != null) {
 
-                int line = layout.getLineForVertical(y);
-                offset = layout.getOffsetForHorizontal(line, x);
-            }
+
+            int line = layout.getLineForVertical(y);
+            offset = layout.getOffsetForHorizontal(line, x);
+
 
             TextView tv = (TextView) v;
             SpannableString value = SpannableString.valueOf(tv.getText());
 
-            LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
 
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     MyURLSpan[] urlSpans = value.getSpans(0, value.length(), MyURLSpan.class);
-                    boolean find = false;
                     int findStart = 0;
                     int findEnd = 0;
                     for (MyURLSpan urlSpan : urlSpans) {
@@ -810,35 +813,51 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                             break;
                         }
                     }
+
+                    String content = tv.getText().toString();
+
+                    Rect bounds = new Rect();
+                    Paint textPaint = tv.getPaint();
+                    textPaint.getTextBounds(content, findStart, findEnd, bounds);
+                    int width = bounds.width();
+
+                    find &= (width >= x);
+
+                    float lineWidth = layout.getLineWidth(line);
+
+                    find &= (lineWidth >= x);
+
                     boolean hasActionMode = ((AbstractTimeLineFragment) fragment).hasActionMode();
-                    boolean result = false;
-                    if (find && !hasActionMode) {
-                        result = true;
-                    }
 
-                    if (find && !result) {
-                        BackgroundColorSpan[] backgroundColorSpans = value.getSpans(0, value.length(), BackgroundColorSpan.class);
-                        for (BackgroundColorSpan urlSpan : backgroundColorSpans) {
-                            value.removeSpan(urlSpan);
-                            ((TextView) v).setText(value);
-                        }
-                    }
+                    find &= (!hasActionMode);
 
-                    if (result) {
+                    if (find) {
+                        LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
                         BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(ThemeUtility.getColor(R.attr.link_pressed_background_color));
                         value.setSpan(backgroundColorSpan, findStart, findEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                        ((TextView) v).setText(value);
+                        //Android has a bug, sometime TextView wont change its value when you modify SpannableString,
+                        // so you must setText again, test on Android 4.3 Nexus4
+                        tv.setText(value);
                     }
 
-                    return result;
+                    return find;
+                case MotionEvent.ACTION_MOVE:
+                    if (find) {
+                        LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
+                    }
+                    break;
                 case MotionEvent.ACTION_CANCEL:
                 case MotionEvent.ACTION_UP:
-                    LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
-                    BackgroundColorSpan[] backgroundColorSpans = value.getSpans(0, value.length(), BackgroundColorSpan.class);
-                    for (BackgroundColorSpan urlSpan : backgroundColorSpans) {
-                        value.removeSpan(urlSpan);
-                        ((TextView) v).setText(value);
+                    if (find) {
+                        LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
+                        LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
                     }
+                    BackgroundColorSpan[] backgroundColorSpans = value.getSpans(0, value.length(), BackgroundColorSpan.class);
+                    for (BackgroundColorSpan backgroundColorSpan : backgroundColorSpans) {
+                        value.removeSpan(backgroundColorSpan);
+                    }
+                    tv.setText(value);
+                    find = false;
                     break;
             }
 
