@@ -641,7 +641,7 @@ public class GalleryActivity extends Activity {
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     mClose = false;
-                    ;
+
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float x = event.getRawX();
