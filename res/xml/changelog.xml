@@ -6,6 +6,8 @@
         <change>修复部分转发微博中，点击正文中原微博却跳转到链接的bug</change>
         <change>修正吃惊和汗的表情对调的bug</change>
         <change>修正没登录微博时候，从其他App分享进来打开四次元崩溃的bug</change>
+        <change>修正切换侧边栏后之前页面长按微博打开的工具栏没关闭的bug</change>
+        <change>稍微改进了下查看多图</change>
     </release>
     <release
         version="0.49-2013.10"

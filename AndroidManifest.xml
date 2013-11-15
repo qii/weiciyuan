@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.qii.weiciyuan"
-          android:versionCode="27"
-          android:versionName="0.49">
+          android:versionCode="28"
+          android:versionName="0.491">
 
     <uses-sdk
         android:minSdkVersion="16"
