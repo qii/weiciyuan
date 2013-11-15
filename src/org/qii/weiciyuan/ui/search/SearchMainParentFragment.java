@@ -234,7 +234,7 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
             }
 
             ((LeftMenuFragment) ((MainTimeLineActivity) getActivity()).getMenuFragment()).searchTabIndex = position;
-
+            clearActionMode();
         }
 
         @Override

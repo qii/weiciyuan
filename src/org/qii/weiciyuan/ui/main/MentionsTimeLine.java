@@ -169,6 +169,7 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
                 ab.setSelectedNavigationItem(position);
             }
             ((LeftMenuFragment) ((MainTimeLineActivity) getActivity()).getMenuFragment()).mentionsTabIndex = position;
+            clearActionMode();
         }
 
         @Override

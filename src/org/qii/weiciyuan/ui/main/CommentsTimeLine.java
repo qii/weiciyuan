@@ -164,7 +164,7 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
             }
 
             ((LeftMenuFragment) ((MainTimeLineActivity) getActivity()).getMenuFragment()).commentsTabIndex = position;
-
+            clearActionMode();
         }
 
         @Override
