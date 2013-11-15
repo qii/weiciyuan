@@ -214,4 +214,8 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
         Utility.stopListViewScrollingAndScrollToTop(fragment.getListView());
     }
 
+    public void clearActionMode() {
+        getCommentsByMeTimeLineFragment().clearActionMode();
+        getCommentsToMeTimeLineFragment().clearActionMode();
+    }
 }

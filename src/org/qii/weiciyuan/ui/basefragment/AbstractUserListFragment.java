@@ -312,6 +312,19 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         return this.pullToRefreshListView;
     }
 
+    public void clearActionMode() {
+        if (mActionMode != null) {
+
+            mActionMode.finish();
+            mActionMode = null;
+        }
+        if (pullToRefreshListView != null && getListView().getCheckedItemCount() > 0) {
+            getListView().clearChoices();
+            if (getAdapter() != null) getAdapter().notifyDataSetChanged();
+        }
+    }
+
+
     protected abstract void oldUserOnPostExecute(UserListBean newValue);
 
     protected void newUserOnPostExecute() {

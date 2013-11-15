@@ -287,5 +287,10 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
 
         }
     }
+
+    public void clearActionMode() {
+        getSearchUserFragment().clearActionMode();
+        getSearchWeiboFragment().clearActionMode();
+    }
 }
 

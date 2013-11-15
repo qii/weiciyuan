@@ -218,4 +218,9 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
         AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) (childrenFragments.get(viewPager.getCurrentItem()));
         Utility.stopListViewScrollingAndScrollToTop(fragment.getListView());
     }
+
+    public void clearActionMode() {
+        getMentionsCommentTimeLineFragment().clearActionMode();
+        getMentionsWeiboTimeLineFragment().clearActionMode();
+    }
 }
