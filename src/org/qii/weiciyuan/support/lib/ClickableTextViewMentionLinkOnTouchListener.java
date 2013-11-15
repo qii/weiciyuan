@@ -14,31 +14,32 @@ import org.qii.weiciyuan.support.utils.ThemeUtility;
  * User: qii
  * Date: 13-10-7
  */
-public class ClickableTextViewMentionOnTouchListener implements View.OnTouchListener {
+public class ClickableTextViewMentionLinkOnTouchListener implements View.OnTouchListener {
+
+    private boolean find = false;
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
         Layout layout = ((TextView) v).getLayout();
 
+        if (layout == null)
+            return false;
+
         int x = (int) event.getX();
         int y = (int) event.getY();
-        int offset = 0;
-        if (layout != null) {
 
-            int line = layout.getLineForVertical(y);
-            offset = layout.getOffsetForHorizontal(line, x);
-        }
+        int line = layout.getLineForVertical(y);
+        int offset = layout.getOffsetForHorizontal(line, x);
+
 
         TextView tv = (TextView) v;
         SpannableString value = SpannableString.valueOf(tv.getText());
 
-        LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
 
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 MyURLSpan[] urlSpans = value.getSpans(0, value.length(), MyURLSpan.class);
-                boolean find = false;
                 int findStart = 0;
                 int findEnd = 0;
                 for (MyURLSpan urlSpan : urlSpans) {
@@ -53,7 +54,13 @@ public class ClickableTextViewMentionOnTouchListener implements View.OnTouchList
                     }
                 }
 
+
+                float lineWidth = layout.getLineWidth(line);
+
+                find &= (lineWidth >= x);
+
                 if (find) {
+                    LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
                     BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(ThemeUtility.getColor(R.attr.link_pressed_background_color));
                     value.setSpan(backgroundColorSpan, findStart, findEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                     //Android has a bug, sometime TextView wont change its value when you modify SpannableString,
@@ -62,14 +69,23 @@ public class ClickableTextViewMentionOnTouchListener implements View.OnTouchList
                 }
 
                 return find;
+            case MotionEvent.ACTION_MOVE:
+                if (find) {
+                    LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
+                }
+                break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-                LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
+                if (find) {
+                    LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
+                    LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
+                }
                 BackgroundColorSpan[] backgroundColorSpans = value.getSpans(0, value.length(), BackgroundColorSpan.class);
                 for (BackgroundColorSpan backgroundColorSpan : backgroundColorSpans) {
                     value.removeSpan(backgroundColorSpan);
                 }
                 tv.setText(value);
+                find = false;
                 break;
         }
 

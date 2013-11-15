@@ -216,6 +216,15 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             public void onPageScroll() {
                 LongClickableLinkMovementMethod.getInstance().setLongClickable(false);
                 (getFriendsTimeLineFragment()).clearActionMode();
+                (getFavFragment()).clearActionMode();
+                (getCommentsTimeLineFragment()).clearActionMode();
+                (getMentionsTimeLineFragment()).clearActionMode();
+                (getMyProfileFragment()).clearActionMode();
+
+                if (GlobalContext.getInstance().getAccountBean().isBlack_magic()) {
+                    (getSearchFragment()).clearActionMode();
+                    (getDMFragment()).clearActionMode();
+                }
             }
         });
 
@@ -312,7 +321,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     public void onBackPressed() {
         super.onBackPressed();
         GlobalContext.getInstance().startedApp = false;
-        GlobalContext.getInstance().getAvatarCache().evictAll();
+        GlobalContext.getInstance().getBitmapCache().evictAll();
         finish();
     }
 

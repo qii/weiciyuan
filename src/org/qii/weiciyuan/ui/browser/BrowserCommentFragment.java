@@ -108,7 +108,7 @@ public class BrowserCommentFragment extends Fragment {
         if (msg.getUser() != null) {
             username.setText(msg.getUser().getScreen_name());
             String url = msg.getUser().getProfile_image_url();
-            Bitmap bitmap = GlobalContext.getInstance().getAvatarCache().get(url);
+            Bitmap bitmap = GlobalContext.getInstance().getBitmapCache().get(url);
             if (bitmap != null) {
                 avatar.setImageBitmap(bitmap);
             } else {

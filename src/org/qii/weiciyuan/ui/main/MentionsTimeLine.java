@@ -169,6 +169,7 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
                 ab.setSelectedNavigationItem(position);
             }
             ((LeftMenuFragment) ((MainTimeLineActivity) getActivity()).getMenuFragment()).mentionsTabIndex = position;
+            clearActionMode();
         }
 
         @Override
@@ -217,5 +218,10 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
     public void scrollToTop() {
         AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) (childrenFragments.get(viewPager.getCurrentItem()));
         Utility.stopListViewScrollingAndScrollToTop(fragment.getListView());
+    }
+
+    public void clearActionMode() {
+        getMentionsCommentTimeLineFragment().clearActionMode();
+        getMentionsWeiboTimeLineFragment().clearActionMode();
     }
 }

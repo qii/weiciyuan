@@ -185,6 +185,7 @@
     <string name="convert_successfully">转换成功，你可以精简文字了</string>
     <string name="convert_failed">转换失败</string>
     <string name="failed_reason">发送失败：%s</string>
+    <string name="share_failed_because_of_no_account">请先登陆再发微博哦</string>
 
 
     <!--accountactivity_layout-->

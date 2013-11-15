@@ -234,7 +234,7 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
             }
 
             ((LeftMenuFragment) ((MainTimeLineActivity) getActivity()).getMenuFragment()).searchTabIndex = position;
-
+            clearActionMode();
         }
 
         @Override
@@ -286,6 +286,11 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
             Utility.stopListViewScrollingAndScrollToTop(((AbstractUserListFragment) fragment).getListView());
 
         }
+    }
+
+    public void clearActionMode() {
+        getSearchUserFragment().clearActionMode();
+        getSearchWeiboFragment().clearActionMode();
     }
 }
 

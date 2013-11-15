@@ -40,6 +40,7 @@ import org.qii.weiciyuan.ui.browser.AppMapActivity;
 import org.qii.weiciyuan.ui.browser.BrowserWriteWeiboLocalPicActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
+import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
@@ -302,6 +303,15 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!GlobalContext.getInstance().checkUserIsLogin()) {
+            Toast.makeText(this, this.getString(R.string.share_failed_because_of_no_account), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, AccountActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         buildInterface();
 
         if (savedInstanceState == null) {

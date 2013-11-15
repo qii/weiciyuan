@@ -43,7 +43,7 @@ public final class GlobalContext extends Application {
     private DisplayMetrics displayMetrics = null;
 
     //image memory cache
-    private LruCache<String, Bitmap> avatarCache = null;
+    private LruCache<String, Bitmap> appBitmapCache = null;
 
     //current account info
     private AccountBean accountBean = null;
@@ -167,11 +167,11 @@ public final class GlobalContext extends Application {
     }
 
 
-    public synchronized LruCache<String, Bitmap> getAvatarCache() {
-        if (avatarCache == null) {
+    public synchronized LruCache<String, Bitmap> getBitmapCache() {
+        if (appBitmapCache == null) {
             buildCache();
         }
-        return avatarCache;
+        return appBitmapCache;
     }
 
     public String getSpecialToken() {
@@ -203,7 +203,7 @@ public final class GlobalContext extends Application {
 
         int cacheSize = Math.max(1024 * 1024 * 8, 1024 * 1024 * memClass / 5);
 
-        avatarCache = new LruCache<String, Bitmap>(cacheSize) {
+        appBitmapCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
 
@@ -275,5 +275,10 @@ public final class GlobalContext extends Application {
     public MusicInfo getMusicInfo() {
         return musicInfo;
     }
+
+    public boolean checkUserIsLogin() {
+        return getInstance().getAccountBean() != null;
+    }
+
 }
 
