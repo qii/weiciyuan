@@ -95,7 +95,7 @@ public class TimeLineBitmapDownloader {
         if (TextUtils.isEmpty(key))
             return null;
         else
-            return GlobalContext.getInstance().getAvatarCache().get(key);
+            return GlobalContext.getInstance().getBitmapCache().get(key);
     }
 
 

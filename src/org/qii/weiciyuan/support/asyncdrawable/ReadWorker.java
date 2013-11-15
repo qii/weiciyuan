@@ -47,7 +47,7 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
     public ReadWorker(ImageView view, String url, FileLocationMethod method, boolean isMultiPictures) {
 
         this.globalContext = GlobalContext.getInstance();
-        this.lruCache = globalContext.getAvatarCache();
+        this.lruCache = globalContext.getBitmapCache();
         this.viewWeakReference = new WeakReference<ImageView>(view);
         this.data = url;
         this.method = method;

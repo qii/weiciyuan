@@ -26,7 +26,7 @@ public class ProfileAvatarReadWorker extends MyAsyncTask<String, Integer, Bitmap
 
 
     public ProfileAvatarReadWorker(ImageView view, String url) {
-        this.lruCache = GlobalContext.getInstance().getAvatarCache();
+        this.lruCache = GlobalContext.getInstance().getBitmapCache();
         this.view = view;
         this.globalContext = GlobalContext.getInstance();
         this.data = url;

@@ -117,7 +117,7 @@ public class AppearanceFragment extends PreferenceFragment implements SharedPref
 
         }
         if (key.equals(SettingActivity.LIST_HIGH_PIC_MODE)) {
-            GlobalContext.getInstance().getAvatarCache().evictAll();
+            GlobalContext.getInstance().getBitmapCache().evictAll();
         }
     }
 
