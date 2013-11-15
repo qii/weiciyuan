@@ -463,7 +463,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
             TimeLineBitmapDownloader.getInstance().downloadAvatar(layout.avatar.getImageView(), msg.getUser());
         }
         layout.content.setText(msg.getListViewSpannableString());
-        layout.content.setOnTouchListener(new ClickableTextViewMentionOnTouchListener());
+        layout.content.setOnTouchListener(new ClickableTextViewMentionLinkOnTouchListener());
 
         layout.time.setText(msg.getTimeInFormat());
 
@@ -498,7 +498,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
 
             layout.repost_layout.setVisibility(View.VISIBLE);
             layout.recontent.setVisibility(View.VISIBLE);
-            layout.recontent.setOnTouchListener(new ClickableTextViewMentionOnTouchListener());
+            layout.recontent.setOnTouchListener(new ClickableTextViewMentionLinkOnTouchListener());
             if (repostMsg.getUser() != null) {
                 layout.recontent.setText(repostMsg.getListViewSpannableString());
                 buildRepostCount();

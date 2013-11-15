@@ -1,7 +1,5 @@
 package org.qii.weiciyuan.support.lib;
 
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.text.Layout;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -16,7 +14,7 @@ import org.qii.weiciyuan.support.utils.ThemeUtility;
  * User: qii
  * Date: 13-10-7
  */
-public class ClickableTextViewMentionOnTouchListener implements View.OnTouchListener {
+public class ClickableTextViewMentionLinkOnTouchListener implements View.OnTouchListener {
 
     private boolean find = false;
 
@@ -56,14 +54,6 @@ public class ClickableTextViewMentionOnTouchListener implements View.OnTouchList
                     }
                 }
 
-                String content = tv.getText().toString();
-
-                Rect bounds = new Rect();
-                Paint textPaint = tv.getPaint();
-                textPaint.getTextBounds(content, findStart, findEnd, bounds);
-                int width = bounds.width();
-
-                find &= (width >= x);
 
                 float lineWidth = layout.getLineWidth(line);
 
