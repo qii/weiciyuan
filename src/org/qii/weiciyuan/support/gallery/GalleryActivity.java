@@ -70,6 +70,8 @@ public class GalleryActivity extends Activity {
 
     private ImageView animationView;
 
+    private View currentViewPositionLayout;
+
     private Rect rect;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,7 @@ public class GalleryActivity extends Activity {
         setContentView(R.layout.galleryactivity_layout);
 
         animationView = (ImageView) findViewById(R.id.animation);
+        currentViewPositionLayout = findViewById(R.id.position_layout);
 
         position = (TextView) findViewById(R.id.position);
         TextView sum = (TextView) findViewById(R.id.sum);
@@ -143,6 +146,7 @@ public class GalleryActivity extends Activity {
 
 
     private void animateClose(PhotoView imageView) {
+        currentViewPositionLayout.setVisibility(View.INVISIBLE);
         animationView.setImageDrawable(imageView.getAttacher().getImageView().getDrawable());
 
         pager.setVisibility(View.INVISIBLE);
