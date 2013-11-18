@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_gravity="right|bottom"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="@dimen/index_text_margin_bottom"
         android:gravity="bottom"
         android:orientation="horizontal"
         android:baselineAligned="true">

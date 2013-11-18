@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--gallery-->
+    <dimen name="index_text_margin_bottom">56dp</dimen>
+</resources>
