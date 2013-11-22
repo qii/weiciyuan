@@ -7,7 +7,7 @@
                 android:background="?listview_item_background_selector"
                 android:id="@+id/listview_root">
 
-    <RelativeLayout
+    <org.qii.weiciyuan.support.lib.QuickRelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
@@ -282,5 +282,5 @@
         <!--android:layout_below="@id/repost_flag"-->
         <!--android:background="@color/lightgray"/>-->
 
-    </RelativeLayout>
+    </org.qii.weiciyuan.support.lib.QuickRelativeLayout>
 </RelativeLayout>
