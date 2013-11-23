@@ -115,58 +115,6 @@
             />
 
 
-        <org.qii.weiciyuan.support.lib.TimeLineImageView
-            android:id="@+id/content_pic"
-            android:layout_marginTop="3dp"
-            android:layout_below="@id/content"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
-            android:visibility="gone"
-            android:clickable="true"/>
-
-        <GridLayout
-            android:layout_marginTop="3dp"
-            android:id="@+id/content_pic_multi"
-            android:layout_below="@id/content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:columnCount="3"
-            android:rowCount="3"
-            android:orientation="horizontal"
-            android:useDefaultMargins="false"
-            android:clickable="false">
-
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
-
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
-
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
-
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
-
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
-
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
-
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
-
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
-
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
-
-        </GridLayout>
-
-
         <View
             android:layout_below="@id/content"
 
@@ -250,37 +198,6 @@
 
         </GridLayout>
 
-
-        <!--<ImageView-->
-        <!--android:id="@+id/repost_flag"-->
-        <!--android:layout_width="6dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignLeft="@id/avatar"-->
-        <!--android:layout_alignTop="@id/repost_content"-->
-        <!--android:layout_alignBottom="@id/repost_content"-->
-        <!--android:layout_marginTop="3dp"-->
-        <!--android:layout_below="@id/avatar"-->
-        <!--android:background="@color/lightgray"/>-->
-
-        <!--<ImageView-->
-        <!--android:layout_width="6dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignLeft="@id/avatar"-->
-        <!--android:layout_alignTop="@id/repost_content"-->
-        <!--android:layout_alignBottom="@id/repost_content_pic"-->
-        <!--android:layout_marginTop="3dp"-->
-        <!--android:layout_below="@id/repost_flag"-->
-        <!--android:background="@color/lightgray"/>-->
-
-        <!--<ImageView-->
-        <!--android:layout_width="6dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignLeft="@id/avatar"-->
-        <!--android:layout_alignTop="@id/repost_content"-->
-        <!--android:layout_alignBottom="@id/repost_content__pic_multi"-->
-        <!--android:layout_marginTop="3dp"-->
-        <!--android:layout_below="@id/repost_flag"-->
-        <!--android:background="@color/lightgray"/>-->
 
     </org.qii.weiciyuan.support.lib.QuickRelativeLayout>
 </RelativeLayout>

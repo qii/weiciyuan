@@ -17,12 +17,10 @@ public class QuickRelativeLayout extends ViewGroup {
     private static final int TIME_INDEX = 3;
     private static final int SOURCE_INDEX = 4;
     private static final int CONTENT_INDEX = 5;
-    private static final int CONTENT_PIC_INDEX = 6;
-    private static final int CONTENT_PIC_MULTI_INDEX = 7;
-    private static final int REPOST_FLAG_INDEX = 8;
-    private static final int REPOST_CONTENT_INDEX = 9;
-    private static final int REPOST_CONTENT_PIC_INDEX = 10;
-    private static final int REPOST_CONTENT_PIC_MULTI_INDEX = 11;
+    private static final int REPOST_FLAG_INDEX = 6;
+    private static final int REPOST_CONTENT_INDEX = 7;
+    private static final int REPOST_CONTENT_PIC_INDEX = 8;
+    private static final int REPOST_CONTENT_PIC_MULTI_INDEX = 9;
 
 
     public QuickRelativeLayout(Context context) {
@@ -186,34 +184,6 @@ public class QuickRelativeLayout extends ViewGroup {
 
                     contentHeight = lp.mBottom + lp.bottomMargin;
 
-                    break;
-                case CONTENT_PIC_INDEX:
-                    int contentPicChildMaxWidth = contentMaxWidth - lp.leftMargin - lp.rightMargin;
-                    widthSpec = MeasureSpec.makeMeasureSpec(contentPicChildMaxWidth, MeasureSpec.EXACTLY);
-                    heightSpec = MeasureSpec.makeMeasureSpec(defaultHeight, MeasureSpec.EXACTLY);
-                    child.measure(widthSpec, heightSpec);
-
-                    lp.mLeft = paddingLeft + lp.leftMargin;
-                    lp.mRight = lp.mLeft + child.getMeasuredWidth();
-
-                    lp.mTop = contentHeight + lp.topMargin;
-                    lp.mBottom = lp.mTop + child.getMeasuredHeight();
-
-                    contentHeight = lp.mBottom + lp.bottomMargin;
-                    break;
-                case CONTENT_PIC_MULTI_INDEX:
-                    int contentMultiPicChildMaxWidth = contentMaxWidth - lp.leftMargin - lp.rightMargin;
-                    widthSpec = MeasureSpec.makeMeasureSpec(contentMultiPicChildMaxWidth, MeasureSpec.EXACTLY);
-                    heightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-                    child.measure(widthSpec, heightSpec);
-
-                    lp.mLeft = paddingLeft + lp.leftMargin;
-                    lp.mRight = lp.mLeft + child.getMeasuredWidth();
-
-                    lp.mTop = contentHeight + lp.topMargin;
-                    lp.mBottom = lp.mTop + child.getMeasuredHeight();
-
-                    contentHeight = lp.mBottom + lp.bottomMargin;
                     break;
                 case REPOST_FLAG_INDEX:
                 case REPOST_CONTENT_INDEX:

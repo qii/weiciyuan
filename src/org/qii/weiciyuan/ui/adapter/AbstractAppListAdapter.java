@@ -343,7 +343,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         return inflater.inflate(R.layout.timeline_listview_item_big_pic_layout, parent, false);
     }
 
-
+    //weibo image widgets and its forward weibo image widgets are the same
     private ViewHolder buildHolder(View convertView) {
         ViewHolder holder = new ViewHolder();
         holder.username = (TextView) convertView.findViewById(R.id.username);
@@ -354,10 +354,12 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.time = (TimeTextView) convertView.findViewById(R.id.time);
         holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
 
-        holder.content_pic = (IWeiciyuanDrawable) convertView.findViewById(R.id.content_pic);
-        holder.content_pic_multi = (GridLayout) convertView.findViewById(R.id.content_pic_multi);
+
         holder.repost_content_pic = (IWeiciyuanDrawable) convertView.findViewById(R.id.repost_content_pic);
         holder.repost_content_pic_multi = (GridLayout) convertView.findViewById(R.id.repost_content__pic_multi);
+
+        holder.content_pic = holder.repost_content_pic;
+        holder.content_pic_multi = holder.repost_content_pic_multi;
 
         holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
         holder.repost_layout = convertView.findViewById(R.id.repost_layout);
