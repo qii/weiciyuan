@@ -211,12 +211,10 @@
 
         <!-- service -->
         <service android:name=".othercomponent.FetchNewMsgService" />
-        <service android:name=".othercomponent.DownloadEmotionsService" />
         <service android:name=".othercomponent.sendweiboservice.SendWeiboService" />
         <service android:name=".othercomponent.sendweiboservice.SendRepostService" />
         <service android:name=".othercomponent.sendweiboservice.SendCommentService" />
         <service android:name=".othercomponent.sendweiboservice.SendReplyToCommentService" />
-        <service android:name=".othercomponent.SaveToDBService" />
 
         <service android:name=".othercomponent.unreadnotification.JBMentionsWeiboNotificationServiceHelper" />
         <service android:name=".othercomponent.unreadnotification.JBMentionsCommentNotificationServiceHelper" />
