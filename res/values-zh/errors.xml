@@ -10,7 +10,7 @@
     <string name="code10002">服务端资源不可用</string>
     <string name="code10003">远程服务出错</string>
     <string name="code10005">该资源需要appkey拥有更高级的授权</string>
-    <string name="code10006">缺少 source参数(appkey)</string>
+    <string name="code10006">授权信息丢失</string>
     <string name="code10007">不支持的 MediaType (%s)</string>
     <string name="code10008">错误:参数错误，请参考API文档</string>
     <string name="code10009">任务过多，系统繁忙</string>
@@ -19,8 +19,8 @@
     <string name="code10012">非法请求</string>
     <string name="code10013">不合法的微博用户</string>
     <string name="code10014">第三方应用访问api接口权限受限制</string>
-    <string name="code10016">错误:缺失必选参数:%s，请参考API文档</string>
-    <string name="code10017" formatted="false">错误:参数值非法,希望得到 (%s),实际得到 (%s)，请参考API文档</string>
+    <string name="code10016">缺失必选参数</string>
+    <string name="code10017" formatted="false">参数值非法</string>
     <string name="code10018">请求长度超过限制</string>
     <string name="code10020">接口不存在</string>
     <string name="code10021">请求的HTTP METHOD不支持</string>
@@ -47,7 +47,7 @@
     <string name="code20014">传入参数有误，请再调用一次</string>
     <string name="code20016">发微博太多啦，休息一会儿吧</string>
     <string name="code20017">你刚刚已经发送过相似内容了哦，先休息一会吧</string>
-    <string name="code20019">不要太贪心哦，发一次就够啦</string>
+    <string name="code20019">内容重复！</string>
     <string name="code20023">很抱歉，此功能暂时无法使用，如需帮助请联系@微博客服 或者致电客服电话400 690 0000</string>
     <string name="code20031">需要弹出验证码</string>
     <string name="code20032">微博发布成功。目前服务器数据同步可能会有延迟，请耐心等待1-2分钟。谢谢</string>
@@ -56,7 +56,7 @@
     <string name="code20044">可发表，但是需要弹出蒙层</string>
     <string name="code20045">不可发表，需要弹出蒙层</string>
 
-    <string name="code20101">不存在的微博</string>
+    <string name="code20101">该微博已经被删掉了</string>
     <string name="code20102">不是你发布的微博</string>
     <string name="code20103">不能转发自己的微博</string>
     <string name="code20109">微博 id为空</string>
@@ -111,7 +111,7 @@
     <string name="code20503">关系错误，user_id必须是你关注的用户</string>
     <string name="code20504">你不能关注自己</string>
     <string name="code20505">加关注请求超过上限</string>
-    <string name="code20506">已经关注此用户</string>
+    <string name="code20506">已经关注了，不要重复操作</string>
     <string name="code20507">需要输入验证码</string>
     <string name="code20508">根据对方的设置，你不能进行此操作</string>
     <string name="code20509">悄悄关注个数到达上限</string>
@@ -215,18 +215,18 @@
     <string name="code21318">Pin码认证失败</string>
     <string name="code21319">授权关系已经被解除</string>
     <string name="code21320">不支持的协议</string>
-    <string name="code21321">未审核的应用使用人数超过限制</string>
+    <string name="code21321">应用还没通过审核，登录用户受限制</string>
     <string name="code21322">重定向地址不匹配</string>
     <string name="code21323">请求不合法</string>
     <string name="code21324">client_id或client_secret参数无效</string>
     <string name="code21325">提供的Access Grant是无效的、过期的或已撤销的</string>
     <string name="code21326">客户端没有权限</string>
-    <string name="code21327">token过期</string>
+    <string name="code21327">授权过期，请重新登录一次</string>
     <string name="code21328">不支持的 GrantType</string>
     <string name="code21329">不支持的 ResponseType</string>
     <string name="code21330">用户或授权服务器拒绝授予数据访问权限</string>
     <string name="code21331">服务暂时无法访问</string>
-    <string name="code21332">access_token 无效</string>
+    <string name="code21332">授权信息错误</string>
     <string name="code21333">禁止使用此认证方式</string>
     <string name="code21334">帐号状态不正常</string>
     <string name="code21501">access_token 无效</string>
@@ -307,17 +307,5 @@
     <string name="code21966">地理信息接口缺少参数coordinates</string>
     <string name="code21971">地理信息接口中心坐标超出范围</string>
 
-
-    <!--you can defined here to override above content-->
-
-    <string name="code20101">该微博已经被删掉了</string>
-    <string name="code21327">授权过期，请重新登录一次</string>
-    <string name="code21321">应用还没通过审核，登录用户受限制</string>
-    <string name="code20506">已经关注了，不要重复操作</string>
-    <string name="code21332">授权信息错误</string>
-    <string name="code10006">授权信息丢失</string>
-    <string name="code20019">内容重复！</string>
-    <string name="code10016">缺失必选参数</string>
-    <string name="code10017" formatted="false">参数值非法</string>
 
 </resources>
