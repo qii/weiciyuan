@@ -1,0 +1,57 @@
+buildscript {
+
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.6.3+'
+    }
+}
+
+apply plugin: 'android'
+
+
+dependencies {
+    compile files('libs/gson-2.2.2.jar')
+    compile project(':libs:slidingmenulibrary')
+    compile 'com.google.android.gms:play-services:4.0.30+'
+
+}
+
+android {
+
+    buildToolsVersion "19"
+    compileSdkVersion 19
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 19
+    }
+
+    target = 'android-19'
+    sourceSets {
+        main {
+            manifest {
+                srcFile 'AndroidManifest.xml'
+            }
+            java {
+                srcDir 'src'
+            }
+            res {
+                srcDir 'res'
+            }
+            assets {
+                srcDir 'assets'
+            }
+            resources {
+                srcDir 'src'
+            }
+
+            aidl {
+                srcDir 'src/com/sina/sso'
+            }
+        }
+    }
+}
