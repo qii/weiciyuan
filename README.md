@@ -16,6 +16,10 @@ Sina Weibo Android App, require Android 4.1+, GPL v3 License
 --------------
 https://github.com/qii/weiciyuan/wiki
 
+编译
+--------------
+gradle build
+
 黄粱一梦二十年
 --------------
 黄粱一梦二十年
