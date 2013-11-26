@@ -116,7 +116,6 @@
     <string name="is_following_me">正在关注</string>
 
     <!--main category -->
-    <string name="home">首页</string>
     <string name="mentions">提及</string>
     <string name="comments">评论</string>
     <string name="discover">探索</string>
