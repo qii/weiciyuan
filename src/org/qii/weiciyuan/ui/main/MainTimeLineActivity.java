@@ -1,21 +1,7 @@
 package org.qii.weiciyuan.ui.main;
 
-import android.app.ActionBar;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.*;
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import com.slidingmenu.lib.SlidingMenu;
+
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.UserBean;
@@ -40,6 +26,28 @@ import org.qii.weiciyuan.ui.userinfo.MyFavListFragment;
 import org.qii.weiciyuan.ui.userinfo.NewUserInfoFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
+import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -51,17 +59,24 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         IAccountInfo {
 
     public static final int REQUEST_CODE_UPDATE_FRIENDS_TIMELINE_COMMENT_REPOST_COUNT = 0;
+
     public static final int REQUEST_CODE_UPDATE_MENTIONS_WEIBO_TIMELINE_COMMENT_REPOST_COUNT = 1;
+
     public static final int REQUEST_CODE_UPDATE_MY_FAV_TIMELINE_COMMENT_REPOST_COUNT = 2;
 
     private AccountBean accountBean;
+
     private NewMsgInterruptBroadcastReceiver newMsgInterruptBroadcastReceiver;
+
     private MusicReceiver musicReceiver;
+
     private ScrollableListFragment currentFragment;
+
     private TextView titleText;
 
 
     public static interface ScrollableListFragment {
+
         public void scrollToTop();
     }
 
@@ -99,19 +114,23 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         } else {
             Intent intent = getIntent();
             accountBean = (AccountBean) intent.getParcelableExtra("account");
-            if (accountBean == null)
-                accountBean = (AccountBean) intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+            if (accountBean == null) {
+                accountBean = (AccountBean) intent
+                        .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+            }
         }
 
-        if (accountBean == null)
+        if (accountBean == null) {
             accountBean = GlobalContext.getInstance().getAccountBean();
+        }
 
         GlobalContext.getInstance().setGroup(null);
         GlobalContext.getInstance().setAccountBean(accountBean);
         SettingUtility.setDefaultAccountId(accountBean.getUid());
 
         buildInterface(savedInstanceState);
-        Executors.newSingleThreadScheduledExecutor().schedule(new ClearCacheTask(), 8, TimeUnit.SECONDS);
+        Executors.newSingleThreadScheduledExecutor()
+                .schedule(new ClearCacheTask(), 8, TimeUnit.SECONDS);
     }
 
 
@@ -136,8 +155,10 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
         if (savedInstanceState == null) {
             initFragments();
-            FragmentTransaction secondFragmentTransaction = getSupportFragmentManager().beginTransaction();
-            secondFragmentTransaction.replace(R.id.menu_frame, getMenuFragment(), LeftMenuFragment.class.getName());
+            FragmentTransaction secondFragmentTransaction = getSupportFragmentManager()
+                    .beginTransaction();
+            secondFragmentTransaction
+                    .replace(R.id.menu_frame, getMenuFragment(), LeftMenuFragment.class.getName());
             getSlidingMenu().showContent();
             secondFragmentTransaction.commit();
         }
@@ -154,7 +175,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (!friend.isAdded()) {
-            fragmentTransaction.add(R.id.menu_right_fl, friend, FriendsTimeLineFragment.class.getName());
+            fragmentTransaction
+                    .add(R.id.menu_right_fl, friend, FriendsTimeLineFragment.class.getName());
             fragmentTransaction.hide(friend);
         }
         if (!mentions.isAdded()) {
@@ -174,7 +196,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         }
 
         if (!myself.isAdded()) {
-            fragmentTransaction.add(R.id.menu_right_fl, myself, NewUserInfoFragment.class.getName());
+            fragmentTransaction
+                    .add(R.id.menu_right_fl, myself, NewUserInfoFragment.class.getName());
             fragmentTransaction.hide(myself);
         }
 
@@ -183,7 +206,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             Fragment dm = getDMFragment();
 
             if (!search.isAdded()) {
-                fragmentTransaction.add(R.id.menu_right_fl, search, SearchMainParentFragment.class.getName());
+                fragmentTransaction
+                        .add(R.id.menu_right_fl, search, SearchMainParentFragment.class.getName());
                 fragmentTransaction.hide(search);
 
             }
@@ -205,10 +229,11 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         SlidingMenu slidingMenu = getSlidingMenu();
         slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
         slidingMenu.setShadowDrawable(R.drawable.shadow_slidingmenu);
-        if (phone)
+        if (phone) {
             slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        else
+        } else {
             slidingMenu.setBehindOffset(Utility.getScreenWidth());
+        }
 
         slidingMenu.setFadeDegree(0.35f);
         slidingMenu.setOnPageScrollListener(new SlidingMenu.OnPageScrollListener() {
@@ -232,7 +257,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             @Override
             public void onClosed() {
                 LongClickableLinkMovementMethod.getInstance().setLongClickable(true);
-                LocalBroadcastManager.getInstance(MainTimeLineActivity.this).sendBroadcast(new Intent(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+                LocalBroadcastManager.getInstance(MainTimeLineActivity.this)
+                        .sendBroadcast(new Intent(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
             }
         });
     }
@@ -257,7 +283,9 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 startActivity(intent);
             }
         });
-        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.RIGHT);
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,
+                Gravity.RIGHT);
         getActionBar().setCustomView(title, layoutParams);
         getActionBar().setDisplayShowCustomEnabled(true);
     }
@@ -280,8 +308,9 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
 
     private void scrollCurrentListViewToTop() {
-        if (this.currentFragment != null)
+        if (this.currentFragment != null) {
             this.currentFragment.scrollToTop();
+        }
     }
 
     public void setCurrentFragment(ScrollableListFragment fragment) {
@@ -297,7 +326,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        AccountBean newAccountBean = (AccountBean) intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+        AccountBean newAccountBean = (AccountBean) intent
+                .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
         if (newAccountBean == null) {
             return;
         }
@@ -363,12 +393,14 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     private void readClipboard() {
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData cmContent = cm.getPrimaryClip();
-        if (cmContent == null)
+        if (cmContent == null) {
             return;
+        }
         ClipData.Item item = cmContent.getItemAt(0);
         if (item != null) {
             String url = item.coerceToText(this).toString();
-            boolean a = !TextUtils.isEmpty(url) && !url.equals(SettingUtility.getLastFoundWeiboAccountLink());
+            boolean a = !TextUtils.isEmpty(url) && !url
+                    .equals(SettingUtility.getLastFoundWeiboAccountLink());
             boolean b = Utility.isWeiboAccountIdLink(url) || Utility.isWeiboAccountDomainLink(url);
             if (a && b) {
                 OpenWeiboAccountLinkDialog dialog = new OpenWeiboAccountLinkDialog(url);
@@ -413,7 +445,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                                 startActivity(intent);
                             } else if (Utility.isWeiboAccountDomainLink(url)) {
                                 Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                                intent.putExtra("domain", Utility.getDomainFromWeiboAccountLink(url));
+                                intent.putExtra("domain",
+                                        Utility.getDomainFromWeiboAccountLink(url));
                                 startActivity(intent);
                             }
                         }
@@ -432,11 +465,13 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     protected void onPause() {
         super.onPause();
         unregisterReceiver(newMsgInterruptBroadcastReceiver);
-        if (musicReceiver != null)
+        if (musicReceiver != null) {
             unregisterReceiver(musicReceiver);
+        }
 
-        if (isFinishing())
+        if (isFinishing()) {
             saveNavigationPositionToDB();
+        }
     }
 
     public void saveNavigationPositionToDB() {
@@ -448,13 +483,15 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         }
         int result = navPosition + second;
         GlobalContext.getInstance().getAccountBean().setNavigationPosition(result);
-        AccountDBTask.updateNavigationPosition(GlobalContext.getInstance().getAccountBean(), result);
+        AccountDBTask
+                .updateNavigationPosition(GlobalContext.getInstance().getAccountBean(), result);
     }
 
 
     public LeftMenuFragment getMenuFragment() {
-        LeftMenuFragment fragment = ((LeftMenuFragment) getSupportFragmentManager().findFragmentByTag(
-                LeftMenuFragment.class.getName()));
+        LeftMenuFragment fragment = ((LeftMenuFragment) getSupportFragmentManager()
+                .findFragmentByTag(
+                        LeftMenuFragment.class.getName()));
         if (fragment == null) {
             fragment = new LeftMenuFragment();
         }
@@ -463,8 +500,9 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
 
     public FriendsTimeLineFragment getFriendsTimeLineFragment() {
-        FriendsTimeLineFragment fragment = ((FriendsTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
-                FriendsTimeLineFragment.class.getName()));
+        FriendsTimeLineFragment fragment = ((FriendsTimeLineFragment) getSupportFragmentManager()
+                .findFragmentByTag(
+                        FriendsTimeLineFragment.class.getName()));
         if (fragment == null) {
             fragment = new FriendsTimeLineFragment(getAccount(), getUser(), getToken());
             fragment.setArguments(new Bundle());
@@ -473,8 +511,9 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     public MentionsTimeLine getMentionsTimeLineFragment() {
-        MentionsTimeLine fragment = ((MentionsTimeLine) getSupportFragmentManager().findFragmentByTag(
-                MentionsTimeLine.class.getName()));
+        MentionsTimeLine fragment = ((MentionsTimeLine) getSupportFragmentManager()
+                .findFragmentByTag(
+                        MentionsTimeLine.class.getName()));
         if (fragment == null) {
             fragment = new MentionsTimeLine();
             fragment.setArguments(new Bundle());
@@ -483,8 +522,9 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     public CommentsTimeLine getCommentsTimeLineFragment() {
-        CommentsTimeLine fragment = ((CommentsTimeLine) getSupportFragmentManager().findFragmentByTag(
-                CommentsTimeLine.class.getName()));
+        CommentsTimeLine fragment = ((CommentsTimeLine) getSupportFragmentManager()
+                .findFragmentByTag(
+                        CommentsTimeLine.class.getName()));
         if (fragment == null) {
             fragment = new CommentsTimeLine();
             fragment.setArguments(new Bundle());
@@ -493,8 +533,9 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     public SearchMainParentFragment getSearchFragment() {
-        SearchMainParentFragment fragment = ((SearchMainParentFragment) getSupportFragmentManager().findFragmentByTag(
-                SearchMainParentFragment.class.getName()));
+        SearchMainParentFragment fragment = ((SearchMainParentFragment) getSupportFragmentManager()
+                .findFragmentByTag(
+                        SearchMainParentFragment.class.getName()));
         if (fragment == null) {
             fragment = new SearchMainParentFragment();
             fragment.setArguments(new Bundle());
@@ -503,8 +544,9 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     public DMUserListFragment getDMFragment() {
-        DMUserListFragment fragment = ((DMUserListFragment) getSupportFragmentManager().findFragmentByTag(
-                DMUserListFragment.class.getName()));
+        DMUserListFragment fragment = ((DMUserListFragment) getSupportFragmentManager()
+                .findFragmentByTag(
+                        DMUserListFragment.class.getName()));
         if (fragment == null) {
             fragment = new DMUserListFragment();
             fragment.setArguments(new Bundle());
@@ -513,8 +555,9 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     public MyFavListFragment getFavFragment() {
-        MyFavListFragment fragment = ((MyFavListFragment) getSupportFragmentManager().findFragmentByTag(
-                MyFavListFragment.class.getName()));
+        MyFavListFragment fragment = ((MyFavListFragment) getSupportFragmentManager()
+                .findFragmentByTag(
+                        MyFavListFragment.class.getName()));
         if (fragment == null) {
             fragment = new MyFavListFragment();
             fragment.setArguments(new Bundle());
@@ -523,10 +566,12 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     public NewUserInfoFragment getMyProfileFragment() {
-        NewUserInfoFragment fragment = ((NewUserInfoFragment) getSupportFragmentManager().findFragmentByTag(
-                NewUserInfoFragment.class.getName()));
+        NewUserInfoFragment fragment = ((NewUserInfoFragment) getSupportFragmentManager()
+                .findFragmentByTag(
+                        NewUserInfoFragment.class.getName()));
         if (fragment == null) {
-            fragment = new NewUserInfoFragment(GlobalContext.getInstance().getAccountBean().getInfo(),
+            fragment = new NewUserInfoFragment(
+                    GlobalContext.getInstance().getAccountBean().getInfo(),
                     GlobalContext.getInstance().getSpecialToken());
             fragment.setArguments(new Bundle());
         }
@@ -535,9 +580,11 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
     //todo
     private class NewMsgInterruptBroadcastReceiver extends BroadcastReceiver {
+
         @Override
         public void onReceive(Context context, Intent intent) {
-            AccountBean newMsgAccountBean = (AccountBean) intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+            AccountBean newMsgAccountBean = (AccountBean) intent
+                    .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
             if (newMsgAccountBean.getUid().equals(MainTimeLineActivity.this.accountBean.getUid())) {
 //                abortBroadcast();
             }
@@ -545,6 +592,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     private class MusicReceiver extends BroadcastReceiver {
+
         @Override
         public void onReceive(Context context, Intent intent) {
             String artist = intent.getStringExtra("artist");
