@@ -16,9 +16,22 @@ Sina Weibo Android App, require Android 4.1+, GPL v3 License
 --------------
 https://github.com/qii/weiciyuan/wiki
 
-编译
+Gradle 构建
 --------------
-gradle build
+- 版本
+    - 最新 Android SDK
+    - Gradle 1.8
+- 环境变量
+    - ANDROID_HOME
+    - GRADLE_HOME，同时把bin放入path变量
+- Android SDK 安装
+    - Android SDK Build-tools 19+
+    - Google Repository 4+
+    - Google Play services 13+
+    - Android Support Repository 3+
+    - Android Support Library 19+
+- 编译
+    - `gradle build`，编译好的apk在build/apk下面，没签名，需要签名的修改build.gradle
 
 黄粱一梦二十年
 --------------
