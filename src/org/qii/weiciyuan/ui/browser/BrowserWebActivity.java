@@ -1,12 +1,5 @@
 package org.qii.weiciyuan.ui.browser;
 
-import android.app.ActionBar;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Gravity;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.shorturl.ShareShortUrlCountDao;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -16,6 +9,14 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
+import android.app.ActionBar;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
 /**
  * User: qii
  * Date: 13-2-19
@@ -23,7 +24,9 @@ import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 public class BrowserWebActivity extends AbstractAppActivity {
 
     private Button shareCountBtn;
+
     private int shareCountInt;
+
     private String url;
 
     @Override
@@ -35,7 +38,12 @@ public class BrowserWebActivity extends AbstractAppActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        url = getIntent().getStringExtra("url");
+        String action = getIntent().getAction();
+        if (Intent.ACTION_VIEW.equalsIgnoreCase(action)) {
+            url = getIntent().getData().toString();
+        } else {
+            url = getIntent().getStringExtra("url");
+        }
 
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setDisplayShowTitleEnabled(true);
@@ -47,7 +55,8 @@ public class BrowserWebActivity extends AbstractAppActivity {
         shareCountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BrowserWebActivity.this, BrowserShareTimeLineActivity.class);
+                Intent intent = new Intent(BrowserWebActivity.this,
+                        BrowserShareTimeLineActivity.class);
                 intent.putExtra("url", url);
                 intent.putExtra("count", shareCountInt);
                 startActivity(intent);
@@ -87,7 +96,8 @@ public class BrowserWebActivity extends AbstractAppActivity {
         protected Integer doInBackground(Void... params) {
             int result = 0;
             try {
-                result = new ShareShortUrlCountDao(GlobalContext.getInstance().getSpecialToken(), url).getCount();
+                result = new ShareShortUrlCountDao(GlobalContext.getInstance().getSpecialToken(),
+                        url).getCount();
             } catch (WeiboException e) {
 
             }
@@ -97,10 +107,12 @@ public class BrowserWebActivity extends AbstractAppActivity {
         @Override
         protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
-            if (result == null)
+            if (result == null) {
                 return;
-            if (shareCountBtn == null)
+            }
+            if (shareCountBtn == null) {
                 return;
+            }
             shareCountInt = result;
             shareCountBtn.setText(String.valueOf(shareCountInt));
         }
