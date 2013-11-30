@@ -1,5 +1,10 @@
 package org.qii.weiciyuan.ui.browser;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
+
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.ClipData;
@@ -11,17 +16,24 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.*;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.*;
+import android.webkit.WebChromeClient;
+import android.webkit.WebIconDatabase;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
@@ -30,10 +42,15 @@ import org.qii.weiciyuan.support.utils.Utility;
 public class BrowserWebFragment extends Fragment {
 
     private WebView mWebView;
+
     private ProgressBar mProgressBar;
+
     private boolean mIsWebViewAvailable;
+
     private String mUrl = null;
+
     private ShareActionProvider mShareActionProvider;
+
     private MenuItem refreshItem;
 
     public BrowserWebFragment() {
@@ -62,8 +79,9 @@ public class BrowserWebFragment extends Fragment {
          * devices may cant, Galaxy Nexus 4.2.2 version
          */
         String path = FileManager.getWebViewFaviconDirPath();
-        if (!TextUtils.isEmpty(path))
+        if (!TextUtils.isEmpty(path)) {
             WebIconDatabase.getInstance().open(FileManager.getWebViewFaviconDirPath());
+        }
     }
 
     @Override
@@ -77,7 +95,7 @@ public class BrowserWebFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.browserwebfragment_layout, container, false);
         if (mWebView != null) {
             mWebView.destroy();
@@ -109,8 +127,12 @@ public class BrowserWebFragment extends Fragment {
 
 
     public void loadUrl(String url) {
-        if (mIsWebViewAvailable) getWebView().loadUrl(mUrl = url);
-        else Log.w("ImprovedWebViewFragment", "WebView cannot be found. Check the view and fragment have been loaded.");
+        if (mIsWebViewAvailable) {
+            getWebView().loadUrl(mUrl = url);
+        } else {
+            Log.w("ImprovedWebViewFragment",
+                    "WebView cannot be found. Check the view and fragment have been loaded.");
+        }
     }
 
     @Override
@@ -172,12 +194,15 @@ public class BrowserWebFragment extends Fragment {
                 getActivity().startActivity(intent);
                 break;
             case R.id.menu_copy:
-                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager cm = (ClipboardManager) getActivity()
+                        .getSystemService(Context.CLIPBOARD_SERVICE);
                 cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", buildShareCopyContent()));
-                Toast.makeText(getActivity(), getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.copy_successfully),
+                        Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menu_share:
-                Utility.setShareIntent(getActivity(), mShareActionProvider, buildShareCopyContent());
+                Utility.setShareIntent(getActivity(), mShareActionProvider,
+                        buildShareCopyContent());
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -194,7 +219,8 @@ public class BrowserWebFragment extends Fragment {
     }
 
     private void startRefreshAnimation() {
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getActivity()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
         Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh);
         iv.startAnimation(rotation);
@@ -210,10 +236,20 @@ public class BrowserWebFragment extends Fragment {
     }
 
     private class InnerWebViewClient extends WebViewClient {
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-            return true;
+            if (Utility.isWeiboAccountDomainLink(url)) {
+                String result = Utility.getDomainFromWeiboAccountLink(url);
+                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                intent.putExtra("domain", result);
+                getActivity().startActivity(intent);
+                getActivity().finish();
+                return true;
+            } else {
+                view.loadUrl(url);
+                return true;
+            }
         }
 
         @Override
@@ -224,29 +260,36 @@ public class BrowserWebFragment extends Fragment {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
             ActionBar actionBar = getActivity().getActionBar();
-            if (actionBar == null)
+            if (actionBar == null) {
                 return;
-            if (!TextUtils.isEmpty(view.getTitle()))
+            }
+            if (!TextUtils.isEmpty(view.getTitle())) {
                 actionBar.setTitle(view.getTitle());
+            }
             finishRefreshAnimation();
         }
     }
 
     private class InnerWebChromeClient extends WebChromeClient {
+
         @Override
         public void onReceivedTitle(WebView view, String sTitle) {
             super.onReceivedTitle(view, sTitle);
             if (sTitle != null && sTitle.length() > 0) {
-                if (getActivity() == null)
+                if (getActivity() == null) {
                     return;
+                }
                 ActionBar actionBar = getActivity().getActionBar();
-                if (actionBar == null)
+                if (actionBar == null) {
                     return;
-                if (!TextUtils.isEmpty(view.getTitle()))
+                }
+                if (!TextUtils.isEmpty(view.getTitle())) {
                     actionBar.setTitle(view.getTitle());
+                }
             }
         }
 
@@ -254,20 +297,24 @@ public class BrowserWebFragment extends Fragment {
         @Override
         public void onReceivedIcon(WebView view, Bitmap icon) {
             super.onReceivedIcon(view, icon);
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
 //            getActivity().getActionBar().setIcon(new BitmapDrawable(getActivity().getResources(), icon));
         }
 
 
         public void onProgressChanged(WebView view, int progress) {
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
-            if (!mProgressBar.isShown())
+            }
+            if (!mProgressBar.isShown()) {
                 mProgressBar.setVisibility(View.VISIBLE);
+            }
             mProgressBar.setProgress(progress);
-            if (progress == 100)
+            if (progress == 100) {
                 mProgressBar.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
