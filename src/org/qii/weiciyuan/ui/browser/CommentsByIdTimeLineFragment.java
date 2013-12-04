@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
+
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
@@ -31,20 +32,26 @@ import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 import org.qii.weiciyuan.ui.loader.CommentsByIdMsgLoader;
-import org.qii.weiciyuan.ui.widgets.QuickSendProgressFragment;
+import org.qii.weiciyuan.ui.common.QuickSendProgressFragment;
 
 /**
  * User: qii
  * Date: 12-7-29
  */
 @Deprecated
-public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<CommentListBean> implements IRemoveItem {
+public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<CommentListBean>
+        implements IRemoveItem {
 
     private LinearLayout quick_repost;
+
     private RemoveTask removeTask;
+
     private CommentListBean bean = new CommentListBean();
+
     private EditText et;
+
     private String token;
+
     private MessageBean msg;
 
     private BroadcastReceiver sendCompletedReceiver;
@@ -94,11 +101,14 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
             return true;
         } else {
             if (!haveContent && !haveToken) {
-                Toast.makeText(getActivity(), getString(R.string.content_cant_be_empty_and_dont_have_account), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),
+                        getString(R.string.content_cant_be_empty_and_dont_have_account),
+                        Toast.LENGTH_SHORT).show();
             } else if (!haveContent) {
                 et.setError(getString(R.string.content_cant_be_empty));
             } else if (!haveToken) {
-                Toast.makeText(getActivity(), getString(R.string.dont_have_account), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.dont_have_account),
+                        Toast.LENGTH_SHORT).show();
             }
 
             if (!contentNumBelow140) {
@@ -157,8 +167,9 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.commentsbyidtimelinefragment_layout, container, false);
+            ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater
+                .inflate(R.layout.commentsbyidtimelinefragment_layout, container, false);
         buildLayout(inflater, view);
         quick_repost = (LinearLayout) view.findViewById(R.id.quick_repost);
         et = (EditText) view.findViewById(R.id.content);
@@ -178,7 +189,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         getListView().setOnItemLongClickListener(onItemLongClickListener);
     }
 
-    private AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+    private AdapterView.OnItemLongClickListener onItemLongClickListener
+            = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
             if (position - 1 < getList().getSize() && position - 1 >= 0) {
@@ -187,12 +199,18 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
                     mActionMode = null;
                     getListView().setItemChecked(position, true);
                     timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(getListView(), timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
+                    mActionMode = getActivity().startActionMode(
+                            new CommentByIdSingleChoiceModeLinstener(getListView(), timeLineAdapter,
+                                    CommentsByIdTimeLineFragment.this, quick_repost,
+                                    bean.getItemList().get(position - 1)));
                     return true;
                 } else {
                     getListView().setItemChecked(position, true);
                     timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new CommentByIdSingleChoiceModeLinstener(getListView(), timeLineAdapter, CommentsByIdTimeLineFragment.this, quick_repost, bean.getItemList().get(position - 1)));
+                    mActionMode = getActivity().startActionMode(
+                            new CommentByIdSingleChoiceModeLinstener(getListView(), timeLineAdapter,
+                                    CommentsByIdTimeLineFragment.this, quick_repost,
+                                    bean.getItemList().get(position - 1)));
                     return true;
                 }
             }
@@ -203,7 +221,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     protected void buildListAdapter() {
-        timeLineAdapter = new CommentListAdapter(this, getList().getItemList(), getListView(), false, false);
+        timeLineAdapter = new CommentListAdapter(this, getList().getItemList(), getListView(),
+                false, false);
         pullToRefreshListView.setAdapter(timeLineAdapter);
     }
 
@@ -218,7 +237,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     public void removeItem(int position) {
         clearActionMode();
         if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            removeTask = new RemoveTask(GlobalContext.getInstance().getSpecialToken(), bean.getItemList().get(position).getId(), position);
+            removeTask = new RemoveTask(GlobalContext.getInstance().getSpecialToken(),
+                    bean.getItemList().get(position).getId(), position);
             removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -252,8 +272,11 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
 
         String token;
+
         String id;
+
         int positon;
+
         WeiboException e;
 
         public RemoveTask(String token, String id, int positon) {
@@ -293,7 +316,9 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     }
 
     private class QuickCommentTask extends AsyncTask<Void, Void, CommentBean> {
+
         WeiboException e;
+
         QuickSendProgressFragment progressFragment = new QuickSendProgressFragment();
 
         @Override
@@ -317,7 +342,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
         @Override
         protected CommentBean doInBackground(Void... params) {
-            CommentNewMsgDao dao = new CommentNewMsgDao(token, msg.getId(), et.getText().toString());
+            CommentNewMsgDao dao = new CommentNewMsgDao(token, msg.getId(),
+                    et.getText().toString());
             try {
                 return dao.sendNewMsg();
             } catch (WeiboException e) {
@@ -344,7 +370,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
                 et.setText("");
                 loadNewMsg();
             } else {
-                Toast.makeText(getActivity(), getString(R.string.send_failed), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.send_failed), Toast.LENGTH_SHORT)
+                        .show();
             }
             super.onPostExecute(s);
 
@@ -436,7 +463,8 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     }
 
 
-    protected android.support.v4.content.Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateNewMsgLoader(int loaderId, Bundle args) {
+    protected android.support.v4.content.Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateNewMsgLoader(
+            int loaderId, Bundle args) {
         String token = GlobalContext.getInstance().getSpecialToken();
 
         String sinceId = null;
@@ -446,13 +474,17 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         return new CommentsByIdMsgLoader(getActivity(), msg.getId(), token, sinceId, null);
     }
 
-    protected android.support.v4.content.Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateMiddleMsgLoader(int loaderId, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
+    protected android.support.v4.content.Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateMiddleMsgLoader(
+            int loaderId, Bundle args, String middleBeginId, String middleEndId,
+            String middleEndTag, int middlePosition) {
         String token = GlobalContext.getInstance().getSpecialToken();
 
-        return new CommentsByIdMsgLoader(getActivity(), msg.getId(), token, middleBeginId, middleEndId);
+        return new CommentsByIdMsgLoader(getActivity(), msg.getId(), token, middleBeginId,
+                middleEndId);
     }
 
-    protected android.support.v4.content.Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateOldMsgLoader(int loaderId, Bundle args) {
+    protected android.support.v4.content.Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateOldMsgLoader(
+            int loaderId, Bundle args) {
         String token = GlobalContext.getInstance().getSpecialToken();
         String maxId = null;
         if (getList().getItemList().size() > 0) {

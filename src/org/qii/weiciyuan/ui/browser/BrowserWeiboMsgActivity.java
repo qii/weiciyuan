@@ -9,6 +9,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.common.CommonProgressDialogFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.loader.AbstractAsyncNetRequestTaskLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -19,17 +20,13 @@ import org.qii.weiciyuan.ui.task.UnFavAsyncTask;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -129,9 +126,10 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
 
         getActionBar().setTitle(getString(R.string.fetching_weibo_info));
 
-        FetchingDataDialog dialog = new FetchingDataDialog();
+        CommonProgressDialogFragment dialog = CommonProgressDialogFragment
+                .newInstance(getString(R.string.fetching_weibo_info));
         getSupportFragmentManager().beginTransaction()
-                .add(dialog, FetchingDataDialog.class.getName()).commit();
+                .add(dialog, CommonProgressDialogFragment.class.getName()).commit();
         getSupportLoaderManager().initLoader(REFRESH_LOADER_ID, null, refreshCallback);
     }
 
@@ -355,8 +353,9 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    FetchingDataDialog dialog = (FetchingDataDialog) getSupportFragmentManager()
-                            .findFragmentByTag(FetchingDataDialog.class.getName());
+                    CommonProgressDialogFragment dialog
+                            = (CommonProgressDialogFragment) getSupportFragmentManager()
+                            .findFragmentByTag(CommonProgressDialogFragment.class.getName());
                     if (dialog != null) {
                         dialog.dismiss();
                     }
@@ -386,19 +385,5 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
         }
     };
 
-    public static class FetchingDataDialog extends DialogFragment {
 
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            ProgressDialog dialog = new ProgressDialog(getActivity());
-            dialog.setMessage(getString(R.string.fetching_weibo_info));
-            return dialog;
-        }
-
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            super.onCancel(dialog);
-            getActivity().finish();
-        }
-    }
 }

@@ -1,10 +1,11 @@
-package org.qii.weiciyuan.ui.widgets;
+package org.qii.weiciyuan.ui.common;
+
+import org.qii.weiciyuan.R;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import org.qii.weiciyuan.R;
 
 /**
  * User: qii

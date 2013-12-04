@@ -1,8 +1,29 @@
 package org.qii.weiciyuan.ui.userinfo;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
+import org.qii.weiciyuan.dao.group.ModifyGroupMemberDao;
+import org.qii.weiciyuan.dao.relationship.FanDao;
+import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
+import org.qii.weiciyuan.dao.show.ShowUserDao;
+import org.qii.weiciyuan.dao.user.RemarkDao;
+import org.qii.weiciyuan.support.database.FilterDBTask;
+import org.qii.weiciyuan.support.debug.AppLogger;
+import org.qii.weiciyuan.support.error.ErrorCode;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.common.CommonProgressDialogFragment;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.interfaces.IUserInfo;
+import org.qii.weiciyuan.ui.loader.AbstractAsyncNetRequestTaskLoader;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,26 +41,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
-import org.qii.weiciyuan.dao.group.ModifyGroupMemberDao;
-import org.qii.weiciyuan.dao.relationship.FanDao;
-import org.qii.weiciyuan.dao.relationship.FriendshipsDao;
-import org.qii.weiciyuan.dao.show.ShowUserDao;
-import org.qii.weiciyuan.dao.user.RemarkDao;
-import org.qii.weiciyuan.support.database.FilterDBTask;
-import org.qii.weiciyuan.support.debug.AppLogger;
-import org.qii.weiciyuan.support.error.ErrorCode;
-import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IUserInfo;
-import org.qii.weiciyuan.ui.loader.AbstractAsyncNetRequestTaskLoader;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
-import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 import java.util.List;
 
@@ -61,8 +62,9 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
 
     public String getToken() {
-        if (TextUtils.isEmpty(token))
+        if (TextUtils.isEmpty(token)) {
             token = GlobalContext.getInstance().getSpecialToken();
+        }
         return token;
     }
 
@@ -121,7 +123,6 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             buildContent();
         }
 
-
         if (isMyselfProfile()) {
             if (getClass() == MyInfoActivity.class) {
                 return;
@@ -142,8 +143,10 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
     private boolean isMyselfProfile() {
         boolean screenNameEqualCurrentAccount = bean.getScreen_name() != null
-                && bean.getScreen_name().equals(GlobalContext.getInstance().getCurrentAccountName());
-        boolean idEqualCurrentAccount = bean.getId() != null && bean.getId().equals(GlobalContext.getInstance().getCurrentAccountId());
+                && bean.getScreen_name()
+                .equals(GlobalContext.getInstance().getCurrentAccountName());
+        boolean idEqualCurrentAccount = bean.getId() != null && bean.getId()
+                .equals(GlobalContext.getInstance().getCurrentAccountId());
         return screenNameEqualCurrentAccount || idEqualCurrentAccount;
     }
 
@@ -152,15 +155,19 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         getActionBar().setDisplayShowHomeEnabled(false);
 
         String title = bean.getScreen_name();
-        if (TextUtils.isEmpty(title))
+        if (TextUtils.isEmpty(title)) {
             title = bean.getDomain();
-        if (TextUtils.isEmpty(title))
+        }
+        if (TextUtils.isEmpty(title)) {
             title = bean.getId();
+        }
 
         getActionBar().setTitle(title);
 
-        FetchingDataDialog dialog = new FetchingDataDialog();
-        getSupportFragmentManager().beginTransaction().add(dialog, FetchingDataDialog.class.getName()).commit();
+        CommonProgressDialogFragment dialog = CommonProgressDialogFragment
+                .newInstance(getString(R.string.fetching_user_info));
+        getSupportFragmentManager().beginTransaction()
+                .add(dialog, CommonProgressDialogFragment.class.getName()).commit();
         getSupportLoaderManager().initLoader(REFRESH_LOADER_ID, null, refreshCallback);
     }
 
@@ -179,9 +186,11 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                if (getSupportFragmentManager().findFragmentByTag(NewUserInfoFragment.class.getName()) == null) {
+                if (getSupportFragmentManager()
+                        .findFragmentByTag(NewUserInfoFragment.class.getName()) == null) {
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content, new NewUserInfoFragment(getUser(), getToken()), NewUserInfoFragment.class.getName())
+                            .replace(R.id.content, new NewUserInfoFragment(getUser(), getToken()),
+                                    NewUserInfoFragment.class.getName())
                             .commit();
                     getSupportFragmentManager().executePendingTransactions();
 
@@ -197,7 +206,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
                 NfcAdapter.EXTRA_NDEF_MESSAGES);
         // only one message sent during the beam
         NdefMessage msg = (NdefMessage) rawMsgs[0];
-        Toast.makeText(this, new String(msg.getRecords()[0].getPayload()), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, new String(msg.getRecords()[0].getPayload()), Toast.LENGTH_SHORT)
+                .show();
         bean = new UserBean();
         bean.setScreen_name(new String(msg.getRecords()[0].getPayload()));
     }
@@ -259,19 +269,22 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
                 dialog.show(getFragmentManager(), "");
                 break;
             case R.id.menu_follow:
-                if (followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                if (followOrUnfollowTask == null
+                        || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                     followOrUnfollowTask = new FollowTask();
                     followOrUnfollowTask.execute();
                 }
                 break;
             case R.id.menu_unfollow:
-                if (followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                if (followOrUnfollowTask == null
+                        || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                     followOrUnfollowTask = new UnFollowTask();
                     followOrUnfollowTask.execute();
                 }
                 break;
             case R.id.menu_remove_fan:
-                if (followOrUnfollowTask == null || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
+                if (followOrUnfollowTask == null
+                        || followOrUnfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                     followOrUnfollowTask = new RemoveFanTask();
                     followOrUnfollowTask.execute();
                 }
@@ -279,7 +292,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             case R.id.menu_add_to_app_filter:
                 if (!TextUtils.isEmpty(bean.getScreen_name())) {
                     FilterDBTask.addFilterKeyword(FilterDBTask.TYPE_USER, bean.getScreen_name());
-                    Toast.makeText(this, getString(R.string.filter_successfully), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.filter_successfully),
+                            Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.menu_manage_group:
@@ -301,7 +315,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     }
 
     private void manageGroup() {
-        ManageGroupDialog dialog = new ManageGroupDialog(GlobalContext.getInstance().getGroup(), bean.getId());
+        ManageGroupDialog dialog = new ManageGroupDialog(GlobalContext.getInstance().getGroup(),
+                bean.getId());
         dialog.show(getSupportFragmentManager(), "");
 
     }
@@ -314,7 +329,9 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     }
 
     private class ModifyGroupMemberTask extends MyAsyncTask<Void, Void, Void> {
+
         List<String> add;
+
         List<String> remove;
 
         public ModifyGroupMemberTask(List<String> add, List<String> remove) {
@@ -347,11 +364,13 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Toast.makeText(UserInfoActivity.this, getString(R.string.modify_successfully), Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserInfoActivity.this, getString(R.string.modify_successfully),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
     private class UnFollowTask extends MyAsyncTask<Void, UserBean, UserBean> {
+
         WeiboException e;
 
         @Override
@@ -387,7 +406,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         @Override
         protected void onPostExecute(UserBean o) {
             super.onPostExecute(o);
-            Toast.makeText(UserInfoActivity.this, getString(R.string.unfollow_successfully), Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserInfoActivity.this, getString(R.string.unfollow_successfully),
+                    Toast.LENGTH_SHORT).show();
             bean = o;
             bean.setFollowing(false);
             invalidateOptionsMenu();
@@ -396,6 +416,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
 
     private class FollowTask extends MyAsyncTask<Void, UserBean, UserBean> {
+
         WeiboException e;
 
         @Override
@@ -439,7 +460,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         @Override
         protected void onPostExecute(UserBean o) {
             super.onPostExecute(o);
-            Toast.makeText(UserInfoActivity.this, getString(R.string.follow_successfully), Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserInfoActivity.this, getString(R.string.follow_successfully),
+                    Toast.LENGTH_SHORT).show();
             bean = o;
             bean.setFollowing(true);
             invalidateOptionsMenu();
@@ -449,6 +471,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
 
 
     private class RemoveFanTask extends MyAsyncTask<Void, UserBean, UserBean> {
+
         WeiboException e;
 
         @Override
@@ -484,7 +507,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         @Override
         protected void onPostExecute(UserBean o) {
             super.onPostExecute(o);
-            Toast.makeText(UserInfoActivity.this, getString(R.string.remove_fan_successfully), Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserInfoActivity.this, getString(R.string.remove_fan_successfully),
+                    Toast.LENGTH_SHORT).show();
             bean = o;
             getInfoFragment().forceReloadData(o);
         }
@@ -494,6 +518,7 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     class UpdateRemarkTask extends MyAsyncTask<Void, UserBean, UserBean> {
 
         WeiboException e;
+
         String remark;
 
         UpdateRemarkTask(String remark) {
@@ -524,8 +549,9 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         protected void onPostExecute(UserBean userBean) {
             super.onPostExecute(userBean);
             bean = userBean;
-            if (getInfoFragment() != null)
+            if (getInfoFragment() != null) {
                 getInfoFragment().forceReloadData(userBean);
+            }
 
         }
     }
@@ -607,32 +633,38 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     }
 
 
-    private LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserBean>> refreshCallback = new LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserBean>>() {
+    private LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserBean>> refreshCallback
+            = new LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserBean>>() {
         @Override
         public Loader<AsyncTaskLoaderResult<UserBean>> onCreateLoader(int id, Bundle args) {
             return new RefreshLoader(UserInfoActivity.this, bean);
         }
 
         @Override
-        public void onLoadFinished(Loader<AsyncTaskLoaderResult<UserBean>> loader, AsyncTaskLoaderResult<UserBean> result) {
+        public void onLoadFinished(Loader<AsyncTaskLoaderResult<UserBean>> loader,
+                AsyncTaskLoaderResult<UserBean> result) {
             UserBean data = result != null ? result.data : null;
             final WeiboException exception = result != null ? result.exception : null;
 
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    FetchingDataDialog dialog = (FetchingDataDialog) getSupportFragmentManager().findFragmentByTag(FetchingDataDialog.class.getName());
+                    CommonProgressDialogFragment dialog
+                            = (CommonProgressDialogFragment) getSupportFragmentManager()
+                            .findFragmentByTag(CommonProgressDialogFragment.class.getName());
                     if (dialog != null) {
                         dialog.dismiss();
                     }
 
                     if (exception != null) {
-                        UserInfoActivityErrorDialog userInfoActivityErrorDialog = new UserInfoActivityErrorDialog(exception.getError());
-                        getSupportFragmentManager().beginTransaction().add(userInfoActivityErrorDialog, UserInfoActivityErrorDialog.class.getName()).commit();
+                        UserInfoActivityErrorDialog userInfoActivityErrorDialog
+                                = new UserInfoActivityErrorDialog(exception.getError());
+                        getSupportFragmentManager().beginTransaction()
+                                .add(userInfoActivityErrorDialog,
+                                        UserInfoActivityErrorDialog.class.getName()).commit();
                     }
                 }
             });
-
 
             if (data != null) {
                 bean = data;
@@ -647,18 +679,5 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         }
     };
 
-    public static class FetchingDataDialog extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            ProgressDialog dialog = new ProgressDialog(getActivity());
-            dialog.setMessage(getString(R.string.fetching_user_info));
-            return dialog;
-        }
 
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            super.onCancel(dialog);
-            getActivity().finish();
-        }
-    }
 }
