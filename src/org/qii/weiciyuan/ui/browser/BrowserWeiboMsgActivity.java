@@ -9,6 +9,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.common.CommonErrorDialogFragment;
 import org.qii.weiciyuan.ui.common.CommonProgressDialogFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.loader.AbstractAsyncNetRequestTaskLoader;
@@ -17,7 +18,6 @@ import org.qii.weiciyuan.ui.send.WriteCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteRepostActivity;
 import org.qii.weiciyuan.ui.task.FavAsyncTask;
 import org.qii.weiciyuan.ui.task.UnFavAsyncTask;
-import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import android.app.Activity;
 import android.content.ClipData;
@@ -361,13 +361,11 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
                     }
 
                     if (exception != null) {
-                        UserInfoActivity.UserInfoActivityErrorDialog userInfoActivityErrorDialog
-                                = new UserInfoActivity.UserInfoActivityErrorDialog(
-                                exception.getError());
+                        CommonErrorDialogFragment userInfoActivityErrorDialog
+                                = CommonErrorDialogFragment.newInstance(exception.getError());
                         getSupportFragmentManager().beginTransaction()
                                 .add(userInfoActivityErrorDialog,
-                                        UserInfoActivity.UserInfoActivityErrorDialog.class
-                                                .getName()).commit();
+                                        CommonErrorDialogFragment.class.getName()).commit();
                     }
                 }
             });

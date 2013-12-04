@@ -15,6 +15,7 @@ import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.common.CommonErrorDialogFragment;
 import org.qii.weiciyuan.ui.common.CommonProgressDialogFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
@@ -557,49 +558,6 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     }
 
 
-    public static class UserInfoActivityErrorDialog extends DialogFragment {
-
-        private String error;
-
-        public UserInfoActivityErrorDialog() {
-
-        }
-
-        public UserInfoActivityErrorDialog(String error) {
-            this.error = error;
-        }
-
-        @Override
-        public void onSaveInstanceState(Bundle outState) {
-            super.onSaveInstanceState(outState);
-            outState.putString("error", error);
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-            if (savedInstanceState != null) {
-                this.error = savedInstanceState.getString("error");
-            }
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                    .setTitle(getString(R.string.something_wrong))
-                    .setMessage(this.error)
-                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            getActivity().finish();
-                        }
-                    });
-            return builder.create();
-        }
-
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            super.onCancel(dialog);
-            getActivity().finish();
-        }
-    }
 
 
     private static class RefreshLoader extends AbstractAsyncNetRequestTaskLoader<UserBean> {
@@ -657,11 +615,11 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
                     }
 
                     if (exception != null) {
-                        UserInfoActivityErrorDialog userInfoActivityErrorDialog
-                                = new UserInfoActivityErrorDialog(exception.getError());
+                        CommonErrorDialogFragment userInfoActivityErrorDialog
+                                = CommonErrorDialogFragment.newInstance(exception.getError());
                         getSupportFragmentManager().beginTransaction()
                                 .add(userInfoActivityErrorDialog,
-                                        UserInfoActivityErrorDialog.class.getName()).commit();
+                                        CommonErrorDialogFragment.class.getName()).commit();
                     }
                 }
             });
