@@ -1,45 +1,80 @@
 package org.qii.weiciyuan.ui.browser;
 
-import android.app.ActionBar;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ShareActionProvider;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.dao.destroy.DestroyStatusDao;
+import org.qii.weiciyuan.dao.show.ShowStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.loader.AbstractAsyncNetRequestTaskLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteRepostActivity;
 import org.qii.weiciyuan.ui.task.FavAsyncTask;
 import org.qii.weiciyuan.ui.task.UnFavAsyncTask;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ShareActionProvider;
+import android.widget.Toast;
 
 /**
  * User: Jiang Qi
  * Date: 12-8-1
  */
-public class BrowserWeiboMsgActivity extends AbstractAppActivity implements RemoveWeiboMsgDialog.IRemove {
+public class BrowserWeiboMsgActivity extends AbstractAppActivity
+        implements RemoveWeiboMsgDialog.IRemove {
+
+    private static final String ACTION_WITH_ID = "action_with_id";
+
+    private static final int REFRESH_LOADER_ID = 0;
+
 
     private MessageBean msg;
+
+    private String msgId;
+
     private String token;
 
     private FavAsyncTask favTask = null;
+
     private UnFavAsyncTask unFavTask = null;
+
     private ShareActionProvider shareActionProvider;
+
     private GestureDetector gestureDetector;
+
     private RemoveTask removeTask;
+
+
+    public static void startActivityWithWeiboId(Activity activity, String weiboId, String token) {
+        Intent intent = new Intent(activity, BrowserWeiboMsgActivity.class);
+        intent.putExtra("weiboId", weiboId);
+        intent.putExtra("token", token);
+        intent.setAction(ACTION_WITH_ID);
+        activity.startActivity(intent);
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -51,15 +86,36 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initLayout();
         if (savedInstanceState != null) {
             msg = savedInstanceState.getParcelable("msg");
             token = savedInstanceState.getString("token");
+            if (msg != null) {
+                buildContent();
+            } else {
+                msgId = getIntent().getStringExtra("weiboId");
+                fetchUserInfoFromServer();
+            }
+
+
         } else {
-            Intent intent = getIntent();
-            token = intent.getStringExtra("token");
-            msg = intent.getParcelableExtra("msg");
+
+            String action = getIntent().getAction();
+            if (ACTION_WITH_ID.equalsIgnoreCase(action)) {
+                token = getIntent().getStringExtra("token");
+                msgId = getIntent().getStringExtra("weiboId");
+                fetchUserInfoFromServer();
+            } else {
+                Intent intent = getIntent();
+                token = intent.getStringExtra("token");
+                msg = intent.getParcelableExtra("msg");
+                buildContent();
+            }
+
+
         }
-        initLayout();
+
+
     }
 
     @Override
@@ -68,34 +124,64 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
         Utility.cancelTasks(removeTask);
     }
 
+
+    private void fetchUserInfoFromServer() {
+
+        getActionBar().setTitle(getString(R.string.fetching_weibo_info));
+
+        FetchingDataDialog dialog = new FetchingDataDialog();
+        getSupportFragmentManager().beginTransaction()
+                .add(dialog, FetchingDataDialog.class.getName()).commit();
+        getSupportLoaderManager().initLoader(REFRESH_LOADER_ID, null, refreshCallback);
+    }
+
     private void initLayout() {
-
-        if (getSupportFragmentManager().findFragmentByTag(BrowserWeiboMsgFragment.class.getName()) == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new BrowserWeiboMsgFragment(msg), BrowserWeiboMsgFragment.class.getName())
-                    .commit();
-        }
-
+        setContentView(R.layout.browserweibomsgactivity_layout);
         getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(false);
+    }
 
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(getString(R.string.detail));
+
+    private void buildContent() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (getSupportFragmentManager()
+                        .findFragmentByTag(BrowserWeiboMsgFragment.class.getName())
+                        == null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(android.R.id.content, new BrowserWeiboMsgFragment(msg),
+                                    BrowserWeiboMsgFragment.class.getName())
+                            .commit();
+                }
+            }
+        });
+
+        getActionBar().setTitle(getString(R.string.detail));
+
+        invalidateOptionsMenu();
 
     }
 
 
     private Fragment getBrowserWeiboMsgFragment() {
-        return getSupportFragmentManager().findFragmentByTag(BrowserWeiboMsgFragment.class.getName());
+        return getSupportFragmentManager()
+                .findFragmentByTag(BrowserWeiboMsgFragment.class.getName());
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        if (msg == null) {
+            return super.onCreateOptionsMenu(menu);
+        }
+
         getMenuInflater().inflate(R.menu.actionbar_menu_browserweibomsgactivity, menu);
 
-        if (msg.getUser() != null && msg.getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId())) {
+        if (msg.getUser() != null && msg.getUser().getId()
+                .equals(GlobalContext.getInstance().getCurrentAccountId())) {
             menu.findItem(R.id.menu_delete).setVisible(true);
         }
 
@@ -134,9 +220,11 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
                 buildShareActionMenu();
                 return true;
             case R.id.menu_copy:
-                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager cm = (ClipboardManager) getSystemService(
+                        Context.CLIPBOARD_SERVICE);
                 cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", getMsg().getText()));
-                Toast.makeText(this, getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.copy_successfully), Toast.LENGTH_SHORT)
+                        .show();
                 return true;
             case R.id.menu_fav:
                 if (Utility.isTaskStopped(favTask) && Utility.isTaskStopped(unFavTask)) {
@@ -197,6 +285,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
 
         String id;
+
         WeiboException e;
 
         public RemoveTask(String id) {
@@ -219,7 +308,8 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
         protected void onCancelled(Boolean aBoolean) {
             super.onCancelled(aBoolean);
             if (this.e != null) {
-                Toast.makeText(BrowserWeiboMsgActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(BrowserWeiboMsgActivity.this, e.getError(), Toast.LENGTH_SHORT)
+                        .show();
             }
         }
 
@@ -229,6 +319,86 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
             if (aBoolean) {
                 finish();
             }
+        }
+    }
+
+
+    private static class RefreshLoader extends AbstractAsyncNetRequestTaskLoader<MessageBean> {
+
+        private String msgId;
+
+        public RefreshLoader(Context context, String msgId) {
+            super(context);
+            this.msgId = msgId;
+        }
+
+        @Override
+        protected MessageBean loadData() throws WeiboException {
+            return new ShowStatusDao(GlobalContext.getInstance().getSpecialToken(), msgId).getMsg();
+
+        }
+    }
+
+    private LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<MessageBean>> refreshCallback
+            = new LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<MessageBean>>() {
+        @Override
+        public Loader<AsyncTaskLoaderResult<MessageBean>> onCreateLoader(int id, Bundle args) {
+            return new RefreshLoader(BrowserWeiboMsgActivity.this, msgId);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<AsyncTaskLoaderResult<MessageBean>> loader,
+                AsyncTaskLoaderResult<MessageBean> result) {
+            MessageBean data = result != null ? result.data : null;
+            final WeiboException exception = result != null ? result.exception : null;
+
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    FetchingDataDialog dialog = (FetchingDataDialog) getSupportFragmentManager()
+                            .findFragmentByTag(FetchingDataDialog.class.getName());
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+
+                    if (exception != null) {
+                        UserInfoActivity.UserInfoActivityErrorDialog userInfoActivityErrorDialog
+                                = new UserInfoActivity.UserInfoActivityErrorDialog(
+                                exception.getError());
+                        getSupportFragmentManager().beginTransaction()
+                                .add(userInfoActivityErrorDialog,
+                                        UserInfoActivity.UserInfoActivityErrorDialog.class
+                                                .getName()).commit();
+                    }
+                }
+            });
+
+            if (data != null) {
+                BrowserWeiboMsgActivity.this.msg = data;
+                buildContent();
+            }
+            getLoaderManager().destroyLoader(loader.getId());
+        }
+
+        @Override
+        public void onLoaderReset(Loader<AsyncTaskLoaderResult<MessageBean>> loader) {
+
+        }
+    };
+
+    public static class FetchingDataDialog extends DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            ProgressDialog dialog = new ProgressDialog(getActivity());
+            dialog.setMessage(getString(R.string.fetching_weibo_info));
+            return dialog;
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            super.onCancel(dialog);
+            getActivity().finish();
         }
     }
 }

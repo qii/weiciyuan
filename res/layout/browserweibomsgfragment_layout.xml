@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:padding="@dimen/browser_msg_bg_padding">
+
+    <GridLayout
+            android:id="@+id/first"
+            android:background="?android:selectableItemBackground"
+            android:padding="5dp"
+            android:clickable="true"
+            android:columnCount="4"
+            android:rowCount="2"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:rowOrderPreserved="false">
+
+        <org.qii.weiciyuan.support.lib.ProfileTopAvatarImageView
+                android:layout_rowSpan="2"
+                android:layout_width="@dimen/browser_msg_avatar_width"
+                android:layout_height="@dimen/browser_msg_avatar_height"
+                android:id="@+id/avatar"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="-5dp"
+                android:layout_marginTop="-5dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginRight="0dp"/>
+
+
+        <TextView
+                android:layout_marginLeft="8dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="testusernametestusernametestusernametestusernametestusernametestusernametestusernametestusernametestusername"
+                android:layout_gravity="fill_horizontal"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_columnSpan="2"
+                android:id="@+id/username"/>
+
+
+        <TextView
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="w"
+                android:gravity="left"
+                android:textColor="?android:textColorTertiary"
+                android:textIsSelectable="false"
+                android:textSize="12sp"
+                android:id="@+id/time"
+                android:text="2013"/>
+
+        <TextView
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="sina"
+                android:text="testsourcetestsourcetestsourcetestsource"
+                android:textColor="?android:textColorTertiary"
+                android:textIsSelectable="false"
+                android:textSize="12sp"
+                android:id="@+id/source"
+                android:layout_gravity="fill_horizontal|right"/>
+
+        <ImageView
+                android:layout_rowSpan="2"
+                android:layout_gravity="center_vertical"
+                android:src="?clickable_flag"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+    </GridLayout>
+
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/second">
+
+        <TextView
+                android:layout_marginTop="4dp"
+                android:id="@+id/content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="testcontenttestcontenttestcontenttestcontenttestcontenttestcontenttestcontent"
+                android:textSize="16sp"
+                android:lineSpacingMultiplier="1.2"
+                android:textIsSelectable="true"/>
+
+
+        <org.qii.weiciyuan.support.lib.WeiboDetailImageView
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:id="@+id/content_pic"
+                android:padding="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="200dp"
+                android:minHeight="0dp"
+                android:visibility="gone"
+                android:clickable="true"
+                android:adjustViewBounds="true"
+                />
+
+        <GridLayout
+                android:id="@+id/content_pic_multi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:columnCount="3"
+                android:rowCount="3"
+                android:layout_gravity="center_horizontal"
+
+                android:orientation="horizontal"
+                android:useDefaultMargins="false"
+                android:clickable="false">
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+        </GridLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:id="@+id/repost_layout"
+            android:clickable="true"
+            android:background="?browser_weibo_detail_background_color"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+        <TextView
+                android:background="?android:selectableItemBackground"
+                android:id="@+id/repost_content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="testrepostcontenttestrepostcontenttestrepostcontenttestrepostcontenttestrepostcontenttestrepostcontenttestrepostcontenttestrepostcontenttestrepostcontenttestrepostcontenttestrepostcontent"
+                android:visibility="visible"
+                android:textSize="16sp"
+                android:lineSpacingMultiplier="1.2"/>
+
+
+        <org.qii.weiciyuan.support.lib.WeiboDetailImageView
+                android:layout_marginTop="8dp"
+                android:padding="3dp"
+                android:id="@+id/repost_content_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="200dp"
+                android:minHeight="0dp"
+                android:visibility="visible"
+                android:clickable="true"
+                android:layout_gravity="center_horizontal"
+                android:adjustViewBounds="true"
+                />
+
+
+        <GridLayout
+                android:id="@+id/repost_content_pic_multi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:columnCount="3"
+                android:layout_gravity="center_horizontal"
+
+                android:rowCount="3"
+                android:orientation="horizontal"
+                android:useDefaultMargins="false"
+                android:clickable="false">
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+                    style="@style/listViewMultiImageView"/>
+
+        </GridLayout>
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="5dp"
+                android:visibility="visible"
+                android:id="@+id/count_layout">
+
+            <TextView
+                    android:id="@+id/repost_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:drawablePadding="4dp"
+                    android:textColor="?android:textColorTertiary"
+                    android:drawableLeft="?timeline_repost_flag"/>
+
+            <TextView
+                    android:id="@+id/comment_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:layout_marginLeft="8dp"
+                    android:drawablePadding="4dp"
+                    android:textColor="?android:textColorTertiary"
+                    android:drawableLeft="?timeline_comment_flag"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/second"
+            android:id="@+id/location"
+            android:visibility="gone"
+            android:onClick="true"
+            android:layout_marginTop="8dp"/>
+
+    <ImageView
+            android:id="@+id/map"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:layout_below="@id/location"
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"/>
+
+</LinearLayout>
+
+

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -31,8 +32,11 @@ public class BrowserCommentFragment extends Fragment {
     private CommentBean msg;
 
     private TextView username;
+
     private TextView content;
+
     private TextView time;
+
     private TextView source;
 
     private ImageView avatar;
@@ -78,17 +82,16 @@ public class BrowserCommentFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.browserweibomsgactivity_layout, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.browserweibomsgfragment_layout, container, false);
 
         username = (TextView) view.findViewById(R.id.username);
         content = (TextView) view.findViewById(R.id.content);
         time = (TextView) view.findViewById(R.id.time);
         source = (TextView) view.findViewById(R.id.source);
 
-
         avatar = (ImageView) view.findViewById(R.id.avatar);
-
 
         view.findViewById(R.id.first).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +102,6 @@ public class BrowserCommentFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
 
         return view;
     }
@@ -122,7 +124,6 @@ public class BrowserCommentFragment extends Fragment {
         TimeLineUtility.addLinks(content);
 
         time.setText(msg.getListviewItemShowTime());
-
 
         if (!TextUtils.isEmpty(msg.getSource())) {
             source.setText(Html.fromHtml(msg.getSource()).toString());
@@ -148,7 +149,8 @@ public class BrowserCommentFragment extends Fragment {
         sharingIntent.setType("text/plain");
         if (msg != null) {
             sharingIntent.putExtra(Intent.EXTRA_TEXT, msg.getText());
-            if (Utility.isIntentSafe(getActivity(), sharingIntent) && mShareActionProvider != null) {
+            if (Utility.isIntentSafe(getActivity(), sharingIntent)
+                    && mShareActionProvider != null) {
                 mShareActionProvider.setShareIntent(sharingIntent);
             }
         }
@@ -165,7 +167,6 @@ public class BrowserCommentFragment extends Fragment {
                 intent.putExtra("msg", msg);
                 getActivity().startActivity(intent);
 
-
                 break;
 
             case R.id.menu_share:
@@ -173,9 +174,11 @@ public class BrowserCommentFragment extends Fragment {
                 buildShareActionMenu();
                 return true;
             case R.id.menu_copy:
-                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager cm = (ClipboardManager) getActivity()
+                        .getSystemService(Context.CLIPBOARD_SERVICE);
                 cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", content.getText().toString()));
-                Toast.makeText(getActivity(), getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.copy_successfully),
+                        Toast.LENGTH_SHORT).show();
                 break;
 
             default:

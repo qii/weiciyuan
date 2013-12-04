@@ -225,6 +225,7 @@
     <string name="switch_to_ori_pic">原图</string>
     <string name="cant_open_deleted_weibo">原微博已经被删除，看不懂中文吗？</string>
     <string name="retry_download_pic">重新下载图片</string>
+    <string name="fetching_weibo_info">获取微博信息……</string>
 
     <!--map-->
     <string name="browser_map">查看地图</string>
@@ -358,6 +359,7 @@
     <string name="share_link">分享链接</string>
     <string name="share_sum">微博统计的分享次数</string>
     <string name="total_share_count">累计分享了%s次</string>
+    <string name="cant_not_convert_to_weibo_id">链接地址无法解析成微博地址</string>
 
 
     <!--gallery-->

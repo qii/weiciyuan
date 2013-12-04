@@ -1,7 +1,11 @@
 package org.qii.weiciyuan.ui.browser;
 
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.dao.shorturl.Mid2IdDao;
+import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
@@ -246,6 +250,12 @@ public class BrowserWebFragment extends Fragment {
                 getActivity().startActivity(intent);
                 getActivity().finish();
                 return true;
+            } else if (Utility.isWeiboMid(url)) {
+
+                String mid = Utility.getMidFromUrl(url);
+                RedirectLinkToWeiboIdTask task = new RedirectLinkToWeiboIdTask(url, mid);
+                task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                return true;
             } else {
                 view.loadUrl(url);
                 return true;
@@ -315,6 +325,43 @@ public class BrowserWebFragment extends Fragment {
             if (progress == 100) {
                 mProgressBar.setVisibility(View.INVISIBLE);
             }
+        }
+    }
+
+    private class RedirectLinkToWeiboIdTask extends MyAsyncTask<Void, Void, String> {
+
+        String mid;
+
+        String oriUrl;
+
+        public RedirectLinkToWeiboIdTask(String oriUrl, String mid) {
+            this.oriUrl = oriUrl;
+            this.mid = mid;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                return new Mid2IdDao(GlobalContext.getInstance().getSpecialToken(), mid).getId();
+            } catch (WeiboException e) {
+                return "0";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String id) {
+            super.onPostExecute(id);
+
+            if (Long.valueOf(id) > 0L) {
+                BrowserWeiboMsgActivity.startActivityWithWeiboId(getActivity(), id,
+                        GlobalContext.getInstance().getSpecialToken());
+                getActivity().finish();
+            } else {
+                Toast.makeText(GlobalContext.getInstance(), R.string.cant_not_convert_to_weibo_id,
+                        Toast.LENGTH_SHORT).show();
+                mWebView.loadUrl(oriUrl);
+            }
+
         }
     }
 
