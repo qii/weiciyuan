@@ -81,6 +81,12 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
 
+    public static Intent newIntent(AccountBean accountBean) {
+        Intent intent = new Intent(GlobalContext.getInstance(), MainTimeLineActivity.class);
+        intent.putExtra(BundleArgsConstants.ACCOUNT_EXTRA, accountBean);
+        return intent;
+    }
+
     public String getToken() {
         return accountBean.getAccess_token();
     }
