@@ -1,13 +1,14 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
 
 /**
  * User: Jiang Qi
@@ -30,9 +31,11 @@ public class FriendListActivity extends AbstractAppActivity implements IUserInfo
         getActionBar().setTitle(getString(R.string.following_list));
         getActionBar().setIcon(R.drawable.ic_ab_friendship);
         bean = (UserBean) getIntent().getParcelableExtra("user");
-        if (getSupportFragmentManager().findFragmentByTag(FriendsListFragment.class.getName()) == null) {
+        if (getSupportFragmentManager().findFragmentByTag(FriendsListFragment.class.getName())
+                == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new FriendsListFragment(bean.getId()), FriendsListFragment.class.getName())
+                    .replace(android.R.id.content, new FriendsListFragment(bean.getId()),
+                            FriendsListFragment.class.getName())
                     .commit();
         }
 
@@ -44,7 +47,7 @@ public class FriendListActivity extends AbstractAppActivity implements IUserInfo
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
-                intent = new Intent(this, MainTimeLineActivity.class);
+                intent = MainTimeLineActivity.newIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;

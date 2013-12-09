@@ -82,7 +82,7 @@ public class BrowserWebActivity extends AbstractAppActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent intent = new Intent(this, MainTimeLineActivity.class);
+                Intent intent = MainTimeLineActivity.newIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;

@@ -1,18 +1,20 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
 
 /**
  * User: qii
  * Date: 13-6-21
  */
 public class UserTimeLineActivity extends AbstractAppActivity implements IUserInfo {
+
     private UserBean bean;
 
 
@@ -30,9 +32,12 @@ public class UserTimeLineActivity extends AbstractAppActivity implements IUserIn
         String token = getIntent().getStringExtra("token");
         bean = (UserBean) getIntent().getParcelableExtra("user");
         getActionBar().setTitle(bean.getScreen_name());
-        if (getSupportFragmentManager().findFragmentByTag(StatusesByIdTimeLineFragment.class.getName()) == null) {
+        if (getSupportFragmentManager()
+                .findFragmentByTag(StatusesByIdTimeLineFragment.class.getName()) == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new StatusesByIdTimeLineFragment(getUser(), token), StatusesByIdTimeLineFragment.class.getName())
+                    .replace(android.R.id.content,
+                            new StatusesByIdTimeLineFragment(getUser(), token),
+                            StatusesByIdTimeLineFragment.class.getName())
                     .commit();
         }
 
@@ -43,7 +48,7 @@ public class UserTimeLineActivity extends AbstractAppActivity implements IUserIn
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
-                intent = new Intent(this, MainTimeLineActivity.class);
+                intent = MainTimeLineActivity.newIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;

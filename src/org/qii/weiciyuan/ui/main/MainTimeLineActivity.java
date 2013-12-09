@@ -4,6 +4,9 @@ import com.slidingmenu.lib.SlidingMenu;
 
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.MusicInfo;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
@@ -80,10 +83,28 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         public void scrollToTop();
     }
 
+    public static Intent newIntent() {
+        return new Intent(GlobalContext.getInstance(), MainTimeLineActivity.class);
+    }
 
     public static Intent newIntent(AccountBean accountBean) {
-        Intent intent = new Intent(GlobalContext.getInstance(), MainTimeLineActivity.class);
+        Intent intent = newIntent();
         intent.putExtra(BundleArgsConstants.ACCOUNT_EXTRA, accountBean);
+        return intent;
+    }
+
+    /*
+      notification bar
+     */
+    public static Intent newIntent(AccountBean accountBean, MessageListBean mentionsWeiboData,
+            CommentListBean mentionsCommentData, CommentListBean commentsToMeData,
+            UnreadBean unreadBean) {
+        Intent intent = newIntent();
+        intent.putExtra(BundleArgsConstants.ACCOUNT_EXTRA, accountBean);
+        intent.putExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA, mentionsWeiboData);
+        intent.putExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA, mentionsCommentData);
+        intent.putExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA, commentsToMeData);
+        intent.putExtra(BundleArgsConstants.UNREAD_EXTRA, unreadBean);
         return intent;
     }
 

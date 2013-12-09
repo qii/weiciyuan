@@ -1,5 +1,19 @@
 package org.qii.weiciyuan.ui.userinfo;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.dao.show.ShowUserDao;
+import org.qii.weiciyuan.dao.user.EditMyProfileDao;
+import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarReadWorker;
+import org.qii.weiciyuan.support.database.AccountDBTask;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.imageutility.ImageUtility;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,38 +35,32 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.dao.show.ShowUserDao;
-import org.qii.weiciyuan.dao.user.EditMyProfileDao;
-import org.qii.weiciyuan.support.asyncdrawable.ProfileAvatarReadWorker;
-import org.qii.weiciyuan.support.database.AccountDBTask;
-import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.imageutility.ImageUtility;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
  * User: qii
  * Date: 13-2-28
  */
-public class EditMyProfileActivity extends AbstractAppActivity implements DialogInterface.OnClickListener {
+public class EditMyProfileActivity extends AbstractAppActivity
+        implements DialogInterface.OnClickListener {
 
     private static final int CAMERA_RESULT = 0;
+
     private static final int PIC_RESULT = 1;
 
     private UserBean userBean;
+
     private Layout layout;
+
     private MenuItem save;
 
     private ProfileAvatarReadWorker avatarTask;
+
     private SaveAsyncTask saveAsyncTask;
+
     private NewProfileAvatarReaderWorker newProfileAvatarReaderWorker;
 
     private Uri imageFileUri;
+
     private String picPath;
 
     @Override
@@ -96,7 +104,8 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
 
     private void initValue(Bundle savedInstanceState) {
 
-        if (savedInstanceState == null || TextUtils.isEmpty(savedInstanceState.getString("picPath"))) {
+        if (savedInstanceState == null || TextUtils
+                .isEmpty(savedInstanceState.getString("picPath"))) {
             String avatarUrl = userBean.getAvatar_large();
             if (!TextUtils.isEmpty(avatarUrl)) {
                 avatarTask = new ProfileAvatarReadWorker(layout.avatar, avatarUrl);
@@ -144,7 +153,8 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
     }
 
     private void save() {
-        if (Utility.isTaskStopped(saveAsyncTask) && !isNicknameEmpty() && !doesNicknameHaveSpace()) {
+        if (Utility.isTaskStopped(saveAsyncTask) && !isNicknameEmpty()
+                && !doesNicknameHaveSpace()) {
             saveAsyncTask = new SaveAsyncTask();
             saveAsyncTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -154,18 +164,22 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case 0:
-                imageFileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        new ContentValues());
+                imageFileUri = getContentResolver()
+                        .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                new ContentValues());
                 if (imageFileUri != null) {
                     Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageFileUri);
                     if (Utility.isIntentSafe(EditMyProfileActivity.this, i)) {
                         startActivityForResult(i, CAMERA_RESULT);
                     } else {
-                        Toast.makeText(EditMyProfileActivity.this, getString(R.string.dont_have_camera_app), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditMyProfileActivity.this,
+                                getString(R.string.dont_have_camera_app), Toast.LENGTH_SHORT)
+                                .show();
                     }
                 } else {
-                    Toast.makeText(EditMyProfileActivity.this, getString(R.string.cant_insert_album), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditMyProfileActivity.this,
+                            getString(R.string.cant_insert_album), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case 1:
@@ -203,8 +217,10 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
     }
 
     private void startSaveAnimation() {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ProgressBar pb = (ProgressBar) inflater.inflate(R.layout.editmyprofileactivity_refresh_actionbar_view_layout, null);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
+        ProgressBar pb = (ProgressBar) inflater
+                .inflate(R.layout.editmyprofileactivity_refresh_actionbar_view_layout, null);
         save.setActionView(pb);
         layout.nickname.setEnabled(false);
         layout.website.setEnabled(false);
@@ -227,8 +243,11 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
 
 
     private class SaveAsyncTask extends MyAsyncTask<Void, UserBean, UserBean> {
+
         String screenName;
+
         String url;
+
         String description;
 
         WeiboException e;
@@ -244,7 +263,8 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
 
         @Override
         protected UserBean doInBackground(Void... params) {
-            EditMyProfileDao dao = new EditMyProfileDao(GlobalContext.getInstance().getSpecialToken(), screenName);
+            EditMyProfileDao dao = new EditMyProfileDao(
+                    GlobalContext.getInstance().getSpecialToken(), screenName);
             dao.setUrl(url);
             dao.setDescription(description);
             dao.setAvatar(picPath);
@@ -260,14 +280,16 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
         }
 
         /**
-         * sina weibo have a bug, after modify your profile, the return UserBean object dont have large avatar url
+         * sina weibo have a bug, after modify your profile, the return UserBean object dont have
+         * large avatar url
          * so must refresh to get actual data;
          */
         @Override
         protected void onPostExecute(UserBean userBean) {
             super.onPostExecute(userBean);
             if (userBean != null) {
-                Toast.makeText(EditMyProfileActivity.this, R.string.edit_successfully, Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditMyProfileActivity.this, R.string.edit_successfully,
+                        Toast.LENGTH_SHORT).show();
                 new RefreshTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
@@ -295,7 +317,7 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
-                intent = new Intent(this, MainTimeLineActivity.class);
+                intent = MainTimeLineActivity.newIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
@@ -308,9 +330,13 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
 
 
     private class Layout {
+
         ImageView avatar;
+
         EditText nickname;
+
         EditText website;
+
         EditText info;
 
     }
@@ -320,9 +346,9 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
 
         @Override
         protected Bitmap doInBackground(String... url) {
-            if (isCancelled())
+            if (isCancelled()) {
                 return null;
-
+            }
 
             int avatarWidth = getResources().getDimensionPixelSize(R.dimen.profile_avatar_width);
             int avatarHeight = getResources().getDimensionPixelSize(R.dimen.profile_avatar_height);
@@ -346,6 +372,7 @@ public class EditMyProfileActivity extends AbstractAppActivity implements Dialog
 
 
     private class RefreshTask extends MyAsyncTask<Object, UserBean, UserBean> {
+
         WeiboException e;
 
         @Override

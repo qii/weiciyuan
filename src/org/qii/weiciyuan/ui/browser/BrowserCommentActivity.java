@@ -1,11 +1,12 @@
 package org.qii.weiciyuan.ui.browser;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
 
 /**
  * User: qii
@@ -44,7 +45,7 @@ public class BrowserCommentActivity extends AbstractAppActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent intent = new Intent(this, MainTimeLineActivity.class);
+                Intent intent = MainTimeLineActivity.newIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;

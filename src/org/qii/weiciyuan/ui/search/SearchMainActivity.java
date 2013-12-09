@@ -1,5 +1,11 @@
 package org.qii.weiciyuan.ui.search;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
+import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
@@ -17,11 +23,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.lib.AppFragmentPagerAdapter;
-import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,21 +92,22 @@ public class SearchMainActivity extends AbstractAppActivity {
     ActionBar.TabListener tabListener = new ActionBar.TabListener() {
 
         public void onTabSelected(ActionBar.Tab tab,
-                                  FragmentTransaction ft) {
+                FragmentTransaction ft) {
 
-            if (mViewPager.getCurrentItem() != tab.getPosition())
+            if (mViewPager.getCurrentItem() != tab.getPosition()) {
                 mViewPager.setCurrentItem(tab.getPosition());
+            }
 
 
         }
 
         public void onTabUnselected(ActionBar.Tab tab,
-                                    FragmentTransaction ft) {
+                FragmentTransaction ft) {
 
         }
 
         public void onTabReselected(ActionBar.Tab tab,
-                                    FragmentTransaction ft) {
+                FragmentTransaction ft) {
 
         }
     };
@@ -114,7 +116,8 @@ public class SearchMainActivity extends AbstractAppActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu_searchmainactivity, menu);
-        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SearchManager searchManager = (SearchManager) getSystemService(
+                Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
@@ -146,7 +149,8 @@ public class SearchMainActivity extends AbstractAppActivity {
     }
 
     private void showInputMethod(View view) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(
+                Context.INPUT_METHOD_SERVICE);
 
         if (imm != null) {
             imm.showSoftInput(view, 0);
@@ -158,7 +162,7 @@ public class SearchMainActivity extends AbstractAppActivity {
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
-                intent = new Intent(this, MainTimeLineActivity.class);
+                intent = MainTimeLineActivity.newIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
@@ -177,7 +181,8 @@ public class SearchMainActivity extends AbstractAppActivity {
                 SearchStatusFragment.class.getName());
     }
 
-    ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+    ViewPager.SimpleOnPageChangeListener onPageChangeListener
+            = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
             getActionBar().setSelectedNavigationItem(position);

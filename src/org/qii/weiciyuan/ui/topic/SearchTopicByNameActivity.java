@@ -1,18 +1,20 @@
 package org.qii.weiciyuan.ui.topic;
 
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 /**
  * User: qii
  * Date: 12-9-8
  */
 public class SearchTopicByNameActivity extends AbstractAppActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +41,7 @@ public class SearchTopicByNameActivity extends AbstractAppActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
 
-                Intent intent = new Intent(this, MainTimeLineActivity.class);
+                Intent intent = MainTimeLineActivity.newIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;

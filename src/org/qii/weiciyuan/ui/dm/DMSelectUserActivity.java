@@ -1,14 +1,5 @@
 package org.qii.weiciyuan.ui.dm;
 
-import android.app.ActionBar;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.Loader;
-import android.view.Gravity;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
@@ -23,6 +14,22 @@ import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.loader.FriendUserLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
+import android.app.ActionBar;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.content.Loader;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +40,7 @@ import java.util.List;
 public class DMSelectUserActivity extends AbstractAppActivity implements IUserInfo {
 
     private List<UserBean> data;
+
     private ProgressBar suggestProgressBar;
 
     @Override
@@ -49,15 +57,16 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
         getActionBar().setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
         getActionBar().setDisplayShowCustomEnabled(true);
 
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.list_content, new SelectFriendsListFragment(GlobalContext.getInstance().getCurrentAccountId()))
+                    .replace(R.id.list_content, new SelectFriendsListFragment(
+                            GlobalContext.getInstance().getCurrentAccountId()))
                     .commit();
         }
 
         AutoCompleteTextView search = (AutoCompleteTextView) findViewById(R.id.search);
-        AutoCompleteAdapter adapter = new AutoCompleteAdapter(this, android.R.layout.simple_dropdown_item_1line);
+        AutoCompleteAdapter adapter = new AutoCompleteAdapter(this,
+                android.R.layout.simple_dropdown_item_1line);
         search.setAdapter(adapter);
         search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -86,7 +95,7 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
-                intent = new Intent(this, MainTimeLineActivity.class);
+                intent = MainTimeLineActivity.newIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
@@ -97,6 +106,7 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
     private class AutoCompleteAdapter extends ArrayAdapter<UserBean> implements Filterable {
 
         private DMSelectUserActivity activity;
+
         private ProgressBar suggestProgressBar;
 
         public AutoCompleteAdapter(DMSelectUserActivity context, int textViewResourceId) {
@@ -131,7 +141,8 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
                             }
                         });
 
-                        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(), constraint.toString());
+                        SearchDao dao = new SearchDao(GlobalContext.getInstance().getSpecialToken(),
+                                constraint.toString());
 
                         try {
                             data = dao.getUserList().getUsers();
@@ -171,9 +182,11 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            convertView = activity.getLayoutInflater().inflate(R.layout.dm_search_user_dropdown_item_layout, parent, false);
+            convertView = activity.getLayoutInflater()
+                    .inflate(R.layout.dm_search_user_dropdown_item_layout, parent, false);
 
-            PerformanceImageView avatar = (PerformanceImageView) convertView.findViewById(R.id.avatar);
+            PerformanceImageView avatar = (PerformanceImageView) convertView
+                    .findViewById(R.id.avatar);
             TextView username = (TextView) convertView.findViewById(R.id.username);
 
             TimeLineBitmapDownloader.getInstance().downloadAvatar(avatar, getItem(position));
@@ -225,19 +238,21 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
         }
 
         @Override
-        protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewMsgLoader(int id,
+                Bundle args) {
             String token = GlobalContext.getInstance().getSpecialToken();
             String cursor = String.valueOf(0);
             return new FriendUserLoader(getActivity(), token, uid, cursor);
         }
 
         @Override
-        protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+        protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateOldMsgLoader(int id,
+                Bundle args) {
 
-            if (getList().getUsers().size() > 0 && Integer.valueOf(getList().getNext_cursor()) == 0) {
+            if (getList().getUsers().size() > 0
+                    && Integer.valueOf(getList().getNext_cursor()) == 0) {
                 return null;
             }
-
 
             String token = GlobalContext.getInstance().getSpecialToken();
             String cursor = String.valueOf(bean.getNext_cursor());

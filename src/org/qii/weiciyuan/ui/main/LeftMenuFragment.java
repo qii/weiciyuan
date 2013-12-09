@@ -1,5 +1,29 @@
 package org.qii.weiciyuan.ui.main;
 
+import com.slidingmenu.lib.SlidingMenu;
+
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.database.AccountDBTask;
+import org.qii.weiciyuan.support.database.CommentToMeTimeLineDBTask;
+import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
+import org.qii.weiciyuan.support.database.MentionWeiboTimeLineDBTask;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.utils.AppEventAction;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.dm.DMUserListFragment;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
+import org.qii.weiciyuan.ui.login.AccountActivity;
+import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
+import org.qii.weiciyuan.ui.nearby.NearbyTimeLineActivity;
+import org.qii.weiciyuan.ui.preference.SettingActivity;
+import org.qii.weiciyuan.ui.search.SearchMainParentFragment;
+import org.qii.weiciyuan.ui.userinfo.MyFavListFragment;
+import org.qii.weiciyuan.ui.userinfo.NewUserInfoFragment;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,30 +36,13 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import com.slidingmenu.lib.SlidingMenu;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.bean.android.TimeLinePosition;
-import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
-import org.qii.weiciyuan.support.database.AccountDBTask;
-import org.qii.weiciyuan.support.database.CommentToMeTimeLineDBTask;
-import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
-import org.qii.weiciyuan.support.database.MentionWeiboTimeLineDBTask;
-import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.utils.AppEventAction;
-import org.qii.weiciyuan.support.utils.BundleArgsConstants;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.dm.DMUserListFragment;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
-import org.qii.weiciyuan.ui.login.AccountActivity;
-import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
-import org.qii.weiciyuan.ui.nearby.NearbyTimeLineActivity;
-import org.qii.weiciyuan.ui.preference.SettingActivity;
-import org.qii.weiciyuan.ui.search.SearchMainParentFragment;
-import org.qii.weiciyuan.ui.userinfo.MyFavListFragment;
-import org.qii.weiciyuan.ui.userinfo.NewUserInfoFragment;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,11 +59,15 @@ public class LeftMenuFragment extends AbstractAppFragment {
     private int currentIndex = -1;
 
     private int mentionsWeiboUnreadCount = 0;
+
     private int mentionsCommentUnreadCount = 0;
+
     private int commentsToMeUnreadCount = 0;
 
     public int commentsTabIndex = -1;
+
     public int mentionsTabIndex = -1;
+
     public int searchTabIndex = -1;
 
 
@@ -65,13 +76,21 @@ public class LeftMenuFragment extends AbstractAppFragment {
     private SparseArray<Fragment> rightFragments = new SparseArray<Fragment>();
 
     public static final int HOME_INDEX = 0;
+
     public static final int MENTIONS_INDEX = 1;
+
     public static final int COMMENTS_INDEX = 2;
+
     public static final int DM_INDEX = 3;
+
     public static final int FAV_INDEX = 4;
+
     public static final int SEARCH_INDEX = 5;
+
     public static final int PROFILE_INDEX = 6;
+
     public static final int LOGOUT_INDEX = 7;
+
     public static final int SETTING_INDEX = 8;
 
 
@@ -104,17 +123,22 @@ public class LeftMenuFragment extends AbstractAppFragment {
             readUnreadCountFromDB();
         }
         if (currentIndex == -1) {
-            currentIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
+            currentIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition()
+                    / 10;
         }
 
-
-        rightFragments.append(HOME_INDEX, ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment());
-        rightFragments.append(MENTIONS_INDEX, ((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment());
-        rightFragments.append(COMMENTS_INDEX, ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
-        rightFragments.append(SEARCH_INDEX, ((MainTimeLineActivity) getActivity()).getSearchFragment());
+        rightFragments.append(HOME_INDEX,
+                ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment());
+        rightFragments.append(MENTIONS_INDEX,
+                ((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment());
+        rightFragments.append(COMMENTS_INDEX,
+                ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
+        rightFragments
+                .append(SEARCH_INDEX, ((MainTimeLineActivity) getActivity()).getSearchFragment());
         rightFragments.append(DM_INDEX, ((MainTimeLineActivity) getActivity()).getDMFragment());
         rightFragments.append(FAV_INDEX, ((MainTimeLineActivity) getActivity()).getFavFragment());
-        rightFragments.append(PROFILE_INDEX, ((MainTimeLineActivity) getActivity()).getMyProfileFragment());
+        rightFragments.append(PROFILE_INDEX,
+                ((MainTimeLineActivity) getActivity()).getMyProfileFragment());
 
         switchCategory(currentIndex);
 
@@ -155,18 +179,21 @@ public class LeftMenuFragment extends AbstractAppFragment {
     }
 
     private void readUnreadCountFromDB() {
-        TimeLinePosition position = MentionWeiboTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
+        TimeLinePosition position = MentionWeiboTimeLineDBTask
+                .getPosition(GlobalContext.getInstance().getCurrentAccountId());
         TreeSet<Long> hashSet = position.newMsgIds;
         if (hashSet != null) {
             mentionsWeiboUnreadCount = hashSet.size();
         }
 
-        position = MentionCommentsTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
+        position = MentionCommentsTimeLineDBTask
+                .getPosition(GlobalContext.getInstance().getCurrentAccountId());
         hashSet = position.newMsgIds;
         if (hashSet != null) {
             mentionsCommentUnreadCount = hashSet.size();
         }
-        position = CommentToMeTimeLineDBTask.getPosition(GlobalContext.getInstance().getCurrentAccountId());
+        position = CommentToMeTimeLineDBTask
+                .getPosition(GlobalContext.getInstance().getCurrentAccountId());
         hashSet = position.newMsgIds;
         if (hashSet != null) {
             commentsToMeUnreadCount = hashSet.size();
@@ -206,17 +233,18 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
-                    if (currentIndex == HOME_INDEX)
+                    if (currentIndex == HOME_INDEX) {
                         showHomePageImp();
+                    }
 
                 }
             };
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
+                    new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
         } else {
             showHomePageImp();
 
         }
-
 
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
 
@@ -254,11 +282,13 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
-                    if (currentIndex == MENTIONS_INDEX)
+                    if (currentIndex == MENTIONS_INDEX) {
                         showMentionPageImp();
+                    }
                 }
             };
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
+                    new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
         } else {
             showMentionPageImp();
         }
@@ -276,13 +306,14 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(FAV_INDEX));
         ft.hide(rightFragments.get(PROFILE_INDEX));
 
-
         Fragment m = rightFragments.get(MENTIONS_INDEX);
 
         if (firstStart) {
-            int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
+            int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition()
+                    / 10;
             if (navPosition == MENTIONS_INDEX) {
-                mentionsTabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
+                mentionsTabIndex =
+                        GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
             }
         }
         m.getArguments().putInt("mentionsTabIndex", mentionsTabIndex);
@@ -312,17 +343,18 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
-                    if (currentIndex == COMMENTS_INDEX)
+                    if (currentIndex == COMMENTS_INDEX) {
                         showCommentPageImp();
+                    }
 
                 }
             };
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
+                    new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
         } else {
             showCommentPageImp();
 
         }
-
 
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
 
@@ -341,9 +373,11 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
         Fragment fragment = rightFragments.get(COMMENTS_INDEX);
         if (firstStart) {
-            int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
+            int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition()
+                    / 10;
             if (navPosition == COMMENTS_INDEX) {
-                commentsTabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
+                commentsTabIndex =
+                        GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
             }
         }
         fragment.getArguments().putInt("commentsTabIndex", commentsTabIndex);
@@ -369,17 +403,18 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
-                    if (currentIndex == SEARCH_INDEX)
+                    if (currentIndex == SEARCH_INDEX) {
                         showSearchPageImp();
+                    }
 
                 }
             };
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
+                    new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
         } else {
             showSearchPageImp();
 
         }
-
 
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
 
@@ -399,9 +434,11 @@ public class LeftMenuFragment extends AbstractAppFragment {
         Fragment fragment = rightFragments.get(SEARCH_INDEX);
 
         if (firstStart) {
-            int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition() / 10;
+            int navPosition = GlobalContext.getInstance().getAccountBean().getNavigationPosition()
+                    / 10;
             if (navPosition == SEARCH_INDEX) {
-                searchTabIndex = GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
+                searchTabIndex =
+                        GlobalContext.getInstance().getAccountBean().getNavigationPosition() % 10;
             }
         }
         fragment.getArguments().putInt("searchTabIndex", searchTabIndex);
@@ -428,17 +465,18 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
-                    if (currentIndex == DM_INDEX)
+                    if (currentIndex == DM_INDEX) {
                         showDMPageImp();
+                    }
 
                 }
             };
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
+                    new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
         } else {
             showDMPageImp();
 
         }
-
 
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
 
@@ -456,7 +494,6 @@ public class LeftMenuFragment extends AbstractAppFragment {
         ft.hide(rightFragments.get(PROFILE_INDEX));
 
         Fragment fragment = rightFragments.get(DM_INDEX);
-
 
         ft.show(fragment);
         ft.commit();
@@ -478,17 +515,18 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
-                    if (currentIndex == FAV_INDEX)
+                    if (currentIndex == FAV_INDEX) {
                         showFavPageImp();
+                    }
 
                 }
             };
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
+                    new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
         } else {
             showFavPageImp();
 
         }
-
 
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
 
@@ -526,17 +564,18 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(this);
-                    if (currentIndex == PROFILE_INDEX)
+                    if (currentIndex == PROFILE_INDEX) {
                         showProfilePageImp();
+                    }
 
                 }
             };
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
+                    new IntentFilter(AppEventAction.SLIDING_MENU_CLOSED_BROADCAST));
         } else {
             showProfilePageImp();
 
         }
-
 
         ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
 
@@ -568,8 +607,10 @@ public class LeftMenuFragment extends AbstractAppFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final ScrollView view = (ScrollView) inflater.inflate(R.layout.slidingdrawer_contents, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        final ScrollView view = (ScrollView) inflater
+                .inflate(R.layout.slidingdrawer_contents, container, false);
 
         layout = new Layout();
 
@@ -760,6 +801,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
     private class AvatarAdapter extends BaseAdapter {
 
         ArrayList<AccountBean> data = new ArrayList<AccountBean>();
+
         int count = 0;
 
         public AvatarAdapter(Spinner spinner) {
@@ -772,7 +814,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
             Iterator<AccountBean> iterator = data.iterator();
             while (iterator.hasNext()) {
                 AccountBean accountBean = iterator.next();
-                if (accountBean.getUid().equals(GlobalContext.getInstance().getAccountBean().getUid())) {
+                if (accountBean.getUid()
+                        .equals(GlobalContext.getInstance().getAccountBean().getUid())) {
                     iterator.remove();
                     break;
                 }
@@ -797,22 +840,28 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = getLayoutInflater(null).inflate(R.layout.slidingdrawer_avatar, parent, false);
+            View view = getLayoutInflater(null)
+                    .inflate(R.layout.slidingdrawer_avatar, parent, false);
             ImageView iv = (ImageView) view.findViewById(R.id.avatar);
-            TimeLineBitmapDownloader.getInstance().display(iv, -1, -1, GlobalContext.getInstance().getAccountBean().getInfo().getAvatar_large(), FileLocationMethod.avatar_large);
+            TimeLineBitmapDownloader.getInstance().display(iv, -1, -1,
+                    GlobalContext.getInstance().getAccountBean().getInfo().getAvatar_large(),
+                    FileLocationMethod.avatar_large);
 
             return view;
         }
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            View view = getLayoutInflater(null).inflate(R.layout.slidingdrawer_avatar_dropdown, parent, false);
+            View view = getLayoutInflater(null)
+                    .inflate(R.layout.slidingdrawer_avatar_dropdown, parent, false);
             TextView nickname = (TextView) view.findViewById(R.id.nickname);
             ImageView avatar = (ImageView) view.findViewById(R.id.avatar);
 
             if (data.size() > 0) {
                 final AccountBean accountBean = data.get(position);
-                TimeLineBitmapDownloader.getInstance().display(avatar, -1, -1, accountBean.getInfo().getAvatar_large(), FileLocationMethod.avatar_large);
+                TimeLineBitmapDownloader.getInstance()
+                        .display(avatar, -1, -1, accountBean.getInfo().getAvatar_large(),
+                                FileLocationMethod.avatar_large);
 
                 nickname.setText(accountBean.getUsernick());
 
@@ -820,8 +869,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
                     @Override
                     public void onClick(View v) {
 
-                        Intent start = new Intent(getActivity(), MainTimeLineActivity.class);
-                        start.putExtra(BundleArgsConstants.ACCOUNT_EXTRA, accountBean);
+                        Intent start = MainTimeLineActivity.newIntent(accountBean);
                         getActivity().startActivity(start);
                         getActivity().finish();
 
@@ -839,20 +887,32 @@ public class LeftMenuFragment extends AbstractAppFragment {
     private class Layout {
 
         Spinner avatar;
+
         TextView nickname;
 
         LinearLayout home;
+
         LinearLayout mention;
+
         LinearLayout comment;
+
         TextView homeCount;
+
         TextView mentionCount;
+
         TextView commentCount;
+
         Button search;
+
         //        Button location;
         Button dm;
+
         Button logout;
+
         Button profile;
+
         Button setting;
+
         Button fav;
     }
 
