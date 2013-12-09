@@ -1,16 +1,16 @@
 package org.qii.weiciyuan.ui.search;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.Loader;
-import android.view.View;
-import android.widget.AdapterView;
 import org.qii.weiciyuan.bean.SearchStatusListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.loader.SearchStatusLoader;
+
+import android.os.Bundle;
+import android.support.v4.content.Loader;
+import android.view.View;
+import android.widget.AdapterView;
 
 /**
  * User: qii
@@ -65,10 +65,8 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
 
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-        intent.putExtra("msg", bean.getItem(position));
-        startActivity(intent);
+        startActivity(BrowserWeiboMsgActivity.newIntent(bean.getItem(position),
+                GlobalContext.getInstance().getSpecialToken()));
     }
 
 
@@ -90,7 +88,8 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
     }
 
     @Override
-    protected Loader<AsyncTaskLoaderResult<SearchStatusListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<SearchStatusListBean>> onCreateNewMsgLoader(int id,
+            Bundle args) {
         String token = GlobalContext.getInstance().getSpecialToken();
         String word = ((SearchMainParentFragment) getParentFragment()).getSearchWord();
         page = 1;
@@ -98,7 +97,8 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
     }
 
     @Override
-    protected Loader<AsyncTaskLoaderResult<SearchStatusListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<SearchStatusListBean>> onCreateOldMsgLoader(int id,
+            Bundle args) {
         String token = GlobalContext.getInstance().getSpecialToken();
         String word = ((SearchMainParentFragment) getParentFragment()).getSearchWord();
         return new SearchStatusLoader(getActivity(), token, word, String.valueOf(page + 1));

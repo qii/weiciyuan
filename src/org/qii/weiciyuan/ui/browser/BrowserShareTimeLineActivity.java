@@ -1,11 +1,5 @@
 package org.qii.weiciyuan.ui.browser;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.Loader;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import org.qii.weiciyuan.bean.ShareListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -13,6 +7,13 @@ import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.loader.BrowserShareMsgLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.content.Loader;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 
 /**
  * User: qii
@@ -53,9 +54,11 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
         return false;
     }
 
-    public static class BrowserShareTimeLineFragment extends AbstractMessageTimeLineFragment<ShareListBean> {
+    public static class BrowserShareTimeLineFragment
+            extends AbstractMessageTimeLineFragment<ShareListBean> {
 
         private ShareListBean bean = new ShareListBean();
+
         private String url;
 
 
@@ -104,10 +107,9 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
 
         @Override
         protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-            Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-            intent.putExtra("msg", getList().getItemList().get(position));
-            intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-            startActivityForResult(intent, 0);
+            startActivityForResult(
+                    BrowserWeiboMsgActivity.newIntent(getList().getItemList().get(position),
+                            GlobalContext.getInstance().getSpecialToken()), 0);
         }
 
         @Override
@@ -145,7 +147,8 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
             getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
         }
 
-        protected Loader<AsyncTaskLoaderResult<ShareListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+        protected Loader<AsyncTaskLoaderResult<ShareListBean>> onCreateNewMsgLoader(int id,
+                Bundle args) {
             String token = GlobalContext.getInstance().getSpecialToken();
             String sinceId = null;
             if (getList().getItemList().size() > 0) {
@@ -155,7 +158,8 @@ public class BrowserShareTimeLineActivity extends AbstractAppActivity {
         }
 
 
-        protected Loader<AsyncTaskLoaderResult<ShareListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+        protected Loader<AsyncTaskLoaderResult<ShareListBean>> onCreateOldMsgLoader(int id,
+                Bundle args) {
             String token = GlobalContext.getInstance().getSpecialToken();
             String maxId = null;
             if (getList().getItemList().size() > 0) {

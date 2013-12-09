@@ -1,16 +1,17 @@
 package org.qii.weiciyuan.ui.actionmenu;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
+import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.CommentBean;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
-import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
 /**
  * User: qii
@@ -51,10 +52,9 @@ public class CommentFloatingMenu extends DialogFragment {
                 Intent intent;
                 switch (which) {
                     case 0:
-                        intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-                        intent.putExtra("msg", bean.getStatus());
-                        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                        startActivity(intent);
+                        startActivity(BrowserWeiboMsgActivity
+                                .newIntent(bean.getStatus(),
+                                        GlobalContext.getInstance().getSpecialToken()));
                         break;
                     case 1:
                         intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);

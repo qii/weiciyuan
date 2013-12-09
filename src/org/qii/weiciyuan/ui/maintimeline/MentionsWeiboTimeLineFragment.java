@@ -1,21 +1,12 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
-import android.app.ActionBar;
-import android.app.NotificationManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.TextView;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.*;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.MessageReCmtCountBean;
+import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.bean.android.MentionTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
@@ -39,6 +30,21 @@ import org.qii.weiciyuan.ui.loader.MentionsWeiboTimeDBLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.main.MentionsTimeLine;
 
+import android.app.ActionBar;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,14 +52,21 @@ import java.util.List;
  * User: qii
  * Date: 12-7-29
  */
-public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragment<MessageListBean> {
+public class MentionsWeiboTimeLineFragment
+        extends AbstractMessageTimeLineFragment<MessageListBean> {
 
     private AccountBean accountBean;
+
     private UserBean userBean;
+
     private String token;
+
     private UnreadBean unreadBean;
+
     private TimeLinePosition timeLinePosition;
+
     private MessageListBean bean = new MessageListBean();
+
     private final int POSITION_IN_PARENT_FRAGMENT = 0;
 
     @Override
@@ -81,7 +94,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     public void onResume() {
         super.onResume();
         setListViewPositionFromPositionsCache();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(newBroadcastReceiver, new IntentFilter(AppEventAction.NEW_MSG_BROADCAST));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(newBroadcastReceiver,
+                new IntentFilter(AppEventAction.NEW_MSG_BROADCAST));
         setActionBarTabCount(newMsgTipBar.getValues().size());
         getNewMsgTipBar().setOnChangeListener(new TopTipBar.OnChangeListener() {
             @Override
@@ -149,8 +163,10 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
             return;
         }
         Intent intent = getActivity().getIntent();
-        MessageListBean mentionsWeibo = intent.getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
-        UnreadBean unreadBeanFromNotification = intent.getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
+        MessageListBean mentionsWeibo = intent
+                .getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
+        UnreadBean unreadBeanFromNotification = intent
+                .getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
 
         if (mentionsWeibo != null) {
             addUnreadMessage(mentionsWeibo);
@@ -189,7 +205,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         unreadBean = null;
         NotificationManager notificationManager = (NotificationManager) getActivity()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NotificationServiceHelper.getMentionsWeiboNotificationId(GlobalContext.getInstance().getAccountBean()));
+        notificationManager.cancel(NotificationServiceHelper
+                .getMentionsWeiboNotificationId(GlobalContext.getInstance().getAccountBean()));
 
 
     }
@@ -218,7 +235,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         }
     }
 
-    protected void middleMsgOnPostExecute(int position, MessageListBean newValue, boolean towardsBottom) {
+    protected void middleMsgOnPostExecute(int position, MessageListBean newValue,
+            boolean towardsBottom) {
 
         if (newValue != null) {
             int size = newValue.getSize();
@@ -230,7 +248,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
                     getAdapter().notifyDataSetChanged();
                 } else {
 
-                    View v = Utility.getListViewItemViewFromPosition(getListView(), position + 1 + 1);
+                    View v = Utility
+                            .getListViewItemViewFromPosition(getListView(), position + 1 + 1);
                     int top = (v == null) ? 0 : v.getTop();
                     getAdapter().notifyDataSetChanged();
                     int ss = position + 1 + size - 1;
@@ -246,7 +265,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
             getList().addOldData(newValue);
             MentionWeiboTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());
         } else {
-            Toast.makeText(getActivity(), getString(R.string.older_message_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.older_message_empty),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -278,14 +298,17 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
                 accountBean = (AccountBean) savedInstanceState.getParcelable("account");
                 token = savedInstanceState.getString("token");
                 unreadBean = (UnreadBean) savedInstanceState.getParcelable("unreadBean");
-                timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
+                timeLinePosition = (TimeLinePosition) savedInstanceState
+                        .getSerializable("timeLinePosition");
 
-                Loader<MentionTimeLineData> loader = getLoaderManager().getLoader(DB_CACHE_LOADER_ID);
+                Loader<MentionTimeLineData> loader = getLoaderManager()
+                        .getLoader(DB_CACHE_LOADER_ID);
                 if (loader != null) {
                     getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 }
 
-                MessageListBean savedBean = (MessageListBean) savedInstanceState.getParcelable("bean");
+                MessageListBean savedBean = (MessageListBean) savedInstanceState
+                        .getParcelable("bean");
                 if (savedBean != null && savedBean.getSize() > 0) {
                     getList().replaceData(savedBean);
                     timeLineAdapter.notifyDataSetChanged();
@@ -301,17 +324,19 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
 
     @Override
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("msg", bean.getItemList().get(position));
-        intent.putExtra("token", token);
-        startActivityForResult(intent, MainTimeLineActivity.REQUEST_CODE_UPDATE_MENTIONS_WEIBO_TIMELINE_COMMENT_REPOST_COUNT);
+        startActivityForResult(
+                BrowserWeiboMsgActivity.newIntent(bean.getItemList().get(position),
+                        GlobalContext.getInstance().getSpecialToken()),
+                MainTimeLineActivity.REQUEST_CODE_UPDATE_MENTIONS_WEIBO_TIMELINE_COMMENT_REPOST_COUNT);
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //use Up instead of Back to reach this fragment
-        if (data == null)
+        if (data == null) {
             return;
+        }
         final MessageBean msg = (MessageBean) data.getParcelableExtra("msg");
         if (msg != null) {
             for (int i = 0; i < getList().getSize(); i++) {
@@ -331,10 +356,11 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
     }
 
     private void setListViewPositionFromPositionsCache() {
-        if (timeLinePosition != null)
+        if (timeLinePosition != null) {
             getListView().setSelectionFromTop(timeLinePosition.position + 1, timeLinePosition.top);
-        else
+        } else {
             getListView().setSelectionFromTop(0, 0);
+        }
 
         setListViewUnreadTipBar(timeLinePosition);
 
@@ -344,7 +370,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         if (p != null && p.newMsgIds != null) {
             newMsgTipBar.setValue(p.newMsgIds);
             setActionBarTabCount(newMsgTipBar.getValues().size());
-            ((MainTimeLineActivity) getActivity()).setMentionsWeiboCount(newMsgTipBar.getValues().size());
+            ((MainTimeLineActivity) getActivity())
+                    .setMentionsWeiboCount(newMsgTipBar.getValues().size());
         }
     }
 
@@ -360,7 +387,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         bundle.putString("endId", endId);
         bundle.putInt("position", position);
         VelocityListView velocityListView = (VelocityListView) getListView();
-        bundle.putBoolean("towardsBottom", velocityListView.getTowardsOrientation() == VelocityListView.TOWARDS_BOTTOM);
+        bundle.putBoolean("towardsBottom",
+                velocityListView.getTowardsOrientation() == VelocityListView.TOWARDS_BOTTOM);
         getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
 
     }
@@ -381,11 +409,13 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
     }
 
-    private LoaderManager.LoaderCallbacks<MentionTimeLineData> dbCallback = new LoaderManager.LoaderCallbacks<MentionTimeLineData>() {
+    private LoaderManager.LoaderCallbacks<MentionTimeLineData> dbCallback
+            = new LoaderManager.LoaderCallbacks<MentionTimeLineData>() {
         @Override
         public Loader<MentionTimeLineData> onCreateLoader(int id, Bundle args) {
             getPullToRefreshListView().setVisibility(View.INVISIBLE);
-            return new MentionsWeiboTimeDBLoader(getActivity(), GlobalContext.getInstance().getCurrentAccountId());
+            return new MentionsWeiboTimeDBLoader(getActivity(),
+                    GlobalContext.getInstance().getCurrentAccountId());
         }
 
         @Override
@@ -425,7 +455,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         }
     };
 
-    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateNewMsgLoader(int id,
+            Bundle args) {
         String accountId = accountBean.getUid();
         String token = accountBean.getAccess_token();
         String sinceId = null;
@@ -435,13 +466,17 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         return new MentionsWeiboMsgLoader(getActivity(), accountId, token, sinceId, null);
     }
 
-    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateMiddleMsgLoader(int id, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
+    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateMiddleMsgLoader(int id,
+            Bundle args, String middleBeginId, String middleEndId, String middleEndTag,
+            int middlePosition) {
         String accountId = accountBean.getUid();
         String token = accountBean.getAccess_token();
-        return new MentionsWeiboMsgLoader(getActivity(), accountId, token, middleBeginId, middleEndId);
+        return new MentionsWeiboMsgLoader(getActivity(), accountId, token, middleBeginId,
+                middleEndId);
     }
 
-    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateOldMsgLoader(int id,
+            Bundle args) {
         String accountId = accountBean.getUid();
         String token = accountBean.getAccess_token();
         String maxId = null;
@@ -455,11 +490,13 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         @Override
         public void onReceive(Context context, Intent intent) {
             AccountBean account = intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
-            final UnreadBean unreadBean = intent.getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
+            final UnreadBean unreadBean = intent
+                    .getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
             if (account == null || !account.getUid().equals(account.getUid())) {
                 return;
             }
-            MessageListBean data = intent.getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
+            MessageListBean data = intent
+                    .getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
             addUnreadMessage(data);
             clearUnreadMentions(unreadBean);
         }
@@ -469,12 +506,15 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         if (data != null && data.getSize() > 0) {
             MessageBean last = data.getItem(data.getSize() - 1);
             boolean dup = getList().getItemList().contains(last);
-            if (!dup)
+            if (!dup) {
                 addNewDataAndRememberPosition(data);
+            }
         }
     }
 
-    private class RefreshReCmtCountTask extends MyAsyncTask<Void, List<MessageReCmtCountBean>, List<MessageReCmtCountBean>> {
+    private class RefreshReCmtCountTask
+            extends MyAsyncTask<Void, List<MessageReCmtCountBean>, List<MessageReCmtCountBean>> {
+
         List<String> msgIds;
 
         @Override
@@ -492,7 +532,8 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         @Override
         protected List<MessageReCmtCountBean> doInBackground(Void... params) {
             try {
-                return new TimeLineReCmtCountDao(GlobalContext.getInstance().getSpecialToken(), msgIds).get();
+                return new TimeLineReCmtCountDao(GlobalContext.getInstance().getSpecialToken(),
+                        msgIds).get();
             } catch (WeiboException e) {
                 cancel(true);
             }
@@ -502,8 +543,9 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
         @Override
         protected void onPostExecute(List<MessageReCmtCountBean> value) {
             super.onPostExecute(value);
-            if (getActivity() == null || value == null)
+            if (getActivity() == null || value == null) {
                 return;
+            }
 
             for (int i = 0; i < value.size(); i++) {
                 MessageBean msg = getList().getItem(i);
@@ -526,8 +568,10 @@ public class MentionsWeiboTimeLineFragment extends AbstractMessageTimeLineFragme
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    new ClearUnreadDao(GlobalContext.getInstance().getAccountBean().getAccess_token())
-                            .clearMentionStatusUnread(data, GlobalContext.getInstance().getAccountBean().getUid());
+                    new ClearUnreadDao(
+                            GlobalContext.getInstance().getAccountBean().getAccess_token())
+                            .clearMentionStatusUnread(data,
+                                    GlobalContext.getInstance().getAccountBean().getUid());
                 } catch (WeiboException ignored) {
 
                 }

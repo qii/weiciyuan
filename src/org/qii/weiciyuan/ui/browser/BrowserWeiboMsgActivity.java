@@ -19,7 +19,6 @@ import org.qii.weiciyuan.ui.send.WriteRepostActivity;
 import org.qii.weiciyuan.ui.task.FavAsyncTask;
 import org.qii.weiciyuan.ui.task.UnFavAsyncTask;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -45,6 +44,8 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
 
     private static final String ACTION_WITH_ID = "action_with_id";
 
+    private static final String ACTION_WITH_DETAIL = "action_with_detail";
+
     private static final int REFRESH_LOADER_ID = 0;
 
 
@@ -65,13 +66,22 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
     private RemoveTask removeTask;
 
 
-    public static void startActivityWithWeiboId(Activity activity, String weiboId, String token) {
-        Intent intent = new Intent(activity, BrowserWeiboMsgActivity.class);
+    public static Intent newIntent(String weiboId, String token) {
+        Intent intent = new Intent(GlobalContext.getInstance(), BrowserWeiboMsgActivity.class);
         intent.putExtra("weiboId", weiboId);
         intent.putExtra("token", token);
         intent.setAction(ACTION_WITH_ID);
-        activity.startActivity(intent);
+        return intent;
     }
+
+    public static Intent newIntent(MessageBean msg, String token) {
+        Intent intent = new Intent(GlobalContext.getInstance(), BrowserWeiboMsgActivity.class);
+        intent.putExtra("msg", msg);
+        intent.putExtra("token", token);
+        intent.setAction(ACTION_WITH_DETAIL);
+        return intent;
+    }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -102,11 +112,15 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
                 token = getIntent().getStringExtra("token");
                 msgId = getIntent().getStringExtra("weiboId");
                 fetchUserInfoFromServer();
-            } else {
+            } else if (ACTION_WITH_DETAIL.equalsIgnoreCase(action)) {
                 Intent intent = getIntent();
                 token = intent.getStringExtra("token");
                 msg = intent.getParcelableExtra("msg");
                 buildContent();
+            } else {
+                throw new IllegalArgumentException(
+                        "activity intent action must be " + ACTION_WITH_DETAIL + " or "
+                                + ACTION_WITH_ID);
             }
 
 

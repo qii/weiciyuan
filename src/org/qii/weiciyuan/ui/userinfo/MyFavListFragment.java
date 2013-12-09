@@ -1,12 +1,5 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.app.ActionBar;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.Loader;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.FavListBean;
@@ -27,6 +20,14 @@ import org.qii.weiciyuan.ui.loader.MyFavMsgLoader;
 import org.qii.weiciyuan.ui.main.LeftMenuFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
+import android.app.ActionBar;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.content.Loader;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,8 @@ import java.util.List;
  * Date: 12-8-18
  * this class need to refactor
  */
-public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBean> implements MainTimeLineActivity.ScrollableListFragment {
+public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBean>
+        implements MainTimeLineActivity.ScrollableListFragment {
 
     private int page = 1;
 
@@ -119,17 +121,19 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     }
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-        intent.putExtra("msg", bean.getItem(position));
-        startActivityForResult(intent, MainTimeLineActivity.REQUEST_CODE_UPDATE_MY_FAV_TIMELINE_COMMENT_REPOST_COUNT);
+        startActivityForResult(
+                BrowserWeiboMsgActivity.newIntent(bean.getItem(position),
+                        GlobalContext.getInstance().getSpecialToken()),
+                MainTimeLineActivity.REQUEST_CODE_UPDATE_MY_FAV_TIMELINE_COMMENT_REPOST_COUNT);
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //use Up instead of Back to reach this fragment
-        if (data == null)
+        if (data == null) {
             return;
+        }
         final MessageBean msg = (MessageBean) data.getParcelableExtra("msg");
         if (msg != null) {
             for (int i = 0; i < getList().getSize(); i++) {
@@ -272,16 +276,18 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
 
     private void setListViewPositionFromPositionsCache() {
         TimeLinePosition p = position;
-        if (p != null)
+        if (p != null) {
             getListView().setSelectionFromTop(p.position + 1, p.top);
-        else
+        } else {
             getListView().setSelectionFromTop(0, 0);
+        }
 
 
     }
 
 
-    private class DBCacheTask extends MyAsyncTask<Void, FavouriteTimeLineData, FavouriteTimeLineData> {
+    private class DBCacheTask
+            extends MyAsyncTask<Void, FavouriteTimeLineData, FavouriteTimeLineData> {
 
         @Override
         protected void onPreExecute() {
@@ -321,7 +327,9 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     }
 
 
-    private class RefreshReCmtCountTask extends MyAsyncTask<Void, List<MessageReCmtCountBean>, List<MessageReCmtCountBean>> {
+    private class RefreshReCmtCountTask
+            extends MyAsyncTask<Void, List<MessageReCmtCountBean>, List<MessageReCmtCountBean>> {
+
         List<String> msgIds;
 
         @Override
@@ -339,7 +347,8 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         @Override
         protected List<MessageReCmtCountBean> doInBackground(Void... params) {
             try {
-                return new TimeLineReCmtCountDao(GlobalContext.getInstance().getSpecialToken(), msgIds).get();
+                return new TimeLineReCmtCountDao(GlobalContext.getInstance().getSpecialToken(),
+                        msgIds).get();
             } catch (WeiboException e) {
                 cancel(true);
             }
@@ -349,8 +358,9 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         @Override
         protected void onPostExecute(List<MessageReCmtCountBean> value) {
             super.onPostExecute(value);
-            if (getActivity() == null || value == null)
+            if (getActivity() == null || value == null) {
                 return;
+            }
 
             for (int i = 0; i < value.size(); i++) {
                 MessageBean msg = getList().getItem(i);

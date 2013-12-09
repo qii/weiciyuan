@@ -353,8 +353,8 @@ public class BrowserWebFragment extends Fragment {
             super.onPostExecute(id);
 
             if (Long.valueOf(id) > 0L) {
-                BrowserWeiboMsgActivity.startActivityWithWeiboId(getActivity(), id,
-                        GlobalContext.getInstance().getSpecialToken());
+                startActivity(BrowserWeiboMsgActivity.newIntent(id,
+                        GlobalContext.getInstance().getSpecialToken()));
                 getActivity().finish();
             } else {
                 Toast.makeText(GlobalContext.getInstance(), R.string.cant_not_convert_to_weibo_id,

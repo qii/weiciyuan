@@ -1,15 +1,5 @@
 package org.qii.weiciyuan.ui.nearby;
 
-import android.content.Context;
-import android.content.Intent;
-import android.location.*;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,6 +7,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -29,8 +20,26 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * User: qii
@@ -39,15 +48,20 @@ import java.util.*;
 public class NearbyTimeLineActivity extends AbstractAppActivity {
 
     private GoogleMap mMap;
+
     private double lat;
+
     private double lon;
+
     private String locationStr;
 
     private Marker melbourne;
+
     private Map<Marker, MessageBean> bindEvent = new HashMap<Marker, MessageBean>();
 
 
     private GetGoogleLocationInfo locationTask;
+
     private FetchWeiboMsg fetchWeiboMsg;
 
     private MenuItem refresh;
@@ -94,10 +108,8 @@ public class NearbyTimeLineActivity extends AbstractAppActivity {
                     public void onInfoWindowClick(Marker marker) {
                         MessageBean msg = bindEvent.get(marker);
                         if (msg != null) {
-                            Intent intent = new Intent(NearbyTimeLineActivity.this, BrowserWeiboMsgActivity.class);
-                            intent.putExtra("msg", msg);
-                            intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                            startActivityForResult(intent, 0);
+                            startActivityForResult(BrowserWeiboMsgActivity.newIntent(msg,
+                                    GlobalContext.getInstance().getSpecialToken()), 0);
                         }
                     }
                 });
@@ -194,18 +206,22 @@ public class NearbyTimeLineActivity extends AbstractAppActivity {
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            Toast.makeText(NearbyTimeLineActivity.this, getString(R.string.please_open_gps), Toast.LENGTH_SHORT).show();
+            Toast.makeText(NearbyTimeLineActivity.this, getString(R.string.please_open_gps),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Toast.makeText(NearbyTimeLineActivity.this, getString(R.string.gps_is_searching), Toast.LENGTH_SHORT).show();
+        Toast.makeText(NearbyTimeLineActivity.this, getString(R.string.gps_is_searching),
+                Toast.LENGTH_SHORT).show();
 
-        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0,
                     locationListener);
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        }
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0,
                     locationListener);
+        }
     }
 
 
@@ -245,7 +261,7 @@ public class NearbyTimeLineActivity extends AbstractAppActivity {
         }
 
         public void onStatusChanged(String provider, int status,
-                                    Bundle extras) {
+                Bundle extras) {
         }
     };
 
@@ -254,8 +270,10 @@ public class NearbyTimeLineActivity extends AbstractAppActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            ProgressBar pb = (ProgressBar) inflater.inflate(R.layout.editmyprofileactivity_refresh_actionbar_view_layout, null);
+            LayoutInflater inflater = (LayoutInflater) getSystemService(
+                    Context.LAYOUT_INFLATER_SERVICE);
+            ProgressBar pb = (ProgressBar) inflater
+                    .inflate(R.layout.editmyprofileactivity_refresh_actionbar_view_layout, null);
             refresh.setActionView(pb);
         }
 
@@ -263,7 +281,8 @@ public class NearbyTimeLineActivity extends AbstractAppActivity {
         protected NearbyStatusListBean doInBackground(Void... params) {
 
             try {
-                return new NearbyTimeLineDao(GlobalContext.getInstance().getSpecialToken(), lat, lon).get();
+                return new NearbyTimeLineDao(GlobalContext.getInstance().getSpecialToken(), lat,
+                        lon).get();
             } catch (WeiboException e) {
                 e.printStackTrace();
             }
@@ -278,8 +297,9 @@ public class NearbyTimeLineActivity extends AbstractAppActivity {
                 refresh.setActionView(null);
             }
 
-            if (nearbyStatusListBean == null)
+            if (nearbyStatusListBean == null) {
                 return;
+            }
             List<MessageBean> messageBeanList = nearbyStatusListBean.getItemList();
             for (MessageBean msg : messageBeanList) {
                 GeoBean g = msg.getGeo();

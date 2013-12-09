@@ -1,14 +1,5 @@
 package org.qii.weiciyuan.ui.topic;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.Loader;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.TopicResultListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
@@ -22,19 +13,32 @@ import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.loader.SearchTopicByNameLoader;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.content.Loader;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
+
 /**
  * User: qii
  * Date: 12-9-26
  */
-public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<TopicResultListBean> {
+public class SearchTopicByNameFragment
+        extends AbstractMessageTimeLineFragment<TopicResultListBean> {
 
     private String q;
+
     //page 0 and page 1 data is same
     private int page = 1;
 
     private TopicResultListBean bean = new TopicResultListBean();
 
     private FollowTopicTask followTopicTask;
+
     private UnFollowTopicTask unFollowTopicTask;
 
     @Override
@@ -81,7 +85,8 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
             case ACTIVITY_DESTROY_AND_CREATE:
                 q = savedInstanceState.getString("q");
                 page = savedInstanceState.getInt("page");
-                getList().addNewData((TopicResultListBean) savedInstanceState.getParcelable("bean"));
+                getList()
+                        .addNewData((TopicResultListBean) savedInstanceState.getParcelable("bean"));
                 getAdapter().notifyDataSetChanged();
                 refreshLayout(getList());
                 break;
@@ -148,10 +153,8 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
 
     @Override
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("msg", bean.getItemList().get(position));
-        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-        startActivity(intent);
+        startActivity(BrowserWeiboMsgActivity.newIntent(bean.getItemList().get(position),
+                GlobalContext.getInstance().getSpecialToken()));
     }
 
 
@@ -163,6 +166,7 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
 
 
     private class FollowTopicTask extends MyAsyncTask<Void, Boolean, Boolean> {
+
         WeiboException e;
 
         @Override
@@ -187,16 +191,21 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
-            if (aBoolean)
-                Toast.makeText(getActivity(), getString(R.string.follow_topic_successfully), Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(getActivity(), getString(R.string.follow_topic_failed), Toast.LENGTH_SHORT).show();
+            }
+            if (aBoolean) {
+                Toast.makeText(getActivity(), getString(R.string.follow_topic_successfully),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.follow_topic_failed),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     private class UnFollowTopicTask extends MyAsyncTask<Void, Boolean, Boolean> {
+
         WeiboException e;
 
         @Override
@@ -221,12 +230,16 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
-            if (aBoolean)
-                Toast.makeText(getActivity(), getString(R.string.unfollow_topic_successfully), Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(getActivity(), getString(R.string.unfollow_topic_failed), Toast.LENGTH_SHORT).show();
+            }
+            if (aBoolean) {
+                Toast.makeText(getActivity(), getString(R.string.unfollow_topic_successfully),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.unfollow_topic_failed),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
 
     }
@@ -250,7 +263,8 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
     }
 
     @Override
-    protected Loader<AsyncTaskLoaderResult<TopicResultListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<TopicResultListBean>> onCreateNewMsgLoader(int id,
+            Bundle args) {
         String token = GlobalContext.getInstance().getSpecialToken();
         String word = this.q;
         page = 1;
@@ -258,7 +272,8 @@ public class SearchTopicByNameFragment extends AbstractMessageTimeLineFragment<T
     }
 
     @Override
-    protected Loader<AsyncTaskLoaderResult<TopicResultListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<TopicResultListBean>> onCreateOldMsgLoader(int id,
+            Bundle args) {
         String token = GlobalContext.getInstance().getSpecialToken();
         String word = this.q;
         return new SearchTopicByNameLoader(getActivity(), token, word, String.valueOf(page + 1));

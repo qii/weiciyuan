@@ -1,21 +1,5 @@
 package org.qii.weiciyuan.ui.browser;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v4.content.LocalBroadcastManager;
-import android.text.Html;
-import android.text.TextUtils;
-import android.view.*;
-import android.view.animation.AnimationUtils;
-import android.widget.*;
-
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.MapsInitializer;
 
@@ -32,7 +16,12 @@ import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.gallery.GalleryActivity;
-import org.qii.weiciyuan.support.lib.*;
+import org.qii.weiciyuan.support.lib.ClickableTextViewMentionLinkOnTouchListener;
+import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.ProfileTopAvatarImageView;
+import org.qii.weiciyuan.support.lib.SwipeFrameLayout;
+import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
 import org.qii.weiciyuan.support.utils.AppEventAction;
@@ -47,6 +36,33 @@ import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 import org.qii.weiciyuan.ui.loader.CommentsByIdMsgLoader;
 import org.qii.weiciyuan.ui.loader.RepostByIdMsgLoader;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.Html;
+import android.text.TextUtils;
+import android.view.ActionMode;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * User: qii
@@ -487,10 +503,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
                         || msg.getRetweeted_status().getUser() == null;
 
                 if (isNotLink && !isDeleted) {
-                    Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-                    intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                    intent.putExtra("msg", msg.getRetweeted_status());
-                    startActivity(intent);
+                    startActivity(BrowserWeiboMsgActivity
+                            .newIntent(msg.getRetweeted_status(),
+                                    GlobalContext.getInstance().getSpecialToken()));
                 } else if (isNotLink && isDeleted) {
                     Toast.makeText(getActivity(), getString(R.string.cant_open_deleted_weibo),
                             Toast.LENGTH_SHORT).show();
@@ -820,11 +835,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
 
             if (position - listView.getHeaderViewsCount() < repostList.getSize()
                     && position >= listView.getHeaderViewsCount()) {
-                Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-                intent.putExtra("msg",
-                        repostList.getItemList().get(position - listView.getHeaderViewsCount()));
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                startActivity(intent);
+                startActivity(BrowserWeiboMsgActivity.newIntent(
+                        repostList.getItemList().get(position - listView.getHeaderViewsCount()),
+                        GlobalContext.getInstance().getSpecialToken()));
             } else {
                 loadOldRepostData();
             }

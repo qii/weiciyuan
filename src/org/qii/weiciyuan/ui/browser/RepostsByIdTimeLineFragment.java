@@ -1,19 +1,5 @@
 package org.qii.weiciyuan.ui.browser;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v4.content.Loader;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.*;
-
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.RepostListBean;
@@ -28,8 +14,28 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.RepostSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.adapter.StatusListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
-import org.qii.weiciyuan.ui.loader.RepostByIdMsgLoader;
 import org.qii.weiciyuan.ui.common.QuickSendProgressFragment;
+import org.qii.weiciyuan.ui.loader.RepostByIdMsgLoader;
+
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.content.Loader;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * User: qii
@@ -339,10 +345,9 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
 
 
     protected void listViewItemClick(AdapterView parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), BrowserWeiboMsgActivity.class);
-        intent.putExtra("msg", bean.getItemList().get(position));
-        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-        startActivity(intent);
+        startActivity(BrowserWeiboMsgActivity
+                .newIntent(bean.getItemList().get(position),
+                        GlobalContext.getInstance().getSpecialToken()));
     }
 
 
