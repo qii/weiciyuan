@@ -1,5 +1,16 @@
 package org.qii.weiciyuan.ui.main;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.android.UnreadTabIndex;
+import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
+import org.qii.weiciyuan.ui.maintimeline.CommentsByMeTimeLineFragment;
+import org.qii.weiciyuan.ui.maintimeline.CommentsToMeTimeLineFragment;
+
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,29 +23,29 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.android.UnreadTabIndex;
-import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
-import org.qii.weiciyuan.support.utils.BundleArgsConstants;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
-import org.qii.weiciyuan.ui.maintimeline.CommentsByMeTimeLineFragment;
-import org.qii.weiciyuan.ui.maintimeline.CommentsToMeTimeLineFragment;
 
 /**
  * User: qii
  * Date: 13-4-5
  */
-public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLineActivity.ScrollableListFragment {
+public class CommentsTimeLine extends AbstractAppFragment
+        implements MainTimeLineActivity.ScrollableListFragment {
 
     private ViewPager viewPager;
+
     private SparseArray<Fragment> childrenFragments = new SparseArray<Fragment>();
+
     private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
 
     static final int COMMENTS_TO_ME_CHILD_POSITION = 0;
+
     static final int COMMENTS_BY_ME_CHILD_POSITION = 1;
+
+    public static CommentsTimeLine newInstance() {
+        CommentsTimeLine fragment = new CommentsTimeLine();
+        fragment.setArguments(new Bundle());
+        return fragment;
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -42,30 +53,36 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
 
         if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
                 == LeftMenuFragment.COMMENTS_INDEX) {
-            buildActionBarAndViewPagerTitles(((MainTimeLineActivity) getActivity()).getMenuFragment().commentsTabIndex);
+            buildActionBarAndViewPagerTitles(
+                    ((MainTimeLineActivity) getActivity()).getMenuFragment().commentsTabIndex);
         }
     }
 
     private ActionBar.Tab buildCommentsByMeTab(SimpleTwoTabsListener tabListener) {
-        View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
+        View customView = getActivity().getLayoutInflater()
+                .inflate(R.layout.ab_tab_custom_view_layout, null);
         ((TextView) customView.findViewById(R.id.title)).setText(R.string.my_comment);
-        ActionBar.Tab commentsByMeTab = getActivity().getActionBar().newTab().setCustomView(customView)
+        ActionBar.Tab commentsByMeTab = getActivity().getActionBar().newTab()
+                .setCustomView(customView)
                 .setTag(CommentsByMeTimeLineFragment.class.getName()).setTabListener(tabListener);
         tabMap.append(COMMENTS_BY_ME_CHILD_POSITION, commentsByMeTab);
         return commentsByMeTab;
     }
 
     private ActionBar.Tab buildCommentsToMeTab(SimpleTwoTabsListener tabListener) {
-        View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
+        View customView = getActivity().getLayoutInflater()
+                .inflate(R.layout.ab_tab_custom_view_layout, null);
         ((TextView) customView.findViewById(R.id.title)).setText(R.string.all_people_send_to_me);
-        ActionBar.Tab commentsToMeTab = getActivity().getActionBar().newTab().setCustomView(customView)
+        ActionBar.Tab commentsToMeTab = getActivity().getActionBar().newTab()
+                .setCustomView(customView)
                 .setTag(CommentsToMeTimeLineFragment.class.getName()).setTabListener(tabListener);
         tabMap.append(COMMENTS_TO_ME_CHILD_POSITION, commentsToMeTab);
         return commentsToMeTab;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.viewpager_layout, container, false);
         viewPager = (ViewPager) view;
         return view;
@@ -78,7 +95,8 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
         viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setOnPageChangeListener(onPageChangeListener);
-        CommentsTimeLinePagerAdapter adapter = new CommentsTimeLinePagerAdapter(this, viewPager, getChildFragmentManager(), childrenFragments);
+        CommentsTimeLinePagerAdapter adapter = new CommentsTimeLinePagerAdapter(this, viewPager,
+                getChildFragmentManager(), childrenFragments);
         viewPager.setAdapter(adapter);
     }
 
@@ -86,16 +104,21 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
     public void onResume() {
         super.onResume();
         Intent intent = getActivity().getIntent();
-        if (intent == null)
+        if (intent == null) {
             return;
-        UnreadTabIndex unreadTabIndex = (UnreadTabIndex) intent.getSerializableExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA);
-        if (unreadTabIndex == null)
+        }
+        UnreadTabIndex unreadTabIndex = (UnreadTabIndex) intent
+                .getSerializableExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA);
+        if (unreadTabIndex == null) {
             return;
+        }
         switch (unreadTabIndex) {
             case COMMENT_TO_ME:
-                ((MainTimeLineActivity) getActivity()).getMenuFragment().switchCategory(LeftMenuFragment.COMMENTS_INDEX);
+                ((MainTimeLineActivity) getActivity()).getMenuFragment()
+                        .switchCategory(LeftMenuFragment.COMMENTS_INDEX);
                 viewPager.setCurrentItem(0);
-                intent.putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA, UnreadTabIndex.NONE);
+                intent.putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA,
+                        UnreadTabIndex.NONE);
                 break;
         }
 
@@ -154,7 +177,8 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
         return tabMap.get(COMMENTS_BY_ME_CHILD_POSITION);
     }
 
-    ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+    ViewPager.SimpleOnPageChangeListener onPageChangeListener
+            = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
             ActionBar ab = getActivity().getActionBar();
@@ -163,7 +187,8 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
                 ab.setSelectedNavigationItem(position);
             }
 
-            ((LeftMenuFragment) ((MainTimeLineActivity) getActivity()).getMenuFragment()).commentsTabIndex = position;
+            ((LeftMenuFragment) ((MainTimeLineActivity) getActivity())
+                    .getMenuFragment()).commentsTabIndex = position;
             clearActionMode();
         }
 
@@ -188,21 +213,27 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
     };
 
     public CommentsToMeTimeLineFragment getCommentsToMeTimeLineFragment() {
-        CommentsToMeTimeLineFragment fragment = ((CommentsToMeTimeLineFragment) getChildFragmentManager().findFragmentByTag(
+        CommentsToMeTimeLineFragment fragment
+                = ((CommentsToMeTimeLineFragment) getChildFragmentManager().findFragmentByTag(
                 CommentsToMeTimeLineFragment.class.getName()));
-        if (fragment == null)
+        if (fragment == null) {
             fragment = new CommentsToMeTimeLineFragment(GlobalContext.getInstance().getAccountBean()
-                    , GlobalContext.getInstance().getAccountBean().getInfo(), GlobalContext.getInstance().getSpecialToken());
+                    , GlobalContext.getInstance().getAccountBean().getInfo(),
+                    GlobalContext.getInstance().getSpecialToken());
+        }
 
         return fragment;
     }
 
     public CommentsByMeTimeLineFragment getCommentsByMeTimeLineFragment() {
-        CommentsByMeTimeLineFragment fragment = ((CommentsByMeTimeLineFragment) getChildFragmentManager().findFragmentByTag(
+        CommentsByMeTimeLineFragment fragment
+                = ((CommentsByMeTimeLineFragment) getChildFragmentManager().findFragmentByTag(
                 CommentsByMeTimeLineFragment.class.getName()));
-        if (fragment == null)
+        if (fragment == null) {
             fragment = new CommentsByMeTimeLineFragment(GlobalContext.getInstance().getAccountBean()
-                    , GlobalContext.getInstance().getAccountBean().getInfo(), GlobalContext.getInstance().getSpecialToken());
+                    , GlobalContext.getInstance().getAccountBean().getInfo(),
+                    GlobalContext.getInstance().getSpecialToken());
+        }
 
         return fragment;
     }
@@ -210,7 +241,8 @@ public class CommentsTimeLine extends AbstractAppFragment implements MainTimeLin
 
     @Override
     public void scrollToTop() {
-        AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) (childrenFragments.get(viewPager.getCurrentItem()));
+        AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) (childrenFragments
+                .get(viewPager.getCurrentItem()));
         Utility.stopListViewScrollingAndScrollToTop(fragment.getListView());
     }
 

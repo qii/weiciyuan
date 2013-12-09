@@ -1,5 +1,16 @@
 package org.qii.weiciyuan.ui.main;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.android.UnreadTabIndex;
+import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
+import org.qii.weiciyuan.ui.maintimeline.MentionsCommentTimeLineFragment;
+import org.qii.weiciyuan.ui.maintimeline.MentionsWeiboTimeLineFragment;
+
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,29 +23,29 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.android.UnreadTabIndex;
-import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
-import org.qii.weiciyuan.support.utils.BundleArgsConstants;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
-import org.qii.weiciyuan.ui.maintimeline.MentionsCommentTimeLineFragment;
-import org.qii.weiciyuan.ui.maintimeline.MentionsWeiboTimeLineFragment;
 
 /**
  * User: qii
  * Date: 13-3-31
  */
-public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLineActivity.ScrollableListFragment {
+public class MentionsTimeLine extends AbstractAppFragment
+        implements MainTimeLineActivity.ScrollableListFragment {
 
     private ViewPager viewPager;
+
     private SparseArray<Fragment> childrenFragments = new SparseArray<Fragment>();
+
     private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
 
     static final int MENTIONS_WEIBO_CHILD_POSITION = 0;
+
     static final int MENTIONS_COMMENT_CHILD_POSITION = 1;
+
+    public static MentionsTimeLine newInstance() {
+        MentionsTimeLine fragment = new MentionsTimeLine();
+        fragment.setArguments(new Bundle());
+        return fragment;
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -42,23 +53,27 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
 
         if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
                 == LeftMenuFragment.MENTIONS_INDEX) {
-            buildActionBarAndViewPagerTitles(((MainTimeLineActivity) getActivity()).getMenuFragment().mentionsTabIndex);
+            buildActionBarAndViewPagerTitles(
+                    ((MainTimeLineActivity) getActivity()).getMenuFragment().mentionsTabIndex);
         }
     }
 
     private ActionBar.Tab buildMentionsCommentTab(SimpleTwoTabsListener tabListener) {
         ActionBar.Tab mentionsCommentTab;
-        View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
+        View customView = getActivity().getLayoutInflater()
+                .inflate(R.layout.ab_tab_custom_view_layout, null);
         ((TextView) customView.findViewById(R.id.title)).setText(R.string.mentions_to_me);
         mentionsCommentTab = getActivity().getActionBar().newTab().setCustomView(customView)
-                .setTag(MentionsCommentTimeLineFragment.class.getName()).setTabListener(tabListener);
+                .setTag(MentionsCommentTimeLineFragment.class.getName())
+                .setTabListener(tabListener);
         tabMap.append(MENTIONS_COMMENT_CHILD_POSITION, mentionsCommentTab);
         return mentionsCommentTab;
     }
 
     private ActionBar.Tab buildMentionsWeiboTab(SimpleTwoTabsListener tabListener) {
         ActionBar.Tab mentionsWeiboTab;
-        View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
+        View customView = getActivity().getLayoutInflater()
+                .inflate(R.layout.ab_tab_custom_view_layout, null);
         ((TextView) customView.findViewById(R.id.title)).setText(R.string.mentions_weibo);
         mentionsWeiboTab = getActivity().getActionBar().newTab().setCustomView(customView)
                 .setTag(MentionsWeiboTimeLineFragment.class.getName()).setTabListener(tabListener);
@@ -67,7 +82,8 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.viewpager_layout, container, false);
         viewPager = (ViewPager) view;
         return view;
@@ -79,7 +95,8 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
         viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setOnPageChangeListener(onPageChangeListener);
-        MentionsTimeLinePagerAdapter adapter = new MentionsTimeLinePagerAdapter(this, viewPager, getChildFragmentManager(), childrenFragments);
+        MentionsTimeLinePagerAdapter adapter = new MentionsTimeLinePagerAdapter(this, viewPager,
+                getChildFragmentManager(), childrenFragments);
         viewPager.setAdapter(adapter);
     }
 
@@ -97,21 +114,28 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
     public void onResume() {
         super.onResume();
         Intent intent = getActivity().getIntent();
-        if (intent == null)
+        if (intent == null) {
             return;
-        UnreadTabIndex unreadTabIndex = (UnreadTabIndex) intent.getSerializableExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA);
-        if (unreadTabIndex == null)
+        }
+        UnreadTabIndex unreadTabIndex = (UnreadTabIndex) intent
+                .getSerializableExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA);
+        if (unreadTabIndex == null) {
             return;
+        }
         switch (unreadTabIndex) {
             case MENTION_WEIBO:
-                ((MainTimeLineActivity) getActivity()).getMenuFragment().switchCategory(LeftMenuFragment.MENTIONS_INDEX);
+                ((MainTimeLineActivity) getActivity()).getMenuFragment()
+                        .switchCategory(LeftMenuFragment.MENTIONS_INDEX);
                 viewPager.setCurrentItem(0);
-                intent.putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA, UnreadTabIndex.NONE);
+                intent.putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA,
+                        UnreadTabIndex.NONE);
                 break;
             case MENTION_COMMENT:
-                ((MainTimeLineActivity) getActivity()).getMenuFragment().switchCategory(LeftMenuFragment.MENTIONS_INDEX);
+                ((MainTimeLineActivity) getActivity()).getMenuFragment()
+                        .switchCategory(LeftMenuFragment.MENTIONS_INDEX);
                 viewPager.setCurrentItem(1);
-                intent.putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA, UnreadTabIndex.NONE);
+                intent.putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA,
+                        UnreadTabIndex.NONE);
                 break;
         }
 
@@ -160,7 +184,8 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
         return tabMap.get(MENTIONS_COMMENT_CHILD_POSITION);
     }
 
-    ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+    ViewPager.SimpleOnPageChangeListener onPageChangeListener
+            = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
             ActionBar ab = getActivity().getActionBar();
@@ -168,7 +193,8 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
                     && ab.getTabAt(position) == tabMap.get(position)) {
                 ab.setSelectedNavigationItem(position);
             }
-            ((LeftMenuFragment) ((MainTimeLineActivity) getActivity()).getMenuFragment()).mentionsTabIndex = position;
+            ((LeftMenuFragment) ((MainTimeLineActivity) getActivity())
+                    .getMenuFragment()).mentionsTabIndex = position;
             clearActionMode();
         }
 
@@ -194,29 +220,37 @@ public class MentionsTimeLine extends AbstractAppFragment implements MainTimeLin
 
 
     public MentionsCommentTimeLineFragment getMentionsCommentTimeLineFragment() {
-        MentionsCommentTimeLineFragment fragment = ((MentionsCommentTimeLineFragment) getChildFragmentManager().findFragmentByTag(
+        MentionsCommentTimeLineFragment fragment
+                = ((MentionsCommentTimeLineFragment) getChildFragmentManager().findFragmentByTag(
                 MentionsCommentTimeLineFragment.class.getName()));
         if (fragment == null) {
-            fragment = new MentionsCommentTimeLineFragment(GlobalContext.getInstance().getAccountBean()
-                    , GlobalContext.getInstance().getAccountBean().getInfo(), GlobalContext.getInstance().getSpecialToken());
+            fragment = new MentionsCommentTimeLineFragment(
+                    GlobalContext.getInstance().getAccountBean()
+                    , GlobalContext.getInstance().getAccountBean().getInfo(),
+                    GlobalContext.getInstance().getSpecialToken());
         }
 
         return fragment;
     }
 
     public MentionsWeiboTimeLineFragment getMentionsWeiboTimeLineFragment() {
-        MentionsWeiboTimeLineFragment fragment = ((MentionsWeiboTimeLineFragment) getChildFragmentManager().findFragmentByTag(
+        MentionsWeiboTimeLineFragment fragment
+                = ((MentionsWeiboTimeLineFragment) getChildFragmentManager().findFragmentByTag(
                 MentionsWeiboTimeLineFragment.class.getName()));
-        if (fragment == null)
-            fragment = new MentionsWeiboTimeLineFragment(GlobalContext.getInstance().getAccountBean()
-                    , GlobalContext.getInstance().getAccountBean().getInfo(), GlobalContext.getInstance().getSpecialToken());
+        if (fragment == null) {
+            fragment = new MentionsWeiboTimeLineFragment(
+                    GlobalContext.getInstance().getAccountBean()
+                    , GlobalContext.getInstance().getAccountBean().getInfo(),
+                    GlobalContext.getInstance().getSpecialToken());
+        }
 
         return fragment;
     }
 
     @Override
     public void scrollToTop() {
-        AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) (childrenFragments.get(viewPager.getCurrentItem()));
+        AbstractTimeLineFragment fragment = (AbstractTimeLineFragment) (childrenFragments
+                .get(viewPager.getCurrentItem()));
         Utility.stopListViewScrollingAndScrollToTop(fragment.getListView());
     }
 

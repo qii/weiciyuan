@@ -129,6 +129,12 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
     private TimeLinePosition position;
 
+    public static NewUserInfoFragment newInstance(UserBean userBean, String token) {
+        NewUserInfoFragment fragment = new NewUserInfoFragment(userBean, token);
+        fragment.setArguments(new Bundle());
+        return fragment;
+    }
+
 
     public NewUserInfoFragment() {
 

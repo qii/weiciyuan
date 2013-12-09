@@ -54,6 +54,12 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
         return bean;
     }
 
+    public static MyFavListFragment newInstance() {
+        MyFavListFragment fragment = new MyFavListFragment();
+        fragment.setArguments(new Bundle());
+        return fragment;
+    }
+
     public MyFavListFragment() {
 
     }

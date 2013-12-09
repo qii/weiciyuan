@@ -100,6 +100,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     }
 
+    public static FriendsTimeLineFragment newInstance(AccountBean accountBean, UserBean userBean,
+            String token) {
+        FriendsTimeLineFragment fragment = new FriendsTimeLineFragment(accountBean, userBean,
+                token);
+        fragment.setArguments(new Bundle());
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,14 +1,5 @@
 package org.qii.weiciyuan.ui.dm;
 
-import android.app.ActionBar;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.Loader;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.DMUserListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
@@ -22,16 +13,32 @@ import org.qii.weiciyuan.ui.loader.DMUserLoader;
 import org.qii.weiciyuan.ui.main.LeftMenuFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
+import android.app.ActionBar;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.content.Loader;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+
 /**
  * User: qii
  * Date: 12-11-14
  */
-public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean> implements MainTimeLineActivity.ScrollableListFragment {
+public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
+        implements MainTimeLineActivity.ScrollableListFragment {
 
     private DMUserListBean bean = new DMUserListBean();
 
     private DBCacheTask dbTask;
 
+    public static DMUserListFragment newInstance() {
+        DMUserListFragment fragment = new DMUserListFragment();
+        fragment.setArguments(new Bundle());
+        return fragment;
+    }
 
     @Override
     public DMUserListBean getList() {
@@ -130,8 +137,9 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data == null)
+        if (data == null) {
             return;
+        }
 
         Intent intent = new Intent(getActivity(), DMActivity.class);
         intent.putExtra("user", data.getParcelableExtra("user"));
@@ -160,8 +168,9 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
         @Override
         protected void onPostExecute(DMUserListBean result) {
             super.onPostExecute(result);
-            if (result != null)
+            if (result != null) {
                 getList().addNewData(result);
+            }
             getPullToRefreshListView().setVisibility(View.VISIBLE);
             getAdapter().notifyDataSetChanged();
             refreshLayout(getList());
@@ -211,14 +220,16 @@ public class DMUserListFragment extends AbstractTimeLineFragment<DMUserListBean>
     }
 
 
-    protected Loader<AsyncTaskLoaderResult<DMUserListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<DMUserListBean>> onCreateNewMsgLoader(int id,
+            Bundle args) {
         String token = GlobalContext.getInstance().getSpecialToken();
         String cursor = String.valueOf(0);
         return new DMUserLoader(getActivity(), token, cursor);
     }
 
 
-    protected Loader<AsyncTaskLoaderResult<DMUserListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<DMUserListBean>> onCreateOldMsgLoader(int id,
+            Bundle args) {
         String token = GlobalContext.getInstance().getSpecialToken();
         String cursor = null;
         if (getList().getSize() > 0 && Integer.valueOf(getList().getNext_cursor()) == 0) {

@@ -1,19 +1,5 @@
 package org.qii.weiciyuan.ui.search;
 
-import android.app.ActionBar;
-import android.app.SearchManager;
-import android.content.Context;
-import android.os.Bundle;
-import android.os.Handler;
-import android.provider.SearchRecentSuggestions;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
-import android.util.SparseArray;
-import android.view.*;
-import android.view.inputmethod.EditorInfo;
-import android.widget.SearchView;
-import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
@@ -26,20 +12,50 @@ import org.qii.weiciyuan.ui.main.LeftMenuFragment;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.main.SimpleTwoTabsListener;
 
+import android.app.ActionBar;
+import android.app.SearchManager;
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.provider.SearchRecentSuggestions;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.util.SparseArray;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.SearchView;
+import android.widget.TextView;
+
 /**
  * User: qii
  * Date: 13-5-11
  */
-public class SearchMainParentFragment extends AbstractAppFragment implements MainTimeLineActivity.ScrollableListFragment {
+public class SearchMainParentFragment extends AbstractAppFragment
+        implements MainTimeLineActivity.ScrollableListFragment {
 
     private ViewPager viewPager;
+
     private SparseArray<Fragment> searchFragments = new SparseArray<Fragment>();
+
     private SparseArray<ActionBar.Tab> tabMap = new SparseArray<ActionBar.Tab>();
 
     private static final int SEARCH_WEIBO_CHILD_POSITION = 0;
+
     private static final int SEARCH_USER_CHILD_POSITION = 1;
 
     private SearchView searchView;
+
+    public static SearchMainParentFragment newInstance() {
+        SearchMainParentFragment fragment = new SearchMainParentFragment();
+        fragment.setArguments(new Bundle());
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,13 +77,15 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
         }
         if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
                 == LeftMenuFragment.SEARCH_INDEX) {
-            buildActionBarAndViewPagerTitles(((MainTimeLineActivity) getActivity()).getMenuFragment().searchTabIndex);
+            buildActionBarAndViewPagerTitles(
+                    ((MainTimeLineActivity) getActivity()).getMenuFragment().searchTabIndex);
         }
     }
 
     private ActionBar.Tab buildSearchWeiboTab(SimpleTwoTabsListener tabListener) {
         ActionBar.Tab tab;
-        View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
+        View customView = getActivity().getLayoutInflater()
+                .inflate(R.layout.ab_tab_custom_view_layout, null);
         ((TextView) customView.findViewById(R.id.title)).setText(R.string.weibo);
         tab = getActivity().getActionBar().newTab().setCustomView(customView)
                 .setTag(SearchStatusFragment.class.getName()).setTabListener(tabListener);
@@ -77,7 +95,8 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
 
     private ActionBar.Tab buildSearchUserTab(SimpleTwoTabsListener tabListener) {
         ActionBar.Tab tab;
-        View customView = getActivity().getLayoutInflater().inflate(R.layout.ab_tab_custom_view_layout, null);
+        View customView = getActivity().getLayoutInflater()
+                .inflate(R.layout.ab_tab_custom_view_layout, null);
         ((TextView) customView.findViewById(R.id.title)).setText(R.string.user);
         tab = getActivity().getActionBar().newTab().setCustomView(customView)
                 .setTag(SearchUserFragment.class.getName()).setTabListener(tabListener);
@@ -86,7 +105,8 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.viewpager_layout, container, false);
         viewPager = (ViewPager) view;
         return view;
@@ -98,7 +118,8 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
         viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setOnPageChangeListener(onPageChangeListener);
-        SearchTimeLinePagerAdapter adapter = new SearchTimeLinePagerAdapter(this, viewPager, getChildFragmentManager(), (MainTimeLineActivity) getActivity(), searchFragments);
+        SearchTimeLinePagerAdapter adapter = new SearchTimeLinePagerAdapter(this, viewPager,
+                getChildFragmentManager(), (MainTimeLineActivity) getActivity(), searchFragments);
         viewPager.setAdapter(adapter);
     }
 
@@ -109,11 +130,13 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
             int searchTabIndex = getArguments().getInt("searchTabIndex");
             buildActionBarAndViewPagerTitles(searchTabIndex);
 
-            if (searchView != null)
+            if (searchView != null) {
                 SmileyPickerUtility.showKeyBoard(searchView);
+            }
         } else {
-            if (searchView != null)
+            if (searchView != null) {
                 SmileyPickerUtility.hideSoftInput(searchView);
+            }
         }
     }
 
@@ -128,7 +151,6 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
             ((MainTimeLineActivity) getActivity()).setTitle("");
             getActivity().getActionBar().setIcon(R.drawable.ic_launcher);
         }
-
 
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(Utility.isDevicePort());
@@ -160,9 +182,11 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.actionbar_menu_searchmainactivity, menu);
-        final SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        final SearchManager searchManager = (SearchManager) getActivity()
+                .getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         searchView.setIconifiedByDefault(false);
         searchView.setSubmitButtonEnabled(false);
@@ -224,7 +248,8 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
         return tabMap.get(SEARCH_USER_CHILD_POSITION);
     }
 
-    ViewPager.SimpleOnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+    ViewPager.SimpleOnPageChangeListener onPageChangeListener
+            = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
             ActionBar ab = getActivity().getActionBar();
@@ -233,7 +258,8 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
                 ab.setSelectedNavigationItem(position);
             }
 
-            ((LeftMenuFragment) ((MainTimeLineActivity) getActivity()).getMenuFragment()).searchTabIndex = position;
+            ((LeftMenuFragment) ((MainTimeLineActivity) getActivity())
+                    .getMenuFragment()).searchTabIndex = position;
             clearActionMode();
         }
 
@@ -259,8 +285,9 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
 
 
     public SearchUserFragment getSearchUserFragment() {
-        SearchUserFragment fragment = ((SearchUserFragment) getChildFragmentManager().findFragmentByTag(
-                SearchUserFragment.class.getName()));
+        SearchUserFragment fragment = ((SearchUserFragment) getChildFragmentManager()
+                .findFragmentByTag(
+                        SearchUserFragment.class.getName()));
         if (fragment == null) {
             fragment = new SearchUserFragment();
         }
@@ -269,10 +296,12 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
     }
 
     public SearchStatusFragment getSearchWeiboFragment() {
-        SearchStatusFragment fragment = ((SearchStatusFragment) getChildFragmentManager().findFragmentByTag(
-                SearchStatusFragment.class.getName()));
-        if (fragment == null)
+        SearchStatusFragment fragment = ((SearchStatusFragment) getChildFragmentManager()
+                .findFragmentByTag(
+                        SearchStatusFragment.class.getName()));
+        if (fragment == null) {
             fragment = new SearchStatusFragment();
+        }
 
         return fragment;
     }
@@ -281,9 +310,11 @@ public class SearchMainParentFragment extends AbstractAppFragment implements Mai
     public void scrollToTop() {
         Fragment fragment = searchFragments.get(viewPager.getCurrentItem());
         if (fragment instanceof AbstractTimeLineFragment) {
-            Utility.stopListViewScrollingAndScrollToTop(((AbstractTimeLineFragment) fragment).getListView());
+            Utility.stopListViewScrollingAndScrollToTop(
+                    ((AbstractTimeLineFragment) fragment).getListView());
         } else if (fragment instanceof AbstractUserListFragment) {
-            Utility.stopListViewScrollingAndScrollToTop(((AbstractUserListFragment) fragment).getListView());
+            Utility.stopListViewScrollingAndScrollToTop(
+                    ((AbstractUserListFragment) fragment).getListView());
 
         }
     }

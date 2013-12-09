@@ -93,6 +93,11 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     public static final int SETTING_INDEX = 8;
 
+    public static LeftMenuFragment newInstance() {
+        LeftMenuFragment fragment = new LeftMenuFragment();
+        fragment.setArguments(new Bundle());
+        return fragment;
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

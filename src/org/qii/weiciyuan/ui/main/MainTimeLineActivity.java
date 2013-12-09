@@ -520,7 +520,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 .findFragmentByTag(
                         LeftMenuFragment.class.getName()));
         if (fragment == null) {
-            fragment = new LeftMenuFragment();
+            fragment = LeftMenuFragment.newInstance();
         }
         return fragment;
     }
@@ -531,8 +531,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 .findFragmentByTag(
                         FriendsTimeLineFragment.class.getName()));
         if (fragment == null) {
-            fragment = new FriendsTimeLineFragment(getAccount(), getUser(), getToken());
-            fragment.setArguments(new Bundle());
+            fragment = FriendsTimeLineFragment.newInstance(getAccount(), getUser(), getToken());
         }
         return fragment;
     }
@@ -542,8 +541,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 .findFragmentByTag(
                         MentionsTimeLine.class.getName()));
         if (fragment == null) {
-            fragment = new MentionsTimeLine();
-            fragment.setArguments(new Bundle());
+            fragment = MentionsTimeLine.newInstance();
         }
         return fragment;
     }
@@ -553,8 +551,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 .findFragmentByTag(
                         CommentsTimeLine.class.getName()));
         if (fragment == null) {
-            fragment = new CommentsTimeLine();
-            fragment.setArguments(new Bundle());
+            fragment = CommentsTimeLine.newInstance();
         }
         return fragment;
     }
@@ -564,8 +561,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 .findFragmentByTag(
                         SearchMainParentFragment.class.getName()));
         if (fragment == null) {
-            fragment = new SearchMainParentFragment();
-            fragment.setArguments(new Bundle());
+            fragment = SearchMainParentFragment.newInstance();
         }
         return fragment;
     }
@@ -575,8 +571,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 .findFragmentByTag(
                         DMUserListFragment.class.getName()));
         if (fragment == null) {
-            fragment = new DMUserListFragment();
-            fragment.setArguments(new Bundle());
+            fragment = DMUserListFragment.newInstance();
         }
         return fragment;
     }
@@ -586,8 +581,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 .findFragmentByTag(
                         MyFavListFragment.class.getName()));
         if (fragment == null) {
-            fragment = new MyFavListFragment();
-            fragment.setArguments(new Bundle());
+            fragment = MyFavListFragment.newInstance();
         }
         return fragment;
     }
@@ -597,10 +591,9 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                 .findFragmentByTag(
                         NewUserInfoFragment.class.getName()));
         if (fragment == null) {
-            fragment = new NewUserInfoFragment(
+            fragment = NewUserInfoFragment.newInstance(
                     GlobalContext.getInstance().getAccountBean().getInfo(),
                     GlobalContext.getInstance().getSpecialToken());
-            fragment.setArguments(new Bundle());
         }
         return fragment;
     }
