@@ -58,9 +58,13 @@ import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -415,6 +419,19 @@ public class Utility {
             return path;
         }
         return null;
+    }
+
+    public static void copyFile(InputStream in, File destFile) throws IOException {
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(in);
+        FileOutputStream outputStream = new FileOutputStream(destFile);
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = bufferedInputStream.read(buffer)) != -1) {
+            bufferedOutputStream.write(buffer, 0, len);
+        }
+        closeSilently(bufferedInputStream);
+        closeSilently(bufferedOutputStream);
     }
 
     public static Rect locateView(View v) {

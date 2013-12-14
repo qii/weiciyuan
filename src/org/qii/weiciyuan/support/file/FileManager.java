@@ -1,14 +1,20 @@
 package org.qii.weiciyuan.support.file;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.os.Environment;
-import android.text.TextUtils;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
-import java.io.*;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.os.Environment;
+import android.text.TextUtils;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,15 +25,25 @@ import java.util.List;
 public class FileManager {
 
     private static final String AVATAR_SMAll = "avatar_small";
+
     private static final String AVATAR_LARGE = "avatar_large";
+
     private static final String PICTURE_THUMBNAIL = "picture_thumbnail";
+
     private static final String PICTURE_BMIDDLE = "picture_bmiddle";
+
     private static final String PICTURE_LARGE = "picture_large";
+
     private static final String MAP = "map";
+
     private static final String COVER = "cover";
+
     private static final String EMOTION = "emotion";
+
     private static final String TXT2PIC = "txt2pic";
+
     private static final String WEBVIEW_FAVICON = "favicon";
+
     private static final String LOG = "log";
 
     /**
@@ -41,9 +57,9 @@ public class FileManager {
     private static String getSdCardPath() {
         if (isExternalStorageMounted()) {
             File path = GlobalContext.getInstance().getExternalCacheDir();
-            if (path != null)
+            if (path != null) {
                 return path.getAbsolutePath();
-            else {
+            } else {
                 if (!cantReadBecauseOfAndroidBugPermissionProblem) {
                     cantReadBecauseOfAndroidBugPermissionProblem = true;
                     GlobalContext.getInstance().getActivity().runOnUiThread(new Runnable() {
@@ -52,12 +68,14 @@ public class FileManager {
                             new AlertDialog.Builder(GlobalContext.getInstance().getActivity())
                                     .setTitle(R.string.something_error)
                                     .setMessage(R.string.please_deleted_cache_dir)
-                                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
+                                    .setPositiveButton(R.string.ok,
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog,
+                                                        int which) {
 
-                                        }
-                                    })
+                                                }
+                                            })
                                     .show();
 
                         }
@@ -95,16 +113,26 @@ public class FileManager {
 
     public static String getUploadPicTempFile() {
 
-        if (!isExternalStorageMounted())
+        if (!isExternalStorageMounted()) {
             return "";
-        else
+        } else {
             return getSdCardPath() + File.separator + "upload.jpg";
+        }
+    }
+
+    public static String getKKConvertPicTempFile() {
+
+        if (!isExternalStorageMounted()) {
+            return "";
+        } else {
+            return getSdCardPath() + File.separator + "kk_convert.jpg";
+        }
     }
 
     public static String getLogDir() {
-        if (!isExternalStorageMounted())
+        if (!isExternalStorageMounted()) {
             return "";
-        else {
+        } else {
             String path = getSdCardPath() + File.separator + LOG;
             if (!new File(path).exists()) {
                 new File(path).mkdirs();
@@ -115,11 +143,13 @@ public class FileManager {
 
     public static String getFilePathFromUrl(String url, FileLocationMethod method) {
 
-        if (!isExternalStorageMounted())
+        if (!isExternalStorageMounted()) {
             return "";
+        }
 
-        if (TextUtils.isEmpty(url))
+        if (TextUtils.isEmpty(url)) {
             return "";
+        }
 
         int index = url.indexOf("//");
 
@@ -157,20 +187,23 @@ public class FileManager {
         }
 
         String result = getSdCardPath() + File.separator + newRelativePath;
-        if (!result.endsWith(".jpg") && !result.endsWith(".gif") && !result.endsWith(".png"))
+        if (!result.endsWith(".jpg") && !result.endsWith(".gif") && !result.endsWith(".png")) {
             result = result + ".jpg";
+        }
 
         return result;
     }
 
     public static String getTxt2picPath() {
-        if (!isExternalStorageMounted())
+        if (!isExternalStorageMounted()) {
             return "";
+        }
 
         String path = getSdCardPath() + File.separator + TXT2PIC;
         File file = new File(path);
-        if (file.exists())
+        if (file.exists()) {
             file.mkdirs();
+        }
         return path;
     }
 
@@ -189,7 +222,6 @@ public class FileManager {
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-
 
             try {
                 if (file.createNewFile()) {
@@ -293,8 +325,9 @@ public class FileManager {
     }
 
     public static boolean saveToPicDir(String path) {
-        if (!isExternalStorageMounted())
+        if (!isExternalStorageMounted()) {
             return false;
+        }
 
         File file = new File(path);
         String name = file.getName();
@@ -325,10 +358,12 @@ public class FileManager {
             }
             outBuff.flush();
         } finally {
-            if (inBuff != null)
+            if (inBuff != null) {
                 inBuff.close();
-            if (outBuff != null)
+            }
+            if (outBuff != null) {
                 outBuff.close();
+            }
         }
     }
 }

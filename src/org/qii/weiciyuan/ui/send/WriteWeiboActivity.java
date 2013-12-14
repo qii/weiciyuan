@@ -72,6 +72,8 @@ public class WriteWeiboActivity extends AbstractAppActivity
 
     private static final int PIC_RESULT = 1;
 
+    private static final int PIC_RESULT_KK = 2;
+
 
     public static final int AT_USER = 3;
 
@@ -189,10 +191,16 @@ public class WriteWeiboActivity extends AbstractAppActivity
                 }
                 break;
             case 2:
-                Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(choosePictureIntent, PIC_RESULT);
-
+                if (Utility.isKK()) {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, PIC_RESULT_KK);
+                } else {
+                    Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(choosePictureIntent, PIC_RESULT);
+                }
                 break;
         }
     }
@@ -218,7 +226,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CAMERA_RESULT:
@@ -236,9 +243,13 @@ public class WriteWeiboActivity extends AbstractAppActivity
                         content.setSelection(content.getText().toString().length());
                     }
 
-                    Uri imageFileUri = intent.getData();
-                    picPath = Utility.getPicPathFromUri(imageFileUri, this);
+                    picPath = Utility.getPicPathFromUri(intent.getData(), this);
                     enablePicture();
+                    break;
+                case PIC_RESULT_KK:
+                    ConvertKKUriToPathFragment fragment = ConvertKKUriToPathFragment
+                            .newInstance(intent.getData());
+                    getSupportFragmentManager().beginTransaction().add(fragment, "").commit();
                     break;
                 case AT_USER:
                     String name = intent.getStringExtra("name");
@@ -260,6 +271,16 @@ public class WriteWeiboActivity extends AbstractAppActivity
         }
 
 
+    }
+
+    public void picConvertSucceedKK(String path) {
+        if (TextUtils.isEmpty(content.getText().toString())) {
+            content.setText(getString(R.string.share_pic));
+            content.setSelection(content.getText().toString().length());
+        }
+
+        picPath = path;
+        enablePicture();
     }
 
 
@@ -989,4 +1010,5 @@ public class WriteWeiboActivity extends AbstractAppActivity
         picPath = "";
         disablePicture();
     }
+
 }
