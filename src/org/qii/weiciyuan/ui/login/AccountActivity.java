@@ -115,7 +115,6 @@ public class AccountActivity extends AbstractAppActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu_accountactivity, menu);
-        menu.findItem(R.id.menu_hack_login).setVisible(false);
         return true;
     }
 
@@ -125,7 +124,7 @@ public class AccountActivity extends AbstractAppActivity
         switch (item.getItemId()) {
             case R.id.menu_add_account:
                 String[] values;
-                if (getResources().getBoolean(R.bool.blackmagic)) {
+                if (SettingUtility.isBlackMagicEnabled()) {
                     values = new String[3];
                     values[0] = getString(R.string.oauth_login);
                     values[1] = getString(R.string.official_app_login);

@@ -3,9 +3,4 @@
     <!--layout-->
     <bool name="has_two_panes">true</bool>
 
-
-    <bool name="blackmagic">true</bool>
-    <bool name="listview_hardware_accelerated">true</bool>
-    <bool name="jb_notification">true</bool>
-
 </resources>

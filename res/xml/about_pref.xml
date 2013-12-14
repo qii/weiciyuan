@@ -1,123 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
-    <PreferenceCategory
-        android:title="@string/pref_general_title"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         >
-        <Preference
-            android:key="pref_official_weibo_key"
-            android:title="@string/pref_official_weibo_title"
+    <PreferenceCategory
+            android:title="@string/pref_general_title"
             >
+        <Preference
+                android:key="pref_official_weibo_key"
+                android:title="@string/pref_official_weibo_title"
+                >
             <intent
-                android:action="android.intent.action.VIEW"
-                android:data="org.qii.weiciyuan://@四次元App"/>
+                    android:action="android.intent.action.VIEW"
+                    android:data="org.qii.weiciyuan://@四次元App"/>
         </Preference>
 
         <Preference
-            android:key="pref_version_key"
-            android:title="@string/pref_version_title"
-            android:summary="1.0 alpha"
-            />
+                android:key="pref_version_key"
+                android:title="@string/pref_version_title"
+                android:summary="1.0 alpha"
+                />
 
         <Preference
-            android:key="pref_author_key"
-            android:title="@string/pref_author_title"
-            android:summary="@string/pref_author_summary"
-            />
+                android:key="pref_author_key"
+                android:title="@string/pref_author_title"
+                android:summary="@string/pref_author_summary"
+                />
         <Preference
-            android:title="@string/pref_github_title"
-            android:summary="github.com/qii/weiciyuan">
+                android:title="@string/pref_github_title"
+                android:summary="github.com/qii/weiciyuan">
             <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://github.com/qii/weiciyuan"/>
+                    android:action="android.intent.action.VIEW"
+                    android:data="https://github.com/qii/weiciyuan"/>
         </Preference>
 
         <Preference android:title="@string/pref_open_source_license_title">
             <intent
-                android:targetPackage="org.qii.weiciyuan"
-                android:targetClass="org.qii.weiciyuan.ui.preference.LicenseActivity"/>
+                    android:targetPackage="org.qii.weiciyuan"
+                    android:targetClass="org.qii.weiciyuan.ui.preference.LicenseActivity"/>
         </Preference>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/pref_support_title"
-        >
-        <Preference
-            android:key="pref_donate_key"
-            android:title="@string/pref_donate_title"
-            android:summary="@string/pref_donate_summary"
+            android:title="@string/pref_support_title"
             >
+        <Preference
+                android:key="pref_donate_key"
+                android:title="@string/pref_donate_title"
+                android:summary="@string/pref_donate_summary"
+                >
             <intent
-                android:action="android.intent.action.VIEW"
-                android:data="http://me.alipay.com/qiibeta"/>
+                    android:action="android.intent.action.VIEW"
+                    android:data="http://me.alipay.com/qiibeta"/>
         </Preference>
         <Preference
-            android:title="@string/pref_play_store_address_title"
-            android:summary="@string/pref_play_store_address_summary"
-            >
+                android:title="@string/pref_play_store_address_title"
+                android:summary="@string/pref_play_store_address_summary"
+                >
             <intent
-                android:action="android.intent.action.VIEW"
-                android:data="market://details?id=org.qii.weiciyuan"/>
+                    android:action="android.intent.action.VIEW"
+                    android:data="market://details?id=org.qii.weiciyuan"/>
         </Preference>
 
 
         <Preference
-            android:key="pref_suggest_key"
-            android:title="@string/pref_suggest_title"
-            >
+                android:key="pref_suggest_key"
+                android:title="@string/pref_suggest_title"
+                >
 
         </Preference>
 
         <Preference
-            android:key="pref_recommend_key"
-            android:title="@string/pref_recommend_title"
-            >
+                android:key="pref_recommend_key"
+                android:title="@string/pref_recommend_title"
+                >
 
         </Preference>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/pref_thanks_title"
-        >
-        <Preference
-            android:title="@string/pref_icon_design_title"
-            android:summary="NovaDNG"
+            android:title="@string/pref_thanks_title"
             >
+        <Preference
+                android:title="@string/pref_icon_design_title"
+                android:summary="NovaDNG"
+                >
 
         </Preference>
         <Preference
-            android:title="@string/pref_icon_design_title"
-            android:summary="LPF"
-            />
+                android:title="@string/pref_icon_design_title"
+                android:summary="LPF"
+                />
     </PreferenceCategory>
 
 
     <PreferenceCategory
-        android:title="@string/pref_storage_title"
-        >
+            android:title="@string/pref_storage_title"
+            >
 
         <Preference
-            android:key="pref_cache_path_key"
-            android:title="@string/pref_cache_path_title"
-            >
+                android:key="pref_cache_path_key"
+                android:title="@string/pref_cache_path_title"
+                >
 
         </Preference>
 
         <Preference
-            android:key="pref_saved_pic_path_key"
-            android:title="@string/pref_saved_pic_path_title"
-            >
+                android:key="pref_saved_pic_path_key"
+                android:title="@string/pref_saved_pic_path_title"
+                >
 
         </Preference>
 
         <Preference
 
-            android:key="pref_saved_log_path_key"
-            android:title="@string/pref_saved_log_path_title"
-            >
+                android:key="pref_saved_log_path_key"
+                android:title="@string/pref_saved_log_path_title"
+                >
 
         </Preference>
 
@@ -125,14 +125,14 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:enabled="@bool/blackmagic"
-        android:title="@string/pref_debug_title"
-        >
+            android:key="pref_debug_info_key"
+            android:title="@string/pref_debug_title"
+            >
 
         <Preference
-            android:key="pref_mem_key"
-            android:title="@string/pref_debug_mem_title"
-            >
+                android:key="pref_mem_key"
+                android:title="@string/pref_debug_mem_title"
+                >
 
         </Preference>
 

@@ -1,5 +1,13 @@
 package org.qii.weiciyuan.ui.preference;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.debug.AppLogger;
+import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.lib.changelogdialog.ChangeLogDialog;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
+
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,16 +22,12 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.os.Environment;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.widget.Toast;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.debug.AppLogger;
-import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.lib.changelogdialog.ChangeLogDialog;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 import java.io.File;
 
@@ -34,8 +38,14 @@ import java.io.File;
 public class AboutFragment extends PreferenceFragment {
 
     private BroadcastReceiver sdCardReceiver;
+
     private MediaPlayer mp;
+
     private boolean playing;
+
+    private int blackMagicCount = 0;
+
+    private static final String DEBUG_INFO = "pref_debug_info_key";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,42 +54,86 @@ public class AboutFragment extends PreferenceFragment {
 
         addPreferencesFromResource(R.xml.about_pref);
 
-        findPreference(SettingActivity.SUGGEST).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
-                intent.putExtra("content", buildContent());
-                startActivity(intent);
-                return true;
-            }
-        });
+        findPreference(SettingActivity.SUGGEST)
+                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
+                        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                        intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
+                        intent.putExtra("content", buildContent());
+                        startActivity(intent);
+                        return true;
+                    }
+                });
 
-        findPreference(SettingActivity.RECOMMEND).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
-                intent.putExtra("content", getString(R.string.recommend_content));
-                startActivity(intent);
-                return true;
-            }
-        });
+        findPreference(SettingActivity.RECOMMEND)
+                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
+                        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                        intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
+                        intent.putExtra("content", getString(R.string.recommend_content));
+                        startActivity(intent);
+                        return true;
+                    }
+                });
 
         findPreference(SettingActivity.VERSION).setSummary(buildVersionInfo());
 
-        findPreference(SettingActivity.VERSION).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                ChangeLogDialog changeLogDialog = new ChangeLogDialog(getActivity());
-                changeLogDialog.show();
-                return true;
-            }
-        });
+        findPreference(SettingActivity.VERSION)
+                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        ChangeLogDialog changeLogDialog = new ChangeLogDialog(getActivity());
+                        changeLogDialog.show();
+                        return true;
+                    }
+                });
 
-        if (getResources().getBoolean(R.bool.blackmagic)) {
+        detectDebugPreference();
+
+        findPreference(SettingActivity.AUTHOR)
+                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+
+                        blackMagicCount++;
+                        if (blackMagicCount > 3) {
+                            SettingUtility.setBlackMagicEnabled();
+                        }
+
+                        if (mp != null && mp.isPlaying()) {
+                            mp.stop();
+                            playing = false;
+                            return true;
+                        }
+                        if (mp == null || !playing) {
+                            mp = MediaPlayer.create(getActivity(), R.raw.star);
+                        }
+                        mp.start();
+                        playing = true;
+                        Toast.makeText(getActivity(), "♩♪♫♬♭", Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
+
+        buildCacheSummary();
+        buildLogSummary();
+
+        findPreference(SettingActivity.SAVED_PIC_PATH)
+                .setSummary(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES).getAbsolutePath());
+
+    }
+
+    private void detectDebugPreference() {
+        Preference debugPreferenceCategory = (PreferenceCategory) findPreference(DEBUG_INFO);
+        Preference debugPreference = findPreference(SettingActivity.DEBUG_MEM_INFO);
+
+        if (SettingUtility.isBlackMagicEnabled()) {
+
             Runtime rt = Runtime.getRuntime();
             long vmAlloc = rt.totalMemory() - rt.freeMemory();
             long nativeAlloc = Debug.getNativeHeapAllocatedSize();
@@ -87,37 +141,16 @@ public class AboutFragment extends PreferenceFragment {
             String vmAllocStr = "VM Allocated " + formatMemoryText(vmAlloc);
             String nativeAllocStr = "Native Allocated " + formatMemoryText(nativeAlloc);
 
-            ActivityManager am = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+            ActivityManager am = (ActivityManager) getActivity()
+                    .getSystemService(Context.ACTIVITY_SERVICE);
             int memoryClass = am.getMemoryClass();
             String result = "VM Max " + Integer.toString(memoryClass) + "MB";
-            findPreference(SettingActivity.DEBUG_MEM_INFO).setSummary(vmAllocStr + "," + nativeAllocStr + "," + result);
+            debugPreference.setSummary(
+                    vmAllocStr + "," + nativeAllocStr + "," + result);
+        } else {
+            PreferenceScreen screen = getPreferenceScreen();
+            screen.removePreference(debugPreferenceCategory);
         }
-
-
-        findPreference(SettingActivity.AUTHOR).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                if (mp != null && mp.isPlaying()) {
-                    mp.stop();
-                    playing = false;
-                    return true;
-                }
-                if (mp == null || !playing) {
-                    mp = MediaPlayer.create(getActivity(), R.raw.star);
-                }
-                mp.start();
-                playing = true;
-                Toast.makeText(getActivity(), "♩♪♫♬♭", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-
-        buildCacheSummary();
-        buildLogSummary();
-
-        findPreference(SettingActivity.SAVED_PIC_PATH).setSummary(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES).getAbsolutePath());
-
     }
 
     @Override
@@ -144,7 +177,8 @@ public class AboutFragment extends PreferenceFragment {
         if (cachedDir != null) {
             findPreference(SettingActivity.CACHE_PATH).setSummary(cachedDir.getAbsolutePath());
         } else {
-            findPreference(SettingActivity.CACHE_PATH).setSummary(getString(R.string.sd_card_in_not_mounted));
+            findPreference(SettingActivity.CACHE_PATH)
+                    .setSummary(getString(R.string.sd_card_in_not_mounted));
         }
     }
 
@@ -153,7 +187,8 @@ public class AboutFragment extends PreferenceFragment {
         if (cachedDir != null) {
             findPreference(SettingActivity.SAVED_LOG_PATH).setSummary(FileManager.getLogDir());
         } else {
-            findPreference(SettingActivity.SAVED_LOG_PATH).setSummary(getString(R.string.sd_card_in_not_mounted));
+            findPreference(SettingActivity.SAVED_LOG_PATH)
+                    .setSummary(getString(R.string.sd_card_in_not_mounted));
         }
     }
 
@@ -213,7 +248,8 @@ public class AboutFragment extends PreferenceFragment {
 
         return "@四次元App #四次元App反馈# " + android.os.Build.MANUFACTURER
                 + " " + android.os.Build.MODEL + ",Android "
-                + android.os.Build.VERSION.RELEASE + "," + network + " version:" + buildVersionInfo();
+                + android.os.Build.VERSION.RELEASE + "," + network + " version:"
+                + buildVersionInfo();
     }
 
     private String formatMemoryText(long memory) {

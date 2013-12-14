@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        >
 
 
     <CheckBoxPreference
-        android:key="pref_disable_hardware_accelerated_key"
-        android:title="@string/disable_hardware_accelerated"
-        android:summary="@string/pref_disable_hardware_accelerated_summary"
-        android:enabled="@bool/listview_hardware_accelerated"
-        android:defaultValue="false"/>
+            android:key="pref_disable_hardware_accelerated_key"
+            android:title="@string/disable_hardware_accelerated"
+            android:summary="@string/pref_disable_hardware_accelerated_summary"
+            android:enabled="true"
+            android:defaultValue="false"/>
 
 </PreferenceScreen>
