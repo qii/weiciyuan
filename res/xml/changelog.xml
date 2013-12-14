@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
     <release
-        version="0.491-2013.10"
-        versioncode="27">
+            version="0.50-2013.12"
+            versioncode="28">
+        <change>修正上传的图片横竖方向</change>
+        <change>修正没帐号的情况下从外部调用四次元发送微博模块崩溃的bug</change>
+        <change>4.4上查看图片支持透明状态栏和虚拟按键</change>
+        <change>加快大图列表的滚动速度</change>
+        <change>支持外部调用四次元打开链接，如果链接本身是微博地址的话会被正确解析用【微博详情】页面打开，用户链接同理类推</change>
+    </release>
+    <release
+            version="0.491-2013.11"
+            versioncode="27">
         <change>修复部分转发微博中，点击正文中原微博却跳转到链接的bug</change>
         <change>修正吃惊和汗的表情对调的bug</change>
         <change>修正没登录微博时候，从其他App分享进来打开四次元崩溃的bug</change>
