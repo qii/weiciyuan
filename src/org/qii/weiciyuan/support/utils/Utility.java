@@ -399,6 +399,24 @@ public class Utility {
         return 800;
     }
 
+    public static String getLatestCameraPicture(Activity activity) {
+        String[] projection = new String[]{MediaStore.Images.ImageColumns._ID,
+                MediaStore.Images.ImageColumns.DATA,
+                MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+                MediaStore.Images.ImageColumns.DATE_TAKEN,
+                MediaStore.Images.ImageColumns.MIME_TYPE
+        };
+        final Cursor cursor = activity.getContentResolver()
+                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        projection, null, null,
+                        MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+        if (cursor.moveToFirst()) {
+            String path = cursor.getString(1);
+            return path;
+        }
+        return null;
+    }
+
     public static Rect locateView(View v) {
         int[] location = new int[2];
         if (v == null) {
