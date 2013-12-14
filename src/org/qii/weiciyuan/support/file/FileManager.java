@@ -125,7 +125,8 @@ public class FileManager {
         if (!isExternalStorageMounted()) {
             return "";
         } else {
-            return getSdCardPath() + File.separator + "kk_convert.jpg";
+            return getSdCardPath() + File.separator + "kk_convert" + System.currentTimeMillis()
+                    + ".jpg";
         }
     }
 
