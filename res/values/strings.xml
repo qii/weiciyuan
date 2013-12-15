@@ -11,8 +11,11 @@
 
     <!--Account -->
     <string name="oauthing">授权中</string>
-    <string name="sina_server_error">检测到你跳转到错误页面，这是因为新浪微博第三方认证服务器出错，多次重复操作依然不行的话尝试换网络，四次元无能为力</string>
-    <string name="token_expires_in_time">请注意，根据新浪微博的平台政策，刚添加的帐号会在 %s 天后过期，到时需要重新登录，在授权过期之前重复登陆不会刷新剩余天数</string>
+    <string name="sina_server_error">检测到你跳转到错误页面，这是因为新浪微博第三方认证服务器出错，多次重复操作依然不行的话尝试换网络，四次元无能为力
+    </string>
+    <string name="token_expires_in_time">请注意，根据新浪微博的平台政策，刚添加的帐号会在 %s
+        天后过期，到时需要重新登录，在授权过期之前重复登陆不会刷新剩余天数
+    </string>
     <string name="your_token_is_expired">检测到你的授权信息已经过期了，请重新授权一次</string>
     <string name="logout_to_login_again">返回帐号管理页面，重新授权</string>
     <string name="dialog_title_error">出错啦</string>
@@ -76,7 +79,9 @@
     <string name="unknown_sina_network_error">新浪微博某些网络节点又出故障，换个网络试试</string>
     <string name="sd_card_in_not_mounted">SD卡未挂载</string>
     <string name="something_error">发生故障</string>
-    <string name="please_deleted_cache_dir">权限出错，无法读取存储空间，需要用户手动删除SD卡下的 /Android/data/org.qii.weiciyuan 目录</string>
+    <string name="please_deleted_cache_dir">权限出错，无法读取存储空间，需要用户手动删除SD卡下的
+        /Android/data/org.qii.weiciyuan 目录
+    </string>
 
 
     <!-- timeline -->
@@ -366,7 +371,9 @@
 
     <!--gallery-->
     <string name="download_finished_but_cant_read_picture_file">下载完成，但是无法读取图片</string>
-    <string name="picture_is_too_large_to_read_so_gallery_load_thumbnails_of_this_picture">原图太大无法显示，载入缩略图</string>
+    <string name="picture_is_too_large_to_read_so_gallery_load_thumbnails_of_this_picture">
+        原图太大无法显示，载入缩略图
+    </string>
     <string name="picture_is_too_large_so_enable_software_layer">图片太大，启用软件渲染模式，滚动会掉帧……</string>
     <string name="picture_read_failed">图片解析失败</string>
     <string name="wait_for_download_picture">等待图片下载……</string>
@@ -457,7 +464,9 @@
     <string name="filter_topic">话题</string>
     <string name="filter_source">来源</string>
     <string name="filter_rule">规则解释</string>
-    <string name="filter_rule_content">关键词只针对内容，不会误伤到微博的用户昵称，但@到的用户昵称如果匹配会被过滤，而用户只针对发微博/转发微博的用户昵称，是不涉及内容中@到的用户。</string>
+    <string name="filter_rule_content">
+        关键词只针对内容，不会误伤到微博的用户昵称，但@到的用户昵称如果匹配会被过滤，而用户只针对发微博/转发微博的用户昵称，是不涉及内容中@到的用户。
+    </string>
     <string name="add_common_filter_list">直接添加预设清单</string>
     <string name="congratulation_to_you">恭喜你，智商又提高一层！</string>
     <string name="ask_clear_filter_list">清空列表？</string>
@@ -476,6 +485,11 @@
     <string name="pref_web_browser_summary">内置浏览器可以查阅分享该网页链接的微博</string>
     <string name="pref_gallery_title">图片</string>
     <string name="pref_enable_click_to_close_gallery">启用点击关闭图片</string>
+    <string name="pref_cache_title">缓存</string>
+    <string name="pref_click_to_clean_cache">点击清理缓存图片</string>
+    <string name="start_clean_cache">开始清理缓存</string>
+    <string name="clean_cache_finish">清理完成</string>
+    <string name="getting_cache_size">缓存大小正在统计……</string>
 
 
     <!--Setting About-->
@@ -489,7 +503,8 @@
     <string name="official_weibo_link">四次元App</string>
     <string name="pref_suggest_title">反馈意见</string>
     <string name="pref_recommend_title">推荐给微博好友</string>
-    <string name="recommend_content">还在被微博的广告恶心吗？换用 四次元 吧，干净清爽的新浪微博安卓客户端，下载 => http://t.cn/zlAUwy7</string>
+    <string name="recommend_content">还在被微博的广告恶心吗？换用 四次元 吧，干净清爽的新浪微博安卓客户端，下载 => http://t.cn/zlAUwy7
+    </string>
     <string name="pref_donate_title">捐赠支持开发</string>
     <string name="pref_donate_summary">捐之前想清楚，下个版本不一定会支持你的设备</string>
     <string name="donate_summary2">没钱好痛苦……_(:3」∠)_</string>

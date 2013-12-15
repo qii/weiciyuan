@@ -5,18 +5,27 @@
 
 
         <CheckBoxPreference
-            android:key="enable_internal_web_browser"
-            android:title="@string/pref_enable_internal_web_browser"
-            android:summary="@string/pref_web_browser_summary"
-            android:defaultValue="true"/>
+                android:key="enable_internal_web_browser"
+                android:title="@string/pref_enable_internal_web_browser"
+                android:summary="@string/pref_web_browser_summary"
+                android:defaultValue="true"/>
 
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_gallery_title">
 
         <CheckBoxPreference
-            android:key="enable_click_to_close_gallery"
-            android:title="@string/pref_enable_click_to_close_gallery"
-            android:defaultValue="true"/>
+                android:key="enable_click_to_close_gallery"
+                android:title="@string/pref_enable_click_to_close_gallery"
+                android:defaultValue="true"/>
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_cache_title">
+
+        <Preference
+                android:key="click_to_clean_cache"
+                android:summary="@string/getting_cache_size"
+                android:title="@string/pref_click_to_clean_cache"
+                />
 
     </PreferenceCategory>
 </PreferenceScreen>

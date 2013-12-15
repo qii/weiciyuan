@@ -1,17 +1,23 @@
 package org.qii.weiciyuan.ui.preference;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.view.MenuItem;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import android.widget.Toast;
 
 /**
  * User: qii
  * Date: 13-9-17
  */
 public class OtherActivity extends AbstractAppActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -50,8 +56,89 @@ public class OtherActivity extends AbstractAppActivity {
             setRetainInstance(false);
 
             addPreferencesFromResource(R.xml.other_pref);
+
+            new CalcCacheSize(findPreference(SettingActivity.CLICK_TO_CLEAN_CACHE))
+                    .executeOnExecutor(
+                            MyAsyncTask.THREAD_POOL_EXECUTOR);
+            findPreference(SettingActivity.CLICK_TO_CLEAN_CACHE)
+                    .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            new CleanCacheTask(findPreference(SettingActivity.CLICK_TO_CLEAN_CACHE))
+                                    .executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                            return true;
+                        }
+                    });
         }
 
+        private class CalcCacheSize extends MyAsyncTask<Void, Void, String> {
+
+            Preference preference;
+
+            public CalcCacheSize(Preference preference) {
+                this.preference = preference;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                this.preference.setSummary(R.string.getting_cache_size);
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                return FileManager.getPictureCacheSize();
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                if (getActivity() == null) {
+                    return;
+                }
+
+                preference.setSummary(s);
+            }
+
+        }
+
+
+        private class CleanCacheTask extends MyAsyncTask<Void, Void, Void> {
+
+            Preference preference;
+
+            public CleanCacheTask(Preference preference) {
+                this.preference = preference;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Toast.makeText(getActivity(), getString(R.string.start_clean_cache),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                FileManager.deletePictureCache();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                if (getActivity() == null) {
+                    return;
+                }
+
+                Toast.makeText(getActivity(), getString(R.string.clean_cache_finish),
+                        Toast.LENGTH_SHORT).show();
+
+                new CalcCacheSize(preference)
+                        .executeOnExecutor(
+                                MyAsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }
 
     }
 }

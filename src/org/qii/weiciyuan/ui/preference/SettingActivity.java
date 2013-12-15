@@ -89,6 +89,8 @@ public class SettingActivity extends AbstractAppActivity {
 
     public static final String ENABLE_CLICK_TO_CLOSE_GALLERY = "enable_click_to_close_gallery";
 
+    public static final String CLICK_TO_CLEAN_CACHE = "click_to_clean_cache";
+
     //about
     public static final String OFFICIAL_WEIBO = "pref_official_weibo_key";
 
