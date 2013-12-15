@@ -490,6 +490,7 @@
     <string name="start_clean_cache">开始清理缓存</string>
     <string name="clean_cache_finish">清理完成</string>
     <string name="getting_cache_size">缓存大小正在统计……</string>
+    <string name="please_insert_sd_card">请插入SD卡</string>
 
 
     <!--Setting About-->

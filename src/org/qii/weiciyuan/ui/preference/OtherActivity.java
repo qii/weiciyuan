@@ -57,15 +57,27 @@ public class OtherActivity extends AbstractAppActivity {
 
             addPreferencesFromResource(R.xml.other_pref);
 
-            new CalcCacheSize(findPreference(SettingActivity.CLICK_TO_CLEAN_CACHE))
-                    .executeOnExecutor(
-                            MyAsyncTask.THREAD_POOL_EXECUTOR);
-            findPreference(SettingActivity.CLICK_TO_CLEAN_CACHE)
+            final Preference cleanCachePre = findPreference(SettingActivity.CLICK_TO_CLEAN_CACHE);
+
+            if (FileManager.isExternalStorageMounted()) {
+                new CalcCacheSize(cleanCachePre)
+                        .executeOnExecutor(
+                                MyAsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                cleanCachePre.setSummary(R.string.please_insert_sd_card);
+            }
+            cleanCachePre
                     .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
-                            new CleanCacheTask(findPreference(SettingActivity.CLICK_TO_CLEAN_CACHE))
-                                    .executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                            if (FileManager.isExternalStorageMounted()) {
+                                new CleanCacheTask(cleanCachePre)
+                                        .executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                            } else {
+                                Toast.makeText(getActivity(),
+                                        getString(R.string.please_insert_sd_card),
+                                        Toast.LENGTH_SHORT).show();
+                            }
                             return true;
                         }
                     });
