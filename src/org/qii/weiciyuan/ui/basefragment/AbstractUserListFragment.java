@@ -149,6 +149,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
                 getListView());
         pullToRefreshListView.setAdapter(userListAdapter);
         pullToRefreshListView.setOnPullEventListener(getPullEventListener());
+        pullToRefreshListView.getRefreshableView().setFooterDividersEnabled(false);
 
         pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override

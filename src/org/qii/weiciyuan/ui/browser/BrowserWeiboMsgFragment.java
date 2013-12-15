@@ -409,7 +409,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
             }
         });
         commentTab.setTextColor(getResources().getColor(R.color.orange));
-
+        listView.setFooterDividersEnabled(false);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         listView.setOnItemClickListener(commentOnItemClickListener);
         listView.setOnItemLongClickListener(commentOnItemLongClickListener);
