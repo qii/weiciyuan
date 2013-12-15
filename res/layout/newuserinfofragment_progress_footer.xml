@@ -8,10 +8,10 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
-    <ProgressBar
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        style="?android:attr/progressBarStyleSmall"
 
-        />
+    <ProgressBar android:id="@+id/progressbar"
+                 android:layout_gravity="center_horizontal"
+                 android:layout_width="30dp"
+                 android:layout_height="30dp"
+                 style="?android:progressBarStyle"/>
 </LinearLayout>
