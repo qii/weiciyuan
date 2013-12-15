@@ -1,5 +1,10 @@
 package org.qii.weiciyuan.support.smileypicker;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
+import org.qii.weiciyuan.support.utils.Utility;
+
 import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -12,10 +17,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.*;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +36,21 @@ import java.util.Set;
 public class SmileyPicker extends LinearLayout {
 
     private int mPickerHeight;
+
     private EditText mEditText;
+
     private LayoutInflater mInflater;
+
     private Activity activity;
+
     private final LayoutTransition transitioner = new LayoutTransition();
+
     private ViewPager viewPager;
+
     private ImageView centerPoint;
+
     private ImageView leftPoint;
+
     private ImageView rightPoint;
 
     public SmileyPicker(Context paramContext) {
@@ -51,6 +66,11 @@ public class SmileyPicker extends LinearLayout {
         leftPoint = (ImageView) view.findViewById(R.id.left_point);
         centerPoint = (ImageView) view.findViewById(R.id.center_point);
         rightPoint = (ImageView) view.findViewById(R.id.right_point);
+        if (Utility.isKK()) {
+            rightPoint.setVisibility(View.VISIBLE);
+        } else {
+            rightPoint.setVisibility(View.GONE);
+        }
         leftPoint.getDrawable().setLevel(1);
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -101,13 +121,15 @@ public class SmileyPicker extends LinearLayout {
         //open smilepicker, press home, press app switcher to return to write weibo interface,
         //softkeyboard will be opened by android system when smilepicker is showing,
         // this method is used to fix this issue
-        paramActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        paramActivity.getWindow()
+                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     }
 
     public void hide(Activity paramActivity) {
         setVisibility(View.GONE);
-        paramActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        paramActivity.getWindow()
+                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
     }
 
@@ -124,13 +146,15 @@ public class SmileyPicker extends LinearLayout {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
 
-            View view = activity.getLayoutInflater().inflate(R.layout.smileypicker_gridview, container, false);
+            View view = activity.getLayoutInflater()
+                    .inflate(R.layout.smileypicker_gridview, container, false);
 
             GridView gridView = (GridView) view.findViewById(R.id.smiley_grid);
 
             gridView.setAdapter(new SmileyAdapter(activity, position));
-            container.addView(view, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
+            container.addView(view, 0,
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT));
 
             return view;
         }
@@ -144,7 +168,7 @@ public class SmileyPicker extends LinearLayout {
 
         @Override
         public int getCount() {
-            return 3;
+            return Utility.isKK() ? 3 : 2;
         }
 
         @Override
@@ -156,9 +180,13 @@ public class SmileyPicker extends LinearLayout {
     private final class SmileyAdapter extends BaseAdapter {
 
         private LayoutInflater mInflater;
+
         private List<String> keys;
+
         private Map<String, Bitmap> bitmapMap;
+
         private int emotionPosition;
+
         private int count;
 
         public SmileyAdapter(Context context, int emotionPosition) {
@@ -231,8 +259,10 @@ public class SmileyPicker extends LinearLayout {
         }
 
         public View getView(int paramInt, View paramView, ViewGroup paramViewGroup) {
-            if (paramView == null)
-                paramView = this.mInflater.inflate(R.layout.writeweiboactivity_smileypicker_item, null);
+            if (paramView == null) {
+                paramView = this.mInflater
+                        .inflate(R.layout.writeweiboactivity_smileypicker_item, null);
+            }
             bindView(paramInt, paramView);
             return paramView;
         }

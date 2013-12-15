@@ -4,11 +4,11 @@
             version="0.50-2013.12"
             versioncode="28">
         <change>修正上传的图片横竖方向</change>
-        <change>修正没帐号的情况下从外部调用四次元发送微博模块崩溃的bug</change>
         <change>4.4上查看图片支持透明虚拟按键（透明状态栏有bug，未开启）</change>
         <change>选择图片采用4.4新的文件存储框架</change>
         <change>加快大图列表的滚动速度</change>
         <change>新增：其他-清理缓存</change>
+        <change>新增加表情和emoji，emoji只有4.4以上会打开</change>
         <change>支持外部调用四次元打开链接，如果链接本身是微博地址的话会被正确解析用【微博详情】页面打开，用户链接同理类推</change>
     </release>
     <release
