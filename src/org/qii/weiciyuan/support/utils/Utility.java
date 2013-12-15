@@ -550,12 +550,16 @@ public class Utility {
     }
 
     public static String getIdFromWeiboAccountLink(String url) {
+
+        url = convertWeiboCnToWeiboCom(url);
+
         String id = url.substring("http://weibo.com/u/".length());
         id = id.replace("/", "");
         return id;
     }
 
     public static String getDomainFromWeiboAccountLink(String url) {
+        url = convertWeiboCnToWeiboCom(url);
 
         final String NORMAL_DOMAIN_PREFIX = "http://weibo.com/";
         final String ENTERPRISE_DOMAIN_PREFIX = "http://e.weibo.com/";
@@ -582,6 +586,8 @@ public class Utility {
     }
 
     public static boolean isWeiboAccountIdLink(String url) {
+        url = convertWeiboCnToWeiboCom(url);
+
         return !TextUtils.isEmpty(url) && url.startsWith("http://weibo.com/u/");
     }
 
@@ -590,6 +596,7 @@ public class Utility {
         if (TextUtils.isEmpty(url)) {
             return false;
         } else {
+            url = convertWeiboCnToWeiboCom(url);
             boolean a = url.startsWith("http://weibo.com/") || url
                     .startsWith("http://e.weibo.com/");
             boolean b = !url.contains("?");
@@ -615,7 +622,7 @@ public class Utility {
         if (TextUtils.isEmpty(url)) {
             return false;
         } else {
-
+            url = convertWeiboCnToWeiboCom(url);
             boolean urlValide = url.startsWith("http://www.weibo.com/");
 
             if (!urlValide) {
@@ -638,6 +645,8 @@ public class Utility {
 
 
     public static String getMidFromUrl(String url) {
+        url = convertWeiboCnToWeiboCom(url);
+
         if (url.endsWith("/")) {
             url = url.substring(0, url.length() - 1);
         }
@@ -645,6 +654,13 @@ public class Utility {
         url = url.substring("http://www.weibo.com/".length(), url.length());
 
         return url.split("/")[1];
+    }
+
+    private static String convertWeiboCnToWeiboCom(String url) {
+        if (!TextUtils.isEmpty(url) && url.startsWith("http://weibo.cn")) {
+            url = url.replace("http://weibo.cn", "http://weibo.com");
+        }
+        return url;
     }
 
     public static void vibrate(Context context, View view) {
