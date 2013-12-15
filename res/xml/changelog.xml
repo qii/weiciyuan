@@ -8,6 +8,7 @@
         <change>4.4上查看图片支持透明虚拟按键（透明状态栏有bug，未开启）</change>
         <change>选择图片采用4.4新的文件存储框架</change>
         <change>加快大图列表的滚动速度</change>
+        <change>新增：其他-清理缓存</change>
         <change>支持外部调用四次元打开链接，如果链接本身是微博地址的话会被正确解析用【微博详情】页面打开，用户链接同理类推</change>
     </release>
     <release
@@ -20,9 +21,9 @@
         <change>稍微改进了下查看多图</change>
     </release>
     <release
-        version="0.49-2013.10"
-        versioncode="26">
-        <change>修复上版本各种bug</change>
+            version="0.49-2013.10"
+            versioncode="26">
+    <change>修复上版本各种bug</change>
         <change>UI大改，引入侧滑菜单，修改个人资料页面，合并微博详情的评论和转发列表</change>
         <change>进一步提升列表流畅度</change>
         <change>记忆列表阅读位置</change>
@@ -42,9 +43,9 @@
         <change>好友分组管理，添加/删除分组</change>
     </release>
     <release
-        version="0.483-2013.1"
-        versioncode="25">
-        <change>修正一些崩潰的bug</change>
+            version="0.483-2013.1"
+            versioncode="25">
+    <change>修正一些崩潰的bug</change>
         <change>更換部分按鈕圖標</change>
         <change>列表文本添加行間距</change>
         <change>寫微博界面添加完照片後查看圖片方式換掉</change>
@@ -60,9 +61,9 @@
         <change>修正表情按鈕崩潰的bug</change>
     </release>
     <release
-        version="0.482-2012.12"
-        versioncode="24">
-        <change>修正網址鏈接帶進漢字的bug</change>
+            version="0.482-2012.12"
+            versioncode="24">
+    <change>修正網址鏈接帶進漢字的bug</change>
         <change>轉發評論頭像可以在2g時候自動關閉</change>
         <change>用戶資料頁面點擊頭像彈出放大的頭像框</change>
         <change>添加列表快速滾動（設置-外觀）</change>
@@ -87,9 +88,9 @@
         <change>修復橫屏查看圖片時候崩潰的bug</change>
     </release>
     <release
-        version="0.481-2012.11"
-        versioncode="23">
-        <change>查看某人的话题列表，添加自己新关注话题标签</change>
+            version="0.481-2012.11"
+            versioncode="23">
+    <change>查看某人的话题列表，添加自己新关注话题标签</change>
         <change>转发的界面右上角有菜单可以精简掉多余的 @</change>
         <change>发微博的字数bug修正</change>
         <change>发微博右上角可以文字转图片</change>
@@ -103,52 +104,52 @@
 
 
     <release
-        version="0.48-2012.11"
-        versioncode="1">
+            version="0.48-2012.11"
+            versioncode="1">
     </release>
     <release
-        version="0.474-2012.11"
-        versioncode="1">
+            version="0.474-2012.11"
+            versioncode="1">
     </release>
     <release
-        version="0.473-2012.10"
-        versioncode="1">
+            version="0.473-2012.10"
+            versioncode="1">
     </release>
     <release
-        version="0.472-2012.10"
-        versioncode="1">
+            version="0.472-2012.10"
+            versioncode="1">
     </release>
     <release
-        version="0.471-2012.10"
-        versioncode="1">
+            version="0.471-2012.10"
+            versioncode="1">
     </release>
     <release
-        version="0.47-2012.10"
-        versioncode="1">
+            version="0.47-2012.10"
+            versioncode="1">
     </release>
     <release
-        version="0.461-2012.10"
-        versioncode="1">
+            version="0.461-2012.10"
+            versioncode="1">
     </release>
     <release
-        version="0.46-2012.10"
-        versioncode="1">
+            version="0.46-2012.10"
+            versioncode="1">
     </release>
     <release
-        version="0.45-2012.9"
-        versioncode="1">
+            version="0.45-2012.9"
+            versioncode="1">
     </release>
     <release
-        version="0.44-2012.9"
-        versioncode="1">
+            version="0.44-2012.9"
+            versioncode="1">
     </release>
     <release
-        version="0.3-2012.9"
-        versioncode="1">
+            version="0.3-2012.9"
+            versioncode="1">
     </release>
     <release
-        version="0.1-2012.8"
-        versioncode="1">
-        <change>初版</change>
+            version="0.1-2012.8"
+            versioncode="1">
+    <change>初版</change>
     </release>
 </changelog>

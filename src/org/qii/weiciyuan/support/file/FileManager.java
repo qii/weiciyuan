@@ -285,11 +285,14 @@ public class FileManager {
             String oriPath = getSdCardPath() + File.separator + PICTURE_LARGE;
             String largeAvatarPath = getSdCardPath() + File.separator + AVATAR_LARGE;
             String smallAvatarPath = getSdCardPath() + File.separator + AVATAR_SMAll;
+            String coverPath = getSdCardPath() + File.separator + COVER;
+
             size += new FileSize(new File(thumbnailPath)).getLongSize();
             size += new FileSize(new File(middlePath)).getLongSize();
             size += new FileSize(new File(oriPath)).getLongSize();
             size += new FileSize(new File(largeAvatarPath)).getLongSize();
             size += new FileSize(new File(smallAvatarPath)).getLongSize();
+            size += new FileSize(new File(coverPath)).getLongSize();
 
         }
         return FileSize.convertSizeToString(size);
@@ -306,12 +309,14 @@ public class FileManager {
         String oriPath = getSdCardPath() + File.separator + PICTURE_LARGE;
         String largeAvatarPath = getSdCardPath() + File.separator + AVATAR_LARGE;
         String smallAvatarPath = getSdCardPath() + File.separator + AVATAR_SMAll;
+        String coverPath = getSdCardPath() + File.separator + COVER;
 
         deleteDirectory(new File(thumbnailPath));
         deleteDirectory(new File(middlePath));
         deleteDirectory(new File(oriPath));
         deleteDirectory(new File(largeAvatarPath));
         deleteDirectory(new File(smallAvatarPath));
+        deleteDirectory(new File(coverPath));
 
         return true;
     }
