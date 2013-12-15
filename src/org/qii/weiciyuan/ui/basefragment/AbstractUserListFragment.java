@@ -1,12 +1,5 @@
 package org.qii.weiciyuan.ui.basefragment;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.view.*;
-import android.view.animation.AnimationUtils;
-import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
@@ -24,6 +17,24 @@ import org.qii.weiciyuan.ui.loader.AbstractAsyncNetRequestTaskLoader;
 import org.qii.weiciyuan.ui.loader.DummyLoader;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.view.ActionMode;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
 /**
  * User: qii
  * Date: 12-8-18
@@ -31,13 +42,19 @@ import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
     protected View footerView;
+
     protected PullToRefreshListView pullToRefreshListView;
+
     protected TextView empty;
+
     protected ProgressBar progressBar;
+
     private UserListAdapter userListAdapter;
+
     protected UserListBean bean = new UserListBean();
 
     protected static final int NEW_USER_LOADER_ID = 1;
+
     protected static final int OLD_USER_LOADER_ID = 2;
 
     private volatile boolean enableRefreshTime = true;
@@ -55,7 +72,6 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     }
 
     protected void clearAndReplaceValue(UserListBean value) {
-
 
         bean.setNext_cursor(value.getNext_cursor());
         bean.getUsers().clear();
@@ -104,31 +120,33 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+            ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.listview_layout, container, false);
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
-        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
-            @Override
-            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                loadNewMsg();
-            }
-        });
+        pullToRefreshListView
+                .setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+                    @Override
+                    public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+                        loadNewMsg();
+                    }
+                });
 
-        pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
-            @Override
-            public void onLastItemVisible() {
-                listViewFooterViewClick(null);
-            }
-        });
+        pullToRefreshListView
+                .setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+                    @Override
+                    public void onLastItemVisible() {
+                        listViewFooterViewClick(null);
+                    }
+                });
 
         footerView = inflater.inflate(R.layout.listview_footer_layout, null);
         getListView().addFooterView(footerView);
         dismissFooterView();
 
-
-        userListAdapter = new UserListAdapter(AbstractUserListFragment.this, bean.getUsers(), getListView());
+        userListAdapter = new UserListAdapter(AbstractUserListFragment.this, bean.getUsers(),
+                getListView());
         pullToRefreshListView.setAdapter(userListAdapter);
         pullToRefreshListView.setOnPullEventListener(getPullEventListener());
 
@@ -143,7 +161,6 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
                             getAdapter().notifyDataSetChanged();
                         }
                         break;
-
 
                     case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
 
@@ -160,7 +177,8 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
             }
 
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                    int totalItemCount) {
 
             }
         }
@@ -192,7 +210,8 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     }
 
     private SoundPullEventListener<ListView> getPullEventListener() {
-        SoundPullEventListener<ListView> listener = new SoundPullEventListener<ListView>(getActivity());
+        SoundPullEventListener<ListView> listener = new SoundPullEventListener<ListView>(
+                getActivity());
         if (SettingUtility.getEnableSound()) {
             listener.addSoundEvent(PullToRefreshBase.State.RELEASE_TO_REFRESH, R.raw.psst1);
             //            listener.addSoundEvent(PullToRefreshBase.State.GIVE_UP, R.raw.psst2);
@@ -240,32 +259,33 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     }
 
 
-    private void showFooterView() {
-        TextView tv = ((TextView) footerView.findViewById(R.id.listview_footer));
-        tv.setVisibility(View.VISIBLE);
-        tv.setText(getString(R.string.loading));
-        View view = footerView.findViewById(R.id.refresh);
+    protected void showFooterView() {
+        View view = footerView.findViewById(R.id.loading_progressbar);
         view.setVisibility(View.VISIBLE);
-        view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
+        view.setScaleX(1.0f);
+        view.setScaleY(1.0f);
+        view.setAlpha(1.0f);
+        footerView.findViewById(R.id.laod_failed).setVisibility(View.GONE);
     }
-
 
     protected void dismissFooterView() {
-        footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
-        footerView.findViewById(R.id.refresh).clearAnimation();
-        footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+        final View progressbar = footerView.findViewById(R.id.loading_progressbar);
+        progressbar.animate().scaleX(0).scaleY(0).alpha(0.5f).setDuration(300)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressbar.setVisibility(View.GONE);
+                    }
+                });
+        footerView.findViewById(R.id.laod_failed).setVisibility(View.GONE);
     }
 
-
-    private void showErrorFooterView() {
-        TextView tv = ((TextView) footerView.findViewById(R.id.listview_footer));
-        tv.setVisibility(View.VISIBLE);
-        tv.setText(getString(R.string.click_to_load_older_message));
-        View view = footerView.findViewById(R.id.refresh);
-        view.clearAnimation();
+    protected void showErrorFooterView() {
+        View view = footerView.findViewById(R.id.loading_progressbar);
         view.setVisibility(View.GONE);
+        TextView tv = ((TextView) footerView.findViewById(R.id.laod_failed));
+        tv.setVisibility(View.VISIBLE);
     }
-
 
     public void loadNewMsg() {
         getLoaderManager().destroyLoader(OLD_USER_LOADER_ID);
@@ -292,7 +312,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.refresh:
+            case R.id.loading_progressbar:
                 pullToRefreshListView.setRefreshing();
                 loadNewMsg();
                 break;
@@ -320,7 +340,9 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         }
         if (pullToRefreshListView != null && getListView().getCheckedItemCount() > 0) {
             getListView().clearChoices();
-            if (getAdapter() != null) getAdapter().notifyDataSetChanged();
+            if (getAdapter() != null) {
+                getAdapter().notifyDataSetChanged();
+            }
         }
     }
 
@@ -352,17 +374,20 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     }
 
 
-    protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewMsgLoader(int id,
+            Bundle args) {
         return null;
     }
 
 
-    protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateOldMsgLoader(int id,
+            Bundle args) {
         return null;
     }
 
 
-    protected LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserListBean>> msgCallback = new LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserListBean>>() {
+    protected LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserListBean>> msgCallback
+            = new LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserListBean>>() {
 
         @Override
         public Loader<AsyncTaskLoaderResult<UserListBean>> onCreateLoader(int id, Bundle args) {
@@ -370,8 +395,9 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
             showListView();
             switch (id) {
                 case NEW_USER_LOADER_ID:
-                    if (args == null || args.getBoolean(BundleArgsConstants.SCROLL_TO_TOP))
+                    if (args == null || args.getBoolean(BundleArgsConstants.SCROLL_TO_TOP)) {
                         Utility.stopListViewScrollingAndScrollToTop(getListView());
+                    }
                     return createNewMsgLoader(id, args);
                 case OLD_USER_LOADER_ID:
                     showFooterView();
@@ -382,7 +408,8 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         }
 
         @Override
-        public void onLoadFinished(Loader<AsyncTaskLoaderResult<UserListBean>> loader, AsyncTaskLoaderResult<UserListBean> result) {
+        public void onLoadFinished(Loader<AsyncTaskLoaderResult<UserListBean>> loader,
+                AsyncTaskLoaderResult<UserListBean> result) {
 
             UserListBean data = result != null ? result.data : null;
             WeiboException exception = result != null ? result.exception : null;
@@ -392,7 +419,8 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
                     getPullToRefreshListView().onRefreshComplete();
                     refreshLayout(getList());
                     if (Utility.isAllNotNull(exception)) {
-                        Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT)
+                                .show();
                     } else {
                         if (data != null && data.getUsers().size() > 0) {
                             clearAndReplaceValue(data);

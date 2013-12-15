@@ -54,7 +54,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridLayout;
@@ -684,27 +683,31 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
     }
 
     protected void showFooterView() {
-        TextView tv = ((TextView) footerView.findViewById(R.id.listview_footer));
-        tv.setVisibility(View.VISIBLE);
-        tv.setText(getString(R.string.loading));
-        View view = footerView.findViewById(R.id.refresh);
+        View view = footerView.findViewById(R.id.loading_progressbar);
         view.setVisibility(View.VISIBLE);
-        view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.refresh));
+        view.setScaleX(1.0f);
+        view.setScaleY(1.0f);
+        view.setAlpha(1.0f);
+        footerView.findViewById(R.id.laod_failed).setVisibility(View.GONE);
     }
 
     protected void dismissFooterView() {
-        footerView.findViewById(R.id.refresh).setVisibility(View.GONE);
-        footerView.findViewById(R.id.refresh).clearAnimation();
-        footerView.findViewById(R.id.listview_footer).setVisibility(View.GONE);
+        final View progressbar = footerView.findViewById(R.id.loading_progressbar);
+        progressbar.animate().scaleX(0).scaleY(0).alpha(0.5f).setDuration(300)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressbar.setVisibility(View.GONE);
+                    }
+                });
+        footerView.findViewById(R.id.laod_failed).setVisibility(View.GONE);
     }
 
     protected void showErrorFooterView() {
-        TextView tv = ((TextView) footerView.findViewById(R.id.listview_footer));
-        tv.setVisibility(View.VISIBLE);
-        tv.setText(getString(R.string.click_to_load_older_message));
-        View view = footerView.findViewById(R.id.refresh);
-        view.clearAnimation();
+        View view = footerView.findViewById(R.id.loading_progressbar);
         view.setVisibility(View.GONE);
+        TextView tv = ((TextView) footerView.findViewById(R.id.laod_failed));
+        tv.setVisibility(View.VISIBLE);
     }
 
     public void clearActionMode() {

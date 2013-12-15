@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:orientation="horizontal"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+        >
 
-    <ImageView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:background="?listview_item_refresh_animation"
-        android:id="@+id/refresh"
-        android:visibility="gone" />
+    <ProgressBar android:id="@+id/loading_progressbar"
+                 android:visibility="gone"
+                 android:layout_gravity="center_horizontal"
+                 android:layout_marginBottom="5.5dp"
+                 android:layout_width="40dp"
+                 android:layout_height="40dp"
+                 style="?android:progressBarStyle"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:text="@string/loading"
-        android:id="@+id/listview_footer"
-        android:gravity="center" />
-</LinearLayout>
+    <TextView android:layout_gravity="center_horizontal"
+              android:visibility="gone"
+              android:layout_width="wrap_content"
+              android:layout_marginBottom="5.5dp"
+              android:layout_height="40dp"
+              android:text="@string/click_to_load_older_message"
+              android:id="@+id/laod_failed"
+              android:gravity="center"/>
+</FrameLayout>
