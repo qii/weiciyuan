@@ -30,6 +30,9 @@ Gradle 构建
     - Google Play services 13+
     - Android Support Repository 3+
     - Android Support Library 19+
+- 移除配置
+    - 修改AndroidManifest.xml里面`com.google.android.maps.v2.API_KEY`为你的Google Map key
+    - 移除AndroidManifest.xml里面`com.crashlytics.ApiKey`和AccountActivity的`Crashlytics.start(this)`，以免影响四次元的崩溃统计数据
 - 编译
     - `gradle build`，编译好的apk在build/apk下面，没签名，需要签名的修改build.gradle
 

@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.ui.login;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.support.database.AccountDBTask;
@@ -62,6 +64,7 @@ public class AccountActivity extends AbstractAppActivity
         jumpToHomeActivity();
 
         super.onCreate(savedInstanceState);
+        Crashlytics.start(this);
         setContentView(R.layout.accountactivity_layout);
         getActionBar().setTitle(getString(R.string.app_name));
         listAdapter = new AccountAdapter();
@@ -75,6 +78,7 @@ public class AccountActivity extends AbstractAppActivity
         if (SettingUtility.firstStart()) {
             showChangeLogDialog();
         }
+
     }
 
 
