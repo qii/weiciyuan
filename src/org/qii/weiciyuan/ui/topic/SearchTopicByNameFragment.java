@@ -246,23 +246,6 @@ public class SearchTopicByNameFragment
 
 
     @Override
-    public void loadNewMsg() {
-        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
-        dismissFooterView();
-        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
-    }
-
-
-    @Override
-    protected void loadOldMsg(View view) {
-        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
-        getPullToRefreshListView().onRefreshComplete();
-        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
-    }
-
-    @Override
     protected Loader<AsyncTaskLoaderResult<TopicResultListBean>> onCreateNewMsgLoader(int id,
             Bundle args) {
         String token = GlobalContext.getInstance().getSpecialToken();
