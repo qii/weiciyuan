@@ -1,5 +1,35 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
+import org.qii.weiciyuan.bean.android.CommentTimeLineData;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
+import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
+import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
+import org.qii.weiciyuan.othercomponent.unreadnotification.NotificationServiceHelper;
+import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.TopTipBar;
+import org.qii.weiciyuan.support.utils.AppEventAction;
+import org.qii.weiciyuan.support.utils.BundleArgsConstants;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.actionmenu.CommentFloatingMenu;
+import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
+import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
+import org.qii.weiciyuan.ui.loader.MentionsCommentDBLoader;
+import org.qii.weiciyuan.ui.loader.MentionsCommentMsgLoader;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
+import org.qii.weiciyuan.ui.main.MentionsTimeLine;
+
 import android.app.ActionBar;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -15,42 +45,19 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.*;
-import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
-import org.qii.weiciyuan.bean.android.CommentTimeLineData;
-import org.qii.weiciyuan.bean.android.TimeLinePosition;
-import org.qii.weiciyuan.dao.destroy.DestroyCommentDao;
-import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
-import org.qii.weiciyuan.othercomponent.unreadnotification.NotificationServiceHelper;
-import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
-import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.TopTipBar;
-import org.qii.weiciyuan.support.lib.VelocityListView;
-import org.qii.weiciyuan.support.utils.AppEventAction;
-import org.qii.weiciyuan.support.utils.BundleArgsConstants;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.actionmenu.CommentFloatingMenu;
-import org.qii.weiciyuan.ui.actionmenu.CommentSingleChoiceModeListener;
-import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
-import org.qii.weiciyuan.ui.loader.MentionsCommentDBLoader;
-import org.qii.weiciyuan.ui.loader.MentionsCommentMsgLoader;
-import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
-import org.qii.weiciyuan.ui.main.MentionsTimeLine;
 
 /**
  * User: qii
  * Date: 13-1-23
  */
-public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<CommentListBean> implements IRemoveItem {
+public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<CommentListBean>
+        implements IRemoveItem {
 
 
     private AccountBean accountBean;
+
     private UserBean userBean;
+
     private String token;
 
     private RemoveTask removeTask;
@@ -58,7 +65,9 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     private CommentListBean bean = new CommentListBean();
 
     private UnreadBean unreadBean;
+
     private TimeLinePosition timeLinePosition;
+
     private final int POSITION_IN_PARENT_FRAGMENT = 1;
 
 
@@ -71,7 +80,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
     }
 
-    public MentionsCommentTimeLineFragment(AccountBean accountBean, UserBean userBean, String token) {
+    public MentionsCommentTimeLineFragment(AccountBean accountBean, UserBean userBean,
+            String token) {
         this.accountBean = accountBean;
         this.userBean = userBean;
         this.token = token;
@@ -109,7 +119,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     public void onResume() {
         super.onResume();
         setListViewPositionFromPositionsCache();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(newBroadcastReceiver, new IntentFilter(AppEventAction.NEW_MSG_BROADCAST));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(newBroadcastReceiver,
+                new IntentFilter(AppEventAction.NEW_MSG_BROADCAST));
         setActionBarTabCount(newMsgTipBar.getValues().size());
         getNewMsgTipBar().setOnChangeListener(new TopTipBar.OnChangeListener() {
             @Override
@@ -144,8 +155,10 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
             return;
         }
         Intent intent = getActivity().getIntent();
-        CommentListBean mentionsComment = intent.getParcelableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
-        UnreadBean unreadBeanFromNotification = intent.getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
+        CommentListBean mentionsComment = intent
+                .getParcelableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
+        UnreadBean unreadBeanFromNotification = intent
+                .getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
 
         if (mentionsComment != null) {
             addUnreadMessage(mentionsComment);
@@ -188,10 +201,13 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                 accountBean = (AccountBean) savedInstanceState.getParcelable("account");
                 token = savedInstanceState.getString("token");
                 unreadBean = (UnreadBean) savedInstanceState.getParcelable("unreadBean");
-                timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
-                CommentListBean savedBean = (CommentListBean) savedInstanceState.getParcelable("bean");
+                timeLinePosition = (TimeLinePosition) savedInstanceState
+                        .getSerializable("timeLinePosition");
+                CommentListBean savedBean = (CommentListBean) savedInstanceState
+                        .getParcelable("bean");
 
-                Loader<CommentTimeLineData> loader = getLoaderManager().getLoader(DB_CACHE_LOADER_ID);
+                Loader<CommentTimeLineData> loader = getLoaderManager()
+                        .getLoader(DB_CACHE_LOADER_ID);
                 if (loader != null) {
                     getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 }
@@ -218,7 +234,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
     }
 
-    private AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+    private AdapterView.OnItemLongClickListener onItemLongClickListener
+            = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -228,12 +245,18 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                     mActionMode = null;
                     getListView().setItemChecked(position, true);
                     timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), timeLineAdapter, MentionsCommentTimeLineFragment.this, getList().getItemList().get(position - 1)));
+                    mActionMode = getActivity().startActionMode(
+                            new CommentSingleChoiceModeListener(getListView(), timeLineAdapter,
+                                    MentionsCommentTimeLineFragment.this,
+                                    getList().getItemList().get(position - 1)));
                     return true;
                 } else {
                     getListView().setItemChecked(position, true);
                     timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), timeLineAdapter, MentionsCommentTimeLineFragment.this, getList().getItemList().get(position - 1)));
+                    mActionMode = getActivity().startActionMode(
+                            new CommentSingleChoiceModeListener(getListView(), timeLineAdapter,
+                                    MentionsCommentTimeLineFragment.this,
+                                    getList().getItemList().get(position - 1)));
                     return true;
                 }
             }
@@ -245,7 +268,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     public void removeItem(int position) {
         clearActionMode();
         if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            removeTask = new RemoveTask(GlobalContext.getInstance().getSpecialToken(), getList().getItemList().get(position).getId(), position);
+            removeTask = new RemoveTask(GlobalContext.getInstance().getSpecialToken(),
+                    getList().getItemList().get(position).getId(), position);
             removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -258,8 +282,11 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
 
         String token;
+
         String id;
+
         int positon;
+
         WeiboException e;
 
         public RemoveTask(String token, String id, int positon) {
@@ -307,10 +334,11 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
 
     private void setListViewPositionFromPositionsCache() {
-        if (timeLinePosition != null)
+        if (timeLinePosition != null) {
             getListView().setSelectionFromTop(timeLinePosition.position + 1, timeLinePosition.top);
-        else
+        } else {
             getListView().setSelectionFromTop(0, 0);
+        }
         setListViewUnreadTipBar(timeLinePosition);
 
     }
@@ -319,7 +347,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         if (p != null && p.newMsgIds != null) {
             newMsgTipBar.setValue(p.newMsgIds);
             setActionBarTabCount(newMsgTipBar.getValues().size());
-            ((MainTimeLineActivity) getActivity()).setMentionsCommentCount(newMsgTipBar.getValues().size());
+            ((MainTimeLineActivity) getActivity())
+                    .setMentionsCommentCount(newMsgTipBar.getValues().size());
 
         }
     }
@@ -352,7 +381,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
         NotificationManager notificationManager = (NotificationManager) getActivity()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NotificationServiceHelper.getMentionsCommentNotificationId(GlobalContext.getInstance().getAccountBean()));
+        notificationManager.cancel(NotificationServiceHelper
+                .getMentionsCommentNotificationId(GlobalContext.getInstance().getAccountBean()));
     }
 
     private void addNewDataAndRememberPosition(CommentListBean newValue) {
@@ -383,7 +413,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
     }
 
-    protected void middleMsgOnPostExecute(int position, CommentListBean newValue, boolean towardsBottom) {
+    protected void middleMsgOnPostExecute(int position, CommentListBean newValue,
+            boolean towardsBottom) {
 
         if (newValue != null) {
             int size = newValue.getSize();
@@ -395,7 +426,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                     getAdapter().notifyDataSetChanged();
                 } else {
 
-                    View v = Utility.getListViewItemViewFromPosition(getListView(), position + 1 + 1);
+                    View v = Utility
+                            .getListViewItemViewFromPosition(getListView(), position + 1 + 1);
                     int top = (v == null) ? 0 : v.getTop();
                     getAdapter().notifyDataSetChanged();
                     int ss = position + 1 + size - 1;
@@ -414,44 +446,14 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         }
     }
 
-    @Override
-    public void loadMiddleMsg(String beginId, String endId, int position) {
-        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
-        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
-        getPullToRefreshListView().onRefreshComplete();
-        dismissFooterView();
 
-        Bundle bundle = new Bundle();
-        bundle.putString("beginId", beginId);
-        bundle.putString("endId", endId);
-        bundle.putInt("position", position);
-        VelocityListView velocityListView = (VelocityListView) getListView();
-        bundle.putBoolean("towardsBottom", velocityListView.getTowardsOrientation() == VelocityListView.TOWARDS_BOTTOM);
-        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
-
-    }
-
-    @Override
-    public void loadNewMsg() {
-        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
-        dismissFooterView();
-        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
-    }
-
-    @Override
-    protected void loadOldMsg(View view) {
-        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
-        getPullToRefreshListView().onRefreshComplete();
-        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
-    }
-
-    private LoaderManager.LoaderCallbacks<CommentTimeLineData> dbCallback = new LoaderManager.LoaderCallbacks<CommentTimeLineData>() {
+    private LoaderManager.LoaderCallbacks<CommentTimeLineData> dbCallback
+            = new LoaderManager.LoaderCallbacks<CommentTimeLineData>() {
         @Override
         public Loader<CommentTimeLineData> onCreateLoader(int id, Bundle args) {
             getPullToRefreshListView().setVisibility(View.INVISIBLE);
-            return new MentionsCommentDBLoader(getActivity(), GlobalContext.getInstance().getCurrentAccountId());
+            return new MentionsCommentDBLoader(getActivity(),
+                    GlobalContext.getInstance().getCurrentAccountId());
         }
 
         @Override
@@ -487,7 +489,8 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         }
     };
 
-    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateNewMsgLoader(int id,
+            Bundle args) {
         String accountId = accountBean.getUid();
         String token = accountBean.getAccess_token();
         String sinceId = null;
@@ -497,13 +500,17 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         return new MentionsCommentMsgLoader(getActivity(), accountId, token, sinceId, null);
     }
 
-    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateMiddleMsgLoader(int id, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
+    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateMiddleMsgLoader(int id,
+            Bundle args, String middleBeginId, String middleEndId, String middleEndTag,
+            int middlePosition) {
         String accountId = accountBean.getUid();
         String token = accountBean.getAccess_token();
-        return new MentionsCommentMsgLoader(getActivity(), accountId, token, middleBeginId, middleEndId);
+        return new MentionsCommentMsgLoader(getActivity(), accountId, token, middleBeginId,
+                middleEndId);
     }
 
-    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateOldMsgLoader(int id,
+            Bundle args) {
         String accountId = accountBean.getUid();
         String token = accountBean.getAccess_token();
         String maxId = null;
@@ -517,11 +524,13 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         @Override
         public void onReceive(Context context, Intent intent) {
             AccountBean account = intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
-            final UnreadBean unreadBean = intent.getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
+            final UnreadBean unreadBean = intent
+                    .getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
             if (account == null || !account.getUid().equals(account.getUid())) {
                 return;
             }
-            CommentListBean data = intent.getParcelableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
+            CommentListBean data = intent
+                    .getParcelableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
             addUnreadMessage(data);
             clearUnreadMentions(unreadBean);
         }
@@ -531,8 +540,9 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         if (data != null && data.getSize() > 0) {
             CommentBean last = data.getItem(data.getSize() - 1);
             boolean dup = getList().getItemList().contains(last);
-            if (!dup)
+            if (!dup) {
                 addNewDataAndRememberPosition(data);
+            }
         }
     }
 
@@ -542,8 +552,10 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    new ClearUnreadDao(GlobalContext.getInstance().getAccountBean().getAccess_token())
-                            .clearMentionCommentUnread(data, GlobalContext.getInstance().getAccountBean().getUid());
+                    new ClearUnreadDao(
+                            GlobalContext.getInstance().getAccountBean().getAccess_token())
+                            .clearMentionCommentUnread(data,
+                                    GlobalContext.getInstance().getAccountBean().getUid());
                 } catch (WeiboException ignored) {
 
                 }

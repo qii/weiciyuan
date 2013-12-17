@@ -17,7 +17,6 @@ import org.qii.weiciyuan.support.database.MentionWeiboTimeLineDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TopTipBar;
-import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -375,39 +374,6 @@ public class MentionsWeiboTimeLineFragment
         }
     }
 
-    @Override
-    public void loadMiddleMsg(String beginId, String endId, int position) {
-        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
-        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
-        getPullToRefreshListView().onRefreshComplete();
-        dismissFooterView();
-
-        Bundle bundle = new Bundle();
-        bundle.putString("beginId", beginId);
-        bundle.putString("endId", endId);
-        bundle.putInt("position", position);
-        VelocityListView velocityListView = (VelocityListView) getListView();
-        bundle.putBoolean("towardsBottom",
-                velocityListView.getTowardsOrientation() == VelocityListView.TOWARDS_BOTTOM);
-        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
-
-    }
-
-    @Override
-    public void loadNewMsg() {
-        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
-        dismissFooterView();
-        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
-    }
-
-    @Override
-    protected void loadOldMsg(View view) {
-        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
-        getPullToRefreshListView().onRefreshComplete();
-        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
-    }
 
     private LoaderManager.LoaderCallbacks<MentionTimeLineData> dbCallback
             = new LoaderManager.LoaderCallbacks<MentionTimeLineData>() {

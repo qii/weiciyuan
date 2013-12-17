@@ -81,6 +81,8 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
     private int listViewScrollState = -1;
 
+    private boolean canLoadOldData = true;
+
     public int getListViewScrollState() {
         return listViewScrollState;
     }
@@ -120,6 +122,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     protected abstract void listViewItemClick(AdapterView parent, View view, int position, long id);
 
     public void loadNewMsg() {
+        canLoadOldData = true;
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
         getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
         dismissFooterView();
@@ -128,6 +131,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
 
     protected void loadOldMsg(View view) {
+
+        if (getLoaderManager().getLoader(OLD_MSG_LOADER_ID) != null || !canLoadOldData) {
+            return;
+        }
+
         getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
         getPullToRefreshListView().onRefreshComplete();
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
@@ -377,6 +385,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                     || getListView().getLastVisiblePosition() < position) {
                 clearActionMode();
             }
+        }
+
+        if (getListView().getLastVisiblePosition() > getList().getSize() - 3
+                && getListView().getFirstVisiblePosition() != getListView().getHeaderViewsCount()) {
+            loadOldMsg(null);
         }
     }
 
@@ -654,6 +667,13 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                     if (Utility.isAllNotNull(exception)) {
                         showErrorFooterView();
                     } else {
+
+                        if (data != null && Long.valueOf(data.getNext_cursor()) <= 0) {
+                            canLoadOldData = false;
+                        } else {
+                            canLoadOldData = true;
+                        }
+
                         oldMsgOnPostExecute(data);
                         getAdapter().notifyDataSetChanged();
                         dismissFooterView();

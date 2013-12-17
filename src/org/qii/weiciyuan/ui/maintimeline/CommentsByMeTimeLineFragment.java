@@ -1,12 +1,5 @@
 package org.qii.weiciyuan.ui.maintimeline;
 
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.Toast;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.UserBean;
@@ -27,20 +20,32 @@ import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 import org.qii.weiciyuan.ui.loader.CommentsByMeDBLoader;
 import org.qii.weiciyuan.ui.loader.CommentsByMeMsgLoader;
 
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.Toast;
+
 /**
  * User: qii
  * Date: 13-1-22
  */
-public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<CommentListBean> implements IRemoveItem {
+public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<CommentListBean>
+        implements IRemoveItem {
 
 
     private AccountBean accountBean;
+
     private UserBean userBean;
+
     private String token;
 
     private RemoveTask removeTask;
 
     private CommentListBean bean = new CommentListBean();
+
     private TimeLinePosition timeLinePosition;
 
 
@@ -111,14 +116,17 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
                 userBean = (UserBean) savedInstanceState.getParcelable("userBean");
                 accountBean = (AccountBean) savedInstanceState.getParcelable("account");
                 token = savedInstanceState.getString("token");
-                timeLinePosition = (TimeLinePosition) savedInstanceState.getSerializable("timeLinePosition");
+                timeLinePosition = (TimeLinePosition) savedInstanceState
+                        .getSerializable("timeLinePosition");
 
-                Loader<CommentTimeLineData> loader = getLoaderManager().getLoader(DB_CACHE_LOADER_ID);
+                Loader<CommentTimeLineData> loader = getLoaderManager()
+                        .getLoader(DB_CACHE_LOADER_ID);
                 if (loader != null) {
                     getLoaderManager().initLoader(DB_CACHE_LOADER_ID, null, dbCallback);
                 }
 
-                CommentListBean savedBean = (CommentListBean) savedInstanceState.getParcelable("bean");
+                CommentListBean savedBean = (CommentListBean) savedInstanceState
+                        .getParcelable("bean");
                 if (savedBean != null && savedBean.getSize() > 0) {
                     clearAndReplaceValue(savedBean);
                     timeLineAdapter.notifyDataSetChanged();
@@ -138,7 +146,8 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         getListView().setOnItemLongClickListener(onItemLongClickListener);
     }
 
-    private AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+    private AdapterView.OnItemLongClickListener onItemLongClickListener
+            = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
             if (position - 1 < getList().getSize() && position - 1 >= 0) {
@@ -147,12 +156,18 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
                     mActionMode = null;
                     getListView().setItemChecked(position, true);
                     timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), timeLineAdapter, CommentsByMeTimeLineFragment.this, getList().getItemList().get(position - 1)));
+                    mActionMode = getActivity().startActionMode(
+                            new CommentSingleChoiceModeListener(getListView(), timeLineAdapter,
+                                    CommentsByMeTimeLineFragment.this,
+                                    getList().getItemList().get(position - 1)));
                     return true;
                 } else {
                     getListView().setItemChecked(position, true);
                     timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), timeLineAdapter, CommentsByMeTimeLineFragment.this, getList().getItemList().get(position - 1)));
+                    mActionMode = getActivity().startActionMode(
+                            new CommentSingleChoiceModeListener(getListView(), timeLineAdapter,
+                                    CommentsByMeTimeLineFragment.this,
+                                    getList().getItemList().get(position - 1)));
                     return true;
                 }
             }
@@ -173,7 +188,8 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     public void removeItem(int position) {
         clearActionMode();
         if (removeTask == null || removeTask.getStatus() == MyAsyncTask.Status.FINISHED) {
-            removeTask = new RemoveTask(GlobalContext.getInstance().getSpecialToken(), getList().getItemList().get(position).getId(), position);
+            removeTask = new RemoveTask(GlobalContext.getInstance().getSpecialToken(),
+                    getList().getItemList().get(position).getId(), position);
             removeTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -186,8 +202,11 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     class RemoveTask extends MyAsyncTask<Void, Void, Boolean> {
 
         String token;
+
         String id;
+
         int positon;
+
         WeiboException e;
 
         public RemoveTask(String token, String id, int positon) {
@@ -235,10 +254,11 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     }
 
     private void setListViewPositionFromPositionsCache() {
-        if (timeLinePosition != null)
+        if (timeLinePosition != null) {
             getListView().setSelectionFromTop(timeLinePosition.position + 1, timeLinePosition.top);
-        else
+        } else {
             getListView().setSelectionFromTop(0, 0);
+        }
     }
 
 
@@ -258,7 +278,8 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
 
     @Override
     protected void newMsgOnPostExecute(CommentListBean newValue, Bundle loaderArgs) {
-        if (newValue != null && newValue.getItemList() != null && newValue.getItemList().size() > 0) {
+        if (newValue != null && newValue.getItemList() != null
+                && newValue.getItemList().size() > 0) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();
             getListView().setSelectionAfterHeaderView();
@@ -275,42 +296,14 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         }
     }
 
-    @Override
-    public void loadMiddleMsg(String beginId, String endId, int position) {
-        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
-        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
-        getPullToRefreshListView().onRefreshComplete();
-        dismissFooterView();
 
-        Bundle bundle = new Bundle();
-        bundle.putString("beginId", beginId);
-        bundle.putString("endId", endId);
-        bundle.putInt("position", position);
-        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
-
-    }
-
-    @Override
-    public void loadNewMsg() {
-        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
-        dismissFooterView();
-        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
-    }
-
-    @Override
-    protected void loadOldMsg(View view) {
-        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
-        getPullToRefreshListView().onRefreshComplete();
-        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
-    }
-
-    private LoaderManager.LoaderCallbacks<CommentTimeLineData> dbCallback = new LoaderManager.LoaderCallbacks<CommentTimeLineData>() {
+    private LoaderManager.LoaderCallbacks<CommentTimeLineData> dbCallback
+            = new LoaderManager.LoaderCallbacks<CommentTimeLineData>() {
         @Override
         public Loader<CommentTimeLineData> onCreateLoader(int id, Bundle args) {
             getPullToRefreshListView().setVisibility(View.INVISIBLE);
-            return new CommentsByMeDBLoader(getActivity(), GlobalContext.getInstance().getCurrentAccountId());
+            return new CommentsByMeDBLoader(getActivity(),
+                    GlobalContext.getInstance().getCurrentAccountId());
         }
 
         @Override
@@ -343,7 +336,8 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         }
     };
 
-    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateNewMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateNewMsgLoader(int id,
+            Bundle args) {
         String accountId = accountBean.getUid();
         String token = accountBean.getAccess_token();
         String sinceId = null;
@@ -353,13 +347,17 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         return new CommentsByMeMsgLoader(getActivity(), accountId, token, sinceId, null);
     }
 
-    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateMiddleMsgLoader(int id, Bundle args, String middleBeginId, String middleEndId, String middleEndTag, int middlePosition) {
+    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateMiddleMsgLoader(int id,
+            Bundle args, String middleBeginId, String middleEndId, String middleEndTag,
+            int middlePosition) {
         String accountId = accountBean.getUid();
         String token = accountBean.getAccess_token();
-        return new CommentsByMeMsgLoader(getActivity(), accountId, token, middleBeginId, middleEndId);
+        return new CommentsByMeMsgLoader(getActivity(), accountId, token, middleBeginId,
+                middleEndId);
     }
 
-    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateOldMsgLoader(int id, Bundle args) {
+    protected Loader<AsyncTaskLoaderResult<CommentListBean>> onCreateOldMsgLoader(int id,
+            Bundle args) {
         String accountId = accountBean.getUid();
         String token = accountBean.getAccess_token();
         String maxId = null;
