@@ -604,6 +604,12 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
 
     @Override
+    protected boolean allowLoadOldMsgBeforeReachListBottom() {
+        return false;
+    }
+
+
+    @Override
     protected void newMsgOnPostExecute(MessageListBean newValue, Bundle loaderArgs) {
         stopRefreshMenuAnimationIfPossible();
         getListView().removeFooterView(progressFooter);

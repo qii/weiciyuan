@@ -1008,41 +1008,6 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     }
 
-    @Override
-    public void loadMiddleMsg(String beginId, String endId, int position) {
-        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
-        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
-        getPullToRefreshListView().onRefreshComplete();
-        dismissFooterView();
-
-        Bundle bundle = new Bundle();
-        bundle.putString("beginId", beginId);
-        bundle.putString("endId", endId);
-        bundle.putInt("position", position);
-        VelocityListView velocityListView = (VelocityListView) getListView();
-        bundle.putBoolean("towardsBottom",
-                velocityListView.getTowardsOrientation() == VelocityListView.TOWARDS_BOTTOM);
-        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
-
-    }
-
-    @Override
-    public void loadNewMsg() {
-        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
-        dismissFooterView();
-        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
-    }
-
-
-    @Override
-    protected void loadOldMsg(View view) {
-        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
-        getPullToRefreshListView().onRefreshComplete();
-        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
-    }
-
 
     protected Loader<AsyncTaskLoaderResult<MessageListBean>> onCreateNewMsgLoader(int id,
             Bundle args) {

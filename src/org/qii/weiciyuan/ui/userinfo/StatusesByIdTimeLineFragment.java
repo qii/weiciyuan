@@ -5,7 +5,6 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
-import org.qii.weiciyuan.support.lib.VelocityListView;
 import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
@@ -19,7 +18,6 @@ import android.support.v4.content.Loader;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 /**
  * User: Jiang Qi
@@ -178,48 +176,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
         if (newValue != null && newValue.getSize() > 1) {
             getList().addOldData(newValue);
             getActivity().invalidateOptionsMenu();
-
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.older_message_empty),
-                    Toast.LENGTH_SHORT).show();
-
         }
-    }
-
-
-    @Override
-    public void loadMiddleMsg(String beginId, String endId, int position) {
-        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
-        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
-        getPullToRefreshListView().onRefreshComplete();
-        dismissFooterView();
-
-        Bundle bundle = new Bundle();
-        bundle.putString("beginId", beginId);
-        bundle.putString("endId", endId);
-        bundle.putInt("position", position);
-        VelocityListView velocityListView = (VelocityListView) getListView();
-        bundle.putBoolean("towardsBottom",
-                velocityListView.getTowardsOrientation() == VelocityListView.TOWARDS_BOTTOM);
-        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
-
-    }
-
-    @Override
-    public void loadNewMsg() {
-        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
-        dismissFooterView();
-        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
-    }
-
-
-    @Override
-    protected void loadOldMsg(View view) {
-        getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
-        getPullToRefreshListView().onRefreshComplete();
-        getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
     }
 
 

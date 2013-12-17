@@ -387,10 +387,15 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
             }
         }
 
-        if (getListView().getLastVisiblePosition() > getList().getSize() - 3
+        if (allowLoadOldMsgBeforeReachListBottom() && getListView().getLastVisiblePosition() > 7
+                && getListView().getLastVisiblePosition() > getList().getSize() - 3
                 && getListView().getFirstVisiblePosition() != getListView().getHeaderViewsCount()) {
             loadOldMsg(null);
         }
+    }
+
+    protected boolean allowLoadOldMsgBeforeReachListBottom() {
+        return true;
     }
 
     protected void showFooterView() {
@@ -668,7 +673,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                         showErrorFooterView();
                     } else {
 
-                        if (data != null && Long.valueOf(data.getNext_cursor()) <= 0) {
+                        if (data != null && data.getSize() <= 1) {
                             canLoadOldData = false;
                         } else {
                             canLoadOldData = true;
