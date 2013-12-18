@@ -64,7 +64,7 @@ public class AccountActivity extends AbstractAppActivity
         jumpToHomeActivity();
 
         super.onCreate(savedInstanceState);
-        Crashlytics.start(this);
+//        Crashlytics.start(this);
         setContentView(R.layout.accountactivity_layout);
         getActionBar().setTitle(getString(R.string.app_name));
         listAdapter = new AccountAdapter();
