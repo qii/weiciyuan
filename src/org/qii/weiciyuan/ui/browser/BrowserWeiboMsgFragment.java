@@ -118,6 +118,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
 
     private RemoveTask removeTask;
 
+    private boolean canLoadOldCommentData = true;
+
+    private boolean canLoadOldRepostData = true;
 
     private static class BrowserWeiboMsgLayout {
 
@@ -896,29 +899,62 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                 int totalItemCount) {
             LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
+            if (hasActionMode()) {
+                int position = getListView().getCheckedItemPosition();
+                if (getListView().getFirstVisiblePosition() > position
+                        || getListView().getLastVisiblePosition() < position) {
+                    clearActionMode();
+                }
+            }
+
+            if (getListView().getLastVisiblePosition() > 7
+                    && getListView().getFirstVisiblePosition() != getListView()
+                    .getHeaderViewsCount()) {
+
+                if (isCommentList) {
+
+                    if (getListView().getLastVisiblePosition() > commentList.getSize() - 3) {
+                        loadOldCommentData();
+                    }
+                } else {
+                    if (getListView().getLastVisiblePosition() > repostList.getSize() - 3) {
+                        loadOldRepostData();
+                    }
+                }
+            }
         }
     };
 
 
     public void loadNewCommentData() {
+        canLoadOldCommentData = true;
         progressHeader.setVisibility(View.VISIBLE);
         getLoaderManager().destroyLoader(OLD_COMMENT_LOADER_ID);
         getLoaderManager().restartLoader(NEW_COMMENT_LOADER_ID, null, commentMsgCallback);
     }
 
     public void loadNewRepostData() {
+        canLoadOldRepostData = true;
         progressHeader.setVisibility(View.VISIBLE);
         getLoaderManager().destroyLoader(OLD_REPOST_LOADER_ID);
         getLoaderManager().restartLoader(NEW_REPOST_LOADER_ID, null, repostMsgCallback);
     }
 
     public void loadOldCommentData() {
+        if (getLoaderManager().getLoader(OLD_COMMENT_LOADER_ID) != null || !canLoadOldCommentData) {
+            return;
+        }
         showFooterView();
         getLoaderManager().destroyLoader(NEW_COMMENT_LOADER_ID);
         getLoaderManager().restartLoader(OLD_COMMENT_LOADER_ID, null, commentMsgCallback);
     }
 
     public void loadOldRepostData() {
+        if (getLoaderManager().getLoader(OLD_REPOST_LOADER_ID) != null
+                || !canLoadOldRepostData) {
+            return;
+        }
+        showFooterView();
         getLoaderManager().destroyLoader(NEW_REPOST_LOADER_ID);
         getLoaderManager().restartLoader(OLD_REPOST_LOADER_ID, null, repostMsgCallback);
     }
@@ -987,6 +1023,11 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
                                 .show();
                         showErrorFooterView();
                     } else {
+                        if (data != null && data.getSize() <= 1) {
+                            canLoadOldCommentData = false;
+                        } else {
+                            canLoadOldCommentData = true;
+                        }
                         dismissFooterView();
                         commentList.addOldData(data);
                         adapter.notifyDataSetChanged();
@@ -1063,7 +1104,14 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
                     if (Utility.isAllNotNull(exception)) {
                         Toast.makeText(getActivity(), exception.getError(), Toast.LENGTH_SHORT)
                                 .show();
+                        showErrorFooterView();
                     } else {
+                        if (data != null && data.getSize() <= 1) {
+                            canLoadOldRepostData = false;
+                        } else {
+                            canLoadOldRepostData = true;
+                        }
+                        dismissFooterView();
                         repostList.addOldData(data);
                         adapter.notifyDataSetChanged();
                     }
