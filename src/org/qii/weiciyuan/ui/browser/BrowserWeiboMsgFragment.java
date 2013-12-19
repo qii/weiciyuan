@@ -106,6 +106,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
 
     private View progressHeader;
 
+    private TextView emptyHeader;
+
     private View footerView;
 
     private ActionMode mActionMode;
@@ -330,6 +332,12 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
         progressHeader = progressHeaderLayout.findViewById(R.id.progressbar);
         progressHeader.setVisibility(View.GONE);
         listView.addHeaderView(progressHeaderLayout);
+
+        View emptyLayout = inflater
+                .inflate(R.layout.browserweibomsgfragment_empty_header, listView, false);
+        emptyHeader = (TextView) emptyLayout.findViewById(R.id.empty_text);
+        emptyHeader.setOnClickListener(new EmptyHeaderOnClickListener());
+        listView.addHeaderView(emptyLayout);
 
         footerView = inflater.inflate(R.layout.listview_footer_layout, null);
         listView.addFooterView(footerView);
@@ -860,13 +868,25 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
         }
     };
 
+    private class EmptyHeaderOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            if (isCommentList) {
+                loadNewCommentData();
+            } else {
+                loadNewRepostData();
+            }
+        }
+    }
+
     private class RepostTabOnClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
             listView.setOnItemClickListener(repostOnItemClickListener);
             listView.setOnItemLongClickListener(repostOnItemLongClickListener);
-
+            emptyHeader.setText(R.string.repost_is_empty);
             resetActionMode();
 
             dismissFooterView();
@@ -890,6 +910,12 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
             } else {
                 loadNewRepostData();
             }
+
+            if (repostList.getSize() > 0) {
+                emptyHeader.setVisibility(View.GONE);
+            } else {
+                emptyHeader.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -899,7 +925,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
         public void onClick(View v) {
             listView.setOnItemClickListener(commentOnItemClickListener);
             listView.setOnItemLongClickListener(commentOnItemLongClickListener);
-
+            emptyHeader.setText(R.string.comment_is_empty);
             resetActionMode();
 
             dismissFooterView();
@@ -924,12 +950,21 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
             } else {
                 loadNewCommentData();
             }
+
+            if (commentList.getSize() > 0) {
+                emptyHeader.setVisibility(View.GONE);
+            } else {
+                emptyHeader.setVisibility(View.VISIBLE);
+            }
         }
     }
 
 
     public void loadNewCommentData() {
         canLoadOldCommentData = true;
+        if (getLoaderManager().getLoader(NEW_COMMENT_LOADER_ID) != null) {
+            return;
+        }
         progressHeader.setVisibility(View.VISIBLE);
         getLoaderManager().destroyLoader(OLD_COMMENT_LOADER_ID);
         getLoaderManager().restartLoader(NEW_COMMENT_LOADER_ID, null, commentMsgCallback);
@@ -937,6 +972,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
 
     public void loadNewRepostData() {
         canLoadOldRepostData = true;
+        if (getLoaderManager().getLoader(NEW_REPOST_LOADER_ID) != null) {
+            return;
+        }
         progressHeader.setVisibility(View.VISIBLE);
         getLoaderManager().destroyLoader(OLD_REPOST_LOADER_ID);
         getLoaderManager().restartLoader(NEW_REPOST_LOADER_ID, null, repostMsgCallback);
@@ -1015,6 +1053,12 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
                             commentList.replaceAll(data);
                             adapter.notifyDataSetChanged();
 
+                        }
+
+                        if (commentList.getSize() > 0 && isCommentList) {
+                            emptyHeader.setVisibility(View.GONE);
+                        } else if (isCommentList) {
+                            emptyHeader.setVisibility(View.VISIBLE);
                         }
                     }
                     break;
@@ -1098,6 +1142,12 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
                             repostList.replaceAll(data);
                             adapter.notifyDataSetChanged();
 
+                        }
+
+                        if (repostList.getSize() > 0 && !isCommentList) {
+                            emptyHeader.setVisibility(View.GONE);
+                        } else if (!isCommentList) {
+                            emptyHeader.setVisibility(View.VISIBLE);
                         }
                     }
                     break;

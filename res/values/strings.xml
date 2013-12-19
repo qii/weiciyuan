@@ -233,6 +233,8 @@
     <string name="cant_open_deleted_weibo">原微博已经被删除，看不懂中文吗？</string>
     <string name="retry_download_pic">重新下载图片</string>
     <string name="fetching_weibo_info">获取微博信息……</string>
+    <string name="comment_is_empty">没有评论</string>
+    <string name="repost_is_empty">没有转发</string>
 
     <!--map-->
     <string name="browser_map">查看地图</string>
