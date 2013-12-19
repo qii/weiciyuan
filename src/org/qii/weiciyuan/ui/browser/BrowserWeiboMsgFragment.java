@@ -158,6 +158,11 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
 
     }
 
+    public static BrowserWeiboMsgFragment newInstance(MessageBean msg) {
+        BrowserWeiboMsgFragment fragment = new BrowserWeiboMsgFragment(msg);
+        return fragment;
+    }
+
     public BrowserWeiboMsgFragment() {
     }
 

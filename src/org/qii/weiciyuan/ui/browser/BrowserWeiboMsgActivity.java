@@ -163,7 +163,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
                         .findFragmentByTag(BrowserWeiboMsgFragment.class.getName())
                         == null) {
                     getSupportFragmentManager().beginTransaction()
-                            .replace(android.R.id.content, new BrowserWeiboMsgFragment(msg),
+                            .replace(android.R.id.content, BrowserWeiboMsgFragment.newInstance(msg),
                                     BrowserWeiboMsgFragment.class.getName())
                             .commit();
                 }
