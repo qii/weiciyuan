@@ -88,7 +88,7 @@
                 />
         <Preference
                 android:title="@string/pref_icon_design_title"
-                android:summary="NovaDNG, 0.48 version"
+                android:summary="NovaDNG, 0.482 version"
                 >
         </Preference>
 
