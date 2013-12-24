@@ -1,19 +1,5 @@
 package org.qii.weiciyuan.ui.adapter;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
-import android.support.v4.app.Fragment;
-import android.text.*;
-import android.text.style.BackgroundColorSpan;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -32,6 +18,29 @@ import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgFragment;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
+import android.support.v4.app.Fragment;
+import android.text.Layout;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.style.BackgroundColorSpan;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -45,16 +54,21 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
     private boolean isCommentList = true;
 
     private List<CommentBean> commentListBean;
+
     private List<MessageBean> repostListBean;
 
     private Fragment fragment;
+
     private ListView listView;
 
     private int checkedBG;
+
     private int defaultBG;
+
     private LayoutInflater inflater;
 
-    private Map<BrowserWeiboMsgCommentAndRepostAdapter.ViewHolder, Drawable> bg = new WeakHashMap<BrowserWeiboMsgCommentAndRepostAdapter.ViewHolder, Drawable>();
+    private Map<BrowserWeiboMsgCommentAndRepostAdapter.ViewHolder, Drawable> bg
+            = new WeakHashMap<BrowserWeiboMsgCommentAndRepostAdapter.ViewHolder, Drawable>();
 
 
     public BrowserWeiboMsgCommentAndRepostAdapter(Fragment fragment, ListView listView
@@ -115,6 +129,11 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
     }
 
     @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null || convertView.getTag() == null) {
@@ -126,7 +145,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-
         configLayerType(holder);
         configViewFont(holder);
         bindViewData(holder, position);
@@ -137,10 +155,11 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
 
 
     public void bindViewData(ViewHolder holder, int position) {
-        if (isCommentList)
+        if (isCommentList) {
             bindCommentData(holder, position);
-        else
+        } else {
             bindRepostData(holder, position);
+        }
     }
 
 
@@ -154,8 +173,9 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
             bg.put(holder, drawable);
         }
 
-        if (listView.getCheckedItemPosition() == position + listView.getHeaderViewsCount())
+        if (listView.getCheckedItemPosition() == position + listView.getHeaderViewsCount()) {
             holder.listview_root.setBackgroundColor(checkedBG);
+        }
 
         final CommentBean comment = (CommentBean) getItem(position);
 
@@ -163,7 +183,8 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         if (user != null) {
             holder.username.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(user.getRemark())) {
-                holder.username.setText(new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark()).append(")").toString());
+                holder.username.setText(new StringBuilder(user.getScreen_name()).append("(")
+                        .append(user.getRemark()).append(")").toString());
             } else {
                 holder.username.setText(user.getScreen_name());
             }
@@ -206,8 +227,9 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
             bg.put(holder, drawable);
         }
 
-        if (listView.getCheckedItemPosition() == position + listView.getHeaderViewsCount())
+        if (listView.getCheckedItemPosition() == position + listView.getHeaderViewsCount()) {
             holder.listview_root.setBackgroundColor(checkedBG);
+        }
 
         final MessageBean msg = (MessageBean) getItem(position);
 
@@ -215,7 +237,8 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         if (user != null) {
             holder.username.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(user.getRemark())) {
-                holder.username.setText(new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark()).append(")").toString());
+                holder.username.setText(new StringBuilder(user.getScreen_name()).append("(")
+                        .append(user.getRemark()).append(")").toString());
             } else {
                 holder.username.setText(user.getScreen_name());
             }
@@ -248,7 +271,8 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
 
     private View initSimpleLayout(ViewGroup parent) {
         View convertView;
-        convertView = inflater.inflate(R.layout.timeline_listview_item_simple_layout, parent, false);
+        convertView = inflater
+                .inflate(R.layout.timeline_listview_item_simple_layout, parent, false);
 
         return convertView;
     }
@@ -259,8 +283,9 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         holder.time.setClickable(false);
         holder.content.setClickable(false);
 
-        if (holder.content != null)
+        if (holder.content != null) {
             holder.content.setOnTouchListener(onTouchListener);
+        }
 
     }
 
@@ -281,18 +306,21 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
     private void configLayerType(ViewHolder holder) {
 
         boolean disableHardAccelerated = SettingUtility.disableHardwareAccelerated();
-        if (!disableHardAccelerated)
+        if (!disableHardAccelerated) {
             return;
+        }
 
         int currentWidgetLayerType = holder.username.getLayerType();
 
         if (View.LAYER_TYPE_SOFTWARE != currentWidgetLayerType) {
             holder.username.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            if (holder.content != null)
+            if (holder.content != null) {
                 holder.content.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }
 
-            if (holder.time != null)
+            if (holder.time != null) {
                 holder.time.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }
 
         }
 
@@ -310,7 +338,6 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
         }
 
         currentWidgetTextSizePx = holder.content.getTextSize();
-
 
         if (Utility.sp2px(prefFontSizeSp) != currentWidgetTextSizePx) {
             holder.content.setTextSize(prefFontSizeSp);
@@ -376,7 +403,8 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
                     }
 
                     if (find && !result) {
-                        BackgroundColorSpan[] backgroundColorSpans = value.getSpans(0, value.length(), BackgroundColorSpan.class);
+                        BackgroundColorSpan[] backgroundColorSpans = value
+                                .getSpans(0, value.length(), BackgroundColorSpan.class);
                         for (BackgroundColorSpan urlSpan : backgroundColorSpans) {
                             value.removeSpan(urlSpan);
                             ((TextView) v).setText(value);
@@ -384,8 +412,10 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
                     }
 
                     if (result) {
-                        BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(ThemeUtility.getColor(R.attr.link_pressed_background_color));
-                        value.setSpan(backgroundColorSpan, findStart, findEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                        BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(
+                                ThemeUtility.getColor(R.attr.link_pressed_background_color));
+                        value.setSpan(backgroundColorSpan, findStart, findEnd,
+                                Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         ((TextView) v).setText(value);
                     }
 
@@ -393,7 +423,8 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
                 case MotionEvent.ACTION_CANCEL:
                 case MotionEvent.ACTION_UP:
                     LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
-                    BackgroundColorSpan[] backgroundColorSpans = value.getSpans(0, value.length(), BackgroundColorSpan.class);
+                    BackgroundColorSpan[] backgroundColorSpans = value
+                            .getSpans(0, value.length(), BackgroundColorSpan.class);
                     for (BackgroundColorSpan urlSpan : backgroundColorSpans) {
                         value.removeSpan(urlSpan);
                         ((TextView) v).setText(value);
@@ -438,12 +469,17 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
     }
 
     private static class ViewHolder {
+
         RelativeLayout listview_root;
 
         TextView username;
+
         TextView content;
+
         TimeTextView time;
+
         TimeLineAvatarImageView avatar;
+
         ImageView reply;
     }
 
