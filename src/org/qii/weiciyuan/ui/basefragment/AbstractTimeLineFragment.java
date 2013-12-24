@@ -669,18 +669,15 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                 case OLD_MSG_LOADER_ID:
                     refreshLayout(getList());
 
-                    if (Utility.isAllNotNull(exception)) {
+                    if (exception != null) {
                         showErrorFooterView();
-                    } else {
-
-                        if (data != null && data.getSize() <= 1) {
-                            canLoadOldData = false;
-                        } else {
-                            canLoadOldData = true;
-                        }
-
+                    } else if (data != null) {
+                        canLoadOldData = data.getSize() > 1;
                         oldMsgOnPostExecute(data);
                         getAdapter().notifyDataSetChanged();
+                        dismissFooterView();
+                    } else {
+                        canLoadOldData = false;
                         dismissFooterView();
                     }
                     break;

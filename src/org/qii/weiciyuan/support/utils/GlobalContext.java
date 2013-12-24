@@ -1,17 +1,5 @@
 package org.qii.weiciyuan.support.utils;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.Application;
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Handler;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.LruCache;
-import android.view.Display;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
@@ -24,9 +12,27 @@ import org.qii.weiciyuan.support.database.GroupDBTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.smileypicker.SmileyMap;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Application;
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.LruCache;
+import android.view.Display;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * User: Jiang Qi
@@ -39,7 +45,9 @@ public final class GlobalContext extends Application {
 
     //image size
     private Activity activity = null;
+
     private Activity currentRunningActivity = null;
+
     private DisplayMetrics displayMetrics = null;
 
     //image memory cache
@@ -50,7 +58,8 @@ public final class GlobalContext extends Application {
 
     public boolean startedApp = false;
 
-    private LinkedHashMap<Integer, LinkedHashMap<String, Bitmap>> emotionsPic = new LinkedHashMap<Integer, LinkedHashMap<String, Bitmap>>();
+    private LinkedHashMap<Integer, LinkedHashMap<String, Bitmap>> emotionsPic
+            = new LinkedHashMap<Integer, LinkedHashMap<String, Bitmap>>();
 
     private GroupListBean group = null;
 
@@ -67,6 +76,7 @@ public final class GlobalContext extends Application {
         buildCache();
         CrashManagerConstants.loadFromContext(this);
         CrashManager.registerHandler();
+//        Crashlytics.start(this);
     }
 
     public static GlobalContext getInstance() {
@@ -141,11 +151,13 @@ public final class GlobalContext extends Application {
         return accountBean;
     }
 
-    private Set<MyProfileInfoChangeListener> profileListenerSet = new HashSet<MyProfileInfoChangeListener>();
+    private Set<MyProfileInfoChangeListener> profileListenerSet
+            = new HashSet<MyProfileInfoChangeListener>();
 
     public void registerForAccountChangeListener(MyProfileInfoChangeListener listener) {
-        if (listener != null)
+        if (listener != null) {
             profileListenerSet.add(listener);
+        }
     }
 
     public void unRegisterForAccountChangeListener(MyProfileInfoChangeListener listener) {
@@ -153,6 +165,7 @@ public final class GlobalContext extends Application {
     }
 
     public static interface MyProfileInfoChangeListener {
+
         public void onChange(UserBean newUserBean);
     }
 
@@ -175,10 +188,11 @@ public final class GlobalContext extends Application {
     }
 
     public String getSpecialToken() {
-        if (getAccountBean() != null)
+        if (getAccountBean() != null) {
             return getAccountBean().getAccess_token();
-        else
+        } else {
             return "";
+        }
     }
 
     public Activity getActivity() {

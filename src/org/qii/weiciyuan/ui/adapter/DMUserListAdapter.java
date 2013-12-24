@@ -1,10 +1,22 @@
 package org.qii.weiciyuan.ui.adapter;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.DMUserBean;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.lib.ClickableTextViewMentionLinkOnTouchListener;
+import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.text.Layout;
-import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,20 +27,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.DMUserBean;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
-import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
-import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
-import org.qii.weiciyuan.support.lib.MyURLSpan;
-import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.TimeLineUtility;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.List;
 
@@ -37,10 +35,15 @@ import java.util.List;
  * Date: 12-11-14
  */
 public class DMUserListAdapter extends BaseAdapter {
+
     private List<DMUserBean> bean;
+
     private Fragment fragment;
+
     private LayoutInflater inflater;
+
     private ListView listView;
+
     private TimeLineBitmapDownloader commander;
 
 
@@ -62,7 +65,6 @@ public class DMUserListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         DMViewHolder holder = null;
 
-
         if (convertView == null || convertView.getTag() == null) {
 
             convertView = initSimpleLayout(parent);
@@ -73,7 +75,6 @@ public class DMUserListAdapter extends BaseAdapter {
         } else {
             holder = (DMViewHolder) convertView.getTag();
         }
-
 
         configViewFont(holder);
         bindViewData(holder, position);
@@ -157,7 +158,9 @@ public class DMUserListAdapter extends BaseAdapter {
     private void buildUsername(DMViewHolder holder, UserBean user) {
 
         if (!TextUtils.isEmpty(user.getRemark())) {
-            holder.username.setText(new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark()).append(")").toString());
+            holder.username.setText(
+                    new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark())
+                            .append(")").toString());
         } else {
             holder.username.setText(user.getScreen_name());
         }
@@ -168,8 +171,9 @@ public class DMUserListAdapter extends BaseAdapter {
         holder.time.setClickable(false);
         holder.content.setClickable(false);
 
-        if (holder.content != null)
+        if (holder.content != null) {
             holder.content.setOnTouchListener(onTouchListener);
+        }
 
     }
 
@@ -193,17 +197,21 @@ public class DMUserListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        if (position >= 0 && getList() != null && getList().size() > 0 && position < getList().size())
+        if (position >= 0 && getList() != null && getList().size() > 0 && position < getList()
+                .size()) {
             return getList().get(position);
+        }
         return null;
     }
 
     @Override
     public long getItemId(int position) {
-        if (getList() != null && getList().get(position) != null && getList().size() > 0 && position < getList().size())
+        if (getList() != null && getList().get(position) != null && getList().size() > 0
+                && position < getList().size()) {
             return Long.valueOf(getList().get(position).getId());
-        else
+        } else {
             return -1;
+        }
     }
 
     protected void buildAvatar(ImageView view, int position, final UserBean user) {
@@ -229,14 +237,23 @@ public class DMUserListAdapter extends BaseAdapter {
 
 
     private static class DMViewHolder {
+
         TextView username;
+
         TextView content;
+
         TextView time;
+
         TimeLineAvatarImageView avatar;
 
     }
 
+
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+
+        ClickableTextViewMentionLinkOnTouchListener listener
+                = new ClickableTextViewMentionLinkOnTouchListener();
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
@@ -246,36 +263,10 @@ public class DMUserListAdapter extends BaseAdapter {
                 return false;
             }
 
-            Layout layout = ((TextView) v).getLayout();
-
-            int x = (int) event.getX();
-            int y = (int) event.getY();
-            int offset = 0;
-            if (layout != null) {
-
-                int line = layout.getLineForVertical(y);
-                offset = layout.getOffsetForHorizontal(line, x);
-            }
-
-            TextView tv = (TextView) v;
-            SpannableString value = SpannableString.valueOf(tv.getText());
-            MyURLSpan[] urlSpans = value.getSpans(0, value.length(), MyURLSpan.class);
-            boolean result = false;
-            for (MyURLSpan urlSpan : urlSpans) {
-                int start = value.getSpanStart(urlSpan);
-                int end = value.getSpanEnd(urlSpan);
-                if (start <= offset && offset <= end) {
-                    result = true;
-                    break;
-                }
-            }
-
             boolean hasActionMode = ((AbstractTimeLineFragment) fragment).hasActionMode();
-            if (result && !hasActionMode) {
-                return LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
-            } else {
-                return false;
-            }
+
+            return !hasActionMode && listener.onTouch(v, event);
+
 
         }
     };
@@ -304,7 +295,8 @@ public class DMUserListAdapter extends BaseAdapter {
         }
 
         View wantedView = listView.getChildAt(wantedChild);
-        DMViewHolder holder = (DMViewHolder) wantedView.getTag(R.drawable.ic_launcher + getItemViewType(position));
+        DMViewHolder holder = (DMViewHolder) wantedView
+                .getTag(R.drawable.ic_launcher + getItemViewType(position));
         return holder;
 
     }
