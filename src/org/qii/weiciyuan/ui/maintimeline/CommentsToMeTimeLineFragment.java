@@ -421,6 +421,7 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         }
     }
 
+    @Override
     protected void middleMsgOnPostExecute(int position, CommentListBean newValue,
             boolean towardsBottom) {
 

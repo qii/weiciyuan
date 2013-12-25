@@ -296,6 +296,30 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
         }
     }
 
+    @Override
+    protected void middleMsgOnPostExecute(int position, CommentListBean newValue,
+            boolean towardsBottom) {
+
+        if (newValue != null) {
+            int size = newValue.getSize();
+
+            if (getActivity() != null && newValue.getSize() > 0) {
+                getList().addMiddleData(position, newValue, towardsBottom);
+
+                if (towardsBottom) {
+                    getAdapter().notifyDataSetChanged();
+                } else {
+
+                    View v = Utility
+                            .getListViewItemViewFromPosition(getListView(), position + 1 + 1);
+                    int top = (v == null) ? 0 : v.getTop();
+                    getAdapter().notifyDataSetChanged();
+                    int ss = position + 1 + size - 1;
+                    getListView().setSelectionFromTop(ss, top);
+                }
+            }
+        }
+    }
 
     private LoaderManager.LoaderCallbacks<CommentTimeLineData> dbCallback
             = new LoaderManager.LoaderCallbacks<CommentTimeLineData>() {
