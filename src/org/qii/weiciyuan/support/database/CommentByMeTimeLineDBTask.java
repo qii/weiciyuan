@@ -1,20 +1,22 @@
 package org.qii.weiciyuan.support.database;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.android.CommentTimeLineData;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
+import org.qii.weiciyuan.support.database.table.CommentByMeTable;
+import org.qii.weiciyuan.support.debug.AppLogger;
+import org.qii.weiciyuan.support.utils.AppConfig;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import org.qii.weiciyuan.bean.CommentBean;
-import org.qii.weiciyuan.bean.CommentListBean;
-import org.qii.weiciyuan.bean.android.CommentTimeLineData;
-import org.qii.weiciyuan.bean.android.TimeLinePosition;
-import org.qii.weiciyuan.support.database.table.CommentByMeTable;
-import org.qii.weiciyuan.support.utils.AppConfig;
-import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,20 +47,29 @@ public class CommentByMeTimeLineDBTask {
         Gson gson = new Gson();
         List<CommentBean> msgList = list.getItemList();
 
-        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), CommentByMeTable.CommentByMeDataTable.TABLE_NAME);
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(),
+                CommentByMeTable.CommentByMeDataTable.TABLE_NAME);
         final int mblogidColumn = ih.getColumnIndex(CommentByMeTable.CommentByMeDataTable.MBLOGID);
-        final int accountidColumn = ih.getColumnIndex(CommentByMeTable.CommentByMeDataTable.ACCOUNTID);
-        final int jsondataColumn = ih.getColumnIndex(CommentByMeTable.CommentByMeDataTable.JSONDATA);
+        final int accountidColumn = ih
+                .getColumnIndex(CommentByMeTable.CommentByMeDataTable.ACCOUNTID);
+        final int jsondataColumn = ih
+                .getColumnIndex(CommentByMeTable.CommentByMeDataTable.JSONDATA);
 
         try {
             getWsd().beginTransaction();
             for (CommentBean msg : msgList) {
 
                 ih.prepareForInsert();
-                ih.bind(mblogidColumn, msg.getId());
-                ih.bind(accountidColumn, accountId);
-                String json = gson.toJson(msg);
-                ih.bind(jsondataColumn, json);
+                if (msg != null) {
+                    ih.bind(mblogidColumn, msg.getId());
+                    ih.bind(accountidColumn, accountId);
+                    String json = gson.toJson(msg);
+                    ih.bind(jsondataColumn, json);
+                } else {
+                    ih.bind(mblogidColumn, "-1");
+                    ih.bind(accountidColumn, accountId);
+                    ih.bind(jsondataColumn, "");
+                }
                 ih.execute();
 
             }
@@ -76,15 +87,21 @@ public class CommentByMeTimeLineDBTask {
 
         CommentListBean result = new CommentListBean();
 
-        int limit = position.position + AppConfig.DB_CACHE_COUNT_OFFSET > AppConfig.DEFAULT_MSG_COUNT_50 ? position.position + AppConfig.DB_CACHE_COUNT_OFFSET : AppConfig.DEFAULT_MSG_COUNT_50;
+        int limit =
+                position.position + AppConfig.DB_CACHE_COUNT_OFFSET > AppConfig.DEFAULT_MSG_COUNT_50
+                        ? position.position + AppConfig.DB_CACHE_COUNT_OFFSET
+                        : AppConfig.DEFAULT_MSG_COUNT_50;
 
         List<CommentBean> msgList = new ArrayList<CommentBean>();
-        String sql = "select * from " + CommentByMeTable.CommentByMeDataTable.TABLE_NAME + " where " + CommentByMeTable.CommentByMeDataTable.ACCOUNTID + "  = "
-                + accountId + " order by " + CommentByMeTable.CommentByMeDataTable.MBLOGID + " desc limit " + limit;
+        String sql = "select * from " + CommentByMeTable.CommentByMeDataTable.TABLE_NAME + " where "
+                + CommentByMeTable.CommentByMeDataTable.ACCOUNTID + "  = "
+                + accountId + " order by " + CommentByMeTable.CommentByMeDataTable.MBLOGID
+                + " desc limit " + limit;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
         while (c.moveToNext()) {
-            String json = c.getString(c.getColumnIndex(CommentByMeTable.CommentByMeDataTable.JSONDATA));
+            String json = c
+                    .getString(c.getColumnIndex(CommentByMeTable.CommentByMeDataTable.JSONDATA));
             if (!TextUtils.isEmpty(json)) {
                 try {
                     CommentBean value = gson.fromJson(json, CommentBean.class);
@@ -106,7 +123,9 @@ public class CommentByMeTimeLineDBTask {
 
 
     private static void reduceCommentTable(String accountId) {
-        String searchCount = "select count(" + CommentByMeTable.CommentByMeDataTable.ID + ") as total" + " from " + CommentByMeTable.CommentByMeDataTable.TABLE_NAME + " where " + CommentByMeTable.CommentByMeDataTable.ACCOUNTID
+        String searchCount = "select count(" + CommentByMeTable.CommentByMeDataTable.ID
+                + ") as total" + " from " + CommentByMeTable.CommentByMeDataTable.TABLE_NAME
+                + " where " + CommentByMeTable.CommentByMeDataTable.ACCOUNTID
                 + " = " + accountId;
         int total = 0;
         Cursor c = getRsd().rawQuery(searchCount, null);
@@ -143,14 +162,17 @@ public class CommentByMeTimeLineDBTask {
     }
 
     static void deleteAllComments(String accountId) {
-        String sql = "delete from " + CommentByMeTable.CommentByMeDataTable.TABLE_NAME + " where " + CommentByMeTable.CommentByMeDataTable.ACCOUNTID + " in " + "(" + accountId + ")";
+        String sql = "delete from " + CommentByMeTable.CommentByMeDataTable.TABLE_NAME + " where "
+                + CommentByMeTable.CommentByMeDataTable.ACCOUNTID + " in " + "(" + accountId + ")";
 
         getWsd().execSQL(sql);
     }
 
-    public static void asyncUpdatePosition(final TimeLinePosition position, final String accountId) {
-        if (position == null)
+    public static void asyncUpdatePosition(final TimeLinePosition position,
+            final String accountId) {
+        if (position == null) {
             return;
+        }
 
         Runnable runnable = new Runnable() {
             @Override
@@ -164,7 +186,8 @@ public class CommentByMeTimeLineDBTask {
 
 
     private static void updatePosition(TimeLinePosition position, String accountId) {
-        String sql = "select * from " + CommentByMeTable.TABLE_NAME + " where " + CommentByMeTable.ACCOUNTID + "  = "
+        String sql = "select * from " + CommentByMeTable.TABLE_NAME + " where "
+                + CommentByMeTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
@@ -173,7 +196,8 @@ public class CommentByMeTimeLineDBTask {
                 String[] args = {accountId};
                 ContentValues cv = new ContentValues();
                 cv.put(CommentByMeTable.TIMELINEDATA, gson.toJson(position));
-                getWsd().update(CommentByMeTable.TABLE_NAME, cv, CommentByMeTable.ACCOUNTID + "=?", args);
+                getWsd().update(CommentByMeTable.TABLE_NAME, cv, CommentByMeTable.ACCOUNTID + "=?",
+                        args);
             } catch (JsonSyntaxException e) {
 
             }
@@ -188,7 +212,8 @@ public class CommentByMeTimeLineDBTask {
     }
 
     private static TimeLinePosition getPosition(String accountId) {
-        String sql = "select * from " + CommentByMeTable.TABLE_NAME + " where " + CommentByMeTable.ACCOUNTID + "  = "
+        String sql = "select * from " + CommentByMeTable.TABLE_NAME + " where "
+                + CommentByMeTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
