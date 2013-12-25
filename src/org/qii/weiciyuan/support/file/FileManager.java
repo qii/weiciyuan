@@ -4,10 +4,12 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -62,10 +64,16 @@ public class FileManager {
             } else {
                 if (!cantReadBecauseOfAndroidBugPermissionProblem) {
                     cantReadBecauseOfAndroidBugPermissionProblem = true;
-                    GlobalContext.getInstance().getActivity().runOnUiThread(new Runnable() {
+                    final Activity activity = GlobalContext.getInstance().getActivity();
+                    if (activity == null || activity.isFinishing()) {
+                        Toast.makeText(GlobalContext.getInstance(),
+                                R.string.please_deleted_cache_dir, Toast.LENGTH_SHORT).show();
+                        return "";
+                    }
+                    activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            new AlertDialog.Builder(GlobalContext.getInstance().getActivity())
+                            new AlertDialog.Builder(activity)
                                     .setTitle(R.string.something_error)
                                     .setMessage(R.string.please_deleted_cache_dir)
                                     .setPositiveButton(R.string.ok,
