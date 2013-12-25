@@ -1,5 +1,9 @@
 package org.qii.weiciyuan.support.lib;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.ItemBean;
+import org.qii.weiciyuan.bean.ListBean;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
@@ -10,12 +14,13 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.ItemBean;
-import org.qii.weiciyuan.bean.ListBean;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * User: qii
@@ -29,14 +34,20 @@ public class TopTipBar extends TextView {
     }
 
     private TreeSet<Long> ids = null;
+
     private boolean disappear = false;
+
     private Runnable lastRunnable;
+
     private boolean error;
+
     private OnChangeListener onChangeListener;
+
     private Type type;
 
 
     private static class TopTipBarComparator implements Comparator<Long>, Serializable {
+
         @Override
         public int compare(Long a, Long b) {
             Long aL = a;
@@ -53,6 +64,7 @@ public class TopTipBar extends TextView {
     }
 
     public static interface OnChangeListener {
+
         public void onChange(int count);
 
     }
@@ -100,8 +112,9 @@ public class TopTipBar extends TextView {
         this.disappear = disappear;
         List<? extends ItemBean> values = listData.getItemList();
         for (ItemBean b : values) {
-            if (b != null)
+            if (b != null) {
                 ids.add(b.getIdLong());
+            }
         }
         setCount();
         if (disappear) {
@@ -119,7 +132,10 @@ public class TopTipBar extends TextView {
             return;
         }
         if (lastRunnable != null) {
-            getHandler().removeCallbacks(lastRunnable);
+            Handler handler = getHandler();
+            if (handler != null) {
+                handler.removeCallbacks(lastRunnable);
+            }
         }
         lastRunnable = new Runnable() {
             @Override
@@ -139,8 +155,9 @@ public class TopTipBar extends TextView {
 
         };
         Handler handler = getHandler();
-        if (handler != null)
+        if (handler != null) {
             handler.postDelayed(lastRunnable, duration);
+        }
     }
 
 
@@ -150,7 +167,8 @@ public class TopTipBar extends TextView {
         int count = ids.size();
         if (count > 0) {
             setVisibility(View.VISIBLE);
-            setText(String.format(getContext().getString(R.string.new_messages_count), String.valueOf(ids.size())));
+            setText(String.format(getContext().getString(R.string.new_messages_count),
+                    String.valueOf(ids.size())));
             setBackgroundResource(R.color.top_tip_bar_tip);
         } else {
             disappear(0);
@@ -251,9 +269,13 @@ public class TopTipBar extends TextView {
     }
 
     static class SavedState extends BaseSavedState {
+
         TreeSet<Long> ids;
+
         boolean disappear;
+
         boolean visible;
+
         Type type;
 
         SavedState(Parcelable superState) {
