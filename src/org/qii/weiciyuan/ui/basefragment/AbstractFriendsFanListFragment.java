@@ -1,13 +1,18 @@
 package org.qii.weiciyuan.ui.basefragment;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.bean.UserListBean;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.AppConfig;
+import org.qii.weiciyuan.ui.interfaces.IUserInfo;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.AbsListView;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.bean.UserListBean;
-import org.qii.weiciyuan.support.utils.AppConfig;
-import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 
 import java.util.List;
 
@@ -18,6 +23,7 @@ import java.util.List;
 public abstract class AbstractFriendsFanListFragment extends AbstractUserListFragment {
 
     protected UserBean currentUser;
+
     protected String uid;
 
 
@@ -32,7 +38,8 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
     //this api has bug, check cursor before add data
     @Override
     protected void oldUserOnPostExecute(UserListBean newValue) {
-        if (newValue != null && newValue.getUsers().size() > 0 && newValue.getPrevious_cursor() != bean.getPrevious_cursor()) {
+        if (newValue != null && newValue.getUsers().size() > 0
+                && newValue.getPrevious_cursor() != bean.getPrevious_cursor()) {
             List<UserBean> list = newValue.getUsers();
             getList().getUsers().addAll(list);
             bean.setNext_cursor(newValue.getNext_cursor());
@@ -95,6 +102,17 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
         refreshLayout(bean);
 
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+
+        if (SettingUtility.isFollowingOrFanListFirstShow()) {
+            new AlertDialog.Builder(getActivity()).setTitle(R.string.tip)
+                    .setMessage(R.string.following_and_fan_list_tip)
+                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).show();
+        }
 
 
     }

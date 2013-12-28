@@ -338,4 +338,13 @@ public class SettingUtility {
     public static void setBlackMagicEnabled() {
         SettingHelper.setEditor(getContext(), BLACK_MAGIC, true);
     }
+
+    public static boolean isFollowingOrFanListFirstShow() {
+        boolean result = SettingHelper
+                .getSharedPreferences(getContext(), "is_following_or_fan_list_first_show", true);
+        SettingHelper.setEditor(getContext(), "is_following_or_fan_list_first_show", false);
+        return result;
+    }
+
+
 }

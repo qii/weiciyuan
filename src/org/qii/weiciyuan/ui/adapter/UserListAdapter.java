@@ -1,11 +1,5 @@
 package org.qii.weiciyuan.ui.adapter;
 
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
@@ -13,7 +7,17 @@ import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.basefragment.AbstractUserListFragment;
+
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -24,11 +28,17 @@ import java.util.List;
 public class UserListAdapter extends BaseAdapter {
 
     protected List<UserBean> bean;
+
     protected Fragment activity;
+
     protected LayoutInflater inflater;
+
     protected ListView listView;
+
     protected TimeLineBitmapDownloader commander;
+
     protected int checkedBG;
+
     protected int defaultBG;
 
     public UserListAdapter(Fragment activity, List<UserBean> bean, ListView listView) {
@@ -45,8 +55,9 @@ public class UserListAdapter extends BaseAdapter {
             @Override
             public void onMovedToScrapHeap(View view) {
                 ViewHolder holder = (ViewHolder) view.getTag();
-                if (holder == null)
+                if (holder == null) {
                     return;
+                }
                 holder.avatar.setImageDrawable(null);
             }
         });
@@ -95,7 +106,6 @@ public class UserListAdapter extends BaseAdapter {
         configLayerType(holder);
         bindViewData(holder, position);
 
-
         return convertView;
     }
 
@@ -103,9 +113,9 @@ public class UserListAdapter extends BaseAdapter {
 
         holder.listview_root.setBackgroundColor(defaultBG);
 
-        if (listView.getCheckedItemPosition() == position + 1)
+        if (listView.getCheckedItemPosition() == position + 1) {
             holder.listview_root.setBackgroundColor(checkedBG);
-
+        }
 
         UserBean user = getList().get(position);
         holder.avatar.checkVerified(user);
@@ -113,8 +123,7 @@ public class UserListAdapter extends BaseAdapter {
         holder.username.setText(user.getScreen_name());
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
-            boolean isFling = ((AbstractUserListFragment) activity).isListViewFling();
-            commander.downloadAvatar(holder.avatar.getImageView(), user, isFling);
+            commander.downloadAvatar(holder.avatar.getImageView(), user, false);
         }
         holder.content.setText(user.getDescription());
 
@@ -123,15 +132,17 @@ public class UserListAdapter extends BaseAdapter {
     private void configLayerType(ViewHolder holder) {
 
         boolean disableHardAccelerated = SettingUtility.disableHardwareAccelerated();
-        if (!disableHardAccelerated)
+        if (!disableHardAccelerated) {
             return;
+        }
 
         int currentWidgetLayerType = holder.username.getLayerType();
 
         if (View.LAYER_TYPE_SOFTWARE != currentWidgetLayerType) {
             holder.username.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            if (holder.content != null)
+            if (holder.content != null) {
                 holder.content.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }
 
         }
 
@@ -143,7 +154,6 @@ public class UserListAdapter extends BaseAdapter {
 
         currentWidgetTextSizePx = holder.content.getTextSize();
 
-
         if (Utility.sp2px(prefFontSizeSp) != currentWidgetTextSizePx) {
             holder.content.setTextSize(prefFontSizeSp);
             holder.username.setTextSize(prefFontSizeSp);
@@ -151,9 +161,13 @@ public class UserListAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
+
         TextView username;
+
         TextView content;
+
         TimeLineAvatarImageView avatar;
+
         RelativeLayout listview_root;
     }
 

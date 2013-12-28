@@ -10,6 +10,7 @@
         <change>新增：其他-清理缓存</change>
         <change>新增加表情和emoji，emoji只有4.4以上会打开</change>
         <change>支持外部调用四次元打开链接，如果链接本身是微博地址的话会被正确解析用【微博详情】页面打开，用户链接同理类推</change>
+        <change>第一次打开好友/粉丝列表的时候提示【第三方客户端是无法查看到全部的好友，粉丝】</change>
     </release>
     <release
             version="0.491-2013.11"
@@ -23,7 +24,7 @@
     <release
             version="0.49-2013.10"
             versioncode="26">
-    <change>修复上版本各种bug</change>
+        <change>修复上版本各种bug</change>
         <change>UI大改，引入侧滑菜单，修改个人资料页面，合并微博详情的评论和转发列表</change>
         <change>进一步提升列表流畅度</change>
         <change>记忆列表阅读位置</change>
@@ -45,7 +46,7 @@
     <release
             version="0.483-2013.1"
             versioncode="25">
-    <change>修正一些崩潰的bug</change>
+        <change>修正一些崩潰的bug</change>
         <change>更換部分按鈕圖標</change>
         <change>列表文本添加行間距</change>
         <change>寫微博界面添加完照片後查看圖片方式換掉</change>
@@ -63,7 +64,7 @@
     <release
             version="0.482-2012.12"
             versioncode="24">
-    <change>修正網址鏈接帶進漢字的bug</change>
+        <change>修正網址鏈接帶進漢字的bug</change>
         <change>轉發評論頭像可以在2g時候自動關閉</change>
         <change>用戶資料頁面點擊頭像彈出放大的頭像框</change>
         <change>添加列表快速滾動（設置-外觀）</change>
@@ -90,7 +91,7 @@
     <release
             version="0.481-2012.11"
             versioncode="23">
-    <change>查看某人的话题列表，添加自己新关注话题标签</change>
+        <change>查看某人的话题列表，添加自己新关注话题标签</change>
         <change>转发的界面右上角有菜单可以精简掉多余的 @</change>
         <change>发微博的字数bug修正</change>
         <change>发微博右上角可以文字转图片</change>
@@ -150,6 +151,6 @@
     <release
             version="0.1-2012.8"
             versioncode="1">
-    <change>初版</change>
+        <change>初版</change>
     </release>
 </changelog>

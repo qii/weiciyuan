@@ -57,11 +57,8 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
     protected static final int OLD_USER_LOADER_ID = 2;
 
-    private volatile boolean enableRefreshTime = true;
+    private boolean canLoadOldData = true;
 
-    public boolean isListViewFling() {
-        return !enableRefreshTime;
-    }
 
     public ListView getListView() {
         return pullToRefreshListView.getRefreshableView();
@@ -125,21 +122,14 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         empty = (TextView) view.findViewById(R.id.empty);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
+        pullToRefreshListView.setOnRefreshListener(
+                new UserListOnRefreshListener());
         pullToRefreshListView
-                .setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
-                    @Override
-                    public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                        loadNewMsg();
-                    }
-                });
-
-        pullToRefreshListView
-                .setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
-                    @Override
-                    public void onLastItemVisible() {
-                        listViewFooterViewClick(null);
-                    }
-                });
+                .setOnLastItemVisibleListener(new UserListOnLastItemVisibleListener());
+        pullToRefreshListView.setOnPullEventListener(getPullEventListener());
+        pullToRefreshListView.setOnScrollListener(new UserListOnScrollListener());
+        pullToRefreshListView.setOnItemClickListener(new UserListOnItemClickListener());
+        pullToRefreshListView.getRefreshableView().setFooterDividersEnabled(false);
 
         footerView = inflater.inflate(R.layout.listview_footer_layout, null);
         getListView().addFooterView(footerView);
@@ -148,65 +138,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         userListAdapter = new UserListAdapter(AbstractUserListFragment.this, bean.getUsers(),
                 getListView());
         pullToRefreshListView.setAdapter(userListAdapter);
-        pullToRefreshListView.setOnPullEventListener(getPullEventListener());
-        pullToRefreshListView.getRefreshableView().setFooterDividersEnabled(false);
 
-        pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                switch (scrollState) {
-
-                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        if (!enableRefreshTime) {
-                            enableRefreshTime = true;
-                            getAdapter().notifyDataSetChanged();
-                        }
-                        break;
-
-                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-
-                        enableRefreshTime = false;
-                        break;
-
-                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-
-                        enableRefreshTime = true;
-                        break;
-
-
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                    int totalItemCount) {
-
-            }
-        }
-
-        );
-
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                if (mActionMode != null) {
-                    getListView().clearChoices();
-                    mActionMode.finish();
-                    mActionMode = null;
-                    return;
-                }
-                getListView().clearChoices();
-                if (position - 1 < getList().getUsers().size()) {
-
-                    listViewItemClick(parent, view, position - 1, id);
-                } else {
-
-                    listViewFooterViewClick(view);
-                }
-
-            }
-        });
         return view;
     }
 
@@ -289,6 +221,8 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     }
 
     public void loadNewMsg() {
+        canLoadOldData = true;
+
         getLoaderManager().destroyLoader(OLD_USER_LOADER_ID);
         dismissFooterView();
         getLoaderManager().restartLoader(NEW_USER_LOADER_ID, null, msgCallback);
@@ -296,6 +230,11 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
 
     protected void loadOldMsg(View view) {
+
+        if (getLoaderManager().getLoader(OLD_USER_LOADER_ID) != null || !canLoadOldData) {
+            return;
+        }
+
         getLoaderManager().destroyLoader(NEW_USER_LOADER_ID);
         getPullToRefreshListView().onRefreshComplete();
         getLoaderManager().restartLoader(OLD_USER_LOADER_ID, null, msgCallback);
@@ -347,6 +286,65 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         }
     }
 
+    private class UserListOnLastItemVisibleListener
+            implements PullToRefreshBase.OnLastItemVisibleListener {
+
+        @Override
+        public void onLastItemVisible() {
+            listViewFooterViewClick(null);
+        }
+    }
+
+    private class UserListOnRefreshListener
+            implements PullToRefreshBase.OnRefreshListener<ListView> {
+
+        @Override
+        public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+            loadNewMsg();
+        }
+    }
+
+    private class UserListOnItemClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            if (mActionMode != null) {
+                getListView().clearChoices();
+                mActionMode.finish();
+                mActionMode = null;
+                return;
+            }
+            getListView().clearChoices();
+            if (position - 1 < getList().getUsers().size()) {
+
+                listViewItemClick(parent, view, position - 1, id);
+            } else {
+
+                listViewFooterViewClick(view);
+            }
+
+        }
+    }
+
+    private class UserListOnScrollListener implements AbsListView.OnScrollListener {
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                int totalItemCount) {
+            if (getListView().getLastVisiblePosition() > 7
+                    && getListView().getLastVisiblePosition() > getList().getUsers().size() - 3
+                    && getListView().getFirstVisiblePosition() != getListView()
+                    .getHeaderViewsCount()) {
+                loadOldMsg(null);
+            }
+        }
+    }
 
     protected abstract void oldUserOnPostExecute(UserListBean newValue);
 
@@ -434,11 +432,15 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
                 case OLD_USER_LOADER_ID:
                     refreshLayout(getList());
 
-                    if (Utility.isAllNotNull(exception)) {
+                    if (exception != null) {
                         showErrorFooterView();
-                    } else {
+                    } else if (data != null) {
+                        canLoadOldData = data.getUsers().size() > 1;
                         oldUserOnPostExecute(data);
                         getAdapter().notifyDataSetChanged();
+                        dismissFooterView();
+                    } else {
+                        canLoadOldData = false;
                         dismissFooterView();
                     }
                     break;
