@@ -26,6 +26,7 @@ public class SearchTopicByNameActivity extends AbstractAppActivity {
             q = d.substring(index + 1, d.length() - 1);
         }
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setTitle("#" + q + "#");
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
