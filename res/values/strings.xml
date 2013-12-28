@@ -524,6 +524,7 @@
     <string name="pref_open_source_license_title">开源协议</string>
     <string name="pref_debug_title">调试</string>
     <string name="pref_debug_mem_title">内存信息</string>
+    <string name="print_license">打印协议</string>
 
 
     <!-- menu-->

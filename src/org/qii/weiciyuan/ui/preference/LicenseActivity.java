@@ -1,13 +1,19 @@
 package org.qii.weiciyuan.ui.preference;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.webkit.WebView;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
 /**
  * User: qii
@@ -49,10 +55,22 @@ public class LicenseActivity extends AbstractAppActivity {
 
     @Override
     public void onBackPressed() {
-        if (webView != null && webView.canGoBack())
+        if (webView != null && webView.canGoBack()) {
             webView.goBack();
-        else
+        } else {
             super.onBackPressed();
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (Utility.isKK()) {
+            getMenuInflater().inflate(R.menu.actionbar_menu_licenseactivity, menu);
+            return true;
+        } else {
+            return super.onCreateOptionsMenu(menu);
+        }
     }
 
     @Override
@@ -63,6 +81,11 @@ public class LicenseActivity extends AbstractAppActivity {
                 intent = new Intent(this, AboutActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                return true;
+            case R.id.menu_print:
+                PrintManager printManager = (PrintManager) getSystemService(Context.PRINT_SERVICE);
+                PrintDocumentAdapter adapter = webView.createPrintDocumentAdapter();
+                printManager.print(getString(R.string.app_name), adapter, null);
                 return true;
         }
         return false;
