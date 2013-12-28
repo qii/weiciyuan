@@ -15,15 +15,18 @@
  *******************************************************************************/
 package uk.co.senab.photoview;
 
-import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
-import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
-import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
+import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
+import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
 
 public class PhotoView extends ImageView implements IPhotoView {
 
@@ -50,8 +53,9 @@ public class PhotoView extends ImageView implements IPhotoView {
         }
     }
 
-    public PhotoViewAttacher getAttacher() {
-        return mAttacher;
+    @Override
+    public void setPhotoViewRotation(float rotationDegree) {
+        mAttacher.setPhotoViewRotation(rotationDegree);
     }
 
     @Override
@@ -65,18 +69,46 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public Matrix getDisplayMatrix() {
+        return mAttacher.getDrawMatrix();
+    }
+
+    @Override
+    public boolean setDisplayMatrix(Matrix finalRectangle) {
+        return mAttacher.setDisplayMatrix(finalRectangle);
+    }
+
+    @Override
+    @Deprecated
     public float getMinScale() {
-        return mAttacher.getMinScale();
+        return getMinimumScale();
     }
 
     @Override
+    public float getMinimumScale() {
+        return mAttacher.getMinimumScale();
+    }
+
+    @Override
+    @Deprecated
     public float getMidScale() {
-        return mAttacher.getMidScale();
+        return getMediumScale();
     }
 
     @Override
+    public float getMediumScale() {
+        return mAttacher.getMediumScale();
+    }
+
+    @Override
+    @Deprecated
     public float getMaxScale() {
-        return mAttacher.getMaxScale();
+        return getMaximumScale();
+    }
+
+    @Override
+    public float getMaximumScale() {
+        return mAttacher.getMaximumScale();
     }
 
     @Override
@@ -95,18 +127,36 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    @Deprecated
     public void setMinScale(float minScale) {
-        mAttacher.setMinScale(minScale);
+        setMinimumScale(minScale);
     }
 
     @Override
+    public void setMinimumScale(float minimumScale) {
+        mAttacher.setMinimumScale(minimumScale);
+    }
+
+    @Override
+    @Deprecated
     public void setMidScale(float midScale) {
-        mAttacher.setMidScale(midScale);
+        setMediumScale(midScale);
     }
 
     @Override
+    public void setMediumScale(float mediumScale) {
+        mAttacher.setMediumScale(mediumScale);
+    }
+
+    @Override
+    @Deprecated
     public void setMaxScale(float maxScale) {
-        mAttacher.setMaxScale(maxScale);
+        setMaximumScale(maxScale);
+    }
+
+    @Override
+    public void setMaximumScale(float maximumScale) {
+        mAttacher.setMaximumScale(maximumScale);
     }
 
     @Override
@@ -150,8 +200,33 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public OnPhotoTapListener getOnPhotoTapListener() {
+        return mAttacher.getOnPhotoTapListener();
+    }
+
+    @Override
     public void setOnViewTapListener(OnViewTapListener listener) {
         mAttacher.setOnViewTapListener(listener);
+    }
+
+    @Override
+    public OnViewTapListener getOnViewTapListener() {
+        return mAttacher.getOnViewTapListener();
+    }
+
+    @Override
+    public void setScale(float scale) {
+        mAttacher.setScale(scale);
+    }
+
+    @Override
+    public void setScale(float scale, boolean animate) {
+        mAttacher.setScale(scale, animate);
+    }
+
+    @Override
+    public void setScale(float scale, float focalX, float focalY, boolean animate) {
+        mAttacher.setScale(scale, focalX, focalY, animate);
     }
 
     @Override
@@ -169,8 +244,8 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    public void zoomTo(float scale, float focalX, float focalY) {
-        mAttacher.zoomTo(scale, focalX, focalY);
+    public Bitmap getVisibleRectangleBitmap() {
+        return mAttacher.getVisibleRectangleBitmap();
     }
 
     @Override

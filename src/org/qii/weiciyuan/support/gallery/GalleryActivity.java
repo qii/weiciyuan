@@ -65,6 +65,8 @@ public class GalleryActivity extends Activity {
 
     private static final int STATUS_BAR_HEIGHT_DP_UNIT = 25;
 
+    private static final int NAVIGATION_BAR_HEIGHT_DP_UNIT = 48;
+
     private static final String CURRENT_VISIBLE_PAGE = "currentPage";
 
     private ArrayList<String> urls = new ArrayList<String>();
@@ -134,9 +136,8 @@ public class GalleryActivity extends Activity {
 
         final PhotoView imageView = (PhotoView) view.findViewById(R.id.image);
 
-        if (imageView.getAttacher().getImageView() == null
-                || (!(imageView.getAttacher().getImageView()
-                .getDrawable() instanceof BitmapDrawable))) {
+        if (imageView == null
+                || (!(imageView.getDrawable() instanceof BitmapDrawable))) {
             super.onBackPressed();
             return;
         }
@@ -164,7 +165,7 @@ public class GalleryActivity extends Activity {
 
     private void animateClose(PhotoView imageView) {
         currentViewPositionLayout.setVisibility(View.INVISIBLE);
-        animationView.setImageDrawable(imageView.getAttacher().getImageView().getDrawable());
+        animationView.setImageDrawable(imageView.getDrawable());
 
         pager.setVisibility(View.INVISIBLE);
 
@@ -302,9 +303,8 @@ public class GalleryActivity extends Activity {
                 public void onPhotoTap(View view, float x, float y) {
 
                     if (rect == null
-                            || imageView.getAttacher().getImageView() == null
-                            || (!(imageView.getAttacher().getImageView()
-                            .getDrawable() instanceof BitmapDrawable))) {
+                            || imageView == null
+                            || (!(imageView.getDrawable() instanceof BitmapDrawable))) {
                         GalleryActivity.this.finish();
                         return;
                     }
@@ -324,6 +324,15 @@ public class GalleryActivity extends Activity {
         large.setBackgroundColor(getResources().getColor(R.color.transparent));
         large.setVisibility(View.INVISIBLE);
         large.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        if (Utility.doThisDeviceOwnNavigationBar(GalleryActivity.this)) {
+            imageView.setPadding(0, 0, 0,
+                    Utility.dip2px(NAVIGATION_BAR_HEIGHT_DP_UNIT));
+            //webview has a bug, padding is ignored
+            gif.setPadding(0, 0, 0,
+                    Utility.dip2px(NAVIGATION_BAR_HEIGHT_DP_UNIT));
+            large.setPadding(0, 0, 0,
+                    Utility.dip2px(NAVIGATION_BAR_HEIGHT_DP_UNIT));
+        }
 
         TextView wait = (TextView) contentView.findViewById(R.id.wait);
 

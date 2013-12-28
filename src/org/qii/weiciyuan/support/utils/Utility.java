@@ -48,9 +48,12 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.HapticFeedbackConstants;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -893,6 +896,13 @@ public class Utility {
         }
 
         viewGroup.setBackground(null);
+    }
+
+    public static boolean doThisDeviceOwnNavigationBar(Context context) {
+        boolean hasMenuKey = ViewConfiguration.get(context).hasPermanentMenuKey();
+        boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+
+        return !hasMenuKey && !hasBackKey;
     }
 }
 
