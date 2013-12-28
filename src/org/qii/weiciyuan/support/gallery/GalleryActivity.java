@@ -63,7 +63,7 @@ public class GalleryActivity extends Activity {
 
     private static final int IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT = 3000;
 
-    private static final int STATUS_BAR_HEIGHT_DP_UNITE = 25;
+    private static final int STATUS_BAR_HEIGHT_DP_UNIT = 25;
 
     private static final String CURRENT_VISIBLE_PAGE = "currentPage";
 
