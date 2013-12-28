@@ -10,6 +10,7 @@ import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.MusicInfo;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
+import org.qii.weiciyuan.othercomponent.ConnectionChangeReceiver;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.DatabaseManager;
 import org.qii.weiciyuan.support.debug.AppLogger;
@@ -415,7 +416,10 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         registerReceiver(newMsgInterruptBroadcastReceiver, filter);
         startListenMusicPlaying();
         readClipboard();
+        //ensure timeline picture type is correct
+        ConnectionChangeReceiver.judgeNetworkStatus(this);
     }
+
 
     private void readClipboard() {
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);

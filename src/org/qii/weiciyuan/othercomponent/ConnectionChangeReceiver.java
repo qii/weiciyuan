@@ -1,19 +1,26 @@
 package org.qii.weiciyuan.othercomponent;
 
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.Utility;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: Jiang Qi
  * Date: 12-8-6
  */
 public class ConnectionChangeReceiver extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        judgeNetworkStatus(context);
+
+    }
+
+    public static void judgeNetworkStatus(Context context) {
         if (Utility.isConnected(context)) {
 
             if (SettingUtility.getEnableFetchMSG()) {
@@ -27,7 +34,6 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
         } else {
             AppNewMsgAlarm.stopAlarm(context, false);
         }
-
     }
 
     private static void decideTimeLineBigPic(Context context) {
