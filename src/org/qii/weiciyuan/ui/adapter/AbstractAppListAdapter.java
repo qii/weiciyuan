@@ -1,23 +1,5 @@
 package org.qii.weiciyuan.ui.adapter;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.text.TextPaint;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.*;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -39,6 +21,32 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
+import android.widget.BaseAdapter;
+import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.List;
@@ -49,12 +57,19 @@ import java.util.Set;
  * Date: 12-9-15
  */
 public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAdapter {
+
     protected List<T> bean;
+
     protected Fragment fragment;
+
     protected LayoutInflater inflater;
+
     protected ListView listView;
+
     protected boolean showOriStatus = true;
+
     protected int checkedBG;
+
     protected int defaultBG;
 
 //    private final int TYPE_NORMAL = 0;
@@ -65,8 +80,11 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 //    private final int TYPE_SIMPLE = 5;
 
     private final int TYPE_NORMAL = 0;
+
     private final int TYPE_NORMAL_BIG_PIC = 1;
+
     private final int TYPE_MIDDLE = 2;
+
     private final int TYPE_SIMPLE = 3;
 
     public static final int NO_ITEM_ID = -1;
@@ -74,13 +92,20 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private Set<Integer> tagIndexList = new HashSet<Integer>();
 
     private static final int PREF_LISTVIEW_ITEM_VIEW_COUNT = 6;
-    private ArrayDeque<PrefView> prefNormalViews = new ArrayDeque<PrefView>(PREF_LISTVIEW_ITEM_VIEW_COUNT);
-    private ArrayDeque<PrefView> prefBigPicViews = new ArrayDeque<PrefView>(PREF_LISTVIEW_ITEM_VIEW_COUNT);
 
-    private int savedCurrentMiddleLoadingViewPosition = AbstractTimeLineFragment.NO_SAVED_CURRENT_LOADING_MSG_VIEW_POSITION;
+    private ArrayDeque<PrefView> prefNormalViews = new ArrayDeque<PrefView>(
+            PREF_LISTVIEW_ITEM_VIEW_COUNT);
+
+    private ArrayDeque<PrefView> prefBigPicViews = new ArrayDeque<PrefView>(
+            PREF_LISTVIEW_ITEM_VIEW_COUNT);
+
+    private int savedCurrentMiddleLoadingViewPosition
+            = AbstractTimeLineFragment.NO_SAVED_CURRENT_LOADING_MSG_VIEW_POSITION;
 
     private class PrefView {
+
         View view;
+
         ViewHolder holder;
     }
 
@@ -88,20 +113,22 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         savedCurrentMiddleLoadingViewPosition = position;
     }
 
-    public AbstractAppListAdapter(Fragment fragment, List<T> bean, ListView listView, boolean showOriStatus) {
+    public AbstractAppListAdapter(Fragment fragment, List<T> bean, ListView listView,
+            boolean showOriStatus) {
         this(fragment, bean, listView, showOriStatus, false);
     }
 
-    public AbstractAppListAdapter(Fragment fragment, List<T> bean, ListView listView, boolean showOriStatus, boolean pre) {
-        if (showOriStatus)
+    public AbstractAppListAdapter(Fragment fragment, List<T> bean, ListView listView,
+            boolean showOriStatus, boolean pre) {
+        if (showOriStatus) {
             listView.setDivider(null);
+        }
 
         this.bean = bean;
         this.inflater = fragment.getActivity().getLayoutInflater();
         this.listView = listView;
         this.showOriStatus = showOriStatus;
         this.fragment = fragment;
-
 
         defaultBG = fragment.getResources().getColor(R.color.transparent);
         checkedBG = ThemeUtility.getColor(R.attr.listview_checked_color);
@@ -126,8 +153,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             @Override
             public void onMovedToScrapHeap(View view) {
                 Integer index = (Integer) view.getTag(R.string.listview_index_tag);
-                if (index == null)
+                if (index == null) {
                     return;
+                }
 
                 for (Integer tag : tagIndexList) {
 
@@ -154,8 +182,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             }
 
             void clearMultiPics(GridLayout gridLayout) {
-                if (gridLayout == null)
+                if (gridLayout == null) {
                     return;
+                }
                 for (int i = 0; i < gridLayout.getChildCount(); i++) {
                     ImageView iv = (ImageView) gridLayout.getChildAt(i);
                     if (iv != null) {
@@ -200,29 +229,37 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     @Override
     public int getItemViewType(int position) {
 
-        if (position >= bean.size())
+        if (position >= bean.size()) {
             return -1;
+        }
 
-        if (bean.get(position) == null)
+        if (bean.get(position) == null) {
             return TYPE_MIDDLE;
+        }
 
-        if (!showOriStatus)
+        if (!showOriStatus) {
             return TYPE_SIMPLE;
+        }
 
-        if (SettingUtility.getEnableBigPic())
+        if (SettingUtility.getEnableBigPic()) {
             return TYPE_NORMAL_BIG_PIC;
-        else
+        } else {
             return TYPE_NORMAL;
+        }
 
     }
 
 
     /**
      * use getTag(int) and setTag(int, final Object) to solve getItemViewType(int) bug.
-     * When you use getItemViewType(int),getTag(),setTag() together, if getItemViewType(int) change because
-     * network switch to use another layout when you are scrolling listview, bug appears,the other listviews in other tabs
-     * (Actionbar tab navigation) will mix several layout up, for example, the correct layout should be TYPE_NORMAL_BIG_PIC,
-     * but in the listview, you can see some row's layouts are TYPE_NORMAL, some are TYPE_NORMAL_BIG_PIC. if you print
+     * When you use getItemViewType(int),getTag(),setTag() together, if getItemViewType(int) change
+     * because
+     * network switch to use another layout when you are scrolling listview, bug appears,the other
+     * listviews in other tabs
+     * (Actionbar tab navigation) will mix several layout up, for example, the correct layout should
+     * be TYPE_NORMAL_BIG_PIC,
+     * but in the listview, you can see some row's layouts are TYPE_NORMAL, some are
+     * TYPE_NORMAL_BIG_PIC. if you print
      * getItemViewType(int) value to the console,their are same type
      */
 
@@ -231,9 +268,10 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         ViewHolder holder = null;
         PrefView prefView = null;
 
-        if (convertView == null || convertView.getTag(R.drawable.ic_launcher + getItemViewType(position)) == null) {
-
-            switch (getItemViewType(position)) {
+        if (convertView == null
+                || convertView.getTag(R.drawable.ic_launcher + getItemViewType(position)) == null) {
+            int itemViewType = getItemViewType(position);
+            switch (itemViewType) {
                 case TYPE_SIMPLE:
                     convertView = initSimpleLayout(parent);
                     break;
@@ -268,21 +306,22 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                     convertView = initNormalLayout(parent);
                     break;
             }
-            if (getItemViewType(position) != TYPE_MIDDLE) {
+            if (itemViewType != TYPE_MIDDLE) {
                 if (prefView == null) {
                     holder = buildHolder(convertView);
                 } else {
                     holder = prefView.holder;
                 }
                 convertView.setTag(R.drawable.ic_launcher + getItemViewType(position), holder);
-                convertView.setTag(R.string.listview_index_tag, R.drawable.ic_launcher + getItemViewType(position));
+                convertView.setTag(R.string.listview_index_tag,
+                        R.drawable.ic_launcher + getItemViewType(position));
                 tagIndexList.add(R.drawable.ic_launcher + getItemViewType(position));
             }
 
         } else {
-            holder = (ViewHolder) convertView.getTag(R.drawable.ic_launcher + getItemViewType(position));
+            holder = (ViewHolder) convertView
+                    .getTag(R.drawable.ic_launcher + getItemViewType(position));
         }
-
 
         if (getItemViewType(position) != TYPE_MIDDLE) {
             configLayerType(holder);
@@ -290,8 +329,10 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             bindViewData(holder, position);
             bindOnTouchListener(holder);
         } else {
-            if (savedCurrentMiddleLoadingViewPosition == position + listView.getHeaderViewsCount()) {
-                ListViewMiddleMsgLoadingView loadingView = (ListViewMiddleMsgLoadingView) convertView;
+            if (savedCurrentMiddleLoadingViewPosition == position + listView
+                    .getHeaderViewsCount()) {
+                ListViewMiddleMsgLoadingView loadingView
+                        = (ListViewMiddleMsgLoadingView) convertView;
                 loadingView.load();
             }
         }
@@ -305,22 +346,26 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.content.setClickable(false);
         holder.repost_content.setClickable(false);
 
-        if (holder.content != null)
+        if (holder.content != null) {
             holder.content.setOnTouchListener(onTouchListener);
-        if (holder.repost_content != null)
+        }
+        if (holder.repost_content != null) {
             holder.repost_content.setOnTouchListener(onTouchListener);
+        }
     }
 
     private View initMiddleLayout(ViewGroup parent) {
         View convertView;
-        convertView = inflater.inflate(R.layout.timeline_listview_item_middle_layout, parent, false);
+        convertView = inflater
+                .inflate(R.layout.timeline_listview_item_middle_layout, parent, false);
 
         return convertView;
     }
 
     private View initSimpleLayout(ViewGroup parent) {
         View convertView;
-        convertView = inflater.inflate(R.layout.timeline_listview_item_simple_layout, parent, false);
+        convertView = inflater
+                .inflate(R.layout.timeline_listview_item_simple_layout, parent, false);
 
         return convertView;
     }
@@ -328,7 +373,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private View initMylayout(ViewGroup parent) {
         View convertView;
         if (SettingUtility.getEnableBigPic()) {
-            convertView = inflater.inflate(R.layout.timeline_listview_item_big_pic_layout, parent, false);
+            convertView = inflater
+                    .inflate(R.layout.timeline_listview_item_big_pic_layout, parent, false);
         } else {
             convertView = inflater.inflate(R.layout.timeline_listview_item_layout, parent, false);
         }
@@ -354,9 +400,10 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         holder.time = (TimeTextView) convertView.findViewById(R.id.time);
         holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
 
-
-        holder.repost_content_pic = (IWeiciyuanDrawable) convertView.findViewById(R.id.repost_content_pic);
-        holder.repost_content_pic_multi = (GridLayout) convertView.findViewById(R.id.repost_content__pic_multi);
+        holder.repost_content_pic = (IWeiciyuanDrawable) convertView
+                .findViewById(R.id.repost_content_pic);
+        holder.repost_content_pic_multi = (GridLayout) convertView
+                .findViewById(R.id.repost_content__pic_multi);
 
         holder.content_pic = holder.repost_content_pic;
         holder.content_pic_multi = holder.repost_content_pic_multi;
@@ -377,23 +424,29 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     private void configLayerType(ViewHolder holder) {
 
         boolean disableHardAccelerated = SettingUtility.disableHardwareAccelerated();
-        if (!disableHardAccelerated)
+        if (!disableHardAccelerated) {
             return;
+        }
 
         int currentWidgetLayerType = holder.username.getLayerType();
 
         if (View.LAYER_TYPE_SOFTWARE != currentWidgetLayerType) {
             holder.username.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            if (holder.content != null)
+            if (holder.content != null) {
                 holder.content.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            if (holder.repost_content != null)
+            }
+            if (holder.repost_content != null) {
                 holder.repost_content.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            if (holder.time != null)
+            }
+            if (holder.time != null) {
                 holder.time.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            if (holder.repost_count != null)
+            }
+            if (holder.repost_count != null) {
                 holder.repost_count.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            if (holder.comment_count != null)
+            }
+            if (holder.comment_count != null) {
                 holder.comment_count.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }
         }
 
     }
@@ -406,12 +459,12 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
         if (Utility.sp2px(prefFontSizeSp - 3) != currentWidgetTextSizePx) {
             holder.time.setTextSize(prefFontSizeSp - 3);
-            if (holder.source != null)
+            if (holder.source != null) {
                 holder.source.setTextSize(prefFontSizeSp - 3);
+            }
         }
 
         currentWidgetTextSizePx = holder.content.getTextSize();
-
 
         if (Utility.sp2px(prefFontSizeSp) != currentWidgetTextSizePx) {
             holder.content.setTextSize(prefFontSizeSp);
@@ -457,17 +510,21 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     @Override
     public Object getItem(int position) {
-        if (position >= 0 && getList() != null && getList().size() > 0 && position < getList().size())
+        if (position >= 0 && getList() != null && getList().size() > 0 && position < getList()
+                .size()) {
             return getList().get(position);
+        }
         return null;
     }
 
     @Override
     public long getItemId(int position) {
-        if (getList() != null && getList().get(position) != null && getList().size() > 0 && position < getList().size())
+        if (getList() != null && getList().get(position) != null && getList().size() > 0
+                && position < getList().size()) {
             return Long.valueOf(getList().get(position).getId());
-        else
+        } else {
             return NO_ITEM_ID;
+        }
     }
 
     protected void buildAvatar(IWeiciyuanDrawable view, int position, final UserBean user) {
@@ -497,7 +554,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         String image_url = user.getProfile_image_url();
         if (!TextUtils.isEmpty(image_url)) {
             view.setVisibility(View.VISIBLE);
-            TimeLineBitmapDownloader.getInstance().downloadAvatar(view, user, (AbstractTimeLineFragment) fragment);
+            TimeLineBitmapDownloader.getInstance()
+                    .downloadAvatar(view, user, (AbstractTimeLineFragment) fragment);
         } else {
             view.setVisibility(View.GONE);
         }
@@ -512,9 +570,15 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 IWeiciyuanDrawable pic = (IWeiciyuanDrawable) gridLayout.getChildAt(i);
                 pic.setVisibility(View.VISIBLE);
                 if (SettingUtility.getEnableBigPic()) {
-                    TimeLineBitmapDownloader.getInstance().displayMultiPicture(pic, msg.getHighPicUrls().get(i), FileLocationMethod.picture_large, (AbstractTimeLineFragment) fragment);
+                    TimeLineBitmapDownloader.getInstance()
+                            .displayMultiPicture(pic, msg.getHighPicUrls().get(i),
+                                    FileLocationMethod.picture_large,
+                                    (AbstractTimeLineFragment) fragment);
                 } else {
-                    TimeLineBitmapDownloader.getInstance().displayMultiPicture(pic, msg.getThumbnailPicUrls().get(i), FileLocationMethod.picture_thumbnail, (AbstractTimeLineFragment) fragment);
+                    TimeLineBitmapDownloader.getInstance()
+                            .displayMultiPicture(pic, msg.getThumbnailPicUrls().get(i),
+                                    FileLocationMethod.picture_thumbnail,
+                                    (AbstractTimeLineFragment) fragment);
                 }
 
                 final int finalI = i;
@@ -612,10 +676,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                         bitmap = ((BitmapDrawable) drawable).getBitmap();
                     }
 
-
                     Rect rect = new Rect();
                     boolean result = imageView.getGlobalVisibleRect(rect);
-
 
                     boolean checkWidth = rect.width() < imageView.getWidth();
                     boolean checkHeight = rect.height() < imageView.getHeight();
@@ -629,7 +691,6 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
                         int imageViewWidth = imageView.getWidth();
                         int imageviewHeight = imageView.getHeight();
-
 
                         float startScale;
                         if ((float) imageViewWidth / bitmapWidth
@@ -648,17 +709,18 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                         int deltaX = (imageViewWidth - bitmapWidth) / 2;
                         int deltaY = (imageviewHeight - bitmapHeight) / 2;
 
-                        rect.set(rect.left + deltaX, rect.top + deltaY, rect.right - deltaX, rect.bottom - deltaY);
+                        rect.set(rect.left + deltaX, rect.top + deltaY, rect.right - deltaX,
+                                rect.bottom - deltaY);
 
 
                     }
 
-
                     Intent intent = new Intent(getActivity(), GalleryActivity.class);
                     intent.putExtra("msg", msg);
 
-                    if (!clipped && bitmap != null)
+                    if (!clipped && bitmap != null) {
                         intent.putExtra("rect", rect);
+                    }
 
                     Bundle scaleBundle = ActivityOptions.makeScaleUpAnimation(
                             v, 0, 0, v.getWidth(), v.getHeight()).toBundle();
@@ -675,15 +737,18 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     private void buildPic(final MessageBean msg, ImageView view) {
         view.setVisibility(View.VISIBLE);
-        TimeLineBitmapDownloader.getInstance().downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
+        TimeLineBitmapDownloader.getInstance()
+                .downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
     }
 
     private void buildPic(final MessageBean msg, IWeiciyuanDrawable view) {
         view.setVisibility(View.VISIBLE);
-        TimeLineBitmapDownloader.getInstance().downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
+        TimeLineBitmapDownloader.getInstance()
+                .downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
     }
 
-    protected void buildRepostContent(final MessageBean repost_msg, ViewHolder holder, int position) {
+    protected void buildRepostContent(final MessageBean repost_msg, ViewHolder holder,
+            int position) {
         holder.repost_content.setVisibility(View.VISIBLE);
 
         boolean isSameTag = repost_msg.getId().equals((String) holder.repost_content.getTag());
@@ -701,26 +766,43 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
 
     public static class ViewHolder {
+
         TextView username;
+
         TextView content;
+
         TextView repost_content;
+
         TimeTextView time;
+
         IWeiciyuanDrawable avatar;
 
         IWeiciyuanDrawable content_pic;
+
         GridLayout content_pic_multi;
+
         IWeiciyuanDrawable repost_content_pic;
+
         GridLayout repost_content_pic_multi;
 
         RelativeLayout listview_root;
+
         View repost_layout;
+
         View repost_flag;
+
         LinearLayout count_layout;
+
         TextView repost_count;
+
         TextView comment_count;
+
         TextView source;
+
         ImageView timeline_gps;
+
         ImageView timeline_pic;
+
         ImageView replyIV;
     }
 
@@ -771,7 +853,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
 
-        ClickableTextViewMentionLinkOnTouchListener listener = new ClickableTextViewMentionLinkOnTouchListener();
+        ClickableTextViewMentionLinkOnTouchListener listener
+                = new ClickableTextViewMentionLinkOnTouchListener();
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -816,7 +899,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         }
 
         View wantedView = listView.getChildAt(wantedChild);
-        ViewHolder holder = (ViewHolder) wantedView.getTag(R.drawable.ic_launcher + getItemViewType(wantedPosition));
+        ViewHolder holder = (ViewHolder) wantedView
+                .getTag(R.drawable.ic_launcher + getItemViewType(wantedPosition));
         return holder;
 
     }

@@ -525,7 +525,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     private static class DBCacheTask
-    extends MyAsyncTask<Void, MessageTimeLineData, List<MessageTimeLineData>> {
+            extends MyAsyncTask<Void, MessageTimeLineData, List<MessageTimeLineData>> {
 
         private WeakReference<FriendsTimeLineFragment> fragmentWeakReference;
 
@@ -693,25 +693,28 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     protected void middleMsgOnPostExecute(int position, MessageListBean newValue,
             boolean towardsBottom) {
 
-        if (newValue != null) {
-            int size = newValue.getSize();
+        if (newValue == null) {
+            return;
+        }
 
-            if (getActivity() != null && newValue.getSize() > 0) {
-                getList().addMiddleData(position, newValue, towardsBottom);
+        int size = newValue.getSize();
 
-                if (towardsBottom) {
-                    getAdapter().notifyDataSetChanged();
-                } else {
+        if (getActivity() != null && newValue.getSize() > 0) {
+            getList().addMiddleData(position, newValue, towardsBottom);
 
-                    View v = Utility
-                            .getListViewItemViewFromPosition(getListView(), position + 1 + 1);
-                    int top = (v == null) ? 0 : v.getTop();
-                    getAdapter().notifyDataSetChanged();
-                    int ss = position + 1 + size - 1;
-                    getListView().setSelectionFromTop(ss, top);
-                }
+            if (towardsBottom) {
+                getAdapter().notifyDataSetChanged();
+            } else {
+
+                View v = Utility
+                        .getListViewItemViewFromPosition(getListView(), position + 1 + 1);
+                int top = (v == null) ? 0 : v.getTop();
+                getAdapter().notifyDataSetChanged();
+                int ss = position + 1 + size - 1;
+                getListView().setSelectionFromTop(ss, top);
             }
         }
+
     }
 
     private void addNewDataWithoutRememberPosition(MessageListBean newValue) {
@@ -827,7 +830,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
      * refresh timline messages' repost and comment count
      */
     private static class RefreshReCmtCountTask
-    extends MyAsyncTask<Void, List<MessageReCmtCountBean>, List<MessageReCmtCountBean>> {
+            extends MyAsyncTask<Void, List<MessageReCmtCountBean>, List<MessageReCmtCountBean>> {
 
         private List<String> msgIds;
 
