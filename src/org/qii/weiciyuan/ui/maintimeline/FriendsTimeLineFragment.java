@@ -44,6 +44,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -286,7 +287,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         switch (getCurrentState(savedInstanceState)) {
             case FIRST_TIME_START:
                 if (Utility.isTaskStopped(dbTask) && getList().getSize() == 0) {
-                    dbTask = new DBCacheTask();
+                    dbTask = new DBCacheTask(this, accountBean.getUid());
                     dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     GroupInfoTask groupInfoTask = new GroupInfoTask(
                             GlobalContext.getInstance().getSpecialToken(),
@@ -318,7 +319,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 token = savedInstanceState.getString("token");
 
                 if (Utility.isTaskStopped(dbTask) && getList().getSize() == 0) {
-                    dbTask = new DBCacheTask();
+                    dbTask = new DBCacheTask(this, accountBean.getUid());
                     dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     GroupInfoTask groupInfoTask = new GroupInfoTask(
                             GlobalContext.getInstance().getSpecialToken(),
@@ -486,35 +487,80 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         Utility.stopListViewScrollingAndScrollToTop(getListView());
     }
 
-    private class DBCacheTask
-            extends MyAsyncTask<Void, MessageTimeLineData, List<MessageTimeLineData>> {
+
+    private void handleDBCacheOnProgressUpdateData(MessageTimeLineData[] result) {
+        if (result != null && result.length > 0) {
+            MessageTimeLineData recentData = result[0];
+            getList().replaceData(recentData.msgList);
+            putToGroupDataMemoryCache(recentData.groupId, recentData.msgList);
+            positionCache.put(recentData.groupId, recentData.position);
+            currentGroupId = recentData.groupId;
+        }
+        getPullToRefreshListView().setVisibility(View.VISIBLE);
+        getAdapter().notifyDataSetChanged();
+        setListViewPositionFromPositionsCache();
+        if (getActivity().getActionBar().getNavigationMode()
+                == ActionBar.NAVIGATION_MODE_LIST) {
+            getActivity().getActionBar().setSelectedNavigationItem(getRecentNavIndex());
+        }
+        refreshLayout(getList());
+        /**
+         * when this account first open app,if he don't have any data in database,fetch data from server automally
+         */
+        if (getList().getSize() == 0) {
+            getPullToRefreshListView().setRefreshing();
+            loadNewMsg();
+        } else {
+            new RefreshReCmtCountTask(FriendsTimeLineFragment.this, getList())
+                    .executeOnExecutor(
+                            MyAsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    private void handleDBCacheResultData(List<MessageTimeLineData> result) {
+        for (MessageTimeLineData single : result) {
+            putToGroupDataMemoryCache(single.groupId, single.msgList);
+            positionCache.put(single.groupId, single.position);
+        }
+    }
+
+    private static class DBCacheTask
+    extends MyAsyncTask<Void, MessageTimeLineData, List<MessageTimeLineData>> {
+
+        private WeakReference<FriendsTimeLineFragment> fragmentWeakReference;
+
+        private String accountId;
+
+        private DBCacheTask(FriendsTimeLineFragment friendsTimeLineFragment, String accountId) {
+            fragmentWeakReference = new WeakReference<FriendsTimeLineFragment>(
+                    friendsTimeLineFragment);
+            this.accountId = accountId;
+        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            getPullToRefreshListView().setVisibility(View.INVISIBLE);
+            FriendsTimeLineFragment fragment = fragmentWeakReference.get();
+            if (fragment != null) {
+                fragment.getPullToRefreshListView().setVisibility(View.INVISIBLE);
+            }
         }
 
         @Override
         protected List<MessageTimeLineData> doInBackground(Void... params) {
             MessageTimeLineData recentGroupData = FriendsTimeLineDBTask
-                    .getRecentGroupData(accountBean.getUid());
+                    .getRecentGroupData(accountId);
             publishProgress(recentGroupData);
             return FriendsTimeLineDBTask
-                    .getOtherGroupData(accountBean.getUid(), recentGroupData.groupId);
+                    .getOtherGroupData(accountId, recentGroupData.groupId);
         }
 
         @Override
         protected void onPostExecute(List<MessageTimeLineData> result) {
             super.onPostExecute(result);
-            if (getActivity() == null) {
-                return;
-            }
-            if (result != null) {
-                for (MessageTimeLineData single : result) {
-                    putToGroupDataMemoryCache(single.groupId, single.msgList);
-                    positionCache.put(single.groupId, single.position);
-                }
+            FriendsTimeLineFragment fragment = fragmentWeakReference.get();
+            if (fragment != null && result != null && result.size() > 0) {
+                fragment.handleDBCacheResultData(result);
             }
         }
 
@@ -522,33 +568,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         protected void onProgressUpdate(MessageTimeLineData... result) {
             super.onProgressUpdate(result);
 
-            if (getActivity() == null) {
-                return;
-            }
-
-            if (result != null && result.length > 0) {
-                MessageTimeLineData recentData = result[0];
-                getList().replaceData(recentData.msgList);
-                putToGroupDataMemoryCache(recentData.groupId, recentData.msgList);
-                positionCache.put(recentData.groupId, recentData.position);
-                currentGroupId = recentData.groupId;
-            }
-            getPullToRefreshListView().setVisibility(View.VISIBLE);
-            getAdapter().notifyDataSetChanged();
-            setListViewPositionFromPositionsCache();
-            if (getActivity().getActionBar().getNavigationMode()
-                    == ActionBar.NAVIGATION_MODE_LIST) {
-                getActivity().getActionBar().setSelectedNavigationItem(getRecentNavIndex());
-            }
-            refreshLayout(getList());
-            /**
-             * when this account first open app,if he don't have any data in database,fetch data from server automally
-             */
-            if (getList().getSize() == 0) {
-                getPullToRefreshListView().setRefreshing();
-                loadNewMsg();
-            } else {
-                new RefreshReCmtCountTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            FriendsTimeLineFragment fragment = fragmentWeakReference.get();
+            if (fragment != null) {
+                fragment.handleDBCacheOnProgressUpdateData(result);
             }
         }
     }
@@ -741,7 +763,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getAdapter().notifyDataSetChanged();
             setListViewPositionFromPositionsCache();
             saveGroupIdToDB();
-            new RefreshReCmtCountTask().executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            new RefreshReCmtCountTask(this, getList())
+                    .executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -803,22 +826,26 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     /**
      * refresh timline messages' repost and comment count
      */
-    private class RefreshReCmtCountTask
-            extends MyAsyncTask<Void, List<MessageReCmtCountBean>, List<MessageReCmtCountBean>> {
+    private static class RefreshReCmtCountTask
+    extends MyAsyncTask<Void, List<MessageReCmtCountBean>, List<MessageReCmtCountBean>> {
 
-        List<String> msgIds;
+        private List<String> msgIds;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        private WeakReference<FriendsTimeLineFragment> fragmentWeakReference;
+
+        private RefreshReCmtCountTask(FriendsTimeLineFragment friendsTimeLineFragment,
+                MessageListBean data) {
+            fragmentWeakReference = new WeakReference<FriendsTimeLineFragment>(
+                    friendsTimeLineFragment);
             msgIds = new ArrayList<String>();
-            List<MessageBean> msgList = getList().getItemList();
+            List<MessageBean> msgList = data.getItemList();
             for (MessageBean msg : msgList) {
                 if (msg != null) {
                     msgIds.add(msg.getId());
                 }
             }
         }
+
 
         @Override
         protected List<MessageReCmtCountBean> doInBackground(Void... params) {
@@ -834,22 +861,27 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         @Override
         protected void onPostExecute(List<MessageReCmtCountBean> value) {
             super.onPostExecute(value);
-            if (getActivity() == null || value == null) {
+            FriendsTimeLineFragment fragment = fragmentWeakReference.get();
+            if (fragment == null || value == null || value.size() == 0) {
                 return;
             }
-
-            for (int i = 0; i < value.size(); i++) {
-                MessageBean msg = getList().getItem(i);
-                MessageReCmtCountBean count = value.get(i);
-                if (msg != null && msg.getId().equals(count.getId())) {
-                    msg.setReposts_count(count.getReposts());
-                    msg.setComments_count(count.getComments());
-                }
-            }
-            getAdapter().notifyDataSetChanged();
-            FriendsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid(), currentGroupId);
+            fragment.updateTimeLineMessageCommentAndRepostData(value);
         }
 
+    }
+
+
+    private void updateTimeLineMessageCommentAndRepostData(List<MessageReCmtCountBean> value) {
+        for (int i = 0; i < value.size(); i++) {
+            MessageBean msg = getList().getItem(i);
+            MessageReCmtCountBean count = value.get(i);
+            if (msg != null && msg.getId().equals(count.getId())) {
+                msg.setReposts_count(count.getReposts());
+                msg.setComments_count(count.getComments());
+            }
+        }
+        getAdapter().notifyDataSetChanged();
+        FriendsTimeLineDBTask.asyncReplace(getList(), accountBean.getUid(), currentGroupId);
     }
 
 
