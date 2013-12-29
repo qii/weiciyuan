@@ -45,78 +45,57 @@ public class WifiAutoDownloadPictureRunnable implements Runnable {
         switch (this.listViewScrollOrientation) {
             case VelocityListView.TOWARDS_BOTTOM:
                 for (int i = position; i < list.getSize(); i++) {
-                    //wait until other download tasks are finished
-                    synchronized (TaskCache.backgroundWifiDownloadPicturesWorkLock) {
-                        while (!TaskCache.isDownloadTaskFinished() && !Thread.currentThread()
-                                .isInterrupted()) {
-                            try {
-                                AppLogger.i("WifiAutoDownloadPictureRunnable wait for lock");
-                                TaskCache.backgroundWifiDownloadPicturesWorkLock.wait();
-                            } catch (InterruptedException e) {
-                                Thread.currentThread().interrupt();
-                            }
-                        }
-                    }
-
-                    if (Thread.currentThread().isInterrupted()) {
-                        AppLogger.i("WifiAutoDownloadPictureRunnable interrupted");
+                    if (!continueHandleMessage(i)) {
                         return;
                     }
-
-                    MessageBean msg = list.getItem(i);
-                    if (msg == null) {
-                        continue;
-                    }
-                    Boolean done = result.get(msg.getId());
-                    if (done != null && done) {
-                        AppLogger.i("already done skipped");
-                        continue;
-                    }
-                    AppLogger.i("WifiAutoDownloadPictureRunnable" + msg.getId() + "start");
-                    startDownload(msg);
-                    AppLogger.i("WifiAutoDownloadPictureRunnable" + msg.getId() + "finished");
-                    result.put(msg.getId(), true);
                 }
                 break;
             case VelocityListView.TOWARDS_TOP:
                 for (int i = position; i >= 0; i--) {
-                    //wait until other download tasks are finished
-                    synchronized (TaskCache.backgroundWifiDownloadPicturesWorkLock) {
-                        while (!TaskCache.isDownloadTaskFinished() && !Thread.currentThread()
-                                .isInterrupted()) {
-                            try {
-                                AppLogger.i("WifiAutoDownloadPictureRunnable wait for lock");
-                                TaskCache.backgroundWifiDownloadPicturesWorkLock.wait();
-                            } catch (InterruptedException e) {
-                                Thread.currentThread().interrupt();
-                            }
-                        }
-                    }
-
-                    if (Thread.currentThread().isInterrupted()) {
+                    if (!continueHandleMessage(i)) {
                         return;
                     }
-
-                    MessageBean msg = list.getItem(i);
-                    if (msg == null) {
-                        continue;
-                    }
-                    Boolean done = result.get(msg.getId());
-                    if (done != null && done) {
-                        AppLogger.i("already done skipped");
-                        continue;
-                    }
-
-                    AppLogger.i("WifiAutoDownloadPictureRunnable" + msg.getId() + "start");
-                    startDownload(msg);
-                    AppLogger.i("WifiAutoDownloadPictureRunnable" + msg.getId() + "finished");
-
-                    result.put(msg.getId(), true);
                 }
                 break;
         }
 
 
+    }
+
+    private boolean continueHandleMessage(int position) {
+        //wait until other download tasks are finished
+        synchronized (TaskCache.backgroundWifiDownloadPicturesWorkLock) {
+            while (!TaskCache.isDownloadTaskFinished() && !Thread.currentThread()
+                    .isInterrupted()) {
+                try {
+                    AppLogger.i("WifiAutoDownloadPictureRunnable wait for lock");
+                    TaskCache.backgroundWifiDownloadPicturesWorkLock.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+
+        if (Thread.currentThread().isInterrupted()) {
+            return false;
+        }
+
+        MessageBean msg = list.getItem(position);
+        if (msg == null) {
+            return true;
+        }
+        Boolean done = result.get(msg.getId());
+        if (done != null && done) {
+            AppLogger.i("already done skipped");
+            return true;
+        }
+
+        AppLogger.i("WifiAutoDownloadPictureRunnable" + msg.getId() + "start");
+        startDownload(msg);
+        AppLogger.i("WifiAutoDownloadPictureRunnable" + msg.getId() + "finished");
+
+        result.put(msg.getId(), true);
+        return true;
     }
 
     private void startDownload(MessageBean msg) {
