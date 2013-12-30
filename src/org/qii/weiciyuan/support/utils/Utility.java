@@ -626,7 +626,8 @@ public class Utility {
             return false;
         } else {
             url = convertWeiboCnToWeiboCom(url);
-            boolean urlValide = url.startsWith("http://www.weibo.com/");
+            boolean urlValide = url.startsWith("http://www.weibo.com/") || url
+                    .startsWith("http://e.weibo.com/");
 
             if (!urlValide) {
                 return false;
@@ -636,7 +637,11 @@ public class Utility {
                 url = url.substring(0, url.length() - 1);
             }
 
-            url = url.substring("http://www.weibo.com/".length(), url.length());
+            if (url.contains("http://www.weibo.com/")) {
+                url = url.substring("http://www.weibo.com/".length(), url.length());
+            } else {
+                url = url.substring("http://e.weibo.com/".length(), url.length());
+            }
 
             String[] result = url.split("/");
 
