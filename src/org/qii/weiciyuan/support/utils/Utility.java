@@ -659,7 +659,11 @@ public class Utility {
             url = url.substring(0, url.length() - 1);
         }
 
-        url = url.substring("http://www.weibo.com/".length(), url.length());
+        if (url.contains("http://www.weibo.com/")) {
+            url = url.substring("http://www.weibo.com/".length(), url.length());
+        } else {
+            url = url.substring("http://e.weibo.com/".length(), url.length());
+        }
 
         return url.split("/")[1];
     }
