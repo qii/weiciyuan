@@ -8,6 +8,8 @@ import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.VelocityListView;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import android.text.TextUtils;
 
@@ -20,49 +22,65 @@ import java.util.HashMap;
  */
 public class WifiAutoDownloadPictureRunnable implements Runnable {
 
-    private MessageListBean list;
-
-    private int position;
+    private MessageListBean msgList;
 
     private static HashMap<String, Boolean> result = new HashMap<String, Boolean>();
 
-    private int listViewScrollOrientation = VelocityListView.TOWARDS_BOTTOM;
-
-    public WifiAutoDownloadPictureRunnable(MessageListBean list, int position,
+    public WifiAutoDownloadPictureRunnable(MessageListBean source, int position,
             int listViewScrollOrientation) {
-        this.list = new MessageListBean();
-        for (MessageBean msg : list.getItemList()) {
-            this.list.getItemList().add(msg);
+        this.msgList = new MessageListBean();
+        switch (listViewScrollOrientation) {
+            case VelocityListView.TOWARDS_BOTTOM:
+                for (int i = position; i < source.getSize(); i++) {
+                    MessageBean msg = source.getItem(i);
+                    if (msg != null) {
+                        this.msgList.getItemList().add(msg);
+                    }
+                }
+                break;
+            case VelocityListView.TOWARDS_TOP:
+                for (int i = position; i >= 0; i--) {
+                    MessageBean msg = source.getItem(i);
+                    if (msg != null) {
+                        this.msgList.getItemList().add(msg);
+                    }
+                }
+                break;
         }
-        this.position = position;
-        this.listViewScrollOrientation = listViewScrollOrientation;
+
         AppLogger.i("WifiAutoDownloadPictureRunnable new Runnable");
     }
 
     @Override
     public void run() {
 
-        switch (this.listViewScrollOrientation) {
-            case VelocityListView.TOWARDS_BOTTOM:
-                for (int i = position; i < list.getSize(); i++) {
-                    if (!continueHandleMessage(i)) {
-                        return;
-                    }
-                }
-                break;
-            case VelocityListView.TOWARDS_TOP:
-                for (int i = position; i >= 0; i--) {
-                    if (!continueHandleMessage(i)) {
-                        return;
-                    }
-                }
-                break;
+        for (MessageBean msg : this.msgList.getItemList()) {
+            if (!continueHandleMessage(msg)) {
+                return;
+            }
         }
-
-
     }
 
-    private boolean continueHandleMessage(int position) {
+    private boolean continueHandleMessage(MessageBean msg) {
+
+        if (Thread.currentThread().isInterrupted()) {
+            return false;
+        }
+
+        if (!Utility.isWifi(GlobalContext.getInstance())) {
+            return false;
+        }
+
+        if (msg == null) {
+            return true;
+        }
+
+        Boolean done = result.get(msg.getId());
+        if (done != null && done) {
+            AppLogger.i("already done skipped");
+            return true;
+        }
+
         //wait until other download tasks are finished
         synchronized (TaskCache.backgroundWifiDownloadPicturesWorkLock) {
             while (!TaskCache.isDownloadTaskFinished() && !Thread.currentThread()
@@ -72,22 +90,9 @@ public class WifiAutoDownloadPictureRunnable implements Runnable {
                     TaskCache.backgroundWifiDownloadPicturesWorkLock.wait();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                    return false;
                 }
             }
-        }
-
-        if (Thread.currentThread().isInterrupted()) {
-            return false;
-        }
-
-        MessageBean msg = list.getItem(position);
-        if (msg == null) {
-            return true;
-        }
-        Boolean done = result.get(msg.getId());
-        if (done != null && done) {
-            AppLogger.i("already done skipped");
-            return true;
         }
 
         AppLogger.i("WifiAutoDownloadPictureRunnable" + msg.getId() + "start");
