@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
     <release
-            version="0.50-2013.12"
+            version="0.5.0-2014.1"
             versioncode="28">
         <change>修正上传的图片横竖方向</change>
         <change>4.4上查看图片支持透明虚拟按键（透明状态栏有bug，未开启）</change>

@@ -256,7 +256,8 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
      * because
      * network switch to use another layout when you are scrolling listview, bug appears,the other
      * listviews in other tabs
-     * (Actionbar tab navigation) will mix several layout up, for example, the correct layout should
+     * (Actionbar tab navigation) will mix several layout up, for example, the correct layout
+     * should
      * be TYPE_NORMAL_BIG_PIC,
      * but in the listview, you can see some row's layouts are TYPE_NORMAL, some are
      * TYPE_NORMAL_BIG_PIC. if you print
@@ -394,7 +395,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         ViewHolder holder = new ViewHolder();
         holder.username = (TextView) convertView.findViewById(R.id.username);
         TextPaint tp = holder.username.getPaint();
-        tp.setFakeBoldText(true);
+        if (tp != null) {
+            tp.setFakeBoldText(true);
+        }
         holder.content = (TextView) convertView.findViewById(R.id.content);
         holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
         holder.time = (TimeTextView) convertView.findViewById(R.id.time);
