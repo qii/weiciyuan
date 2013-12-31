@@ -544,7 +544,8 @@
     <string name="comment_sent_to_you">评论了你的微博</string>
     <string name="reply_to_you">回复了你的评论</string>
     <string name="comment_at_to_you">在评论中提到了你</string>
-    <string name="weibo_at_to_you">转发了你的微博</string>
+    <string name="weibo_at_to_you">提到了你</string>
+    <string name="retweeted_your_weibo">转发了你的微博</string>
     <string name="next_message">下一条</string>
     <string name="first_message">第一条</string>
 </resources>

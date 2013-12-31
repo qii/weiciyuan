@@ -141,9 +141,17 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
         }
 
         Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(builder);
-        bigTextStyle.setBigContentTitle("@"
-                + data.getItem(currentIndex).getUser().getScreen_name()
-                + getString(R.string.weibo_at_to_you));
+        if (data.getItem(currentIndex).getText().contains(accountBean.getUsernick())) {
+            // mentioned you
+            bigTextStyle.setBigContentTitle("@"
+                    + data.getItem(currentIndex).getUser().getScreen_name()
+                    + getString(R.string.weibo_at_to_you));
+        } else {
+            // retweeted your weibo
+            bigTextStyle.setBigContentTitle("@"
+                    + data.getItem(currentIndex).getUser().getScreen_name()
+                    + getString(R.string.retweeted_your_weibo));
+        }
         bigTextStyle.bigText(data.getItem(currentIndex).getText());
         String summaryText;
         if (data.getSize() > 1)
