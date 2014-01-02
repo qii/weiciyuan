@@ -14,6 +14,7 @@ import org.qii.weiciyuan.support.error.ErrorCode;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.common.CommonErrorDialogFragment;
 import org.qii.weiciyuan.ui.common.CommonProgressDialogFragment;
@@ -116,6 +117,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
                 }
             }
             fetchUserInfoFromServer();
+            findViewById(android.R.id.content).setBackgroundDrawable(
+                    ThemeUtility.getDrawable(android.R.attr.windowBackground));
         } else {
             buildContent();
         }
@@ -169,7 +172,6 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
     }
 
     private void initLayout() {
-        setContentView(R.layout.userinfoactivity_layout);
         getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -186,11 +188,13 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
                 if (getSupportFragmentManager()
                         .findFragmentByTag(NewUserInfoFragment.class.getName()) == null) {
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content, new NewUserInfoFragment(getUser(), getToken()),
+                            .replace(android.R.id.content,
+                                    new NewUserInfoFragment(getUser(), getToken()),
                                     NewUserInfoFragment.class.getName())
                             .commit();
                     getSupportFragmentManager().executePendingTransactions();
 
+                    findViewById(android.R.id.content).setBackgroundDrawable(null);
                 }
             }
         });

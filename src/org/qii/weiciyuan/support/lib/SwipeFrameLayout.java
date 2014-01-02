@@ -1,5 +1,9 @@
 package org.qii.weiciyuan.support.lib;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.ThemeUtility;
+import org.qii.weiciyuan.support.utils.Utility;
+
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,9 +13,6 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.utils.ThemeUtility;
-import org.qii.weiciyuan.support.utils.Utility;
 
 /**
  * User: qii
@@ -53,6 +54,7 @@ public class SwipeFrameLayout extends FrameLayout {
         this.topView = ((View) (activity.findViewById(android.R.id.content).getParent()));
         this.max_motion_event_down_x_position = Utility.dip2px(25);
         this.gestureDetector = new GestureDetector(getContext(), new SwipeRightToCloseOnGestureListener());
+        this.setId(R.id.swipe_framelayout);
     }
 
     @Override
