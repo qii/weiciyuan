@@ -272,41 +272,38 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         if (convertView == null
                 || convertView.getTag(R.drawable.ic_launcher + getItemViewType(position)) == null) {
             int itemViewType = getItemViewType(position);
+            View view = null;
             switch (itemViewType) {
                 case TYPE_SIMPLE:
-                    convertView = initSimpleLayout(parent);
+                    view = initSimpleLayout(parent);
                     break;
                 case TYPE_MIDDLE:
-                    convertView = initMiddleLayout(parent);
+                    view = initMiddleLayout(parent);
                     break;
-//                case TYPE_MYSELF:
-//                    convertView = initMylayout(parent);
-//                    break;
-//                case TYPE_MYSELF_BIG_PIC:
-//                    convertView = initMylayout(parent);
-//                    break;
                 case TYPE_NORMAL:
                     prefView = prefNormalViews.poll();
                     if (prefView != null) {
-                        convertView = prefView.view;
+                        view = prefView.view;
                     }
-                    if (convertView == null) {
-                        convertView = initNormalLayout(parent);
+                    if (view == null) {
+                        view = initNormalLayout(parent);
                     }
                     break;
                 case TYPE_NORMAL_BIG_PIC:
                     prefView = prefBigPicViews.poll();
                     if (prefView != null) {
-                        convertView = prefView.view;
+                        view = prefView.view;
                     }
-                    if (convertView == null) {
-                        convertView = initBigPicLayout(parent);
+                    if (view == null) {
+                        view = initBigPicLayout(parent);
                     }
                     break;
                 default:
-                    convertView = initNormalLayout(parent);
+                    view = initNormalLayout(parent);
                     break;
             }
+
+            convertView = view;
             if (itemViewType != TYPE_MIDDLE) {
                 if (prefView == null) {
                     holder = buildHolder(convertView);
