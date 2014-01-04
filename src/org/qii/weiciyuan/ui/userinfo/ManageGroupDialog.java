@@ -1,5 +1,16 @@
 package org.qii.weiciyuan.ui.userinfo;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.GroupBean;
+import org.qii.weiciyuan.bean.GroupListBean;
+import org.qii.weiciyuan.dao.group.GroupListDao;
+import org.qii.weiciyuan.dao.group.ModifyGroupMemberDao;
+import org.qii.weiciyuan.support.debug.AppLogger;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.friendgroup.ManageGroupActivity;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -9,16 +20,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.GroupBean;
-import org.qii.weiciyuan.bean.GroupListBean;
-import org.qii.weiciyuan.dao.group.GroupListDao;
-import org.qii.weiciyuan.dao.group.ModifyGroupMemberDao;
-import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.debug.AppLogger;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.friendgroup.ManageGroupActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +31,19 @@ import java.util.List;
 public class ManageGroupDialog extends DialogFragment {
 
     private GroupListBean group;
+
     private String uid;
 
     private String[] valueArray;
+
     private boolean[] selectedArray;
 
     private MyAsyncTask<Void, Void, List<String>> task;
 
     private ArrayList<String> currentList = new ArrayList<String>();
+
     private ArrayList<String> addList = new ArrayList<String>();
+
     private ArrayList<String> removeList = new ArrayList<String>();
 
     @Override
@@ -56,8 +61,9 @@ public class ManageGroupDialog extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        if (task != null)
+        if (task != null) {
             task.cancel(true);
+        }
     }
 
     public ManageGroupDialog() {
@@ -109,7 +115,8 @@ public class ManageGroupDialog extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        View customTitle = getActivity().getLayoutInflater().inflate(R.layout.managegroupdialog_title_layout, null);
+        View customTitle = getActivity().getLayoutInflater()
+                .inflate(R.layout.managegroupdialog_title_layout, null);
 
         ImageView setting = (ImageView) customTitle.findViewById(R.id.title_button);
 
@@ -124,16 +131,18 @@ public class ManageGroupDialog extends DialogFragment {
                 .setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ModifyGroupMemberTask modifyGroupMemberTask = new ModifyGroupMemberTask(addList, removeList);
+                        ModifyGroupMemberTask modifyGroupMemberTask = new ModifyGroupMemberTask(uid,
+                                addList, removeList);
                         modifyGroupMemberTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 })
-                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                .setNegativeButton(getString(R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                }).setCustomTitle(customTitle);
+                            }
+                        }).setCustomTitle(customTitle);
 
         task = new Task();
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
@@ -147,12 +156,14 @@ public class ManageGroupDialog extends DialogFragment {
         public void onClick(DialogInterface dialog, int which, boolean isChecked) {
             String id = group.getLists().get(which).getIdstr();
             if (isChecked) {
-                if (!currentList.contains(id))
+                if (!currentList.contains(id)) {
                     addList.add(id);
+                }
 
             } else {
-                if (currentList.contains(id))
+                if (currentList.contains(id)) {
                     removeList.add(group.getLists().get(which).getIdstr());
+                }
             }
         }
 
@@ -192,18 +203,24 @@ public class ManageGroupDialog extends DialogFragment {
     }
 
 
-    private class ModifyGroupMemberTask extends MyAsyncTask<Void, Void, Void> {
-        List<String> add;
-        List<String> remove;
+    private static class ModifyGroupMemberTask extends MyAsyncTask<Void, Void, Void> {
 
-        public ModifyGroupMemberTask(List<String> add, List<String> remove) {
+        private List<String> add;
+
+        private List<String> remove;
+
+        private String uid;
+
+        public ModifyGroupMemberTask(String uid, List<String> add, List<String> remove) {
+            this.uid = uid;
             this.add = add;
             this.remove = remove;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            ModifyGroupMemberDao dao = new ModifyGroupMemberDao(GlobalContext.getInstance().getSpecialToken(), uid);
+            ModifyGroupMemberDao dao = new ModifyGroupMemberDao(
+                    GlobalContext.getInstance().getSpecialToken(), uid);
             for (String id : add) {
                 try {
                     dao.add(id);
@@ -226,7 +243,9 @@ public class ManageGroupDialog extends DialogFragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Toast.makeText(GlobalContext.getInstance(), GlobalContext.getInstance().getString(R.string.modify_successfully), Toast.LENGTH_SHORT).show();
+            Toast.makeText(GlobalContext.getInstance(),
+                    GlobalContext.getInstance().getString(R.string.modify_successfully),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 }

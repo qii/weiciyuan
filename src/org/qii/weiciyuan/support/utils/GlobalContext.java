@@ -87,7 +87,7 @@ public final class GlobalContext extends Application {
         return globalContext;
     }
 
-    public Handler getHandler() {
+    public Handler getUIHandler() {
         return handler;
     }
 

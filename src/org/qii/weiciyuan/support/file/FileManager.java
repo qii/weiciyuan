@@ -66,8 +66,15 @@ public class FileManager {
                     cantReadBecauseOfAndroidBugPermissionProblem = true;
                     final Activity activity = GlobalContext.getInstance().getActivity();
                     if (activity == null || activity.isFinishing()) {
-                        Toast.makeText(GlobalContext.getInstance(),
-                                R.string.please_deleted_cache_dir, Toast.LENGTH_SHORT).show();
+                        GlobalContext.getInstance().getUIHandler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(GlobalContext.getInstance(),
+                                        R.string.please_deleted_cache_dir, Toast.LENGTH_SHORT)
+                                        .show();
+                            }
+                        });
+
                         return "";
                     }
                     activity.runOnUiThread(new Runnable() {
