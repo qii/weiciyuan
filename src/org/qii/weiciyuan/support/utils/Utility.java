@@ -674,6 +674,8 @@ public class Utility {
                 url = url.replace("http://weibo.cn", "http://weibo.com");
             } else if (url.startsWith("http://www.weibo.com")) {
                 url = url.replace("http://www.weibo.com", "http://weibo.com");
+            } else if (url.startsWith("http://www.weibo.cn")) {
+                url = url.replace("http://www.weibo.cn", "http://weibo.com");
             }
         }
         return url;
