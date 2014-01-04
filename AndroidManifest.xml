@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.qii.weiciyuan"
-          android:versionCode="34"
-          android:versionName="0.5.0beta2">
+          android:versionCode="35"
+          android:versionName="0.5.0beta3">
 
     <uses-sdk
             android:minSdkVersion="16"
@@ -118,21 +118,27 @@
                 android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+
                 <data android:host="e.weibo.com"
                       android:scheme="http"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+
                 <data android:host="weibo.com"
                       android:scheme="http"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+
+                <data android:host="www.weibo.com"
+                      android:scheme="http"/>
+
+                <data android:host="www.weibo.cn"
+                      android:scheme="http"/>
+
+                <data android:host="weibo.cn"
+                      android:scheme="http"/>
+
                 <data android:host="t.cn"
                       android:scheme="http"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+
             </intent-filter>
         </activity>
         <activity android:name=".ui.browser.BrowserShareTimeLineActivity"/>
