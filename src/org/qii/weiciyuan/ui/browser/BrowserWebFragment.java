@@ -351,7 +351,9 @@ public class BrowserWebFragment extends Fragment {
         @Override
         protected void onPostExecute(String id) {
             super.onPostExecute(id);
-
+            if (getActivity() == null) {
+                return;
+            }
             if (Long.valueOf(id) > 0L) {
                 startActivity(BrowserWeiboMsgActivity.newIntent(id,
                         GlobalContext.getInstance().getSpecialToken()));

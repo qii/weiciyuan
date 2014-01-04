@@ -626,7 +626,7 @@ public class Utility {
             return false;
         } else {
             url = convertWeiboCnToWeiboCom(url);
-            boolean urlValide = url.startsWith("http://www.weibo.com/") || url
+            boolean urlValide = url.startsWith("http://weibo.com/") || url
                     .startsWith("http://e.weibo.com/");
 
             if (!urlValide) {
@@ -637,8 +637,8 @@ public class Utility {
                 url = url.substring(0, url.length() - 1);
             }
 
-            if (url.contains("http://www.weibo.com/")) {
-                url = url.substring("http://www.weibo.com/".length(), url.length());
+            if (url.contains("http://weibo.com/")) {
+                url = url.substring("http://weibo.com/".length(), url.length());
             } else {
                 url = url.substring("http://e.weibo.com/".length(), url.length());
             }
@@ -659,8 +659,8 @@ public class Utility {
             url = url.substring(0, url.length() - 1);
         }
 
-        if (url.contains("http://www.weibo.com/")) {
-            url = url.substring("http://www.weibo.com/".length(), url.length());
+        if (url.contains("http://weibo.com/")) {
+            url = url.substring("http://weibo.com/".length(), url.length());
         } else {
             url = url.substring("http://e.weibo.com/".length(), url.length());
         }
@@ -669,8 +669,12 @@ public class Utility {
     }
 
     private static String convertWeiboCnToWeiboCom(String url) {
-        if (!TextUtils.isEmpty(url) && url.startsWith("http://weibo.cn")) {
-            url = url.replace("http://weibo.cn", "http://weibo.com");
+        if (!TextUtils.isEmpty(url)) {
+            if (url.startsWith("http://weibo.cn")) {
+                url = url.replace("http://weibo.cn", "http://weibo.com");
+            } else if (url.startsWith("http://www.weibo.com")) {
+                url = url.replace("http://www.weibo.com", "http://weibo.com");
+            }
         }
         return url;
     }
