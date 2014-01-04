@@ -7,6 +7,7 @@ import org.qii.weiciyuan.bean.GeoBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.othercomponent.unreadnotification.NotificationServiceHelper;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.AutoScrollListView;
@@ -26,8 +27,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -73,6 +76,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
@@ -919,5 +924,48 @@ public class Utility {
 
         return !hasMenuKey && !hasBackKey;
     }
+
+    //if app's certificate md5 is correct, enable Crashlytics crash log platform, you should not modify those md5 values
+    public static boolean isCertificateFingerprintCorrect(Context context) {
+        try {
+            PackageManager pm = context.getPackageManager();
+            String packageName = context.getPackageName();
+            int flags = PackageManager.GET_SIGNATURES;
+
+            PackageInfo packageInfo = pm.getPackageInfo(packageName, flags);
+
+            Signature[] signatures = packageInfo.signatures;
+
+            byte[] cert = signatures[0].toByteArray();
+
+            String strResult = "";
+
+            MessageDigest md;
+
+            md = MessageDigest.getInstance("MD5");
+            md.update(cert);
+            for (byte b : md.digest()) {
+                strResult += Integer.toString(b & 0xff, 16);
+            }
+            strResult = strResult.toUpperCase();
+            //debug
+            if ("606A98FAF73EF658B775CA4EFE4B8427".toUpperCase().equals(strResult)) {
+                return true;
+            }
+            //relaease
+            if ("C96155C3DAD4CA1069808F0BAC813A69".toUpperCase().equals(strResult)) {
+                return true;
+            }
+            AppLogger.e(strResult);
+        } catch (NoSuchAlgorithmException ex) {
+            ex.printStackTrace();
+        } catch (PackageManager.NameNotFoundException ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+
+
 }
 

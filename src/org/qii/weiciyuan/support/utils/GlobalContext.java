@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.support.utils;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.GroupListBean;
@@ -76,7 +78,9 @@ public final class GlobalContext extends Application {
         buildCache();
         CrashManagerConstants.loadFromContext(this);
         CrashManager.registerHandler();
-//        Crashlytics.start(this);
+        if (Utility.isCertificateFingerprintCorrect(this)) {
+            Crashlytics.start(this);
+        }
     }
 
     public static GlobalContext getInstance() {

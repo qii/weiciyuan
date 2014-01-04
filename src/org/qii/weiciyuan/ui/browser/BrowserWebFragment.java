@@ -10,6 +10,7 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -38,6 +39,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
+
+import java.lang.ref.WeakReference;
 
 /**
  * User: qii
@@ -253,7 +256,8 @@ public class BrowserWebFragment extends Fragment {
             } else if (Utility.isWeiboMid(url)) {
 
                 String mid = Utility.getMidFromUrl(url);
-                RedirectLinkToWeiboIdTask task = new RedirectLinkToWeiboIdTask(url, mid);
+                RedirectLinkToWeiboIdTask task = new RedirectLinkToWeiboIdTask(
+                        BrowserWebFragment.this, url, mid);
                 task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
             } else {
@@ -328,15 +332,24 @@ public class BrowserWebFragment extends Fragment {
         }
     }
 
-    private class RedirectLinkToWeiboIdTask extends MyAsyncTask<Void, Void, String> {
+    private static class RedirectLinkToWeiboIdTask extends MyAsyncTask<Void, Void, String> {
 
-        String mid;
+        private String mid;
 
-        String oriUrl;
+        private String oriUrl;
 
-        public RedirectLinkToWeiboIdTask(String oriUrl, String mid) {
+        private WeakReference<BrowserWebFragment> webFragmentWeakReference;
+
+        public RedirectLinkToWeiboIdTask(BrowserWebFragment webFragment, String oriUrl,
+                String mid) {
             this.oriUrl = oriUrl;
             this.mid = mid;
+            this.webFragmentWeakReference = new WeakReference<BrowserWebFragment>(webFragment);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
 
         @Override
@@ -351,17 +364,27 @@ public class BrowserWebFragment extends Fragment {
         @Override
         protected void onPostExecute(String id) {
             super.onPostExecute(id);
-            if (getActivity() == null) {
+
+            BrowserWebFragment webFragment = webFragmentWeakReference.get();
+
+            if (webFragment == null) {
                 return;
             }
+
+            Activity activity = webFragment.getActivity();
+
+            if (activity == null) {
+                return;
+            }
+
             if (Long.valueOf(id) > 0L) {
-                startActivity(BrowserWeiboMsgActivity.newIntent(id,
+                webFragment.startActivity(BrowserWeiboMsgActivity.newIntent(id,
                         GlobalContext.getInstance().getSpecialToken()));
-                getActivity().finish();
+                activity.finish();
             } else {
                 Toast.makeText(GlobalContext.getInstance(), R.string.cant_not_convert_to_weibo_id,
                         Toast.LENGTH_SHORT).show();
-                mWebView.loadUrl(oriUrl);
+                webFragment.mWebView.loadUrl(oriUrl);
             }
 
         }
