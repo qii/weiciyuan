@@ -495,9 +495,10 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(newMsgInterruptBroadcastReceiver);
+        Utility.unregisterReceiverIgnoredReceiverNotRegisteredException(this,
+                newMsgInterruptBroadcastReceiver);
         if (musicReceiver != null) {
-            unregisterReceiver(musicReceiver);
+            Utility.unregisterReceiverIgnoredReceiverNotRegisteredException(this, musicReceiver);
         }
 
         if (isFinishing()) {

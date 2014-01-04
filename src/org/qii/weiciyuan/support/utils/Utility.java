@@ -24,6 +24,7 @@ import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -966,6 +967,15 @@ public class Utility {
         return false;
     }
 
+
+    public static void unregisterReceiverIgnoredReceiverNotRegisteredException(Context context,
+            BroadcastReceiver broadcastReceiver) {
+        try {
+            context.getApplicationContext().unregisterReceiver(broadcastReceiver);
+        } catch (IllegalArgumentException receiverNotRegisteredException) {
+            receiverNotRegisteredException.printStackTrace();
+        }
+    }
 
 }
 

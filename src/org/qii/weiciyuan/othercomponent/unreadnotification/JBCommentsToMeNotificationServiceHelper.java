@@ -1,12 +1,5 @@
 package org.qii.weiciyuan.othercomponent.unreadnotification;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentBean;
@@ -21,6 +14,14 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+
 /**
  * User: qii
  * Date: 13-5-4
@@ -29,10 +30,15 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
 
 
     private AccountBean accountBean;
+
     private CommentListBean data;
+
     private UnreadBean unreadBean;
+
     private int currentIndex;
+
     private Intent clickToOpenAppPendingIntentInner;
+
     private String ticker;
 
 
@@ -46,9 +52,9 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
         this.data = intent.getParcelableExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG);
         this.unreadBean = intent.getParcelableExtra(NotificationServiceHelper.UNREAD_ARG);
         this.currentIndex = intent.getIntExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
-        this.clickToOpenAppPendingIntentInner = intent.getParcelableExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG);
+        this.clickToOpenAppPendingIntentInner = intent
+                .getParcelableExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG);
         this.ticker = intent.getStringExtra(NotificationServiceHelper.TICKER);
-
 
         buildNotification();
 
@@ -60,7 +66,8 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
 
     private void buildNotification() {
 
-        int count = (data.getSize() >= Integer.valueOf(SettingUtility.getMsgCount()) ? unreadBean.getCmt() : data.getSize());
+        int count = (data.getSize() >= Integer.valueOf(SettingUtility.getMsgCount()) ? unreadBean
+                .getCmt() : data.getSize());
 
         Notification.Builder builder = new Notification.Builder(getBaseContext())
                 .setTicker(ticker)
@@ -70,13 +77,17 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
                 .setContentIntent(getPendingIntent())
                 .setOnlyAlertOnce(true);
 
-        builder.setContentTitle(String.format(GlobalContext.getInstance().getString(R.string.new_comments), String.valueOf(count)));
+        builder.setContentTitle(
+                String.format(GlobalContext.getInstance().getString(R.string.new_comments),
+                        String.valueOf(count)));
 
-        if (data.getSize() > 1)
+        if (data.getSize() > 1) {
             builder.setNumber(count);
+        }
 
         if (clearNotificationEventReceiver != null) {
-            GlobalContext.getInstance().unregisterReceiver(clearNotificationEventReceiver);
+            Utility.unregisterReceiverIgnoredReceiverNotRegisteredException(
+                    GlobalContext.getInstance(), clearNotificationEventReceiver);
             JBCommentsToMeNotificationServiceHelper.clearNotificationEventReceiver = null;
         }
 
@@ -87,12 +98,15 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
                     @Override
                     public void run() {
                         try {
-                            new ClearUnreadDao(accountBean.getAccess_token()).clearCommentUnread(unreadBean, accountBean.getUid());
+                            new ClearUnreadDao(accountBean.getAccess_token())
+                                    .clearCommentUnread(unreadBean, accountBean.getUid());
                         } catch (WeiboException ignored) {
 
                         } finally {
-                            GlobalContext.getInstance().unregisterReceiver(clearNotificationEventReceiver);
-                            JBCommentsToMeNotificationServiceHelper.clearNotificationEventReceiver = null;
+                            Utility.unregisterReceiverIgnoredReceiverNotRegisteredException(
+                                    GlobalContext.getInstance(), clearNotificationEventReceiver);
+                            JBCommentsToMeNotificationServiceHelper.clearNotificationEventReceiver
+                                    = null;
                         }
 
                     }
@@ -106,24 +120,28 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
 
         Intent broadcastIntent = new Intent(RESET_UNREAD_COMMENTS_TO_ME_ACTION);
 
-        PendingIntent deletedPendingIntent = PendingIntent.getBroadcast(GlobalContext.getInstance(), 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent deletedPendingIntent = PendingIntent
+                .getBroadcast(GlobalContext.getInstance(), 0, broadcastIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setDeleteIntent(deletedPendingIntent);
-
 
         Intent intent = new Intent(getApplicationContext(), WriteReplyToCommentActivity.class);
         intent.putExtra("token", accountBean.getAccess_token());
         intent.putExtra("msg", data.getItem(currentIndex));
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.addAction(R.drawable.reply_to_comment_light, getApplicationContext().getString(R.string.reply_to_comment), pendingIntent);
-
+        PendingIntent pendingIntent = PendingIntent
+                .getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.addAction(R.drawable.reply_to_comment_light,
+                getApplicationContext().getString(R.string.reply_to_comment), pendingIntent);
 
         if (data.getSize() > 1) {
 
-            Intent nextIntent = new Intent(JBCommentsToMeNotificationServiceHelper.this, JBCommentsToMeNotificationServiceHelper.class);
+            Intent nextIntent = new Intent(JBCommentsToMeNotificationServiceHelper.this,
+                    JBCommentsToMeNotificationServiceHelper.class);
             nextIntent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
             nextIntent.putExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG, data);
             nextIntent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
-            nextIntent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG, clickToOpenAppPendingIntentInner);
+            nextIntent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
+                    clickToOpenAppPendingIntentInner);
             nextIntent.putExtra(NotificationServiceHelper.TICKER, ticker);
 
             String actionName;
@@ -139,7 +157,9 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
                 actionDrawable = R.drawable.notification_action_previous;
             }
             nextIntent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, nextIndex);
-            PendingIntent retrySendIntent = PendingIntent.getService(JBCommentsToMeNotificationServiceHelper.this, 0, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent retrySendIntent = PendingIntent
+                    .getService(JBCommentsToMeNotificationServiceHelper.this, 0, nextIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
             builder.addAction(actionDrawable, actionName, retrySendIntent);
         }
 
@@ -156,10 +176,12 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
         }
         bigTextStyle.bigText(data.getItem(currentIndex).getText());
         String summaryText;
-        if (data.getSize() > 1)
-            summaryText = accountBean.getUsernick() + "(" + (currentIndex + 1) + "/" + data.getSize() + ")";
-        else
+        if (data.getSize() > 1) {
+            summaryText = accountBean.getUsernick() + "(" + (currentIndex + 1) + "/" + data
+                    .getSize() + ")";
+        } else {
             summaryText = accountBean.getUsernick();
+        }
         bigTextStyle.setSummaryText(summaryText);
 
         builder.setStyle(bigTextStyle);
@@ -172,8 +194,11 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
 
     private PendingIntent getPendingIntent() {
         clickToOpenAppPendingIntentInner.setExtrasClassLoader(getClass().getClassLoader());
-        clickToOpenAppPendingIntentInner.putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA, UnreadTabIndex.COMMENT_TO_ME);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, clickToOpenAppPendingIntentInner, PendingIntent.FLAG_UPDATE_CURRENT);
+        clickToOpenAppPendingIntentInner.putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA,
+                UnreadTabIndex.COMMENT_TO_ME);
+        PendingIntent pendingIntent = PendingIntent
+                .getActivity(getBaseContext(), 0, clickToOpenAppPendingIntentInner,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
         return pendingIntent;
     }
 }
