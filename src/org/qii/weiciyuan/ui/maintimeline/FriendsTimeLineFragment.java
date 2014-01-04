@@ -559,7 +559,16 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         protected void onPostExecute(List<MessageTimeLineData> result) {
             super.onPostExecute(result);
             FriendsTimeLineFragment fragment = fragmentWeakReference.get();
-            if (fragment != null && result != null && result.size() > 0) {
+
+            if (fragment == null) {
+                return;
+            }
+
+            if (fragment.getActivity() == null) {
+                return;
+            }
+
+            if (result != null && result.size() > 0) {
                 fragment.handleDBCacheResultData(result);
             }
         }
@@ -569,9 +578,17 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             super.onProgressUpdate(result);
 
             FriendsTimeLineFragment fragment = fragmentWeakReference.get();
-            if (fragment != null) {
-                fragment.handleDBCacheOnProgressUpdateData(result);
+
+            if (fragment == null) {
+                return;
             }
+
+            if (fragment.getActivity() == null) {
+                return;
+            }
+
+            fragment.handleDBCacheOnProgressUpdateData(result);
+
         }
     }
 
@@ -875,6 +892,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
 
     private void updateTimeLineMessageCommentAndRepostData(List<MessageReCmtCountBean> value) {
+
+        if (getList().getSize() == 0) {
+            return;
+        }
+
         for (int i = 0; i < value.size(); i++) {
             MessageBean msg = getList().getItem(i);
             MessageReCmtCountBean count = value.get(i);
