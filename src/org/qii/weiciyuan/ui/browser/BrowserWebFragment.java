@@ -7,6 +7,7 @@ import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.common.CommonProgressDialogFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import android.app.ActionBar;
@@ -19,6 +20,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -340,16 +342,36 @@ public class BrowserWebFragment extends Fragment {
 
         private WeakReference<BrowserWebFragment> webFragmentWeakReference;
 
+        private CommonProgressDialogFragment commonProgressDialogFragment;
+
+        private String progressStr;
+
         public RedirectLinkToWeiboIdTask(BrowserWebFragment webFragment, String oriUrl,
                 String mid) {
             this.oriUrl = oriUrl;
             this.mid = mid;
+            this.progressStr = webFragment.getString(R.string.converting_weibo_link);
             this.webFragmentWeakReference = new WeakReference<BrowserWebFragment>(webFragment);
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            BrowserWebFragment webFragment = webFragmentWeakReference.get();
+
+            if (webFragment == null) {
+                return;
+            }
+
+            Activity activity = webFragment.getActivity();
+
+            if (activity == null) {
+                return;
+            }
+
+            commonProgressDialogFragment = CommonProgressDialogFragment.newInstance(progressStr);
+            commonProgressDialogFragment
+                    .show(((FragmentActivity) activity).getSupportFragmentManager(), "dialog");
         }
 
         @Override
@@ -376,6 +398,8 @@ public class BrowserWebFragment extends Fragment {
             if (activity == null) {
                 return;
             }
+
+            commonProgressDialogFragment.dismissAllowingStateLoss();
 
             if (Long.valueOf(id) > 0L) {
                 webFragment.startActivity(BrowserWeiboMsgActivity.newIntent(id,

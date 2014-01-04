@@ -370,6 +370,7 @@
     <string name="share_sum">微博统计的分享次数</string>
     <string name="total_share_count">累计分享了%s次</string>
     <string name="cant_not_convert_to_weibo_id">链接地址无法解析成微博地址</string>
+    <string name="converting_weibo_link">正在转换微博链接……</string>
 
 
     <!--gallery-->
