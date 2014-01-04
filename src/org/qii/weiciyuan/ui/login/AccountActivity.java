@@ -43,6 +43,8 @@ import java.util.concurrent.TimeUnit;
 public class AccountActivity extends AbstractAppActivity
         implements LoaderManager.LoaderCallbacks<List<AccountBean>> {
 
+    private static final String ACTION_OPEN_FROM_APP_INNER = "org.qii.weiciyuan:accountactivity";
+
     private ListView listView = null;
 
     private AccountAdapter listAdapter = null;
@@ -55,14 +57,16 @@ public class AccountActivity extends AbstractAppActivity
 
     public static Intent newIntent() {
         Intent intent = new Intent(GlobalContext.getInstance(), AccountActivity.class);
-        intent.putExtra("launcher", false);
+        intent.setAction(ACTION_OPEN_FROM_APP_INNER);
         return intent;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        jumpToMainTimeLineActivity();
+        if (getIntent() != null && !ACTION_OPEN_FROM_APP_INNER.equals(getIntent().getAction())) {
+            jumpToMainTimeLineActivity();
+        }
 
         super.onCreate(savedInstanceState);
 
@@ -95,15 +99,10 @@ public class AccountActivity extends AbstractAppActivity
 
 
     private void jumpToMainTimeLineActivity() {
-        Intent intent = getIntent();
-        if (intent == null) {
-            return;
-        }
 
-        boolean launcher = intent.getBooleanExtra("launcher", true);
         String id = SettingUtility.getDefaultAccountId();
 
-        if (launcher && !TextUtils.isEmpty(id)) {
+        if (!TextUtils.isEmpty(id)) {
             AccountBean bean = AccountDBTask.getAccount(id);
             if (bean != null) {
                 Intent start = MainTimeLineActivity.newIntent(bean);
@@ -196,7 +195,7 @@ public class AccountActivity extends AbstractAppActivity
 
     @Override
     public Loader<List<AccountBean>> onCreateLoader(int id, Bundle args) {
-        return new AccountDataLoader(AccountActivity.this, args);
+        return new AccountDBLoader(AccountActivity.this, args);
     }
 
     @Override
@@ -333,9 +332,9 @@ public class AccountActivity extends AbstractAppActivity
         }
     }
 
-    private static class AccountDataLoader extends AsyncTaskLoader<List<AccountBean>> {
+    private static class AccountDBLoader extends AsyncTaskLoader<List<AccountBean>> {
 
-        public AccountDataLoader(Context context, Bundle args) {
+        public AccountDBLoader(Context context, Bundle args) {
             super(context);
         }
 
