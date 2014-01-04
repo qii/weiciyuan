@@ -1,7 +1,5 @@
 package org.qii.weiciyuan.ui.login;
 
-import com.crashlytics.android.Crashlytics;
-
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.support.database.AccountDBTask;
@@ -20,10 +18,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -57,11 +53,16 @@ public class AccountActivity extends AbstractAppActivity
 
     private final int LOADER_ID = 0;
 
+    public static Intent newIntent() {
+        Intent intent = new Intent(GlobalContext.getInstance(), AccountActivity.class);
+        intent.putExtra("launcher", false);
+        return intent;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        GlobalContext.getInstance().startedApp = true;
-        jumpToHomeActivity();
+        jumpToMainTimeLineActivity();
 
         super.onCreate(savedInstanceState);
 
@@ -84,7 +85,6 @@ public class AccountActivity extends AbstractAppActivity
 
     @Override
     public void onBackPressed() {
-        GlobalContext.getInstance().startedApp = false;
         super.onBackPressed();
     }
 
@@ -94,24 +94,23 @@ public class AccountActivity extends AbstractAppActivity
     }
 
 
-    private void jumpToHomeActivity() {
+    private void jumpToMainTimeLineActivity() {
         Intent intent = getIntent();
-        if (intent != null) {
-            boolean launcher = intent.getBooleanExtra("launcher", true);
-            if (launcher) {
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-                String id = sharedPref.getString("id", "");
-                if (!TextUtils.isEmpty(id)) {
-                    AccountBean bean = AccountDBTask.getAccount(id);
-                    if (bean != null) {
-                        Intent start = MainTimeLineActivity.newIntent(bean);
-                        startActivity(start);
-                        finish();
-                    }
-                }
-            }
+        if (intent == null) {
+            return;
         }
 
+        boolean launcher = intent.getBooleanExtra("launcher", true);
+        String id = SettingUtility.getDefaultAccountId();
+
+        if (launcher && !TextUtils.isEmpty(id)) {
+            AccountBean bean = AccountDBTask.getAccount(id);
+            if (bean != null) {
+                Intent start = MainTimeLineActivity.newIntent(bean);
+                startActivity(start);
+                finish();
+            }
+        }
 
     }
 

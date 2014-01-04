@@ -378,7 +378,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        GlobalContext.getInstance().startedApp = false;
         GlobalContext.getInstance().getBitmapCache().evictAll();
         finish();
     }

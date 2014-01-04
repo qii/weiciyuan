@@ -824,9 +824,8 @@ public class Utility {
             });
         } else if (!currentAccountTokenIsExpired || activity == null) {
 
-            Intent i = new Intent(GlobalContext.getInstance(), AccountActivity.class);
+            Intent i = AccountActivity.newIntent();
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.putExtra("launcher", false);
             PendingIntent pendingIntent = PendingIntent
                     .getActivity(GlobalContext.getInstance(), 0, i,
                             PendingIntent.FLAG_UPDATE_CURRENT);

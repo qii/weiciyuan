@@ -58,7 +58,6 @@ public final class GlobalContext extends Application {
     //current account info
     private AccountBean accountBean = null;
 
-    public boolean startedApp = false;
 
     private LinkedHashMap<Integer, LinkedHashMap<String, Bitmap>> emotionsPic
             = new LinkedHashMap<Integer, LinkedHashMap<String, Bitmap>>();

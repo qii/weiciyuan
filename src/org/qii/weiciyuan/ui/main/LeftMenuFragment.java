@@ -213,8 +213,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
 
     private void showAccountSwitchPage() {
-        Intent intent = new Intent(getActivity(), AccountActivity.class);
-        intent.putExtra("launcher", false);
+        Intent intent = AccountActivity.newIntent();
         startActivity(intent);
         getActivity().finish();
     }

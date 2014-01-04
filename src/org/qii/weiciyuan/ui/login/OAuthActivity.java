@@ -92,9 +92,8 @@ public class OAuthActivity extends AbstractAppActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent intent = new Intent(this, AccountActivity.class);
+                Intent intent = AccountActivity.newIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("launcher", false);
                 startActivity(intent);
                 return true;
             case R.id.menu_refresh:

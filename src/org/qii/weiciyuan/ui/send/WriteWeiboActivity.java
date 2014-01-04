@@ -358,7 +358,7 @@ public class WriteWeiboActivity extends AbstractAppActivity
         if (!GlobalContext.getInstance().checkUserIsLogin()) {
             Toast.makeText(this, this.getString(R.string.share_failed_because_of_no_account),
                     Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, AccountActivity.class);
+            Intent intent = AccountActivity.newIntent();
             startActivity(intent);
             finish();
             return;
