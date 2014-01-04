@@ -1,5 +1,18 @@
 package org.qii.weiciyuan.ui.blackmagic;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.dao.login.BMOAuthDao;
+import org.qii.weiciyuan.dao.login.OAuthDao;
+import org.qii.weiciyuan.support.database.AccountDBTask;
+import org.qii.weiciyuan.support.debug.AppLogger;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.login.AccountActivity;
+
 import android.app.ActionBar;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -10,19 +23,14 @@ import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.dao.login.BMOAuthDao;
-import org.qii.weiciyuan.dao.login.OAuthDao;
-import org.qii.weiciyuan.support.database.AccountDBTask;
-import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.debug.AppLogger;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.login.AccountActivity;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.Toast;
+
+import java.lang.ref.WeakReference;
 
 /**
  * User: qii
@@ -31,10 +39,13 @@ import org.qii.weiciyuan.ui.login.AccountActivity;
 public class BlackMagicActivity extends AbstractAppActivity {
 
     private EditText username;
+
     private EditText password;
+
     private Spinner spinner;
 
     private String appkey;
+
     private String appSecret;
 
     private LoginTask loginTask;
@@ -107,7 +118,8 @@ public class BlackMagicActivity extends AbstractAppActivity {
                     return true;
                 }
                 if (Utility.isTaskStopped(loginTask)) {
-                    loginTask = new LoginTask();
+                    loginTask = new LoginTask(this, username.getText().toString(),
+                            password.getText().toString(), appkey, appSecret);
                     loginTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 return true;
@@ -117,29 +129,58 @@ public class BlackMagicActivity extends AbstractAppActivity {
     }
 
 
-    private class LoginTask extends MyAsyncTask<Void, Void, String[]> {
-        WeiboException e;
-        ProgressFragment progressFragment = ProgressFragment.newInstance();
+    private static class LoginTask extends MyAsyncTask<Void, Void, String[]> {
+
+        private WeiboException e;
+
+        private ProgressFragment progressFragment = ProgressFragment.newInstance();
+
+        private WeakReference<BlackMagicActivity> mBlackMagicActivityWeakReference;
+
+        private String username;
+
+        private String password;
+
+        private String appkey;
+
+        private String appSecret;
+
+        private LoginTask(BlackMagicActivity activity, String username, String password,
+                String appkey, String appSecret) {
+            mBlackMagicActivityWeakReference = new WeakReference<BlackMagicActivity>(activity);
+            this.username = username;
+            this.password = password;
+            this.appkey = appkey;
+            this.appSecret = appSecret;
+        }
+
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
             progressFragment.setAsyncTask(LoginTask.this);
-            progressFragment.show(getSupportFragmentManager(), "");
+
+            BlackMagicActivity activity = mBlackMagicActivityWeakReference.get();
+            if (activity != null) {
+                progressFragment.show(activity.getSupportFragmentManager(), "");
+            }
         }
 
         @Override
         protected String[] doInBackground(Void... params) {
             try {
-                String[] result = new BMOAuthDao(username.getText().toString(), password.getText().toString(), appkey, appSecret).login();
+                String[] result = new BMOAuthDao(username,
+                        password, appkey, appSecret).login();
                 UserBean user = new OAuthDao(result[0]).getOAuthUserInfo();
                 AccountBean account = new AccountBean();
                 account.setAccess_token(result[0]);
                 account.setInfo(user);
-                account.setExpires_time(System.currentTimeMillis() + Long.valueOf(result[1]) * 1000);
+                account.setExpires_time(
+                        System.currentTimeMillis() + Long.valueOf(result[1]) * 1000);
                 AccountDBTask.addOrUpdateAccount(account, true);
-                AppLogger.e("token expires in " + Utility.calcTokenExpiresInDays(account) + " days");
+                AppLogger
+                        .e("token expires in " + Utility.calcTokenExpiresInDays(account) + " days");
                 return result;
             } catch (WeiboException e) {
                 this.e = e;
@@ -154,8 +195,15 @@ public class BlackMagicActivity extends AbstractAppActivity {
             if (progressFragment != null) {
                 progressFragment.dismissAllowingStateLoss();
             }
-            if (e != null)
-                Toast.makeText(BlackMagicActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
+
+            BlackMagicActivity activity = mBlackMagicActivityWeakReference.get();
+            if (activity == null) {
+                return;
+            }
+
+            if (e != null) {
+                Toast.makeText(activity, e.getError(), Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
@@ -164,19 +212,25 @@ public class BlackMagicActivity extends AbstractAppActivity {
             if (progressFragment != null) {
                 progressFragment.dismissAllowingStateLoss();
             }
+
+            BlackMagicActivity activity = mBlackMagicActivityWeakReference.get();
+            if (activity == null) {
+                return;
+            }
+
             Bundle values = new Bundle();
             values.putString("expires_in", s[1]);
             Intent intent = new Intent();
             intent.putExtras(values);
-            setResult(RESULT_OK, intent);
-            finish();
+            activity.setResult(RESULT_OK, intent);
+            activity.finish();
         }
     }
 
 
     public static class ProgressFragment extends DialogFragment {
 
-        MyAsyncTask asyncTask = null;
+        private MyAsyncTask asyncTask = null;
 
         public static ProgressFragment newInstance() {
             ProgressFragment frag = new ProgressFragment();
@@ -193,7 +247,6 @@ public class BlackMagicActivity extends AbstractAppActivity {
             dialog.setMessage(getString(R.string.logining));
             dialog.setIndeterminate(false);
             dialog.setCancelable(true);
-
 
             return dialog;
         }

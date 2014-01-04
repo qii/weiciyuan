@@ -1,5 +1,17 @@
 package org.qii.weiciyuan.ui.login;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.dao.URLHelper;
+import org.qii.weiciyuan.dao.login.OAuthDao;
+import org.qii.weiciyuan.support.database.AccountDBTask;
+import org.qii.weiciyuan.support.debug.AppLogger;
+import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,21 +27,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.*;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.Toast;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.AccountBean;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.dao.URLHelper;
-import org.qii.weiciyuan.dao.login.OAuthDao;
-import org.qii.weiciyuan.support.database.AccountDBTask;
-import org.qii.weiciyuan.support.error.WeiboException;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.debug.AppLogger;
-import org.qii.weiciyuan.support.utils.Utility;
-import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +46,7 @@ import java.util.Map;
 public class OAuthActivity extends AbstractAppActivity {
 
     private WebView webView;
+
     private MenuItem refreshItem;
 
 
@@ -52,7 +59,6 @@ public class OAuthActivity extends AbstractAppActivity {
         actionBar.setTitle(getString(R.string.login));
         webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new WeiboWebViewClient());
-
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -103,7 +109,8 @@ public class OAuthActivity extends AbstractAppActivity {
     public void refresh() {
         webView.clearView();
         webView.loadUrl("about:blank");
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
 
         Animation rotation = AnimationUtils.loadAnimation(this, R.anim.refresh);
@@ -122,7 +129,6 @@ public class OAuthActivity extends AbstractAppActivity {
 
 
     private String getWeiboOAuthUrl() {
-
 
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("client_id", URLHelper.APP_KEY);
@@ -156,7 +162,8 @@ public class OAuthActivity extends AbstractAppActivity {
         }
 
         @Override
-        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+        public void onReceivedError(WebView view, int errorCode, String description,
+                String failingUrl) {
             super.onReceivedError(view, errorCode, description, failingUrl);
             new SinaWeiboErrorDialog().show(getSupportFragmentManager(), "");
         }
@@ -164,8 +171,9 @@ public class OAuthActivity extends AbstractAppActivity {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            if (!url.equals("about:blank"))
+            if (!url.equals("about:blank")) {
                 completeRefresh();
+            }
         }
     }
 
@@ -183,9 +191,10 @@ public class OAuthActivity extends AbstractAppActivity {
             String access_token = values.getString("access_token");
             String expires_time = values.getString("expires_in");
             setResult(RESULT_OK, intent);
-            new OAuthTask().execute(access_token, expires_time);
+            new OAuthTask(this).execute(access_token, expires_time);
         } else {
-            Toast.makeText(OAuthActivity.this, getString(R.string.you_cancel_login), Toast.LENGTH_SHORT).show();
+            Toast.makeText(OAuthActivity.this, getString(R.string.you_cancel_login),
+                    Toast.LENGTH_SHORT).show();
             finish();
         }
 
@@ -197,21 +206,32 @@ public class OAuthActivity extends AbstractAppActivity {
         if (webView.canGoBack()) {
             webView.goBack();
         } else {
-            Toast.makeText(OAuthActivity.this, getString(R.string.you_cancel_login), Toast.LENGTH_SHORT).show();
+            Toast.makeText(OAuthActivity.this, getString(R.string.you_cancel_login),
+                    Toast.LENGTH_SHORT).show();
             finish();
         }
     }
 
-    class OAuthTask extends MyAsyncTask<String, UserBean, DBResult> {
+    private static class OAuthTask extends MyAsyncTask<String, UserBean, DBResult> {
 
-        WeiboException e;
+        private WeiboException e;
 
-        ProgressFragment progressFragment = ProgressFragment.newInstance();
+        private ProgressFragment progressFragment = ProgressFragment.newInstance();
+
+        private WeakReference<OAuthActivity> oAuthActivityWeakReference;
+
+        private OAuthTask(OAuthActivity activity) {
+            oAuthActivityWeakReference = new WeakReference<OAuthActivity>(activity);
+        }
 
         @Override
         protected void onPreExecute() {
             progressFragment.setAsyncTask(this);
-            progressFragment.show(getSupportFragmentManager(), "");
+
+            OAuthActivity activity = oAuthActivityWeakReference.get();
+            if (activity != null) {
+                progressFragment.show(activity.getSupportFragmentManager(), "");
+            }
 
         }
 
@@ -227,7 +247,8 @@ public class OAuthActivity extends AbstractAppActivity {
                 account.setAccess_token(token);
                 account.setExpires_time(System.currentTimeMillis() + expiresInSeconds * 1000);
                 account.setInfo(user);
-                AppLogger.e("token expires in " + Utility.calcTokenExpiresInDays(account) + " days");
+                AppLogger
+                        .e("token expires in " + Utility.calcTokenExpiresInDays(account) + " days");
                 return AccountDBTask.addOrUpdateAccount(account, false);
             } catch (WeiboException e) {
                 AppLogger.e(e.getError());
@@ -245,9 +266,16 @@ public class OAuthActivity extends AbstractAppActivity {
             if (progressFragment != null) {
                 progressFragment.dismissAllowingStateLoss();
             }
-            if (e != null)
-                Toast.makeText(OAuthActivity.this, e.getError(), Toast.LENGTH_SHORT).show();
-            webView.loadUrl(getWeiboOAuthUrl());
+
+            OAuthActivity activity = oAuthActivityWeakReference.get();
+            if (activity == null) {
+                return;
+            }
+
+            if (e != null) {
+                Toast.makeText(activity, e.getError(), Toast.LENGTH_SHORT).show();
+            }
+            activity.webView.loadUrl(activity.getWeiboOAuthUrl());
         }
 
         @Override
@@ -255,15 +283,21 @@ public class OAuthActivity extends AbstractAppActivity {
             if (progressFragment.isVisible()) {
                 progressFragment.dismissAllowingStateLoss();
             }
+            OAuthActivity activity = oAuthActivityWeakReference.get();
+            if (activity == null) {
+                return;
+            }
             switch (dbResult) {
                 case add_successfuly:
-                    Toast.makeText(OAuthActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, activity.getString(R.string.login_success),
+                            Toast.LENGTH_SHORT).show();
                     break;
                 case update_successfully:
-                    Toast.makeText(OAuthActivity.this, getString(R.string.update_account_success), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, activity.getString(R.string.update_account_success),
+                            Toast.LENGTH_SHORT).show();
                     break;
             }
-            finish();
+            activity.finish();
 
         }
     }
@@ -271,8 +305,9 @@ public class OAuthActivity extends AbstractAppActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (isFinishing())
+        if (isFinishing()) {
             webView.stopLoading();
+        }
     }
 
     public static class ProgressFragment extends DialogFragment {
@@ -295,7 +330,6 @@ public class OAuthActivity extends AbstractAppActivity {
             dialog.setIndeterminate(false);
             dialog.setCancelable(true);
 
-
             return dialog;
         }
 
@@ -316,6 +350,7 @@ public class OAuthActivity extends AbstractAppActivity {
 
 
     public static class SinaWeiboErrorDialog extends DialogFragment {
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
