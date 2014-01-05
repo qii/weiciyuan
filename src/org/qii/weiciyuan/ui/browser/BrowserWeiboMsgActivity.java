@@ -8,6 +8,7 @@ import org.qii.weiciyuan.dao.show.ShowStatusDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.common.CommonErrorDialogFragment;
 import org.qii.weiciyuan.ui.common.CommonProgressDialogFragment;
@@ -112,6 +113,8 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
                 token = getIntent().getStringExtra("token");
                 msgId = getIntent().getStringExtra("weiboId");
                 fetchUserInfoFromServer();
+                findViewById(android.R.id.content).setBackgroundDrawable(
+                        ThemeUtility.getDrawable(android.R.attr.windowBackground));
             } else if (ACTION_WITH_DETAIL.equalsIgnoreCase(action)) {
                 Intent intent = getIntent();
                 token = intent.getStringExtra("token");
@@ -148,7 +151,6 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
     }
 
     private void initLayout() {
-        setContentView(R.layout.browserweibomsgactivity_layout);
         getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setDisplayShowHomeEnabled(false);
@@ -166,6 +168,8 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
                             .replace(android.R.id.content, BrowserWeiboMsgFragment.newInstance(msg),
                                     BrowserWeiboMsgFragment.class.getName())
                             .commit();
+                    getSupportFragmentManager().executePendingTransactions();
+                    findViewById(android.R.id.content).setBackgroundDrawable(null);
                 }
             }
         });

@@ -204,8 +204,8 @@
     <string name="oauth_login">网页授权</string>
     <string name="hack_login">黑魔法授权</string>
     <string name="official_app_login">官方客户端授权</string>
-    <string name="login">登录</string>
-    <string name="logining">登录中</string>
+    <string name="login">授权</string>
+    <string name="logining">授权中</string>
     <string name="email_cant_be_empty">登录邮箱不能为空</string>
     <string name="password_cant_be_empty">密码不能为空</string>
     <string name="login_email">登录邮箱</string>
