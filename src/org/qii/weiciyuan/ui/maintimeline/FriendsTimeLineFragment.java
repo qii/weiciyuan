@@ -893,7 +893,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private void updateTimeLineMessageCommentAndRepostData(List<MessageReCmtCountBean> value) {
 
-        if (getList().getSize() == 0) {
+        if (getList().getSize() <= value.size()) {
             return;
         }
 

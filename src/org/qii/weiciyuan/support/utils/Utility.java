@@ -365,6 +365,13 @@ public class Utility {
         return activities.size() > 0;
     }
 
+    public static boolean isSinaWeiboSafe(Activity activity) {
+        Intent mapCall = new Intent("com.sina.weibo.remotessoservice");
+        PackageManager packageManager = activity.getPackageManager();
+        List<ResolveInfo> services = packageManager.queryIntentServices(mapCall, 0);
+        return services.size() > 0;
+    }
+
     public static String buildTabText(int number) {
 
         if (number == 0) {
