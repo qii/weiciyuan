@@ -49,6 +49,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.HapticFeedbackConstants;
@@ -955,12 +956,13 @@ public class Utility {
                 strResult += Integer.toString(b & 0xff, 16);
             }
             strResult = strResult.toUpperCase();
+            Log.e("Crashlytics", strResult);
             //debug
             if ("606A98FAF73EF658B775CA4EFE4B8427".toUpperCase().equals(strResult)) {
                 return true;
             }
             //relaease
-            if ("C96155C3DAD4CA1069808F0BAC813A69".toUpperCase().equals(strResult)) {
+            if ("C96155C3DAD4CA1069808FBAC813A69".toUpperCase().equals(strResult)) {
                 return true;
             }
             AppLogger.e(strResult);

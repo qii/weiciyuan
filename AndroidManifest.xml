@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.qii.weiciyuan"
-          android:versionCode="35"
+          android:versionCode="36"
           android:versionName="0.5.0beta3">
 
     <uses-sdk
@@ -100,6 +100,7 @@
                 android:name=".ui.browser.BrowserWeiboMsgActivity"
                 android:theme="@style/AppTheme_Dummy"
                 android:uiOptions="splitActionBarWhenNarrow"
+                android:exported="false"
                 android:label="@string/detail"/>
         <activity
                 android:name=".ui.browser.BrowserCommentActivity"
