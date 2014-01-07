@@ -112,6 +112,8 @@ public class SettingActivity extends AbstractAppActivity {
 
     public static final String DEBUG_MEM_INFO = "pref_mem_key";
 
+    public static final String CRASH = "pref_crash_key";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

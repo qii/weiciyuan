@@ -527,6 +527,8 @@
     <string name="pref_debug_title">调试</string>
     <string name="pref_debug_mem_title">内存信息</string>
     <string name="print_license">打印协议</string>
+    <string name="pref_make_a_app_crash_title">立刻崩溃</string>
+    <string name="pref_make_a_app_crash_summary">用于检测崩溃统计平台是否能成功收集到崩溃</string>
 
 
     <!-- menu-->

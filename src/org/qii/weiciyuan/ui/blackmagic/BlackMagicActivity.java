@@ -53,7 +53,7 @@ public class BlackMagicActivity extends AbstractAppActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.blackmagicactivity_layout);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(false);
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setTitle(getString(R.string.hack_login));
 

@@ -136,6 +136,14 @@
 
         </Preference>
 
+        <Preference
+                android:key="pref_crash_key"
+                android:title="@string/pref_make_a_app_crash_title"
+                android:summary="@string/pref_make_a_app_crash_summary"
+                >
+
+        </Preference>
+
 
     </PreferenceCategory>
 

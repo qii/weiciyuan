@@ -94,6 +94,8 @@ public class AboutFragment extends PreferenceFragment {
 
         detectDebugPreference();
 
+        detectCrashPreference();
+
         findPreference(SettingActivity.AUTHOR)
                 .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
@@ -126,6 +128,24 @@ public class AboutFragment extends PreferenceFragment {
                 .setSummary(Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_PICTURES).getAbsolutePath());
 
+    }
+
+    private void detectCrashPreference() {
+        Preference crashPreferenceCategory = (Preference) findPreference(
+                SettingActivity.CRASH);
+
+        if (SettingUtility.isBlackMagicEnabled()) {
+            crashPreferenceCategory.setOnPreferenceClickListener(
+                    new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            throw new IllegalArgumentException("about -> crash test");
+                        }
+                    });
+        } else {
+            PreferenceScreen screen = getPreferenceScreen();
+            screen.removePreference(crashPreferenceCategory);
+        }
     }
 
     private void detectDebugPreference() {
