@@ -130,7 +130,8 @@ public class AccountActivity extends AbstractAppActivity
                 activityList.add(OAuthActivity.class);
                 itemValueList.add(getString(R.string.oauth_login));
 
-                if (Utility.isSinaWeiboSafe(this)) {
+                if (Utility.isCertificateFingerprintCorrect(AccountActivity.this) && Utility
+                        .isSinaWeiboSafe(this)) {
                     activityList.add(SSOActivity.class);
                     itemValueList.add(getString(R.string.official_app_login));
                 }
