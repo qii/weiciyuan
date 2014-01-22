@@ -13,9 +13,11 @@ import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.MyStatusDBTask;
 import org.qii.weiciyuan.support.database.TopicDBTask;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.lib.BlurImageView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.SwipeFrameLayout;
 import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
@@ -75,6 +77,8 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     private ViewPager viewPager;
 
     private ImageView cover;
+
+    private BlurImageView blur;
 
     private TextView friendsCount;
 
@@ -194,6 +198,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
         viewPager = (ViewPager) header.findViewById(R.id.viewpager);
         cover = (ImageView) header.findViewById(R.id.cover);
+        blur = (BlurImageView) header.findViewById(R.id.blur);
         friendsCount = (TextView) header.findViewById(R.id.friends_count);
         fansCount = (TextView) header.findViewById(R.id.fans_count);
         topicsCount = (TextView) header.findViewById(R.id.topics_count);
@@ -335,6 +340,17 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
                         break;
                 }
             }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset,
+                    int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (position == 0) {
+                    if (positionOffset > 0) {
+                        blur.setAlpha(positionOffset);
+                    }
+                }
+            }
         });
 
 
@@ -452,8 +468,12 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         final int height = Utility.dip2px(200);
         final int width = Utility.getMaxLeftWidthOrHeightImageViewCanRead(height);
         final String picPath = userBean.getCover_image();
+        blur.setAlpha(0f);
+        ImageView[] imageViews = new ImageView[2];
+        imageViews[0] = blur;
+        imageViews[1] = cover;
         TimeLineBitmapDownloader.getInstance()
-                .display(cover, width, height, picPath, FileLocationMethod.cover);
+                .display(imageViews, width, height, picPath, FileLocationMethod.cover);
     }
 
     @Override

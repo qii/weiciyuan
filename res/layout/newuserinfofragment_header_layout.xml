@@ -6,200 +6,207 @@
               android:layout_height="match_parent">
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <FrameLayout
 
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
 
             <ImageView
-                android:id="@+id/cover"
-                android:scaleType="centerCrop"
-                android:background="?profile_top_photo_background_color"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"/>
+                    android:id="@+id/cover"
+                    android:scaleType="centerCrop"
+                    android:background="?profile_top_photo_background_color"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"/>
+
+            <org.qii.weiciyuan.support.lib.BlurImageView
+                    android:id="@+id/blur"
+                    android:background="@color/transparent"
+                    android:scaleType="centerCrop"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"/>
 
             <android.support.v4.view.ViewPager
-                android:id="@+id/viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                    android:id="@+id/viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
         </FrameLayout>
 
         <LinearLayout
-            android:layout_gravity="bottom|center"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
-
-            <ImageView
-                android:id="@+id/left_point"
-                android:paddingTop="15dp"
-                android:layout_marginRight="1dp"
-                android:visibility="visible"
+                android:layout_gravity="bottom|center"
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_profile_info_viewpager_point"/>
+                android:layout_marginBottom="10dp">
 
             <ImageView
-                android:id="@+id/center_point"
-                android:layout_marginLeft="1dp"
-                android:paddingTop="15dp"
-                android:layout_marginRight="1dp"
-                android:visibility="visible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_profile_info_viewpager_point"/>
+                    android:id="@+id/left_point"
+                    android:paddingTop="15dp"
+                    android:layout_marginRight="1dp"
+                    android:visibility="visible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_profile_info_viewpager_point"/>
 
             <ImageView
-                android:id="@+id/right_point"
-                android:layout_marginLeft="1dp"
-                android:paddingTop="15dp"
-                android:visibility="visible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_profile_info_viewpager_point"/>
+                    android:id="@+id/center_point"
+                    android:layout_marginLeft="1dp"
+                    android:paddingTop="15dp"
+                    android:layout_marginRight="1dp"
+                    android:visibility="visible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_profile_info_viewpager_point"/>
+
+            <ImageView
+                    android:id="@+id/right_point"
+                    android:layout_marginLeft="1dp"
+                    android:paddingTop="15dp"
+                    android:visibility="visible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_profile_info_viewpager_point"/>
         </LinearLayout>
 
     </FrameLayout>
 
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:showDividers="middle"
-        android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:showDividers="middle"
+            android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:clickable="true"
-            android:paddingLeft="10dp"
-            android:background="?android:selectableItemBackground"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center_vertical"
-            android:id="@+id/weibo_count_layout"
-            android:layout_weight="1">
+                android:layout_width="0dp"
+                android:clickable="true"
+                android:paddingLeft="10dp"
+                android:background="?android:selectableItemBackground"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:id="@+id/weibo_count_layout"
+                android:layout_weight="1">
 
             <TextView
-                android:id="@+id/weibo_count"
-                style="@style/profileStatValue"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="0"/>
+                    android:id="@+id/weibo_count"
+                    style="@style/profileStatValue"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="0"/>
 
             <TextView
-                style="@style/profileStatName"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="@string/weibo_number"/>
+                    style="@style/profileStatName"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="@string/weibo_number"/>
 
 
         </LinearLayout>
 
         <View
-            android:background="?profile_detail_count_divider_color"
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"/>
+                android:background="?profile_detail_count_divider_color"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"/>
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:background="?android:selectableItemBackground"
-            android:id="@+id/friends_count_layout"
-            android:layout_weight="1">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:background="?android:selectableItemBackground"
+                android:id="@+id/friends_count_layout"
+                android:layout_weight="1">
 
             <TextView
-                style="@style/profileStatValue"
-                android:id="@+id/friends_count"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="0"/>
+                    style="@style/profileStatValue"
+                    android:id="@+id/friends_count"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="0"/>
 
             <TextView
-                style="@style/profileStatName"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="@string/following_number"/>
+                    style="@style/profileStatName"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="@string/following_number"/>
 
 
         </LinearLayout>
 
         <View
-            android:background="?profile_detail_count_divider_color"
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"/>
+                android:background="?profile_detail_count_divider_color"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"/>
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:background="?android:selectableItemBackground"
-            android:id="@+id/fans_count_layout"
-            android:layout_weight="1">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:background="?android:selectableItemBackground"
+                android:id="@+id/fans_count_layout"
+                android:layout_weight="1">
 
             <TextView
-                style="@style/profileStatValue"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:id="@+id/fans_count"
-                android:text="0"/>
+                    style="@style/profileStatValue"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/fans_count"
+                    android:text="0"/>
 
             <TextView
-                style="@style/profileStatName"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="@string/fan_number"/>
+                    style="@style/profileStatName"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="@string/fan_number"/>
 
 
         </LinearLayout>
 
         <View
-            android:background="?profile_detail_count_divider_color"
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"/>
+                android:background="?profile_detail_count_divider_color"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"/>
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:clickable="true"
-            android:background="?android:selectableItemBackground"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:id="@+id/topics_count_layout"
-            android:layout_weight="1">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:id="@+id/topics_count_layout"
+                android:layout_weight="1">
 
 
             <TextView
-                style="@style/profileStatValue"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:id="@+id/topics_count"
-                android:text="0"/>
+                    style="@style/profileStatValue"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/topics_count"
+                    android:text="0"/>
 
             <TextView
-                style="@style/profileStatName"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="@string/topic_number"/>
+                    style="@style/profileStatName"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="@string/topic_number"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
     <View
-        android:background="?profile_detail_count_bottom_color"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+            android:background="?profile_detail_count_bottom_color"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
 </LinearLayout>
