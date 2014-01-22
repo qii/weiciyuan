@@ -125,6 +125,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
             findViewById(android.R.id.content).setBackgroundDrawable(
                     ThemeUtility.getDrawable(android.R.attr.windowBackground));
         } else {
+            findViewById(android.R.id.content).setBackgroundDrawable(
+                    ThemeUtility.getDrawable(android.R.attr.windowBackground));
             buildContent();
         }
 
