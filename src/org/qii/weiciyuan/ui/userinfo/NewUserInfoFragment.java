@@ -13,7 +13,6 @@ import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.MyStatusDBTask;
 import org.qii.weiciyuan.support.database.TopicDBTask;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -49,6 +48,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -469,11 +471,19 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         final int width = Utility.getMaxLeftWidthOrHeightImageViewCanRead(height);
         final String picPath = userBean.getCover_image();
         blur.setAlpha(0f);
-        ImageView[] imageViews = new ImageView[2];
-        imageViews[0] = blur;
-        imageViews[1] = cover;
+        ArrayList<ImageView> imageViewArrayList = new ArrayList<ImageView>();
+        imageViewArrayList.add(cover);
+        imageViewArrayList.add(blur);
+        TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0,
+                Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF,
+                -100f, Animation.RELATIVE_TO_SELF, 0f);
+        animation.setDuration(2000);
+        animation.setInterpolator(new DecelerateInterpolator());
+        ArrayList<Animation> animationArray = new ArrayList<Animation>();
+        animationArray.add(animation);
         TimeLineBitmapDownloader.getInstance()
-                .display(imageViews, width, height, picPath, FileLocationMethod.cover);
+                .display(imageViewArrayList, width, height, picPath, FileLocationMethod.cover,
+                        animationArray);
     }
 
     @Override

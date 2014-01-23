@@ -10,14 +10,13 @@
             android:layout_height="wrap_content">
 
         <FrameLayout
-
+                android:background="?profile_top_photo_background_color"
                 android:layout_width="match_parent"
                 android:layout_height="200dp">
 
             <ImageView
                     android:id="@+id/cover"
                     android:scaleType="centerCrop"
-                    android:background="?profile_top_photo_background_color"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"/>
 

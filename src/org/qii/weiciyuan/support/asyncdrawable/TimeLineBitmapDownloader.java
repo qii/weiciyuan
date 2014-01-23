@@ -20,7 +20,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.ImageView;
+
+import java.util.ArrayList;
 
 /**
  * User: qii
@@ -188,7 +191,8 @@ public class TimeLineBitmapDownloader {
      * timeline will refresh at the time user press back button to display the latest repost count
      * and comment count. But sometimes, weibo detail's pictures are very large that bitmap memory
      * cache has cleared those timeline bitmap to save memory, app have to read bitmap from sd card
-     * again, then app play annoying animation , this method will check whether we should read again
+     * again, then app play annoying animation , this method will check whether we should read
+     * again
      * or not.
      */
     private boolean shouldReloadPicture(ImageView view, String urlKey) {
@@ -351,14 +355,15 @@ public class TimeLineBitmapDownloader {
 
     public void display(final ImageView imageView, final int width, final int height,
             final String url, final FileLocationMethod method) {
-        ImageView[] ivArray = new ImageView[1];
-        ivArray[0] = imageView;
-        display(ivArray, width, height, url, method);
+        ArrayList<ImageView> imageViewArrayList = new ArrayList<ImageView>();
+        imageViewArrayList.add(imageView);
+        display(imageViewArrayList, width, height, url, method, null);
 
     }
 
-    public void display(final ImageView[] imageView, final int width, final int height,
-            final String url, final FileLocationMethod method) {
+    public void display(final ArrayList<ImageView> imageView, final int width, final int height,
+            final String url, final FileLocationMethod method,
+            final ArrayList<Animation> animations) {
         if (TextUtils.isEmpty(url)) {
             return;
         }
@@ -382,12 +387,17 @@ public class TimeLineBitmapDownloader {
             protected void onPostExecute(Bitmap bitmap) {
                 super.onPostExecute(bitmap);
                 if (bitmap != null) {
-                    for (ImageView iv : imageView) {
-                        iv.setImageDrawable(
+                    for (int i = 0; i < imageView.size(); i++) {
+                        ImageView imageView1 = imageView.get(i);
+                        imageView1.setImageDrawable(
                                 new BitmapDrawable(GlobalContext.getInstance().getResources(),
                                         bitmap));
-
+                        if (animations != null && animations.size() > i) {
+                            Animation animation = animations.get(i);
+                            imageView1.startAnimation(animation);
+                        }
                     }
+
                 }
             }
         }.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);

@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -24,6 +26,8 @@ public class BlurImageView extends ImageView {
 
     private static int radius = 20;
 
+    private Thread blurThread;
+
 
     public BlurImageView(Context context) {
         super(context);
@@ -39,16 +43,41 @@ public class BlurImageView extends ImageView {
 
 
     @Override
-    public void setImageDrawable(Drawable drawable) {
+    public void setImageDrawable(final Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            Bitmap bitmap = bitmapDrawable.getBitmap();
+            final Bitmap bitmap = bitmapDrawable.getBitmap();
             if (bitmap != null) {
-                drawable = new BitmapDrawable(getResources(), fastBlur(bitmap, radius));
+                blurThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Drawable blurDrawable = new BitmapDrawable(getResources(),
+                                fastBlur(bitmap, radius));
+                        if (Thread.currentThread().isInterrupted()) {
+                            return;
+                        }
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                BlurImageView.super.setImageDrawable(blurDrawable);
+                            }
+                        });
+                    }
+                });
+                blurThread.start();
+                return;
             }
 
         }
         super.setImageDrawable(drawable);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (blurThread != null) {
+            blurThread.interrupt();
+        }
     }
 
     @Override
