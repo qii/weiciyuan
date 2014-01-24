@@ -456,12 +456,14 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
             followsYou.setVisibility(View.GONE);
         }
 
-        cover.post(new Runnable() {
-            @Override
-            public void run() {
-                displayCoverPicture();
-            }
-        });
+        if (cover.getDrawable() == null) {
+            cover.post(new Runnable() {
+                @Override
+                public void run() {
+                    displayCoverPicture();
+                }
+            });
+        }
 
     }
 
@@ -477,7 +479,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0,
                 Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF,
                 -100f, Animation.RELATIVE_TO_SELF, 0f);
-        animation.setDuration(2000);
+        animation.setDuration(3000);
         animation.setInterpolator(new DecelerateInterpolator());
         ArrayList<Animation> animationArray = new ArrayList<Animation>();
         animationArray.add(animation);
