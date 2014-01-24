@@ -457,12 +457,16 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         }
 
         if (cover.getDrawable() == null) {
-            cover.post(new Runnable() {
+            Utility.runUIActionDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    if (getActivity() == null) {
+                        return;
+                    }
                     displayCoverPicture();
                 }
-            });
+            }, 400);
+
         }
 
     }
@@ -543,9 +547,17 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
                 if (isMyself() && isOpenedFromMainPage()) {
                     readDBCache();
                 } else {
-                    fetchLastestUserInfoFromServer();
-                    loadNewMsg();
-                    fetchTopicInfoFromServer();
+                    Utility.runUIActionDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (getActivity() == null) {
+                                return;
+                            }
+                            fetchLastestUserInfoFromServer();
+                            loadNewMsg();
+                            fetchTopicInfoFromServer();
+                        }
+                    }, 400);
                 }
                 break;
             case SCREEN_ROTATE:

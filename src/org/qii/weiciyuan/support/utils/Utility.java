@@ -46,6 +46,8 @@ import android.net.Uri;
 import android.opengl.GLES10;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -985,6 +987,10 @@ public class Utility {
         } catch (IllegalArgumentException receiverNotRegisteredException) {
             receiverNotRegisteredException.printStackTrace();
         }
+    }
+
+    public static void runUIActionDelayed(Runnable runnable, long delayMillis) {
+        new Handler(Looper.getMainLooper()).postDelayed(runnable, delayMillis);
     }
 
 }
