@@ -368,6 +368,21 @@ public class TimeLineBitmapDownloader {
             return;
         }
 
+        final Bitmap bitmap = getBitmapFromMemCache(url);
+        if (bitmap != null && bitmap.getHeight() == height && bitmap.getWidth() == width) {
+            for (int i = 0; i < imageView.size(); i++) {
+                ImageView imageView1 = imageView.get(i);
+                imageView1.setImageDrawable(
+                        new BitmapDrawable(GlobalContext.getInstance().getResources(),
+                                bitmap));
+                if (animations != null && animations.size() > i) {
+                    Animation animation = animations.get(i);
+                    imageView1.startAnimation(animation);
+                }
+            }
+            return;
+        }
+
         new MyAsyncTask<Void, Bitmap, Bitmap>() {
 
             @Override
@@ -387,6 +402,7 @@ public class TimeLineBitmapDownloader {
             protected void onPostExecute(Bitmap bitmap) {
                 super.onPostExecute(bitmap);
                 if (bitmap != null) {
+                    GlobalContext.getInstance().getBitmapCache().put(url, bitmap);
                     for (int i = 0; i < imageView.size(); i++) {
                         ImageView imageView1 = imageView.get(i);
                         imageView1.setImageDrawable(
