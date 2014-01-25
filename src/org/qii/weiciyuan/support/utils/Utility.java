@@ -28,6 +28,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -50,6 +51,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.AndroidRuntimeException;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
@@ -982,10 +984,25 @@ public class Utility {
 
     public static void unregisterReceiverIgnoredReceiverNotRegisteredException(Context context,
             BroadcastReceiver broadcastReceiver) {
+        if (broadcastReceiver == null) {
+            return;
+        }
         try {
             context.getApplicationContext().unregisterReceiver(broadcastReceiver);
         } catch (IllegalArgumentException receiverNotRegisteredException) {
             receiverNotRegisteredException.printStackTrace();
+        }
+    }
+
+    public static void registerReceiverIgnoredReceiverHasRegisteredHereException(Context context,
+            BroadcastReceiver broadcastReceiver, IntentFilter intentFilter) {
+        if (broadcastReceiver == null || intentFilter == null) {
+            return;
+        }
+        try {
+            context.getApplicationContext().registerReceiver(broadcastReceiver, intentFilter);
+        } catch (AndroidRuntimeException receiverHasRegisteredException) {
+            receiverHasRegisteredException.printStackTrace();
         }
     }
 

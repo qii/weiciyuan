@@ -164,7 +164,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
     private void startListenMusicPlaying() {
         musicReceiver = new MusicReceiver();
-        registerReceiver(musicReceiver, AppEventAction.getSystemMusicBroadcastFilterAction());
+        Utility.registerReceiverIgnoredReceiverHasRegisteredHereException(this, musicReceiver,
+                AppEventAction.getSystemMusicBroadcastFilterAction());
     }
 
 
@@ -406,20 +407,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        IntentFilter filter = new IntentFilter(AppEventAction.NEW_MSG_PRIORITY_BROADCAST);
-        filter.setPriority(1);
-        newMsgInterruptBroadcastReceiver = new NewMsgInterruptBroadcastReceiver();
-        registerReceiver(newMsgInterruptBroadcastReceiver, filter);
-        startListenMusicPlaying();
-        readClipboard();
-        //ensure timeline picture type is correct
-        ConnectionChangeReceiver.judgeNetworkStatus(this);
-    }
-
-
     private void readClipboard() {
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData cmContent = cm.getPrimaryClip();
@@ -492,13 +479,25 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(AppEventAction.NEW_MSG_PRIORITY_BROADCAST);
+        filter.setPriority(1);
+        newMsgInterruptBroadcastReceiver = new NewMsgInterruptBroadcastReceiver();
+        Utility.registerReceiverIgnoredReceiverHasRegisteredHereException(this,
+                newMsgInterruptBroadcastReceiver, filter);
+        startListenMusicPlaying();
+        readClipboard();
+        //ensure timeline picture type is correct
+        ConnectionChangeReceiver.judgeNetworkStatus(this);
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         Utility.unregisterReceiverIgnoredReceiverNotRegisteredException(this,
                 newMsgInterruptBroadcastReceiver);
-        if (musicReceiver != null) {
-            Utility.unregisterReceiverIgnoredReceiverNotRegisteredException(this, musicReceiver);
-        }
+        Utility.unregisterReceiverIgnoredReceiverNotRegisteredException(this, musicReceiver);
 
         if (isFinishing()) {
             saveNavigationPositionToDB();
