@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.support.utils;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -11,12 +12,16 @@ import android.view.animation.DecelerateInterpolator;
  */
 public class AnimationUtility {
 
-    public static void translateFragmentY(Fragment fragment, int from, int to) {
+    public static void translateFragmentY(Fragment fragment, int from, int to,
+            Animator.AnimatorListener animatorListener) {
         final View fragmentView = fragment.getView();
         FragmentViewYWrapper wrapper = new FragmentViewYWrapper(fragmentView);
         ObjectAnimator objectAnimator = ObjectAnimator.ofInt(wrapper, "change", from, to);
         objectAnimator.setDuration(300);
         objectAnimator.setInterpolator(new DecelerateInterpolator());
+        if (animatorListener != null) {
+            objectAnimator.addListener(animatorListener);
+        }
         objectAnimator.start();
 
     }

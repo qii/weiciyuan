@@ -200,7 +200,8 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
                             .commit();
                     getSupportFragmentManager().executePendingTransactions();
 
-                    AnimationUtility.translateFragmentY(userInfoFragment, -400, 0);
+                    AnimationUtility
+                            .translateFragmentY(userInfoFragment, -400, 0, userInfoFragment);
 
                 }
             }
