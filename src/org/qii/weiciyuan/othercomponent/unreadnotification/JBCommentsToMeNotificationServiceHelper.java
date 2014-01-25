@@ -8,6 +8,7 @@ import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.android.UnreadTabIndex;
 import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
 import org.qii.weiciyuan.support.error.WeiboException;
+import org.qii.weiciyuan.support.lib.RecordOperationAppBroadcastReceiver;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -17,7 +18,6 @@ import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -42,7 +42,7 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
     private String ticker;
 
 
-    private static BroadcastReceiver clearNotificationEventReceiver;
+    private static RecordOperationAppBroadcastReceiver clearNotificationEventReceiver;
 
 
     @Override
@@ -91,7 +91,7 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
             JBCommentsToMeNotificationServiceHelper.clearNotificationEventReceiver = null;
         }
 
-        clearNotificationEventReceiver = new BroadcastReceiver() {
+        clearNotificationEventReceiver = new RecordOperationAppBroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 new Thread(new Runnable() {
