@@ -1,7 +1,5 @@
 package org.qii.weiciyuan.support.lib;
 
-import org.qii.weiciyuan.support.utils.Utility;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,10 +7,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
@@ -87,23 +81,23 @@ public class BlurImageView extends ImageView {
 
 
     private Bitmap fastBlur(Bitmap sentBitmap, int radius) {
-
-        if (Utility.isJB1()) {
-            Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
-
-            final RenderScript rs = RenderScript.create(getContext());
-            final Allocation input = Allocation
-                    .createFromBitmap(rs, sentBitmap, Allocation.MipmapControl.MIPMAP_NONE,
-                            Allocation.USAGE_SCRIPT);
-            final Allocation output = Allocation.createTyped(rs, input.getType());
-            final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element
-                    .U8_4(rs));
-            script.setRadius(radius /* e.g. 3.f */);
-            script.setInput(input);
-            script.forEach(output);
-            output.copyTo(bitmap);
-            return bitmap;
-        }
+//       on Android 4.4, some bitmaps will crash, fuck RenderScript
+//        if (Utility.isJB1()) {
+//            Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+//
+//            final RenderScript rs = RenderScript.create(getContext());
+//            final Allocation input = Allocation
+//                    .createFromBitmap(rs, sentBitmap, Allocation.MipmapControl.MIPMAP_NONE,
+//                            Allocation.USAGE_SCRIPT);
+//            final Allocation output = Allocation.createTyped(rs, input.getType());
+//            final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element
+//                    .U8_4(rs));
+//            script.setRadius(radius /* e.g. 3.f */);
+//            script.setInput(input);
+//            script.forEach(output);
+//            output.copyTo(bitmap);
+//            return bitmap;
+//        }
 
         // Stack Blur v1.0 from
         // http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
