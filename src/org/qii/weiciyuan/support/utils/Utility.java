@@ -10,6 +10,7 @@ import org.qii.weiciyuan.othercomponent.unreadnotification.NotificationServiceHe
 import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.lib.RecordOperationAppBroadcastReceiver;
 import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -24,7 +25,6 @@ import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -983,24 +983,28 @@ public class Utility {
 
 
     public static void unregisterReceiverIgnoredReceiverNotRegisteredException(Context context,
-            BroadcastReceiver broadcastReceiver) {
-        if (broadcastReceiver == null) {
+            RecordOperationAppBroadcastReceiver broadcastReceiver) {
+        if (broadcastReceiver == null || broadcastReceiver.hasUnRegistered() || !broadcastReceiver
+                .hasRegistered()) {
             return;
         }
         try {
             context.getApplicationContext().unregisterReceiver(broadcastReceiver);
+            broadcastReceiver.setHasUnRegistered(true);
         } catch (IllegalArgumentException receiverNotRegisteredException) {
             receiverNotRegisteredException.printStackTrace();
         }
     }
 
     public static void registerReceiverIgnoredReceiverHasRegisteredHereException(Context context,
-            BroadcastReceiver broadcastReceiver, IntentFilter intentFilter) {
-        if (broadcastReceiver == null || intentFilter == null) {
+            RecordOperationAppBroadcastReceiver broadcastReceiver, IntentFilter intentFilter) {
+        if (broadcastReceiver == null || broadcastReceiver.hasRegistered()
+                || intentFilter == null) {
             return;
         }
         try {
             context.getApplicationContext().registerReceiver(broadcastReceiver, intentFilter);
+            broadcastReceiver.setHasRegistered(true);
         } catch (AndroidRuntimeException receiverHasRegisteredException) {
             receiverHasRegisteredException.printStackTrace();
         }
