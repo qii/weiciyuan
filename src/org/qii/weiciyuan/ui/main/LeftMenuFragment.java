@@ -22,7 +22,7 @@ import org.qii.weiciyuan.ui.nearby.NearbyTimeLineActivity;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
 import org.qii.weiciyuan.ui.search.SearchMainParentFragment;
 import org.qii.weiciyuan.ui.userinfo.MyFavListFragment;
-import org.qii.weiciyuan.ui.userinfo.NewUserInfoFragment;
+import org.qii.weiciyuan.ui.userinfo.UserInfoFragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -600,7 +600,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
         ft.show(fragment);
         ft.commit();
-        ((NewUserInfoFragment) fragment).buildActionBarAndViewPagerTitles();
+        ((UserInfoFragment) fragment).buildActionBarAndViewPagerTitles();
     }
 
 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        >
+
+    <org.qii.weiciyuan.support.lib.ProfileTopAvatarImageView
+            android:id="@+id/avatar"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/bg_header_avatar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:adjustViewBounds="true"
+            android:layout_centerHorizontal="true"
+            />
+
+    <LinearLayout
+            android:id="@+id/name_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4.0dp"
+            android:layout_below="@id/avatar"
+            android:layout_centerHorizontal="true">
+
+        <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/profileHeaderText.Bold"
+                android:id="@+id/nickname"/>
+
+        <ImageView
+                android:layout_gravity="center_vertical"
+                android:id="@+id/icon"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:paddingBottom="10.0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2.0dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_below="@id/name_container"
+            android:layout_centerHorizontal="true">
+
+        <TextView
+                android:id="@id/location"
+                android:textSize="12sp"
+                style="@style/profileHeaderText"/>
+
+        <TextView
+                android:textSize="9.0sp"
+                android:textColor="@color/white"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/follows_you"
+                android:background="@drawable/bg_follows_you"
+                android:paddingLeft="5.0dp"
+                android:paddingTop="2.0dp"
+                android:paddingRight="5.0dp"
+                android:paddingBottom="2.0dp"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4.0dp"
+                />
+    </LinearLayout>
+</RelativeLayout>
