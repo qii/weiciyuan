@@ -78,10 +78,10 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
     }
 
-    protected ActionMode mActionMode;
+    protected ActionMode actionMode;
 
     public void setmActionMode(ActionMode mActionMode) {
-        this.mActionMode = mActionMode;
+        this.actionMode = mActionMode;
     }
 
     @Override
@@ -159,12 +159,12 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
         Loader<UserListBean> loader = getLoaderManager().getLoader(NEW_USER_LOADER_ID);
         if (loader != null) {
-            getLoaderManager().initLoader(NEW_USER_LOADER_ID, null, msgCallback);
+            getLoaderManager().initLoader(NEW_USER_LOADER_ID, null, userAsyncTaskLoaderCallback);
         }
 
         loader = getLoaderManager().getLoader(OLD_USER_LOADER_ID);
         if (loader != null) {
-            getLoaderManager().initLoader(OLD_USER_LOADER_ID, null, msgCallback);
+            getLoaderManager().initLoader(OLD_USER_LOADER_ID, null, userAsyncTaskLoaderCallback);
         }
     }
 
@@ -225,7 +225,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
         getLoaderManager().destroyLoader(OLD_USER_LOADER_ID);
         dismissFooterView();
-        getLoaderManager().restartLoader(NEW_USER_LOADER_ID, null, msgCallback);
+        getLoaderManager().restartLoader(NEW_USER_LOADER_ID, null, userAsyncTaskLoaderCallback);
     }
 
 
@@ -237,7 +237,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
 
         getLoaderManager().destroyLoader(NEW_USER_LOADER_ID);
         getPullToRefreshListView().onRefreshComplete();
-        getLoaderManager().restartLoader(OLD_USER_LOADER_ID, null, msgCallback);
+        getLoaderManager().restartLoader(OLD_USER_LOADER_ID, null, userAsyncTaskLoaderCallback);
     }
 
 
@@ -273,10 +273,10 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     }
 
     public void clearActionMode() {
-        if (mActionMode != null) {
+        if (actionMode != null) {
 
-            mActionMode.finish();
-            mActionMode = null;
+            actionMode.finish();
+            actionMode = null;
         }
         if (pullToRefreshListView != null && getListView().getCheckedItemCount() > 0) {
             getListView().clearChoices();
@@ -309,10 +309,10 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            if (mActionMode != null) {
+            if (actionMode != null) {
                 getListView().clearChoices();
-                mActionMode.finish();
-                mActionMode = null;
+                actionMode.finish();
+                actionMode = null;
                 return;
             }
             getListView().clearChoices();
@@ -346,14 +346,14 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
         }
     }
 
-    protected abstract void oldUserOnPostExecute(UserListBean newValue);
+    protected abstract void oldUserLoaderSuccessCallback(UserListBean newValue);
 
-    protected void newUserOnPostExecute() {
+    protected void newUserLoaderSuccessCallback() {
 
     }
 
-    private Loader<AsyncTaskLoaderResult<UserListBean>> createNewMsgLoader(int id, Bundle args) {
-        Loader<AsyncTaskLoaderResult<UserListBean>> loader = onCreateNewMsgLoader(id, args);
+    private Loader<AsyncTaskLoaderResult<UserListBean>> createNewUserLoader(int id, Bundle args) {
+        Loader<AsyncTaskLoaderResult<UserListBean>> loader = onCreateNewUserLoader(id, args);
         if (loader == null) {
             loader = new DummyLoader<UserListBean>(getActivity());
         }
@@ -364,8 +364,8 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     }
 
 
-    private Loader<AsyncTaskLoaderResult<UserListBean>> createOldMsgLoader(int id, Bundle args) {
-        Loader<AsyncTaskLoaderResult<UserListBean>> loader = onCreateOldMsgLoader(id, args);
+    private Loader<AsyncTaskLoaderResult<UserListBean>> createOldUserLoader(int id, Bundle args) {
+        Loader<AsyncTaskLoaderResult<UserListBean>> loader = onCreateOldUserLoader(id, args);
         if (loader == null) {
             loader = new DummyLoader<UserListBean>(getActivity());
         }
@@ -373,19 +373,20 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
     }
 
 
-    protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewMsgLoader(int id,
+    protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewUserLoader(int id,
             Bundle args) {
         return null;
     }
 
 
-    protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateOldMsgLoader(int id,
+    protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateOldUserLoader(int id,
             Bundle args) {
         return null;
     }
 
 
-    protected LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserListBean>> msgCallback
+    protected LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserListBean>>
+            userAsyncTaskLoaderCallback
             = new LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<UserListBean>>() {
 
         @Override
@@ -397,10 +398,10 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
                     if (args == null || args.getBoolean(BundleArgsConstants.SCROLL_TO_TOP)) {
                         Utility.stopListViewScrollingAndScrollToTop(getListView());
                     }
-                    return createNewMsgLoader(id, args);
+                    return createNewUserLoader(id, args);
                 case OLD_USER_LOADER_ID:
                     showFooterView();
-                    return createOldMsgLoader(id, args);
+                    return createOldUserLoader(id, args);
             }
 
             return null;
@@ -425,7 +426,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
                             clearAndReplaceValue(data);
                             getAdapter().notifyDataSetChanged();
                             getListView().setSelectionAfterHeaderView();
-                            newUserOnPostExecute();
+                            newUserLoaderSuccessCallback();
                         }
                     }
                     break;
@@ -436,7 +437,7 @@ public abstract class AbstractUserListFragment extends AbstractAppFragment {
                         showErrorFooterView();
                     } else if (data != null) {
                         canLoadOldData = data.getUsers().size() > 1;
-                        oldUserOnPostExecute(data);
+                        oldUserLoaderSuccessCallback(data);
                         getAdapter().notifyDataSetChanged();
                         dismissFooterView();
                     } else {

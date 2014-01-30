@@ -37,7 +37,7 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
 
     //this api has bug, check cursor before add data
     @Override
-    protected void oldUserOnPostExecute(UserListBean newValue) {
+    protected void oldUserLoaderSuccessCallback(UserListBean newValue) {
         if (newValue != null && newValue.getUsers().size() > 0
                 && newValue.getPrevious_cursor() != bean.getPrevious_cursor()) {
             List<UserBean> list = newValue.getUsers();
@@ -49,7 +49,7 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
     }
 
     @Override
-    protected void newUserOnPostExecute() {
+    protected void newUserLoaderSuccessCallback() {
         buildActionBarSubtitle();
     }
 

@@ -238,7 +238,7 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
         }
 
         @Override
-        protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewMsgLoader(int id,
+        protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateNewUserLoader(int id,
                 Bundle args) {
             String token = GlobalContext.getInstance().getSpecialToken();
             String cursor = String.valueOf(0);
@@ -246,7 +246,7 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
         }
 
         @Override
-        protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateOldMsgLoader(int id,
+        protected Loader<AsyncTaskLoaderResult<UserListBean>> onCreateOldUserLoader(int id,
                 Bundle args) {
 
             if (getList().getUsers().size() > 0
