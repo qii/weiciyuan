@@ -55,7 +55,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -655,6 +654,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     protected void newMsgOnPostExecuteError(WeiboException exception) {
         super.newMsgOnPostExecuteError(exception);
         stopRefreshMenuAnimationIfPossible();
+        getListView().removeFooterView(progressFooter);
     }
 
     @Override
@@ -987,7 +987,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
             if (Utility.isAllNotNull(getActivity(), this.e)) {
-                Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_SHORT).show();
+                newMsgTipBar.setError(e.getError());
             }
             stopRefreshMenuAnimationIfPossible();
         }
