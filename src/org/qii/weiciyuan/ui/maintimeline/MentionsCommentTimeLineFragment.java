@@ -240,12 +240,12 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
             if (position - 1 < getList().getSize() && position - 1 >= 0) {
-                if (mActionMode != null) {
-                    mActionMode.finish();
-                    mActionMode = null;
+                if (actionMode != null) {
+                    actionMode.finish();
+                    actionMode = null;
                     getListView().setItemChecked(position, true);
                     timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(
+                    actionMode = getActivity().startActionMode(
                             new CommentSingleChoiceModeListener(getListView(), timeLineAdapter,
                                     MentionsCommentTimeLineFragment.this,
                                     getList().getItemList().get(position - 1)));
@@ -253,7 +253,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                 } else {
                     getListView().setItemChecked(position, true);
                     timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(
+                    actionMode = getActivity().startActionMode(
                             new CommentSingleChoiceModeListener(getListView(), timeLineAdapter,
                                     MentionsCommentTimeLineFragment.this,
                                     getList().getItemList().get(position - 1)));

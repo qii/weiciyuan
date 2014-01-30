@@ -1,20 +1,5 @@
 package org.qii.weiciyuan.ui.browser;
 
-import android.app.Activity;
-import android.content.*;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.*;
-
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
@@ -30,9 +15,32 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.actionmenu.CommentByIdSingleChoiceModeLinstener;
 import org.qii.weiciyuan.ui.adapter.CommentListAdapter;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.common.QuickSendProgressFragment;
 import org.qii.weiciyuan.ui.interfaces.IRemoveItem;
 import org.qii.weiciyuan.ui.loader.CommentsByIdMsgLoader;
-import org.qii.weiciyuan.ui.common.QuickSendProgressFragment;
+
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 /**
  * User: qii
@@ -194,12 +202,12 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
             if (position - 1 < getList().getSize() && position - 1 >= 0) {
-                if (mActionMode != null) {
-                    mActionMode.finish();
-                    mActionMode = null;
+                if (actionMode != null) {
+                    actionMode.finish();
+                    actionMode = null;
                     getListView().setItemChecked(position, true);
                     timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(
+                    actionMode = getActivity().startActionMode(
                             new CommentByIdSingleChoiceModeLinstener(getListView(), timeLineAdapter,
                                     CommentsByIdTimeLineFragment.this, quick_repost,
                                     bean.getItemList().get(position - 1)));
@@ -207,7 +215,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
                 } else {
                     getListView().setItemChecked(position, true);
                     timeLineAdapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(
+                    actionMode = getActivity().startActionMode(
                             new CommentByIdSingleChoiceModeLinstener(getListView(), timeLineAdapter,
                                     CommentsByIdTimeLineFragment.this, quick_repost,
                                     bean.getItemList().get(position - 1)));

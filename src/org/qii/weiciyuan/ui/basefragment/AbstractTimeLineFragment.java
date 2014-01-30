@@ -71,7 +71,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
     protected static final int OLD_MSG_LOADER_ID = 3;
 
-    protected ActionMode mActionMode;
+    protected ActionMode actionMode;
 
     protected int savedCurrentLoadingMsgViewPositon = NO_SAVED_CURRENT_LOADING_MSG_VIEW_POSITION;
 
@@ -298,10 +298,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         }
 
         boolean resetActionMode() {
-            if (mActionMode != null) {
+            if (actionMode != null) {
                 getListView().clearChoices();
-                mActionMode.finish();
-                mActionMode = null;
+                actionMode.finish();
+                actionMode = null;
                 return true;
             } else {
                 return false;
@@ -428,10 +428,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
 
     public void clearActionMode() {
-        if (mActionMode != null) {
+        if (actionMode != null) {
 
-            mActionMode.finish();
-            mActionMode = null;
+            actionMode.finish();
+            actionMode = null;
         }
         if (pullToRefreshListView != null && getListView().getCheckedItemCount() > 0) {
             getListView().clearChoices();
@@ -443,9 +443,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
     public boolean clearActionModeIfOpen() {
         boolean flag = false;
-        if (mActionMode != null) {
-            mActionMode.finish();
-            mActionMode = null;
+        if (actionMode != null) {
+            actionMode.finish();
+            actionMode = null;
             flag = true;
         }
         if (pullToRefreshListView != null && getListView().getCheckedItemCount() > 0) {
@@ -492,11 +492,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
     public void setActionMode(ActionMode mActionMode) {
-        this.mActionMode = mActionMode;
+        this.actionMode = mActionMode;
     }
 
     public boolean hasActionMode() {
-        return mActionMode != null;
+        return actionMode != null;
     }
 
 

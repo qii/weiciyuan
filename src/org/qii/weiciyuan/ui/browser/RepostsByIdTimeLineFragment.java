@@ -144,12 +144,12 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position,
                     long id) {
                 if (position - 1 < getList().getSize() && position - 1 >= 0) {
-                    if (mActionMode != null) {
-                        mActionMode.finish();
-                        mActionMode = null;
+                    if (actionMode != null) {
+                        actionMode.finish();
+                        actionMode = null;
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(
+                        actionMode = getActivity().startActionMode(
                                 new RepostSingleChoiceModeListener(getListView(),
                                         (StatusListAdapter) timeLineAdapter,
                                         RepostsByIdTimeLineFragment.this, quick_repost,
@@ -158,7 +158,7 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
                     } else {
                         getListView().setItemChecked(position, true);
                         timeLineAdapter.notifyDataSetChanged();
-                        mActionMode = getActivity().startActionMode(
+                        actionMode = getActivity().startActionMode(
                                 new RepostSingleChoiceModeListener(getListView(),
                                         (StatusListAdapter) timeLineAdapter,
                                         RepostsByIdTimeLineFragment.this, quick_repost,
@@ -221,10 +221,10 @@ public class RepostsByIdTimeLineFragment extends AbstractMessageTimeLineFragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (mActionMode != null) {
+                if (actionMode != null) {
                     getListView().clearChoices();
-                    mActionMode.finish();
-                    mActionMode = null;
+                    actionMode.finish();
+                    actionMode = null;
                     return;
                 }
                 getListView().clearChoices();

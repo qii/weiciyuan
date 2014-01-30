@@ -1,5 +1,13 @@
 package org.qii.weiciyuan.ui.actionmenu;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.browser.BrowserCommentActivity;
+import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgFragment;
+import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
+
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -16,14 +24,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
-
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.CommentBean;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.browser.BrowserCommentActivity;
-import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgFragment;
-import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 
 import java.util.List;
 
@@ -199,7 +199,7 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         }
 
         if (fragment instanceof BrowserWeiboMsgFragment) {
-            ((BrowserWeiboMsgFragment) fragment).setmActionMode(null);
+            ((BrowserWeiboMsgFragment) fragment).setActionMode(null);
         }
 
     }

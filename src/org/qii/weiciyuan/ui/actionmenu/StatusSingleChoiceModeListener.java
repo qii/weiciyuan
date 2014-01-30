@@ -211,7 +211,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
         }
 
         if (fragment instanceof BrowserWeiboMsgFragment) {
-            ((BrowserWeiboMsgFragment) fragment).setmActionMode(null);
+            ((BrowserWeiboMsgFragment) fragment).setActionMode(null);
         }
     }
 
