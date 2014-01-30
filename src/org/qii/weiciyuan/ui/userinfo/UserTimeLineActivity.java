@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.ui.userinfo;
 
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -21,6 +22,13 @@ public class UserTimeLineActivity extends AbstractAppActivity implements IUserIn
     @Override
     public UserBean getUser() {
         return bean;
+    }
+
+    public static Intent newIntent(String token, UserBean userBean) {
+        Intent intent = new Intent(GlobalContext.getInstance(), UserTimeLineActivity.class);
+        intent.putExtra("token", token);
+        intent.putExtra("user", userBean);
+        return intent;
     }
 
     @Override

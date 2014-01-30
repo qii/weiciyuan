@@ -2,6 +2,7 @@ package org.qii.weiciyuan.ui.topic;
 
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -16,6 +17,14 @@ import java.util.ArrayList;
  * Date: 12-11-18
  */
 public class UserTopicListActivity extends AbstractAppActivity {
+
+    public static Intent newIntent(UserBean userBean, ArrayList<String> topicList) {
+        Intent intent = new Intent(GlobalContext.getInstance(), UserTopicListActivity.class);
+        intent.putExtra("userBean", userBean);
+        intent.putStringArrayListExtra("topicList", topicList);
+        return intent;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

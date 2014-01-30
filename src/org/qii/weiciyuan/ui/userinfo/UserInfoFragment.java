@@ -65,7 +65,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 13-6-20
  */
 public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageListBean>
-implements MainTimeLineActivity.ScrollableListFragment, Animator.AnimatorListener {
+        implements MainTimeLineActivity.ScrollableListFragment, Animator.AnimatorListener {
 
 
     private static final String LIMITED_READ_MESSAGE_COUNT = "10";
@@ -235,9 +235,8 @@ implements MainTimeLineActivity.ScrollableListFragment, Animator.AnimatorListene
         weiboCountLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UserTimeLineActivity.class);
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                intent.putExtra("user", userBean);
+                Intent intent = UserTimeLineActivity
+                        .newIntent(GlobalContext.getInstance().getSpecialToken(), userBean);
                 startActivity(intent);
             }
         });
@@ -245,9 +244,9 @@ implements MainTimeLineActivity.ScrollableListFragment, Animator.AnimatorListene
         friendsCountLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FriendListActivity.class);
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                intent.putExtra("user", userBean);
+                Intent intent = FriendListActivity
+                        .newIntent(GlobalContext.getInstance().getSpecialToken(),
+                                userBean);
                 startActivity(intent);
             }
         });
@@ -255,9 +254,9 @@ implements MainTimeLineActivity.ScrollableListFragment, Animator.AnimatorListene
         fansCountLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FanListActivity.class);
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                intent.putExtra("user", userBean);
+                Intent intent = FanListActivity
+                        .newIntent(GlobalContext.getInstance().getSpecialToken(),
+                                userBean);
                 startActivity(intent);
             }
         });
@@ -265,9 +264,7 @@ implements MainTimeLineActivity.ScrollableListFragment, Animator.AnimatorListene
         topicCountLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UserTopicListActivity.class);
-                intent.putExtra("userBean", userBean);
-                intent.putStringArrayListExtra("topicList", topicList);
+                Intent intent = UserTopicListActivity.newIntent(userBean, topicList);
                 startActivity(intent);
             }
         });
@@ -683,9 +680,8 @@ implements MainTimeLineActivity.ScrollableListFragment, Animator.AnimatorListene
 
     @Override
     protected void loadOldMsg(View view) {
-        Intent intent = new Intent(getActivity(), UserTimeLineActivity.class);
-        intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-        intent.putExtra("user", userBean);
+        Intent intent = UserTimeLineActivity
+                .newIntent(GlobalContext.getInstance().getSpecialToken(), userBean);
         startActivity(intent);
     }
 
