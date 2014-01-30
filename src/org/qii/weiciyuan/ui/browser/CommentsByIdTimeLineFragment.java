@@ -399,7 +399,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
 
 
     @Override
-    protected void newMsgOnPostExecute(CommentListBean newValue, Bundle loaderArgs) {
+    protected void newMsgLoaderSuccessCallback(CommentListBean newValue, Bundle loaderArgs) {
         if (newValue != null && newValue.getSize() > 0) {
             getList().replaceAll(newValue);
             getAdapter().notifyDataSetChanged();
@@ -413,7 +413,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
     }
 
     @Override
-    protected void oldMsgOnPostExecute(CommentListBean newValue) {
+    protected void oldMsgLoaderSuccessCallback(CommentListBean newValue) {
         if (newValue != null && newValue.getItemList().size() > 1) {
             getList().addOldData(newValue);
             getAdapter().notifyDataSetChanged();
@@ -442,7 +442,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         bundle.putString("beginId", beginId);
         bundle.putString("endId", endId);
         bundle.putInt("position", position);
-        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
+        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgAsyncTaskLoaderCallback);
 
     }
 
@@ -451,7 +451,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
         getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
         dismissFooterView();
-        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgAsyncTaskLoaderCallback);
     }
 
     @Override
@@ -459,7 +459,7 @@ public class CommentsByIdTimeLineFragment extends AbstractTimeLineFragment<Comme
         getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
         getPullToRefreshListView().onRefreshComplete();
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgAsyncTaskLoaderCallback);
     }
 
 

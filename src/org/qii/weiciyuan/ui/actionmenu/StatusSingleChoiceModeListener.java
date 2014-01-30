@@ -14,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
+
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -33,21 +34,29 @@ import org.qii.weiciyuan.ui.task.UnFavAsyncTask;
 public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
     private ListView listView;
+
     private BaseAdapter adapter;
+
     private Fragment fragment;
+
     private ActionMode mode;
+
     private MessageBean bean;
+
     private ShareActionProvider mShareActionProvider;
 
     private FavAsyncTask favTask = null;
+
     private UnFavAsyncTask unFavTask = null;
 
     public void finish() {
-        if (mode != null)
+        if (mode != null) {
             mode.finish();
+        }
     }
 
-    public StatusSingleChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment fragment, MessageBean bean) {
+    public StatusSingleChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment fragment,
+            MessageBean bean) {
         this.listView = listView;
         this.fragment = fragment;
         this.adapter = adapter;
@@ -61,8 +70,9 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        if (this.mode == null)
+        if (this.mode == null) {
             this.mode = mode;
+        }
 
         return true;
 
@@ -93,15 +103,18 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
-        if (fragment.getActivity() != null)
+        if (fragment.getActivity() != null) {
             Utility.setShareIntent(fragment.getActivity(), mShareActionProvider, bean);
-        mShareActionProvider.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
-            @Override
-            public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
-                finish();
-                return false;
-            }
-        });
+        }
+        mShareActionProvider.setOnShareTargetSelectedListener(
+                new ShareActionProvider.OnShareTargetSelectedListener() {
+                    @Override
+                    public boolean onShareTargetSelected(ShareActionProvider source,
+                            Intent intent) {
+                        finish();
+                        return false;
+                    }
+                });
         return true;
 
 
@@ -137,7 +150,8 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
                 break;
             case R.id.menu_fav:
                 if (Utility.isTaskStopped(favTask) && Utility.isTaskStopped(unFavTask)) {
-                    favTask = new FavAsyncTask(GlobalContext.getInstance().getSpecialToken(), bean.getId());
+                    favTask = new FavAsyncTask(GlobalContext.getInstance().getSpecialToken(),
+                            bean.getId());
                     favTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 listView.clearChoices();
@@ -145,7 +159,8 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
                 break;
             case R.id.menu_unfav:
                 if (Utility.isTaskStopped(favTask) && Utility.isTaskStopped(unFavTask)) {
-                    unFavTask = new UnFavAsyncTask(GlobalContext.getInstance().getSpecialToken(), bean.getId());
+                    unFavTask = new UnFavAsyncTask(GlobalContext.getInstance().getSpecialToken(),
+                            bean.getId());
                     unFavTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 listView.clearChoices();
@@ -160,24 +175,28 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 
                 break;
             case R.id.menu_share:
-                if (fragment.getActivity() != null)
+                if (fragment.getActivity() != null) {
                     Utility.setShareIntent(fragment.getActivity(), mShareActionProvider, bean);
-                mShareActionProvider.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
-                    @Override
-                    public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
-                        finish();
-                        return false;
-                    }
-                });
+                }
+                mShareActionProvider.setOnShareTargetSelectedListener(
+                        new ShareActionProvider.OnShareTargetSelectedListener() {
+                            @Override
+                            public boolean onShareTargetSelected(ShareActionProvider source,
+                                    Intent intent) {
+                                finish();
+                                return false;
+                            }
+                        });
                 break;
             case R.id.menu_copy:
-                ClipboardManager cm = (ClipboardManager) fragment.getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager cm = (ClipboardManager) fragment.getActivity()
+                        .getSystemService(Context.CLIPBOARD_SERVICE);
                 cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", bean.getText()));
-                Toast.makeText(fragment.getActivity(), fragment.getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
+                Toast.makeText(fragment.getActivity(),
+                        fragment.getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
                 mode.finish();
                 break;
         }
-
 
         return true;
     }
@@ -187,11 +206,13 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
         this.mode = null;
         listView.clearChoices();
         adapter.notifyDataSetChanged();
-        if (fragment instanceof AbstractTimeLineFragment)
-            ((AbstractTimeLineFragment) fragment).setmActionMode(null);
+        if (fragment instanceof AbstractTimeLineFragment) {
+            ((AbstractTimeLineFragment) fragment).setActionMode(null);
+        }
 
-        if (fragment instanceof BrowserWeiboMsgFragment)
+        if (fragment instanceof BrowserWeiboMsgFragment) {
             ((BrowserWeiboMsgFragment) fragment).setmActionMode(null);
+        }
     }
 
 

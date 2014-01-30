@@ -277,7 +277,7 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     }
 
     @Override
-    protected void newMsgOnPostExecute(CommentListBean newValue, Bundle loaderArgs) {
+    protected void newMsgLoaderSuccessCallback(CommentListBean newValue, Bundle loaderArgs) {
         if (newValue != null && newValue.getItemList() != null
                 && newValue.getItemList().size() > 0) {
             getList().addNewData(newValue);
@@ -288,7 +288,7 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     }
 
     @Override
-    protected void oldMsgOnPostExecute(CommentListBean newValue) {
+    protected void oldMsgLoaderSuccessCallback(CommentListBean newValue) {
         if (newValue != null && newValue.getItemList().size() > 1) {
             getList().addOldData(newValue);
             getAdapter().notifyDataSetChanged();
@@ -297,7 +297,7 @@ public class CommentsByMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     }
 
     @Override
-    protected void middleMsgOnPostExecute(int position, CommentListBean newValue,
+    protected void middleMsgLoaderSuccessCallback(int position, CommentListBean newValue,
             boolean towardsBottom) {
 
         if (newValue != null) {

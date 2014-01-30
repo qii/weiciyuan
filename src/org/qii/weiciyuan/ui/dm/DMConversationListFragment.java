@@ -266,7 +266,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
 
 
     @Override
-    protected void newMsgOnPostExecute(DMListBean newValue, Bundle loaderArgs) {
+    protected void newMsgLoaderSuccessCallback(DMListBean newValue, Bundle loaderArgs) {
         dmProgressBar.setVisibility(View.INVISIBLE);
 
         if (newValue != null && newValue.getSize() > 0 && getActivity() != null) {
@@ -279,7 +279,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
     }
 
     @Override
-    protected void oldMsgOnPostExecute(DMListBean newValue) {
+    protected void oldMsgLoaderSuccessCallback(DMListBean newValue) {
         if (newValue != null && newValue.getSize() > 0) {
             getList().addOldData(newValue);
             Collections.sort(getList().getItemList(), comparator);
@@ -370,7 +370,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
         getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
         dismissFooterView();
-        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgAsyncTaskLoaderCallback);
     }
 
 
@@ -379,7 +379,7 @@ public class DMConversationListFragment extends AbstractTimeLineFragment<DMListB
         getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
         getPullToRefreshListView().onRefreshComplete();
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgAsyncTaskLoaderCallback);
     }
 
     @Override

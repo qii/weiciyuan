@@ -89,7 +89,7 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
 
 
     @Override
-    protected void newMsgOnPostExecute(SearchStatusListBean newValue, Bundle loaderArgs) {
+    protected void newMsgLoaderSuccessCallback(SearchStatusListBean newValue, Bundle loaderArgs) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();
@@ -100,7 +100,7 @@ public class SearchStatusFragment extends AbstractMessageTimeLineFragment<Search
     }
 
     @Override
-    protected void oldMsgOnPostExecute(SearchStatusListBean newValue) {
+    protected void oldMsgLoaderSuccessCallback(SearchStatusListBean newValue) {
 
         if (newValue != null && newValue.getSize() > 0) {
             getList().addOldData(newValue);

@@ -372,7 +372,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
 
     @Override
-    protected void newMsgOnPostExecute(CommentListBean newValue, Bundle loaderArgs) {
+    protected void newMsgLoaderSuccessCallback(CommentListBean newValue, Bundle loaderArgs) {
         if (newValue != null && newValue.getItemList().size() > 0) {
             addNewDataAndRememberPosition(newValue);
         }
@@ -413,7 +413,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
 
     }
 
-    protected void middleMsgOnPostExecute(int position, CommentListBean newValue,
+    protected void middleMsgLoaderSuccessCallback(int position, CommentListBean newValue,
             boolean towardsBottom) {
 
         if (newValue != null) {
@@ -438,7 +438,7 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     }
 
     @Override
-    protected void oldMsgOnPostExecute(CommentListBean newValue) {
+    protected void oldMsgLoaderSuccessCallback(CommentListBean newValue) {
         if (newValue != null && newValue.getItemList().size() > 1) {
             getList().addOldData(newValue);
             getAdapter().notifyDataSetChanged();

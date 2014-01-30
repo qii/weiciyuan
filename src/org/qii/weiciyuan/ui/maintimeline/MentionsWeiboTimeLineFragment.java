@@ -197,7 +197,7 @@ public class MentionsWeiboTimeLineFragment
 
 
     @Override
-    protected void newMsgOnPostExecute(MessageListBean newValue, Bundle loaderArgs) {
+    protected void newMsgLoaderSuccessCallback(MessageListBean newValue, Bundle loaderArgs) {
         if (getActivity() != null && newValue.getSize() > 0) {
             addNewDataAndRememberPosition(newValue);
         }
@@ -234,7 +234,7 @@ public class MentionsWeiboTimeLineFragment
         }
     }
 
-    protected void middleMsgOnPostExecute(int position, MessageListBean newValue,
+    protected void middleMsgLoaderSuccessCallback(int position, MessageListBean newValue,
             boolean towardsBottom) {
 
         if (newValue != null) {
@@ -259,7 +259,7 @@ public class MentionsWeiboTimeLineFragment
     }
 
     @Override
-    protected void oldMsgOnPostExecute(MessageListBean newValue) {
+    protected void oldMsgLoaderSuccessCallback(MessageListBean newValue) {
         if (newValue != null && newValue.getSize() > 1) {
             getList().addOldData(newValue);
             MentionWeiboTimeLineDBTask.asyncReplace(getList(), accountBean.getUid());

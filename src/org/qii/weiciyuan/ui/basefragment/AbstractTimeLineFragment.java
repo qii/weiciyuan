@@ -126,7 +126,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
         getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
         dismissFooterView();
-        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgAsyncTaskLoaderCallback);
     }
 
 
@@ -139,7 +139,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         getLoaderManager().destroyLoader(NEW_MSG_LOADER_ID);
         getPullToRefreshListView().onRefreshComplete();
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
-        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+        getLoaderManager().restartLoader(OLD_MSG_LOADER_ID, null, msgAsyncTaskLoaderCallback);
     }
 
     public void loadMiddleMsg(String beginId, String endId, int position) {
@@ -155,7 +155,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         VelocityListView velocityListView = (VelocityListView) getListView();
         bundle.putBoolean("towardsBottom",
                 velocityListView.getTowardsOrientation() == VelocityListView.TOWARDS_BOTTOM);
-        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgCallback);
+        getLoaderManager().restartLoader(MIDDLE_MSG_LOADER_ID, bundle, msgAsyncTaskLoaderCallback);
 
     }
 
@@ -479,19 +479,19 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
         Loader<T> loader = getLoaderManager().getLoader(NEW_MSG_LOADER_ID);
         if (loader != null) {
-            getLoaderManager().initLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+            getLoaderManager().initLoader(NEW_MSG_LOADER_ID, null, msgAsyncTaskLoaderCallback);
         }
         loader = getLoaderManager().getLoader(MIDDLE_MSG_LOADER_ID);
         if (loader != null) {
-            getLoaderManager().initLoader(MIDDLE_MSG_LOADER_ID, null, msgCallback);
+            getLoaderManager().initLoader(MIDDLE_MSG_LOADER_ID, null, msgAsyncTaskLoaderCallback);
         }
         loader = getLoaderManager().getLoader(OLD_MSG_LOADER_ID);
         if (loader != null) {
-            getLoaderManager().initLoader(OLD_MSG_LOADER_ID, null, msgCallback);
+            getLoaderManager().initLoader(OLD_MSG_LOADER_ID, null, msgAsyncTaskLoaderCallback);
         }
     }
 
-    public void setmActionMode(ActionMode mActionMode) {
+    public void setActionMode(ActionMode mActionMode) {
         this.mActionMode = mActionMode;
     }
 
@@ -499,42 +499,6 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         return mActionMode != null;
     }
 
-
-    protected abstract void newMsgOnPostExecute(T newValue, Bundle loaderArgs);
-
-    protected abstract void oldMsgOnPostExecute(T newValue);
-
-
-    protected void middleMsgOnPostExecute(int position, T newValue, boolean towardsBottom) {
-
-        if (newValue == null) {
-            return;
-        }
-
-        if (newValue.getSize() == 0 || newValue.getSize() == 1) {
-            getList().getItemList().remove(position);
-            getAdapter().notifyDataSetChanged();
-            return;
-        }
-
-        ItemBean lastItem = newValue.getItem(newValue.getSize() - 1);
-
-//        if (!lastItem.getId().equals(endTag)) {
-//            getList().getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
-//            getAdapter().notifyDataSetChanged();
-//            return;
-//        }
-//
-//        if (lastItem.getId().equals(endTag)) {
-//            int nullIndex = position + newValue.getSize() - 1;
-//            getList().getItemList().addAll(position, newValue.getItemList().subList(1, newValue.getSize()));
-//            getList().getItemList().remove(nullIndex - 1);
-//            getList().getItemList().remove(nullIndex - 1);
-//            getAdapter().notifyDataSetChanged();
-//            return;
-//        }
-
-    }
 
     protected void showListView() {
         progressBar.setVisibility(View.INVISIBLE);
@@ -547,6 +511,30 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         return !enableRefreshTime;
     }
 
+    protected abstract void newMsgLoaderSuccessCallback(T newValue, Bundle loaderArgs);
+
+    protected abstract void oldMsgLoaderSuccessCallback(T newValue);
+
+    protected void middleMsgLoaderSuccessCallback(int position, T newValue, boolean towardsBottom) {
+
+        if (newValue == null) {
+            return;
+        }
+
+        if (newValue.getSize() == 0 || newValue.getSize() == 1) {
+            getList().getItemList().remove(position);
+            getAdapter().notifyDataSetChanged();
+            return;
+        }
+    }
+
+    protected void newMsgLoaderFailedCallback(WeiboException exception) {
+
+    }
+
+    protected void oldMsgLoaderFailedCallback(WeiboException exception) {
+
+    }
 
     private Loader<AsyncTaskLoaderResult<T>> createNewMsgLoader(int id, Bundle args) {
         Loader<AsyncTaskLoaderResult<T>> loader = onCreateNewMsgLoader(id, args);
@@ -591,7 +579,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         return null;
     }
 
-    protected LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<T>> msgCallback
+    protected LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<T>> msgAsyncTaskLoaderCallback
             = new LoaderManager.LoaderCallbacks<AsyncTaskLoaderResult<T>>() {
 
         private String middleBeginId = "";
@@ -641,9 +629,9 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                     refreshLayout(getList());
                     if (Utility.isAllNotNull(exception)) {
                         newMsgTipBar.setError(exception.getError());
-                        newMsgOnPostExecuteError(exception);
+                        newMsgLoaderFailedCallback(exception);
                     } else {
-                        newMsgOnPostExecute(data, args);
+                        newMsgLoaderSuccessCallback(data, args);
                     }
                     break;
                 case MIDDLE_MSG_LOADER_ID:
@@ -656,7 +644,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
                             loadingView.setErrorMessage(exception.getError());
                         }
                     } else {
-                        middleMsgOnPostExecute(middlePosition, data, towardsBottom);
+                        middleMsgLoaderSuccessCallback(middlePosition, data, towardsBottom);
 //                        getAdapter().notifyDataSetChanged();
                     }
                     savedCurrentLoadingMsgViewPositon = NO_SAVED_CURRENT_LOADING_MSG_VIEW_POSITION;
@@ -671,9 +659,10 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
 
                     if (exception != null) {
                         showErrorFooterView();
+                        oldMsgLoaderFailedCallback(exception);
                     } else if (data != null) {
                         canLoadOldData = data.getSize() > 1;
-                        oldMsgOnPostExecute(data);
+                        oldMsgLoaderSuccessCallback(data);
                         getAdapter().notifyDataSetChanged();
                         dismissFooterView();
                     } else {
@@ -691,9 +680,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
         }
     };
 
-    protected void newMsgOnPostExecuteError(WeiboException exception) {
 
-    }
 }
 
 

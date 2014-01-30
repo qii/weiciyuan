@@ -634,7 +634,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
 
 
     @Override
-    protected void newMsgOnPostExecute(MessageListBean newValue, Bundle loaderArgs) {
+    protected void newMsgLoaderSuccessCallback(MessageListBean newValue, Bundle loaderArgs) {
         stopRefreshMenuAnimationIfPossible();
         getListView().removeFooterView(progressFooter);
         if (getActivity() != null && newValue.getSize() > 0) {
@@ -651,14 +651,14 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
     }
 
     @Override
-    protected void newMsgOnPostExecuteError(WeiboException exception) {
-        super.newMsgOnPostExecuteError(exception);
+    protected void newMsgLoaderFailedCallback(WeiboException exception) {
+        super.newMsgLoaderFailedCallback(exception);
         stopRefreshMenuAnimationIfPossible();
         getListView().removeFooterView(progressFooter);
     }
 
     @Override
-    protected void oldMsgOnPostExecute(MessageListBean newValue) {
+    protected void oldMsgLoaderSuccessCallback(MessageListBean newValue) {
 
     }
 
@@ -677,7 +677,7 @@ public class NewUserInfoFragment extends AbstractMessageTimeLineFragment<Message
         getLoaderManager().destroyLoader(MIDDLE_MSG_LOADER_ID);
         getLoaderManager().destroyLoader(OLD_MSG_LOADER_ID);
         dismissFooterView();
-        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgCallback);
+        getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, null, msgAsyncTaskLoaderCallback);
     }
 
 

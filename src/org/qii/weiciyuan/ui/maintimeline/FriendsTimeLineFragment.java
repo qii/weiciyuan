@@ -650,7 +650,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
 
     @Override
-    protected void newMsgOnPostExecute(MessageListBean newValue, Bundle loaderArgs) {
+    protected void newMsgLoaderSuccessCallback(MessageListBean newValue, Bundle loaderArgs) {
         if (Utility.isAllNotNull(getActivity(), newValue) && newValue.getSize() > 0) {
             if (loaderArgs != null && loaderArgs
                     .getBoolean(BundleArgsConstants.AUTO_REFRESH, false)) {
@@ -707,7 +707,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     }
 
-    protected void middleMsgOnPostExecute(int position, MessageListBean newValue,
+    protected void middleMsgLoaderSuccessCallback(int position, MessageListBean newValue,
             boolean towardsBottom) {
 
         if (newValue == null) {
@@ -743,7 +743,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     @Override
-    protected void oldMsgOnPostExecute(MessageListBean oldValue) {
+    protected void oldMsgLoaderSuccessCallback(MessageListBean oldValue) {
         if (Utility.isAllNotNull(getActivity(), oldValue) && oldValue.getSize() > 1) {
             getList().addOldData(oldValue);
             putToGroupDataMemoryCache(currentGroupId, getList());
@@ -838,7 +838,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             Bundle bundle = new Bundle();
             bundle.putBoolean(BundleArgsConstants.SCROLL_TO_TOP, false);
             bundle.putBoolean(BundleArgsConstants.AUTO_REFRESH, true);
-            getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, bundle, msgCallback);
+            getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, bundle, msgAsyncTaskLoaderCallback);
         }
     }
 

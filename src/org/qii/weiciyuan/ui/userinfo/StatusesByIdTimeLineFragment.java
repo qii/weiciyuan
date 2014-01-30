@@ -159,7 +159,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
 
 
     @Override
-    protected void newMsgOnPostExecute(MessageListBean newValue, Bundle loaderArgs) {
+    protected void newMsgLoaderSuccessCallback(MessageListBean newValue, Bundle loaderArgs) {
         if (getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             getAdapter().notifyDataSetChanged();
@@ -172,7 +172,7 @@ public class StatusesByIdTimeLineFragment extends AbstractMessageTimeLineFragmen
     }
 
     @Override
-    protected void oldMsgOnPostExecute(MessageListBean newValue) {
+    protected void oldMsgLoaderSuccessCallback(MessageListBean newValue) {
         if (newValue != null && newValue.getSize() > 1) {
             getList().addOldData(newValue);
             getActivity().invalidateOptionsMenu();

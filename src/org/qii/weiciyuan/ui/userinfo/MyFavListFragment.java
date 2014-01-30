@@ -196,7 +196,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
 
 
     @Override
-    protected void newMsgOnPostExecute(FavListBean newValue, Bundle loaderArgs) {
+    protected void newMsgLoaderSuccessCallback(FavListBean newValue, Bundle loaderArgs) {
         if (newValue != null && getActivity() != null && newValue.getSize() > 0) {
             addNewDataWithoutRememberPosition(newValue);
             buildActionBarSubtitle();
@@ -207,7 +207,7 @@ public class MyFavListFragment extends AbstractMessageTimeLineFragment<FavListBe
     }
 
     @Override
-    protected void oldMsgOnPostExecute(FavListBean newValue) {
+    protected void oldMsgLoaderSuccessCallback(FavListBean newValue) {
 
         if (newValue != null && newValue.getSize() > 0) {
             getList().addOldData(newValue);

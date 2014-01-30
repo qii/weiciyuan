@@ -16,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
+
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -33,18 +34,25 @@ import java.util.List;
 public class CommentSingleChoiceModeListener implements ActionMode.Callback {
 
     private ListView listView;
+
     private BaseAdapter adapter;
+
     private Fragment fragment;
+
     private ActionMode mode;
+
     private CommentBean bean;
+
     private ShareActionProvider mShareActionProvider;
 
     public void finish() {
-        if (mode != null)
+        if (mode != null) {
             mode.finish();
+        }
     }
 
-    public CommentSingleChoiceModeListener(ListView listView, BaseAdapter adapter, Fragment fragment, CommentBean bean) {
+    public CommentSingleChoiceModeListener(ListView listView, BaseAdapter adapter,
+            Fragment fragment, CommentBean bean) {
         this.listView = listView;
         this.fragment = fragment;
         this.adapter = adapter;
@@ -58,8 +66,9 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        if (this.mode == null)
+        if (this.mode == null) {
             this.mode = mode;
+        }
 
         return true;
 
@@ -77,8 +86,10 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         MenuInflater inflater = mode.getMenuInflater();
         menu.clear();
 
-        boolean isMyComment = bean.getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId());
-        boolean isCommentUnderMyStatus = bean.getStatus().getUser().getId().equals(GlobalContext.getInstance().getCurrentAccountId());
+        boolean isMyComment = bean.getUser().getId()
+                .equals(GlobalContext.getInstance().getCurrentAccountId());
+        boolean isCommentUnderMyStatus = bean.getStatus().getUser().getId()
+                .equals(GlobalContext.getInstance().getCurrentAccountId());
 
         if (isMyComment || isCommentUnderMyStatus) {
             inflater.inflate(R.menu.contextual_menu_fragment_comment_listview_myself, menu);
@@ -100,13 +111,15 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         if (isIntentSafe && mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(sharingIntent);
         }
-        mShareActionProvider.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
-            @Override
-            public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
-                finish();
-                return false;
-            }
-        });
+        mShareActionProvider.setOnShareTargetSelectedListener(
+                new ShareActionProvider.OnShareTargetSelectedListener() {
+                    @Override
+                    public boolean onShareTargetSelected(ShareActionProvider source,
+                            Intent intent) {
+                        finish();
+                        return false;
+                    }
+                });
     }
 
     @Override
@@ -137,23 +150,28 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
                 sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, bean.getText());
                 PackageManager packageManager = getActivity().getPackageManager();
-                List<ResolveInfo> activities = packageManager.queryIntentActivities(sharingIntent, 0);
+                List<ResolveInfo> activities = packageManager
+                        .queryIntentActivities(sharingIntent, 0);
                 boolean isIntentSafe = activities.size() > 0;
                 if (isIntentSafe && mShareActionProvider != null) {
                     mShareActionProvider.setShareIntent(sharingIntent);
                 }
-                mShareActionProvider.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {
-                    @Override
-                    public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
-                        finish();
-                        return false;
-                    }
-                });
+                mShareActionProvider.setOnShareTargetSelectedListener(
+                        new ShareActionProvider.OnShareTargetSelectedListener() {
+                            @Override
+                            public boolean onShareTargetSelected(ShareActionProvider source,
+                                    Intent intent) {
+                                finish();
+                                return false;
+                            }
+                        });
                 break;
             case R.id.menu_copy:
-                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager cm = (ClipboardManager) getActivity()
+                        .getSystemService(Context.CLIPBOARD_SERVICE);
                 cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", bean.getText()));
-                Toast.makeText(getActivity(), getActivity().getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getActivity().getString(R.string.copy_successfully),
+                        Toast.LENGTH_SHORT).show();
                 listView.clearChoices();
                 mode.finish();
                 break;
@@ -168,7 +186,6 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
 
         }
 
-
         return true;
     }
 
@@ -177,11 +194,13 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
         this.mode = null;
         listView.clearChoices();
         adapter.notifyDataSetChanged();
-        if (fragment instanceof AbstractTimeLineFragment)
-            ((AbstractTimeLineFragment) fragment).setmActionMode(null);
+        if (fragment instanceof AbstractTimeLineFragment) {
+            ((AbstractTimeLineFragment) fragment).setActionMode(null);
+        }
 
-        if (fragment instanceof BrowserWeiboMsgFragment)
+        if (fragment instanceof BrowserWeiboMsgFragment) {
             ((BrowserWeiboMsgFragment) fragment).setmActionMode(null);
+        }
 
     }
 }
