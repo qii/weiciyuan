@@ -24,6 +24,7 @@ import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.support.utils.ViewUtility;
 import org.qii.weiciyuan.ui.basefragment.AbstractMessageTimeLineFragment;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgActivity;
 import org.qii.weiciyuan.ui.loader.StatusesByIdLoader;
@@ -198,13 +199,13 @@ public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageLis
         moreFooter.setVisibility(View.GONE);
         getListView().addFooterView(moreFooter);
 
-        viewPager = (ViewPager) header.findViewById(R.id.viewpager);
-        cover = (ImageView) header.findViewById(R.id.cover);
-        blur = (BlurImageView) header.findViewById(R.id.blur);
-        friendsCount = (TextView) header.findViewById(R.id.friends_count);
-        fansCount = (TextView) header.findViewById(R.id.fans_count);
-        topicsCount = (TextView) header.findViewById(R.id.topics_count);
-        weiboCount = (TextView) header.findViewById(R.id.weibo_count);
+        viewPager = ViewUtility.findViewById(header, R.id.viewpager);
+        cover = ViewUtility.findViewById(header, R.id.cover);
+        blur = ViewUtility.findViewById(header, R.id.blur);
+        friendsCount = ViewUtility.findViewById(header, R.id.friends_count);
+        fansCount = ViewUtility.findViewById(header, R.id.fans_count);
+        topicsCount = ViewUtility.findViewById(header, R.id.topics_count);
+        weiboCount = ViewUtility.findViewById(header, R.id.weibo_count);
 
         headerFirst = inflater
                 .inflate(R.layout.newuserinfofragment_header_viewpager_first_layout, null, false);
@@ -213,24 +214,24 @@ public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageLis
         headerThird = inflater
                 .inflate(R.layout.newuserinfofragment_header_viewpager_third_layout, null, false);
 
-        avatar = (TimeLineAvatarImageView) headerFirst.findViewById(R.id.avatar);
-        nickname = (TextView) headerFirst.findViewById(R.id.nickname);
-        location = (TextView) headerFirst.findViewById(R.id.location);
-        followsYou = (TextView) headerFirst.findViewById(R.id.follows_you);
+        avatar = ViewUtility.findViewById(headerFirst, R.id.avatar);
+        nickname = ViewUtility.findViewById(headerFirst, R.id.nickname);
+        location = ViewUtility.findViewById(headerFirst, R.id.location);
+        followsYou = ViewUtility.findViewById(headerFirst, R.id.follows_you);
 
-        bio = (TextView) headerSecond.findViewById(R.id.bio);
-        url = (TextView) headerSecond.findViewById(R.id.url);
-        verifiedReason = (TextView) headerThird.findViewById(R.id.verified_reason);
+        bio = ViewUtility.findViewById(headerSecond, R.id.bio);
+        url = ViewUtility.findViewById(headerSecond, R.id.url);
+        verifiedReason = ViewUtility.findViewById(headerThird, R.id.verified_reason);
 
-        leftPoint = (ImageView) header.findViewById(R.id.left_point);
-        centerPoint = (ImageView) header.findViewById(R.id.center_point);
-        rightPoint = (ImageView) header.findViewById(R.id.right_point);
+        leftPoint = ViewUtility.findViewById(header, R.id.left_point);
+        centerPoint = ViewUtility.findViewById(header, R.id.center_point);
+        rightPoint = ViewUtility.findViewById(header, R.id.right_point);
         leftPoint.getDrawable().setLevel(1);
 
-        View weiboCountLayout = header.findViewById(R.id.weibo_count_layout);
-        View friendsCountLayout = header.findViewById(R.id.friends_count_layout);
-        View fansCountLayout = header.findViewById(R.id.fans_count_layout);
-        View topicCountLayout = header.findViewById(R.id.topics_count_layout);
+        View weiboCountLayout = ViewUtility.findViewById(header, R.id.weibo_count_layout);
+        View friendsCountLayout = ViewUtility.findViewById(header, R.id.friends_count_layout);
+        View fansCountLayout = ViewUtility.findViewById(header, R.id.fans_count_layout);
+        View topicCountLayout = ViewUtility.findViewById(header, R.id.topics_count_layout);
 
         weiboCountLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -373,6 +374,8 @@ public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageLis
         } else {
             nickname.setText(userBean.getScreen_name() + "(" + userBean.getRemark() + ")");
         }
+
+        getActivity().getActionBar().setTitle(userBean.getScreen_name());
 
         avatar.checkVerified(userBean);
 
