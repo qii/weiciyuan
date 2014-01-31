@@ -18,6 +18,7 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.support.utils.ViewUtility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
@@ -390,34 +391,34 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
     //weibo image widgets and its forward weibo image widgets are the same
     private ViewHolder buildHolder(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.username = (TextView) convertView.findViewById(R.id.username);
+        holder.username = ViewUtility.findViewById(convertView, R.id.username);
         TextPaint tp = holder.username.getPaint();
         if (tp != null) {
             tp.setFakeBoldText(true);
         }
-        holder.content = (TextView) convertView.findViewById(R.id.content);
-        holder.repost_content = (TextView) convertView.findViewById(R.id.repost_content);
-        holder.time = (TimeTextView) convertView.findViewById(R.id.time);
+        holder.content = ViewUtility.findViewById(convertView, R.id.content);
+        holder.repost_content = ViewUtility.findViewById(convertView, R.id.repost_content);
+        holder.time = ViewUtility.findViewById(convertView, R.id.time);
         holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
 
         holder.repost_content_pic = (IWeiciyuanDrawable) convertView
                 .findViewById(R.id.repost_content_pic);
-        holder.repost_content_pic_multi = (GridLayout) convertView
-                .findViewById(R.id.repost_content__pic_multi);
+        holder.repost_content_pic_multi = ViewUtility
+                .findViewById(convertView, R.id.repost_content__pic_multi);
 
         holder.content_pic = holder.repost_content_pic;
         holder.content_pic_multi = holder.repost_content_pic_multi;
 
-        holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
-        holder.repost_layout = convertView.findViewById(R.id.repost_layout);
-        holder.repost_flag = (View) convertView.findViewById(R.id.repost_flag);
-        holder.count_layout = (LinearLayout) convertView.findViewById(R.id.count_layout);
-        holder.repost_count = (TextView) convertView.findViewById(R.id.repost_count);
-        holder.comment_count = (TextView) convertView.findViewById(R.id.comment_count);
-        holder.timeline_gps = (ImageView) convertView.findViewById(R.id.timeline_gps_iv);
-        holder.timeline_pic = (ImageView) convertView.findViewById(R.id.timeline_pic_iv);
-        holder.replyIV = (ImageView) convertView.findViewById(R.id.replyIV);
-        holder.source = (TextView) convertView.findViewById(R.id.source);
+        holder.listview_root = ViewUtility.findViewById(convertView, R.id.listview_root);
+        holder.repost_layout = ViewUtility.findViewById(convertView, R.id.repost_layout);
+        holder.repost_flag = ViewUtility.findViewById(convertView, R.id.repost_flag);
+        holder.count_layout = ViewUtility.findViewById(convertView, R.id.count_layout);
+        holder.repost_count = ViewUtility.findViewById(convertView, R.id.repost_count);
+        holder.comment_count = ViewUtility.findViewById(convertView, R.id.comment_count);
+        holder.timeline_gps = ViewUtility.findViewById(convertView, R.id.timeline_gps_iv);
+        holder.timeline_pic = ViewUtility.findViewById(convertView, R.id.timeline_pic_iv);
+        holder.replyIV = ViewUtility.findViewById(convertView, R.id.replyIV);
+        holder.source = ViewUtility.findViewById(convertView, R.id.source);
         return holder;
     }
 

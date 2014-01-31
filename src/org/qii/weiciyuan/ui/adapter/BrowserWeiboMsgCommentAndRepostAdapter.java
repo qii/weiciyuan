@@ -14,6 +14,7 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.support.utils.ViewUtility;
 import org.qii.weiciyuan.ui.browser.BrowserWeiboMsgFragment;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
@@ -292,14 +293,14 @@ public class BrowserWeiboMsgCommentAndRepostAdapter extends BaseAdapter {
 
     private ViewHolder buildHolder(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.username = (TextView) convertView.findViewById(R.id.username);
+        holder.username = ViewUtility.findViewById(convertView, R.id.username);
         TextPaint tp = holder.username.getPaint();
         tp.setFakeBoldText(true);
-        holder.content = (TextView) convertView.findViewById(R.id.content);
-        holder.time = (TimeTextView) convertView.findViewById(R.id.time);
+        holder.content = ViewUtility.findViewById(convertView, R.id.content);
+        holder.time = ViewUtility.findViewById(convertView, R.id.time);
         holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
-        holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
-        holder.reply = (ImageView) convertView.findViewById(R.id.replyIV);
+        holder.listview_root = ViewUtility.findViewById(convertView, R.id.listview_root);
+        holder.reply = ViewUtility.findViewById(convertView, R.id.replyIV);
         return holder;
     }
 

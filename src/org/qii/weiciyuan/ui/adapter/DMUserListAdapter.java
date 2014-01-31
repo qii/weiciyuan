@@ -11,6 +11,7 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.support.utils.ViewUtility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
@@ -93,11 +94,11 @@ public class DMUserListAdapter extends BaseAdapter {
 
     private DMViewHolder buildHolder(View convertView) {
         DMViewHolder holder = new DMViewHolder();
-        holder.username = (TextView) convertView.findViewById(R.id.username);
+        holder.username = ViewUtility.findViewById(convertView, R.id.username);
         TextPaint tp = holder.username.getPaint();
         tp.setFakeBoldText(true);
-        holder.content = (TextView) convertView.findViewById(R.id.content);
-        holder.time = (TextView) convertView.findViewById(R.id.time);
+        holder.content = ViewUtility.findViewById(convertView, R.id.content);
+        holder.time = ViewUtility.findViewById(convertView, R.id.time);
         holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
         return holder;
     }

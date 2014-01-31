@@ -1,5 +1,18 @@
 package org.qii.weiciyuan.ui.adapter;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.DMBean;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
+import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
+import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
+import org.qii.weiciyuan.support.utils.ViewUtility;
+import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
+import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -10,17 +23,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.bean.DMBean;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
-import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
-import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.TimeLineUtility;
-import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
-import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import java.util.List;
 
@@ -134,8 +136,8 @@ public class DMConversationAdapter extends BaseAdapter {
 
     private DMViewHolder buildHolder(View convertView) {
         DMViewHolder holder = new DMViewHolder();
-        holder.content = (TextView) convertView.findViewById(R.id.content);
-        holder.time = (TextView) convertView.findViewById(R.id.time);
+        holder.content = ViewUtility.findViewById(convertView, R.id.content);
+        holder.time = ViewUtility.findViewById(convertView, R.id.time);
         holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
         return holder;
     }

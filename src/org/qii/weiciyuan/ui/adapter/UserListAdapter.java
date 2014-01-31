@@ -7,6 +7,7 @@ import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.support.utils.ViewUtility;
 
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -94,10 +95,10 @@ public class UserListAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.user_listview_item_layout, parent, false);
-            holder.username = (TextView) convertView.findViewById(R.id.username);
-            holder.content = (TextView) convertView.findViewById(R.id.content);
+            holder.username = ViewUtility.findViewById(convertView, R.id.username);
+            holder.content = ViewUtility.findViewById(convertView, R.id.content);
             holder.avatar = (TimeLineAvatarImageView) convertView.findViewById(R.id.avatar);
-            holder.listview_root = (RelativeLayout) convertView.findViewById(R.id.listview_root);
+            holder.listview_root = ViewUtility.findViewById(convertView, R.id.listview_root);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();

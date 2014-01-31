@@ -16,6 +16,7 @@ import org.qii.weiciyuan.support.lib.pulltorefresh.extras.SoundPullEventListener
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.support.utils.ViewUtility;
 import org.qii.weiciyuan.ui.adapter.AbstractAppListAdapter;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppFragment;
 import org.qii.weiciyuan.ui.loader.AbstractAsyncNetRequestTaskLoader;
@@ -174,11 +175,11 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
     }
 
     protected void buildLayout(LayoutInflater inflater, View view) {
-        empty = (TextView) view.findViewById(R.id.empty);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        empty = ViewUtility.findViewById(view, R.id.empty);
+        progressBar = ViewUtility.findViewById(view, R.id.progressbar);
         progressBar.setVisibility(View.GONE);
-        pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.listView);
-        newMsgTipBar = (TopTipBar) view.findViewById(R.id.tv_unread_new_message_count_tip_bar);
+        pullToRefreshListView = ViewUtility.findViewById(view, R.id.listView);
+        newMsgTipBar = ViewUtility.findViewById(view, R.id.tv_unread_new_message_count_tip_bar);
 
         getListView().setHeaderDividersEnabled(false);
         getListView().setScrollingCacheEnabled(false);
