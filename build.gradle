@@ -16,6 +16,7 @@ apply plugin: 'android'
 dependencies {
     compile files('libs/gson-2.2.2.jar')
     compile project(':libs:slidingmenulibrary')
+    compile project(':libs:showcaseviewlibrary')
     compile 'com.google.android.gms:play-services:4.0.30+'
 
 }
