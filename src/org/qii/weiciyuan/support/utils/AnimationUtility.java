@@ -15,6 +15,9 @@ public class AnimationUtility {
     public static void translateFragmentY(Fragment fragment, int from, int to,
             Animator.AnimatorListener animatorListener) {
         final View fragmentView = fragment.getView();
+        if (fragmentView == null) {
+            return;
+        }
         FragmentViewYWrapper wrapper = new FragmentViewYWrapper(fragmentView);
         ObjectAnimator objectAnimator = ObjectAnimator.ofInt(wrapper, "change", from, to);
         objectAnimator.setDuration(300);
@@ -28,6 +31,9 @@ public class AnimationUtility {
 
     public static void translateFragmentX(Fragment fragment, int from, int to) {
         final View fragmentView = fragment.getView();
+        if (fragmentView == null) {
+            return;
+        }
         FragmentViewXWrapper wrapper = new FragmentViewXWrapper(fragmentView);
         ObjectAnimator objectAnimator = ObjectAnimator.ofInt(wrapper, "change", from, to);
         objectAnimator.setDuration(300);
