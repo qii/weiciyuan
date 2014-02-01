@@ -20,6 +20,8 @@ public class SettingUtility {
 
     private static final String BLACK_MAGIC = "black_magic";
 
+    private static final String CLICK_TO_TOP_TIP = "click_to_top_tip";
+
     private SettingUtility() {
 
     }
@@ -343,6 +345,13 @@ public class SettingUtility {
         boolean result = SettingHelper
                 .getSharedPreferences(getContext(), "is_following_or_fan_list_first_show", true);
         SettingHelper.setEditor(getContext(), "is_following_or_fan_list_first_show", false);
+        return result;
+    }
+
+    public static boolean isClickToTopTipFirstShow() {
+        boolean result = SettingHelper
+                .getSharedPreferences(getContext(), CLICK_TO_TOP_TIP, true);
+        SettingHelper.setEditor(getContext(), CLICK_TO_TOP_TIP, false);
         return result;
     }
 

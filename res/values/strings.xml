@@ -36,6 +36,7 @@
     </string>
     <string name="title_changelog">更新日志</string>
     <string name="changelog_close">关闭</string>
+    <string name="click_to_top_tip">点击空白区域直接返回顶部</string>
 
     <!--emotions-->
     <string name="weibo_emotions">微博表情</string>
