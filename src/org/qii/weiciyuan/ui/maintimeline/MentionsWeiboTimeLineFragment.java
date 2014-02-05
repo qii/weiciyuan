@@ -162,12 +162,14 @@ public class MentionsWeiboTimeLineFragment
             return;
         }
         Intent intent = getActivity().getIntent();
+        AccountBean intentAccount = intent
+                .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
         MessageListBean mentionsWeibo = intent
                 .getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
         UnreadBean unreadBeanFromNotification = intent
                 .getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
 
-        if (mentionsWeibo != null) {
+        if (accountBean.equals(intentAccount) && mentionsWeibo != null) {
             addUnreadMessage(mentionsWeibo);
             clearUnreadMentions(unreadBeanFromNotification);
             MessageListBean nullObject = null;

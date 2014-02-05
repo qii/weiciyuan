@@ -155,11 +155,13 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
             return;
         }
         Intent intent = getActivity().getIntent();
+        AccountBean intentAccount = intent
+                .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
         CommentListBean commentsToMe = intent
                 .getParcelableExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA);
         UnreadBean unreadBeanFromNotification = intent
                 .getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
-        if (commentsToMe != null) {
+        if (accountBean.equals(intentAccount) && commentsToMe != null) {
             addUnreadMessage(commentsToMe);
             clearUnreadComment(unreadBeanFromNotification);
             CommentListBean nullObject = null;
