@@ -10,12 +10,11 @@ import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.bean.android.MusicInfo;
 import org.qii.weiciyuan.othercomponent.ClearCacheTask;
 import org.qii.weiciyuan.othercomponent.ConnectionChangeReceiver;
+import org.qii.weiciyuan.othercomponent.MusicReceiver;
 import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.DatabaseManager;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.RecordOperationAppBroadcastReceiver;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -619,24 +618,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
                     .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
             if (newMsgAccountBean.getUid().equals(MainTimeLineActivity.this.accountBean.getUid())) {
 //                abortBroadcast();
-            }
-        }
-    }
-
-    private class MusicReceiver extends RecordOperationAppBroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String artist = intent.getStringExtra("artist");
-            String album = intent.getStringExtra("album");
-            String track = intent.getStringExtra("track");
-            if (!TextUtils.isEmpty(track)) {
-                MusicInfo musicInfo = new MusicInfo();
-                musicInfo.setArtist(artist);
-                musicInfo.setAlbum(album);
-                musicInfo.setTrack(track);
-                AppLogger.d("Music" + artist + ":" + album + ":" + track);
-                GlobalContext.getInstance().updateMusicInfo(musicInfo);
             }
         }
     }
