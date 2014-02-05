@@ -1,10 +1,6 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.os.Bundle;
-import android.support.v4.content.Loader;
-import android.view.View;
-import android.widget.AdapterView;
-
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -13,18 +9,27 @@ import org.qii.weiciyuan.ui.actionmenu.NormalFriendShipSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.basefragment.AbstractFriendsFanListFragment;
 import org.qii.weiciyuan.ui.loader.FanUserLoader;
 
+import android.os.Bundle;
+import android.support.v4.content.Loader;
+import android.view.View;
+import android.widget.AdapterView;
+
 /**
  * User: Jiang Qi
  * Date: 12-8-16
  */
 public class FanListFragment extends AbstractFriendsFanListFragment {
 
-    public FanListFragment() {
-        super();
+    public static FanListFragment newInstance(UserBean userBean) {
+        FanListFragment fragment = new FanListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("userBean", userBean);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public FanListFragment(String uid) {
-        super(uid);
+    public FanListFragment() {
+        super();
     }
 
 
@@ -32,6 +37,11 @@ public class FanListFragment extends AbstractFriendsFanListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getListView().setOnItemLongClickListener(new FanListOnItemLongClickListener());
+    }
+
+    @Override
+    protected UserBean getCurrentUser() {
+        return getArguments().getParcelable("userBean");
     }
 
 
@@ -46,7 +56,7 @@ public class FanListFragment extends AbstractFriendsFanListFragment {
                     actionMode = null;
                     getListView().setItemChecked(position, true);
                     getAdapter().notifyDataSetChanged();
-                    if (currentUser.getId()
+                    if (getCurrentUser().getId()
                             .equals(GlobalContext.getInstance().getCurrentAccountId())) {
                         actionMode = getActivity().startActionMode(
                                 new MyFanSingleChoiceModeListener(getListView(), getAdapter(),
@@ -61,7 +71,7 @@ public class FanListFragment extends AbstractFriendsFanListFragment {
                 } else {
                     getListView().setItemChecked(position, true);
                     getAdapter().notifyDataSetChanged();
-                    if (currentUser.getId()
+                    if (getCurrentUser().getId()
                             .equals(GlobalContext.getInstance().getCurrentAccountId())) {
                         actionMode = getActivity().startActionMode(
                                 new MyFanSingleChoiceModeListener(getListView(), getAdapter(),
@@ -85,7 +95,7 @@ public class FanListFragment extends AbstractFriendsFanListFragment {
             Bundle args) {
         String token = GlobalContext.getInstance().getSpecialToken();
         String cursor = String.valueOf(0);
-        return new FanUserLoader(getActivity(), token, uid, cursor);
+        return new FanUserLoader(getActivity(), token, getCurrentUser().getId(), cursor);
     }
 
     @Override
@@ -99,7 +109,7 @@ public class FanListFragment extends AbstractFriendsFanListFragment {
         String token = GlobalContext.getInstance().getSpecialToken();
         String cursor = String.valueOf(bean.getNext_cursor());
 
-        return new FanUserLoader(getActivity(), token, uid, cursor);
+        return new FanUserLoader(getActivity(), token, getCurrentUser().getId(), cursor);
     }
 
 

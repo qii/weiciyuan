@@ -10,7 +10,6 @@ import org.qii.weiciyuan.support.lib.PerformanceImageView;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.basefragment.AbstractFriendsFanListFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.loader.FriendUserLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
@@ -37,7 +36,7 @@ import java.util.List;
  * User: qii
  * Date: 13-3-2
  */
-public class DMSelectUserActivity extends AbstractAppActivity implements IUserInfo {
+public class DMSelectUserActivity extends AbstractAppActivity {
 
     private List<UserBean> data;
 
@@ -59,8 +58,8 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.list_content, new SelectFriendsListFragment(
-                            GlobalContext.getInstance().getCurrentAccountId()))
+                    .replace(R.id.list_content, SelectFriendsListFragment
+                            .newInstance(GlobalContext.getInstance().getAccountBean().getInfo()))
                     .commit();
         }
 
@@ -81,7 +80,6 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
 
     }
 
-    @Override
     public UserBean getUser() {
         return GlobalContext.getInstance().getAccountBean().getInfo();
     }
@@ -203,13 +201,18 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
     public static class SelectFriendsListFragment extends AbstractFriendsFanListFragment {
 
 
+        public static SelectFriendsListFragment newInstance(UserBean userBean) {
+            SelectFriendsListFragment fragment = new SelectFriendsListFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("userBean", userBean);
+            fragment.setArguments(bundle);
+            return fragment;
+        }
+
         public SelectFriendsListFragment() {
 
         }
 
-        public SelectFriendsListFragment(String uid) {
-            super(uid);
-        }
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -223,6 +226,11 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
 
+        }
+
+        @Override
+        protected UserBean getCurrentUser() {
+            return getArguments().getParcelable("userBean");
         }
 
         @Override
@@ -242,7 +250,7 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
                 Bundle args) {
             String token = GlobalContext.getInstance().getSpecialToken();
             String cursor = String.valueOf(0);
-            return new FriendUserLoader(getActivity(), token, uid, cursor);
+            return new FriendUserLoader(getActivity(), token, getCurrentUser().getId(), cursor);
         }
 
         @Override
@@ -257,7 +265,7 @@ public class DMSelectUserActivity extends AbstractAppActivity implements IUserIn
             String token = GlobalContext.getInstance().getSpecialToken();
             String cursor = String.valueOf(bean.getNext_cursor());
 
-            return new FriendUserLoader(getActivity(), token, uid, cursor);
+            return new FriendUserLoader(getActivity(), token, getCurrentUser().getId(), cursor);
         }
     }
 }

@@ -3,7 +3,6 @@ package org.qii.weiciyuan.ui.userinfo;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import android.content.Intent;
@@ -14,12 +13,11 @@ import android.view.MenuItem;
  * User: qii
  * Date: 13-6-21
  */
-public class UserTimeLineActivity extends AbstractAppActivity implements IUserInfo {
+public class UserTimeLineActivity extends AbstractAppActivity {
 
     private UserBean bean;
 
 
-    @Override
     public UserBean getUser() {
         return bean;
     }

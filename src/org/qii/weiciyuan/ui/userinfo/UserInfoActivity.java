@@ -20,7 +20,6 @@ import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.common.CommonErrorDialogFragment;
 import org.qii.weiciyuan.ui.common.CommonProgressDialogFragment;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.loader.AbstractAsyncNetRequestTaskLoader;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
@@ -47,7 +46,7 @@ import java.util.List;
  * User: Jiang Qi
  * Date: 12-8-14
  */
-public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
+public class UserInfoActivity extends AbstractAppActivity {
 
     private String token;
 
@@ -67,7 +66,6 @@ public class UserInfoActivity extends AbstractAppActivity implements IUserInfo {
         return token;
     }
 
-    @Override
     public UserBean getUser() {
         return bean;
     }

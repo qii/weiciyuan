@@ -5,7 +5,6 @@ import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppConfig;
-import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -22,18 +21,11 @@ import java.util.List;
  */
 public abstract class AbstractFriendsFanListFragment extends AbstractUserListFragment {
 
-    protected UserBean currentUser;
-
-    protected String uid;
-
 
     public AbstractFriendsFanListFragment() {
 
     }
 
-    public AbstractFriendsFanListFragment(String uid) {
-        this.uid = uid;
-    }
 
     //this api has bug, check cursor before add data
     @Override
@@ -54,9 +46,8 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
     }
 
     protected void buildActionBarSubtitle() {
-        if (!TextUtils.isEmpty(currentUser.getFriends_count())) {
-
-            int size = Integer.valueOf(currentUser.getFriends_count());
+        if (!TextUtils.isEmpty(getCurrentUser().getFriends_count())) {
+            int size = Integer.valueOf(getCurrentUser().getFriends_count());
             int newSize = bean.getTotal_number();
             String number = "";
             if (size >= newSize) {
@@ -92,8 +83,6 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
                 refreshLayout(bean);
                 break;
             case ACTIVITY_DESTROY_AND_CREATE:
-                currentUser = savedInstanceState.getParcelable("currentUser");
-                uid = savedInstanceState.getString("uid");
                 clearAndReplaceValue((UserListBean) savedInstanceState.getParcelable("bean"));
                 getAdapter().notifyDataSetChanged();
                 break;
@@ -117,17 +106,7 @@ public abstract class AbstractFriendsFanListFragment extends AbstractUserListFra
 
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        currentUser = ((IUserInfo) getActivity()).getUser();
+    protected abstract UserBean getCurrentUser();
 
-    }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable("currentUser", currentUser);
-        outState.putString("uid", uid);
-    }
 }

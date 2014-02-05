@@ -4,7 +4,6 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
 import android.content.Intent;
@@ -15,12 +14,11 @@ import android.view.MenuItem;
  * User: Jiang Qi
  * Date: 12-8-16
  */
-public class FriendListActivity extends AbstractAppActivity implements IUserInfo {
+public class FriendListActivity extends AbstractAppActivity {
 
     private UserBean bean;
 
 
-    @Override
     public UserBean getUser() {
         return bean;
     }
@@ -42,7 +40,7 @@ public class FriendListActivity extends AbstractAppActivity implements IUserInfo
         if (getSupportFragmentManager().findFragmentByTag(FriendsListFragment.class.getName())
                 == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new FriendsListFragment(bean.getId()),
+                    .replace(android.R.id.content, FriendsListFragment.newInstance(bean),
                             FriendsListFragment.class.getName())
                     .commit();
         }

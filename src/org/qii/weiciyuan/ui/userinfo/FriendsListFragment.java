@@ -1,10 +1,6 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.os.Bundle;
-import android.support.v4.content.Loader;
-import android.view.View;
-import android.widget.AdapterView;
-
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.UserListBean;
 import org.qii.weiciyuan.bean.android.AsyncTaskLoaderResult;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -13,19 +9,28 @@ import org.qii.weiciyuan.ui.actionmenu.NormalFriendShipSingleChoiceModeListener;
 import org.qii.weiciyuan.ui.basefragment.AbstractFriendsFanListFragment;
 import org.qii.weiciyuan.ui.loader.FriendUserLoader;
 
+import android.os.Bundle;
+import android.support.v4.content.Loader;
+import android.view.View;
+import android.widget.AdapterView;
+
 /**
  * User: Jiang Qi
  * Date: 12-8-16
  */
 public class FriendsListFragment extends AbstractFriendsFanListFragment {
 
+    public static FriendsListFragment newInstance(UserBean userBean) {
+        FriendsListFragment fragment = new FriendsListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("userBean", userBean);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
 
     public FriendsListFragment() {
 
-    }
-
-    public FriendsListFragment(String uid) {
-        super(uid);
     }
 
 
@@ -34,6 +39,11 @@ public class FriendsListFragment extends AbstractFriendsFanListFragment {
         super.onActivityCreated(savedInstanceState);
         getListView().setOnItemLongClickListener(new FriendListOnItemLongClickListener());
 
+    }
+
+    @Override
+    protected UserBean getCurrentUser() {
+        return getArguments().getParcelable("userBean");
     }
 
 
@@ -48,7 +58,7 @@ public class FriendsListFragment extends AbstractFriendsFanListFragment {
                     actionMode = null;
                     getListView().setItemChecked(position, true);
                     getAdapter().notifyDataSetChanged();
-                    if (currentUser.getId()
+                    if (getCurrentUser().getId()
                             .equals(GlobalContext.getInstance().getCurrentAccountId())) {
                         actionMode = getActivity().startActionMode(
                                 new MyFriendSingleChoiceModeListener(getListView(), getAdapter(),
@@ -64,7 +74,7 @@ public class FriendsListFragment extends AbstractFriendsFanListFragment {
                 } else {
                     getListView().setItemChecked(position, true);
                     getAdapter().notifyDataSetChanged();
-                    if (currentUser.getId()
+                    if (getCurrentUser().getId()
                             .equals(GlobalContext.getInstance().getCurrentAccountId())) {
                         actionMode = getActivity().startActionMode(
                                 new MyFriendSingleChoiceModeListener(getListView(), getAdapter(),
@@ -89,7 +99,7 @@ public class FriendsListFragment extends AbstractFriendsFanListFragment {
             Bundle args) {
         String token = GlobalContext.getInstance().getSpecialToken();
         String cursor = String.valueOf(0);
-        return new FriendUserLoader(getActivity(), token, uid, cursor);
+        return new FriendUserLoader(getActivity(), token, getCurrentUser().getId(), cursor);
     }
 
     @Override
@@ -103,7 +113,7 @@ public class FriendsListFragment extends AbstractFriendsFanListFragment {
         String token = GlobalContext.getInstance().getSpecialToken();
         String cursor = String.valueOf(bean.getNext_cursor());
 
-        return new FriendUserLoader(getActivity(), token, uid, cursor);
+        return new FriendUserLoader(getActivity(), token, getCurrentUser().getId(), cursor);
     }
 
 }
