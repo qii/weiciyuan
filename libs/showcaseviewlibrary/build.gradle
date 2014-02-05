@@ -15,7 +15,6 @@ dependencies {
         mavenCentral()
     }
     compile 'com.android.support:support-v4:19.0.+'
-    compile 'com.nineoldandroids:library:2.4.0+'
 }
 
 android {
