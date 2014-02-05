@@ -23,7 +23,6 @@ import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.dm.DMUserListFragment;
-import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.interfaces.IUserInfo;
 import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import org.qii.weiciyuan.ui.search.SearchMainParentFragment;
@@ -60,8 +59,7 @@ import java.util.concurrent.TimeUnit;
  * User: Jiang Qi
  * Date: 12-7-27
  */
-public class MainTimeLineActivity extends MainTimeLineParentActivity implements IUserInfo,
-        IAccountInfo {
+public class MainTimeLineActivity extends MainTimeLineParentActivity implements IUserInfo {
 
     public static final int REQUEST_CODE_UPDATE_FRIENDS_TIMELINE_COMMENT_REPOST_COUNT = 0;
 
@@ -405,7 +403,6 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
 
-    @Override
     public AccountBean getAccount() {
         return accountBean;
     }

@@ -21,7 +21,6 @@ import org.qii.weiciyuan.support.utils.ViewUtility;
 import org.qii.weiciyuan.ui.browser.AppMapActivity;
 import org.qii.weiciyuan.ui.browser.BrowserWriteWeiboLocalPicActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
-import org.qii.weiciyuan.ui.interfaces.IAccountInfo;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
@@ -67,7 +66,7 @@ import java.util.Locale;
  */
 public class WriteWeiboActivity extends AbstractAppActivity
         implements DialogInterface.OnClickListener,
-        IAccountInfo, ClearContentDialog.IClear, SaveDraftDialog.IDraft {
+        ClearContentDialog.IClear, SaveDraftDialog.IDraft {
 
     private static final int CAMERA_RESULT = 0;
 
@@ -795,7 +794,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
         }
     }
 
-    @Override
     public AccountBean getAccount() {
         return accountBean;
     }
