@@ -141,14 +141,11 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            accountBean = (AccountBean) savedInstanceState.getParcelable("account");
+            accountBean = savedInstanceState.getParcelable("account");
         } else {
             Intent intent = getIntent();
-            accountBean = (AccountBean) intent.getParcelableExtra("account");
-            if (accountBean == null) {
-                accountBean = (AccountBean) intent
-                        .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
-            }
+            accountBean = intent
+                    .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
         }
 
         if (accountBean == null) {
@@ -364,20 +361,19 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        AccountBean newAccountBean = (AccountBean) intent
+        AccountBean intentAccountBean = intent
                 .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
-        if (newAccountBean == null) {
+        if (intentAccountBean == null) {
             return;
         }
 
-        if (newAccountBean.getUid().equals(accountBean.getUid())) {
-            accountBean = newAccountBean;
+        if (accountBean.equals(intentAccountBean)) {
+            accountBean = intentAccountBean;
             GlobalContext.getInstance().setAccountBean(accountBean);
             setIntent(intent);
         } else {
             finish();
             overridePendingTransition(0, 0);
-            intent.putExtra("account", newAccountBean);
             startActivity(intent);
             overridePendingTransition(0, 0);
         }
@@ -417,7 +413,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
 
     private void readClipboard() {
-        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(
+                Context.CLIPBOARD_SERVICE);
         ClipData cmContent = cm.getPrimaryClip();
         if (cmContent == null) {
             return;
