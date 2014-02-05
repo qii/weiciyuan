@@ -17,6 +17,7 @@ import org.qii.weiciyuan.support.smileypicker.SmileyPicker;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.support.utils.Utility;
+import org.qii.weiciyuan.support.utils.ViewUtility;
 import org.qii.weiciyuan.ui.browser.AppMapActivity;
 import org.qii.weiciyuan.ui.browser.BrowserWriteWeiboLocalPicActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -100,6 +101,8 @@ public class WriteWeiboActivity extends AbstractAppActivity
     private ImageView haveGPS = null;
 
     private KeyboardControlEditText content = null;
+
+    private ImageView preview = null;
 
     private SmileyPicker smiley = null;
 
@@ -211,11 +214,20 @@ public class WriteWeiboActivity extends AbstractAppActivity
         if (bitmap != null) {
             ((ImageButton) findViewById(R.id.menu_add_pic)).setImageBitmap(bitmap);
         }
+        bitmap = ImageUtility.decodeBitmapFromSDCard(picPath, Utility.getScreenWidth(),
+                Utility.getScreenHeight());
+        if (bitmap != null) {
+            preview.setVisibility(View.VISIBLE);
+            preview.setImageBitmap(bitmap);
+        }
     }
 
     private void disablePicture() {
         ((ImageButton) findViewById(R.id.menu_add_pic))
                 .setImageDrawable(getResources().getDrawable(R.drawable.camera_light));
+
+        preview.setVisibility(View.INVISIBLE);
+        preview.setImageBitmap(null);
     }
 
 
@@ -511,6 +523,8 @@ public class WriteWeiboActivity extends AbstractAppActivity
         AutoCompleteAdapter adapter = new AutoCompleteAdapter(this, content,
                 (ProgressBar) title.findViewById(R.id.have_suggest_progressbar));
         content.setAdapter(adapter);
+
+        preview = ViewUtility.findViewById(this, R.id.status_image_preview);
 
         View.OnClickListener onClickListener = new BottomButtonClickListener();
         findViewById(R.id.menu_at).setOnClickListener(onClickListener);
