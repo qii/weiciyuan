@@ -302,9 +302,8 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         write.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainTimeLineActivity.this, WriteWeiboActivity.class);
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
+                Intent intent = WriteWeiboActivity
+                        .newIntent(GlobalContext.getInstance().getAccountBean());
                 startActivity(intent);
             }
         });

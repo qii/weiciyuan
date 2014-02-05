@@ -112,6 +112,13 @@ public class WriteWeiboActivity extends AbstractAppActivity
 
     private GetGoogleLocationInfo locationTask;
 
+    public static Intent newIntent(AccountBean accountBean) {
+        Intent intent = new Intent(GlobalContext.getInstance(), WriteWeiboActivity.class);
+        intent.putExtra("token", accountBean.getAccess_token());
+        intent.putExtra("account", accountBean);
+        return intent;
+    }
+
     public static Intent startBecauseSendFailed(Context context,
             AccountBean accountBean,
             String content,
