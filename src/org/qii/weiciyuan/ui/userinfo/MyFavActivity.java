@@ -32,7 +32,7 @@ public class MyFavActivity extends AbstractAppActivity {
         if (getSupportFragmentManager().findFragmentByTag(MyFavListFragment.class.getName())
                 == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new MyFavListFragment(),
+                    .replace(android.R.id.content, MyFavListFragment.newInstance(),
                             MyFavListFragment.class.getName())
                     .commit();
         }

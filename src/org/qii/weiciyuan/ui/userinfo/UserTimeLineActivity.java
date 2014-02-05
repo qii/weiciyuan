@@ -15,12 +15,6 @@ import android.view.MenuItem;
  */
 public class UserTimeLineActivity extends AbstractAppActivity {
 
-    private UserBean bean;
-
-
-    public UserBean getUser() {
-        return bean;
-    }
 
     public static Intent newIntent(String token, UserBean userBean) {
         Intent intent = new Intent(GlobalContext.getInstance(), UserTimeLineActivity.class);
@@ -36,13 +30,13 @@ public class UserTimeLineActivity extends AbstractAppActivity {
         getActionBar().setDisplayShowTitleEnabled(true);
         getActionBar().setDisplayShowHomeEnabled(false);
         String token = getIntent().getStringExtra("token");
-        bean = (UserBean) getIntent().getParcelableExtra("user");
+        UserBean bean = getIntent().getParcelableExtra("user");
         getActionBar().setTitle(bean.getScreen_name());
         if (getSupportFragmentManager()
                 .findFragmentByTag(StatusesByIdTimeLineFragment.class.getName()) == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content,
-                            new StatusesByIdTimeLineFragment(getUser(), token),
+                            StatusesByIdTimeLineFragment.newInstance(bean, token),
                             StatusesByIdTimeLineFragment.class.getName())
                     .commit();
         }
