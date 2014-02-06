@@ -434,6 +434,7 @@
     <string name="start_fetch_msg">开始后台自动获取……</string>
     <string name="frequency">间隔</string>
     <string name="stopped">已终止</string>
+    <string name="you_have_new_unread_count">你有 %s 条新未读消息</string>
 
     <!--Setting Draft-->
     <string name="draft">草稿箱</string>

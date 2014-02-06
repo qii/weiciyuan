@@ -50,6 +50,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -609,10 +610,24 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            AccountBean newMsgAccountBean = (AccountBean) intent
+            AccountBean intentAccount = intent
                     .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
-            if (newMsgAccountBean.getUid().equals(MainTimeLineActivity.this.accountBean.getUid())) {
-//                abortBroadcast();
+            if (accountBean.equals(intentAccount)) {
+                MessageListBean mentionsWeibo = intent
+                        .getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
+                MessageListBean mentionsComment = intent
+                        .getParcelableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
+                CommentListBean commentsToMe = intent
+                        .getParcelableExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA);
+                int unreadCount = (mentionsWeibo != null ? mentionsWeibo.getSize() : 0) + (
+                        mentionsComment != null ? mentionsComment.getSize() : 0) + (
+                        commentsToMe != null ? commentsToMe
+                                .getSize() : 0);
+                String tip = String.format(context.getString(R.string.you_have_new_unread_count),
+                        String.valueOf(unreadCount));
+                Toast.makeText(MainTimeLineActivity.this, tip,
+                        Toast.LENGTH_LONG).show();
+                abortBroadcast();
             }
         }
     }
