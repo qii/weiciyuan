@@ -3,6 +3,7 @@ package org.qii.weiciyuan.support.file;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -47,6 +48,8 @@ public class FileManager {
     private static final String WEBVIEW_FAVICON = "favicon";
 
     private static final String LOG = "log";
+
+    private static final String WEICIYUAN = "weiciyuan";
 
     /**
      * install weiciyuan, open app and login in, Android system will create cache dir.
@@ -361,10 +364,12 @@ public class FileManager {
         File file = new File(path);
         String name = file.getName();
         String newPath = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + name;
+                Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + WEICIYUAN
+                + File.separator + name;
         try {
             FileManager.createNewFileInSDCard(newPath);
             copyFile(file, new File(newPath));
+            Utility.forceRefreshSystemAlbum(newPath);
             return true;
         } catch (IOException e) {
             return false;

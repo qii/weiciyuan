@@ -10,9 +10,9 @@ import org.qii.weiciyuan.othercomponent.unreadnotification.NotificationServiceHe
 import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.lib.RecordOperationAppBroadcastReceiver;
 import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.RecordOperationAppBroadcastReceiver;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.ui.blackmagic.BlackMagicActivity;
 import org.qii.weiciyuan.ui.login.AccountActivity;
@@ -36,11 +36,13 @@ import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
+import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -1014,5 +1016,16 @@ public class Utility {
         new Handler(Looper.getMainLooper()).postDelayed(runnable, delayMillis);
     }
 
+    public static void forceRefreshSystemAlbum(String path) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        String type = options.outMimeType;
+
+        MediaScannerConnection
+                .scanFile(GlobalContext.getInstance(), new String[]{path}, new String[]{type},
+                        null);
+
+    }
 }
 
