@@ -525,10 +525,11 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     private BroadcastReceiver newBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            AccountBean account = intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+            AccountBean intentAccount = intent
+                    .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
             final UnreadBean unreadBean = intent
                     .getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
-            if (account == null || !account.getUid().equals(account.getUid())) {
+            if (intentAccount == null || !accountBean.equals(intentAccount)) {
                 return;
             }
             CommentListBean data = intent

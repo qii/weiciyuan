@@ -522,11 +522,11 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     private BroadcastReceiver newBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            final AccountBean account = (AccountBean) intent
+            final AccountBean intentAccount = (AccountBean) intent
                     .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
             final UnreadBean unreadBean = (UnreadBean) intent
                     .getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
-            if (account == null || !account.getUid().equals(account.getUid())) {
+            if (intentAccount == null || !accountBean.equals(intentAccount)) {
                 return;
             }
             CommentListBean data = (CommentListBean) intent
