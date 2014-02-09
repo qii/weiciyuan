@@ -1,13 +1,14 @@
 package org.qii.weiciyuan.support.utils;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 
 /**
  * User: qii
@@ -45,22 +46,22 @@ public class NotificationUtility {
         int mentionStatus = unreadBean.getMention_status();
         int mention = 0;
         if (SettingUtility.allowMentionToMe() && mentionStatus > 0 && mentionsWeibo != null) {
-            int actualFetchedSize = mentionsWeibo.getSize();
-            if (actualFetchedSize >= Integer.valueOf(SettingUtility.getMsgCount())) {
-                mention += mentionStatus;
-            } else {
-                mention += actualFetchedSize;
-            }
-
+//            int actualFetchedSize = mentionsWeibo.getSize();
+//            if (actualFetchedSize >= Integer.valueOf(SettingUtility.getMsgCount())) {
+            mention += mentionStatus;
+//            } else {
+//                mention += actualFetchedSize;
+//            }
+//
         }
         if (SettingUtility.allowMentionCommentToMe() && mentionCmt > 0 && mentionsComment != null) {
-            int actualFetchedSize = mentionsComment.getSize();
-            if (actualFetchedSize >= Integer.valueOf(SettingUtility.getMsgCount())) {
-                mention += mentionCmt;
-            } else {
-                mention += actualFetchedSize;
-            }
-
+//            int actualFetchedSize = mentionsComment.getSize();
+//            if (actualFetchedSize >= Integer.valueOf(SettingUtility.getMsgCount())) {
+            mention += mentionCmt;
+//            } else {
+//                mention += actualFetchedSize;
+//            }
+//
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -74,13 +75,13 @@ public class NotificationUtility {
         int cmt = 0;
 
         if (SettingUtility.allowCommentToMe() && unreadBean.getCmt() > 0 && commentsToMe != null) {
-
-            int actualFetchedSize = commentsToMe.getSize();
-            if (actualFetchedSize >= Integer.valueOf(SettingUtility.getMsgCount())) {
-                cmt = unreadBean.getCmt();
-            } else {
-                cmt = actualFetchedSize;
-            }
+//
+//            int actualFetchedSize = commentsToMe.getSize();
+//            if (actualFetchedSize >= Integer.valueOf(SettingUtility.getMsgCount())) {
+            cmt = unreadBean.getCmt();
+//            } else {
+//                cmt = actualFetchedSize;
+//            }
 
             if (mention > 0)
                 stringBuilder.append("、");
