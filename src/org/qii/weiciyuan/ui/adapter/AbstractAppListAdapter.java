@@ -45,7 +45,6 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayDeque;
@@ -786,7 +785,7 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
         GridLayout repost_content_pic_multi;
 
-        RelativeLayout listview_root;
+        ViewGroup listview_root;
 
         View repost_layout;
 

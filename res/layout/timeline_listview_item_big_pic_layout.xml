@@ -1,203 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:background="?listview_item_background_selector"
-                android:id="@+id/listview_root">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:clickable="false"
+             android:background="?listview_item_background_selector"
+             android:id="@+id/listview_root">
 
     <org.qii.weiciyuan.support.lib.QuickRelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:background="?listview_card_bg">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="?listview_card_bg">
 
         <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
-            android:id="@+id/avatar"
-            android:layout_width="@dimen/timeline_avatar_width"
-            android:layout_height="@dimen/timeline_avatar_height"
-            android:layout_gravity="left|center_vertical"
-            android:layout_marginTop="-5dp"
-            android:layout_marginLeft="-5dp"
-            android:layout_marginBottom="-5dp"
-            android:layout_marginRight="3dp"
-            android:clickable="true"/>
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/timeline_avatar_width"
+                android:layout_height="@dimen/timeline_avatar_height"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginTop="-5dp"
+                android:layout_marginLeft="-5dp"
+                android:layout_marginBottom="-5dp"
+                android:layout_marginRight="3dp"
+                android:clickable="true"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:visibility="gone"
-            android:id="@+id/count_layout">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"
+                android:id="@+id/count_layout">
 
             <ImageView
-                android:id="@+id/timeline_gps_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="?timeline_gps_icon"
-                android:visibility="gone"
-                />
+                    android:id="@+id/timeline_gps_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="?timeline_gps_icon"
+                    android:visibility="gone"
+                    />
 
             <ImageView
-                android:id="@+id/timeline_pic_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:visibility="gone"
-                android:src="?timeline_pic_icon"/>
+                    android:id="@+id/timeline_pic_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:visibility="gone"
+                    android:src="?timeline_pic_icon"/>
 
             <TextView
-                android:id="@+id/repost_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="?android:textColorTertiary"
-                android:drawablePadding="4dp"
-                android:layout_marginLeft="8dp"
-                android:fontFamily="monospace"
-                android:drawableLeft="?timeline_repost_flag"/>
+                    android:id="@+id/repost_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:textColorTertiary"
+                    android:drawablePadding="4dp"
+                    android:layout_marginLeft="8dp"
+                    android:fontFamily="monospace"
+                    android:drawableLeft="?timeline_repost_flag"/>
 
             <TextView
-                android:id="@+id/comment_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:drawablePadding="4dp"
-                android:fontFamily="monospace"
-                android:textColor="?android:textColorTertiary"
-                android:drawableLeft="?timeline_comment_flag"/>
+                    android:id="@+id/comment_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:drawablePadding="4dp"
+                    android:fontFamily="monospace"
+                    android:textColor="?android:textColorTertiary"
+                    android:drawableLeft="?timeline_comment_flag"/>
 
         </LinearLayout>
 
         <TextView
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:clickable="false"
-            android:textColor="?listview_text_color"
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:clickable="false"
+                android:textColor="?listview_text_color"
 
-            android:layout_toRightOf="@id/avatar"
-            android:layout_toLeftOf="@id/count_layout"
-            android:textStyle="bold"/>
+                android:layout_toRightOf="@id/avatar"
+                android:layout_toLeftOf="@id/count_layout"
+                android:textStyle="bold"/>
 
 
         <org.qii.weiciyuan.support.lib.TimeTextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?android:textColorTertiary"
-            android:layout_below="@id/username"
-            android:layout_toRightOf="@id/avatar"
-            />
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?android:textColorTertiary"
+                android:layout_below="@id/username"
+                android:layout_toRightOf="@id/avatar"
+                />
 
         <TextView
-            android:id="@+id/source"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/time"
-            android:textColor="?android:textColorTertiary"
-            android:layout_marginLeft="5dp"
-            android:layout_alignTop="@+id/time"
-            />
+                android:id="@+id/source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/time"
+                android:textColor="?android:textColorTertiary"
+                android:layout_marginLeft="5dp"
+                android:layout_alignTop="@+id/time"
+                />
 
         <TextView
-            android:layout_marginTop="6dp"
-            android:id="@+id/content"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="?listview_text_color"
-            android:layout_below="@id/avatar"
-            android:lineSpacingMultiplier="1.2"
-            android:clickable="false"
-            />
+                android:layout_marginTop="6dp"
+                android:id="@+id/content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="?listview_text_color"
+                android:layout_below="@id/avatar"
+                android:lineSpacingMultiplier="1.2"
+                android:clickable="false"
+                />
 
 
         <View
-            android:layout_below="@id/content"
+                android:layout_below="@id/content"
 
-            android:id="@+id/repost_flag"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="?listview_repost_divider"
-            android:layout_height="1dp"
-            android:layout_width="match_parent"/>
+                android:id="@+id/repost_flag"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="?listview_repost_divider"
+                android:layout_height="1dp"
+                android:layout_width="match_parent"/>
 
         <TextView
-            android:layout_below="@id/repost_flag"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="3dp"
-            android:includeFontPadding="true"
-            android:id="@+id/repost_content"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="?listview_text_color"
-            android:lineSpacingMultiplier="1.2"
-            android:visibility="gone"
-            android:clickable="false"
-            />
+                android:layout_below="@id/repost_flag"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="3dp"
+                android:includeFontPadding="true"
+                android:id="@+id/repost_content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="?listview_text_color"
+                android:lineSpacingMultiplier="1.2"
+                android:visibility="gone"
+                android:clickable="false"
+                />
 
 
         <org.qii.weiciyuan.support.lib.TimeLineImageView
-            android:layout_below="@id/repost_content"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="5dp"
-            android:id="@+id/repost_content_pic"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
-            android:visibility="gone"
-            android:clickable="true"
-            android:padding="2dp"
-            />
+                android:layout_below="@id/repost_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="5dp"
+                android:id="@+id/repost_content_pic"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/timeline_pic_high_thumbnail_height"
+                android:visibility="gone"
+                android:clickable="true"
+                android:padding="2dp"
+                />
 
         <GridLayout
-            android:id="@+id/repost_content__pic_multi"
-            android:layout_below="@id/repost_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="5dp"
-            android:columnCount="3"
-            android:rowCount="3"
-            android:orientation="horizontal"
-            android:useDefaultMargins="false"
-            android:clickable="false">
+                android:id="@+id/repost_content__pic_multi"
+                android:layout_below="@id/repost_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="5dp"
+                android:columnCount="3"
+                android:rowCount="3"
+                android:orientation="horizontal"
+                android:useDefaultMargins="false"
+                android:clickable="false">
 
             <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
+                    style="@style/listViewMultiImageView"/>
 
             <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
+                    style="@style/listViewMultiImageView"/>
 
             <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
+                    style="@style/listViewMultiImageView"/>
 
             <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
+                    style="@style/listViewMultiImageView"/>
 
             <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
+                    style="@style/listViewMultiImageView"/>
 
             <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
+                    style="@style/listViewMultiImageView"/>
 
             <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
+                    style="@style/listViewMultiImageView"/>
 
             <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
+                    style="@style/listViewMultiImageView"/>
 
             <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
-                style="@style/listViewMultiImageView"/>
+                    style="@style/listViewMultiImageView"/>
 
         </GridLayout>
 
 
     </org.qii.weiciyuan.support.lib.QuickRelativeLayout>
-</RelativeLayout>
+</FrameLayout>

@@ -8,7 +8,6 @@ import org.qii.weiciyuan.bean.android.UnreadTabIndex;
 import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.RecordOperationAppBroadcastReceiver;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -63,8 +62,14 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
 
     private void buildNotification() {
 
-        int count = (data.getSize() >= Integer.valueOf(SettingUtility.getMsgCount()) ? unreadBean
-                .getMention_status() : data.getSize());
+//        int count = (data.getSize() >= Integer.valueOf(SettingUtility.getMsgCount()) ? unreadBean
+//                .getMention_status() : data.getSize());
+
+        int count = unreadBean.getMention_status();
+
+        if (count == 0) {
+            return;
+        }
 
         Notification.Builder builder = new Notification.Builder(getBaseContext())
                 .setTicker(ticker)
@@ -78,7 +83,7 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
                 String.format(GlobalContext.getInstance().getString(R.string.new_mentions_weibo),
                         String.valueOf(count)));
 
-        if (data.getSize() > 1) {
+        if (count > 1) {
             builder.setNumber(count);
         }
 
@@ -132,7 +137,7 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
         builder.addAction(R.drawable.comment_light,
                 getApplicationContext().getString(R.string.comments), pendingIntent);
 
-        if (data.getSize() > 1) {
+        if (count > 1) {
             Intent nextIntent = new Intent(JBMentionsWeiboNotificationServiceHelper.this,
                     JBMentionsWeiboNotificationServiceHelper.class);
             nextIntent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
@@ -145,7 +150,7 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
             String actionName;
             int nextIndex;
             int actionDrawable;
-            if (currentIndex < data.getSize() - 1) {
+            if (currentIndex < count - 1) {
                 nextIndex = currentIndex + 1;
                 actionName = getString(R.string.next_message);
                 actionDrawable = R.drawable.notification_action_next;
@@ -175,9 +180,8 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
         }
         bigTextStyle.bigText(data.getItem(currentIndex).getText());
         String summaryText;
-        if (data.getSize() > 1) {
-            summaryText = accountBean.getUsernick() + "(" + (currentIndex + 1) + "/" + data
-                    .getSize() + ")";
+        if (count > 1) {
+            summaryText = accountBean.getUsernick() + "(" + (currentIndex + 1) + "/" + count + ")";
         } else {
             summaryText = accountBean.getUsernick();
         }

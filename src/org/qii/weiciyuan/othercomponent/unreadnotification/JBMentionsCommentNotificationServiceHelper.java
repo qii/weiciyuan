@@ -8,7 +8,6 @@ import org.qii.weiciyuan.bean.android.UnreadTabIndex;
 import org.qii.weiciyuan.dao.unread.ClearUnreadDao;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.RecordOperationAppBroadcastReceiver;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -65,8 +64,14 @@ public class JBMentionsCommentNotificationServiceHelper extends NotificationServ
 
     private void buildNotification() {
 
-        int count = (data.getSize() >= Integer.valueOf(SettingUtility.getMsgCount()) ? unreadBean
-                .getMention_cmt() : data.getSize());
+//        int count = (data.getSize() >= Integer.valueOf(SettingUtility.getMsgCount()) ? unreadBean
+//                .getMention_cmt() : data.getSize());
+
+        int count = unreadBean.getMention_cmt();
+
+        if (count == 0) {
+            return;
+        }
 
         Notification.Builder builder = new Notification.Builder(getBaseContext())
                 .setTicker(ticker)
@@ -80,7 +85,7 @@ public class JBMentionsCommentNotificationServiceHelper extends NotificationServ
                 String.format(GlobalContext.getInstance().getString(R.string.new_mentions_comment),
                         String.valueOf(count)));
 
-        if (data.getSize() > 1) {
+        if (count > 1) {
             builder.setNumber(count);
         }
 
@@ -133,7 +138,7 @@ public class JBMentionsCommentNotificationServiceHelper extends NotificationServ
         builder.addAction(R.drawable.reply_to_comment_light,
                 getApplicationContext().getString(R.string.reply_to_comment), pendingIntent);
 
-        if (data.getSize() > 1) {
+        if (count > 1) {
             Intent nextIntent = new Intent(JBMentionsCommentNotificationServiceHelper.this,
                     JBMentionsCommentNotificationServiceHelper.class);
             nextIntent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
@@ -146,7 +151,7 @@ public class JBMentionsCommentNotificationServiceHelper extends NotificationServ
             String actionName;
             int nextIndex;
             int actionDrawable;
-            if (currentIndex < data.getSize() - 1) {
+            if (currentIndex < count - 1) {
                 nextIndex = currentIndex + 1;
                 actionName = getString(R.string.next_message);
                 actionDrawable = R.drawable.notification_action_next;
@@ -168,9 +173,8 @@ public class JBMentionsCommentNotificationServiceHelper extends NotificationServ
                 + getString(R.string.comment_at_to_you));
         bigTextStyle.bigText(data.getItem(currentIndex).getText());
         String summaryText;
-        if (data.getSize() > 1) {
-            summaryText = accountBean.getUsernick() + "(" + (currentIndex + 1) + "/" + data
-                    .getSize() + ")";
+        if (count > 1) {
+            summaryText = accountBean.getUsernick() + "(" + (currentIndex + 1) + "/" + count + ")";
         } else {
             summaryText = accountBean.getUsernick();
         }
