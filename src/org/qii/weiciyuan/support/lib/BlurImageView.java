@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.support.lib;
 
+import org.qii.weiciyuan.support.utils.GlobalContext;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -7,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
@@ -22,6 +25,8 @@ public class BlurImageView extends ImageView {
 
     private Thread blurThread;
 
+    private String url;
+
 
     public BlurImageView(Context context) {
         super(context);
@@ -35,30 +40,49 @@ public class BlurImageView extends ImageView {
         super(context, attrs, defStyle);
     }
 
+    public void setOriImageUrl(String url) {
+        this.url = url;
+    }
 
     @Override
     public void setImageDrawable(final Drawable drawable) {
+
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
+
         if (drawable instanceof BitmapDrawable) {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
             final Bitmap bitmap = bitmapDrawable.getBitmap();
             if (bitmap != null) {
-                blurThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        final Drawable blurDrawable = new BitmapDrawable(getResources(),
-                                fastBlur(bitmap, radius));
-                        if (Thread.currentThread().isInterrupted()) {
-                            return;
-                        }
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                BlurImageView.super.setImageDrawable(blurDrawable);
+
+                Bitmap blurBitmap = GlobalContext.getInstance().getBitmapCache().get(url + "/blur");
+                if (blurBitmap == null) {
+                    blurThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final Bitmap createdBlurBitmap = fastBlur(bitmap, radius);
+                            final Drawable blurDrawable = new BitmapDrawable(getResources(),
+                                    createdBlurBitmap);
+                            if (Thread.currentThread().isInterrupted()) {
+                                return;
                             }
-                        });
-                    }
-                });
-                blurThread.start();
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    GlobalContext.getInstance().getBitmapCache()
+                                            .put(url + "/blur", createdBlurBitmap);
+                                    BlurImageView.super.setImageDrawable(blurDrawable);
+                                }
+                            });
+                        }
+                    });
+                    blurThread.start();
+                } else {
+                    final Drawable blurDrawable = new BitmapDrawable(getResources(),
+                            blurBitmap);
+                    BlurImageView.super.setImageDrawable(blurDrawable);
+                }
                 return;
             }
 
