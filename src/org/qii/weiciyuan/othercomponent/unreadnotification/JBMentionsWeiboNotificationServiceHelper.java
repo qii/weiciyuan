@@ -65,7 +65,7 @@ public class JBMentionsWeiboNotificationServiceHelper extends NotificationServic
 //        int count = (data.getSize() >= Integer.valueOf(SettingUtility.getMsgCount()) ? unreadBean
 //                .getMention_status() : data.getSize());
 
-        int count = unreadBean.getMention_status();
+        int count = Math.min(unreadBean.getMention_status(), data.getSize());
 
         if (count == 0) {
             return;

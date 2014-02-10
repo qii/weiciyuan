@@ -67,7 +67,7 @@ public class JBMentionsCommentNotificationServiceHelper extends NotificationServ
 //        int count = (data.getSize() >= Integer.valueOf(SettingUtility.getMsgCount()) ? unreadBean
 //                .getMention_cmt() : data.getSize());
 
-        int count = unreadBean.getMention_cmt();
+        int count = Math.min(unreadBean.getMention_cmt(), data.getSize());
 
         if (count == 0) {
             return;

@@ -13,6 +13,8 @@
         <change>第一次打开好友/粉丝列表的时候提示【第三方客户端是无法查看到全部的好友，粉丝】</change>
         <change>修复多帐号评论,转发混乱</change>
         <change>设置-显示，关闭快速滚动选项</change>
+        <change>加了个引导，点击标题栏空白区域回到顶部</change>
+        <change>只支持4.2+系统</change>
     </release>
     <release
             version="0.491-2013.11"

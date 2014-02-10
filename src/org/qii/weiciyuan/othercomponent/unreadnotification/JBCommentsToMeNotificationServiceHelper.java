@@ -67,7 +67,7 @@ public class JBCommentsToMeNotificationServiceHelper extends NotificationService
 
 //        int count = (data.getSize() >= Integer.valueOf(SettingUtility.getMsgCount()) ? unreadBean
 //                .getCmt() : data.getSize());
-        int count = unreadBean.getCmt();
+        int count = Math.min(unreadBean.getCmt(), data.getSize());
 
         if (count == 0) {
             return;
