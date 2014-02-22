@@ -1,13 +1,8 @@
 package org.qii.weiciyuan.support.database;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.GroupBean;
 import org.qii.weiciyuan.bean.GroupListBean;
 import org.qii.weiciyuan.bean.MessageBean;
@@ -15,9 +10,16 @@ import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.android.MessageTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.table.HomeTable;
-import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.debug.AppLogger;
+import org.qii.weiciyuan.support.utils.AppConfig;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,7 +62,8 @@ public class FriendsTimeLineDBTask {
 
         Gson gson = new Gson();
         List<MessageBean> msgList = list.getItemList();
-        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), HomeTable.HomeDataTable.TABLE_NAME);
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(),
+                HomeTable.HomeDataTable.TABLE_NAME);
         final int mblogidColumn = ih.getColumnIndex(HomeTable.HomeDataTable.MBLOGID);
         final int accountidColumn = ih.getColumnIndex(HomeTable.HomeDataTable.ACCOUNTID);
         final int jsondataColumn = ih.getColumnIndex(HomeTable.HomeDataTable.JSONDATA);
@@ -91,7 +94,8 @@ public class FriendsTimeLineDBTask {
     }
 
     private static void reduceHomeTable(String accountId) {
-        String searchCount = "select count(" + HomeTable.HomeDataTable.ID + ") as total" + " from " + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.ACCOUNTID
+        String searchCount = "select count(" + HomeTable.HomeDataTable.ID + ") as total" + " from "
+                + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.ACCOUNTID
                 + " = " + accountId;
         int total = 0;
         Cursor c = getWsd().rawQuery(searchCount, null);
@@ -125,7 +129,8 @@ public class FriendsTimeLineDBTask {
         }
     }
 
-    public static void asyncReplace(final MessageListBean list, final String accountId, final String groupId) {
+    public static void asyncReplace(final MessageListBean list, final String accountId,
+            final String groupId) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -135,7 +140,8 @@ public class FriendsTimeLineDBTask {
 
     }
 
-    public static void asyncUpdatePosition(final TimeLinePosition position, final String accountId, final String groupId) {
+    public static void asyncUpdatePosition(final TimeLinePosition position, final String accountId,
+            final String groupId) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -146,17 +152,21 @@ public class FriendsTimeLineDBTask {
         new Thread(runnable).start();
     }
 
-    private static void updatePosition(TimeLinePosition position, String accountId, String groupId) {
+    private static void updatePosition(TimeLinePosition position, String accountId,
+            String groupId) {
         if (groupId.equals("0")) {
             updatePosition(position, accountId);
         } else {
-            HomeOtherGroupTimeLineDBTask.updatePosition(position, GlobalContext.getInstance().getCurrentAccountId(), groupId);
+            HomeOtherGroupTimeLineDBTask
+                    .updatePosition(position, GlobalContext.getInstance().getCurrentAccountId(),
+                            groupId);
         }
     }
 
 
     private static void updatePosition(TimeLinePosition position, String accountId) {
-        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
+        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID
+                + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
@@ -180,7 +190,8 @@ public class FriendsTimeLineDBTask {
     }
 
     private static TimeLinePosition getPosition(String accountId) {
-        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
+        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID
+                + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
@@ -202,7 +213,8 @@ public class FriendsTimeLineDBTask {
     }
 
     public static String getRecentGroupId(String accountId) {
-        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
+        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID
+                + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
@@ -221,7 +233,9 @@ public class FriendsTimeLineDBTask {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                FriendsTimeLineDBTask.updateRecentGroupId(GlobalContext.getInstance().getCurrentAccountId(), groupId);
+                FriendsTimeLineDBTask
+                        .updateRecentGroupId(GlobalContext.getInstance().getCurrentAccountId(),
+                                groupId);
             }
         };
 
@@ -230,7 +244,8 @@ public class FriendsTimeLineDBTask {
 
     private static void updateRecentGroupId(String accountId, String groupId) {
 
-        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID + "  = "
+        String sql = "select * from " + HomeTable.TABLE_NAME + " where " + HomeTable.ACCOUNTID
+                + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         if (c.moveToNext()) {
@@ -253,12 +268,14 @@ public class FriendsTimeLineDBTask {
     }
 
     static void deleteAllHomes(String accountId) {
-        String sql = "delete from " + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.ACCOUNTID + " in " + "(" + accountId + ")";
+        String sql = "delete from " + HomeTable.HomeDataTable.TABLE_NAME + " where "
+                + HomeTable.HomeDataTable.ACCOUNTID + " in " + "(" + accountId + ")";
 
         getWsd().execSQL(sql);
     }
 
-    public static void asyncUpdateCount(final String msgId, final int commentCount, final int repostCount) {
+    public static void asyncUpdateCount(final String msgId, final int commentCount,
+            final int repostCount) {
 
         new Thread(new Runnable() {
             @Override
@@ -271,7 +288,8 @@ public class FriendsTimeLineDBTask {
     }
 
     private static void updateCount(String msgId, int commentCount, int repostCount) {
-        String sql = "select * from " + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.MBLOGID + "  = "
+        String sql = "select * from " + HomeTable.HomeDataTable.TABLE_NAME + " where "
+                + HomeTable.HomeDataTable.MBLOGID + "  = "
                 + msgId + " order by "
                 + HomeTable.HomeDataTable.ID + " asc limit 50";
         Cursor c = getRsd().rawQuery(sql, null);
@@ -287,7 +305,8 @@ public class FriendsTimeLineDBTask {
                     String[] args = {id};
                     ContentValues cv = new ContentValues();
                     cv.put(HomeTable.HomeDataTable.JSONDATA, gson.toJson(value));
-                    getWsd().update(HomeTable.HomeDataTable.TABLE_NAME, cv, HomeTable.HomeDataTable.ID + "=?", args);
+                    getWsd().update(HomeTable.HomeDataTable.TABLE_NAME, cv,
+                            HomeTable.HomeDataTable.ID + "=?", args);
                 } catch (JsonSyntaxException e) {
 
                 }
@@ -303,20 +322,24 @@ public class FriendsTimeLineDBTask {
         TimeLinePosition position;
         if (groupId.equals("0")) {
             position = getPosition(accountId);
-            msgList = getHomeLineMsgList(accountId, position.position + AppConfig.DB_CACHE_COUNT_OFFSET);
+            msgList = getHomeLineMsgList(accountId,
+                    position.position + AppConfig.DB_CACHE_COUNT_OFFSET);
         } else {
-            msgList = HomeOtherGroupTimeLineDBTask.get(accountId, groupId);
             position = HomeOtherGroupTimeLineDBTask.getPosition(accountId, groupId);
+            msgList = HomeOtherGroupTimeLineDBTask.get(accountId, groupId,
+                    position.position + AppConfig.DB_CACHE_COUNT_OFFSET);
         }
 
         return new MessageTimeLineData(groupId, msgList, position);
     }
 
-    public static List<MessageTimeLineData> getOtherGroupData(String accountId, String exceptGroupId) {
+    public static List<MessageTimeLineData> getOtherGroupData(String accountId,
+            String exceptGroupId) {
         List<MessageTimeLineData> data = new ArrayList<MessageTimeLineData>();
 
         TimeLinePosition position = getPosition(accountId);
-        MessageListBean msgList = getHomeLineMsgList(accountId, position.position + AppConfig.DB_CACHE_COUNT_OFFSET);
+        MessageListBean msgList = getHomeLineMsgList(accountId,
+                position.position + AppConfig.DB_CACHE_COUNT_OFFSET);
         MessageTimeLineData home = new MessageTimeLineData("0", msgList, position);
         data.add(home);
 
@@ -328,7 +351,8 @@ public class FriendsTimeLineDBTask {
         if (groupListBean != null) {
             List<GroupBean> lists = groupListBean.getLists();
             for (GroupBean groupBean : lists) {
-                MessageTimeLineData dbMsg = HomeOtherGroupTimeLineDBTask.getTimeLineData(accountId, groupBean.getId());
+                MessageTimeLineData dbMsg = HomeOtherGroupTimeLineDBTask
+                        .getTimeLineData(accountId, groupBean.getId());
                 data.add(dbMsg);
             }
         }
@@ -348,9 +372,11 @@ public class FriendsTimeLineDBTask {
     private static MessageListBean getHomeLineMsgList(String accountId, int limitCount) {
         Gson gson = new Gson();
         MessageListBean result = new MessageListBean();
-        int limit = limitCount > AppConfig.DEFAULT_MSG_COUNT_50 ? limitCount : AppConfig.DEFAULT_MSG_COUNT_50;
+        int limit = limitCount > AppConfig.DEFAULT_MSG_COUNT_50 ? limitCount
+                : AppConfig.DEFAULT_MSG_COUNT_50;
         List<MessageBean> msgList = new ArrayList<MessageBean>();
-        String sql = "select * from " + HomeTable.HomeDataTable.TABLE_NAME + " where " + HomeTable.HomeDataTable.ACCOUNTID + "  = "
+        String sql = "select * from " + HomeTable.HomeDataTable.TABLE_NAME + " where "
+                + HomeTable.HomeDataTable.ACCOUNTID + "  = "
                 + accountId + " order by " + HomeTable.HomeDataTable.ID + " asc limit " + limit;
         Cursor c = getRsd().rawQuery(sql, null);
         while (c.moveToNext()) {
