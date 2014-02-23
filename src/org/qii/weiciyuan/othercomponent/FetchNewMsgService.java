@@ -15,6 +15,7 @@ import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.database.CommentToMeTimeLineDBTask;
 import org.qii.weiciyuan.support.database.MentionCommentsTimeLineDBTask;
 import org.qii.weiciyuan.support.database.MentionWeiboTimeLineDBTask;
+import org.qii.weiciyuan.support.database.NotificationDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppEventAction;
@@ -136,6 +137,9 @@ public class FetchNewMsgService extends IntentService {
             mentionCommentsResult = dao.getGSONMsgListWithoutClearUnread();
         }
 
+        clearDatabaseUnreadInfo(accountBean.getUid(), unreadBean.getMention_status(),
+                unreadBean.getMention_cmt(), unreadBean.getCmt());
+
         boolean mentionsWeibo = (mentionStatusesResult != null
                 && mentionStatusesResult.getSize() > 0);
         boolean mentionsComment = (mentionCommentsResult != null
@@ -163,6 +167,22 @@ public class FetchNewMsgService extends IntentService {
         if (mentionsWeibo || mentionsComment || commentsToMe) {
             sendTwoKindsOfBroadcast(accountBean, commentResult, mentionStatusesResult,
                     mentionCommentsResult, unreadBean);
+        }
+    }
+
+    private void clearDatabaseUnreadInfo(String accountId, int mentionsWeibo, int mentionsComment,
+            int cmt) {
+        if (mentionsWeibo == 0) {
+            NotificationDBTask
+                    .asyncClearUnread(accountId, NotificationDBTask.UnreadDBType.mentionsWeibo);
+        }
+        if (mentionsComment == 0) {
+            NotificationDBTask
+                    .asyncClearUnread(accountId, NotificationDBTask.UnreadDBType.mentionsComment);
+        }
+        if (cmt == 0) {
+            NotificationDBTask
+                    .asyncClearUnread(accountId, NotificationDBTask.UnreadDBType.commentsToMe);
         }
     }
 

@@ -1,9 +1,12 @@
 package org.qii.weiciyuan.othercomponent.unreadnotification;
 
 import org.qii.weiciyuan.bean.AccountBean;
+import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.support.database.NotificationDBTask;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.NotificationUtility;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -14,6 +17,10 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * User: Jiang Qi
@@ -57,6 +64,7 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
         }
     }
 
+
     private boolean allowShowNotification() {
         return sum > 0 && (commentsToMeData != null || mentionsWeiboData != null
                 || mentionsCommentData != null);
@@ -89,43 +97,91 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
                     .getTicker(unreadBean, mentionsWeiboData, mentionsCommentData,
                             commentsToMeData);
 
+            String accountId = accountBean.getUid();
+
+            Set<String> dbUnreadMentionsWeibo = NotificationDBTask.getUnreadMsgIds(accountId,
+                    NotificationDBTask.UnreadDBType.mentionsWeibo);
+            Set<String> dbUnreadMentionsComment = NotificationDBTask.getUnreadMsgIds(accountId,
+                    NotificationDBTask.UnreadDBType.mentionsComment);
+            Set<String> dbUnreadCommentsToMe = NotificationDBTask.getUnreadMsgIds(accountId,
+                    NotificationDBTask.UnreadDBType.commentsToMe);
+
             if (mentionsWeiboData != null && mentionsWeiboData.getSize() > 0) {
-                Intent intent = new Intent(context, JBMentionsWeiboNotificationServiceHelper.class);
-                intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
-                intent.putExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG, mentionsWeiboData);
-                intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
-                intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
-                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
-                        clickNotificationToOpenAppPendingIntentInner);
-                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
-                context.startService(intent);
+
+                List<MessageBean> msgList = mentionsWeiboData.getItemList();
+                Iterator<MessageBean> iterator = msgList.iterator();
+                while (iterator.hasNext()) {
+                    MessageBean msg = iterator.next();
+                    if (dbUnreadMentionsWeibo.contains(msg.getId())) {
+                        iterator.remove();
+                    }
+                }
+
+                if (msgList.size() != 0) {
+                    Intent intent = new Intent(context,
+                            JBMentionsWeiboNotificationServiceHelper.class);
+                    intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
+                    intent.putExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG,
+                            mentionsWeiboData);
+                    intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
+                    intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
+                    intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
+                            clickNotificationToOpenAppPendingIntentInner);
+                    intent.putExtra(NotificationServiceHelper.TICKER, ticker);
+                    context.startService(intent);
+                }
             }
 
             if (mentionsCommentData != null && mentionsCommentData.getSize() > 0) {
-                Intent intent = new Intent(context,
-                        JBMentionsCommentNotificationServiceHelper.class);
-                intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
-                intent.putExtra(NotificationServiceHelper.MENTIONS_COMMENT_ARG,
-                        mentionsCommentData);
-                intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
-                intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
-                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
-                        clickNotificationToOpenAppPendingIntentInner);
-                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
-                context.startService(intent);
+                List<CommentBean> msgList = mentionsCommentData.getItemList();
+                Iterator<CommentBean> iterator = msgList.iterator();
+                while (iterator.hasNext()) {
+                    CommentBean msg = iterator.next();
+                    if (dbUnreadMentionsComment.contains(msg.getId())) {
+                        iterator.remove();
+                    }
+                }
+
+                if (msgList.size() != 0) {
+                    Intent intent = new Intent(context,
+                            JBMentionsCommentNotificationServiceHelper.class);
+                    intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
+                    intent.putExtra(NotificationServiceHelper.MENTIONS_COMMENT_ARG,
+                            mentionsCommentData);
+                    intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
+                    intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
+                    intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
+                            clickNotificationToOpenAppPendingIntentInner);
+                    intent.putExtra(NotificationServiceHelper.TICKER, ticker);
+                    context.startService(intent);
+                }
             }
 
             if (commentsToMeData != null && commentsToMeData.getSize() > 0) {
-                Intent intent = new Intent(context, JBCommentsToMeNotificationServiceHelper.class);
-                intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
-                intent.putExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG, commentsToMeData);
-                intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
-                intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
-                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
-                        clickNotificationToOpenAppPendingIntentInner);
-                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
-                context.startService(intent);
+                List<CommentBean> msgList = commentsToMeData.getItemList();
+                Iterator<CommentBean> iterator = msgList.iterator();
+                while (iterator.hasNext()) {
+                    CommentBean msg = iterator.next();
+                    if (dbUnreadCommentsToMe.contains(msg.getId())) {
+                        iterator.remove();
+                    }
+                }
+
+                if (msgList.size() != 0) {
+                    Intent intent = new Intent(context,
+                            JBCommentsToMeNotificationServiceHelper.class);
+                    intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
+                    intent.putExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG, commentsToMeData);
+                    intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
+                    intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
+                    intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
+                            clickNotificationToOpenAppPendingIntentInner);
+                    intent.putExtra(NotificationServiceHelper.TICKER, ticker);
+                    context.startService(intent);
+                }
             }
         }
     }
+
+
 }
