@@ -615,7 +615,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
             if (accountBean.equals(intentAccount)) {
                 MessageListBean mentionsWeibo = intent
                         .getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
-                MessageListBean mentionsComment = intent
+                CommentListBean mentionsComment = intent
                         .getParcelableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
                 CommentListBean commentsToMe = intent
                         .getParcelableExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA);
