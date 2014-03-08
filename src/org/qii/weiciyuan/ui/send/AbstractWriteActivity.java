@@ -1,15 +1,7 @@
 package org.qii.weiciyuan.ui.send;
 
-import android.app.ActionBar;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.*;
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.CheatSheet;
@@ -17,21 +9,42 @@ import org.qii.weiciyuan.support.smileypicker.SmileyPicker;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
+import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 import org.qii.weiciyuan.ui.maintimeline.SaveDraftDialog;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
+
+import android.app.ActionBar;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 /**
  * User: qii
  * Date: 12-9-25
  */
-public abstract class AbstractWriteActivity<T> extends AbstractAppActivity implements View.OnClickListener, ClearContentDialog.IClear
+public abstract class AbstractWriteActivity<T> extends AbstractAppActivity
+        implements View.OnClickListener, ClearContentDialog.IClear
         , SaveDraftDialog.IDraft {
 
 
     protected abstract boolean canSend();
 
     private AutoCompleteTextView et;
+
     private SmileyPicker smiley = null;
+
     private RelativeLayout container = null;
 
     public static final int AT_USER = 3;
@@ -82,9 +95,13 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         int avatarWidth = getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width);
         int avatarHeight = getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height);
 
-        Bitmap bitmap = ImageUtility.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getAvatar_large(), avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
+        Bitmap bitmap = ImageUtility
+                .getWriteWeiboRoundedCornerPic(getCurrentAccountBean().getInfo().getAvatar_large(),
+                        avatarWidth, avatarHeight, FileLocationMethod.avatar_large);
         if (bitmap == null) {
-            bitmap = ImageUtility.getWriteWeiboRoundedCornerPic(GlobalContext.getInstance().getAccountBean().getInfo().getProfile_image_url(), avatarWidth, avatarHeight, FileLocationMethod.avatar_small);
+            bitmap = ImageUtility.getWriteWeiboRoundedCornerPic(
+                    getCurrentAccountBean().getInfo().getProfile_image_url(),
+                    avatarWidth, avatarHeight, FileLocationMethod.avatar_small);
         }
         if (bitmap != null) {
             actionBar.setIcon(new BitmapDrawable(getResources(), bitmap));
@@ -96,8 +113,10 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         actionBar.setCustomView(title, new ActionBar.LayoutParams(Gravity.RIGHT));
 
         et = ((AutoCompleteTextView) findViewById(R.id.status_new_content));
-        et.addTextChangedListener(new TextNumLimitWatcher((TextView) findViewById(R.id.menu_send), et, this));
-        AutoCompleteAdapter adapter = new AutoCompleteAdapter(this, et, (ProgressBar) title.findViewById(R.id.have_suggest_progressbar));
+        et.addTextChangedListener(
+                new TextNumLimitWatcher((TextView) findViewById(R.id.menu_send), et, this));
+        AutoCompleteAdapter adapter = new AutoCompleteAdapter(this, et,
+                (ProgressBar) title.findViewById(R.id.have_suggest_progressbar));
         et.setAdapter(adapter);
 
         findViewById(R.id.menu_topic).setOnClickListener(this);
@@ -106,12 +125,15 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         findViewById(R.id.menu_send).setOnClickListener(this);
 
         CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_at), R.string.at_other);
-        CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_emoticon), R.string.add_emoticon);
-        CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_topic), R.string.add_topic);
+        CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_emoticon),
+                R.string.add_emoticon);
+        CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_topic),
+                R.string.add_topic);
         CheatSheet.setup(AbstractWriteActivity.this, findViewById(R.id.menu_send), R.string.send);
 
         smiley = (SmileyPicker) findViewById(R.id.smiley_picker);
-        smiley.setEditText(AbstractWriteActivity.this, ((LinearLayout) findViewById(R.id.root_layout)), et);
+        smiley.setEditText(AbstractWriteActivity.this,
+                ((LinearLayout) findViewById(R.id.root_layout)), et);
         container = (RelativeLayout) findViewById(R.id.container);
         et.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +153,8 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
         if (this.smiley.isShown()) {
             if (showKeyBoard) {
                 //this time softkeyboard is hidden
-                LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.container.getLayoutParams();
+                LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this
+                        .container.getLayoutParams();
                 localLayoutParams.height = smiley.getTop();
                 localLayoutParams.weight = 0.0F;
                 this.smiley.hide(AbstractWriteActivity.this);
@@ -152,14 +175,16 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
     }
 
     private void lockContainerHeight(int paramInt) {
-        LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.container.getLayoutParams();
+        LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.container
+                .getLayoutParams();
         localLayoutParams.height = paramInt;
         localLayoutParams.weight = 0.0F;
     }
 
     public void unlockContainerHeightDelayed() {
 
-        ((LinearLayout.LayoutParams) AbstractWriteActivity.this.container.getLayoutParams()).weight = 1.0F;
+        ((LinearLayout.LayoutParams) AbstractWriteActivity.this.container.getLayoutParams()).weight
+                = 1.0F;
 
     }
 
@@ -170,7 +195,8 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
                 if (smiley.isShown()) {
                     hideSmileyPicker(true);
                 } else {
-                    showSmileyPicker(SmileyPickerUtility.isKeyBoardShow(AbstractWriteActivity.this));
+                    showSmileyPicker(
+                            SmileyPickerUtility.isKeyBoardShow(AbstractWriteActivity.this));
                 }
                 break;
 
@@ -208,8 +234,26 @@ public abstract class AbstractWriteActivity<T> extends AbstractAppActivity imple
             SaveDraftDialog dialog = new SaveDraftDialog();
             dialog.show(getFragmentManager(), "");
         } else {
-            super.onBackPressed();
+
+            if (GlobalContext.getInstance().getAccountBean().equals(getCurrentAccountBean())) {
+                super.onBackPressed();
+            } else {
+                InputMethodManager imm = (InputMethodManager) getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                if (imm.isActive()) {
+                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
+                            InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+                Intent intent = MainTimeLineActivity.newIntent(getCurrentAccountBean());
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+
         }
+    }
+
+    protected AccountBean getCurrentAccountBean() {
+        return GlobalContext.getInstance().getAccountBean();
     }
 
     protected abstract boolean canShowSaveDraftDialog();
