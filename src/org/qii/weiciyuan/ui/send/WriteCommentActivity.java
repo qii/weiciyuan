@@ -1,14 +1,5 @@
 package org.qii.weiciyuan.ui.send;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.Toast;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.ItemBean;
@@ -22,6 +13,16 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.search.AtUserActivity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.Toast;
+
 /**
  * User: Jiang Qi
  * Date: 12-8-2
@@ -29,16 +30,25 @@ import org.qii.weiciyuan.ui.search.AtUserActivity;
 public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
 
     public static final String ACTION_DRAFT = "org.qii.weiciyuan.DRAFT";
-    public static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
+
+    private static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
+
+    private static final String ACTION_NOTIFICATION_COMMENT
+            = "org.qii.weiciyuan.NOTIFICATION_COMMENT";
+
 
     private String token;
+
     private MessageBean msg;
+
     private CommentDraftBean commentDraftBean;
 
     private MenuItem enableCommentOri;
+
     private MenuItem enableRepost;
 
     private boolean savedEnableCommentOri;
+
     private boolean savedEnableRepost;
 
 
@@ -47,17 +57,19 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         super.onCreate(savedInstanceState);
 
         getActionBar().setTitle(R.string.comments);
-        getActionBar().setSubtitle(GlobalContext.getInstance().getCurrentAccountName());
+        getActionBar().setSubtitle(getCurrentAccountBean().getUsernick());
 
         if (savedInstanceState == null) {
 
             Intent intent = getIntent();
             String action = intent.getAction();
             if (!TextUtils.isEmpty(action)) {
-                if (action.equals(WriteReplyToCommentActivity.ACTION_DRAFT)) {
+                if (action.equals(WriteCommentActivity.ACTION_DRAFT)) {
                     handleDraftOperation(intent);
-                } else if (action.equals(WriteReplyToCommentActivity.ACTION_SEND_FAILED)) {
+                } else if (action.equals(WriteCommentActivity.ACTION_SEND_FAILED)) {
                     handleFailedOperation(intent);
+                } else if (action.equals(WriteCommentActivity.ACTION_NOTIFICATION_COMMENT)) {
+                    handleNotificationCommentOperation(intent);
                 }
             } else {
                 handleNormalOperation(intent);
@@ -67,12 +79,12 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
     }
 
     public static Intent startBecauseSendFailed(Context context,
-                                                AccountBean account,
-                                                String content,
-                                                MessageBean oriMsg,
-                                                CommentDraftBean draft,
-                                                boolean comment_ori,
-                                                String failedReason) {
+            AccountBean account,
+            String content,
+            MessageBean oriMsg,
+            CommentDraftBean draft,
+            boolean comment_ori,
+            String failedReason) {
         Intent intent = new Intent(context, WriteCommentActivity.class);
         intent.setAction(WriteCommentActivity.ACTION_SEND_FAILED);
         intent.putExtra("account", account);
@@ -82,6 +94,24 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         intent.putExtra("failedReason", failedReason);
         intent.putExtra("draft", draft);
         return intent;
+    }
+
+    public static Intent newIntentFromNotification(Context context,
+            AccountBean account,
+            MessageBean msg) {
+        Intent intent = new Intent(context, WriteCommentActivity.class);
+        intent.setAction(WriteCommentActivity.ACTION_NOTIFICATION_COMMENT);
+        intent.putExtra("account", account);
+        intent.putExtra("msg", msg);
+        return intent;
+    }
+
+
+    private void handleNotificationCommentOperation(Intent intent) {
+        AccountBean accountBean = intent.getParcelableExtra("account");
+        token = accountBean.getAccess_token();
+        msg = intent.getParcelableExtra("msg");
+        getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
     }
 
     private void handleFailedOperation(Intent intent) {
@@ -100,8 +130,9 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
     private void handleNormalOperation(Intent intent) {
 
         token = getIntent().getStringExtra("token");
-        if (TextUtils.isEmpty(token))
+        if (TextUtils.isEmpty(token)) {
             token = GlobalContext.getInstance().getSpecialToken();
+        }
 
         msg = (MessageBean) getIntent().getParcelableExtra("msg");
         getEditTextView().setHint("@" + msg.getUser().getScreen_name() + "：" + msg.getText());
@@ -110,9 +141,9 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
     private void handleDraftOperation(Intent intent) {
 
         token = getIntent().getStringExtra("token");
-        if (TextUtils.isEmpty(token))
+        if (TextUtils.isEmpty(token)) {
             token = GlobalContext.getInstance().getSpecialToken();
-
+        }
 
         commentDraftBean = (CommentDraftBean) getIntent().getParcelableExtra("draft");
         msg = commentDraftBean.getMessageBean();
@@ -139,7 +170,8 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
             savedEnableRepost = savedInstanceState.getBoolean("repost");
             token = savedInstanceState.getString("token");
             msg = (MessageBean) savedInstanceState.getParcelable("msg");
-            commentDraftBean = (CommentDraftBean) savedInstanceState.getParcelable("commentDraftBean");
+            commentDraftBean = (CommentDraftBean) savedInstanceState
+                    .getParcelable("commentDraftBean");
         }
     }
 
@@ -156,15 +188,17 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
     @Override
     public void saveToDraft() {
         if (!TextUtils.isEmpty(getEditTextView().getText().toString())) {
-            DraftDBManager.getInstance().insertComment(getEditTextView().getText().toString(), msg, GlobalContext.getInstance().getCurrentAccountId());
+            DraftDBManager.getInstance().insertComment(getEditTextView().getText().toString(), msg,
+                    GlobalContext.getInstance().getCurrentAccountId());
         }
         finish();
     }
 
     @Override
     protected void removeDraft() {
-        if (commentDraftBean != null)
+        if (commentDraftBean != null) {
             DraftDBManager.getInstance().remove(commentDraftBean.getId());
+        }
     }
 
     @Override
@@ -206,11 +240,14 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
             return true;
         } else {
             if (!haveContent && !haveToken) {
-                Toast.makeText(this, getString(R.string.content_cant_be_empty_and_dont_have_account), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,
+                        getString(R.string.content_cant_be_empty_and_dont_have_account),
+                        Toast.LENGTH_SHORT).show();
             } else if (!haveContent) {
                 getEditTextView().setError(getString(R.string.content_cant_be_empty));
             } else if (!haveToken) {
-                Toast.makeText(this, getString(R.string.dont_have_account), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.dont_have_account), Toast.LENGTH_SHORT)
+                        .show();
             }
 
             if (!contentNumBelow140) {
@@ -227,9 +264,12 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm.isActive())
-                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+                InputMethodManager imm = (InputMethodManager) getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                if (imm.isActive()) {
+                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
+                            InputMethodManager.HIDE_NOT_ALWAYS);
+                }
                 finish();
                 break;
 
@@ -262,13 +302,10 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
     @Override
     protected void send() {
         if (!enableRepost.isChecked()) {
-            String content = ((EditText) findViewById(R.id.status_new_content)).getText().toString();
-            Intent intent = new Intent(WriteCommentActivity.this, SendCommentService.class);
-            intent.putExtra("oriMsg", msg);
-            intent.putExtra("content", content);
-            intent.putExtra("comment_ori", enableCommentOri.isChecked());
-            intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-            intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
+            String content = ((EditText) findViewById(R.id.status_new_content)).getText()
+                    .toString();
+            Intent intent = SendCommentService
+                    .newIntent(getCurrentAccountBean(), msg, content, enableCommentOri.isChecked());
             startService(intent);
             finish();
 
@@ -300,7 +337,6 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
             }
         }
 
-
         boolean comment = true;
         boolean oriComment = enableCommentOri.isChecked();
         String is_comment = "";
@@ -321,5 +357,16 @@ public class WriteCommentActivity extends AbstractWriteActivity<ItemBean> {
         startService(intent);
         finish();
 
+    }
+
+    @Override
+    protected AccountBean getCurrentAccountBean() {
+        if (WriteCommentActivity.ACTION_NOTIFICATION_COMMENT.equals(getIntent().getAction())
+                || WriteCommentActivity.ACTION_SEND_FAILED.equals(getIntent().getAction())) {
+            AccountBean accountBean = ((AccountBean) getIntent().getParcelableExtra("account"));
+            return accountBean;
+        } else {
+            return super.getCurrentAccountBean();
+        }
     }
 }

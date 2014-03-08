@@ -28,9 +28,9 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
 
     public static final String ACTION_DRAFT = "org.qii.weiciyuan.DRAFT";
 
-    public static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
+    private static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
 
-    public static final String ACTION_NOTIFICATION_REPLY = "org.qii.weiciyuan.NOTIFICATION_REPLY";
+    private static final String ACTION_NOTIFICATION_REPLY = "org.qii.weiciyuan.NOTIFICATION_REPLY";
 
     private CommentBean bean;
 
