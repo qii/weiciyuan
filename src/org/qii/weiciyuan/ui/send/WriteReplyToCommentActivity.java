@@ -242,16 +242,9 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
             String content = ((EditText) findViewById(R.id.status_new_content)).getText()
                     .toString();
 
-            Intent intent = new Intent(WriteReplyToCommentActivity.this,
-                    SendReplyToCommentService.class);
-            intent.putExtra("oriMsg", bean);
-            intent.putExtra("content", content);
-            intent.putExtra("token", getCurrentAccountBean().getAccess_token());
-            intent.putExtra("account", getCurrentAccountBean());
-            if (enableRepost.isChecked()) {
-                intent.putExtra("repostContent", repost());
-
-            }
+            Intent intent = SendReplyToCommentService
+                    .newIntent(getCurrentAccountBean(), bean, content,
+                            enableRepost.isChecked() ? repost() : null);
             startService(intent);
             finish();
         }
