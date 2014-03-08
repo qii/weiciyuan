@@ -29,7 +29,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +41,7 @@ import java.util.HashMap;
  * User: qii
  * Date: 14-3-8
  */
-public class GeneralNotificationService extends NotificationServiceHelper {
+public class BigTextNotificationService extends NotificationServiceHelper {
 
     private class ValueWrapper {
 
@@ -171,37 +174,48 @@ public class GeneralNotificationService extends NotificationServiceHelper {
                     @Override
                     public void run() {
                         try {
-
                             ArrayList<String> ids = new ArrayList<String>();
 
-                            for (MessageBean msg : mentionsWeibo.getItemList()) {
-                                ids.add(msg.getId());
-                            }
+                            if (mentionsWeibo != null) {
+                                for (MessageBean msg : mentionsWeibo.getItemList()) {
+                                    ids.add(msg.getId());
+                                }
 
-                            NotificationDBTask.addUnreadNotification(accountBean.getUid(), ids,
-                                    NotificationDBTask.UnreadDBType.mentionsWeibo);
+                                NotificationDBTask.addUnreadNotification(accountBean.getUid(), ids,
+                                        NotificationDBTask.UnreadDBType.mentionsWeibo);
+                            }
 
                             ids.clear();
 
-                            for (CommentBean msg : commentsToMe.getItemList()) {
-                                ids.add(msg.getId());
+                            if (commentsToMe != null) {
+
+                                for (CommentBean msg : commentsToMe.getItemList()) {
+                                    ids.add(msg.getId());
+                                }
+
+                                NotificationDBTask.addUnreadNotification(accountBean.getUid(), ids,
+                                        NotificationDBTask.UnreadDBType.commentsToMe);
                             }
-
-                            NotificationDBTask.addUnreadNotification(accountBean.getUid(), ids,
-                                    NotificationDBTask.UnreadDBType.commentsToMe);
-
                             ids.clear();
+                            if (mentionsComment != null) {
+                                for (CommentBean msg : mentionsComment.getItemList()) {
+                                    ids.add(msg.getId());
+                                }
 
-                            for (CommentBean msg : mentionsComment.getItemList()) {
-                                ids.add(msg.getId());
+                                NotificationDBTask.addUnreadNotification(accountBean.getUid(), ids,
+                                        NotificationDBTask.UnreadDBType.mentionsComment);
                             }
-
-                            NotificationDBTask.addUnreadNotification(accountBean.getUid(), ids,
-                                    NotificationDBTask.UnreadDBType.mentionsComment);
-
                         } finally {
                             Utility.unregisterReceiverIgnoredReceiverNotRegisteredException(
                                     GlobalContext.getInstance(), clearNotificationEventReceiver);
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "移除通知",
+                                            Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
                         }
 
                     }
@@ -255,8 +269,8 @@ public class GeneralNotificationService extends NotificationServiceHelper {
         }
 
         if (count > 1) {
-            Intent nextIntent = new Intent(GeneralNotificationService.this,
-                    GeneralNotificationService.class);
+            Intent nextIntent = new Intent(BigTextNotificationService.this,
+                    BigTextNotificationService.class);
             nextIntent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
             nextIntent.putExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG, mentionsWeibo);
             nextIntent.putExtra(NotificationServiceHelper.MENTIONS_COMMENT_ARG,
@@ -281,7 +295,7 @@ public class GeneralNotificationService extends NotificationServiceHelper {
             }
             nextIntent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, nextIndex);
             PendingIntent retrySendIntent = PendingIntent
-                    .getService(GeneralNotificationService.this, accountBean.getUid().hashCode(),
+                    .getService(BigTextNotificationService.this, accountBean.getUid().hashCode(),
                             nextIntent,
                             PendingIntent.FLAG_UPDATE_CURRENT);
             builder.addAction(actionDrawable, actionName, retrySendIntent);

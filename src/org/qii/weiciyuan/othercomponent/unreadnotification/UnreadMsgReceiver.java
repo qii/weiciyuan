@@ -7,13 +7,11 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.support.database.NotificationDBTask;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.NotificationUtility;
-import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -52,19 +50,41 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
             MessageListBean mentionsWeiboData, CommentListBean commentsToMeData
             , CommentListBean mentionsCommentData, UnreadBean unreadBean) {
 
-        if (!Utility.isJB()) {
-            NotificationManager notificationManager = (NotificationManager) context
-                    .getSystemService(Context.NOTIFICATION_SERVICE);
-            Notification notification = new ICSNotification(context, accountBean, commentsToMeData,
-                    mentionsWeiboData, mentionsCommentData, unreadBean).get();
-            notificationManager.notify(Integer.valueOf(accountBean.getUid()), notification);
-        } else {
+        Intent clickNotificationToOpenAppPendingIntentInner = MainTimeLineActivity
+                .newIntent(accountBean, mentionsWeiboData, mentionsCommentData,
+                        commentsToMeData, unreadBean);
+        clickNotificationToOpenAppPendingIntentInner
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            Intent clickNotificationToOpenAppPendingIntentInner = MainTimeLineActivity
-                    .newIntent(accountBean, mentionsWeiboData, mentionsCommentData,
-                            commentsToMeData, unreadBean);
-            clickNotificationToOpenAppPendingIntentInner
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        boolean commentsToMeDataSizeIsLarge = (commentsToMeData != null) && (
+                commentsToMeData.getSize() >= Integer.valueOf(
+                        SettingUtility.getMsgCount()));
+
+        boolean mentionsWeiboDataSizeIsLarge = (mentionsWeiboData != null) && (
+                mentionsWeiboData.getSize() >= Integer.valueOf(
+                        SettingUtility.getMsgCount()));
+
+        boolean mentionsCommentDataSizeIsLarge = (mentionsCommentData != null) && (
+                mentionsCommentData.getSize() >= Integer.valueOf(
+                        SettingUtility.getMsgCount()));
+
+        boolean showSimpleTextNotification = commentsToMeDataSizeIsLarge
+                || mentionsWeiboDataSizeIsLarge || mentionsCommentDataSizeIsLarge;
+
+        if (showSimpleTextNotification) {
+            String ticker = NotificationUtility
+                    .getTicker(unreadBean);
+            Intent intent = new Intent(context,
+                    SimpleTextNotificationService.class);
+
+            intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
+            intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
+            intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
+                    clickNotificationToOpenAppPendingIntentInner);
+            intent.putExtra(NotificationServiceHelper.TICKER, ticker);
+            context.startService(intent);
+
+        } else {
 
             String accountId = accountBean.getUid();
 
@@ -112,12 +132,23 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
 
             }
 
+            boolean mentionsWeibo = (mentionsWeiboData != null
+                    && mentionsWeiboData.getSize() > 0);
+            boolean mentionsComment = (mentionsCommentData != null
+                    && mentionsCommentData.getSize() > 0);
+            boolean commentsToMe = (commentsToMeData != null && commentsToMeData.getSize() > 0);
+
+            if (!mentionsWeibo && !mentionsComment && !commentsToMe) {
+                return;
+            }
+
             String ticker = NotificationUtility
                     .getTicker(unreadBean, mentionsWeiboData, mentionsCommentData,
                             commentsToMeData);
 
             Intent intent = new Intent(context,
-                    GeneralNotificationService.class);
+                    BigTextNotificationService.class);
+
             intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
             intent.putExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG,
                     mentionsWeiboData);
@@ -131,52 +162,6 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
             intent.putExtra(NotificationServiceHelper.TICKER, ticker);
             context.startService(intent);
 
-//            if (mentionsWeiboData != null && mentionsWeiboData.getSize() > 0) {
-//
-//                Intent intent = new Intent(context,
-//                        JBMentionsWeiboNotificationServiceHelper.class);
-//                intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
-//                intent.putExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG,
-//                        mentionsWeiboData);
-//                intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
-//                intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
-//                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
-//                        clickNotificationToOpenAppPendingIntentInner);
-//                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
-//                context.startService(intent);
-//
-//            }
-//
-//            if (mentionsCommentData != null && mentionsCommentData.getSize() > 0) {
-//
-//                Intent intent = new Intent(context,
-//                        JBMentionsCommentNotificationServiceHelper.class);
-//                intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
-//                intent.putExtra(NotificationServiceHelper.MENTIONS_COMMENT_ARG,
-//                        mentionsCommentData);
-//                intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
-//                intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
-//                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
-//                        clickNotificationToOpenAppPendingIntentInner);
-//                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
-//                context.startService(intent);
-//
-//            }
-//
-//            if (commentsToMeData != null && commentsToMeData.getSize() > 0) {
-//
-//                Intent intent = new Intent(context,
-//                        JBCommentsToMeNotificationServiceHelper.class);
-//                intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
-//                intent.putExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG, commentsToMeData);
-//                intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
-//                intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
-//                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
-//                        clickNotificationToOpenAppPendingIntentInner);
-//                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
-//                context.startService(intent);
-//
-//            }
         }
     }
 

@@ -255,7 +255,8 @@
                 android:name=".othercomponent.unreadnotification.JBMentionsCommentNotificationServiceHelper"/>
         <service
                 android:name=".othercomponent.unreadnotification.JBCommentsToMeNotificationServiceHelper"/>
-        <service android:name=".othercomponent.unreadnotification.GeneralNotificationService"/>
+        <service android:name=".othercomponent.unreadnotification.BigTextNotificationService"/>
+        <service android:name=".othercomponent.unreadnotification.SimpleTextNotificationService"/>
 
         <!---broadcast receiver -->
         <receiver

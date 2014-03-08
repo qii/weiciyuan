@@ -48,12 +48,21 @@ public class NotificationUtility {
         int mention = 0;
         if (SettingUtility.allowMentionToMe() && unreadMentionStatus > 0 && mentionsWeibo != null) {
             int actualFetchedSize = mentionsWeibo.getSize();
-            mention += Math.max(actualFetchedSize, unreadMentionStatus);
+            if (actualFetchedSize < Integer.valueOf(SettingUtility.getMsgCount())) {
+                mention += actualFetchedSize;
+            } else {
+                mention += Math.max(actualFetchedSize, unreadMentionStatus);
+            }
         }
         if (SettingUtility.allowMentionCommentToMe() && unreadMentionCmt > 0
                 && mentionsComment != null) {
             int actualFetchedSize = mentionsComment.getSize();
-            mention += Math.max(actualFetchedSize, unreadMentionCmt);
+            if (actualFetchedSize < Integer.valueOf(SettingUtility.getMsgCount())) {
+                mention += actualFetchedSize;
+            } else {
+                mention += Math.max(actualFetchedSize, unreadMentionCmt);
+
+            }
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -70,7 +79,11 @@ public class NotificationUtility {
         if (SettingUtility.allowCommentToMe() && unreadCmt > 0 && commentsToMe != null) {
 //
             int actualFetchedSize = commentsToMe.getSize();
-            cmt += Math.max(actualFetchedSize, unreadCmt);
+            if (actualFetchedSize < Integer.valueOf(SettingUtility.getMsgCount())) {
+                cmt += actualFetchedSize;
+            } else {
+                cmt += Math.max(actualFetchedSize, unreadCmt);
+            }
 
             if (mention > 0) {
                 stringBuilder.append("、");
@@ -85,6 +98,21 @@ public class NotificationUtility {
 
         }
         return stringBuilder.toString();
+    }
+
+    @Deprecated
+    public static String getTicker(UnreadBean unreadBean) {
+        int unreadMentionCmt = unreadBean.getMention_cmt();
+        int unreadMentionStatus = unreadBean.getMention_status();
+        int unreadCmt = unreadBean.getCmt();
+
+        int messageCount = unreadMentionCmt + unreadMentionStatus + unreadCmt;
+
+        String txt = String
+                .format(GlobalContext.getInstance().getString(R.string.new_unread_messages),
+                        String.valueOf(messageCount));
+
+        return txt;
     }
 
     public static void show(Notification notification, int id) {
