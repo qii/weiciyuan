@@ -208,14 +208,17 @@ public class BigTextNotificationService extends NotificationServiceHelper {
                         } finally {
                             Utility.unregisterReceiverIgnoredReceiverNotRegisteredException(
                                     GlobalContext.getInstance(), clearNotificationEventReceiver);
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(), "移除通知",
-                                            Toast.LENGTH_SHORT).show();
+                            if (Utility.isDebugMode()) {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getApplicationContext(),
+                                                "weiciyuan:remove notification items",
+                                                Toast.LENGTH_SHORT).show();
 
-                                }
-                            });
+                                    }
+                                });
+                            }
                         }
 
                     }

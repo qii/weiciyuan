@@ -1027,5 +1027,9 @@ public class Utility {
                         null);
 
     }
+
+    public static boolean isDebugMode() {
+        return BuildConfig.DEBUG;
+    }
 }
 
