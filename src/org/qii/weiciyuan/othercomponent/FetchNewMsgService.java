@@ -146,27 +146,14 @@ public class FetchNewMsgService extends IntentService {
                 && mentionCommentsResult.getSize() > 0);
         boolean commentsToMe = (commentResult != null && commentResult.getSize() > 0);
 
-        NotificationManager notificationManager = (NotificationManager) getApplicationContext()
-                .getSystemService(NOTIFICATION_SERVICE);
-
-        if (!mentionsWeibo) {
-            notificationManager
-                    .cancel(NotificationServiceHelper.getMentionsWeiboNotificationId(accountBean));
-        }
-
-        if (!mentionsComment) {
-            notificationManager.cancel(NotificationServiceHelper.getMentionsCommentNotificationId(
-                    accountBean));
-        }
-
-        if (!commentsToMe) {
-            notificationManager.cancel(NotificationServiceHelper.getCommentsToMeNotificationId(
-                    accountBean));
-        }
-
         if (mentionsWeibo || mentionsComment || commentsToMe) {
             sendTwoKindsOfBroadcast(accountBean, commentResult, mentionStatusesResult,
                     mentionCommentsResult, unreadBean);
+        } else {
+            NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+                    .getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancel(
+                    NotificationServiceHelper.getMentionsWeiboNotificationId(accountBean));
         }
     }
 

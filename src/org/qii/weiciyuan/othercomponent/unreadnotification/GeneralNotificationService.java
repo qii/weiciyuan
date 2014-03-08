@@ -11,6 +11,9 @@ import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.android.UnreadTabIndex;
 import org.qii.weiciyuan.support.database.NotificationDBTask;
 import org.qii.weiciyuan.support.debug.AppLogger;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.RecordOperationAppBroadcastReceiver;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
@@ -24,6 +27,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
@@ -238,6 +243,15 @@ public class GeneralNotificationService extends NotificationServiceHelper {
             builder.addAction(R.drawable.reply_to_comment_light,
                     getApplicationContext().getString(R.string.reply_to_comment), pendingIntent);
 
+        }
+
+        String avatar = ((ItemBean) itemBean).getUser().getAvatar_large();
+        String avatarPath = FileManager.getFilePathFromUrl(avatar, FileLocationMethod.avatar_large);
+        if (ImageUtility.isThisBitmapCanRead(avatarPath)) {
+            Bitmap bitmap = BitmapFactory.decodeFile(avatarPath, new BitmapFactory.Options());
+            if (bitmap != null) {
+                builder.setLargeIcon(bitmap);
+            }
         }
 
         if (count > 1) {

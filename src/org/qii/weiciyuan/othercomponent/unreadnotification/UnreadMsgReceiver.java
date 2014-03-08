@@ -28,56 +28,29 @@ import java.util.Set;
  */
 public class UnreadMsgReceiver extends BroadcastReceiver {
 
-    private Context context;
-
-    private AccountBean accountBean;
-
-    private int sum;
-
-    private CommentListBean commentsToMeData;
-
-    private MessageListBean mentionsWeiboData;
-
-    private CommentListBean mentionsCommentData;
-
-    private UnreadBean unreadBean;
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        this.context = context;
-        accountBean = (AccountBean) intent.getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
-        commentsToMeData = (CommentListBean) intent
+        AccountBean accountBean = (AccountBean) intent
+                .getParcelableExtra(BundleArgsConstants.ACCOUNT_EXTRA);
+        CommentListBean commentsToMeData = (CommentListBean) intent
                 .getParcelableExtra(BundleArgsConstants.COMMENTS_TO_ME_EXTRA);
-        mentionsWeiboData = (MessageListBean) intent
+        MessageListBean mentionsWeiboData = (MessageListBean) intent
                 .getParcelableExtra(BundleArgsConstants.MENTIONS_WEIBO_EXTRA);
-        mentionsCommentData = (CommentListBean) intent
+        CommentListBean mentionsCommentData = (CommentListBean) intent
                 .getParcelableExtra(BundleArgsConstants.MENTIONS_COMMENT_EXTRA);
-        unreadBean = (UnreadBean) intent.getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
+        UnreadBean unreadBean = (UnreadBean) intent
+                .getParcelableExtra(BundleArgsConstants.UNREAD_EXTRA);
 
-        sum = unreadBean.getMention_cmt() + unreadBean.getMention_status() + unreadBean.getCmt();
-
-        if (sum == 0 && accountBean != null) {
-            clearNotification(accountBean);
-        } else if (allowShowNotification()) {
-            showNotification();
-        }
-    }
-
-
-    private boolean allowShowNotification() {
-        return sum > 0 && (commentsToMeData != null || mentionsWeiboData != null
-                || mentionsCommentData != null);
-    }
-
-    private void clearNotification(AccountBean accountBean) {
-        NotificationManager notificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(Long.valueOf(accountBean.getUid()).intValue());
+        showNotification(context, accountBean, mentionsWeiboData, commentsToMeData,
+                mentionsCommentData, unreadBean);
 
     }
 
-    private void showNotification() {
+
+    private void showNotification(Context context, AccountBean accountBean,
+            MessageListBean mentionsWeiboData, CommentListBean commentsToMeData
+            , CommentListBean mentionsCommentData, UnreadBean unreadBean) {
 
         if (!Utility.isJB()) {
             NotificationManager notificationManager = (NotificationManager) context
