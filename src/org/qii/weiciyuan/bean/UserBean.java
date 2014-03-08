@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 /**
  * User: qii
@@ -11,7 +12,9 @@ import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 public class UserBean implements Parcelable {
 
     public static final int V_TYPE_NONE = -1;
+
     public static final int V_TYPE_PERSONAL = 0;
+
     public static final int V_TYPE_ENTERPRISE = 1;
 
     public boolean isEnterpriseV() {
@@ -239,33 +242,61 @@ public class UserBean implements Parcelable {
     }
 
     private String id;
+
     private String screen_name;
+
     private String name;
+
     private String province;
+
     private String city;
+
     private String location;
+
     private String description;
+
     private String url;
+
     private String profile_image_url;
+
     private String cover_image;
+
     private String domain;
+
     private String gender;
+
     private String statuses_count = "0";
+
     private String favourites_count = "0";
+
     private String created_at;
+
     private boolean following;
+
     private String allow_all_act_msg;
+
     private String remark;
+
     private String geo_enabled;
+
     private boolean verified;
+
     private String allow_all_comment;
+
     private String avatar_large;
+
     private String verified_reason;
+
     private int verified_type;
+
     private boolean follow_me;
+
     private String online_status;
+
     private String bi_followers_count;
+
     private String followers_count = "0";
+
     private String friends_count = "0";
 
     public String getFollowers_count() {
@@ -371,4 +402,16 @@ public class UserBean implements Parcelable {
                     return new UserBean[size];
                 }
             };
+
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof UserBean && id.equals(((UserBean) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
+
 }

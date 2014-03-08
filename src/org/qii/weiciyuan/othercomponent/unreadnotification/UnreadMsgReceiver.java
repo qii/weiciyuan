@@ -143,52 +143,67 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
                     .getTicker(unreadBean, mentionsWeiboData, mentionsCommentData,
                             commentsToMeData);
 
-            if (mentionsWeiboData != null && mentionsWeiboData.getSize() > 0) {
+            Intent intent = new Intent(context,
+                    GeneralNotificationService.class);
+            intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
+            intent.putExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG,
+                    mentionsWeiboData);
+            intent.putExtra(NotificationServiceHelper.MENTIONS_COMMENT_ARG,
+                    mentionsCommentData);
+            intent.putExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG, commentsToMeData);
+            intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
+            intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
+            intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
+                    clickNotificationToOpenAppPendingIntentInner);
+            intent.putExtra(NotificationServiceHelper.TICKER, ticker);
+            context.startService(intent);
 
-                Intent intent = new Intent(context,
-                        JBMentionsWeiboNotificationServiceHelper.class);
-                intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
-                intent.putExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG,
-                        mentionsWeiboData);
-                intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
-                intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
-                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
-                        clickNotificationToOpenAppPendingIntentInner);
-                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
-                context.startService(intent);
-
-            }
-
-            if (mentionsCommentData != null && mentionsCommentData.getSize() > 0) {
-
-                Intent intent = new Intent(context,
-                        JBMentionsCommentNotificationServiceHelper.class);
-                intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
-                intent.putExtra(NotificationServiceHelper.MENTIONS_COMMENT_ARG,
-                        mentionsCommentData);
-                intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
-                intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
-                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
-                        clickNotificationToOpenAppPendingIntentInner);
-                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
-                context.startService(intent);
-
-            }
-
-            if (commentsToMeData != null && commentsToMeData.getSize() > 0) {
-
-                Intent intent = new Intent(context,
-                        JBCommentsToMeNotificationServiceHelper.class);
-                intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
-                intent.putExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG, commentsToMeData);
-                intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
-                intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
-                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
-                        clickNotificationToOpenAppPendingIntentInner);
-                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
-                context.startService(intent);
-
-            }
+//            if (mentionsWeiboData != null && mentionsWeiboData.getSize() > 0) {
+//
+//                Intent intent = new Intent(context,
+//                        JBMentionsWeiboNotificationServiceHelper.class);
+//                intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
+//                intent.putExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG,
+//                        mentionsWeiboData);
+//                intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
+//                intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
+//                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
+//                        clickNotificationToOpenAppPendingIntentInner);
+//                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
+//                context.startService(intent);
+//
+//            }
+//
+//            if (mentionsCommentData != null && mentionsCommentData.getSize() > 0) {
+//
+//                Intent intent = new Intent(context,
+//                        JBMentionsCommentNotificationServiceHelper.class);
+//                intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
+//                intent.putExtra(NotificationServiceHelper.MENTIONS_COMMENT_ARG,
+//                        mentionsCommentData);
+//                intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
+//                intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
+//                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
+//                        clickNotificationToOpenAppPendingIntentInner);
+//                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
+//                context.startService(intent);
+//
+//            }
+//
+//            if (commentsToMeData != null && commentsToMeData.getSize() > 0) {
+//
+//                Intent intent = new Intent(context,
+//                        JBCommentsToMeNotificationServiceHelper.class);
+//                intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
+//                intent.putExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG, commentsToMeData);
+//                intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
+//                intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
+//                intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
+//                        clickNotificationToOpenAppPendingIntentInner);
+//                intent.putExtra(NotificationServiceHelper.TICKER, ticker);
+//                context.startService(intent);
+//
+//            }
         }
     }
 

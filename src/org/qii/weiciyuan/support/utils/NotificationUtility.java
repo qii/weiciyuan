@@ -48,12 +48,12 @@ public class NotificationUtility {
         int mention = 0;
         if (SettingUtility.allowMentionToMe() && unreadMentionStatus > 0 && mentionsWeibo != null) {
             int actualFetchedSize = mentionsWeibo.getSize();
-            mention += Math.min(actualFetchedSize, unreadMentionStatus);
+            mention += Math.max(actualFetchedSize, unreadMentionStatus);
         }
         if (SettingUtility.allowMentionCommentToMe() && unreadMentionCmt > 0
                 && mentionsComment != null) {
             int actualFetchedSize = mentionsComment.getSize();
-            mention += Math.min(actualFetchedSize, unreadMentionCmt);
+            mention += Math.max(actualFetchedSize, unreadMentionCmt);
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -70,14 +70,19 @@ public class NotificationUtility {
         if (SettingUtility.allowCommentToMe() && unreadCmt > 0 && commentsToMe != null) {
 //
             int actualFetchedSize = commentsToMe.getSize();
-            cmt += Math.min(actualFetchedSize, unreadCmt);
+            cmt += Math.max(actualFetchedSize, unreadCmt);
 
             if (mention > 0) {
                 stringBuilder.append("、");
             }
-            String txt = String.format(GlobalContext.getInstance().getString(R.string.new_comments),
-                    String.valueOf(cmt));
-            stringBuilder.append(txt);
+
+            if (cmt > 0) {
+                String txt = String
+                        .format(GlobalContext.getInstance().getString(R.string.new_comments),
+                                String.valueOf(cmt));
+                stringBuilder.append(txt);
+            }
+
         }
         return stringBuilder.toString();
     }

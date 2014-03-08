@@ -27,6 +27,7 @@ import java.util.HashMap;
  * User: qii
  * Date: 13-5-4
  */
+@Deprecated
 public class JBMentionsCommentNotificationServiceHelper extends NotificationServiceHelper {
 
 
