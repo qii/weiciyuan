@@ -307,7 +307,8 @@ public class WriteReplyToCommentActivity extends AbstractWriteActivity<CommentBe
 
     @Override
     protected AccountBean getCurrentAccountBean() {
-        if (WriteReplyToCommentActivity.ACTION_NOTIFICATION_REPLY.equals(getIntent().getAction())) {
+        if (WriteReplyToCommentActivity.ACTION_NOTIFICATION_REPLY.equals(getIntent().getAction())
+                || WriteReplyToCommentActivity.ACTION_SEND_FAILED.equals(getIntent().getAction())) {
             AccountBean accountBean = ((AccountBean) getIntent().getParcelableExtra("account"));
             return accountBean;
         } else {
