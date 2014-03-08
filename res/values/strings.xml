@@ -424,6 +424,7 @@
     <string name="pref_led_title">呼吸灯</string>
     <string name="pref_ringtone_title">铃声</string>
 
+    <string name="new_unread_messages">%s 条消息</string>
     <string name="new_comments">%s 条评论</string>
     <string name="new_mentions">%s 条@</string>
     <string name="new_mentions_weibo">%s 条@微博</string>

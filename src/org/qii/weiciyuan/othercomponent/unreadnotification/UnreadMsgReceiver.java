@@ -56,6 +56,62 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
         clickNotificationToOpenAppPendingIntentInner
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
+        String accountId = accountBean.getUid();
+
+        Set<String> dbUnreadMentionsWeibo = NotificationDBTask.getUnreadMsgIds(accountId,
+                NotificationDBTask.UnreadDBType.mentionsWeibo);
+        Set<String> dbUnreadMentionsComment = NotificationDBTask.getUnreadMsgIds(accountId,
+                NotificationDBTask.UnreadDBType.mentionsComment);
+        Set<String> dbUnreadCommentsToMe = NotificationDBTask.getUnreadMsgIds(accountId,
+                NotificationDBTask.UnreadDBType.commentsToMe);
+
+        if (mentionsWeiboData != null && mentionsWeiboData.getSize() > 0) {
+
+            List<MessageBean> msgList = mentionsWeiboData.getItemList();
+            Iterator<MessageBean> iterator = msgList.iterator();
+            while (iterator.hasNext()) {
+                MessageBean msg = iterator.next();
+                if (dbUnreadMentionsWeibo.contains(msg.getId())) {
+                    iterator.remove();
+                }
+            }
+
+        }
+
+        if (mentionsCommentData != null && mentionsCommentData.getSize() > 0) {
+            List<CommentBean> msgList = mentionsCommentData.getItemList();
+            Iterator<CommentBean> iterator = msgList.iterator();
+            while (iterator.hasNext()) {
+                CommentBean msg = iterator.next();
+                if (dbUnreadMentionsComment.contains(msg.getId())) {
+                    iterator.remove();
+                }
+            }
+
+        }
+
+        if (commentsToMeData != null && commentsToMeData.getSize() > 0) {
+            List<CommentBean> msgList = commentsToMeData.getItemList();
+            Iterator<CommentBean> iterator = msgList.iterator();
+            while (iterator.hasNext()) {
+                CommentBean msg = iterator.next();
+                if (dbUnreadCommentsToMe.contains(msg.getId())) {
+                    iterator.remove();
+                }
+            }
+
+        }
+
+        boolean mentionsWeibo = (mentionsWeiboData != null
+                && mentionsWeiboData.getSize() > 0);
+        boolean mentionsComment = (mentionsCommentData != null
+                && mentionsCommentData.getSize() > 0);
+        boolean commentsToMe = (commentsToMeData != null && commentsToMeData.getSize() > 0);
+
+        if (!mentionsWeibo && !mentionsComment && !commentsToMe) {
+            return;
+        }
+
         boolean commentsToMeDataSizeIsLarge = (commentsToMeData != null) && (
                 commentsToMeData.getSize() >= Integer.valueOf(
                         SettingUtility.getMsgCount()));
@@ -85,62 +141,6 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
             context.startService(intent);
 
         } else {
-
-            String accountId = accountBean.getUid();
-
-            Set<String> dbUnreadMentionsWeibo = NotificationDBTask.getUnreadMsgIds(accountId,
-                    NotificationDBTask.UnreadDBType.mentionsWeibo);
-            Set<String> dbUnreadMentionsComment = NotificationDBTask.getUnreadMsgIds(accountId,
-                    NotificationDBTask.UnreadDBType.mentionsComment);
-            Set<String> dbUnreadCommentsToMe = NotificationDBTask.getUnreadMsgIds(accountId,
-                    NotificationDBTask.UnreadDBType.commentsToMe);
-
-            if (mentionsWeiboData != null && mentionsWeiboData.getSize() > 0) {
-
-                List<MessageBean> msgList = mentionsWeiboData.getItemList();
-                Iterator<MessageBean> iterator = msgList.iterator();
-                while (iterator.hasNext()) {
-                    MessageBean msg = iterator.next();
-                    if (dbUnreadMentionsWeibo.contains(msg.getId())) {
-                        iterator.remove();
-                    }
-                }
-
-            }
-
-            if (mentionsCommentData != null && mentionsCommentData.getSize() > 0) {
-                List<CommentBean> msgList = mentionsCommentData.getItemList();
-                Iterator<CommentBean> iterator = msgList.iterator();
-                while (iterator.hasNext()) {
-                    CommentBean msg = iterator.next();
-                    if (dbUnreadMentionsComment.contains(msg.getId())) {
-                        iterator.remove();
-                    }
-                }
-
-            }
-
-            if (commentsToMeData != null && commentsToMeData.getSize() > 0) {
-                List<CommentBean> msgList = commentsToMeData.getItemList();
-                Iterator<CommentBean> iterator = msgList.iterator();
-                while (iterator.hasNext()) {
-                    CommentBean msg = iterator.next();
-                    if (dbUnreadCommentsToMe.contains(msg.getId())) {
-                        iterator.remove();
-                    }
-                }
-
-            }
-
-            boolean mentionsWeibo = (mentionsWeiboData != null
-                    && mentionsWeiboData.getSize() > 0);
-            boolean mentionsComment = (mentionsCommentData != null
-                    && mentionsCommentData.getSize() > 0);
-            boolean commentsToMe = (commentsToMeData != null && commentsToMeData.getSize() > 0);
-
-            if (!mentionsWeibo && !mentionsComment && !commentsToMe) {
-                return;
-            }
 
             String ticker = NotificationUtility
                     .getTicker(unreadBean, mentionsWeiboData, mentionsCommentData,
