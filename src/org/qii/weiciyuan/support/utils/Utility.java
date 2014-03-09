@@ -1036,11 +1036,12 @@ public class Utility {
 
     //long click link(schedule show dialog event), press home button(onPause onSaveInstance), show dialog,then crash....
     public static void forceShowDialog(FragmentActivity activity, DialogFragment dialogFragment) {
-        try {
-            dialogFragment.show(activity.getSupportFragmentManager(), "");
-        } catch (Exception ignored) {
-
-        }
+//        try {
+        dialogFragment.show(activity.getSupportFragmentManager(), "");
+        activity.getSupportFragmentManager().executePendingTransactions();
+//        } catch (Exception ignored) {
+//
+//        }
     }
 }
 
