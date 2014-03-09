@@ -1,5 +1,17 @@
 package org.qii.weiciyuan.support.utils;
 
+import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.bean.DMBean;
+import org.qii.weiciyuan.bean.DMUserBean;
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.database.FilterDBTask;
+import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
+import org.qii.weiciyuan.support.lib.MyURLSpan;
+import org.qii.weiciyuan.support.lib.WeiboPatterns;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+
 import android.graphics.Bitmap;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -8,12 +20,6 @@ import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.widget.TextView;
-import org.qii.weiciyuan.bean.*;
-import org.qii.weiciyuan.support.database.FilterDBTask;
-import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
-import org.qii.weiciyuan.support.lib.MyURLSpan;
-import org.qii.weiciyuan.support.lib.WeiboPatterns;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 import java.util.Iterator;
 import java.util.List;
@@ -38,7 +44,7 @@ public class TimeLineUtility {
         }
     }
 
-    private static SpannableString convertNormalStringToSpannableString(String txt) {
+    public static SpannableString convertNormalStringToSpannableString(String txt) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
         String hackTxt;

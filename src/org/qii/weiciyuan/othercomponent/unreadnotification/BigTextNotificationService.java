@@ -17,6 +17,7 @@ import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.RecordOperationAppBroadcastReceiver;
 import org.qii.weiciyuan.support.utils.BundleArgsConstants;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteCommentActivity;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
@@ -152,13 +153,14 @@ public class BigTextNotificationService extends NotificationServiceHelper {
 
         Notification.Builder builder = new Notification.Builder(getBaseContext())
                 .setTicker(ticker)
-                .setContentText(accountBean.getUsernick())
+                .setContentText(ticker)
+                .setSubText(accountBean.getUsernick())
                 .setSmallIcon(R.drawable.ic_notification)
                 .setAutoCancel(true)
                 .setContentIntent(getPendingIntent(clickToOpenAppPendingIntentInner))
                 .setOnlyAlertOnce(true);
 
-        builder.setContentTitle(ticker);
+        builder.setContentTitle(getString(R.string.app_name));
 
         if (count > 1) {
             builder.setNumber(count);
@@ -337,45 +339,46 @@ public class BigTextNotificationService extends NotificationServiceHelper {
 
     private String getItemBigContentTitle(AccountBean accountBean,
             ArrayList<Parcelable> notificationItems, int currentIndex) {
-        Parcelable itemBean = notificationItems.get(currentIndex);
-        if (itemBean instanceof MessageBean) {
-            MessageBean msg = (MessageBean) itemBean;
-            if (msg.getText().contains(accountBean.getUsernick())) {
-                // mentioned you
-                return "@"
-                        + msg.getUser().getScreen_name()
-                        + getString(R.string.weibo_at_to_you);
-            } else {
-                // retweeted your weibo
-                return "@"
-                        + msg.getUser().getScreen_name()
-                        + getString(R.string.retweeted_your_weibo);
-            }
-        } else if (itemBean instanceof CommentBean) {
-            CommentBean commentBean = (CommentBean) itemBean;
-            CommentBean oriCommentBean = commentBean.getReply_comment();
-            MessageBean oriMessageBean = commentBean.getStatus();
-            if (oriCommentBean != null && accountBean.getInfo().equals(oriCommentBean.getUser())) {
-                return "@"
-                        + commentBean.getUser().getScreen_name()
-                        + getString(R.string.reply_to_you);
-            } else if (oriMessageBean != null && accountBean.getInfo()
-                    .equals(oriMessageBean.getUser())) {
-                return "@"
-                        + commentBean.getUser().getScreen_name()
-                        + getString(R.string.comment_sent_to_you);
-            } else {
-                return commentBean.getUser().getScreen_name()
-                        + getString(R.string.comment_at_to_you);
-            }
-        }
+//        Parcelable itemBean = notificationItems.get(currentIndex);
+//        if (itemBean instanceof MessageBean) {
+//            MessageBean msg = (MessageBean) itemBean;
+//            if (msg.getText().contains(accountBean.getUsernick())) {
+//                // mentioned you
+//                return "@"
+//                        + msg.getUser().getScreen_name()
+//                        + getString(R.string.weibo_at_to_you);
+//            } else {
+//                // retweeted your weibo
+//                return "@"
+//                        + msg.getUser().getScreen_name()
+//                        + getString(R.string.retweeted_your_weibo);
+//            }
+//        } else if (itemBean instanceof CommentBean) {
+//            CommentBean commentBean = (CommentBean) itemBean;
+//            CommentBean oriCommentBean = commentBean.getReply_comment();
+//            MessageBean oriMessageBean = commentBean.getStatus();
+//            if (oriCommentBean != null && accountBean.getInfo().equals(oriCommentBean.getUser())) {
+//                return "@"
+//                        + commentBean.getUser().getScreen_name()
+//                        + getString(R.string.reply_to_you);
+//            } else if (oriMessageBean != null && accountBean.getInfo()
+//                    .equals(oriMessageBean.getUser())) {
+//                return "@"
+//                        + commentBean.getUser().getScreen_name()
+//                        + getString(R.string.comment_sent_to_you);
+//            } else {
+//                return commentBean.getUser().getScreen_name()
+//                        + getString(R.string.comment_at_to_you);
+//            }
+//        }
 
-        return null;
+        ItemBean itemBean = (ItemBean) notificationItems.get(currentIndex);
+        return itemBean.getUser().getScreen_name();
     }
 
-    private String getItemBigText(ArrayList<Parcelable> notificationItems, int currentIndex) {
+    private CharSequence getItemBigText(ArrayList<Parcelable> notificationItems, int currentIndex) {
         ItemBean itemBean = (ItemBean) notificationItems.get(currentIndex);
-        return itemBean.getText();
+        return TimeLineUtility.convertNormalStringToSpannableString(itemBean.getText());
     }
 
 }
