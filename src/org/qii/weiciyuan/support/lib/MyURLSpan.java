@@ -1,23 +1,24 @@
 package org.qii.weiciyuan.support.lib;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.TypedArray;
-import android.net.Uri;
-import android.os.Parcel;
-import android.provider.Browser;
-import android.text.ParcelableSpan;
-import android.text.TextPaint;
-import android.text.TextUtils;
-import android.text.style.ClickableSpan;
-import android.view.View;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.support.utils.WebBrowserSelector;
 import org.qii.weiciyuan.ui.adapter.LongClickLinkDialog;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.TypedArray;
+import android.net.Uri;
+import android.os.Parcel;
+import android.provider.Browser;
+import android.support.v4.app.FragmentActivity;
+import android.text.ParcelableSpan;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.style.ClickableSpan;
+import android.view.View;
 
 /**
  * User: qii
@@ -67,8 +68,9 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
             } else {
                 //otherwise some urls cant be opened, will be redirected to sina error page
                 String openUrl = url;
-                if (openUrl.endsWith("/"))
+                if (openUrl.endsWith("/")) {
                     openUrl = openUrl.substring(0, openUrl.lastIndexOf("/"));
+                }
                 WebBrowserSelector.openLink(context, Uri.parse(openUrl));
             }
         } else {
@@ -93,7 +95,8 @@ public class MyURLSpan extends ClickableSpan implements ParcelableSpan {
             if (!TextUtils.isEmpty(newValue)) {
                 Utility.vibrate(widget.getContext(), widget);
                 LongClickLinkDialog dialog = new LongClickLinkDialog(data);
-                dialog.show(((Activity) widget.getContext()).getFragmentManager(), "");
+                Utility.forceShowDialog((FragmentActivity) widget.getContext(), dialog);
+
 
             }
 
