@@ -336,7 +336,14 @@ public class JavaHttpUtility {
             int bytesum = 0;
             int byteread = 0;
             out = new BufferedOutputStream(new FileOutputStream(file));
-            in = new BufferedInputStream(urlConnection.getInputStream());
+
+            InputStream is = urlConnection.getInputStream();
+            String content_encode = urlConnection.getContentEncoding();
+            if (null != content_encode && !"".equals(content_encode) &&
+                    content_encode.equals("gzip")) {
+                is = new GZIPInputStream(is);
+            }
+            in = new BufferedInputStream(is);
 
             final Thread thread = Thread.currentThread();
             byte[] buffer = new byte[1444];
