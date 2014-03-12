@@ -145,23 +145,11 @@ public class UnreadMsgReceiver extends BroadcastReceiver {
                 .getTicker(unreadBean, mentionsWeiboData, mentionsCommentData,
                         commentsToMeData);
 
-        Intent intent = new Intent(context,
-                BigTextNotificationService.class);
-
-        intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
-        intent.putExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG,
-                mentionsWeiboData);
-        intent.putExtra(NotificationServiceHelper.MENTIONS_COMMENT_ARG,
-                mentionsCommentData);
-        intent.putExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG, commentsToMeData);
-        intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
-        intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, 0);
-        intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
-                clickNotificationToOpenAppPendingIntentInner);
-        intent.putExtra(NotificationServiceHelper.TICKER, ticker);
+        Intent intent = BigTextNotificationService
+                .newIntent(accountBean, mentionsWeiboData, commentsToMeData, mentionsCommentData,
+                        unreadBean, clickNotificationToOpenAppPendingIntentInner, ticker, 0);
         context.startService(intent);
 
-//        }
     }
 
 

@@ -44,6 +44,29 @@ import java.util.HashMap;
  */
 public class BigTextNotificationService extends NotificationServiceHelper {
 
+
+    public static Intent newIntent(AccountBean accountBean,
+            MessageListBean mentionsWeiboData, CommentListBean commentsToMeData
+            , CommentListBean mentionsCommentData, UnreadBean unreadBean,
+            Intent clickNotificationToOpenAppPendingIntentInner, String ticker, int currentIndex) {
+
+        Intent intent = new Intent(GlobalContext.getInstance(),
+                BigTextNotificationService.class);
+
+        intent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
+        intent.putExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG,
+                mentionsWeiboData);
+        intent.putExtra(NotificationServiceHelper.MENTIONS_COMMENT_ARG,
+                mentionsCommentData);
+        intent.putExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG, commentsToMeData);
+        intent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
+        intent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, currentIndex);
+        intent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
+                clickNotificationToOpenAppPendingIntentInner);
+        intent.putExtra(NotificationServiceHelper.TICKER, ticker);
+        return intent;
+    }
+
     private class ValueWrapper {
 
         private AccountBean accountBean;
@@ -76,6 +99,11 @@ public class BigTextNotificationService extends NotificationServiceHelper {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         AccountBean accountBean = intent.getParcelableExtra(NotificationServiceHelper.ACCOUNT_ARG);
+
+        if (accountBean == null) {
+            throw new IllegalArgumentException(
+                    "you must use BigTextNotificationService newIntent method");
+        }
 
         ValueWrapper valueWrapper = valueBagHashMap.get(accountBean.getUid());
 
@@ -173,6 +201,8 @@ public class BigTextNotificationService extends NotificationServiceHelper {
                 GlobalContext.getInstance(), valueWrapper.clearNotificationEventReceiver);
 
         valueWrapper.clearNotificationEventReceiver = new RecordOperationAppBroadcastReceiver() {
+
+            //mark these messages as read, write to database
             @Override
             public void onReceive(Context context, Intent intent) {
                 new Thread(new Runnable() {
@@ -280,17 +310,6 @@ public class BigTextNotificationService extends NotificationServiceHelper {
         }
 
         if (count > 1) {
-            Intent nextIntent = new Intent(BigTextNotificationService.this,
-                    BigTextNotificationService.class);
-            nextIntent.putExtra(NotificationServiceHelper.ACCOUNT_ARG, accountBean);
-            nextIntent.putExtra(NotificationServiceHelper.MENTIONS_WEIBO_ARG, mentionsWeibo);
-            nextIntent.putExtra(NotificationServiceHelper.MENTIONS_COMMENT_ARG,
-                    mentionsComment);
-            nextIntent.putExtra(NotificationServiceHelper.COMMENTS_TO_ME_ARG, commentsToMe);
-            nextIntent.putExtra(NotificationServiceHelper.UNREAD_ARG, unreadBean);
-            nextIntent.putExtra(NotificationServiceHelper.PENDING_INTENT_INNER_ARG,
-                    clickToOpenAppPendingIntentInner);
-            nextIntent.putExtra(NotificationServiceHelper.TICKER, ticker);
 
             String actionName;
             int nextIndex;
@@ -304,7 +323,11 @@ public class BigTextNotificationService extends NotificationServiceHelper {
                 actionName = getString(R.string.first_message);
                 actionDrawable = R.drawable.notification_action_previous;
             }
-            nextIntent.putExtra(NotificationServiceHelper.CURRENT_INDEX_ARG, nextIndex);
+            Intent nextIntent = BigTextNotificationService
+                    .newIntent(accountBean, mentionsWeibo, commentsToMe,
+                            mentionsComment,
+                            unreadBean, clickToOpenAppPendingIntentInner, ticker,
+                            nextIndex);
             PendingIntent retrySendIntent = PendingIntent
                     .getService(BigTextNotificationService.this, accountBean.getUid().hashCode(),
                             nextIntent,
