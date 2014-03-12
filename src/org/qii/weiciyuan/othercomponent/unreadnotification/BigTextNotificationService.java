@@ -75,7 +75,13 @@ public class BigTextNotificationService extends NotificationServiceHelper {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        ValueWrapper valueWrapper = new ValueWrapper();
+        AccountBean accountBean = intent.getParcelableExtra(NotificationServiceHelper.ACCOUNT_ARG);
+
+        ValueWrapper valueWrapper = valueBagHashMap.get(accountBean.getUid());
+
+        if (valueWrapper == null) {
+            valueWrapper = new ValueWrapper();
+        }
 
         valueWrapper.accountBean = intent.getParcelableExtra(NotificationServiceHelper.ACCOUNT_ARG);
         valueWrapper.mentionsWeibo = intent
@@ -116,7 +122,7 @@ public class BigTextNotificationService extends NotificationServiceHelper {
 
     private void buildNotification(String uid) {
 
-        ValueWrapper valueWrapper = valueBagHashMap.get(uid);
+        final ValueWrapper valueWrapper = valueBagHashMap.get(uid);
 
         if (valueWrapper == null) {
             return;
@@ -139,9 +145,6 @@ public class BigTextNotificationService extends NotificationServiceHelper {
         String ticker = valueWrapper.ticker;
 
         ArrayList<Parcelable> notificationItems = valueWrapper.notificationItems;
-
-        final RecordOperationAppBroadcastReceiver clearNotificationEventReceiver
-                = valueWrapper.clearNotificationEventReceiver;
 
 //        int count = Math.min(unreadBean.getMention_status(), data.getSize());
 
@@ -167,7 +170,7 @@ public class BigTextNotificationService extends NotificationServiceHelper {
         }
 
         Utility.unregisterReceiverIgnoredReceiverNotRegisteredException(
-                GlobalContext.getInstance(), clearNotificationEventReceiver);
+                GlobalContext.getInstance(), valueWrapper.clearNotificationEventReceiver);
 
         valueWrapper.clearNotificationEventReceiver = new RecordOperationAppBroadcastReceiver() {
             @Override
@@ -209,13 +212,16 @@ public class BigTextNotificationService extends NotificationServiceHelper {
                             }
                         } finally {
                             Utility.unregisterReceiverIgnoredReceiverNotRegisteredException(
-                                    GlobalContext.getInstance(), clearNotificationEventReceiver);
+                                    GlobalContext.getInstance(),
+                                    valueWrapper.clearNotificationEventReceiver);
                             if (Utility.isDebugMode()) {
+
                                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                                     @Override
                                     public void run() {
                                         Toast.makeText(getApplicationContext(),
-                                                "weiciyuan:remove notification items",
+                                                "weiciyuan:remove notification items" + System
+                                                        .currentTimeMillis(),
                                                 Toast.LENGTH_SHORT).show();
 
                                     }
@@ -230,9 +236,9 @@ public class BigTextNotificationService extends NotificationServiceHelper {
 
         IntentFilter intentFilter = new IntentFilter(RESET_UNREAD_MENTIONS_WEIBO_ACTION);
 
-        GlobalContext.getInstance()
-                .registerReceiver(valueWrapper.clearNotificationEventReceiver,
-                        intentFilter);
+        Utility.registerReceiverIgnoredReceiverHasRegisteredHereException(
+                GlobalContext.getInstance(), valueWrapper.clearNotificationEventReceiver,
+                intentFilter);
 
         Intent broadcastIntent = new Intent(RESET_UNREAD_MENTIONS_WEIBO_ACTION);
 
