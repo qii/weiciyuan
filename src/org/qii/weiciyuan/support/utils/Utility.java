@@ -968,7 +968,7 @@ public class Utility {
             }
             strResult = strResult.toUpperCase();
             //debug
-            if ("606A98FAF73EF658B775CA4EFE4B8427".toUpperCase().equals(strResult)) {
+            if ("DE421D82D4BBF9042886E72AA31FE22".toUpperCase().equals(strResult)) {
                 return true;
             }
             //relaease

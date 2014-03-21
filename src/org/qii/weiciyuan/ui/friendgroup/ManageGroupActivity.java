@@ -1,14 +1,5 @@
 package org.qii.weiciyuan.ui.friendgroup;
 
-import android.app.ListFragment;
-import android.content.Intent;
-import android.content.res.TypedArray;
-import android.os.Bundle;
-import android.util.SparseBooleanArray;
-import android.view.*;
-import android.widget.AbsListView;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.GroupBean;
 import org.qii.weiciyuan.bean.GroupListBean;
@@ -20,9 +11,24 @@ import org.qii.weiciyuan.support.database.GroupDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.preference.SettingActivity;
+
+import android.app.ListFragment;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +38,7 @@ import java.util.List;
  * Date: 13-2-14
  */
 public class ManageGroupActivity extends AbstractAppActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -66,7 +73,9 @@ public class ManageGroupActivity extends AbstractAppActivity {
     public static class ManageGroupFragment extends ListFragment {
 
         private GroupAdapter adapter;
+
         private GroupListBean group;
+
         private List<String> name;
 
         @Override
@@ -144,14 +153,13 @@ public class ManageGroupActivity extends AbstractAppActivity {
         class GroupAdapter extends BaseAdapter {
 
             int checkedBG;
+
             int defaultBG;
 
             public GroupAdapter() {
                 defaultBG = getResources().getColor(R.color.transparent);
-
-                int[] attrs = new int[]{R.attr.listview_checked_color};
-                TypedArray ta = getActivity().obtainStyledAttributes(attrs);
-                checkedBG = ta.getColor(0, 430);
+                checkedBG = ThemeUtility
+                        .getColor(getActivity(), R.attr.listview_checked_color);
 
 
             }
@@ -179,7 +187,8 @@ public class ManageGroupActivity extends AbstractAppActivity {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
 
-                View view = getActivity().getLayoutInflater().inflate(R.layout.managegroupactivity_list_item_layout, parent, false);
+                View view = getActivity().getLayoutInflater()
+                        .inflate(R.layout.managegroupactivity_list_item_layout, parent, false);
                 TextView tv = (TextView) view;
                 tv.setBackgroundColor(defaultBG);
                 if (getListView().getCheckedItemPositions().get(position)) {
@@ -192,6 +201,7 @@ public class ManageGroupActivity extends AbstractAppActivity {
 
 
         class GroupMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+
             MenuItem modify;
 
             @Override
@@ -220,10 +230,12 @@ public class ManageGroupActivity extends AbstractAppActivity {
                         for (int i = 0; i < positions.size(); i++) {
                             if (positions.get(positions.keyAt(i))) {
                                 oriName = group.getLists().get(positions.keyAt(i)).getName();
-                                checkedIdstrs.add(group.getLists().get(positions.keyAt(i)).getIdstr());
+                                checkedIdstrs
+                                        .add(group.getLists().get(positions.keyAt(i)).getIdstr());
                             }
                         }
-                        ModifyGroupDialog modifyGroupDialog = new ModifyGroupDialog(oriName, checkedIdstrs.get(0));
+                        ModifyGroupDialog modifyGroupDialog = new ModifyGroupDialog(oriName,
+                                checkedIdstrs.get(0));
                         modifyGroupDialog.setTargetFragment(ManageGroupFragment.this, 0);
                         modifyGroupDialog.show(getFragmentManager(), "");
                         mode.finish();
@@ -233,7 +245,8 @@ public class ManageGroupActivity extends AbstractAppActivity {
                         checkedIdstrs = new ArrayList<String>();
                         for (int i = 0; i < positions.size(); i++) {
                             if (positions.get(positions.keyAt(i))) {
-                                checkedIdstrs.add(group.getLists().get(positions.keyAt(i)).getIdstr());
+                                checkedIdstrs
+                                        .add(group.getLists().get(positions.keyAt(i)).getIdstr());
                             }
                         }
                         RemoveGroupDialog removeGroupDialog = new RemoveGroupDialog(checkedIdstrs);
@@ -252,21 +265,26 @@ public class ManageGroupActivity extends AbstractAppActivity {
             }
 
             @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id,
+                    boolean checked) {
                 if (getListView().getCheckedItemCount() > 1) {
                     modify.setVisible(false);
                 } else {
                     modify.setVisible(true);
                 }
-                mode.setTitle(String.format(getString(R.string.have_selected), String.valueOf(getListView().getCheckedItemCount())));
+                mode.setTitle(String.format(getString(R.string.have_selected),
+                        String.valueOf(getListView().getCheckedItemCount())));
                 adapter.notifyDataSetChanged();
             }
         }
 
 
         class CreateGroupTask extends MyAsyncTask<Void, Void, GroupBean> {
+
             String token;
+
             String name;
+
             WeiboException e;
 
             public CreateGroupTask(String token, String name) {
@@ -288,8 +306,9 @@ public class ManageGroupActivity extends AbstractAppActivity {
             @Override
             protected void onPostExecute(GroupBean groupBean) {
                 super.onPostExecute(groupBean);
-                if (getActivity() == null)
+                if (getActivity() == null) {
                     return;
+                }
                 if (Utility.isAllNotNull(groupBean)) {
                     new RefreshGroupTask(token).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
@@ -321,9 +340,11 @@ public class ManageGroupActivity extends AbstractAppActivity {
             @Override
             protected void onPostExecute(GroupListBean groupListBean) {
                 super.onPostExecute(groupListBean);
-                if (getActivity() == null)
+                if (getActivity() == null) {
                     return;
-                GroupDBTask.update(groupListBean, GlobalContext.getInstance().getCurrentAccountId());
+                }
+                GroupDBTask
+                        .update(groupListBean, GlobalContext.getInstance().getCurrentAccountId());
                 GlobalContext.getInstance().setGroup(groupListBean);
                 group = groupListBean;
                 refreshListData();
@@ -331,8 +352,11 @@ public class ManageGroupActivity extends AbstractAppActivity {
         }
 
         class RemoveGroupTask extends MyAsyncTask<Void, Void, Boolean> {
+
             String token;
+
             List<String> groupNames;
+
             WeiboException e;
 
             public RemoveGroupTask(String token, List<String> groupNames) {
@@ -360,8 +384,9 @@ public class ManageGroupActivity extends AbstractAppActivity {
             @Override
             protected void onPostExecute(Boolean groupBean) {
                 super.onPostExecute(groupBean);
-                if (getActivity() == null)
+                if (getActivity() == null) {
                     return;
+                }
                 if (Utility.isAllNotNull(groupBean)) {
                     new RefreshGroupTask(token).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
@@ -369,9 +394,13 @@ public class ManageGroupActivity extends AbstractAppActivity {
         }
 
         class ModifyGroupNameTask extends MyAsyncTask<Void, Void, GroupBean> {
+
             String token;
+
             String groupIdstr;
+
             String name;
+
             WeiboException e;
 
             public ModifyGroupNameTask(String token, String groupIdstr, String name) {
@@ -396,8 +425,9 @@ public class ManageGroupActivity extends AbstractAppActivity {
             @Override
             protected void onPostExecute(GroupBean groupBean) {
                 super.onPostExecute(groupBean);
-                if (getActivity() == null)
+                if (getActivity() == null) {
                     return;
+                }
                 if (Utility.isAllNotNull(groupBean)) {
                     new RefreshGroupTask(token).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }

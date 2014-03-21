@@ -6,6 +6,7 @@ import org.qii.weiciyuan.support.database.AccountDBTask;
 import org.qii.weiciyuan.support.lib.changelogdialog.ChangeLogDialog;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.blackmagic.BlackMagicActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
@@ -18,7 +19,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.ActionMode;
@@ -264,10 +264,9 @@ public class AccountActivity extends AbstractAppActivity
 
         public AccountAdapter() {
             defaultBG = getResources().getColor(R.color.transparent);
+            checkedBG = ThemeUtility
+                    .getColor(AccountActivity.this, R.attr.listview_checked_color);
 
-            int[] attrs = new int[]{R.attr.listview_checked_color};
-            TypedArray ta = obtainStyledAttributes(attrs);
-            checkedBG = ta.getColor(0, 430);
         }
 
         @Override

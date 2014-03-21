@@ -1,13 +1,14 @@
 package org.qii.weiciyuan.ui.preference.filter;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.ThemeUtility;
+
 import android.app.Activity;
-import android.content.res.TypedArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.qii.weiciyuan.R;
 
 import java.util.List;
 
@@ -18,17 +19,20 @@ import java.util.List;
 public class FilterAdapter extends BaseAdapter {
 
     private int checkedBG;
+
     private int defaultBG;
+
     private Activity activity;
+
     private List<String> list;
+
     private ListView listView;
 
 
     public FilterAdapter(Activity activity, ListView listView, List<String> list) {
         defaultBG = activity.getResources().getColor(R.color.transparent);
-        int[] attrs = new int[]{R.attr.listview_checked_color};
-        TypedArray ta = activity.obtainStyledAttributes(attrs);
-        checkedBG = ta.getColor(0, 430);
+        checkedBG = ThemeUtility
+                .getColor(activity, R.attr.listview_checked_color);
         this.activity = activity;
         this.list = list;
         this.listView = listView;
@@ -57,7 +61,8 @@ public class FilterAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View view = activity.getLayoutInflater().inflate(R.layout.simple_listview_item, parent, false);
+        View view = activity.getLayoutInflater()
+                .inflate(R.layout.simple_listview_item, parent, false);
         TextView tv = (TextView) view.findViewById(R.id.text1);
         tv.setBackgroundColor(defaultBG);
         if (listView.getCheckedItemPositions().get(position)) {

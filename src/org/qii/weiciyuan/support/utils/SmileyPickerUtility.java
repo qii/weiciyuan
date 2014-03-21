@@ -1,15 +1,15 @@
 package org.qii.weiciyuan.support.utils;
 
+import org.qii.weiciyuan.support.debug.AppLogger;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+
 import android.app.Activity;
-import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import org.qii.weiciyuan.support.debug.AppLogger;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 
 /**
  * User: qii
@@ -17,8 +17,10 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
  * from top to bottom:statusbar, actionbar, app content, keyboard
  */
 public class SmileyPickerUtility {
+
     public static void hideSoftInput(View paramEditText) {
-        ((InputMethodManager) GlobalContext.getInstance().getSystemService("input_method")).hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
+        ((InputMethodManager) GlobalContext.getInstance().getSystemService("input_method"))
+                .hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
     }
 
     public static void showKeyBoard(final View paramEditText) {
@@ -26,7 +28,8 @@ public class SmileyPickerUtility {
         paramEditText.post(new Runnable() {
             @Override
             public void run() {
-                ((InputMethodManager) GlobalContext.getInstance().getSystemService("input_method")).showSoftInput(paramEditText, 0);
+                ((InputMethodManager) GlobalContext.getInstance().getSystemService("input_method"))
+                        .showSoftInput(paramEditText, 0);
             }
         });
     }
@@ -57,9 +60,8 @@ public class SmileyPickerUtility {
 
 //        return contentViewTop - getStatusBarHeight(paramActivity);
 
-        int[] attrs = new int[]{android.R.attr.actionBarSize};
-        TypedArray ta = paramActivity.obtainStyledAttributes(attrs);
-        return ta.getDimensionPixelSize(0, Utility.dip2px(48));
+        return ThemeUtility.getDimensionPixelSize(paramActivity, android.R.attr.actionBarSize,
+                Utility.dip2px(48));
     }
 
     //below status bar,include actionbar, above softkeyboard

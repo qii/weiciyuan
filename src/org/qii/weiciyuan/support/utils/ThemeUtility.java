@@ -1,12 +1,14 @@
 package org.qii.weiciyuan.support.utils;
 
+import org.qii.weiciyuan.R;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.widget.SearchView;
 import android.widget.TextView;
-import org.qii.weiciyuan.R;
 
 /**
  * User: qii
@@ -15,20 +17,24 @@ import org.qii.weiciyuan.R;
 public class ThemeUtility {
 
     public static int getColor(int attr) {
-        int[] attrs = new int[]{attr};
-        Context context = GlobalContext.getInstance().getActivity();
-//        if (context == null)
-//            context = GlobalContext.getInstance();
-        TypedArray ta = context.obtainStyledAttributes(attrs);
-        return ta.getColor(0, 430);
+        return getColor(GlobalContext.getInstance().getActivity(), attr);
+    }
 
+    public static int getColor(Activity activity, int attr) {
+        int[] attrs = new int[]{attr};
+        TypedArray ta = activity.obtainStyledAttributes(attrs);
+        int color = ta.getColor(0, 430);
+        ta.recycle();
+        return color;
     }
 
     public static Drawable getDrawable(int attr) {
         int[] attrs = new int[]{attr};
         Context context = GlobalContext.getInstance().getActivity();
         TypedArray ta = context.obtainStyledAttributes(attrs);
-        return ta.getDrawable(0);
+        Drawable drawable = ta.getDrawable(0);
+        ta.recycle();
+        return drawable;
 
     }
 
@@ -36,13 +42,23 @@ public class ThemeUtility {
         int[] attrs = new int[]{attr};
         Context context = GlobalContext.getInstance().getActivity();
         TypedArray ta = context.obtainStyledAttributes(attrs);
-        return ta.getResourceId(0, 430);
+        int id = ta.getResourceId(0, 430);
+        ta.recycle();
+        return id;
+    }
 
+    public static int getDimensionPixelSize(Activity activity, int attr, int defaultValue) {
+        int[] attrs = new int[]{attr};
+        TypedArray ta = activity.obtainStyledAttributes(attrs);
+        int value = ta.getDimensionPixelSize(0, defaultValue);
+        ta.recycle();
+        return value;
     }
 
     //can't find a public theme attr to modify actionbar searchview text color
     public static void customActionBarSearchViewTextColor(SearchView searchView) {
-        int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        int id = searchView.getContext().getResources()
+                .getIdentifier("android:id/search_src_text", null, null);
         TextView textView = (TextView) searchView.findViewById(id);
         textView.setTextColor(Color.WHITE);
 
