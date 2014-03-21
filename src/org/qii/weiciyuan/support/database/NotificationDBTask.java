@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.support.database;
 
 import org.qii.weiciyuan.support.database.table.NotificationTable;
+import org.qii.weiciyuan.support.utils.AppConfig;
 
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -58,10 +59,9 @@ public class NotificationDBTask {
 
         try {
             getWsd().beginTransaction();
-            for (int i = 0; i < msgIds.size(); i++) {
+            for (String msg : msgIds) {
 
-                String msg = msgIds.get(i);
-                ih.prepareForInsert();
+                ih.prepareForReplace();
                 ih.bind(mblogidColumn, msg);
                 ih.bind(accountidColumn, accountId);
                 ih.bind(typeColumn, type.getValue());
@@ -69,7 +69,7 @@ public class NotificationDBTask {
 
             }
             getWsd().setTransactionSuccessful();
-        } catch (SQLException e) {
+        } catch (SQLException ignored) {
         } finally {
             getWsd().endTransaction();
             ih.close();
@@ -91,7 +91,7 @@ public class NotificationDBTask {
         return ids;
     }
 
-    private static void clearUnread(String accountId, UnreadDBType type) {
+    private static void cleanUnread(String accountId, UnreadDBType type) {
         String sql = "delete from " + NotificationTable.TABLE_NAME
                 + " where " + NotificationTable.ACCOUNTID + " in " + "("
                 + accountId + ")"
@@ -100,17 +100,29 @@ public class NotificationDBTask {
         getWsd().execSQL(sql);
     }
 
+    private static boolean needCleanDB(String accountId) {
+        String searchCount = "select count(" + NotificationTable.MSGID + ") as total" + " from "
+                + NotificationTable.TABLE_NAME + " where " + NotificationTable.ACCOUNTID
+                + " = " + accountId;
+        int total = 0;
+        Cursor c = getWsd().rawQuery(searchCount, null);
+        if (c.moveToNext()) {
+            total = c.getInt(c.getColumnIndex("total"));
+        }
 
-    public static void asyncClearUnread(final String accountId, final UnreadDBType type) {
+        c.close();
+        return total >= AppConfig.DEFAULT_NOTIFICATION_UNREAD_DB_CACHE_COUNT;
+    }
+
+
+    public static void asyncCleanUnread(final String accountId, final UnreadDBType type) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String sql = "delete from " + NotificationTable.TABLE_NAME
-                        + " where " + NotificationTable.ACCOUNTID + " in " + "("
-                        + accountId + ")"
-                        + " and " + NotificationTable.TYPE + " = " + type.getValue();
+                if (needCleanDB(accountId)) {
+                    cleanUnread(accountId, type);
+                }
 
-                getWsd().execSQL(sql);
             }
         }).start();
     }

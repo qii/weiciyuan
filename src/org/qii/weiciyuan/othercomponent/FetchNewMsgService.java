@@ -161,15 +161,15 @@ public class FetchNewMsgService extends IntentService {
             int cmt) {
         if (mentionsWeibo == 0) {
             NotificationDBTask
-                    .asyncClearUnread(accountId, NotificationDBTask.UnreadDBType.mentionsWeibo);
+                    .asyncCleanUnread(accountId, NotificationDBTask.UnreadDBType.mentionsWeibo);
         }
         if (mentionsComment == 0) {
             NotificationDBTask
-                    .asyncClearUnread(accountId, NotificationDBTask.UnreadDBType.mentionsComment);
+                    .asyncCleanUnread(accountId, NotificationDBTask.UnreadDBType.mentionsComment);
         }
         if (cmt == 0) {
             NotificationDBTask
-                    .asyncClearUnread(accountId, NotificationDBTask.UnreadDBType.commentsToMe);
+                    .asyncCleanUnread(accountId, NotificationDBTask.UnreadDBType.commentsToMe);
         }
     }
 
