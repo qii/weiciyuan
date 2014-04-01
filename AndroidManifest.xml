@@ -110,6 +110,10 @@
                 android:theme="@style/GalleryTheme"
                 android:launchMode="singleTop"/>
         <activity
+                android:name=".support.gallery.GalleryAnimationActivity"
+                android:theme="@style/GalleryTheme"
+                android:launchMode="singleTop"/>
+        <activity
                 android:name=".ui.browser.BrowserWriteWeiboLocalPicActivity"
                 android:uiOptions="splitActionBarWhenNarrow"
                 android:launchMode="singleTop"/>
