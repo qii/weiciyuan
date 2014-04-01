@@ -12,4 +12,51 @@
             android:id="@+id/animation"/>
 
 
+    <LinearLayout
+            android:fitsSystemWindows="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="@dimen/index_text_margin_bottom"
+            android:gravity="bottom"
+            android:id="@+id/position_layout"
+            android:orientation="horizontal"
+            android:baselineAligned="true">
+
+        <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="1"
+                android:id="@+id/position"
+                android:textColor="@color/white"
+                android:shadowColor="@color/dark_gray"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:textSize="35sp"/>
+
+        <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="/"
+                android:shadowColor="@color/dark_gray"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:textColor="@color/white"
+                android:textSize="24sp"/>
+
+        <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="1"
+                android:id="@+id/sum"
+                android:shadowColor="@color/dark_gray"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:textColor="@color/white"
+                android:textSize="24sp"/>
+
+    </LinearLayout>
+
+
 </FrameLayout>
