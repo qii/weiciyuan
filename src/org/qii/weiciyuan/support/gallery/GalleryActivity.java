@@ -114,7 +114,8 @@ public class GalleryActivity extends Activity {
         if (urls.size() == 1 && rect != null && ImageUtility.isThisBitmapCanRead(
                 FileManager.getFilePathFromUrl(urls.get(0), FileLocationMethod.picture_large))
                 && !ImageUtility.isThisBitmapTooLargeToRead(
-                FileManager.getFilePathFromUrl(urls.get(0), FileLocationMethod.picture_large))) {
+                FileManager.getFilePathFromUrl(urls.get(0), FileLocationMethod.picture_large))
+                && !ImageUtility.isThisPictureGif(urls.get(0))) {
             Intent intent = new Intent(this, GalleryAnimationActivity.class);
             intent.putExtra("msg", getIntent().getParcelableExtra("msg"));
             intent.putExtra("rect", getIntent().getParcelableExtra("rect"));
