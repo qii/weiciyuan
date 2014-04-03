@@ -7,6 +7,7 @@ import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imageutility.ImageUtility;
+import org.qii.weiciyuan.support.lib.AnimationRect;
 import org.qii.weiciyuan.support.lib.CircleProgressView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -101,7 +102,7 @@ public class GalleryActivity extends Activity {
         position = (TextView) findViewById(R.id.position);
         TextView sum = (TextView) findViewById(R.id.sum);
 
-        rect = getIntent().getParcelableExtra("rect");
+        rect = ((AnimationRect) getIntent().getParcelableExtra("rect")).scaledBitmapRect;
 
         MessageBean msg = getIntent().getParcelableExtra("msg");
         ArrayList<String> tmp = msg.getThumbnailPicUrls();
@@ -111,7 +112,7 @@ public class GalleryActivity extends Activity {
         sum.setText(String.valueOf(urls.size()));
 
         //jump to new gallery animation activity
-        if (urls.size() == 1 && rect != null && ImageUtility.isThisBitmapCanRead(
+        if (urls.size() < 10 && rect != null && ImageUtility.isThisBitmapCanRead(
                 FileManager.getFilePathFromUrl(urls.get(0), FileLocationMethod.picture_large))
                 && !ImageUtility.isThisBitmapTooLargeToRead(
                 FileManager.getFilePathFromUrl(urls.get(0), FileLocationMethod.picture_large))
@@ -119,6 +120,7 @@ public class GalleryActivity extends Activity {
             Intent intent = new Intent(this, GalleryAnimationActivity.class);
             intent.putExtra("msg", getIntent().getParcelableExtra("msg"));
             intent.putExtra("rect", getIntent().getParcelableExtra("rect"));
+            intent.putExtra("position", getIntent().getIntExtra("position", 0));
             startActivity(intent);
             overridePendingTransition(0, 0);
             finish();

@@ -6,8 +6,10 @@ import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imageutility.ImageUtility;
+import org.qii.weiciyuan.support.lib.AnimationRect;
 import org.qii.weiciyuan.support.utils.AnimationUtility;
 
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -37,7 +39,7 @@ public class GalleryAnimationActivity extends Activity {
 
     private static final int IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT = 3000;
 
-    private Rect rect;
+    private AnimationRect rect;
 
     private ArrayList<String> urls = new ArrayList<String>();
 
@@ -61,7 +63,9 @@ public class GalleryAnimationActivity extends Activity {
         backgroundColor = new ColorDrawable(Color.BLACK);
         background.setBackground(backgroundColor);
 
-        String path = FileManager.getFilePathFromUrl(urls.get(0), FileLocationMethod.picture_large);
+        String path = FileManager
+                .getFilePathFromUrl(urls.get(getIntent().getIntExtra("position", 0)),
+                        FileLocationMethod.picture_large);
 
         Bitmap bitmap = ImageUtility
                 .decodeBitmapFromSDCard(path, IMAGEVIEW_SOFT_LAYER_MAX_WIDTH,
@@ -73,7 +77,7 @@ public class GalleryAnimationActivity extends Activity {
                     @Override
                     public boolean onPreDraw() {
 
-                        final Rect startBounds = new Rect(rect);
+                        final Rect startBounds = new Rect(rect.scaledBitmapRect);
                         final Rect finalBounds = AnimationUtility
                                 .getBitmapRectFromImageView(animation);
 
@@ -105,12 +109,34 @@ public class GalleryAnimationActivity extends Activity {
                         animation.animate().translationY(0).translationX(0)
                                 .scaleY(1)
                                 .scaleX(1).setDuration(ANIMATION_DURATION)
-                                .setInterpolator(new AccelerateDecelerateInterpolator());
+                                .setInterpolator(
+                                        new AccelerateDecelerateInterpolator());
 
-                        ObjectAnimator bgAnim = ObjectAnimator
-                                .ofInt(backgroundColor, "alpha", 0, 255);
-                        bgAnim.setDuration(ANIMATION_DURATION);
-                        bgAnim.start();
+                        if (rect.type == AnimationRect.TYPE_EXTEND_V
+                                || rect.type == AnimationRect.TYPE_EXTEND_H) {
+
+                            ObjectAnimator bgAnim = ObjectAnimator
+                                    .ofInt(backgroundColor, "alpha", 0, 255);
+                            bgAnim.setDuration(ANIMATION_DURATION);
+                            bgAnim.start();
+                        } else {
+
+                            AnimatorSet animationSet = new AnimatorSet();
+                            animationSet.setDuration(ANIMATION_DURATION);
+                            animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
+
+                            animationSet.playTogether(
+                                    ObjectAnimator.ofInt(backgroundColor, "alpha", 0, 255));
+                            animationSet.playTogether(ObjectAnimator.ofFloat(animation,
+                                    "clipHorizontal", rect.clipRectH, 0));
+                            animationSet.playTogether(ObjectAnimator.ofFloat(animation,
+                                    "clipVertical", rect.clipRectV, 0));
+                            animationSet.start();
+
+                            backgroundColor.setAlpha(0);
+
+                        }
+
                         animation.getViewTreeObserver().removeOnPreDrawListener(this);
                         return true;
                     }
@@ -119,10 +145,12 @@ public class GalleryAnimationActivity extends Activity {
 
     private void animateClose(PhotoView imageView) {
 
-        final Rect startBounds = rect;
+        final Rect startBounds = rect.scaledBitmapRect;
         final Rect finalBounds = AnimationUtility.getBitmapRectFromImageView(animation);
 
         if (rect == null || finalBounds == null) {
+            GalleryAnimationActivity.super.onBackPressed();
+            overridePendingTransition(0, 0);
             return;
         }
 
@@ -143,19 +171,47 @@ public class GalleryAnimationActivity extends Activity {
         animation.setPivotY((animation.getHeight() - finalBounds.height()) / 2);
         animation.setPivotX((animation.getWidth() - finalBounds.width()) / 2);
 
-        animation.animate().translationX(deltaLeft).translationY(deltaTop).scaleY(startScaleFinal)
+        animation.animate().translationX(deltaLeft).translationY(deltaTop)
+                .scaleY(startScaleFinal)
                 .scaleX(startScaleFinal).setDuration(ANIMATION_DURATION)
                 .setInterpolator(new AccelerateDecelerateInterpolator())
                 .withEndAction(new Runnable() {
                     @Override
                     public void run() {
-                        GalleryAnimationActivity.super.onBackPressed();
-                        overridePendingTransition(0, 0);
+
+                        animation.animate().alpha(0.0f).setDuration(200).withEndAction(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        GalleryAnimationActivity.super.onBackPressed();
+                                        overridePendingTransition(0, 0);
+                                    }
+                                });
+
                     }
                 });
-        ObjectAnimator bgAnim = ObjectAnimator.ofInt(backgroundColor, "alpha", 0);
-        bgAnim.setDuration(ANIMATION_DURATION);
-        bgAnim.start();
+
+        if (rect.type == AnimationRect.TYPE_EXTEND_V
+                || rect.type == AnimationRect.TYPE_EXTEND_H) {
+
+            ObjectAnimator bgAnim = ObjectAnimator.ofInt(backgroundColor, "alpha", 0);
+            bgAnim.setDuration(ANIMATION_DURATION);
+            bgAnim.start();
+        } else {
+
+            AnimatorSet animationSet = new AnimatorSet();
+            animationSet.setDuration(ANIMATION_DURATION);
+            animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
+
+            animationSet.playTogether(ObjectAnimator.ofInt(backgroundColor, "alpha", 0));
+            animationSet.playTogether(ObjectAnimator.ofFloat(animation,
+                    "clipHorizontal", 0, rect.clipRectH));
+            animationSet.playTogether(ObjectAnimator.ofFloat(animation,
+                    "clipVertical", 0, rect.clipRectV));
+            animationSet.start();
+
+
+        }
     }
 
     @Override
