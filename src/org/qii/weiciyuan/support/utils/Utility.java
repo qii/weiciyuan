@@ -824,10 +824,8 @@ public class Utility {
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Intent intent = new Intent(activity,
-                                                    AccountActivity.class);
-                                            intent.putExtra("launcher", false);
-                                            activity.startActivity(intent);
+                                            activity.startActivity(
+                                                    AccountActivity.newIntent());
                                             activity.finish();
                                             GlobalContext.getInstance().tokenExpiredDialogIsShowing
                                                     = false;
