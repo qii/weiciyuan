@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.support.database;
 
+import org.qii.weiciyuan.support.database.dbUpgrade.Upgrade35to36;
 import org.qii.weiciyuan.support.database.table.AccountTable;
 import org.qii.weiciyuan.support.database.table.AtUsersTable;
 import org.qii.weiciyuan.support.database.table.CommentByMeTable;
@@ -27,13 +28,13 @@ import android.database.sqlite.SQLiteOpenHelper;
  * User: qii
  * Date: 12-7-30
  */
-class DatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static DatabaseHelper singleton = null;
 
     private static final String DATABASE_NAME = "weibo.db";
 
-    private static final int DATABASE_VERSION = 35;
+    private static final int DATABASE_VERSION = 36;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -223,11 +224,13 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + DraftTable.TYPE + " integer"
             + ");";
 
-    static final String CREATE_ATUSERS_TABLE_SQL = "create table " + AtUsersTable.TABLE_NAME
+    public static final String CREATE_ATUSERS_TABLE_SQL = "create table " + AtUsersTable.TABLE_NAME
             + "("
-            + AtUsersTable.ID + " integer primary key autoincrement,"
+            + AtUsersTable.ID + " integer,"
+            + AtUsersTable.USERID + " text,"
             + AtUsersTable.ACCOUNTID + " text,"
-            + AtUsersTable.JSONDATA + " text"
+            + AtUsersTable.JSONDATA + " text,"
+            + "primary key (" + AtUsersTable.USERID + "," + AtUsersTable.ACCOUNTID + ")"
             + ");";
 
     static final String CREATE_TOPICS_TABLE_SQL = "create table " + TopicTable.TABLE_NAME
@@ -328,7 +331,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        if (oldVersion < 34) {
+        if (oldVersion == 35) {
+            Upgrade35to36.upgrade(db);
+        } else if (oldVersion < 34) {
             deleteAllTable(db);
             onCreate(db);
         } else if (oldVersion == 34) {
