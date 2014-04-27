@@ -1,14 +1,19 @@
 package org.qii.weiciyuan.ui.userinfo;
 
-import android.app.AlertDialog;
+import org.qii.weiciyuan.R;
+
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.widget.ImageView;
-import org.qii.weiciyuan.R;
 
 /**
  * User: qii
@@ -16,35 +21,101 @@ import org.qii.weiciyuan.R;
  */
 public class UserAvatarDialog extends DialogFragment {
 
-    private String path;
-
-    public UserAvatarDialog() {
-
+    public static UserAvatarDialog newInstance(String path, Rect rect) {
+        UserAvatarDialog dialog = new UserAvatarDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString("path", path);
+        bundle.putParcelable("rect", rect);
+        dialog.setArguments(bundle);
+        return dialog;
     }
 
-    public UserAvatarDialog(String path) {
-        this.path = path;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("path", path);
-    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            path = savedInstanceState.getString("path");
-        }
+
+        String path = getArguments().getString("path");
+        final Rect ori = getArguments().getParcelable("rect");
 
         Bitmap bitmap = BitmapFactory.decodeFile(path);
 
+        final View content = getActivity().getLayoutInflater()
+                .inflate(R.layout.useravatardialog_layout, null);
+        final ImageView avatar = ((ImageView) content.findViewById(R.id.imageview));
+        avatar.setImageBitmap(bitmap);
+        Dialog dialog = new Dialog(getActivity(), R.style.UserAvatarDialog) {
+            @Override
+            public boolean onKeyDown(int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.UserAvatarDialog);
-        View customView = getActivity().getLayoutInflater().inflate(R.layout.useravatardialog_layout, null);
-        ((ImageView) customView.findViewById(R.id.imageview)).setImageBitmap(bitmap);
-        builder.setView(customView);
-        return builder.create();
+                    int[] avatarLocation = new int[2];
+                    avatar.getLocationOnScreen(avatarLocation);
+
+                    final int transX = ori.left - avatarLocation[0];
+                    final int transY = ori.top - avatarLocation[1];
+
+                    final float scaleX = (float) ori.width() / (float) avatar.getWidth();
+                    final float scaleY = (float) ori.height() / (float) avatar.getHeight();
+
+                    avatar.animate().translationX(transX).translationY(transY).scaleY(scaleY)
+                            .scaleX(scaleX).alpha(0.7f).rotationY(0f).setDuration(300)
+                            .withEndAction(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dismissAllowingStateLoss();
+                                }
+                            });
+
+                    return true;
+                }
+                return super.onKeyDown(keyCode, event);
+            }
+
+        };
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        dialog.setContentView(content);
+
+        content.getViewTreeObserver()
+                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+
+                        content.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                        int[] avatarLocation = new int[2];
+                        avatar.getLocationOnScreen(avatarLocation);
+
+                        final int transX = ori.left - avatarLocation[0];
+                        final int transY = ori.top - avatarLocation[1];
+
+                        final float scaleX = (float) ori.width() / (float) avatar.getWidth();
+                        final float scaleY = (float) ori.height() / (float) avatar.getHeight();
+
+                        avatar.setTranslationX(transX);
+                        avatar.setTranslationY(transY);
+
+                        avatar.setPivotX(0);
+                        avatar.setPivotY(0);
+
+                        avatar.setScaleX(scaleX);
+                        avatar.setScaleY(scaleY);
+
+                        avatar.animate().translationX(0).translationY(0).scaleY(1)
+                                .scaleX(1).alpha(1.0f).setDuration(300)
+                                .withEndAction(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                    }
+                                });
+
+                    }
+                });
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+
+        return dialog;
     }
 }

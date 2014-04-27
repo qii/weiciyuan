@@ -16,11 +16,13 @@ import org.qii.weiciyuan.support.database.TopicDBTask;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.BlurImageView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.SwipeFrameLayout;
 import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
+import org.qii.weiciyuan.support.utils.AnimationUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.TimeLineUtility;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -36,6 +38,7 @@ import android.animation.Animator;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.support.v4.view.PagerAdapter;
@@ -57,7 +60,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -403,17 +405,17 @@ public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageLis
             public void onClick(View v) {
                 String path = FileManager.getFilePathFromUrl(userBean.getAvatar_large(),
                         FileLocationMethod.avatar_large);
-                if (!new File(path).exists()) {
+                if (!ImageUtility.isThisBitmapCanRead(path)) {
 
                     path = FileManager.getFilePathFromUrl(userBean.getProfile_image_url(),
                             FileLocationMethod.avatar_small);
 
-                    if (!new File(path).exists()) {
+                    if (!ImageUtility.isThisBitmapCanRead(path)) {
                         return;
                     }
                 }
-
-                UserAvatarDialog dialog = new UserAvatarDialog(path);
+                Rect rect = AnimationUtility.getBitmapRectFromImageView(avatar);
+                UserAvatarDialog dialog = UserAvatarDialog.newInstance(path, rect);
                 dialog.show(getFragmentManager(), "");
             }
         });
