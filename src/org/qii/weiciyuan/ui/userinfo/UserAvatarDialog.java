@@ -41,30 +41,23 @@ public class UserAvatarDialog extends DialogFragment {
 
         final View content = getActivity().getLayoutInflater()
                 .inflate(R.layout.useravatardialog_layout, null);
+
         final ImageView avatar = ((ImageView) content.findViewById(R.id.imageview));
         avatar.setImageBitmap(bitmap);
+        avatar.setClickable(true);
+        content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animateClose(avatar, ori);
+            }
+        });
+
         Dialog dialog = new Dialog(getActivity(), R.style.UserAvatarDialog) {
             @Override
             public boolean onKeyDown(int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 
-                    int[] avatarLocation = new int[2];
-                    avatar.getLocationOnScreen(avatarLocation);
-
-                    final int transX = ori.left - avatarLocation[0];
-                    final int transY = ori.top - avatarLocation[1];
-
-                    final float scaleX = (float) ori.width() / (float) avatar.getWidth();
-                    final float scaleY = (float) ori.height() / (float) avatar.getHeight();
-
-                    avatar.animate().translationX(transX).translationY(transY).scaleY(scaleY)
-                            .scaleX(scaleX).alpha(0.7f).rotationY(0f).setDuration(300)
-                            .withEndAction(new Runnable() {
-                                @Override
-                                public void run() {
-                                    dismissAllowingStateLoss();
-                                }
-                            });
+                    animateClose(avatar, ori);
 
                     return true;
                 }
@@ -117,5 +110,25 @@ public class UserAvatarDialog extends DialogFragment {
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
         return dialog;
+    }
+
+    private void animateClose(ImageView avatar, Rect ori) {
+        int[] avatarLocation = new int[2];
+        avatar.getLocationOnScreen(avatarLocation);
+
+        final int transX = ori.left - avatarLocation[0];
+        final int transY = ori.top - avatarLocation[1];
+
+        final float scaleX = (float) ori.width() / (float) avatar.getWidth();
+        final float scaleY = (float) ori.height() / (float) avatar.getHeight();
+
+        avatar.animate().translationX(transX).translationY(transY).scaleY(scaleY)
+                .scaleX(scaleX).alpha(0.7f).rotationY(0f).setDuration(300)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissAllowingStateLoss();
+                    }
+                });
     }
 }
