@@ -10,7 +10,7 @@
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowIsTranslucent">true</item>
 
-
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <style name="GalleryTheme" parent="@style/CommonGalleryTheme">

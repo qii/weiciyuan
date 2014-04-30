@@ -2,229 +2,174 @@ package org.qii.weiciyuan.support.gallery;
 
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.support.debug.AppLogger;
-import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.AnimationRect;
 import org.qii.weiciyuan.support.utils.AnimationUtility;
+import org.qii.weiciyuan.support.utils.GlobalContext;
 
-import android.animation.AnimatorSet;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
-import android.graphics.Bitmap;
+import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.TextView;
 
 import java.util.ArrayList;
-
-import uk.co.senab.photoview.PhotoView;
+import java.util.HashMap;
 
 /**
  * User: qii
  * Date: 14-3-21
  */
-public class GalleryAnimationActivity extends Activity {
+public class GalleryAnimationActivity extends FragmentActivity {
 
-    private static final int ANIMATION_DURATION = 300;
 
-    private ColorDrawable backgroundColor;
-
-    private static final int IMAGEVIEW_SOFT_LAYER_MAX_WIDTH = 2000;
-
-    private static final int IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT = 3000;
-
-    private AnimationRect rect;
+    private ArrayList<AnimationRect> rectList;
 
     private ArrayList<String> urls = new ArrayList<String>();
 
-    private PhotoView animation;
+    private ViewPager pager;
 
+    private TextView position;
+
+    private int initPosition;
+
+    private View background;
+
+    private ColorDrawable backgroundColor;
+
+    public static Intent newIntent(MessageBean msg, ArrayList<AnimationRect> rectList,
+            int initPosition) {
+        Intent intent = new Intent(GlobalContext.getInstance(), GalleryAnimationActivity.class);
+        intent.putExtra("msg", msg);
+        intent.putExtra("rect", rectList);
+        intent.putExtra("position", initPosition);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.galleryactivity_animation_layout);
 
-        rect = getIntent().getParcelableExtra("rect");
+        rectList = getIntent().getParcelableArrayListExtra("rect");
         MessageBean msg = getIntent().getParcelableExtra("msg");
         ArrayList<String> tmp = msg.getThumbnailPicUrls();
         for (int i = 0; i < tmp.size(); i++) {
             urls.add(tmp.get(i).replace("thumbnail", "large"));
         }
 
-        animation = (PhotoView) findViewById(R.id.animation);
-        View background = findViewById(R.id.background);
-        backgroundColor = new ColorDrawable(Color.BLACK);
-        background.setBackground(backgroundColor);
+        position = (TextView) findViewById(R.id.position);
+        initPosition = getIntent().getIntExtra("position", 0);
 
-        String path = FileManager
-                .getFilePathFromUrl(urls.get(getIntent().getIntExtra("position", 0)),
-                        FileLocationMethod.picture_large);
+        pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager()));
+        pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                GalleryAnimationActivity.this.position.setText(String.valueOf(position + 1));
+            }
+        });
+        pager.setCurrentItem(getIntent().getIntExtra("position", 0));
+        pager.setOffscreenPageLimit(1);
+        pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
-        Bitmap bitmap = ImageUtility
-                .decodeBitmapFromSDCard(path, IMAGEVIEW_SOFT_LAYER_MAX_WIDTH,
-                        IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT);
+        TextView sum = (TextView) findViewById(R.id.sum);
+        sum.setText(String.valueOf(urls.size()));
 
-        animation.setImageBitmap(bitmap);
-        animation.getViewTreeObserver()
-                .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-
-                        final Rect startBounds = new Rect(rect.scaledBitmapRect);
-                        final Rect finalBounds = AnimationUtility
-                                .getBitmapRectFromImageView(animation);
-
-                        if (rect == null || finalBounds == null) {
-                            return true;
-                        }
-
-                        float startScale = (float) finalBounds.width() / startBounds.width();
-
-                        if (startScale * startBounds.height() > finalBounds.height()) {
-                            startScale = (float) finalBounds.height() / startBounds.height();
-                        }
-
-                        int deltaTop = startBounds.top - finalBounds.top;
-                        int deltaLeft = startBounds.left - finalBounds.left;
-
-                        AppLogger.e("deltaTop=" + deltaTop + ",deltaLeft=" + deltaLeft
-                                + ",scale=" + startScale);
-
-                        animation.setPivotY((animation.getHeight() - finalBounds.height()) / 2);
-                        animation.setPivotX((animation.getWidth() - finalBounds.width()) / 2);
-
-                        animation.setScaleX(1 / startScale);
-                        animation.setScaleY(1 / startScale);
-
-                        animation.setTranslationX(deltaLeft);
-                        animation.setTranslationY(deltaTop);
-
-                        animation.animate().translationY(0).translationX(0)
-                                .scaleY(1)
-                                .scaleX(1).setDuration(ANIMATION_DURATION)
-                                .setInterpolator(
-                                        new AccelerateDecelerateInterpolator());
-
-                        if (rect.type == AnimationRect.TYPE_EXTEND_V
-                                || rect.type == AnimationRect.TYPE_EXTEND_H) {
-
-                            ObjectAnimator bgAnim = ObjectAnimator
-                                    .ofInt(backgroundColor, "alpha", 0, 255);
-                            bgAnim.setDuration(ANIMATION_DURATION);
-                            bgAnim.start();
-                        } else {
-
-                            AnimatorSet animationSet = new AnimatorSet();
-                            animationSet.setDuration(ANIMATION_DURATION);
-                            animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
-
-                            animationSet.playTogether(
-                                    ObjectAnimator.ofInt(backgroundColor, "alpha", 0, 255));
-                            animationSet.playTogether(ObjectAnimator.ofFloat(animation,
-                                    "clipHorizontal", rect.clipRectH, 0));
-                            animationSet.playTogether(ObjectAnimator.ofFloat(animation,
-                                    "clipVertical", rect.clipRectV, 0));
-                            animationSet.start();
-
-                            backgroundColor.setAlpha(0);
-
-                        }
-
-                        animation.getViewTreeObserver().removeOnPreDrawListener(this);
-                        return true;
-                    }
-                });
+        background = AnimationUtility.getAppContentView(this);
     }
 
-    private void animateClose(PhotoView imageView) {
+    private HashMap<Integer, ContainerFragment> fragmentMap
+            = new HashMap<Integer, ContainerFragment>();
 
-        final Rect startBounds = rect.scaledBitmapRect;
-        final Rect finalBounds = AnimationUtility.getBitmapRectFromImageView(animation);
+    private boolean alreadyAnimateIn = false;
 
-        if (rect == null || finalBounds == null) {
-            GalleryAnimationActivity.super.onBackPressed();
-            overridePendingTransition(0, 0);
-            return;
+    private class ImagePagerAdapter extends FragmentPagerAdapter {
+
+        public ImagePagerAdapter(FragmentManager fm) {
+            super(fm);
         }
 
-        float startScale;
-        if ((float) finalBounds.width() / finalBounds.height()
-                > (float) startBounds.width() / startBounds.height()) {
-            startScale = (float) startBounds.height() / finalBounds.height();
+        @Override
+        public Fragment getItem(int position) {
 
-        } else {
-            startScale = (float) startBounds.width() / finalBounds.width();
+            ContainerFragment fragment = fragmentMap.get(position);
+            if (fragment == null) {
+
+                boolean animateIn = (initPosition == position) && !alreadyAnimateIn;
+                fragment = ContainerFragment
+                        .newInstance(urls.get(position), rectList.get(position), animateIn,
+                                initPosition == position);
+                alreadyAnimateIn = true;
+                fragmentMap.put(position, fragment);
+            }
+
+            return fragment;
         }
 
-        final float startScaleFinal = startScale;
-
-        int deltaTop = startBounds.top - finalBounds.top;
-        int deltaLeft = startBounds.left - finalBounds.left;
-
-        animation.setPivotY((animation.getHeight() - finalBounds.height()) / 2);
-        animation.setPivotX((animation.getWidth() - finalBounds.width()) / 2);
-
-        animation.animate().translationX(deltaLeft).translationY(deltaTop)
-                .scaleY(startScaleFinal)
-                .scaleX(startScaleFinal).setDuration(ANIMATION_DURATION)
-                .setInterpolator(new AccelerateDecelerateInterpolator())
-                .withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        animation.animate().alpha(0.0f).setDuration(200).withEndAction(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        GalleryAnimationActivity.super.onBackPressed();
-                                        overridePendingTransition(0, 0);
-                                    }
-                                });
-
-                    }
-                });
-
-        if (rect.type == AnimationRect.TYPE_EXTEND_V
-                || rect.type == AnimationRect.TYPE_EXTEND_H) {
-
-            ObjectAnimator bgAnim = ObjectAnimator.ofInt(backgroundColor, "alpha", 0);
-            bgAnim.setDuration(ANIMATION_DURATION);
-            bgAnim.start();
-        } else {
-
-            AnimatorSet animationSet = new AnimatorSet();
-            animationSet.setDuration(ANIMATION_DURATION);
-            animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
-
-            animationSet.playTogether(ObjectAnimator.ofInt(backgroundColor, "alpha", 0));
-            animationSet.playTogether(ObjectAnimator.ofFloat(animation,
-                    "clipHorizontal", 0, rect.clipRectH));
-            animationSet.playTogether(ObjectAnimator.ofFloat(animation,
-                    "clipVertical", 0, rect.clipRectV));
-            animationSet.start();
-
-
+        @Override
+        public int getCount() {
+            return urls.size();
         }
+    }
+
+
+    public void showBackgroundImmediately() {
+        if (background.getBackground() == null) {
+            backgroundColor = new ColorDrawable(Color.BLACK);
+            background.setBackground(backgroundColor);
+        }
+    }
+
+    public ObjectAnimator showBackgroundAnimate() {
+        backgroundColor = new ColorDrawable(Color.BLACK);
+        background.setBackground(backgroundColor);
+        ObjectAnimator bgAnim = ObjectAnimator
+                .ofInt(backgroundColor, "alpha", 0, 255);
+        bgAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                background.setBackground(backgroundColor);
+            }
+        });
+        return bgAnim;
     }
 
     @Override
     public void onBackPressed() {
 
-        if (Math.abs(animation.getScale() - 1.0f) > 0.1f) {
-            animation.setScale(1, true);
-            return;
+        ContainerFragment fragment = fragmentMap.get(pager.getCurrentItem());
+        if (fragment != null && fragment.canAnimateCloseActivity()) {
+            backgroundColor = new ColorDrawable(Color.BLACK);
+            ObjectAnimator bgAnim = ObjectAnimator.ofInt(backgroundColor, "alpha", 0);
+            bgAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    background.setBackground(backgroundColor);
+                }
+            });
+            bgAnim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    GalleryAnimationActivity.super.onBackPressed();
+                    overridePendingTransition(-1, -1);
+                }
+            });
+            fragment.animationExit(bgAnim);
+        } else {
+            super.onBackPressed();
         }
-
-        overridePendingTransition(0, 0);
-        animateClose(null);
-
     }
 
 

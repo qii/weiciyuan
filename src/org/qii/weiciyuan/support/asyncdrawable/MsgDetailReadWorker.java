@@ -1,5 +1,17 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.gallery.GalleryAnimationActivity;
+import org.qii.weiciyuan.support.imageutility.ImageUtility;
+import org.qii.weiciyuan.support.lib.AnimationRect;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -8,16 +20,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
-import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.gallery.GalleryActivity;
-import org.qii.weiciyuan.support.imageutility.ImageUtility;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
+
+import java.util.ArrayList;
 
 /**
  * User: qii
@@ -28,12 +32,15 @@ import org.qii.weiciyuan.support.utils.Utility;
 public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
 
     private WeiboDetailImageView view;
+
     private ProgressBar pb;
+
     private Button retry;
 
     private MessageBean msg;
 
     private String oriPath;
+
     private String middlePath;
 
     public MsgDetailReadWorker(WeiboDetailImageView view, MessageBean msg) {
@@ -43,7 +50,8 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
         this.retry = view.getRetryButton();
         retry.setVisibility(View.INVISIBLE);
 
-        oriPath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
+        oriPath = FileManager
+                .getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
 
         if (ImageUtility.isThisBitmapCanRead(oriPath)
                 && TaskCache.isThisUrlTaskFinished(msg.getOriginal_pic())) {
@@ -53,8 +61,8 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
             return;
         }
 
-
-        middlePath = FileManager.getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
+        middlePath = FileManager
+                .getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
 
         if (ImageUtility.isThisBitmapCanRead(middlePath)
                 && TaskCache.isThisUrlTaskFinished(msg.getBmiddle_pic())) {
@@ -82,17 +90,22 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
         }
 
         if (Utility.isWifi(GlobalContext.getInstance())) {
-            boolean result = TaskCache.waitForPictureDownload(msg.getOriginal_pic(), downloadListener, oriPath, FileLocationMethod.picture_large);
+            boolean result = TaskCache
+                    .waitForPictureDownload(msg.getOriginal_pic(), downloadListener, oriPath,
+                            FileLocationMethod.picture_large);
             return result ? oriPath : null;
         } else {
-            boolean result = TaskCache.waitForPictureDownload(msg.getBmiddle_pic(), downloadListener, middlePath, FileLocationMethod.picture_bmiddle);
+            boolean result = TaskCache
+                    .waitForPictureDownload(msg.getBmiddle_pic(), downloadListener, middlePath,
+                            FileLocationMethod.picture_bmiddle);
             return result ? middlePath : null;
         }
 
     }
 
 
-    FileDownloaderHttpHelper.DownloadListener downloadListener = new FileDownloaderHttpHelper.DownloadListener() {
+    FileDownloaderHttpHelper.DownloadListener downloadListener
+            = new FileDownloaderHttpHelper.DownloadListener() {
 
         @Override
         public void pushProgress(int progress, int max) {
@@ -140,8 +153,13 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(GlobalContext.getInstance(), GalleryActivity.class);
-                    intent.putExtra("msg", msg);
+
+                    AnimationRect rect = AnimationRect.buildFromImageView(view.getImageView());
+                    ArrayList<AnimationRect> animationRectArrayList
+                            = new ArrayList<AnimationRect>();
+                    animationRectArrayList.add(rect);
+                    Intent intent = GalleryAnimationActivity
+                            .newIntent(msg, animationRectArrayList, 0);
                     GlobalContext.getInstance().getActivity().startActivity(intent);
                 }
             });

@@ -9,7 +9,7 @@ import org.qii.weiciyuan.support.asyncdrawable.PictureBitmapDrawable;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.gallery.GalleryActivity;
+import org.qii.weiciyuan.support.gallery.GalleryAnimationActivity;
 import org.qii.weiciyuan.support.lib.AnimationRect;
 import org.qii.weiciyuan.support.lib.ClickableTextViewMentionLinkOnTouchListener;
 import org.qii.weiciyuan.support.lib.ListViewMiddleMsgLoadingView;
@@ -24,10 +24,8 @@ import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 import org.qii.weiciyuan.ui.userinfo.UserInfoActivity;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -46,6 +44,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -559,11 +558,11 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
         }
     }
 
-    protected void buildMultiPic(final MessageBean msg, GridLayout gridLayout) {
+    protected void buildMultiPic(final MessageBean msg, final GridLayout gridLayout) {
         if (SettingUtility.isEnablePic()) {
             gridLayout.setVisibility(View.VISIBLE);
 
-            int count = msg.getPicCount();
+            final int count = msg.getPicCount();
             for (int i = 0; i < count; i++) {
                 final IWeiciyuanDrawable pic = (IWeiciyuanDrawable) gridLayout.getChildAt(i);
                 pic.setVisibility(View.VISIBLE);
@@ -583,18 +582,21 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 pic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), GalleryActivity.class);
-                        intent.putExtra("msg", msg);
-                        intent.putExtra("position", finalI);
-                        AnimationRect rect = AnimationRect.buildFromImageView((ImageView) pic);
-
-                        if (rect != null) {
-                            intent.putExtra("rect", rect);
+                        ArrayList<AnimationRect> animationRectArrayList
+                                = new ArrayList<AnimationRect>();
+                        for (int i = 0; i < count; i++) {
+                            final IWeiciyuanDrawable pic = (IWeiciyuanDrawable) gridLayout
+                                    .getChildAt(i);
+                            ImageView imageView = (ImageView) pic;
+                            if (imageView.getVisibility() == View.VISIBLE) {
+                                AnimationRect rect = AnimationRect.buildFromImageView(imageView);
+                                animationRectArrayList.add(rect);
+                            }
                         }
 
-                        Bundle scaleBundle = ActivityOptions.makeScaleUpAnimation(
-                                v, 0, 0, v.getWidth(), v.getHeight()).toBundle();
-                        getActivity().startActivity(intent, scaleBundle);
+                        Intent intent = GalleryAnimationActivity
+                                .newIntent(msg, animationRectArrayList, finalI);
+                        getActivity().startActivity(intent);
                     }
                 });
 
@@ -674,18 +676,14 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
 
                     ImageView imageView = view.getImageView();
 
-                    Intent intent = new Intent(getActivity(), GalleryActivity.class);
-                    intent.putExtra("msg", msg);
-
                     AnimationRect rect = AnimationRect.buildFromImageView(imageView);
+                    ArrayList<AnimationRect> animationRectArrayList
+                            = new ArrayList<AnimationRect>();
+                    animationRectArrayList.add(rect);
 
-                    if (rect != null) {
-                        intent.putExtra("rect", rect);
-                    }
-
-                    Bundle scaleBundle = ActivityOptions.makeScaleUpAnimation(
-                            v, 0, 0, v.getWidth(), v.getHeight()).toBundle();
-                    getActivity().startActivity(intent, scaleBundle);
+                    Intent intent = GalleryAnimationActivity
+                            .newIntent(msg, animationRectArrayList, 0);
+                    getActivity().startActivity(intent);
                 }
             });
             buildPic(msg, view);

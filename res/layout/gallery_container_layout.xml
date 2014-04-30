@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent"
+             android:padding="1dip">
+
+
+    <org.qii.weiciyuan.support.lib.CircleProgressView
+            android:id="@+id/loading"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
+
+
+    <TextView
+            android:textColor="@color/red"
+            android:id="@+id/error"
+            android:textSize="16sp"
+            android:text="@string/picture_read_failed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
+
+    <TextView
+            android:textColor="@color/white"
+            android:id="@+id/wait"
+            android:textSize="16sp"
+            android:text="@string/wait_for_download_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
+
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:id="@+id/child"/>
+
+</FrameLayout>

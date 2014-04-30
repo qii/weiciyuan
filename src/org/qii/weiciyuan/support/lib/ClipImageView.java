@@ -9,22 +9,26 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * User: qii
  * Date: 14-4-1
  */
-public class ClipImageView extends ImageView {
+public class ClipImageView extends GifImageView {
 
     private float clipHorizontalPercent;
 
     private float clipVerticalPercent;
 
+    private boolean clipEnable = false;
+
     private Rect rect;
 
     public ClipImageView(Context context) {
         super(context);
+
     }
 
     public ClipImageView(Context context, AttributeSet attrs) {
@@ -46,6 +50,10 @@ public class ClipImageView extends ImageView {
         invalidate();
     }
 
+    public void setClipEnable(boolean value) {
+        this.clipEnable = value;
+        invalidate();
+    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -62,7 +70,7 @@ public class ClipImageView extends ImageView {
             bitmap = ((BitmapDrawable) drawable).getBitmap();
         }
 
-        if (bitmap != null) {
+        if (bitmap != null && clipEnable) {
 
             Rect clipRect = new Rect(rect);
             int width = clipRect.width();

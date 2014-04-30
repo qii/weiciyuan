@@ -2,6 +2,7 @@ package org.qii.weiciyuan.support.utils;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -121,6 +122,12 @@ public class AnimationUtility {
             return null;
         }
 
+
+    }
+
+    public static View getAppContentView(Activity activity) {
+        final View appView = activity.findViewById(android.R.id.content);
+        return appView;
 
     }
 }

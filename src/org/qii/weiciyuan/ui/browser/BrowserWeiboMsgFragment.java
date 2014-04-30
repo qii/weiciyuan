@@ -15,7 +15,8 @@ import org.qii.weiciyuan.support.asyncdrawable.MsgDetailReadWorker;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
 import org.qii.weiciyuan.support.error.WeiboException;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.gallery.GalleryActivity;
+import org.qii.weiciyuan.support.gallery.GalleryAnimationActivity;
+import org.qii.weiciyuan.support.lib.AnimationRect;
 import org.qii.weiciyuan.support.lib.ClickableTextViewMentionLinkOnTouchListener;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.ProfileTopAvatarImageView;
@@ -61,6 +62,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * User: qii
@@ -485,7 +488,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
     }
 
 
-    private void displayPictures(final MessageBean msg, GridLayout layout,
+    private void displayPictures(final MessageBean msg, final GridLayout layout,
             WeiboDetailImageView view, boolean refreshPic) {
 
         if (!msg.isMultiPics()) {
@@ -499,9 +502,9 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
         } else {
             layout.setVisibility(View.VISIBLE);
 
-            int count = msg.getPicCount();
+            final int count = msg.getPicCount();
             for (int i = 0; i < count; i++) {
-                IWeiciyuanDrawable pic = (IWeiciyuanDrawable) layout.getChildAt(i);
+                final IWeiciyuanDrawable pic = (IWeiciyuanDrawable) layout.getChildAt(i);
                 pic.setVisibility(View.VISIBLE);
 
                 TimeLineBitmapDownloader.getInstance()
@@ -512,9 +515,20 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
                 pic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), GalleryActivity.class);
-                        intent.putExtra("msg", msg);
-                        intent.putExtra("position", finalI);
+
+                        ArrayList<AnimationRect> animationRectArrayList
+                                = new ArrayList<AnimationRect>();
+                        for (int i = 0; i < count; i++) {
+                            final IWeiciyuanDrawable pic = (IWeiciyuanDrawable) layout
+                                    .getChildAt(i);
+                            ImageView imageView = (ImageView) pic;
+                            if (imageView.getVisibility() == View.VISIBLE) {
+                                AnimationRect rect = AnimationRect.buildFromImageView(imageView);
+                                animationRectArrayList.add(rect);
+                            }
+                        }
+                        Intent intent = GalleryAnimationActivity
+                                .newIntent(msg, animationRectArrayList, finalI);
                         getActivity().startActivity(intent);
                     }
                 });
