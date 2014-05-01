@@ -94,8 +94,10 @@ public class AnimationUtility {
             int bitmapWidth = bitmap.getWidth();
             int bitmapHeight = bitmap.getHeight();
 
-            int imageViewWidth = imageView.getWidth();
-            int imageviewHeight = imageView.getHeight();
+            int imageViewWidth = imageView.getWidth() - imageView.getPaddingLeft() - imageView
+                    .getPaddingRight();
+            int imageviewHeight = imageView.getHeight() - imageView.getPaddingTop() - imageView
+                    .getPaddingBottom();
 
             float startScale;
             if ((float) imageViewWidth / bitmapWidth

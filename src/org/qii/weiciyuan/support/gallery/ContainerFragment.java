@@ -232,4 +232,12 @@ public class ContainerFragment extends Fragment {
         }
     }
 
+    public LongClickListener getLongClickListener() {
+        String url = getArguments().getString("url");
+        String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_large);
+        LongClickListener longClickListener = new LongClickListener(getActivity(), url, path);
+        return longClickListener;
+    }
+
+
 }

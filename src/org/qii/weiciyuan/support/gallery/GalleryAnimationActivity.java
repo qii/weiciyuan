@@ -5,6 +5,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.support.lib.AnimationRect;
 import org.qii.weiciyuan.support.utils.AnimationUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -31,6 +32,7 @@ import java.util.HashMap;
  */
 public class GalleryAnimationActivity extends FragmentActivity {
 
+    private static final int STATUS_BAR_HEIGHT_DP_UNIT = 25;
 
     private ArrayList<AnimationRect> rectList;
 
@@ -71,6 +73,8 @@ public class GalleryAnimationActivity extends FragmentActivity {
         initPosition = getIntent().getIntExtra("position", 0);
 
         pager = (ViewPager) findViewById(R.id.pager);
+        pager.setPadding(0, Utility.dip2px(STATUS_BAR_HEIGHT_DP_UNIT), 0, 0);
+
         pager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager()));
         pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override

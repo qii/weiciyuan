@@ -1,11 +1,16 @@
 package org.qii.weiciyuan.support.gallery;
 
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
@@ -17,6 +22,7 @@ import java.io.File;
  */
 public class LargePictureFragment extends Fragment {
 
+    private static final int NAVIGATION_BAR_HEIGHT_DP_UNIT = 48;
 
     public static LargePictureFragment newInstance(String path) {
         LargePictureFragment fragment = new LargePictureFragment();
@@ -33,6 +39,21 @@ public class LargePictureFragment extends Fragment {
         View view = inflater.inflate(R.layout.gallery_large_layout, container, false);
 
         WebView large = (WebView) view.findViewById(R.id.large);
+        large.setBackgroundColor(getResources().getColor(R.color.transparent));
+        large.setVisibility(View.INVISIBLE);
+        large.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        if (Utility.doThisDeviceOwnNavigationBar(getActivity())) {
+            large.setPadding(0, 0, 0,
+                    Utility.dip2px(NAVIGATION_BAR_HEIGHT_DP_UNIT));
+        }
+
+        if (SettingUtility.allowClickToCloseGallery()) {
+            large.setOnTouchListener(largeOnTouchListener);
+        }
+
+        LongClickListener longClickListener = ((ContainerFragment) getParentFragment())
+                .getLongClickListener();
+        large.setOnLongClickListener(longClickListener);
 
         String path = getArguments().getString("path");
 
@@ -83,4 +104,74 @@ public class LargePictureFragment extends Fragment {
 
         return view;
     }
+
+
+    private View.OnTouchListener largeOnTouchListener = new View.OnTouchListener() {
+        boolean mPressed;
+
+        boolean mClose;
+
+        CheckForSinglePress mPendingCheckForSinglePress;
+
+        long lastTime = 0;
+
+        float[] location = new float[2];
+
+        class CheckForSinglePress implements Runnable {
+
+            View view;
+
+            public CheckForSinglePress(View view) {
+                this.view = view;
+            }
+
+            public void run() {
+                if (!mPressed && mClose) {
+                    Utility.playClickSound(view);
+                    getActivity().onBackPressed();
+                }
+            }
+
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    mPendingCheckForSinglePress = new CheckForSinglePress(v);
+                    mPressed = true;
+                    if (System.currentTimeMillis() - lastTime
+                            > ViewConfiguration.getDoubleTapTimeout() + 100) {
+                        mClose = true;
+                        new Handler().postDelayed(mPendingCheckForSinglePress,
+                                ViewConfiguration.getDoubleTapTimeout() + 100);
+                    } else {
+                        mClose = false;
+                    }
+                    lastTime = System.currentTimeMillis();
+
+                    location[0] = event.getRawX();
+                    location[1] = event.getRawY();
+
+                    break;
+                case MotionEvent.ACTION_UP:
+                    mPressed = false;
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    mClose = false;
+
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float x = event.getRawX();
+                    float y = event.getRawY();
+                    if (Math.abs(location[0] - x) > 5.0f && Math.abs(location[1] - y) > 5.0f) {
+                        mClose = false;
+                    }
+                    break;
+            }
+
+            return false;
+        }
+    };
+
 }

@@ -1,6 +1,8 @@
 package org.qii.weiciyuan.support.gallery;
 
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,13 +14,16 @@ import java.io.File;
 import java.io.IOException;
 
 import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifImageView;
+import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * User: qii
  * Date: 14-4-30
  */
 public class GifPictureFragment extends Fragment {
+
+    private static final int NAVIGATION_BAR_HEIGHT_DP_UNIT = 48;
 
     public static GifPictureFragment newInstance(String path) {
         GifPictureFragment fragment = new GifPictureFragment();
@@ -33,7 +38,26 @@ public class GifPictureFragment extends Fragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.gallery_gif_layout, container, false);
 
-        GifImageView gifImageView = (GifImageView) view.findViewById(R.id.animation);
+        PhotoView gifImageView = (PhotoView) view.findViewById(R.id.animation);
+        if (Utility.doThisDeviceOwnNavigationBar(getActivity())) {
+            gifImageView.setPadding(0, 0, 0,
+                    Utility.dip2px(NAVIGATION_BAR_HEIGHT_DP_UNIT));
+        }
+
+        if (SettingUtility.allowClickToCloseGallery()) {
+            gifImageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+                @Override
+                public void onPhotoTap(View view, float x, float y) {
+                    getActivity().onBackPressed();
+
+                }
+
+            });
+        }
+
+        LongClickListener longClickListener = ((ContainerFragment) getParentFragment())
+                .getLongClickListener();
+        gifImageView.setOnLongClickListener(longClickListener);
 
         String path = getArguments().getString("path");
 
