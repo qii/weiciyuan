@@ -111,14 +111,12 @@ public class GeneralPictureFragment extends Fragment {
 
         photoView.setImageBitmap(bitmap);
 
-        photoView.setClipEnable(true);
 
         final Runnable endAction = new Runnable() {
             @Override
             public void run() {
                 Bundle bundle = getArguments();
                 bundle.putBoolean("animationIn", false);
-                photoView.setClipEnable(false);
             }
         };
 
@@ -207,7 +205,6 @@ public class GeneralPictureFragment extends Fragment {
 
         AnimationRect rect = getArguments().getParcelable("rect");
 
-        photoView.setClipEnable(true);
 
         final Rect startBounds = rect.scaledBitmapRect;
         final Rect finalBounds = AnimationUtility.getBitmapRectFromImageView(photoView);

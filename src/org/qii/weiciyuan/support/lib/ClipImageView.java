@@ -50,10 +50,6 @@ public class ClipImageView extends GifImageView {
         invalidate();
     }
 
-    public void setClipEnable(boolean value) {
-        this.clipEnable = value;
-        invalidate();
-    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -70,7 +66,7 @@ public class ClipImageView extends GifImageView {
             bitmap = ((BitmapDrawable) drawable).getBitmap();
         }
 
-        if (bitmap != null && clipEnable) {
+        if (bitmap != null && clipVerticalPercent > 0 && clipHorizontalPercent > 0) {
 
             Rect clipRect = new Rect(rect);
             int width = clipRect.width();
