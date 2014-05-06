@@ -199,10 +199,18 @@ public class GeneralPictureFragment extends Fragment {
 
         AnimationRect rect = getArguments().getParcelable("rect");
 
+        if (rect == null) {
+            photoView.animate().alpha(0);
+            backgroundAnimator.start();
+            return;
+        }
+
         final Rect startBounds = rect.scaledBitmapRect;
         final Rect finalBounds = AnimationUtility.getBitmapRectFromImageView(photoView);
 
         if (finalBounds == null) {
+            photoView.animate().alpha(0);
+            backgroundAnimator.start();
             return;
         }
 
