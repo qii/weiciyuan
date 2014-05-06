@@ -49,9 +49,7 @@
                 android:title="@string/pref_donate_title"
                 android:summary="@string/pref_donate_summary"
                 >
-            <intent
-                    android:action="android.intent.action.VIEW"
-                    android:data="http://me.alipay.com/qiibeta"/>
+
         </Preference>
         <Preference
                 android:title="@string/pref_play_store_address_title"
