@@ -5,12 +5,11 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
@@ -42,13 +41,9 @@ public class LargePictureFragment extends Fragment {
         large.setBackgroundColor(getResources().getColor(R.color.transparent));
         large.setVisibility(View.INVISIBLE);
         large.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        if (Utility.doThisDeviceOwnNavigationBar(getActivity())) {
-            large.setPadding(0, 0, 0,
-                    Utility.dip2px(NAVIGATION_BAR_HEIGHT_DP_UNIT));
-        }
 
         if (SettingUtility.allowClickToCloseGallery()) {
-            large.setOnTouchListener(largeOnTouchListener);
+            large.setOnTouchListener(new LargeOnTouchListener(large));
         }
 
         LongClickListener longClickListener = ((ContainerFragment) getParentFragment())
@@ -106,72 +101,27 @@ public class LargePictureFragment extends Fragment {
     }
 
 
-    private View.OnTouchListener largeOnTouchListener = new View.OnTouchListener() {
-        boolean mPressed;
+    private class LargeOnTouchListener implements View.OnTouchListener {
 
-        boolean mClose;
+        GestureDetector gestureDetector;
 
-        CheckForSinglePress mPendingCheckForSinglePress;
-
-        long lastTime = 0;
-
-        float[] location = new float[2];
-
-        class CheckForSinglePress implements Runnable {
-
-            View view;
-
-            public CheckForSinglePress(View view) {
-                this.view = view;
-            }
-
-            public void run() {
-                if (!mPressed && mClose) {
-                    Utility.playClickSound(view);
-                    getActivity().onBackPressed();
-                }
-            }
-
+        public LargeOnTouchListener(final View view) {
+            gestureDetector = new GestureDetector(view.getContext(),
+                    new GestureDetector.SimpleOnGestureListener() {
+                        @Override
+                        public boolean onSingleTapUp(MotionEvent e) {
+                            Utility.playClickSound(view);
+                            getActivity().onBackPressed();
+                            return true;
+                        }
+                    });
         }
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            switch (event.getActionMasked()) {
-                case MotionEvent.ACTION_DOWN:
-                    mPendingCheckForSinglePress = new CheckForSinglePress(v);
-                    mPressed = true;
-                    if (System.currentTimeMillis() - lastTime
-                            > ViewConfiguration.getDoubleTapTimeout() + 100) {
-                        mClose = true;
-                        new Handler().postDelayed(mPendingCheckForSinglePress,
-                                ViewConfiguration.getDoubleTapTimeout() + 100);
-                    } else {
-                        mClose = false;
-                    }
-                    lastTime = System.currentTimeMillis();
-
-                    location[0] = event.getRawX();
-                    location[1] = event.getRawY();
-
-                    break;
-                case MotionEvent.ACTION_UP:
-                    mPressed = false;
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                    mClose = false;
-
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    float x = event.getRawX();
-                    float y = event.getRawY();
-                    if (Math.abs(location[0] - x) > 5.0f && Math.abs(location[1] - y) > 5.0f) {
-                        mClose = false;
-                    }
-                    break;
-            }
-
+            gestureDetector.onTouchEvent(event);
             return false;
         }
-    };
+    }
 
 }

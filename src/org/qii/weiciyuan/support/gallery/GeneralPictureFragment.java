@@ -7,7 +7,6 @@ import org.qii.weiciyuan.support.lib.AnimationRect;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AnimationUtility;
-import org.qii.weiciyuan.support.utils.Utility;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -58,10 +57,6 @@ public class GeneralPictureFragment extends Fragment {
         View view = inflater.inflate(R.layout.gallery_general_layout, container, false);
 
         photoView = (PhotoView) view.findViewById(R.id.animation);
-        if (Utility.doThisDeviceOwnNavigationBar(getActivity())) {
-            photoView.setPadding(0, 0, 0,
-                    Utility.dip2px(NAVIGATION_BAR_HEIGHT_DP_UNIT));
-        }
 
         if (SettingUtility.allowClickToCloseGallery()) {
             photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
@@ -110,7 +105,6 @@ public class GeneralPictureFragment extends Fragment {
                         IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT);
 
         photoView.setImageBitmap(bitmap);
-
 
         final Runnable endAction = new Runnable() {
             @Override
@@ -205,9 +199,12 @@ public class GeneralPictureFragment extends Fragment {
 
         AnimationRect rect = getArguments().getParcelable("rect");
 
-
         final Rect startBounds = rect.scaledBitmapRect;
         final Rect finalBounds = AnimationUtility.getBitmapRectFromImageView(photoView);
+
+        if (finalBounds == null) {
+            return;
+        }
 
         float startScale;
         if ((float) finalBounds.width() / finalBounds.height()

@@ -22,21 +22,24 @@ public class ClipImageView extends GifImageView {
 
     private float clipVerticalPercent;
 
-    private boolean clipEnable = false;
 
     private Rect rect;
 
+    private Paint paint;
+
     public ClipImageView(Context context) {
-        super(context);
+        this(context, null, -1);
 
     }
 
     public ClipImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, -1);
     }
 
     public ClipImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        paint = new Paint();
+        paint.setColor(Color.GREEN);
     }
 
     public void setClipHorizontal(float value) {
@@ -61,62 +64,66 @@ public class ClipImageView extends GifImageView {
     public void draw(Canvas canvas) {
 
         Drawable drawable = getDrawable();
-        Bitmap bitmap = null;
-        if (drawable instanceof BitmapDrawable) {
-            bitmap = ((BitmapDrawable) drawable).getBitmap();
+
+        if (drawable == null || (clipVerticalPercent == 0 && clipHorizontalPercent == 0)) {
+            super.draw(canvas);
+            return;
         }
 
-        if (bitmap != null && clipVerticalPercent > 0 && clipHorizontalPercent > 0) {
-
-            Rect clipRect = new Rect(rect);
-            int width = clipRect.width();
-            int height = clipRect.height();
-
-            int bitmapWidth = bitmap.getWidth();
-            int bitmapHeight = bitmap.getHeight();
-
-            int imageViewWidth = width;
-            int imageviewHeight = height;
-
-            float startScale;
-
-            int deltaX;
-
-            int deltaY;
-
-            if ((float) imageViewWidth / bitmapWidth
-                    > (float) imageviewHeight / bitmapHeight) {
-//                Extend start bounds horizontally
-                startScale = (float) imageviewHeight / bitmapHeight;
-
-
-            } else {
-                startScale = (float) imageViewWidth / bitmapWidth;
-            }
-
-            bitmapHeight = (int) (bitmapHeight * startScale);
-            bitmapWidth = (int) (bitmapWidth * startScale);
-
-            deltaX = (imageViewWidth - bitmapWidth) / 2;
-            deltaY = (imageviewHeight - bitmapHeight) / 2;
-
-            Paint paint = new Paint();
-            paint.setColor(Color.GREEN);
-            canvas.save();
-
-            int clipV = (int) (this.clipVerticalPercent * bitmapHeight) + deltaY;
-            int clipH = (int) (this.clipHorizontalPercent * bitmapWidth) + deltaX;
-
-            clipRect.set(clipRect.left + clipH,
-                    clipRect.top + clipV,
-                    clipRect.right - clipH,
-                    clipRect.bottom - clipV);
-            canvas.clipRect(clipRect);
+        if (!(drawable instanceof BitmapDrawable)) {
             super.draw(canvas);
-            canvas.restore();
+            return;
+        }
+
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+
+        if (bitmap == null) {
+            super.draw(canvas);
+            return;
+        }
+
+        Rect clipRect = new Rect(rect);
+        int width = clipRect.width();
+        int height = clipRect.height();
+
+        int bitmapWidth = bitmap.getWidth();
+        int bitmapHeight = bitmap.getHeight();
+
+        int imageViewWidth = width;
+        int imageViewHeight = height;
+
+        float startScale;
+
+        int deltaX;
+
+        int deltaY;
+
+        if ((float) imageViewWidth / bitmapWidth
+                > (float) imageViewHeight / bitmapHeight) {
+            startScale = (float) imageViewHeight / bitmapHeight;
         } else {
-            super.draw(canvas);
+            startScale = (float) imageViewWidth / bitmapWidth;
         }
+
+        bitmapHeight = (int) (bitmapHeight * startScale);
+        bitmapWidth = (int) (bitmapWidth * startScale);
+
+        deltaX = (imageViewWidth - bitmapWidth) / 2;
+        deltaY = (imageViewHeight - bitmapHeight) / 2;
+
+        canvas.save();
+
+        int clipV = (int) (this.clipVerticalPercent * bitmapHeight) + deltaY;
+        int clipH = (int) (this.clipHorizontalPercent * bitmapWidth) + deltaX;
+
+        clipRect.set(clipRect.left + clipH,
+                clipRect.top + clipV,
+                clipRect.right - clipH,
+                clipRect.bottom - clipV);
+        canvas.clipRect(clipRect);
+        super.draw(canvas);
+        canvas.restore();
+
 
     }
 

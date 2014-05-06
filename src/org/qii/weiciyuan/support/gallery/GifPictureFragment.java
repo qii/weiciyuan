@@ -2,7 +2,6 @@ package org.qii.weiciyuan.support.gallery;
 
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.Utility;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,10 +38,6 @@ public class GifPictureFragment extends Fragment {
         View view = inflater.inflate(R.layout.gallery_gif_layout, container, false);
 
         PhotoView gifImageView = (PhotoView) view.findViewById(R.id.animation);
-        if (Utility.doThisDeviceOwnNavigationBar(getActivity())) {
-            gifImageView.setPadding(0, 0, 0,
-                    Utility.dip2px(NAVIGATION_BAR_HEIGHT_DP_UNIT));
-        }
 
         if (SettingUtility.allowClickToCloseGallery()) {
             gifImageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {

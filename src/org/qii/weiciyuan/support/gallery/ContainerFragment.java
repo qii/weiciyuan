@@ -11,6 +11,7 @@ import org.qii.weiciyuan.support.lib.CircleProgressView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -18,9 +19,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * User: qii
@@ -58,14 +61,27 @@ public class ContainerFragment extends Fragment {
 
         String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_large);
 
-        if (ImageUtility.isThisBitmapCanRead(path)) {
+        if (ImageUtility.isThisBitmapCanRead(path) && taskMap.get(url) == null
+                && TaskCache.isThisUrlTaskFinished(url)) {
             displayPicture(path, animateIn);
         } else {
             GalleryAnimationActivity activity = (GalleryAnimationActivity) getActivity();
             activity.showBackgroundImmediately();
-            PicSimpleBitmapWorkerTask task = new PicSimpleBitmapWorkerTask(progressView, wait,
-                    error, url, taskMap);
-            task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            progressView.setVisibility(View.VISIBLE);
+
+            if (taskMap.get(url) == null) {
+                PicSimpleBitmapWorkerTask task = new PicSimpleBitmapWorkerTask(this, progressView,
+                        wait,
+                        error, url, taskMap);
+                taskMap.put(url, task);
+                task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                wait.setVisibility(View.VISIBLE);
+            } else {
+                PicSimpleBitmapWorkerTask task = taskMap.get(url);
+                task.bind(this, progressView, wait, error);
+            }
+
+
         }
 
         return view;
@@ -122,7 +138,7 @@ public class ContainerFragment extends Fragment {
         }
     }
 
-    private class PicSimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, String> {
+    private static class PicSimpleBitmapWorkerTask extends MyAsyncTask<String, Integer, String> {
 
         private FileDownloaderHttpHelper.DownloadListener downloadListener
                 = new FileDownloaderHttpHelper.DownloadListener() {
@@ -134,13 +150,16 @@ public class ContainerFragment extends Fragment {
 
         };
 
-        public void setWidget(CircleProgressView spinner, TextView wait,
+        public void bind(ContainerFragment fragment, CircleProgressView spinner, TextView wait,
                 TextView readError) {
+            this.containerRefList.add(new WeakReference<ContainerFragment>(fragment));
             this.spinner = spinner;
             this.wait = wait;
             this.readError = readError;
         }
 
+        private List<WeakReference<ContainerFragment>> containerRefList
+                = new ArrayList<WeakReference<ContainerFragment>>();
 
         private TextView wait;
 
@@ -152,9 +171,11 @@ public class ContainerFragment extends Fragment {
 
         private HashMap<String, PicSimpleBitmapWorkerTask> taskMap;
 
-        public PicSimpleBitmapWorkerTask(CircleProgressView spinner, TextView wait,
+        public PicSimpleBitmapWorkerTask(ContainerFragment containerFragment,
+                CircleProgressView spinner, TextView wait,
                 TextView readError, String url,
                 HashMap<String, PicSimpleBitmapWorkerTask> taskMap) {
+            this.containerRefList.add(new WeakReference<ContainerFragment>(containerFragment));
             this.url = url;
             this.spinner = spinner;
             this.readError = readError;
@@ -194,7 +215,7 @@ public class ContainerFragment extends Fragment {
         @Override
         protected void onCancelled(String s) {
             super.onCancelled(s);
-            taskMap.remove(url);
+            this.taskMap.remove(url);
             this.spinner.setVisibility(View.INVISIBLE);
             this.wait.setVisibility(View.INVISIBLE);
         }
@@ -202,33 +223,45 @@ public class ContainerFragment extends Fragment {
         @Override
         protected void onPostExecute(final String bitmapPath) {
 
-            this.spinner.setVisibility(View.INVISIBLE);
-            this.wait.setVisibility(View.INVISIBLE);
+            this.taskMap.remove(url);
 
             if (isCancelled()) {
                 return;
             }
 
-            taskMap.remove(url);
+            for (WeakReference<ContainerFragment> containerRef : containerRefList) {
 
-            if (TextUtils.isEmpty(bitmapPath)) {
+                ContainerFragment fragment = containerRef.get();
 
-                readError.setVisibility(View.VISIBLE);
-                readError.setText(getString(R.string.picture_cant_download_or_sd_cant_read));
-                return;
-            } else {
-                readError.setVisibility(View.INVISIBLE);
+                if (fragment == null) {
+                    continue;
+                }
+
+                Activity activity = fragment.getActivity();
+
+                if (activity == null) {
+                    continue;
+                }
+
+                this.spinner.setVisibility(View.INVISIBLE);
+                this.wait.setVisibility(View.INVISIBLE);
+
+                if (TextUtils.isEmpty(bitmapPath)) {
+                    readError.setVisibility(View.VISIBLE);
+                    readError.setText(
+                            activity.getString(R.string.picture_cant_download_or_sd_cant_read));
+                } else if (!ImageUtility.isThisBitmapCanRead(bitmapPath)) {
+                    readError.setVisibility(View.VISIBLE);
+                    readError.setText(
+                            activity.getString(
+                                    R.string.download_finished_but_cant_read_picture_file));
+                } else {
+                    readError.setVisibility(View.INVISIBLE);
+                    fragment.displayPicture(bitmapPath, false);
+                }
+
+
             }
-
-            if (!ImageUtility.isThisBitmapCanRead(bitmapPath)) {
-                Toast.makeText(getActivity(),
-                        R.string.download_finished_but_cant_read_picture_file, Toast.LENGTH_SHORT)
-                        .show();
-            }
-
-            displayPicture(bitmapPath, false);
-
-
         }
     }
 
