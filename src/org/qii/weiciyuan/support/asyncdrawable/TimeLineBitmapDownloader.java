@@ -4,6 +4,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.debug.AppLogger;
+import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imageutility.ImageUtility;
@@ -13,16 +14,19 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.ui.basefragment.AbstractTimeLineFragment;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -416,6 +420,135 @@ public class TimeLineBitmapDownloader {
 
                 }
             }
+        }.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+
+    public static class DownloadCallback {
+
+        public void onSubmitJobButNotBegin() {
+
+        }
+
+        public void onSubmitJobButAlreadyBegin() {
+
+        }
+
+        public void onBegin() {
+
+        }
+
+        public void onUpdate(int value, int max) {
+
+        }
+
+        public void onComplete(String localPath) {
+
+        }
+
+
+    }
+
+    public void download(final Activity activity, final String url, final FileLocationMethod method,
+            final DownloadCallback callback) {
+        downloadInner(activity, url, method, callback);
+    }
+
+    public void download(final Fragment fragment, final String url, final FileLocationMethod method,
+            final DownloadCallback callback) {
+        downloadInner(fragment, url, method, callback);
+    }
+
+    private void downloadInner(final Object object, final String url,
+            final FileLocationMethod method,
+            final DownloadCallback callback) {
+
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
+
+        if (TaskCache.isThisUrlTaskFinished(url)) {
+            callback.onSubmitJobButNotBegin();
+        } else {
+            callback.onSubmitJobButAlreadyBegin();
+        }
+
+        new MyAsyncTask<Void, Integer, String>() {
+
+            WeakReference<Object> activityRef;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                activityRef = new WeakReference<Object>(object);
+                callback.onBegin();
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+
+                boolean downloaded = TaskCache.waitForPictureDownload(
+                        url, new FileDownloaderHttpHelper.DownloadListener() {
+                    @Override
+                    public void pushProgress(int progress, int max) {
+                        onProgressUpdate(progress, max);
+                    }
+
+                    @Override
+                    public void completed() {
+
+                    }
+
+                    @Override
+                    public void cancel() {
+
+                    }
+                }, FileManager.getFilePathFromUrl(url, method), method);
+
+                return downloaded ? FileManager.getFilePathFromUrl(url, method) : null;
+
+            }
+
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+                super.onProgressUpdate(values);
+                if (!isComponentLifeCycleFinished()) {
+                    int progress = values[0];
+                    int max = values[1];
+                    callback.onUpdate(progress, max);
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String value) {
+                super.onPostExecute(value);
+                if (!isComponentLifeCycleFinished()) {
+                    callback.onComplete(value);
+                }
+
+            }
+
+            boolean isComponentLifeCycleFinished() {
+                Object object = activityRef.get();
+                if (object == null) {
+                    return true;
+                }
+
+                if (object instanceof Fragment) {
+                    Fragment fragment = (Fragment) object;
+                    if (fragment.getActivity() == null) {
+                        return true;
+                    }
+                } else if (object instanceof Activity) {
+                    Activity activity = (Activity) object;
+                    if (activity.isDestroyed()) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
         }.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
     }
 }

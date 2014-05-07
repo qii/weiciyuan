@@ -118,11 +118,17 @@ public class GeneralPictureFragment extends Fragment {
                     @Override
                     public boolean onPreDraw() {
 
+                        if (rect == null) {
+                            photoView.getViewTreeObserver().removeOnPreDrawListener(this);
+                            return true;
+                        }
+
                         final Rect startBounds = new Rect(rect.scaledBitmapRect);
                         final Rect finalBounds = AnimationUtility
                                 .getBitmapRectFromImageView(photoView);
 
-                        if (rect == null || finalBounds == null) {
+                        if (finalBounds == null) {
+                            photoView.getViewTreeObserver().removeOnPreDrawListener(this);
                             return true;
                         }
 

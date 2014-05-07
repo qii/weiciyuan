@@ -20,6 +20,8 @@ public class TaskCache {
 
     public static final Object backgroundWifiDownloadPicturesWorkLock = new Object();
 
+    private static final int TIME_OUT = 60;
+
 
     public static void removeDownloadTask(String url, DownloadWorker downloadWorker) {
         synchronized (TaskCache.backgroundWifiDownloadPicturesWorkLock) {
@@ -63,7 +65,7 @@ public class TaskCache {
             downloadWorker.addDownloadListener(downloadListener);
 
             try {
-                return downloadWorker.get(30, TimeUnit.SECONDS);
+                return downloadWorker.get(TIME_OUT, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 Utility.printStackTrace(e);
                 Thread.currentThread().interrupt();
@@ -113,7 +115,7 @@ public class TaskCache {
 
             try {
                 downloadWorker.addDownloadListener(downloadListener);
-                return downloadWorker.get(30, TimeUnit.SECONDS);
+                return downloadWorker.get(TIME_OUT, TimeUnit.SECONDS);
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
