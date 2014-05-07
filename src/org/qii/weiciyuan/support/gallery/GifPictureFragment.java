@@ -40,13 +40,11 @@ public class GifPictureFragment extends Fragment {
         PhotoView gifImageView = (PhotoView) view.findViewById(R.id.animation);
 
         if (SettingUtility.allowClickToCloseGallery()) {
-            gifImageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            gifImageView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
                 @Override
-                public void onPhotoTap(View view, float x, float y) {
+                public void onViewTap(View view, float x, float y) {
                     getActivity().onBackPressed();
-
                 }
-
             });
         }
 

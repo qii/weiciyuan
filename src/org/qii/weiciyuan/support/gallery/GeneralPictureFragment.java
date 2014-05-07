@@ -59,13 +59,12 @@ public class GeneralPictureFragment extends Fragment {
         photoView = (PhotoView) view.findViewById(R.id.animation);
 
         if (SettingUtility.allowClickToCloseGallery()) {
-            photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+
+            photoView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
                 @Override
-                public void onPhotoTap(View view, float x, float y) {
+                public void onViewTap(View view, float x, float y) {
                     getActivity().onBackPressed();
-
                 }
-
             });
         }
 
