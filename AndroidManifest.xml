@@ -112,6 +112,7 @@
         <activity
                 android:name=".support.gallery.GalleryAnimationActivity"
                 android:theme="@style/GalleryTheme"
+                android:configChanges="screenSize|keyboardHidden|orientation"
                 android:launchMode="singleTop"/>
         <activity
                 android:name=".ui.browser.BrowserWriteWeiboLocalPicActivity"

@@ -7,6 +7,7 @@ import org.qii.weiciyuan.support.lib.AnimationRect;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AnimationUtility;
+import org.qii.weiciyuan.support.utils.Utility;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -132,6 +133,16 @@ public class GeneralPictureFragment extends Fragment {
                             return true;
                         }
 
+                        float timelineBitmapRatio = (float) startBounds.width()
+                                / (float) startBounds.height();
+                        float bitmapRatio = (float) finalBounds.width() / (float) finalBounds
+                                .height();
+
+                        if (Math.abs(timelineBitmapRatio - bitmapRatio) > 0.01f) {
+                            photoView.getViewTreeObserver().removeOnPreDrawListener(this);
+                            return true;
+                        }
+
                         float startScale = (float) finalBounds.width() / startBounds.width();
 
                         if (startScale * startBounds.height() > finalBounds.height()) {
@@ -214,6 +225,23 @@ public class GeneralPictureFragment extends Fragment {
         final Rect finalBounds = AnimationUtility.getBitmapRectFromImageView(photoView);
 
         if (finalBounds == null) {
+            photoView.animate().alpha(0);
+            backgroundAnimator.start();
+            return;
+        }
+
+        float timelineBitmapRatio = (float) startBounds.width()
+                / (float) startBounds.height();
+        float bitmapRatio = (float) finalBounds.width() / (float) finalBounds
+                .height();
+
+        if (Math.abs(timelineBitmapRatio - bitmapRatio) > 0.01f) {
+            photoView.animate().alpha(0);
+            backgroundAnimator.start();
+            return;
+        }
+
+        if (Utility.isDevicePort() != rect.isScreenPortrait) {
             photoView.animate().alpha(0);
             backgroundAnimator.start();
             return;
