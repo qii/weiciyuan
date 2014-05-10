@@ -135,7 +135,7 @@ public class ContainerFragment extends Fragment {
         if (!ImageUtility.isThisBitmapTooLargeToRead(path)) {
             Fragment fragment = null;
             if (ImageUtility.isThisPictureGif(path)) {
-                fragment = GifPictureFragment.newInstance(path);
+                fragment = GifPictureFragment.newInstance(path, rect, animateIn);
             } else {
                 fragment = GeneralPictureFragment.newInstance(path, rect, animateIn);
             }
@@ -153,6 +153,9 @@ public class ContainerFragment extends Fragment {
         if (fragment instanceof GeneralPictureFragment) {
             GeneralPictureFragment child = (GeneralPictureFragment) fragment;
             child.animationExit(backgroundAnimator);
+        } else if (fragment instanceof GifPictureFragment) {
+            GifPictureFragment child = (GifPictureFragment) fragment;
+            child.animationExit(backgroundAnimator);
         }
     }
 
@@ -160,6 +163,8 @@ public class ContainerFragment extends Fragment {
     public boolean canAnimateCloseActivity() {
         Fragment fragment = getChildFragmentManager().findFragmentById(R.id.child);
         if (fragment instanceof GeneralPictureFragment) {
+            return true;
+        } else if (fragment instanceof GifPictureFragment) {
             return true;
         } else {
             return false;

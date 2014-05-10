@@ -7,6 +7,12 @@
             android:layout_gravity="center"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:id="@+id/animation"/>
+            android:id="@+id/gif"/>
+
+    <org.qii.weiciyuan.support.lib.ClipImageView
+            android:layout_gravity="center"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:id="@+id/cover"/>
 
 </FrameLayout>
