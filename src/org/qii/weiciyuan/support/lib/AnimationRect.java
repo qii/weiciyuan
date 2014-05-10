@@ -30,6 +30,11 @@ public class AnimationRect implements Parcelable {
         dest.writeInt(type);
         dest.writeBooleanArray(new boolean[]{clipped});
         dest.writeBooleanArray(new boolean[]{isScreenPortrait});
+        dest.writeFloat(thumbnailWidthHeightRatio);
+        dest.writeInt(thumbnailWidth);
+        dest.writeInt(thumbnailHeight);
+        dest.writeInt(widgetWidth);
+        dest.writeInt(widgetHeight);
     }
 
     public static final Parcelable.Creator<AnimationRect> CREATOR =
@@ -49,6 +54,13 @@ public class AnimationRect implements Parcelable {
                     boolean[] isScreenPortraitArray = new boolean[1];
                     in.readBooleanArray(isScreenPortraitArray);
                     rect.isScreenPortrait = isScreenPortraitArray[0];
+
+                    rect.thumbnailWidthHeightRatio = in.readFloat();
+                    rect.thumbnailWidth = in.readInt();
+                    rect.thumbnailHeight = in.readInt();
+
+                    rect.widgetWidth = in.readInt();
+                    rect.widgetHeight = in.readInt();
 
                     return rect;
                 }
@@ -82,6 +94,16 @@ public class AnimationRect implements Parcelable {
 
     public boolean isScreenPortrait;
 
+    public float thumbnailWidthHeightRatio;
+
+    public int thumbnailWidth;
+
+    public int thumbnailHeight;
+
+    public int widgetWidth;
+
+    public int widgetHeight;
+
     public static AnimationRect buildFromImageView(ImageView imageView) {
         AnimationRect rect = new AnimationRect();
 
@@ -98,6 +120,17 @@ public class AnimationRect implements Parcelable {
         }
 
         rect.imageViewRect = new Rect();
+
+        rect.widgetWidth = imageView.getWidth();
+
+        rect.widgetHeight = imageView.getHeight();
+
+        rect.thumbnailWidthHeightRatio = (float) bitmap.getWidth() / (float) bitmap.getHeight();
+
+        rect.thumbnailWidth = bitmap.getWidth();
+
+        rect.thumbnailHeight = bitmap.getHeight();
+
         boolean result = imageView.getGlobalVisibleRect(rect.imageViewRect);
 
         boolean checkWidth = rect.imageViewRect.width() < imageView.getWidth();

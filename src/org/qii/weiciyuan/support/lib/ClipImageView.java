@@ -22,6 +22,13 @@ public class ClipImageView extends GifImageView {
 
     private float clipVerticalPercent;
 
+    private float clipTopPercent;
+
+    private float clipBottomPercent;
+
+    private float clipLeftPercent;
+
+    private float clipRightPercent;
 
     private Rect rect;
 
@@ -53,6 +60,25 @@ public class ClipImageView extends GifImageView {
         invalidate();
     }
 
+    public void setClipTop(float value) {
+        this.clipTopPercent = value;
+        invalidate();
+    }
+
+    public void setClipBottom(float value) {
+        this.clipBottomPercent = value;
+        invalidate();
+    }
+
+    public void setClipLeft(float value) {
+        this.clipLeftPercent = value;
+        invalidate();
+    }
+
+    public void setClipRight(float value) {
+        this.clipRightPercent = value;
+        invalidate();
+    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -65,7 +91,13 @@ public class ClipImageView extends GifImageView {
 
         Drawable drawable = getDrawable();
 
-        if (drawable == null || (clipVerticalPercent == 0 && clipHorizontalPercent == 0)) {
+        if (drawable == null || (
+                clipVerticalPercent == 0
+                        && clipHorizontalPercent == 0
+                        && clipTopPercent == 0
+                        && clipBottomPercent == 0
+                        && clipLeftPercent == 0
+                        && clipRightPercent == 0)) {
             super.draw(canvas);
             return;
         }
@@ -116,10 +148,16 @@ public class ClipImageView extends GifImageView {
         int clipV = (int) (this.clipVerticalPercent * bitmapHeight) + deltaY;
         int clipH = (int) (this.clipHorizontalPercent * bitmapWidth) + deltaX;
 
-        clipRect.set(clipRect.left + clipH,
-                clipRect.top + clipV,
-                clipRect.right - clipH,
-                clipRect.bottom - clipV);
+        int clipTop = (int) (this.clipTopPercent * bitmapHeight);
+        int clipBottom = (int) (this.clipBottomPercent * bitmapHeight);
+
+        int clipLeft = (int) (this.clipLeftPercent * bitmapWidth);
+        int clipRight = (int) (this.clipRightPercent * bitmapWidth);
+
+        clipRect.set(clipRect.left + clipH + clipLeft,
+                clipRect.top + clipV + clipTop,
+                clipRect.right - clipH - clipRight,
+                clipRect.bottom - clipV - clipBottom);
         canvas.clipRect(clipRect);
         super.draw(canvas);
         canvas.restore();

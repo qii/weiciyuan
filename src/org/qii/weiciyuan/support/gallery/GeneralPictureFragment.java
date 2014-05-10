@@ -1,7 +1,6 @@
 package org.qii.weiciyuan.support.gallery;
 
 import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.AnimationRect;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
@@ -100,7 +99,7 @@ public class GeneralPictureFragment extends Fragment {
             return view;
         }
 
-        Bitmap bitmap = ImageUtility
+        final Bitmap bitmap = ImageUtility
                 .decodeBitmapFromSDCard(path, IMAGEVIEW_SOFT_LAYER_MAX_WIDTH,
                         IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT);
 
@@ -133,27 +132,27 @@ public class GeneralPictureFragment extends Fragment {
                             return true;
                         }
 
-                        float timelineBitmapRatio = (float) startBounds.width()
-                                / (float) startBounds.height();
-                        float bitmapRatio = (float) finalBounds.width() / (float) finalBounds
-                                .height();
-
-                        if (Math.abs(timelineBitmapRatio - bitmapRatio) > 0.01f) {
-                            photoView.getViewTreeObserver().removeOnPreDrawListener(this);
-                            return true;
-                        }
-
                         float startScale = (float) finalBounds.width() / startBounds.width();
 
                         if (startScale * startBounds.height() > finalBounds.height()) {
                             startScale = (float) finalBounds.height() / startBounds.height();
                         }
 
+                        int oriBitmapScaledWidth = (int) (finalBounds.width() / startScale);
+                        int oriBitmapScaledHeight = (int) (finalBounds.height() / startScale);
+
+                        int thumbnailAndOriDeltaRightSize = Math
+                                .abs(rect.scaledBitmapRect.width() - oriBitmapScaledWidth);
+                        int thumbnailAndOriDeltaBottomSize = Math
+                                .abs(rect.scaledBitmapRect.height() - oriBitmapScaledHeight);
+
+                        float thumbnailAndOriDeltaWidth = (float) thumbnailAndOriDeltaRightSize
+                                / (float) oriBitmapScaledWidth;
+                        float thumbnailAndOriDeltaHeight = (float) thumbnailAndOriDeltaBottomSize
+                                / (float) oriBitmapScaledHeight;
+
                         int deltaTop = startBounds.top - finalBounds.top;
                         int deltaLeft = startBounds.left - finalBounds.left;
-
-                        AppLogger.e("deltaTop=" + deltaTop + ",deltaLeft=" + deltaLeft
-                                + ",scale=" + startScale);
 
                         photoView.setPivotY(
                                 (photoView.getHeight() - finalBounds.height()) / 2);
@@ -175,6 +174,14 @@ public class GeneralPictureFragment extends Fragment {
                         if (rect.type == AnimationRect.TYPE_EXTEND_V
                                 || rect.type == AnimationRect.TYPE_EXTEND_H) {
 
+                            AnimatorSet animationSet = new AnimatorSet();
+                            animationSet.setDuration(ANIMATION_DURATION);
+                            animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
+
+                            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                                    "clipBottom", thumbnailAndOriDeltaHeight, 0));
+                            animationSet.start();
+
                         } else {
 
                             AnimatorSet animationSet = new AnimatorSet();
@@ -182,10 +189,25 @@ public class GeneralPictureFragment extends Fragment {
                             animationSet
                                     .setInterpolator(new AccelerateDecelerateInterpolator());
 
+                            float clipRectH =
+                                    ((float) (oriBitmapScaledWidth
+                                            - oriBitmapScaledWidth * thumbnailAndOriDeltaWidth
+                                            - rect.widgetWidth)
+                                            / 2) / (float) oriBitmapScaledWidth;
+                            float clipRectV = ((float) (oriBitmapScaledHeight
+                                    - oriBitmapScaledHeight * thumbnailAndOriDeltaHeight
+                                    - rect.widgetHeight) / 2) / (float) oriBitmapScaledHeight;
+
                             animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                                    "clipHorizontal", rect.clipRectH, 0));
+                                    "clipHorizontal", clipRectH, 0));
                             animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                                    "clipVertical", rect.clipRectV, 0));
+                                    "clipVertical", clipRectV, 0));
+
+                            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                                    "clipBottom", thumbnailAndOriDeltaHeight, 0));
+                            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                                    "clipRight", thumbnailAndOriDeltaWidth, 0));
+
                             animationSet.start();
 
 
@@ -230,17 +252,6 @@ public class GeneralPictureFragment extends Fragment {
             return;
         }
 
-        float timelineBitmapRatio = (float) startBounds.width()
-                / (float) startBounds.height();
-        float bitmapRatio = (float) finalBounds.width() / (float) finalBounds
-                .height();
-
-        if (Math.abs(timelineBitmapRatio - bitmapRatio) > 0.01f) {
-            photoView.animate().alpha(0);
-            backgroundAnimator.start();
-            return;
-        }
-
         if (Utility.isDevicePort() != rect.isScreenPortrait) {
             photoView.animate().alpha(0);
             backgroundAnimator.start();
@@ -257,6 +268,20 @@ public class GeneralPictureFragment extends Fragment {
         }
 
         final float startScaleFinal = startScale;
+
+        int oriBitmapScaledWidth = (int) (finalBounds.width() * startScale);
+        int oriBitmapScaledHeight = (int) (finalBounds.height() * startScale);
+
+        //sina server may cut thumbnail's right or bottom
+        int thumbnailAndOriDeltaRightSize = Math
+                .abs(rect.scaledBitmapRect.width() - oriBitmapScaledWidth);
+        int thumbnailAndOriDeltaBottomSize = Math
+                .abs(rect.scaledBitmapRect.height() - oriBitmapScaledHeight);
+
+        float serverClipThumbnailRightSizePercent = (float) thumbnailAndOriDeltaRightSize
+                / (float) oriBitmapScaledWidth;
+        float serverClipThumbnailBottomSizePercent = (float) thumbnailAndOriDeltaBottomSize
+                / (float) oriBitmapScaledHeight;
 
         int deltaTop = startBounds.top - finalBounds.top;
         int deltaLeft = startBounds.left - finalBounds.left;
@@ -285,7 +310,14 @@ public class GeneralPictureFragment extends Fragment {
 
         if (rect.type == AnimationRect.TYPE_EXTEND_V
                 || rect.type == AnimationRect.TYPE_EXTEND_H) {
-            backgroundAnimator.start();
+            AnimatorSet animationSet = new AnimatorSet();
+            animationSet.setDuration(ANIMATION_DURATION);
+            animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
+
+            animationSet.playTogether(backgroundAnimator);
+            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                    "clipBottom", 0, serverClipThumbnailBottomSizePercent));
+            animationSet.start();
         } else {
 
             AnimatorSet animationSet = new AnimatorSet();
@@ -293,10 +325,27 @@ public class GeneralPictureFragment extends Fragment {
             animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
 
             animationSet.playTogether(backgroundAnimator);
+
+            float clipRectH =
+                    ((float) (oriBitmapScaledWidth
+                            - oriBitmapScaledWidth * serverClipThumbnailRightSizePercent
+                            - rect.widgetWidth)
+                            / 2) / (float) oriBitmapScaledWidth;
+            float clipRectV =
+                    ((float) (oriBitmapScaledHeight
+                            - oriBitmapScaledHeight * serverClipThumbnailBottomSizePercent
+                            - rect.widgetHeight) / 2) / (float) oriBitmapScaledHeight;
+
             animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                    "clipHorizontal", 0, rect.clipRectH));
+                    "clipHorizontal", 0, clipRectH));
             animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                    "clipVertical", 0, rect.clipRectV));
+                    "clipVertical", 0, clipRectV));
+
+            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                    "clipBottom", 0, serverClipThumbnailBottomSizePercent));
+            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                    "clipRight", 0, serverClipThumbnailRightSizePercent));
+
             animationSet.start();
 
 

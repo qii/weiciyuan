@@ -68,27 +68,13 @@
 
         </Preference>
 
-        <Preference
-                android:key="pref_recommend_key"
-                android:title="@string/pref_recommend_title"
-                >
+        <!--<Preference-->
+        <!--android:enabled="false"-->
+        <!--android:key="pref_recommend_key"-->
+        <!--android:title="@string/pref_recommend_title"-->
+        <!-->-->
 
-        </Preference>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-            android:title="@string/pref_thanks_title"
-            >
-        <Preference
-                android:title="@string/pref_icon_design_title"
-                android:summary="LPF, 0.483 version"
-                />
-        <Preference
-                android:title="@string/pref_icon_design_title"
-                android:summary="NovaDNG, 0.482 version"
-                >
-        </Preference>
+        <!--</Preference>-->
 
     </PreferenceCategory>
 

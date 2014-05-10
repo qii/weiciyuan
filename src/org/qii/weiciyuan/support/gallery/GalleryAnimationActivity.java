@@ -164,7 +164,7 @@ public class GalleryAnimationActivity extends FragmentActivity {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    GalleryAnimationActivity.super.onBackPressed();
+                    GalleryAnimationActivity.super.finish();
                     overridePendingTransition(-1, -1);
                 }
             });
