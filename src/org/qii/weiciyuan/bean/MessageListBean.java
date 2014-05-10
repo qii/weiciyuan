@@ -1,10 +1,11 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,6 +18,9 @@ import java.util.List;
 public class MessageListBean extends ListBean<MessageBean, MessageListBean> implements Parcelable {
 
     private List<MessageBean> statuses = new ArrayList<MessageBean>();
+
+    private List<AdBean> ad = new ArrayList<AdBean>();
+
     private int removedCount = 0;
 
     @Override
@@ -32,6 +36,7 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
         dest.writeString(next_cursor);
 
         dest.writeTypedList(statuses);
+        dest.writeTypedList(ad);
         dest.writeInt(removedCount);
     }
 
@@ -47,6 +52,9 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
                     messageListBean.statuses = new ArrayList<MessageBean>();
                     in.readTypedList(messageListBean.statuses, MessageBean.CREATOR);
 
+                    messageListBean.ad = new ArrayList<AdBean>();
+                    in.readTypedList(messageListBean.ad, AdBean.CREATOR);
+
                     messageListBean.removedCount = in.readInt();
 
                     return messageListBean;
@@ -60,6 +68,10 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
 
     private List<MessageBean> getStatuses() {
         return statuses;
+    }
+
+    public List<AdBean> getAd() {
+        return ad;
     }
 
     public void setStatuses(List<MessageBean> statuses) {
@@ -98,8 +110,10 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
             return;
         }
 
-        boolean receivedCountBelowRequestCount = newValue.getReceivedCount() < Integer.valueOf(SettingUtility.getMsgCount());
-        boolean receivedCountEqualRequestCount = newValue.getReceivedCount() >= Integer.valueOf(SettingUtility.getMsgCount());
+        boolean receivedCountBelowRequestCount = newValue.getReceivedCount() < Integer
+                .valueOf(SettingUtility.getMsgCount());
+        boolean receivedCountEqualRequestCount = newValue.getReceivedCount() >= Integer
+                .valueOf(SettingUtility.getMsgCount());
         if (receivedCountEqualRequestCount && this.getSize() > 0) {
             newValue.getItemList().add(null);
         }
@@ -117,8 +131,9 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
     }
 
     public void addMiddleData(int position, MessageListBean middleValue, boolean towardsBottom) {
-        if (middleValue == null)
+        if (middleValue == null) {
             return;
+        }
 
         if (middleValue.getSize() == 0 || middleValue.getSize() == 1) {
             getItemList().remove(position);
@@ -145,8 +160,9 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
     }
 
     public void replaceData(MessageListBean value) {
-        if (value == null)
+        if (value == null) {
             return;
+        }
         getItemList().clear();
         getItemList().addAll(value.getItemList());
         setTotal_number(value.getTotal_number());

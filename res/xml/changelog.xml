@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="0.5.0beta5-2014.5"
+             versioncode="38">
+        <change>加了点动画</change>
+        <change>去除4.4的透明虚拟按键（影响动画）</change>
+        <change>修复某些地区3G网络下无法查看图片的bug</change>
+    </release>
     <release
-            version="0.5.0-2014.2"
+            version="0.5.0beta4-2014.2"
             versioncode="28">
         <change>修正上传的图片横竖方向</change>
         <change>4.4上查看图片支持透明虚拟按键（透明状态栏有bug，未开启）</change>
@@ -15,6 +21,21 @@
         <change>设置-显示，关闭快速滚动选项</change>
         <change>加了个引导，点击标题栏空白区域回到顶部</change>
         <change>只支持4.2+系统</change>
+    </release>
+    <release
+            version="0.5.0beta3-2014.1"
+            >
+
+    </release>
+    <release
+            version="0.5.0beta2-2014.1"
+            >
+
+    </release>
+    <release
+            version="0.5.0beta1-2013.12"
+            >
+
     </release>
     <release
             version="0.491-2013.11"
