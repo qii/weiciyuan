@@ -524,6 +524,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
     }
 
+    @Override
+    public void loadNewMsg() {
+        super.loadNewMsg();
+        new RefreshReCmtCountTask(FriendsTimeLineFragment.this, getList())
+                .executeOnExecutor(
+                        MyAsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private static class DBCacheTask
             extends MyAsyncTask<Void, MessageTimeLineData, List<MessageTimeLineData>> {
 
@@ -869,6 +877,11 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         @Override
         protected List<MessageReCmtCountBean> doInBackground(Void... params) {
+
+            if (msgIds.size() == 0) {
+                return null;
+            }
+
             try {
                 return new TimeLineReCmtCountDao(GlobalContext.getInstance().getSpecialToken(),
                         msgIds).get();
@@ -893,14 +906,26 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private void updateTimeLineMessageCommentAndRepostData(List<MessageReCmtCountBean> value) {
 
-        if (getList().getSize() <= value.size()) {
+        if (value == null) {
             return;
         }
 
-        for (int i = 0; i < value.size(); i++) {
+        HashMap<String, MessageReCmtCountBean> messageReCmtCountBeanHashMap
+                = new HashMap<String, MessageReCmtCountBean>();
+
+        for (MessageReCmtCountBean count : value) {
+            messageReCmtCountBeanHashMap.put(count.getId(), count);
+        }
+
+        for (int i = 0; i < getList().getSize(); i++) {
             MessageBean msg = getList().getItem(i);
-            MessageReCmtCountBean count = value.get(i);
-            if (msg != null && msg.getId().equals(count.getId())) {
+
+            if (msg == null) {
+                continue;
+            }
+
+            MessageReCmtCountBean count = messageReCmtCountBeanHashMap.get(msg.getId());
+            if (count != null) {
                 msg.setReposts_count(count.getReposts());
                 msg.setComments_count(count.getComments());
             }

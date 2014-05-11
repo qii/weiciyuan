@@ -1,8 +1,9 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 /**
  * User: qii
@@ -11,8 +12,10 @@ import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 public class MessageReCmtCountBean implements Parcelable {
 
     private String id;
-    private int comments;
-    private int reposts;
+
+    private int comments = 0;
+
+    private int reposts = 0;
 
     @Override
     public int describeContents() {
