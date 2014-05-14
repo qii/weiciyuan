@@ -8,6 +8,7 @@ import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
+import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.UnreadTabIndex;
 import org.qii.weiciyuan.support.database.NotificationDBTask;
 import org.qii.weiciyuan.support.debug.AppLogger;
@@ -182,13 +183,16 @@ public class BigTextNotificationService extends NotificationServiceHelper {
             return;
         }
 
+        Parcelable itemBean = notificationItems.get(currentIndex);
+
         Notification.Builder builder = new Notification.Builder(getBaseContext())
                 .setTicker(ticker)
                 .setContentText(ticker)
                 .setSubText(accountBean.getUsernick())
                 .setSmallIcon(R.drawable.ic_notification)
                 .setAutoCancel(true)
-                .setContentIntent(getPendingIntent(clickToOpenAppPendingIntentInner))
+                .setContentIntent(
+                        getPendingIntent(clickToOpenAppPendingIntentInner, itemBean, accountBean))
                 .setOnlyAlertOnce(true);
 
         builder.setContentTitle(getString(R.string.app_name));
@@ -278,7 +282,6 @@ public class BigTextNotificationService extends NotificationServiceHelper {
                         PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setDeleteIntent(deletedPendingIntent);
 
-        Parcelable itemBean = notificationItems.get(currentIndex);
         if (itemBean instanceof MessageBean) {
             MessageBean msg = (MessageBean) itemBean;
             Intent intent = WriteCommentActivity
@@ -355,10 +358,33 @@ public class BigTextNotificationService extends NotificationServiceHelper {
         notificationManager.notify(getMentionsWeiboNotificationId(accountBean), builder.build());
     }
 
-    private PendingIntent getPendingIntent(Intent clickToOpenAppPendingIntentInner) {
+
+    private PendingIntent getPendingIntent(Intent clickToOpenAppPendingIntentInner,
+            Parcelable itemBean, AccountBean accountBean) {
         clickToOpenAppPendingIntentInner.setExtrasClassLoader(getClass().getClassLoader());
-        clickToOpenAppPendingIntentInner.putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA,
-                UnreadTabIndex.MENTION_WEIBO);
+
+        UnreadTabIndex unreadTabIndex = UnreadTabIndex.NONE;
+
+        if (itemBean instanceof MessageBean) {
+            unreadTabIndex = UnreadTabIndex.MENTION_WEIBO;
+        } else if (itemBean instanceof CommentBean) {
+            CommentBean commentBean = (CommentBean) itemBean;
+            MessageBean messageBean = commentBean.getStatus();
+            if (messageBean != null) {
+                UserBean userBean = messageBean.getUser();
+                if (accountBean.getInfo().equals(userBean)) {
+                    unreadTabIndex = UnreadTabIndex.COMMENT_TO_ME;
+                } else {
+                    unreadTabIndex = UnreadTabIndex.MENTION_COMMENT;
+                }
+            } else {
+                unreadTabIndex = UnreadTabIndex.MENTION_COMMENT;
+            }
+
+        }
+        clickToOpenAppPendingIntentInner
+                .putExtra(BundleArgsConstants.OPEN_NAVIGATION_INDEX_EXTRA,
+                        unreadTabIndex);
         PendingIntent pendingIntent = PendingIntent
                 .getActivity(getBaseContext(), 0, clickToOpenAppPendingIntentInner,
                         PendingIntent.FLAG_UPDATE_CURRENT);
