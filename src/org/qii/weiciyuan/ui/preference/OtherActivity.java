@@ -3,12 +3,15 @@ package org.qii.weiciyuan.ui.preference;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -50,6 +53,9 @@ public class OtherActivity extends AbstractAppActivity {
 
     public static class OtherFragment extends PreferenceFragment {
 
+        private static final String DEBUG_INFO = "pref_debug_info_key";
+
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -81,7 +87,20 @@ public class OtherActivity extends AbstractAppActivity {
                             return true;
                         }
                     });
+
+            detectDebugPreference();
         }
+
+
+        private void detectDebugPreference() {
+            Preference debugPreferenceCategory = (PreferenceCategory) findPreference(DEBUG_INFO);
+
+            if (!SettingUtility.isBlackMagicEnabled()) {
+                PreferenceScreen screen = getPreferenceScreen();
+                screen.removePreference(debugPreferenceCategory);
+            }
+        }
+
 
         private class CalcCacheSize extends MyAsyncTask<Void, Void, String> {
 

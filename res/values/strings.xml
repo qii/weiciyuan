@@ -499,6 +499,8 @@
     <string name="clean_cache_finish">清理完成</string>
     <string name="getting_cache_size">缓存大小正在统计……</string>
     <string name="please_insert_sd_card">请插入SD卡</string>
+    <string name="pref_black_magic_title">黑魔法</string>
+    <string name="pref_filter_sina_ad">过滤新浪广告</string>
 
 
     <!--Setting About-->

@@ -355,5 +355,10 @@ public class SettingUtility {
         return result;
     }
 
+    public static boolean isFilterSinaAd() {
+        return SettingHelper
+                .getSharedPreferences(getContext(), SettingActivity.FILTER_SINA_AD, false);
+    }
+
 
 }

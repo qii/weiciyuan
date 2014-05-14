@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.support.utils;
 
+import org.qii.weiciyuan.bean.AdBean;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.DMBean;
 import org.qii.weiciyuan.bean.DMUserBean;
@@ -7,6 +8,7 @@ import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.support.database.FilterDBTask;
+import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.lib.LongClickableLinkMovementMethod;
 import org.qii.weiciyuan.support.lib.MyURLSpan;
 import org.qii.weiciyuan.support.lib.WeiboPatterns;
@@ -21,6 +23,7 @@ import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -28,7 +31,8 @@ import java.util.regex.Matcher;
 /**
  * User: qii
  * Date: 12-8-29
- * build emotions and clickable string in other threads except UI thread, improve listview scroll performance
+ * build emotions and clickable string in other threads except UI thread, improve listview scroll
+ * performance
  */
 public class TimeLineUtility {
 
@@ -77,7 +81,8 @@ public class TimeLineUtility {
         bean.getSourceString();
 
         if (bean.getRetweeted_status() != null) {
-            bean.getRetweeted_status().setListViewSpannableString(buildOriWeiboSpannalString(bean.getRetweeted_status()));
+            bean.getRetweeted_status().setListViewSpannableString(
+                    buildOriWeiboSpannalString(bean.getRetweeted_status()));
             bean.getRetweeted_status().getSourceString();
         }
     }
@@ -95,7 +100,8 @@ public class TimeLineUtility {
         SpannableString value;
 
         if (!TextUtils.isEmpty(name)) {
-            value = TimeLineUtility.convertNormalStringToSpannableString("@" + name + "：" + oriMsg.getText());
+            value = TimeLineUtility
+                    .convertNormalStringToSpannableString("@" + name + "：" + oriMsg.getText());
         } else {
             value = TimeLineUtility.convertNormalStringToSpannableString(oriMsg.getText());
         }
@@ -104,11 +110,13 @@ public class TimeLineUtility {
 
     public static void addJustHighLightLinks(CommentBean bean) {
 
-        bean.setListViewSpannableString(TimeLineUtility.convertNormalStringToSpannableString(bean.getText()));
+        bean.setListViewSpannableString(
+                TimeLineUtility.convertNormalStringToSpannableString(bean.getText()));
         bean.getSourceString();
 
         if (bean.getStatus() != null) {
-            bean.getStatus().setListViewSpannableString(buildOriWeiboSpannalString(bean.getStatus()));
+            bean.getStatus()
+                    .setListViewSpannableString(buildOriWeiboSpannalString(bean.getStatus()));
         }
 
         if (bean.getReply_comment() != null) {
@@ -126,7 +134,8 @@ public class TimeLineUtility {
         SpannableString value;
 
         if (!TextUtils.isEmpty(name)) {
-            value = TimeLineUtility.convertNormalStringToSpannableString("@" + name + "：" + bean.getText());
+            value = TimeLineUtility
+                    .convertNormalStringToSpannableString("@" + name + "：" + bean.getText());
         } else {
             value = TimeLineUtility.convertNormalStringToSpannableString(bean.getText());
         }
@@ -135,25 +144,43 @@ public class TimeLineUtility {
     }
 
     public static void addJustHighLightLinks(DMUserBean bean) {
-        bean.setListViewSpannableString(TimeLineUtility.convertNormalStringToSpannableString(bean.getText()));
+        bean.setListViewSpannableString(
+                TimeLineUtility.convertNormalStringToSpannableString(bean.getText()));
     }
 
     public static void addJustHighLightLinks(DMBean bean) {
-        bean.setListViewSpannableString(TimeLineUtility.convertNormalStringToSpannableString(bean.getText()));
+        bean.setListViewSpannableString(
+                TimeLineUtility.convertNormalStringToSpannableString(bean.getText()));
     }
 
     public static void filterHomeTimeLineSinaWeiboAd(MessageListBean value) {
 
+        if (!SettingUtility.isFilterSinaAd()) {
+            return;
+        }
+
         List<MessageBean> msgList = value.getItemList();
         Iterator<MessageBean> iterator = msgList.iterator();
 
-        while (iterator.hasNext()) {
-            MessageBean msg = iterator.next();
-            UserBean user = msg.getUser();
-            if (user == null)
-                continue;
-            if (user.isEnterpriseV() && !user.isFollowing()) {
-                if (!user.getId().equalsIgnoreCase(GlobalContext.getInstance().getCurrentAccountId())) {
+        final List<AdBean> adBeanList = value.getAd();
+
+        if (adBeanList.size() > 0) {
+
+            AppLogger.d("filter " + adBeanList.size() + " sina weibo ads");
+
+            List<String> adIdList = new ArrayList<String>();
+
+            for (AdBean adBean : adBeanList) {
+                adIdList.add(adBean.getId());
+            }
+
+            while (iterator.hasNext()) {
+                MessageBean msg = iterator.next();
+                UserBean user = msg.getUser();
+                if (user == null) {
+                    continue;
+                }
+                if (adIdList.contains(msg.getId())) {
                     iterator.remove();
                     value.removedCountPlus();
                 }
@@ -171,13 +198,13 @@ public class TimeLineUtility {
         List<String> topicFilter = FilterDBTask.getFilterKeywordList(FilterDBTask.TYPE_TOPIC);
         List<String> sourceFilter = FilterDBTask.getFilterKeywordList(FilterDBTask.TYPE_SOURCE);
 
-
         while (iterator.hasNext()) {
             MessageBean msg = iterator.next();
             if (msg.getUser() == null) {
                 iterator.remove();
                 value.removedCountPlus();
-            } else if (SettingUtility.isEnableFilter() && TimeLineUtility.haveFilterWord(msg, keywordFilter, userFilter, topicFilter, sourceFilter)) {
+            } else if (SettingUtility.isEnableFilter() && TimeLineUtility
+                    .haveFilterWord(msg, keywordFilter, userFilter, topicFilter, sourceFilter)) {
                 iterator.remove();
                 value.removedCountPlus();
             } else {
@@ -212,10 +239,10 @@ public class TimeLineUtility {
 
         for (String filterWord : userFilter) {
 
-            if (content.getUser() != null && content.getUser().getScreen_name().equals(filterWord)) {
+            if (content.getUser() != null && content.getUser().getScreen_name()
+                    .equals(filterWord)) {
                 return true;
             }
-
 
             if (hasOriMessage && oriMessage.getUser() != null
                     && oriMessage.getUser().getScreen_name().equals(filterWord)) {
@@ -224,7 +251,6 @@ public class TimeLineUtility {
         }
 
         for (String filterWord : topicFilter) {
-
 
             Matcher localMatcher = WeiboPatterns.TOPIC_URL.matcher(content.getText());
 
@@ -240,10 +266,10 @@ public class TimeLineUtility {
 
             }
 
-
             if (content.getRetweeted_status() != null) {
 
-                localMatcher = WeiboPatterns.TOPIC_URL.matcher(content.getRetweeted_status().getText());
+                localMatcher = WeiboPatterns.TOPIC_URL
+                        .matcher(content.getRetweeted_status().getText());
 
                 while (localMatcher.find()) {
                     String str2 = localMatcher.group(0);
@@ -266,8 +292,8 @@ public class TimeLineUtility {
                 return true;
             }
 
-
-            if (hasOriMessage && filterWord.equals(content.getRetweeted_status().getSourceString())) {
+            if (hasOriMessage && filterWord
+                    .equals(content.getRetweeted_status().getSourceString())) {
                 return true;
             }
         }
@@ -284,10 +310,13 @@ public class TimeLineUtility {
             int m = localMatcher.end();
             if (m - k < 8) {
                 Bitmap bitmap = GlobalContext.getInstance().getEmotionsPics().get(str2);
-                if (bitmap == null)
+                if (bitmap == null) {
                     bitmap = GlobalContext.getInstance().getHuahuaPics().get(str2);
+                }
                 if (bitmap != null) {
-                    ImageSpan localImageSpan = new ImageSpan(GlobalContext.getInstance().getActivity(), bitmap, ImageSpan.ALIGN_BASELINE);
+                    ImageSpan localImageSpan = new ImageSpan(
+                            GlobalContext.getInstance().getActivity(), bitmap,
+                            ImageSpan.ALIGN_BASELINE);
                     value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
 

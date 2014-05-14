@@ -91,6 +91,8 @@ public class SettingActivity extends AbstractAppActivity {
 
     public static final String CLICK_TO_CLEAN_CACHE = "click_to_clean_cache";
 
+    public static final String FILTER_SINA_AD = "filter_sina_ad";
+
     //about
     public static final String OFFICIAL_WEIBO = "pref_official_weibo_key";
 

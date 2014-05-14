@@ -28,4 +28,14 @@
                 />
 
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_black_magic_title"
+                        android:key="pref_debug_info_key">
+
+        <CheckBoxPreference
+                android:key="filter_sina_ad"
+                android:title="@string/pref_filter_sina_ad"
+                android:defaultValue="false"
+                />
+
+    </PreferenceCategory>
 </PreferenceScreen>
