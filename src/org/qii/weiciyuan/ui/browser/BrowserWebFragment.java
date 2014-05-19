@@ -186,7 +186,22 @@ public class BrowserWebFragment extends Fragment {
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
         refreshItem = menu.findItem(R.id.menu_refresh);
         super.onCreateOptionsMenu(menu, inflater);
-        mWebView.loadUrl(mUrl);
+
+        if (Utility.isWeiboAccountDomainLink(mUrl)) {
+            String result = Utility.getDomainFromWeiboAccountLink(mUrl);
+            Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+            intent.putExtra("domain", result);
+            getActivity().startActivity(intent);
+            getActivity().finish();
+
+        } else if (Utility.isWeiboMid(mUrl)) {
+            String mid = Utility.getMidFromUrl(mUrl);
+            RedirectLinkToWeiboIdTask task = new RedirectLinkToWeiboIdTask(
+                    BrowserWebFragment.this, mUrl, mid);
+            task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            mWebView.loadUrl(mUrl);
+        }
     }
 
     @Override
