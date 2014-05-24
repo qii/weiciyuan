@@ -641,7 +641,7 @@ public class Utility {
                     count++;
                 }
             }
-            return a && b && count == 3;
+            return a && b && count == 3 && !"http://weibo.com/pub".equals(tmp);
         }
     }
 
