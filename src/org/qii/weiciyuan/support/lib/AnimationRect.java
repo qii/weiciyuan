@@ -133,6 +133,14 @@ public class AnimationRect implements Parcelable {
 
         boolean result = imageView.getGlobalVisibleRect(rect.imageViewRect);
 
+        int[] location = new int[2];
+        imageView.getLocationOnScreen(location);
+
+        rect.imageViewRect.left = location[0];
+        rect.imageViewRect.top = location[1];
+        rect.imageViewRect.right = rect.imageViewRect.left + imageView.getWidth();
+        rect.imageViewRect.bottom = rect.imageViewRect.top + imageView.getHeight();
+
         boolean checkWidth = rect.imageViewRect.width() < imageView.getWidth();
         boolean checkHeight = rect.imageViewRect.height() < imageView.getHeight();
 
