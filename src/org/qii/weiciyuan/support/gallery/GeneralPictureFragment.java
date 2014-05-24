@@ -138,19 +138,6 @@ public class GeneralPictureFragment extends Fragment {
                             startScale = (float) finalBounds.height() / startBounds.height();
                         }
 
-                        int oriBitmapScaledWidth = (int) (finalBounds.width() / startScale);
-                        int oriBitmapScaledHeight = (int) (finalBounds.height() / startScale);
-
-                        int thumbnailAndOriDeltaRightSize = Math
-                                .abs(rect.scaledBitmapRect.width() - oriBitmapScaledWidth);
-                        int thumbnailAndOriDeltaBottomSize = Math
-                                .abs(rect.scaledBitmapRect.height() - oriBitmapScaledHeight);
-
-                        float thumbnailAndOriDeltaWidth = (float) thumbnailAndOriDeltaRightSize
-                                / (float) oriBitmapScaledWidth;
-                        float thumbnailAndOriDeltaHeight = (float) thumbnailAndOriDeltaBottomSize
-                                / (float) oriBitmapScaledHeight;
-
                         int deltaTop = startBounds.top - finalBounds.top;
                         int deltaLeft = startBounds.left - finalBounds.left;
 
@@ -171,47 +158,23 @@ public class GeneralPictureFragment extends Fragment {
                                         new AccelerateDecelerateInterpolator())
                                 .withEndAction(endAction);
 
-                        if (rect.type == AnimationRect.TYPE_EXTEND_V
-                                || rect.type == AnimationRect.TYPE_EXTEND_H) {
+                        AnimatorSet animationSet = new AnimatorSet();
+                        animationSet.setDuration(ANIMATION_DURATION);
+                        animationSet
+                                .setInterpolator(new AccelerateDecelerateInterpolator());
 
-                            AnimatorSet animationSet = new AnimatorSet();
-                            animationSet.setDuration(ANIMATION_DURATION);
-                            animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                                "clipBottom",
+                                AnimationRect.getClipBottom(rect, finalBounds), 0));
+                        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                                "clipRight",
+                                AnimationRect.getClipRight(rect, finalBounds), 0));
+                        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                                "clipTop", AnimationRect.getClipTop(rect, finalBounds), 0));
+                        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                                "clipLeft", AnimationRect.getClipLeft(rect, finalBounds), 0));
 
-                            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                                    "clipBottom", thumbnailAndOriDeltaHeight, 0));
-                            animationSet.start();
-
-                        } else {
-
-                            AnimatorSet animationSet = new AnimatorSet();
-                            animationSet.setDuration(ANIMATION_DURATION);
-                            animationSet
-                                    .setInterpolator(new AccelerateDecelerateInterpolator());
-
-                            float clipRectH =
-                                    ((float) (oriBitmapScaledWidth
-                                            - oriBitmapScaledWidth * thumbnailAndOriDeltaWidth
-                                            - rect.widgetWidth)
-                                            / 2) / (float) oriBitmapScaledWidth;
-                            float clipRectV = ((float) (oriBitmapScaledHeight
-                                    - oriBitmapScaledHeight * thumbnailAndOriDeltaHeight
-                                    - rect.widgetHeight) / 2) / (float) oriBitmapScaledHeight;
-
-                            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                                    "clipHorizontal", clipRectH, 0));
-                            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                                    "clipVertical", clipRectV, 0));
-
-                            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                                    "clipBottom", thumbnailAndOriDeltaHeight, 0));
-                            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                                    "clipRight", thumbnailAndOriDeltaWidth, 0));
-
-                            animationSet.start();
-
-
-                        }
+                        animationSet.start();
 
                         photoView.getViewTreeObserver().removeOnPreDrawListener(this);
                         return true;
@@ -269,20 +232,6 @@ public class GeneralPictureFragment extends Fragment {
 
         final float startScaleFinal = startScale;
 
-        int oriBitmapScaledWidth = (int) (finalBounds.width() * startScale);
-        int oriBitmapScaledHeight = (int) (finalBounds.height() * startScale);
-
-        //sina server may cut thumbnail's right or bottom
-        int thumbnailAndOriDeltaRightSize = Math
-                .abs(rect.scaledBitmapRect.width() - oriBitmapScaledWidth);
-        int thumbnailAndOriDeltaBottomSize = Math
-                .abs(rect.scaledBitmapRect.height() - oriBitmapScaledHeight);
-
-        float serverClipThumbnailRightSizePercent = (float) thumbnailAndOriDeltaRightSize
-                / (float) oriBitmapScaledWidth;
-        float serverClipThumbnailBottomSizePercent = (float) thumbnailAndOriDeltaBottomSize
-                / (float) oriBitmapScaledHeight;
-
         int deltaTop = startBounds.top - finalBounds.top;
         int deltaLeft = startBounds.left - finalBounds.left;
 
@@ -308,48 +257,26 @@ public class GeneralPictureFragment extends Fragment {
                     }
                 });
 
-        if (rect.type == AnimationRect.TYPE_EXTEND_V
-                || rect.type == AnimationRect.TYPE_EXTEND_H) {
-            AnimatorSet animationSet = new AnimatorSet();
-            animationSet.setDuration(ANIMATION_DURATION);
-            animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        AnimatorSet animationSet = new AnimatorSet();
+        animationSet.setDuration(ANIMATION_DURATION);
+        animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
 
-            animationSet.playTogether(backgroundAnimator);
-            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                    "clipBottom", 0, serverClipThumbnailBottomSizePercent));
-            animationSet.start();
-        } else {
+        animationSet.playTogether(backgroundAnimator);
 
-            AnimatorSet animationSet = new AnimatorSet();
-            animationSet.setDuration(ANIMATION_DURATION);
-            animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                "clipBottom", 0,
+                AnimationRect.getClipBottom(rect, finalBounds)));
+        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                "clipRight", 0,
+                AnimationRect.getClipRight(rect, finalBounds)));
+        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                "clipTop", 0, AnimationRect.getClipTop(rect, finalBounds)));
+        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                "clipLeft", 0, AnimationRect.getClipLeft(rect, finalBounds)));
 
-            animationSet.playTogether(backgroundAnimator);
-
-            float clipRectH =
-                    ((float) (oriBitmapScaledWidth
-                            - oriBitmapScaledWidth * serverClipThumbnailRightSizePercent
-                            - rect.widgetWidth)
-                            / 2) / (float) oriBitmapScaledWidth;
-            float clipRectV =
-                    ((float) (oriBitmapScaledHeight
-                            - oriBitmapScaledHeight * serverClipThumbnailBottomSizePercent
-                            - rect.widgetHeight) / 2) / (float) oriBitmapScaledHeight;
-
-            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                    "clipHorizontal", 0, clipRectH));
-            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                    "clipVertical", 0, clipRectV));
-
-            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                    "clipBottom", 0, serverClipThumbnailBottomSizePercent));
-            animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                    "clipRight", 0, serverClipThumbnailRightSizePercent));
-
-            animationSet.start();
+        animationSet.start();
 
 
-        }
     }
 
 }

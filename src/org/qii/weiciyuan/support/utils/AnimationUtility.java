@@ -82,14 +82,18 @@ public class AnimationUtility {
         }
 
         Rect rect = new Rect();
-        boolean result = imageView.getGlobalVisibleRect(rect);
+        boolean isVisible = imageView.getGlobalVisibleRect(rect);
+        if (!isVisible) {
+            int[] location = new int[2];
+            imageView.getLocationOnScreen(location);
 
-        boolean checkWidth = rect.width() < imageView.getWidth();
-        boolean checkHeight = rect.height() < imageView.getHeight();
+            rect.left = location[0];
+            rect.top = location[1];
+            rect.right = rect.left + imageView.getWidth();
+            rect.bottom = rect.top + imageView.getHeight();
+        }
 
-        boolean clipped = !result || checkWidth || checkHeight;
-
-        if (bitmap != null && !clipped) {
+        if (bitmap != null) {
 
             int bitmapWidth = bitmap.getWidth();
             int bitmapHeight = bitmap.getHeight();

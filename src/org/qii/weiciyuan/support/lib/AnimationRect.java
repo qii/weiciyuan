@@ -24,17 +24,21 @@ public class AnimationRect implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(scaledBitmapRect, flags);
-        dest.writeFloat(clipRectH);
-        dest.writeFloat(clipRectV);
-        dest.writeParcelable(imageViewRect, flags);
+        dest.writeParcelable(imageViewEntireRect, flags);
+        dest.writeParcelable(imageViewVisibleRect, flags);
         dest.writeInt(type);
-        dest.writeBooleanArray(new boolean[]{clipped});
+        dest.writeBooleanArray(new boolean[]{isTotalVisible});
+        dest.writeBooleanArray(new boolean[]{isTotalInvisible});
         dest.writeBooleanArray(new boolean[]{isScreenPortrait});
         dest.writeFloat(thumbnailWidthHeightRatio);
         dest.writeInt(thumbnailWidth);
         dest.writeInt(thumbnailHeight);
         dest.writeInt(widgetWidth);
         dest.writeInt(widgetHeight);
+        dest.writeFloat(clipByParentRectTop);
+        dest.writeFloat(clipByParentRectBottom);
+        dest.writeFloat(clipByParentRectLeft);
+        dest.writeFloat(clipByParentRectRight);
     }
 
     public static final Parcelable.Creator<AnimationRect> CREATOR =
@@ -42,14 +46,17 @@ public class AnimationRect implements Parcelable {
                 public AnimationRect createFromParcel(Parcel in) {
                     AnimationRect rect = new AnimationRect();
                     rect.scaledBitmapRect = in.readParcelable(Rect.class.getClassLoader());
-                    rect.clipRectH = in.readFloat();
-                    rect.clipRectV = in.readFloat();
-                    rect.imageViewRect = in.readParcelable(Rect.class.getClassLoader());
+                    rect.imageViewEntireRect = in.readParcelable(Rect.class.getClassLoader());
+                    rect.imageViewVisibleRect = in.readParcelable(Rect.class.getClassLoader());
                     rect.type = in.readInt();
 
                     boolean[] booleans = new boolean[1];
                     in.readBooleanArray(booleans);
-                    rect.clipped = booleans[0];
+                    rect.isTotalVisible = booleans[0];
+
+                    boolean[] isTotalInvisibleBooleans = new boolean[1];
+                    in.readBooleanArray(isTotalInvisibleBooleans);
+                    rect.isTotalInvisible = isTotalInvisibleBooleans[0];
 
                     boolean[] isScreenPortraitArray = new boolean[1];
                     in.readBooleanArray(isScreenPortraitArray);
@@ -61,6 +68,11 @@ public class AnimationRect implements Parcelable {
 
                     rect.widgetWidth = in.readInt();
                     rect.widgetHeight = in.readInt();
+
+                    rect.clipByParentRectTop = in.readFloat();
+                    rect.clipByParentRectBottom = in.readFloat();
+                    rect.clipByParentRectLeft = in.readFloat();
+                    rect.clipByParentRectRight = in.readFloat();
 
                     return rect;
                 }
@@ -79,18 +91,28 @@ public class AnimationRect implements Parcelable {
 
     public static final int TYPE_EXTEND_H = 3;
 
+
+    public float clipByParentRectTop;
+
+    public float clipByParentRectBottom;
+
+    public float clipByParentRectLeft;
+
+    public float clipByParentRectRight;
+
+
+    public Rect imageViewEntireRect;
+
+    public Rect imageViewVisibleRect;
+
     public Rect scaledBitmapRect;
 
-    public float clipRectH;
-
-    public float clipRectV;
-
-
-    public Rect imageViewRect;
 
     public int type = -1;
 
-    public boolean clipped;
+    public boolean isTotalVisible;
+
+    public boolean isTotalInvisible;
 
     public boolean isScreenPortrait;
 
@@ -119,8 +141,6 @@ public class AnimationRect implements Parcelable {
             return null;
         }
 
-        rect.imageViewRect = new Rect();
-
         rect.widgetWidth = imageView.getWidth();
 
         rect.widgetHeight = imageView.getHeight();
@@ -131,24 +151,27 @@ public class AnimationRect implements Parcelable {
 
         rect.thumbnailHeight = bitmap.getHeight();
 
-        boolean result = imageView.getGlobalVisibleRect(rect.imageViewRect);
-
+        rect.imageViewEntireRect = new Rect();
         int[] location = new int[2];
         imageView.getLocationOnScreen(location);
+        rect.imageViewEntireRect.left = location[0];
+        rect.imageViewEntireRect.top = location[1];
+        rect.imageViewEntireRect.right = rect.imageViewEntireRect.left + imageView.getWidth();
+        rect.imageViewEntireRect.bottom = rect.imageViewEntireRect.top + imageView.getHeight();
 
-        rect.imageViewRect.left = location[0];
-        rect.imageViewRect.top = location[1];
-        rect.imageViewRect.right = rect.imageViewRect.left + imageView.getWidth();
-        rect.imageViewRect.bottom = rect.imageViewRect.top + imageView.getHeight();
+        rect.imageViewVisibleRect = new Rect();
+        boolean isVisible = imageView.getGlobalVisibleRect(rect.imageViewVisibleRect);
 
-        boolean checkWidth = rect.imageViewRect.width() < imageView.getWidth();
-        boolean checkHeight = rect.imageViewRect.height() < imageView.getHeight();
+        boolean checkWidth = rect.imageViewVisibleRect.width() < imageView.getWidth();
+        boolean checkHeight = rect.imageViewVisibleRect.height() < imageView.getHeight();
 
-        rect.clipped = !result || checkWidth || checkHeight;
+        rect.isTotalVisible = isVisible && !checkWidth && !checkHeight;
+
+        rect.isTotalInvisible = !isVisible;
 
         ImageView.ScaleType scaledType = imageView.getScaleType();
 
-        Rect scaledBitmapRect = new Rect(rect.imageViewRect);
+        Rect scaledBitmapRect = new Rect(rect.imageViewEntireRect);
 
         int bitmapWidth = bitmap.getWidth();
         int bitmapHeight = bitmap.getHeight();
@@ -186,12 +209,6 @@ public class AnimationRect implements Parcelable {
                         scaledBitmapRect.right - deltaX,
                         scaledBitmapRect.bottom - deltaY);
 
-                if (rect.type == TYPE_CLIP_H) {
-                    rect.clipRectH = Math.abs((float) deltaX / (float) bitmapWidth);
-                } else if (rect.type == TYPE_CLIP_V) {
-                    rect.clipRectV = Math.abs((float) deltaY / (float) bitmapHeight);
-                }
-
                 break;
 
             case FIT_CENTER:
@@ -214,9 +231,10 @@ public class AnimationRect implements Parcelable {
                 deltaX = (imageViewWidth - bitmapWidth) / 2;
                 deltaY = (imageViewHeight - bitmapHeight) / 2;
 
-                scaledBitmapRect.set(scaledBitmapRect.left + deltaX, scaledBitmapRect.top + deltaY,
-                        scaledBitmapRect.right - deltaX,
-                        scaledBitmapRect.bottom - deltaY);
+                scaledBitmapRect
+                        .set(scaledBitmapRect.left + deltaX, scaledBitmapRect.top + deltaY,
+                                scaledBitmapRect.right - deltaX,
+                                scaledBitmapRect.bottom - deltaY);
 
                 break;
         }
@@ -224,6 +242,164 @@ public class AnimationRect implements Parcelable {
         rect.scaledBitmapRect = scaledBitmapRect;
 
         return rect;
+    }
+
+
+    public static float getClipLeft(AnimationRect animationRect, Rect finalBounds) {
+        final Rect startBounds = animationRect.scaledBitmapRect;
+
+        float startScale;
+        if ((float) finalBounds.width() / finalBounds.height()
+                > (float) startBounds.width() / startBounds.height()) {
+            startScale = (float) startBounds.height() / finalBounds.height();
+
+        } else {
+            startScale = (float) startBounds.width() / finalBounds.width();
+        }
+
+        int oriBitmapScaledWidth = (int) (finalBounds.width() * startScale);
+
+        //sina server may cut thumbnail's right or bottom
+        int thumbnailAndOriDeltaRightSize = Math
+                .abs(animationRect.scaledBitmapRect.width() - oriBitmapScaledWidth);
+
+        float serverClipThumbnailRightSizePercent = (float) thumbnailAndOriDeltaRightSize
+                / (float) oriBitmapScaledWidth;
+
+        float deltaH = (float) (oriBitmapScaledWidth
+                - oriBitmapScaledWidth * serverClipThumbnailRightSizePercent
+                - animationRect.widgetWidth);
+
+        float deltaLeft = deltaH / 2;
+
+        if (!animationRect.isTotalVisible && !animationRect.isTotalInvisible) {
+            float deltaInvisibleLeft = Math
+                    .abs(animationRect.imageViewVisibleRect.left
+                            - animationRect.imageViewEntireRect.left);
+            deltaLeft += deltaInvisibleLeft;
+        }
+
+        return (deltaLeft) / (float) oriBitmapScaledWidth;
+    }
+
+    public static float getClipTop(AnimationRect animationRect, Rect finalBounds) {
+
+        final Rect startBounds = animationRect.scaledBitmapRect;
+
+        float startScale;
+        if ((float) finalBounds.width() / finalBounds.height()
+                > (float) startBounds.width() / startBounds.height()) {
+            startScale = (float) startBounds.height() / finalBounds.height();
+
+        } else {
+            startScale = (float) startBounds.width() / finalBounds.width();
+        }
+
+        int oriBitmapScaledHeight = (int) (finalBounds.height() * startScale);
+
+        //sina server may cut thumbnail's right or bottom
+        int thumbnailAndOriDeltaBottomSize = Math
+                .abs(animationRect.scaledBitmapRect.height() - oriBitmapScaledHeight);
+
+        float serverClipThumbnailBottomSizePercent = (float) thumbnailAndOriDeltaBottomSize
+                / (float) oriBitmapScaledHeight;
+
+        float deltaV = (float) (oriBitmapScaledHeight
+                - oriBitmapScaledHeight * serverClipThumbnailBottomSizePercent
+                - animationRect.widgetHeight);
+
+        float deltaTop = deltaV / 2;
+
+        if (!animationRect.isTotalVisible && !animationRect.isTotalInvisible) {
+
+            float deltaInvisibleTop = Math
+                    .abs(animationRect.imageViewVisibleRect.top
+                            - animationRect.imageViewEntireRect.top);
+
+            deltaTop += deltaInvisibleTop;
+
+        }
+
+        return (deltaTop) / (float) oriBitmapScaledHeight;
+    }
+
+    public static float getClipRight(AnimationRect animationRect, Rect finalBounds) {
+        final Rect startBounds = animationRect.scaledBitmapRect;
+
+        float startScale;
+        if ((float) finalBounds.width() / finalBounds.height()
+                > (float) startBounds.width() / startBounds.height()) {
+            startScale = (float) startBounds.height() / finalBounds.height();
+
+        } else {
+            startScale = (float) startBounds.width() / finalBounds.width();
+        }
+
+        int oriBitmapScaledWidth = (int) (finalBounds.width() * startScale);
+
+        //sina server may cut thumbnail's right or bottom
+        int thumbnailAndOriDeltaRightSize = Math
+                .abs(animationRect.scaledBitmapRect.width() - oriBitmapScaledWidth);
+
+        float serverClipThumbnailRightSizePercent = (float) thumbnailAndOriDeltaRightSize
+                / (float) oriBitmapScaledWidth;
+
+        float deltaH = (float) (oriBitmapScaledWidth
+                - oriBitmapScaledWidth * serverClipThumbnailRightSizePercent
+                - animationRect.widgetWidth);
+
+        float deltaRight = deltaH / 2;
+
+        if (!animationRect.isTotalVisible && !animationRect.isTotalInvisible) {
+            float deltaInvisibleRight = Math
+                    .abs(animationRect.imageViewVisibleRect.right
+                            - animationRect.imageViewEntireRect.right);
+            deltaRight += deltaInvisibleRight;
+        }
+
+        deltaRight += thumbnailAndOriDeltaRightSize;
+
+        return (deltaRight) / (float) oriBitmapScaledWidth;
+    }
+
+    public static float getClipBottom(AnimationRect animationRect, Rect finalBounds) {
+        final Rect startBounds = animationRect.scaledBitmapRect;
+
+        float startScale;
+        if ((float) finalBounds.width() / finalBounds.height()
+                > (float) startBounds.width() / startBounds.height()) {
+            startScale = (float) startBounds.height() / finalBounds.height();
+
+        } else {
+            startScale = (float) startBounds.width() / finalBounds.width();
+        }
+
+        int oriBitmapScaledHeight = (int) (finalBounds.height() * startScale);
+
+        //sina server may cut thumbnail's right or bottom
+        int thumbnailAndOriDeltaBottomSize = Math
+                .abs(animationRect.scaledBitmapRect.height() - oriBitmapScaledHeight);
+
+        float serverClipThumbnailBottomSizePercent = (float) thumbnailAndOriDeltaBottomSize
+                / (float) oriBitmapScaledHeight;
+
+        float deltaV = (float) (oriBitmapScaledHeight
+                - oriBitmapScaledHeight * serverClipThumbnailBottomSizePercent
+                - animationRect.widgetHeight);
+
+        float deltaBottom = deltaV / 2;
+
+        if (!animationRect.isTotalVisible && !animationRect.isTotalInvisible) {
+
+            float deltaInvisibleBottom = Math
+                    .abs(animationRect.imageViewVisibleRect.bottom
+                            - animationRect.imageViewEntireRect.bottom);
+
+            deltaBottom += deltaInvisibleBottom;
+        }
+
+        deltaBottom += thumbnailAndOriDeltaBottomSize;
+        return (deltaBottom) / (float) oriBitmapScaledHeight;
     }
 
 }
