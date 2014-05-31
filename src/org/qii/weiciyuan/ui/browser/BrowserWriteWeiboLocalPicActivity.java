@@ -21,6 +21,7 @@ import java.io.File;
  * User: qii
  * Date: 12-12-30
  */
+@Deprecated
 public class BrowserWriteWeiboLocalPicActivity extends AbstractAppActivity {
 
     private WebView webView;

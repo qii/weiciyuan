@@ -16,6 +16,7 @@
 
     <item
         android:id="@+id/menu_txt_to_pic"
+        android:visible="false"
         android:title="@string/txt_to_pic"/>
     <item
         android:id="@+id/menu_clear"

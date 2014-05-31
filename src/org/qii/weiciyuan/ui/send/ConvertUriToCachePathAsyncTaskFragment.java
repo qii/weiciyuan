@@ -22,12 +22,13 @@ import java.io.InputStream;
  * User: qii
  * Date: 13-12-14
  */
-public class ConvertKKUriToPathFragment extends Fragment {
+public class ConvertUriToCachePathAsyncTaskFragment extends Fragment {
 
     private ConvertTask task;
 
-    public static ConvertKKUriToPathFragment newInstance(Uri uri) {
-        ConvertKKUriToPathFragment fragment = new ConvertKKUriToPathFragment();
+    public static ConvertUriToCachePathAsyncTaskFragment newInstance(Uri uri) {
+        ConvertUriToCachePathAsyncTaskFragment
+                fragment = new ConvertUriToCachePathAsyncTaskFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable("uri", uri);
         fragment.setArguments(bundle);
@@ -93,7 +94,8 @@ public class ConvertKKUriToPathFragment extends Fragment {
             if (getActivity() == null) {
                 return;
             }
-            getFragmentManager().beginTransaction().remove(ConvertKKUriToPathFragment.this)
+            getFragmentManager().beginTransaction()
+                    .remove(ConvertUriToCachePathAsyncTaskFragment.this)
                     .commitAllowingStateLoss();
             if (TextUtils.isEmpty(s)) {
                 Toast.makeText(getActivity(),

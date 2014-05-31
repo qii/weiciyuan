@@ -431,7 +431,7 @@ public class Utility {
         return 800;
     }
 
-    public static String getLatestCameraPicture(Activity activity) {
+    public static Uri getLatestCameraPicture(Activity activity) {
         String[] projection = new String[]{MediaStore.Images.ImageColumns._ID,
                 MediaStore.Images.ImageColumns.DATA,
                 MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
@@ -444,7 +444,7 @@ public class Utility {
                         MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
         if (cursor.moveToFirst()) {
             String path = cursor.getString(1);
-            return path;
+            return Uri.fromFile(new File(path));
         }
         return null;
     }

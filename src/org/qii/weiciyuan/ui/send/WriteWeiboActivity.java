@@ -19,7 +19,6 @@ import org.qii.weiciyuan.support.utils.SmileyPickerUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.support.utils.ViewUtility;
 import org.qii.weiciyuan.ui.browser.AppMapActivity;
-import org.qii.weiciyuan.ui.browser.BrowserWriteWeiboLocalPicActivity;
 import org.qii.weiciyuan.ui.interfaces.AbstractAppActivity;
 import org.qii.weiciyuan.ui.login.AccountActivity;
 import org.qii.weiciyuan.ui.main.MainTimeLineActivity;
@@ -56,6 +55,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -77,7 +77,6 @@ public class WriteWeiboActivity extends AbstractAppActivity
 
     public static final int AT_USER = 3;
 
-    public static final int BROWSER_PIC = 4;
 
     public static final String ACTION_DRAFT = "org.qii.weiciyuan.DRAFT";
 
@@ -164,14 +163,10 @@ public class WriteWeiboActivity extends AbstractAppActivity
         switch (which) {
             case 0:
 
-                String path = Utility.getLatestCameraPicture(WriteWeiboActivity.this);
-                if (!TextUtils.isEmpty(path)) {
-                    picPath = path;
-                    enablePicture();
-                    if (TextUtils.isEmpty(content.getText().toString())) {
-                        content.setText(getString(R.string.share_pic));
-                        content.setSelection(content.getText().toString().length());
-                    }
+                Uri lastUri = Utility.getLatestCameraPicture(WriteWeiboActivity.this);
+                if (lastUri != null) {
+                    imageFileUri = lastUri;
+                    createTmpUploadFileFromUri();
                     return;
                 }
 
@@ -214,6 +209,23 @@ public class WriteWeiboActivity extends AbstractAppActivity
         }
     }
 
+    private void createTmpUploadFileFromUri() {
+        ConvertUriToCachePathAsyncTaskFragment fragment = ConvertUriToCachePathAsyncTaskFragment
+                .newInstance(imageFileUri);
+        getSupportFragmentManager().beginTransaction().add(fragment, "").commit();
+
+    }
+
+    public void picConvertSucceedKK(String path) {
+        if (TextUtils.isEmpty(content.getText().toString())) {
+            content.setText(getString(R.string.share_pic));
+            content.setSelection(content.getText().toString().length());
+        }
+
+        picPath = path;
+        enablePicture();
+    }
+
     private void enablePicture() {
 
         Bitmap bitmap = ImageUtility.getWriteWeiboPictureThumblr(picPath);
@@ -229,6 +241,15 @@ public class WriteWeiboActivity extends AbstractAppActivity
     }
 
     private void disablePicture() {
+
+        if (picPath != null) {
+            new File(picPath).delete();
+        }
+
+        if (content.getText().toString().equals(getString(R.string.share_pic))) {
+            content.setText("");
+        }
+
         ((ImageButton) findViewById(R.id.menu_add_pic))
                 .setImageDrawable(getResources().getDrawable(R.drawable.camera_light));
 
@@ -247,27 +268,12 @@ public class WriteWeiboActivity extends AbstractAppActivity
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CAMERA_RESULT:
-                    if (TextUtils.isEmpty(content.getText().toString())) {
-                        content.setText(getString(R.string.share_pic));
-                        content.setSelection(content.getText().toString().length());
-                    }
-
-                    picPath = Utility.getPicPathFromUri(imageFileUri, this);
-                    enablePicture();
+                    createTmpUploadFileFromUri();
                     break;
                 case PIC_RESULT:
-                    if (TextUtils.isEmpty(content.getText().toString())) {
-                        content.setText(getString(R.string.share_pic));
-                        content.setSelection(content.getText().toString().length());
-                    }
-
-                    picPath = Utility.getPicPathFromUri(intent.getData(), this);
-                    enablePicture();
-                    break;
                 case PIC_RESULT_KK:
-                    ConvertKKUriToPathFragment fragment = ConvertKKUriToPathFragment
-                            .newInstance(intent.getData());
-                    getSupportFragmentManager().beginTransaction().add(fragment, "").commit();
+                    imageFileUri = intent.getData();
+                    createTmpUploadFileFromUri();
                     break;
                 case AT_USER:
                     String name = intent.getStringExtra("name");
@@ -278,27 +284,11 @@ public class WriteWeiboActivity extends AbstractAppActivity
                     content.setText(stringBuilder.toString());
                     content.setSelection(index + name.length());
                     break;
-                case BROWSER_PIC:
-                    boolean deleted = intent.getBooleanExtra("deleted", false);
-                    if (deleted) {
-                        deletePicture();
-                    }
-                    break;
             }
 
         }
 
 
-    }
-
-    public void picConvertSucceedKK(String path) {
-        if (TextUtils.isEmpty(content.getText().toString())) {
-            content.setText(getString(R.string.share_pic));
-            content.setSelection(content.getText().toString().length());
-        }
-
-        picPath = path;
-        enablePicture();
     }
 
 
@@ -586,14 +576,10 @@ public class WriteWeiboActivity extends AbstractAppActivity
 
         getAccountInfo();
 
-        Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        if (imageUri != null) {
-            picPath = Utility.getPicPathFromUri(imageUri, this);
-            if (TextUtils.isEmpty(content.getText().toString())) {
-                content.setText(getString(R.string.share_pic));
-                content.setSelection(content.getText().toString().length());
-            }
-            enablePicture();
+        Uri sharedImageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (sharedImageUri != null) {
+            this.imageFileUri = sharedImageUri;
+            createTmpUploadFileFromUri();
         }
     }
 
@@ -762,14 +748,11 @@ public class WriteWeiboActivity extends AbstractAppActivity
     }
 
     private void addPic() {
-        new SelectPictureDialog().show(getFragmentManager(), "");
+        SelectPictureDialog.newInstance().show(getFragmentManager(), "");
     }
 
     private void showPic() {
-        Intent intent = new Intent(WriteWeiboActivity.this,
-                BrowserWriteWeiboLocalPicActivity.class);
-        intent.putExtra("path", picPath);
-        startActivityForResult(intent, BROWSER_PIC);
+        DeleteSelectedPictureDialog.newInstance().show(getFragmentManager(), "");
     }
 
     protected void executeTask(String contentString) {
@@ -1013,8 +996,8 @@ public class WriteWeiboActivity extends AbstractAppActivity
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if (!TextUtils.isEmpty(s)) {
+                imageFileUri = Uri.fromFile(new File(s));
                 enablePicture();
-                picPath = s;
                 Toast.makeText(WriteWeiboActivity.this, getString(R.string.convert_successfully),
                         Toast.LENGTH_SHORT).show();
             } else {
@@ -1026,7 +1009,8 @@ public class WriteWeiboActivity extends AbstractAppActivity
     }
 
     public void deletePicture() {
-        picPath = "";
+        imageFileUri = null;
+        picPath = null;
         disablePicture();
     }
 
