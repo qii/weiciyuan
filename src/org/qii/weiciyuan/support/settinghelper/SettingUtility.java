@@ -223,8 +223,9 @@ public class SettingUtility {
     }
 
     public static boolean allowFastScroll() {
-        return SettingHelper
-                .getSharedPreferences(getContext(), SettingActivity.LIST_FAST_SCROLL, true);
+        return true;
+//        return SettingHelper
+//                .getSharedPreferences(getContext(), SettingActivity.LIST_FAST_SCROLL, true);
 
     }
 

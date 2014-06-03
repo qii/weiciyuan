@@ -81,7 +81,7 @@
         <item name="android:actionBarTabStyle">@style/ActionBarTabViewLight</item>
         <item name="android:actionBarWidgetTheme">@style/ActionBarTheme</item>
         <item name="android:actionBarItemBackground">@drawable/action_bar_item_background</item>
-
+        <item name="android:fastScrollTrackDrawable">@null</item>
     </style>
 
 

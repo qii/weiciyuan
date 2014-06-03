@@ -85,7 +85,7 @@
         <item name="android:actionBarStyle">@style/ActionBarStyle_Black</item>
         <item name="android:actionDropDownStyle">@style/ActionBarDropDownStyle_Black</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabViewDark</item>
-
+        <item name="android:fastScrollTrackDrawable">@null</item>
     </style>
 
     <style name="ActionBarDropDownStyle_Black" parent="@android:style/Widget.Holo.Spinner">
