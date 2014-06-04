@@ -50,34 +50,47 @@ public class ClipImageView extends GifImageView {
     }
 
     public void setClipHorizontal(float value) {
-        this.clipHorizontalPercent = value;
-        invalidate();
+        if (this.clipHorizontalPercent != value) {
+            this.clipHorizontalPercent = value;
+            invalidate();
+        }
+
     }
 
 
     public void setClipVertical(float value) {
-        this.clipVerticalPercent = value;
-        invalidate();
+        if (this.clipVerticalPercent != value) {
+            this.clipVerticalPercent = value;
+            invalidate();
+        }
     }
 
     public void setClipTop(float value) {
-        this.clipTopPercent = value;
-        invalidate();
+        if (this.clipTopPercent != value) {
+            this.clipTopPercent = value;
+            invalidate();
+        }
     }
 
     public void setClipBottom(float value) {
-        this.clipBottomPercent = value;
-        invalidate();
+        if (this.clipBottomPercent != value) {
+            this.clipBottomPercent = value;
+            invalidate();
+        }
     }
 
     public void setClipLeft(float value) {
-        this.clipLeftPercent = value;
-        invalidate();
+        if (this.clipLeftPercent != value) {
+            this.clipLeftPercent = value;
+            invalidate();
+        }
     }
 
     public void setClipRight(float value) {
-        this.clipRightPercent = value;
-        invalidate();
+        if (this.clipRightPercent != value) {
+            this.clipRightPercent = value;
+            invalidate();
+        }
     }
 
     @Override

@@ -1,5 +1,8 @@
 package org.qii.weiciyuan.support.utils;
 
+import org.qii.weiciyuan.support.lib.LayerEnablingAnimatorListener;
+import org.qii.weiciyuan.ui.userinfo.UserInfoFragment;
+
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -12,27 +15,31 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
+import java.lang.reflect.Method;
+
 /**
  * User: qii
  * Date: 14-1-24
  */
 public class AnimationUtility {
 
-    public static void translateFragmentY(Fragment fragment, int from, int to,
+    public static void translateFragmentY(UserInfoFragment fragment, int from, int to,
             Animator.AnimatorListener animatorListener) {
         final View fragmentView = fragment.getView();
         if (fragmentView == null) {
             return;
         }
+
+        View view = fragment.header;
+
         FragmentViewYWrapper wrapper = new FragmentViewYWrapper(fragmentView);
         ObjectAnimator objectAnimator = ObjectAnimator.ofInt(wrapper, "change", from, to);
         objectAnimator.setDuration(300);
         objectAnimator.setInterpolator(new DecelerateInterpolator());
         if (animatorListener != null) {
-            objectAnimator.addListener(animatorListener);
+            objectAnimator.addListener(new LayerEnablingAnimatorListener(view, animatorListener));
         }
         objectAnimator.start();
-
     }
 
     public static void translateFragmentX(Fragment fragment, int from, int to) {
@@ -46,6 +53,32 @@ public class AnimationUtility {
         objectAnimator.setInterpolator(new DecelerateInterpolator());
         objectAnimator.start();
 
+    }
+
+    public static void forceConvertActivityFromTranslucent(Activity activity) {
+        try {
+            Method method = Activity.class.getDeclaredMethod("convertFromTranslucent", null);
+            method.setAccessible(true);
+            method.invoke(activity, null);
+        } catch (Throwable ignored) {
+        }
+    }
+
+    public static void forceConvertActivityToTranslucent(Activity activity) {
+        try {
+            Class<?>[] declaredClasses = Activity.class.getDeclaredClasses();
+            Class<?> listener = null;
+            for (Class clazz : declaredClasses) {
+                if (clazz.getSimpleName().contains("TranslucentConversionListener")) {
+                    listener = clazz;
+                }
+            }
+            Method method = Activity.class.getDeclaredMethod("convertToTranslucent",
+                    listener);
+            method.setAccessible(true);
+            method.invoke(activity, new Object[]{null});
+        } catch (Throwable ignored) {
+        }
     }
 
     private static class FragmentViewYWrapper {

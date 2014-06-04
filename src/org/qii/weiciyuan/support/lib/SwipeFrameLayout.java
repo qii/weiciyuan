@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.support.lib;
 
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.utils.AnimationUtility;
 import org.qii.weiciyuan.support.utils.ThemeUtility;
 import org.qii.weiciyuan.support.utils.Utility;
 
@@ -23,7 +24,9 @@ public class SwipeFrameLayout extends FrameLayout {
     private Activity activity;
 
     private boolean isDragging = false;
+
     private float[] initPointLocation = new float[2];
+
     private View topView;
 
     private static final int OFFSET = 5;
@@ -53,7 +56,8 @@ public class SwipeFrameLayout extends FrameLayout {
         this.activity = (Activity) getContext();
         this.topView = ((View) (activity.findViewById(android.R.id.content).getParent()));
         this.max_motion_event_down_x_position = Utility.dip2px(25);
-        this.gestureDetector = new GestureDetector(getContext(), new SwipeRightToCloseOnGestureListener());
+        this.gestureDetector = new GestureDetector(getContext(),
+                new SwipeRightToCloseOnGestureListener());
         this.setId(R.id.swipe_framelayout);
     }
 
@@ -68,6 +72,7 @@ public class SwipeFrameLayout extends FrameLayout {
             case MotionEvent.ACTION_DOWN:
                 initPointLocation[0] = ev.getRawX();
                 initPointLocation[1] = ev.getRawY();
+
                 return false;
             case MotionEvent.ACTION_MOVE:
                 if (isDragging) {
@@ -76,9 +81,12 @@ public class SwipeFrameLayout extends FrameLayout {
                 }
 
                 float xx = ev.getRawX();
-                if ((xx > initPointLocation[0] + Utility.dip2px(OFFSET)) && initPointLocation[0] <= max_motion_event_down_x_position) {
+                if ((xx > initPointLocation[0] + Utility.dip2px(OFFSET))
+                        && initPointLocation[0] <= max_motion_event_down_x_position) {
+
                     isDragging = true;
                     gestureDetector.onTouchEvent(ev);
+
                     return true;
                 }
 
@@ -90,7 +98,6 @@ public class SwipeFrameLayout extends FrameLayout {
                     int x = (int) (ev.getRawX() - initPointLocation[0]);
                     initPointLocation[0] = 0f;
                     initPointLocation[1] = 0f;
-
 
                     if (x > (Utility.getScreenWidth() / 2)) {
                         closeActivity();
@@ -105,8 +112,19 @@ public class SwipeFrameLayout extends FrameLayout {
         return super.onTouchEvent(ev);
     }
 
+    private boolean translucent;
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+
+        if (!translucent) {
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    AnimationUtility.forceConvertActivityToTranslucent(activity);
+                }
+            }, 0);
+        }
 
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
@@ -115,7 +133,6 @@ public class SwipeFrameLayout extends FrameLayout {
                 this.gestureDetector.onTouchEvent(ev);
                 break;
         }
-
 
         return super.dispatchTouchEvent(ev);
 
@@ -128,11 +145,11 @@ public class SwipeFrameLayout extends FrameLayout {
             return true;
         }
 
-
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_MOVE:
                 float x = ev.getRawX();
-                if (x > initPointLocation[0] && initPointLocation[0] <= max_motion_event_down_x_position) {
+                if (x > initPointLocation[0]
+                        && initPointLocation[0] <= max_motion_event_down_x_position) {
                     return true;
                 }
                 break;
@@ -143,12 +160,14 @@ public class SwipeFrameLayout extends FrameLayout {
 
 
     private void closeActivity() {
+        if (translucent) {
+            AnimationUtility.forceConvertActivityFromTranslucent(activity);
+        }
         activity.finish();
         activity.overridePendingTransition(R.anim.stay, R.anim.swipe_right_to_close);
     }
 
     private void restoreActivity() {
-
         scroller.startScroll(topView.getScrollX(), 0, -topView.getScrollX(), 0);
         post(new ScrollRunnable());
 
@@ -163,13 +182,19 @@ public class SwipeFrameLayout extends FrameLayout {
                 topView.scrollTo(currentValue, 0);
                 topView.invalidate();
                 post(this);
+            } else if (translucent) {
+                AnimationUtility.forceConvertActivityFromTranslucent(activity);
+
             }
 
         }
     }
 
-    private class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOnGestureListener {
+    private class SwipeRightToCloseOnGestureListener
+            extends GestureDetector.SimpleOnGestureListener {
+
         protected MotionEvent mLastOnDownEvent = null;
+
         private float[] initPointLocation = new float[2];
 
 
@@ -183,6 +208,7 @@ public class SwipeFrameLayout extends FrameLayout {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+
             if (e2.getRawX() < initPointLocation[0]) {
                 float y = topView.getScaleX();
                 if (y != 0f) {
