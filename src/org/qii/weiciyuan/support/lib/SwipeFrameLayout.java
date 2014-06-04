@@ -124,6 +124,7 @@ public class SwipeFrameLayout extends FrameLayout {
                     AnimationUtility.forceConvertActivityToTranslucent(activity);
                 }
             }, 0);
+            translucent = true;
         }
 
         switch (ev.getActionMasked()) {
@@ -132,6 +133,15 @@ public class SwipeFrameLayout extends FrameLayout {
                 initPointLocation[1] = ev.getRawY();
                 this.gestureDetector.onTouchEvent(ev);
                 break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                if (!isDragging && translucent) {
+                    AnimationUtility.forceConvertActivityFromTranslucent(activity);
+                    translucent = false;
+                }
+
+                break;
+
         }
 
         return super.dispatchTouchEvent(ev);
@@ -162,6 +172,7 @@ public class SwipeFrameLayout extends FrameLayout {
     private void closeActivity() {
         if (translucent) {
             AnimationUtility.forceConvertActivityFromTranslucent(activity);
+            translucent = false;
         }
         activity.finish();
         activity.overridePendingTransition(R.anim.stay, R.anim.swipe_right_to_close);
@@ -184,6 +195,7 @@ public class SwipeFrameLayout extends FrameLayout {
                 post(this);
             } else if (translucent) {
                 AnimationUtility.forceConvertActivityFromTranslucent(activity);
+                translucent = false;
 
             }
 
