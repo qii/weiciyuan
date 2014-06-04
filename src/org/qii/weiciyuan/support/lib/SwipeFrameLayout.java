@@ -117,13 +117,8 @@ public class SwipeFrameLayout extends FrameLayout {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
 
-        if (!translucent) {
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    AnimationUtility.forceConvertActivityToTranslucent(activity);
-                }
-            }, 0);
+        if (!translucent && isDownEventInsideSwipeRegion(ev)) {
+            AnimationUtility.forceConvertActivityToTranslucent(activity);
             translucent = true;
         }
 
@@ -157,9 +152,7 @@ public class SwipeFrameLayout extends FrameLayout {
 
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_MOVE:
-                float x = ev.getRawX();
-                if (x > initPointLocation[0]
-                        && initPointLocation[0] <= max_motion_event_down_x_position) {
+                if (canSwipe(ev)) {
                     return true;
                 }
                 break;
@@ -168,6 +161,16 @@ public class SwipeFrameLayout extends FrameLayout {
         return super.onInterceptTouchEvent(ev);
     }
 
+    private boolean isDownEventInsideSwipeRegion(MotionEvent ev) {
+        float x = ev.getRawX();
+        return x <= max_motion_event_down_x_position;
+    }
+
+    private boolean canSwipe(MotionEvent ev) {
+        float x = ev.getRawX();
+        return x > initPointLocation[0]
+                && initPointLocation[0] <= max_motion_event_down_x_position;
+    }
 
     private void closeActivity() {
         if (translucent) {
