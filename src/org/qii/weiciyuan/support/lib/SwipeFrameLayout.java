@@ -7,6 +7,7 @@ import org.qii.weiciyuan.support.utils.Utility;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -36,6 +37,8 @@ public class SwipeFrameLayout extends FrameLayout {
     private GestureDetector gestureDetector;
 
     private OverScroller scroller;
+
+    private Handler uiHandler = new Handler();
 
     public SwipeFrameLayout(Context context) {
         this(context, null);
@@ -114,11 +117,46 @@ public class SwipeFrameLayout extends FrameLayout {
 
     private boolean translucent;
 
+    private Runnable forceConvertActivityFromTranslucentRunnable;
+
+    private void forceConvertActivityFromTranslucent() {
+
+        if (forceConvertActivityFromTranslucentRunnable != null) {
+            uiHandler.removeCallbacks(forceConvertActivityFromTranslucentRunnable);
+        }
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (activity.isFinishing()) {
+                    return;
+                }
+                AnimationUtility.forceConvertActivityFromTranslucent(activity);
+                forceConvertActivityFromTranslucentRunnable = null;
+
+
+            }
+        };
+
+        forceConvertActivityFromTranslucentRunnable = runnable;
+        uiHandler.postDelayed(forceConvertActivityFromTranslucentRunnable, 3000);
+
+    }
+
+    private void forceConvertActivityToTranslucent() {
+        if (forceConvertActivityFromTranslucentRunnable != null) {
+            uiHandler.removeCallbacks(forceConvertActivityFromTranslucentRunnable);
+        } else {
+            AnimationUtility.forceConvertActivityToTranslucent(activity);
+
+        }
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
 
         if (!translucent && isDownEventInsideSwipeRegion(ev)) {
-            AnimationUtility.forceConvertActivityToTranslucent(activity);
+            forceConvertActivityToTranslucent();
             translucent = true;
         }
 
@@ -131,7 +169,8 @@ public class SwipeFrameLayout extends FrameLayout {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if (!isDragging && translucent) {
-                    AnimationUtility.forceConvertActivityFromTranslucent(activity);
+                    forceConvertActivityFromTranslucent();
+
                     translucent = false;
                 }
 
@@ -174,7 +213,8 @@ public class SwipeFrameLayout extends FrameLayout {
 
     private void closeActivity() {
         if (translucent) {
-            AnimationUtility.forceConvertActivityFromTranslucent(activity);
+            forceConvertActivityFromTranslucent();
+
             translucent = false;
         }
         activity.finish();
@@ -182,10 +222,17 @@ public class SwipeFrameLayout extends FrameLayout {
     }
 
     private void restoreActivity() {
+        if (lastScrollRunnable != null) {
+            removeCallbacks(lastScrollRunnable);
+        }
+
         scroller.startScroll(topView.getScrollX(), 0, -topView.getScrollX(), 0);
-        post(new ScrollRunnable());
+        lastScrollRunnable = new ScrollRunnable();
+        post(lastScrollRunnable);
 
     }
+
+    private ScrollRunnable lastScrollRunnable;
 
     private class ScrollRunnable implements Runnable {
 
@@ -196,10 +243,13 @@ public class SwipeFrameLayout extends FrameLayout {
                 topView.scrollTo(currentValue, 0);
                 topView.invalidate();
                 post(this);
-            } else if (translucent) {
-                AnimationUtility.forceConvertActivityFromTranslucent(activity);
-                translucent = false;
+            } else if (translucent && !isDragging) {
+                forceConvertActivityFromTranslucent();
 
+                translucent = false;
+                if (lastScrollRunnable == this) {
+                    lastScrollRunnable = null;
+                }
             }
 
         }
@@ -225,7 +275,7 @@ public class SwipeFrameLayout extends FrameLayout {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 
             if (e2.getRawX() < initPointLocation[0]) {
-                float y = topView.getScaleX();
+                float y = topView.getScrollX();
                 if (y != 0f) {
                     restoreActivity();
                     return super.onScroll(e1, e2, distanceX, distanceY);
