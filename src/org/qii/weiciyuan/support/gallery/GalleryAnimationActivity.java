@@ -68,17 +68,40 @@ public class GalleryAnimationActivity extends FragmentActivity {
             urls.add(tmp.get(i).replace("thumbnail", "large"));
         }
 
+        boolean disableHardwareLayerType = false;
+
+        for (String url : urls) {
+            if (url.contains(".gif")) {
+                disableHardwareLayerType = true;
+                break;
+            }
+        }
+
         position = (TextView) findViewById(R.id.position);
         initPosition = getIntent().getIntExtra("position", 0);
 
         pager = (ViewPager) findViewById(R.id.pager);
 
         pager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager()));
+        final boolean finalDisableHardwareLayerType = disableHardwareLayerType;
         pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 GalleryAnimationActivity.this.position.setText(String.valueOf(position + 1));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int scrollState) {
+                if (scrollState != ViewPager.SCROLL_STATE_IDLE && finalDisableHardwareLayerType) {
+                    final int childCount = pager.getChildCount();
+                    for (int i = 0; i < childCount; i++) {
+                        View child = pager.getChildAt(i);
+                        if (child.getLayerType() != View.LAYER_TYPE_NONE) {
+                            child.setLayerType(View.LAYER_TYPE_NONE, null);
+                        }
+                    }
+                }
             }
         });
         pager.setCurrentItem(getIntent().getIntExtra("position", 0));

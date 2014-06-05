@@ -1,23 +1,24 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
+import org.qii.weiciyuan.support.file.FileLocationMethod;
+import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.imageutility.ImageUtility;
+import org.qii.weiciyuan.support.lib.LayerEnablingAnimatorListener;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.GlobalContext;
+import org.qii.weiciyuan.support.utils.Utility;
+
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
-import org.qii.weiciyuan.support.file.FileLocationMethod;
-import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.imageutility.ImageUtility;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
 
 import java.lang.ref.WeakReference;
 
@@ -289,9 +290,12 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
 
         view.setImageBitmap(bitmap);
         resetProgressBarStatues();
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
-        alphaAnimation.setDuration(500);
-        view.startAnimation(alphaAnimation);
+//        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
+//        alphaAnimation.setDuration(500);
+//        view.startAnimation(alphaAnimation);
+        view.setAlpha(0f);
+        view.animate().alpha(1.0f).setDuration(500)
+                .setListener(new LayerEnablingAnimatorListener(view, null));
         view.setTag(getUrl());
 
 
