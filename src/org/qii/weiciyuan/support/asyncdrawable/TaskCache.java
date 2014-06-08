@@ -20,7 +20,7 @@ public class TaskCache {
 
     public static final Object backgroundWifiDownloadPicturesWorkLock = new Object();
 
-    private static final int TIME_OUT = 60;
+    private static final int TIME_OUT = 30;
 
 
     public static void removeDownloadTask(String url, DownloadWorker downloadWorker) {

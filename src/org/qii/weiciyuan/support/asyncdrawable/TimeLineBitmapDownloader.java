@@ -3,7 +3,6 @@ package org.qii.weiciyuan.support.asyncdrawable;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -205,11 +204,11 @@ public class TimeLineBitmapDownloader {
                 && view.getDrawable() instanceof BitmapDrawable
                 && ((BitmapDrawable) view.getDrawable() != null
                 && ((BitmapDrawable) view.getDrawable()).getBitmap() != null)) {
-            AppLogger.d("shouldReloadPicture=false");
+//            AppLogger.d("shouldReloadPicture=false");
             return false;
         } else {
             view.setTag(null);
-            AppLogger.d("shouldReloadPicture=true");
+//            AppLogger.d("shouldReloadPicture=true");
             return true;
         }
     }

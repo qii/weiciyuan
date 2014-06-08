@@ -6,7 +6,17 @@ import android.os.Message;
 import android.os.Process;
 
 import java.util.ArrayDeque;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -15,10 +25,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 12-9-1
  */
 public abstract class MyAsyncTask<Params, Progress, Result> {
+
     private static final String LOG_TAG = "AsyncTask";
 
-    private static final int CORE_POOL_SIZE = 5;
-    private static final int MAXIMUM_POOL_SIZE = 128;
+    private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
+
     private static final int KEEP_ALIVE = 1;
 
     private static final ThreadFactory sThreadFactory = new ThreadFactory() {
@@ -37,21 +48,51 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
         }
     };
 
-    private static final BlockingQueue<Runnable> sPoolWorkQueue =
-            new LinkedBlockingQueue<Runnable>(10);
-    private static final BlockingQueue<Runnable> sDownloadPoolWorkQueue =
-            new LinkedBlockingQueue<Runnable>(5);
+    private static final ThreadFactory sIoThreadFactory = new ThreadFactory() {
+        private final AtomicInteger mCount = new AtomicInteger(1);
+
+        public Thread newThread(Runnable r) {
+            return new Thread(r, "AsyncTask Local IO #" + mCount.getAndIncrement());
+        }
+    };
+
 
     /**
      * An {@link java.util.concurrent.Executor} that can be used to execute tasks in parallel.
      */
+    public static final Executor IO_THREAD_POOL_EXECUTOR
+            = new ThreadPoolExecutor(4, 10, KEEP_ALIVE,
+            TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(20), sIoThreadFactory,
+            new ThreadPoolExecutor.DiscardOldestPolicy());
+
     public static final Executor THREAD_POOL_EXECUTOR
-            = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
-            TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory, new ThreadPoolExecutor.DiscardOldestPolicy());
+            = new ThreadPoolExecutor(5, 10, KEEP_ALIVE,
+            TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(128), sThreadFactory,
+            new ThreadPoolExecutor.DiscardOldestPolicy());
 
     public static final Executor DOWNLOAD_THREAD_POOL_EXECUTOR
-            = new ThreadPoolExecutor(4, 20, KEEP_ALIVE,
-            TimeUnit.SECONDS, sDownloadPoolWorkQueue, sDownloadThreadFactory, new ThreadPoolExecutor.DiscardOldestPolicy());
+            = new ThreadPoolExecutor(4, 4, KEEP_ALIVE,
+            TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(15) {
+        @Override
+        public void put(Runnable runnable) {
+            super.addFirst(runnable);
+        }
+
+    }, sDownloadThreadFactory,
+            new ThreadPoolExecutor.DiscardOldestPolicy() {
+                @Override
+                public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
+                    if (!e.isShutdown()) {
+                        Runnable runnable = e.getQueue().poll();
+                        if (runnable instanceof FutureTask) {
+                            FutureTask futureTask = (FutureTask) runnable;
+                            futureTask.cancel(false);
+                        }
+                        e.execute(r);
+                    }
+                }
+            }
+    );
 
     /**
      * An {@link Executor} that executes tasks one at a time in serial
@@ -60,12 +101,15 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
     public static final Executor SERIAL_EXECUTOR = new SerialExecutor();
 
     private static final int MESSAGE_POST_RESULT = 0x1;
+
     private static final int MESSAGE_POST_PROGRESS = 0x2;
 
     private static final InternalHandler sHandler = new InternalHandler();
 
     private static volatile Executor sDefaultExecutor = SERIAL_EXECUTOR;
+
     private final WorkerRunnable<Params, Result> mWorker;
+
     private final FutureTask<Result> mFuture;
 
     private volatile Status mStatus = Status.PENDING;
@@ -73,7 +117,9 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
     private final AtomicBoolean mTaskInvoked = new AtomicBoolean();
 
     private static class SerialExecutor implements Executor {
+
         final ArrayDeque<Runnable> mTasks = new ArrayDeque<Runnable>();
+
         Runnable mActive;
 
         public synchronized void execute(final Runnable r) {
@@ -306,11 +352,12 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
      * possible.</p>
      *
      * @param mayInterruptIfRunning <tt>true</tt> if the thread executing this
-     *                              task should be interrupted; otherwise, in-progress tasks are allowed
+     *                              task should be interrupted; otherwise, in-progress tasks are
+     *                              allowed
      *                              to complete.
      * @return <tt>false</tt> if the task could not be cancelled,
-     *         typically because it has already completed normally;
-     *         <tt>true</tt> otherwise
+     * typically because it has already completed normally;
+     * <tt>true</tt> otherwise
      * @see #isCancelled()
      * @see #onCancelled(Object)
      */
@@ -407,7 +454,7 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
      *                               {@link AsyncTask.Status#RUNNING} or {@link AsyncTask.Status#FINISHED}.
      */
     public final MyAsyncTask<Params, Progress, Result> executeOnExecutor(Executor exec,
-                                                                         Params... params) {
+            Params... params) {
         if (mStatus != Status.PENDING) {
             switch (mStatus) {
                 case RUNNING:
@@ -468,6 +515,7 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
     }
 
     private static class InternalHandler extends Handler {
+
         @SuppressWarnings({"unchecked", "RawUseOfParameterizedType"})
         @Override
         public void handleMessage(Message msg) {
@@ -485,12 +533,15 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
     }
 
     private static abstract class WorkerRunnable<Params, Result> implements Callable<Result> {
+
         Params[] mParams;
     }
 
     @SuppressWarnings({"RawUseOfParameterizedType"})
     private static class AsyncTaskResult<Data> {
+
         final MyAsyncTask mTask;
+
         final Data[] mData;
 
         AsyncTaskResult(MyAsyncTask task, Data... data) {

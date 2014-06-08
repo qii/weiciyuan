@@ -63,7 +63,7 @@ public class ContainerFragment extends Fragment {
             GalleryAnimationActivity activity = (GalleryAnimationActivity) getActivity();
             activity.showBackgroundImmediately();
             progressView.setVisibility(View.VISIBLE);
-
+            wait.setVisibility(View.VISIBLE);
             TimeLineBitmapDownloader.getInstance()
                     .download(this, url, FileLocationMethod.picture_large, downloadCallback);
 

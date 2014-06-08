@@ -94,7 +94,7 @@ public class GeneralPictureFragment extends Fragment {
                     photoView.setImageBitmap(bitmap);
                 }
 
-            }.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+            }.executeOnExecutor(MyAsyncTask.IO_THREAD_POOL_EXECUTOR);
 
             return view;
         }

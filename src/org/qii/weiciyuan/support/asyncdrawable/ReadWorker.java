@@ -30,22 +30,31 @@ import java.lang.ref.WeakReference;
 public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements IPictureWorker {
 
     private LruCache<String, Bitmap> lruCache;
+
     private String data = "";
+
     private WeakReference<ImageView> viewWeakReference;
 
     private GlobalContext globalContext;
+
     private FileLocationMethod method;
+
     private FailedResult failedResult;
+
     private int mShortAnimationDuration;
+
     private WeakReference<ProgressBar> pbWeakReference;
+
     private boolean isMultiPictures = false;
+
     private IWeiciyuanDrawable IWeiciyuanDrawable;
 
     public String getUrl() {
         return data;
     }
 
-    public ReadWorker(ImageView view, String url, FileLocationMethod method, boolean isMultiPictures) {
+    public ReadWorker(ImageView view, String url, FileLocationMethod method,
+            boolean isMultiPictures) {
 
         this.globalContext = GlobalContext.getInstance();
         this.lruCache = globalContext.getBitmapCache();
@@ -61,7 +70,8 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         this(view, url, method, false);
     }
 
-    public ReadWorker(IWeiciyuanDrawable view, String url, FileLocationMethod method, boolean isMultiPictures) {
+    public ReadWorker(IWeiciyuanDrawable view, String url, FileLocationMethod method,
+            boolean isMultiPictures) {
 
         this(view.getImageView(), url, method);
         this.IWeiciyuanDrawable = view;
@@ -100,12 +110,19 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
             }
         }
 
-        if (isCancelled())
+        if (isCancelled()) {
             return null;
+        }
 
         String path = FileManager.getFilePathFromUrl(data, method);
-
-        boolean downloaded = TaskCache.waitForPictureDownload(data, (SettingUtility.getEnableBigPic() ? downloadListener : null), path, method);
+        boolean downloaded = false;
+        for (int i = 0; i < 3; i++) {
+            if (TaskCache.waitForPictureDownload(data,
+                    (SettingUtility.getEnableBigPic() ? downloadListener : null), path, method)) {
+                downloaded = true;
+                break;
+            }
+        }
 
         if (!downloaded) {
             failedResult = FailedResult.downloadFailed;
@@ -118,13 +135,19 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         switch (method) {
             case avatar_small:
             case avatar_large:
-                width = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_width) - Utility.dip2px(5) * 2;
-                height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_avatar_height) - Utility.dip2px(5) * 2;
+                width = globalContext.getResources()
+                        .getDimensionPixelSize(R.dimen.timeline_avatar_width)
+                        - Utility.dip2px(5) * 2;
+                height = globalContext.getResources()
+                        .getDimensionPixelSize(R.dimen.timeline_avatar_height)
+                        - Utility.dip2px(5) * 2;
                 break;
 
             case picture_thumbnail:
-                width = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_thumbnail_width);
-                height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_thumbnail_height);
+                width = globalContext.getResources()
+                        .getDimensionPixelSize(R.dimen.timeline_pic_thumbnail_width);
+                height = globalContext.getResources()
+                        .getDimensionPixelSize(R.dimen.timeline_pic_thumbnail_height);
                 break;
 
             case picture_large:
@@ -134,7 +157,8 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
 
                     float reSize = globalContext.getResources().getDisplayMetrics().density;
 
-                    height = globalContext.getResources().getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
+                    height = globalContext.getResources()
+                            .getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
                     //8 is  layout padding
                     width = (int) (metrics.widthPixels - (8 + 8) * reSize);
                 } else {
@@ -153,8 +177,9 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
             }
         }
 
-        if (isCancelled())
+        if (isCancelled()) {
             return null;
+        }
 
         Bitmap bitmap;
 
@@ -177,8 +202,9 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        if (TimeLineBitmapDownloader.pauseDownloadWork)
+        if (TimeLineBitmapDownloader.pauseDownloadWork) {
             return;
+        }
         ImageView imageView = viewWeakReference.get();
         if (imageView != null) {
             if (canDisplay(imageView) && pbWeakReference != null) {
@@ -223,20 +249,23 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
                 }
 
                 if (bitmap != null) {
-                    if (IWeiciyuanDrawable != null)
+                    if (IWeiciyuanDrawable != null) {
                         IWeiciyuanDrawable.setGifFlag(ImageUtility.isThisPictureGif(getUrl()));
+                    }
                     playImageViewAnimation(imageView, bitmap);
                     lruCache.put(data, bitmap);
                 } else if (failedResult != null) {
                     switch (failedResult) {
                         case downloadFailed:
-                            imageView.setImageDrawable(new ColorDrawable(DebugColor.DOWNLOAD_FAILED));
+                            imageView.setImageDrawable(
+                                    new ColorDrawable(DebugColor.DOWNLOAD_FAILED));
                             break;
                         case readFailed:
                             imageView.setImageDrawable(new ColorDrawable(DebugColor.PICTURE_ERROR));
                             break;
                         case taskCanceled:
-                            imageView.setImageDrawable(new ColorDrawable(DebugColor.DOWNLOAD_CANCEL));
+                            imageView.setImageDrawable(
+                                    new ColorDrawable(DebugColor.DOWNLOAD_CANCEL));
                             break;
                     }
 
@@ -253,8 +282,9 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
     }
 
     private void resetProgressBarStatues() {
-        if (pbWeakReference == null)
+        if (pbWeakReference == null) {
             return;
+        }
         ProgressBar pb = pbWeakReference.get();
         if (pb != null) {
             pb.setVisibility(View.INVISIBLE);
@@ -297,7 +327,6 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         view.animate().alpha(1.0f).setDuration(500)
                 .setListener(new LayerEnablingAnimatorListener(view, null));
         view.setTag(getUrl());
-
 
 //        final Animation anim_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_out);
 //        final Animation anim_in = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_in);
@@ -354,7 +383,8 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
 //            view.startAnimation(anim_out);
     }
 
-    FileDownloaderHttpHelper.DownloadListener downloadListener = new FileDownloaderHttpHelper.DownloadListener() {
+    FileDownloaderHttpHelper.DownloadListener downloadListener
+            = new FileDownloaderHttpHelper.DownloadListener() {
         @Override
         public void pushProgress(int progress, int max) {
             onProgressUpdate(progress, max);
