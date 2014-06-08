@@ -60,7 +60,7 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
     /**
      * An {@link java.util.concurrent.Executor} that can be used to execute tasks in parallel.
      */
-    public static final Executor IO_THREAD_POOL_EXECUTOR
+    private static final Executor IO_THREAD_POOL_EXECUTOR
             = new ThreadPoolExecutor(4, 10, KEEP_ALIVE,
             TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(20), sIoThreadFactory,
             new ThreadPoolExecutor.DiscardOldestPolicy());
@@ -70,7 +70,7 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
             TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(128), sThreadFactory,
             new ThreadPoolExecutor.DiscardOldestPolicy());
 
-    public static final Executor DOWNLOAD_THREAD_POOL_EXECUTOR
+    private static final Executor DOWNLOAD_THREAD_POOL_EXECUTOR
             = new ThreadPoolExecutor(4, 4, KEEP_ALIVE,
             TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(15) {
         @Override
@@ -83,7 +83,8 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
                 @Override
                 public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
                     if (!e.isShutdown()) {
-                        Runnable runnable = e.getQueue().poll();
+                        LinkedBlockingDeque<Runnable> deque = (LinkedBlockingDeque) e.getQueue();
+                        Runnable runnable = deque.pollLast();
                         if (runnable instanceof FutureTask) {
                             FutureTask futureTask = (FutureTask) runnable;
                             futureTask.cancel(false);
@@ -483,6 +484,18 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
      */
     public static void execute(Runnable runnable) {
         sDefaultExecutor.execute(runnable);
+    }
+
+    public void executeOnIO(Params... params) {
+        executeOnExecutor(IO_THREAD_POOL_EXECUTOR, params);
+    }
+
+    public void executeOnNormal(Params... params) {
+        executeOnExecutor(THREAD_POOL_EXECUTOR, params);
+    }
+
+    public void executeOnNetwork(Params... params) {
+        executeOnExecutor(DOWNLOAD_THREAD_POOL_EXECUTOR, params);
     }
 
     /**

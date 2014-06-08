@@ -43,7 +43,7 @@ public class LayerEnablingAnimatorListener extends AnimatorListenerAdapter {
         }
         mLayerType = mTargetView.getLayerType();
         mTargetView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        AppLogger.d("View animation is started, enable hardware accelerated");
+//        AppLogger.d("View animation is started, enable hardware accelerated");
     }
 
     @Override
@@ -53,6 +53,6 @@ public class LayerEnablingAnimatorListener extends AnimatorListenerAdapter {
             mAdapter.onAnimationEnd(animation);
         }
         mTargetView.setLayerType(mLayerType, null);
-        AppLogger.d("View animation is finished, disable hardware accelerated");
+//        AppLogger.d("View animation is finished, disable hardware accelerated");
     }
 }

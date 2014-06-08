@@ -223,7 +223,7 @@ public class JavaHttpUtility {
             while ((line = buffer.readLine()) != null) {
                 strBuilder.append(line);
             }
-            AppLogger.d("result=" + strBuilder.toString());
+//            AppLogger.d("result=" + strBuilder.toString());
             return strBuilder.toString();
         } catch (IOException e) {
             e.printStackTrace();

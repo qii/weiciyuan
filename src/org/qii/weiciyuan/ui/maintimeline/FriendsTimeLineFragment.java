@@ -288,7 +288,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             case FIRST_TIME_START:
                 if (Utility.isTaskStopped(dbTask) && getList().getSize() == 0) {
                     dbTask = new DBCacheTask(this, accountBean.getUid());
-                    dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                    dbTask.executeOnIO();
                     GroupInfoTask groupInfoTask = new GroupInfoTask(
                             GlobalContext.getInstance().getSpecialToken(),
                             GlobalContext.getInstance().getCurrentAccountId());
@@ -320,7 +320,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
                 if (Utility.isTaskStopped(dbTask) && getList().getSize() == 0) {
                     dbTask = new DBCacheTask(this, accountBean.getUid());
-                    dbTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                    dbTask.executeOnIO();
                     GroupInfoTask groupInfoTask = new GroupInfoTask(
                             GlobalContext.getInstance().getSpecialToken(),
                             GlobalContext.getInstance().getCurrentAccountId());

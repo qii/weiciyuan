@@ -719,11 +719,12 @@ public class ImageUtility {
 
     public static boolean getBitmapFromNetWork(String url, String path,
             FileDownloaderHttpHelper.DownloadListener downloadListener) {
-
-        if (HttpUtility.getInstance().executeDownloadTask(url, path, downloadListener)) {
-            return true;
+        for (int i = 0; i < 3; i++) {
+            if (HttpUtility.getInstance().executeDownloadTask(url, path, downloadListener)) {
+                return true;
+            }
+            new File(path).delete();
         }
-        new File(path).delete();
 
         return false;
     }

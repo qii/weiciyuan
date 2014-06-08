@@ -20,7 +20,7 @@ public class TaskCache {
 
     public static final Object backgroundWifiDownloadPicturesWorkLock = new Object();
 
-    private static final int TIME_OUT = 30;
+    private static final int TIME_OUT = 60;
 
 
     public static void removeDownloadTask(String url, DownloadWorker downloadWorker) {
@@ -55,7 +55,7 @@ public class TaskCache {
                     }
                     if (downloadWorker == null) {
                         downloadWorker = newWorker;
-                        downloadWorker.executeOnExecutor(MyAsyncTask.DOWNLOAD_THREAD_POOL_EXECUTOR);
+                        downloadWorker.executeOnNetwork();
                     }
                 } else {
                     return true;
@@ -65,15 +65,12 @@ public class TaskCache {
             downloadWorker.addDownloadListener(downloadListener);
 
             try {
-                return downloadWorker.get(TIME_OUT, TimeUnit.SECONDS);
+                return downloadWorker.get();
             } catch (InterruptedException e) {
                 Utility.printStackTrace(e);
                 Thread.currentThread().interrupt();
                 return false;
             } catch (ExecutionException e) {
-                Utility.printStackTrace(e);
-                return false;
-            } catch (TimeoutException e) {
                 Utility.printStackTrace(e);
                 return false;
             } catch (CancellationException e) {
@@ -108,23 +105,20 @@ public class TaskCache {
                 }
                 if (downloadWorker == null) {
                     downloadWorker = newWorker;
-                    downloadWorker.executeOnExecutor(MyAsyncTask.DOWNLOAD_THREAD_POOL_EXECUTOR);
+                    downloadWorker.executeOnNetwork();
                 }
             }
 
 
             try {
                 downloadWorker.addDownloadListener(downloadListener);
-                return downloadWorker.get(TIME_OUT, TimeUnit.SECONDS);
+                return downloadWorker.get();
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 Utility.printStackTrace(e);
                 return false;
             } catch (ExecutionException e) {
-                Utility.printStackTrace(e);
-                return false;
-            } catch (TimeoutException e) {
                 Utility.printStackTrace(e);
                 return false;
             } catch (CancellationException e) {

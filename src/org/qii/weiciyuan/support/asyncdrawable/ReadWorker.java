@@ -115,14 +115,9 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         }
 
         String path = FileManager.getFilePathFromUrl(data, method);
-        boolean downloaded = false;
-        for (int i = 0; i < 3; i++) {
-            if (TaskCache.waitForPictureDownload(data,
-                    (SettingUtility.getEnableBigPic() ? downloadListener : null), path, method)) {
-                downloaded = true;
-                break;
-            }
-        }
+
+        boolean downloaded = TaskCache.waitForPictureDownload(data,
+                (SettingUtility.getEnableBigPic() ? downloadListener : null), path, method);
 
         if (!downloaded) {
             failedResult = FailedResult.downloadFailed;
