@@ -4,6 +4,7 @@ import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.ItemBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.asyncdrawable.IPictureWorker;
 import org.qii.weiciyuan.support.asyncdrawable.IWeiciyuanDrawable;
 import org.qii.weiciyuan.support.asyncdrawable.PictureBitmapDrawable;
 import org.qii.weiciyuan.support.asyncdrawable.TimeLineBitmapDownloader;
@@ -13,6 +14,7 @@ import org.qii.weiciyuan.support.gallery.GalleryAnimationActivity;
 import org.qii.weiciyuan.support.lib.AnimationRect;
 import org.qii.weiciyuan.support.lib.ClickableTextViewMentionLinkOnTouchListener;
 import org.qii.weiciyuan.support.lib.ListViewMiddleMsgLoadingView;
+import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.TimeLineAvatarImageView;
 import org.qii.weiciyuan.support.lib.TimeTextView;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
@@ -665,6 +667,35 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             gridLayout.setVisibility(View.GONE);
         }
 
+    }
+
+    protected void interruptPicDownload(GridLayout gridLayout) {
+
+        for (int i = 0; i < gridLayout.getChildCount(); i++) {
+            ImageView iv = (ImageView) gridLayout.getChildAt(i);
+            if (iv != null) {
+                Drawable drawable = iv.getDrawable();
+                if (drawable instanceof PictureBitmapDrawable) {
+                    PictureBitmapDrawable downloadedDrawable
+                            = (PictureBitmapDrawable) drawable;
+                    IPictureWorker worker = downloadedDrawable.getBitmapDownloaderTask();
+                    ((MyAsyncTask) worker).cancel(true);
+                }
+                iv.setImageDrawable(null);
+            }
+        }
+
+    }
+
+    protected void interruptPicDownload(IWeiciyuanDrawable view) {
+        Drawable drawable = view.getImageView().getDrawable();
+        if (drawable instanceof PictureBitmapDrawable) {
+            PictureBitmapDrawable downloadedDrawable
+                    = (PictureBitmapDrawable) drawable;
+            IPictureWorker worker = downloadedDrawable.getBitmapDownloaderTask();
+            ((MyAsyncTask) worker).cancel(true);
+        }
+        view.getImageView().setImageDrawable(null);
     }
 
     protected void buildPic(final MessageBean msg, final IWeiciyuanDrawable view, int position) {

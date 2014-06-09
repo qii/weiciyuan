@@ -1,5 +1,14 @@
 package org.qii.weiciyuan.ui.adapter;
 
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.UserBean;
+import org.qii.weiciyuan.support.lib.AutoScrollListView;
+import org.qii.weiciyuan.support.lib.TopTipBar;
+import org.qii.weiciyuan.support.lib.VelocityListView;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
+import org.qii.weiciyuan.support.utils.Utility;
+
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -10,14 +19,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.support.lib.AutoScrollListView;
-import org.qii.weiciyuan.support.lib.TopTipBar;
-import org.qii.weiciyuan.support.lib.VelocityListView;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.TimeLineUtility;
-import org.qii.weiciyuan.support.utils.Utility;
 
 import java.util.List;
 import java.util.WeakHashMap;
@@ -31,20 +32,24 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
     private WeakHashMap<ViewHolder, Drawable> bg = new WeakHashMap<ViewHolder, Drawable>();
 
     private LongSparseArray<Integer> msgHeights = new LongSparseArray<Integer>();
+
     private LongSparseArray<Integer> msgWidths = new LongSparseArray<Integer>();
 
     private LongSparseArray<Integer> oriMsgHeights = new LongSparseArray<Integer>();
+
     private LongSparseArray<Integer> oriMsgWidths = new LongSparseArray<Integer>();
 
     private TopTipBar topTipBar;
 
     private Handler handler = new Handler();
 
-    public StatusListAdapter(Fragment fragment, List<MessageBean> bean, ListView listView, boolean showOriStatus) {
+    public StatusListAdapter(Fragment fragment, List<MessageBean> bean, ListView listView,
+            boolean showOriStatus) {
         this(fragment, bean, listView, showOriStatus, false);
     }
 
-    public StatusListAdapter(Fragment fragment, List<MessageBean> bean, ListView listView, boolean showOriStatus, boolean pre) {
+    public StatusListAdapter(Fragment fragment, List<MessageBean> bean, ListView listView,
+            boolean showOriStatus, boolean pre) {
         super(fragment, bean, listView, showOriStatus, pre);
     }
 
@@ -58,7 +63,8 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             }
 
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                    int totalItemCount) {
                 VelocityListView velocityListView = (VelocityListView) view;
 //                if (velocityListView.getVelocity() < 0) {
 //                    topTipBar.hideCount();
@@ -67,7 +73,8 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
 //                        return;
 //                    }
 
-                View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
+                View childView = Utility
+                        .getListViewItemViewFromPosition(listView, firstVisibleItem);
 
                 if (childView == null) {
                     return;
@@ -112,8 +119,9 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             bg.put(holder, drawable);
         }
 
-        if (listView.getCheckedItemPosition() == position + listView.getHeaderViewsCount())
+        if (listView.getCheckedItemPosition() == position + listView.getHeaderViewsCount()) {
             holder.listview_root.setBackgroundColor(checkedBG);
+        }
 
         final MessageBean msg = bean.get(position);
 
@@ -121,7 +129,8 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         if (user != null) {
             holder.username.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(user.getRemark())) {
-                holder.username.setText(new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark()).append(")").toString());
+                holder.username.setText(new StringBuilder(user.getScreen_name()).append("(")
+                        .append(user.getRemark()).append(")").toString());
             } else {
                 holder.username.setText(user.getScreen_name());
             }
@@ -166,10 +175,10 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
             holder.content.setText(msg.getListViewSpannableString());
         }
 
-
         holder.time.setTime(msg.getMills());
-        if (holder.source != null)
+        if (holder.source != null) {
             holder.source.setText(msg.getSourceString());
+        }
 
         if (showOriStatus) {
             boolean checkRepostsCount = (msg.getReposts_count() != 0);
@@ -220,7 +229,6 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         holder.content_pic.setVisibility(View.GONE);
         holder.content_pic_multi.setVisibility(View.GONE);
 
-
         if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
 
             if (msg.isMultiPics()) {
@@ -233,25 +241,98 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         MessageBean repost_msg = msg.getRetweeted_status();
 
         if (repost_msg != null && showOriStatus) {
-            if (holder.repost_layout != null)
+            if (holder.repost_layout != null) {
                 holder.repost_layout.setVisibility(View.VISIBLE);
+            }
             holder.repost_flag.setVisibility(View.VISIBLE);
             //sina weibo official account can send repost message with picture, fuck sina weibo
-            if (holder.content_pic.getVisibility() != View.GONE)
+            if (holder.content_pic.getVisibility() != View.GONE) {
                 holder.content_pic.setVisibility(View.GONE);
+            }
             buildRepostContent(msg, repost_msg, holder, position);
 
-
+            if (holder.content_pic_multi != holder.repost_content_pic_multi) {
+                interruptPicDownload(holder.content_pic_multi);
+            }
+            if (holder.repost_content_pic != holder.content_pic) {
+                interruptPicDownload(holder.repost_content_pic);
+            }
         } else {
-            if (holder.repost_layout != null)
+            if (holder.content_pic_multi != holder.repost_content_pic_multi) {
+                interruptPicDownload(holder.repost_content_pic_multi);
+            }
+            if (holder.repost_content_pic != holder.content_pic) {
+                interruptPicDownload(holder.repost_content_pic);
+            }
+            if (holder.repost_layout != null) {
                 holder.repost_layout.setVisibility(View.GONE);
+            }
             holder.repost_flag.setVisibility(View.GONE);
         }
 
+        boolean interruptPic = false;
+        boolean interruptMultiPic = false;
+        boolean interruptRepostPic = false;
+        boolean interruptRepostMultiPic = false;
+
+        if (!TextUtils.isEmpty(msg.getThumbnail_pic())) {
+            if (msg.isMultiPics()) {
+                interruptPic = true;
+            } else {
+                interruptMultiPic = true;
+            }
+        }
+
+        if (repost_msg != null && showOriStatus) {
+
+            if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {
+                if (repost_msg.isMultiPics()) {
+                    interruptRepostPic = true;
+                } else {
+                    interruptRepostMultiPic = true;
+                }
+
+            }
+        }
+
+        if (interruptPic && interruptRepostPic) {
+            interruptPicDownload(holder.content_pic);
+            interruptPicDownload(holder.repost_content_pic);
+        }
+
+        if (interruptMultiPic && interruptRepostMultiPic) {
+            interruptPicDownload(holder.content_pic_multi);
+            interruptPicDownload(holder.repost_content_pic_multi);
+        }
+
+        if (interruptPic && !interruptRepostPic) {
+            if (holder.content_pic != holder.repost_content_pic) {
+                interruptPicDownload(holder.content_pic);
+            }
+        }
+
+        if (!interruptPic && interruptRepostPic) {
+            if (holder.content_pic != holder.repost_content_pic) {
+                interruptPicDownload(holder.repost_content_pic);
+            }
+        }
+
+        if (interruptMultiPic && !interruptRepostMultiPic) {
+            if (holder.content_pic_multi != holder.repost_content_pic_multi) {
+                interruptPicDownload(holder.content_pic_multi);
+            }
+        }
+
+        if (!interruptMultiPic && interruptRepostMultiPic) {
+            if (holder.content_pic_multi != holder.repost_content_pic_multi) {
+                interruptPicDownload(holder.repost_content_pic_multi);
+            }
+        }
     }
 
 
-    private void buildRepostContent(MessageBean msg, final MessageBean repost_msg, ViewHolder holder, int position) {
+    private void buildRepostContent(MessageBean msg, final MessageBean repost_msg,
+            ViewHolder holder, int position) {
         holder.repost_content.setVisibility(View.VISIBLE);
         if (!repost_msg.getId().equals((String) holder.repost_content.getTag())) {
             boolean haveCachedHeight = oriMsgHeights.get(msg.getIdLong()) != null;
@@ -287,10 +368,15 @@ public class StatusListAdapter extends AbstractAppListAdapter<MessageBean> {
         if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {
             if (repost_msg.isMultiPics()) {
                 buildMultiPic(repost_msg, holder.repost_content_pic_multi);
+                interruptPicDownload(holder.repost_content_pic);
             } else {
                 buildPic(repost_msg, holder.repost_content_pic, position);
+                interruptPicDownload(holder.repost_content_pic_multi);
             }
 
+        } else {
+            interruptPicDownload(holder.repost_content_pic_multi);
+            interruptPicDownload(holder.repost_content_pic);
         }
     }
 

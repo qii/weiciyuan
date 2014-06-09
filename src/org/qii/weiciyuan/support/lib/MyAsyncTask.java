@@ -66,9 +66,25 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
             new ThreadPoolExecutor.DiscardOldestPolicy());
 
     public static final Executor THREAD_POOL_EXECUTOR
-            = new ThreadPoolExecutor(5, 10, KEEP_ALIVE,
-            TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(128), sThreadFactory,
-            new ThreadPoolExecutor.DiscardOldestPolicy());
+            = new ThreadPoolExecutor(8, 10, KEEP_ALIVE,
+            TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(128) {
+        @Override
+        public void put(Runnable runnable) {
+            super.addFirst(runnable);
+        }
+    }, sThreadFactory,
+            new ThreadPoolExecutor.DiscardOldestPolicy() {
+                @Override
+                public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
+                    if (!e.isShutdown()) {
+                        LinkedBlockingDeque<Runnable> deque = (LinkedBlockingDeque) e.getQueue();
+                        Runnable runnable = deque.pollLast();
+                        e.execute(r);
+                    }
+                }
+
+            }
+    );
 
     private static final Executor DOWNLOAD_THREAD_POOL_EXECUTOR
             = new ThreadPoolExecutor(4, 4, KEEP_ALIVE,

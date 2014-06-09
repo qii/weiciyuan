@@ -41,8 +41,6 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
 
     private FailedResult failedResult;
 
-    private int mShortAnimationDuration;
-
     private WeakReference<ProgressBar> pbWeakReference;
 
     private boolean isMultiPictures = false;
@@ -61,8 +59,6 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         this.viewWeakReference = new WeakReference<ImageView>(view);
         this.data = url;
         this.method = method;
-        this.mShortAnimationDuration = GlobalContext.getInstance().getResources().getInteger(
-                android.R.integer.config_shortAnimTime);
         this.isMultiPictures = isMultiPictures;
     }
 
@@ -315,67 +311,11 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
 
         view.setImageBitmap(bitmap);
         resetProgressBarStatues();
-//        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
-//        alphaAnimation.setDuration(500);
-//        view.startAnimation(alphaAnimation);
         view.setAlpha(0f);
         view.animate().alpha(1.0f).setDuration(500)
                 .setListener(new LayerEnablingAnimatorListener(view, null));
         view.setTag(getUrl());
 
-//        final Animation anim_out = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_out);
-//        final Animation anim_in = AnimationUtils.loadAnimation(view.getContext(), R.anim.timeline_pic_fade_in);
-//
-//        anim_out.setAnimationListener(new Animation.AnimationListener() {
-//
-//            @Override
-//            public void onAnimationStart(Animation animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animation animation) {
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animation animation) {
-//
-//                anim_in.setAnimationListener(new Animation.AnimationListener() {
-//                    @Override
-//                    public void onAnimationStart(Animation animation) {
-//                    }
-//
-//                    @Override
-//                    public void onAnimationRepeat(Animation animation) {
-//                    }
-//
-//                    //clear animation avoid memory leak
-//                    @Override
-//                    public void onAnimationEnd(Animation animation) {
-//                        if (view.getAnimation() != null && view.getAnimation().hasEnded()) {
-//                            view.clearAnimation();
-//                        }
-//                        resetProgressBarStatues();
-//                    }
-//                });
-//
-//                if (isImageViewDrawableBitmap(view)) {
-//                    resetProgressBarStatues();
-//                    return;
-//                } else if (!canDisplay(view)) {
-//                    return;
-//                }
-//
-//
-//                view.setImageBitmap(bitmap);
-//                view.setTag(getUrl());
-//                view.startAnimation(anim_in);
-//
-//            }
-//        });
-//
-//        if (view.getAnimation() == null || view.getAnimation().hasEnded())
-//            view.startAnimation(anim_out);
     }
 
     FileDownloaderHttpHelper.DownloadListener downloadListener
