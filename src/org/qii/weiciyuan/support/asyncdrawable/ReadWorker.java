@@ -1,21 +1,11 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
-import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
-import org.qii.weiciyuan.support.imageutility.ImageUtility;
-import org.qii.weiciyuan.support.lib.LayerEnablingAnimatorListener;
-import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.util.DisplayMetrics;
-import android.util.LruCache;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -27,19 +17,15 @@ import java.lang.ref.WeakReference;
  * Date: 13-2-9
  * reuse download worker or create a new download worker
  */
-public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements IPictureWorker {
+public class ReadWorker extends AbstractWorker<String, Integer, Boolean> {
 
-    private LruCache<String, Bitmap> lruCache;
 
     private String data = "";
 
     private WeakReference<ImageView> viewWeakReference;
 
-    private GlobalContext globalContext;
-
     private FileLocationMethod method;
 
-    private FailedResult failedResult;
 
     private WeakReference<ProgressBar> pbWeakReference;
 
@@ -54,22 +40,17 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
     public ReadWorker(ImageView view, String url, FileLocationMethod method,
             boolean isMultiPictures) {
 
-        this.globalContext = GlobalContext.getInstance();
-        this.lruCache = globalContext.getBitmapCache();
         this.viewWeakReference = new WeakReference<ImageView>(view);
         this.data = url;
         this.method = method;
         this.isMultiPictures = isMultiPictures;
     }
 
-    public ReadWorker(ImageView view, String url, FileLocationMethod method) {
-        this(view, url, method, false);
-    }
 
     public ReadWorker(IWeiciyuanDrawable view, String url, FileLocationMethod method,
             boolean isMultiPictures) {
 
-        this(view.getImageView(), url, method);
+        this(view.getImageView(), url, method, false);
         this.IWeiciyuanDrawable = view;
         this.pbWeakReference = new WeakReference<ProgressBar>(view.getProgressBar());
         view.setGifFlag(false);
@@ -88,13 +69,8 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
 
     }
 
-    public ReadWorker(IWeiciyuanDrawable view, String url, FileLocationMethod method) {
-        this(view, url, method, false);
-    }
-
-
     @Override
-    protected Bitmap doInBackground(String... url) {
+    protected Boolean doInBackground(String... url) {
 
         synchronized (TimeLineBitmapDownloader.pauseReadWorkLock) {
             while (TimeLineBitmapDownloader.pauseReadWork && !isCancelled()) {
@@ -112,82 +88,10 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
 
         String path = FileManager.getFilePathFromUrl(data, method);
 
-        boolean downloaded = TaskCache.waitForPictureDownload(data,
+        return TaskCache.waitForPictureDownload(data,
                 (SettingUtility.getEnableBigPic() ? downloadListener : null), path, method);
 
-        if (!downloaded) {
-            failedResult = FailedResult.downloadFailed;
-            return null;
-        }
 
-        int height = 0;
-        int width = 0;
-
-        switch (method) {
-            case avatar_small:
-            case avatar_large:
-                width = globalContext.getResources()
-                        .getDimensionPixelSize(R.dimen.timeline_avatar_width)
-                        - Utility.dip2px(5) * 2;
-                height = globalContext.getResources()
-                        .getDimensionPixelSize(R.dimen.timeline_avatar_height)
-                        - Utility.dip2px(5) * 2;
-                break;
-
-            case picture_thumbnail:
-                width = globalContext.getResources()
-                        .getDimensionPixelSize(R.dimen.timeline_pic_thumbnail_width);
-                height = globalContext.getResources()
-                        .getDimensionPixelSize(R.dimen.timeline_pic_thumbnail_height);
-                break;
-
-            case picture_large:
-            case picture_bmiddle:
-                if (!isMultiPictures) {
-                    DisplayMetrics metrics = globalContext.getDisplayMetrics();
-
-                    float reSize = globalContext.getResources().getDisplayMetrics().density;
-
-                    height = globalContext.getResources()
-                            .getDimensionPixelSize(R.dimen.timeline_pic_high_thumbnail_height);
-                    //8 is  layout padding
-                    width = (int) (metrics.widthPixels - (8 + 8) * reSize);
-                } else {
-                    height = width = Utility.dip2px(120);
-                }
-                break;
-        }
-
-        synchronized (TimeLineBitmapDownloader.pauseReadWorkLock) {
-            while (TimeLineBitmapDownloader.pauseReadWork && !isCancelled()) {
-                try {
-                    TimeLineBitmapDownloader.pauseReadWorkLock.wait();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-        }
-
-        if (isCancelled()) {
-            return null;
-        }
-
-        Bitmap bitmap;
-
-        switch (method) {
-            case avatar_small:
-            case avatar_large:
-                bitmap = ImageUtility.getRoundedCornerPic(path, width, height, Utility.dip2px(2));
-                break;
-            default:
-                bitmap = ImageUtility.getRoundedCornerPic(path, width, height, 0);
-                break;
-        }
-
-        if (bitmap == null) {
-            this.failedResult = FailedResult.readFailed;
-        }
-        return bitmap;
     }
 
     @Override
@@ -196,127 +100,60 @@ public class ReadWorker extends MyAsyncTask<String, Integer, Bitmap> implements 
         if (TimeLineBitmapDownloader.pauseDownloadWork) {
             return;
         }
-        ImageView imageView = viewWeakReference.get();
-        if (imageView != null) {
-            if (canDisplay(imageView) && pbWeakReference != null) {
-                ProgressBar pb = pbWeakReference.get();
-                if (pb != null) {
-                    Integer progress = values[0];
-                    Integer max = values[1];
-                    pb.setMax(max);
-                    pb.setProgress(progress);
-                }
-            } else if (isImageViewDrawableBitmap(imageView)) {
-                //imageview drawable actually is bitmap, so hide progressbar
-                resetProgressBarStatues();
-                pbWeakReference = null;
-            }
-        }
-    }
-
-    @Override
-    protected void onCancelled(Bitmap bitmap) {
-        super.onCancelled(bitmap);
-        this.failedResult = FailedResult.taskCanceled;
-        displayBitmap(bitmap);
-    }
-
-    @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        super.onPostExecute(bitmap);
-        displayBitmap(bitmap);
-    }
-
-    private void displayBitmap(Bitmap bitmap) {
 
         ImageView imageView = viewWeakReference.get();
-        if (imageView != null) {
-            if (canDisplay(imageView)) {
-                if (pbWeakReference != null) {
-                    ProgressBar pb = pbWeakReference.get();
-                    if (pb != null) {
-                        pb.setVisibility(View.INVISIBLE);
-                    }
-                }
-
-                if (bitmap != null) {
-                    if (IWeiciyuanDrawable != null) {
-                        IWeiciyuanDrawable.setGifFlag(ImageUtility.isThisPictureGif(getUrl()));
-                    }
-                    playImageViewAnimation(imageView, bitmap);
-                    lruCache.put(data, bitmap);
-                } else if (failedResult != null) {
-                    switch (failedResult) {
-                        case downloadFailed:
-                            imageView.setImageDrawable(
-                                    new ColorDrawable(DebugColor.DOWNLOAD_FAILED));
-                            break;
-                        case readFailed:
-                            imageView.setImageDrawable(new ColorDrawable(DebugColor.PICTURE_ERROR));
-                            break;
-                        case taskCanceled:
-                            imageView.setImageDrawable(
-                                    new ColorDrawable(DebugColor.DOWNLOAD_CANCEL));
-                            break;
-                    }
-
-                }
-
-
-            } else if (isImageViewDrawableBitmap(imageView)) {
-                //imageview drawable actually is bitmap, so hide progressbar
-                resetProgressBarStatues();
-            }
-        }
-
-
-    }
-
-    private void resetProgressBarStatues() {
-        if (pbWeakReference == null) {
+        if (!isMySelf(imageView)) {
             return;
         }
-        ProgressBar pb = pbWeakReference.get();
-        if (pb != null) {
-            pb.setVisibility(View.INVISIBLE);
-        }
-    }
 
-    private boolean isImageViewDrawableBitmap(ImageView imageView) {
-        return !(imageView.getDrawable() instanceof PictureBitmapDrawable);
-    }
-
-    private boolean canDisplay(ImageView view) {
-        if (view != null) {
-            IPictureWorker bitmapDownloaderTask = getBitmapDownloaderTask(view);
-            if (this == bitmapDownloaderTask) {
-                return true;
+        if (pbWeakReference != null) {
+            ProgressBar pb = pbWeakReference.get();
+            if (pb != null) {
+                Integer progress = values[0];
+                Integer max = values[1];
+                pb.setMax(max);
+                pb.setProgress(progress);
             }
+
         }
-        return false;
     }
 
-    private static IPictureWorker getBitmapDownloaderTask(ImageView imageView) {
-        if (imageView != null) {
-            Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof PictureBitmapDrawable) {
-                PictureBitmapDrawable downloadedDrawable = (PictureBitmapDrawable) drawable;
-                return downloadedDrawable.getBitmapDownloaderTask();
+
+    @Override
+    protected void onPostExecute(Boolean result) {
+        super.onPostExecute(result);
+        ImageView imageView = viewWeakReference.get();
+        if (!isMySelf(imageView)) {
+            return;
+        }
+
+        if (result) {
+            LocalWorker newTask = null;
+
+            if (IWeiciyuanDrawable != null) {
+                newTask = new LocalWorker(IWeiciyuanDrawable, getUrl(), method,
+                        isMultiPictures);
+                PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(newTask);
+                IWeiciyuanDrawable.setImageDrawable(downloadedDrawable);
+            } else {
+                newTask = new LocalWorker(imageView, getUrl(), method, isMultiPictures);
+                PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(newTask);
+                imageView.setImageDrawable(downloadedDrawable);
             }
+
+            newTask.executeOnIO();
+        } else {
+            if (pbWeakReference != null) {
+                ProgressBar pb = pbWeakReference.get();
+                pb.setVisibility(View.INVISIBLE);
+
+            }
+            imageView.setImageDrawable(
+                    new ColorDrawable(DebugColor.DOWNLOAD_FAILED));
+
         }
-        return null;
     }
 
-    private void playImageViewAnimation(final ImageView view, final Bitmap bitmap) {
-
-        view.setImageBitmap(bitmap);
-        resetProgressBarStatues();
-        view.setAlpha(0f);
-        view.animate().alpha(1.0f).setDuration(500)
-                .setListener(new LayerEnablingAnimatorListener(view, null));
-        view.setTag(getUrl());
-
-    }
 
     FileDownloaderHttpHelper.DownloadListener downloadListener
             = new FileDownloaderHttpHelper.DownloadListener() {

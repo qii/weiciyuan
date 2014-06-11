@@ -49,12 +49,15 @@ import javax.net.ssl.X509TrustManager;
 public class JavaHttpUtility {
 
     private static final int CONNECT_TIMEOUT = 10 * 1000;
+
     private static final int READ_TIMEOUT = 10 * 1000;
 
     private static final int DOWNLOAD_CONNECT_TIMEOUT = 15 * 1000;
+
     private static final int DOWNLOAD_READ_TIMEOUT = 60 * 1000;
 
     private static final int UPLOAD_CONNECT_TIMEOUT = 15 * 1000;
+
     private static final int UPLOAD_READ_TIMEOUT = 5 * 60 * 1000;
 
     public class NullHostNameVerifier implements HostnameVerifier {
@@ -97,7 +100,8 @@ public class JavaHttpUtility {
     }
 
 
-    public String executeNormalTask(HttpMethod httpMethod, String url, Map<String, String> param) throws WeiboException {
+    public String executeNormalTask(HttpMethod httpMethod, String url, Map<String, String> param)
+            throws WeiboException {
         switch (httpMethod) {
             case Post:
                 return doPost(url, param);
@@ -110,10 +114,12 @@ public class JavaHttpUtility {
     private static Proxy getProxy() {
         String proxyHost = System.getProperty("http.proxyHost");
         String proxyPort = System.getProperty("http.proxyPort");
-        if (!TextUtils.isEmpty(proxyHost) && !TextUtils.isEmpty(proxyPort))
-            return new Proxy(java.net.Proxy.Type.HTTP, new InetSocketAddress(proxyHost, Integer.valueOf(proxyPort)));
-        else
+        if (!TextUtils.isEmpty(proxyHost) && !TextUtils.isEmpty(proxyPort)) {
+            return new Proxy(java.net.Proxy.Type.HTTP,
+                    new InetSocketAddress(proxyHost, Integer.valueOf(proxyPort)));
+        } else {
             return null;
+        }
     }
 
     public String doPost(String urlAddress, Map<String, String> param) throws WeiboException {
@@ -124,10 +130,11 @@ public class JavaHttpUtility {
             URL url = new URL(urlAddress);
             Proxy proxy = getProxy();
             HttpsURLConnection uRLConnection;
-            if (proxy != null)
+            if (proxy != null) {
                 uRLConnection = (HttpsURLConnection) url.openConnection(proxy);
-            else
+            } else {
                 uRLConnection = (HttpsURLConnection) url.openConnection();
+            }
 
             uRLConnection.setDoInput(true);
             uRLConnection.setDoOutput(true);
@@ -181,8 +188,9 @@ public class JavaHttpUtility {
             AppLogger.e("error=" + result);
             JSONObject json = new JSONObject(result);
             err = json.optString("error_description", "");
-            if (TextUtils.isEmpty(err))
+            if (TextUtils.isEmpty(err)) {
                 err = json.getString("error");
+            }
             errCode = json.getInt("error_code");
             WeiboException exception = new WeiboException();
             exception.setError_code(errCode);
@@ -198,7 +206,6 @@ public class JavaHttpUtility {
             e.printStackTrace();
         }
 
-
         return result;
     }
 
@@ -213,7 +220,8 @@ public class JavaHttpUtility {
 
             String content_encode = urlConnection.getContentEncoding();
 
-            if (null != content_encode && !"".equals(content_encode) && content_encode.equals("gzip")) {
+            if (null != content_encode && !"".equals(content_encode) && content_encode
+                    .equals("gzip")) {
                 is = new GZIPInputStream(is);
             }
 
@@ -252,7 +260,8 @@ public class JavaHttpUtility {
 
             String content_encode = urlConnection.getContentEncoding();
 
-            if (null != content_encode && !"".equals(content_encode) && content_encode.equals("gzip")) {
+            if (null != content_encode && !"".equals(content_encode) && content_encode
+                    .equals("gzip")) {
                 is = new GZIPInputStream(is);
             }
 
@@ -289,10 +298,11 @@ public class JavaHttpUtility {
             AppLogger.d("get request" + url);
             Proxy proxy = getProxy();
             HttpURLConnection urlConnection;
-            if (proxy != null)
+            if (proxy != null) {
                 urlConnection = (HttpURLConnection) url.openConnection(proxy);
-            else
+            } else {
                 urlConnection = (HttpURLConnection) url.openConnection();
+            }
 
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoOutput(false);
@@ -313,7 +323,8 @@ public class JavaHttpUtility {
 
     }
 
-    public boolean doGetSaveFile(String urlStr, String path, FileDownloaderHttpHelper.DownloadListener downloadListener) {
+    public boolean doGetSaveFile(String urlStr, String path,
+            FileDownloaderHttpHelper.DownloadListener downloadListener) {
 
         File file = FileManager.createNewFileInSDCard(path);
         if (file == null) {
@@ -328,10 +339,11 @@ public class JavaHttpUtility {
             URL url = new URL(urlStr);
             AppLogger.d("download request=" + urlStr);
             Proxy proxy = getProxy();
-            if (proxy != null)
+            if (proxy != null) {
                 urlConnection = (HttpURLConnection) url.openConnection(proxy);
-            else
+            } else {
                 urlConnection = (HttpURLConnection) url.openConnection();
+            }
 
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoOutput(false);
@@ -348,7 +360,6 @@ public class JavaHttpUtility {
             if (status != HttpURLConnection.HTTP_OK) {
                 return false;
             }
-
 
             int bytetotal = (int) urlConnection.getContentLength();
             int bytesum = 0;
@@ -367,8 +378,11 @@ public class JavaHttpUtility {
             byte[] buffer = new byte[1444];
             while ((byteread = in.read(buffer)) != -1) {
                 if (thread.isInterrupted()) {
-                    file.delete();
-                    throw new InterruptedIOException();
+                    if (((float) bytesum / (float) bytetotal) < 0.8f) {
+                        file.delete();
+                        throw new InterruptedIOException();
+                    }
+
                 }
 
                 bytesum += byteread;
@@ -387,8 +401,9 @@ public class JavaHttpUtility {
         } finally {
             Utility.closeSilently(in);
             Utility.closeSilently(out);
-            if (urlConnection != null)
+            if (urlConnection != null) {
                 urlConnection.disconnect();
+            }
         }
 
         return false;
@@ -409,7 +424,8 @@ public class JavaHttpUtility {
         return _sb.toString();
     }
 
-    private String getBoundaryMessage(String boundary, Map params, String fileField, String fileName, String fileType) {
+    private String getBoundaryMessage(String boundary, Map params, String fileField,
+            String fileName, String fileType) {
         StringBuffer res = new StringBuffer("--").append(boundary).append("\r\n");
 
         Iterator keys = params.keySet().iterator();
@@ -430,7 +446,9 @@ public class JavaHttpUtility {
         return res.toString();
     }
 
-    public boolean doUploadFile(String urlStr, Map<String, String> param, String path, String imageParamName, final FileUploaderHttpHelper.ProgressListener listener) throws WeiboException {
+    public boolean doUploadFile(String urlStr, Map<String, String> param, String path,
+            String imageParamName, final FileUploaderHttpHelper.ProgressListener listener)
+            throws WeiboException {
         String BOUNDARYSTR = getBoundry();
 
         File targetFile = new File(path);
@@ -441,8 +459,10 @@ public class JavaHttpUtility {
         try {
             barry = ("--" + BOUNDARYSTR + "--\r\n").getBytes("UTF-8");
 
-            sendStr = getBoundaryMessage(BOUNDARYSTR, param, imageParamName, new File(path).getName(), "image/png");
-            contentLength = sendStr.getBytes("UTF-8").length + (int) targetFile.length() + 2 * barry.length;
+            sendStr = getBoundaryMessage(BOUNDARYSTR, param, imageParamName,
+                    new File(path).getName(), "image/png");
+            contentLength = sendStr.getBytes("UTF-8").length + (int) targetFile.length()
+                    + 2 * barry.length;
         } catch (UnsupportedEncodingException e) {
 
         }
@@ -461,10 +481,11 @@ public class JavaHttpUtility {
             url = new URL(urlStr);
 
             Proxy proxy = getProxy();
-            if (proxy != null)
+            if (proxy != null) {
                 urlConnection = (HttpURLConnection) url.openConnection(proxy);
-            else
+            } else {
                 urlConnection = (HttpURLConnection) url.openConnection();
+            }
 
             urlConnection.setConnectTimeout(UPLOAD_CONNECT_TIMEOUT);
             urlConnection.setReadTimeout(UPLOAD_READ_TIMEOUT);
@@ -474,7 +495,8 @@ public class JavaHttpUtility {
             urlConnection.setUseCaches(false);
             urlConnection.setRequestProperty("Connection", "Keep-Alive");
             urlConnection.setRequestProperty("Charset", "UTF-8");
-            urlConnection.setRequestProperty("Content-type", "multipart/form-data;boundary=" + BOUNDARYSTR);
+            urlConnection.setRequestProperty("Content-type",
+                    "multipart/form-data;boundary=" + BOUNDARYSTR);
             urlConnection.setRequestProperty("Content-Length", lenstr);
             ((HttpURLConnection) urlConnection).setFixedLengthStreamingMode(contentLength);
             urlConnection.connect();
@@ -482,7 +504,6 @@ public class JavaHttpUtility {
             out = new BufferedOutputStream(urlConnection.getOutputStream());
             out.write(sendStr.getBytes("UTF-8"));
             totalSent += sendStr.getBytes("UTF-8").length;
-
 
             fis = new FileInputStream(targetFile);
 
@@ -509,13 +530,14 @@ public class JavaHttpUtility {
                 bufferSize = Math.min(bytesAvailable, maxBufferSize);
                 bytesRead = fis.read(buffer, 0, bufferSize);
                 transferred += bytesRead;
-                if (transferred % 50 == 0)
+                if (transferred % 50 == 0) {
                     out.flush();
-                if (listener != null)
+                }
+                if (listener != null) {
                     listener.transferred(transferred);
+                }
 
             }
-
 
             out.write(barry);
             totalSent += barry.length;
@@ -541,8 +563,9 @@ public class JavaHttpUtility {
         } finally {
             Utility.closeSilently(fis);
             Utility.closeSilently(out);
-            if (urlConnection != null)
+            if (urlConnection != null) {
                 urlConnection.disconnect();
+            }
         }
 
         return true;

@@ -13,11 +13,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Date: 13-2-9
  * support to insert progressbar update
  */
-public class DownloadWorker extends MyAsyncTask<String, Integer, Boolean> implements IPictureWorker {
+@Deprecated
+public class DownloadWorker extends MyAsyncTask<String, Integer, Boolean>
+        implements IPictureWorker {
 
 
     private String url = "";
-    private CopyOnWriteArrayList<FileDownloaderHttpHelper.DownloadListener> downloadListenerList = new CopyOnWriteArrayList<FileDownloaderHttpHelper.DownloadListener>();
+
+    private CopyOnWriteArrayList<FileDownloaderHttpHelper.DownloadListener> downloadListenerList
+            = new CopyOnWriteArrayList<FileDownloaderHttpHelper.DownloadListener>();
 
     private FileLocationMethod method;
 
@@ -50,8 +54,9 @@ public class DownloadWorker extends MyAsyncTask<String, Integer, Boolean> implem
             }
         }
 
-        if (isCancelled())
+        if (isCancelled()) {
             return false;
+        }
 
         String filePath = FileManager.getFilePathFromUrl(url, method);
 
@@ -70,24 +75,20 @@ public class DownloadWorker extends MyAsyncTask<String, Integer, Boolean> implem
 
         }
 
-        boolean result = ImageUtility.getBitmapFromNetWork(actualDownloadUrl, filePath, new FileDownloaderHttpHelper.DownloadListener() {
-            @Override
-            public void pushProgress(int progress, int max) {
-                publishProgress(progress, max);
-            }
-        });
-        TaskCache.removeDownloadTask(url, DownloadWorker.this);
+        boolean result = ImageUtility.getBitmapFromNetWork(actualDownloadUrl, filePath,
+                new FileDownloaderHttpHelper.DownloadListener() {
+                    @Override
+                    public void pushProgress(int progress, int max) {
+                        for (FileDownloaderHttpHelper.DownloadListener downloadListener : downloadListenerList) {
+                            if (downloadListener != null) {
+                                downloadListener.pushProgress(progress, max);
+                            }
+                        }
+                    }
+                });
+//        TaskCache.removeDownloadTask(url, DownloadWorker.this);
         return result;
 
-    }
-
-    @Override
-    protected void onProgressUpdate(Integer... values) {
-        super.onProgressUpdate(values);
-        for (FileDownloaderHttpHelper.DownloadListener downloadListener : downloadListenerList) {
-            if (downloadListener != null)
-                downloadListener.pushProgress(values[0], values[1]);
-        }
     }
 
 

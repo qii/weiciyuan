@@ -44,7 +44,7 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
         private final AtomicInteger mCount = new AtomicInteger(1);
 
         public Thread newThread(Runnable r) {
-            return new Thread(r, "AsyncTask Download #" + mCount.getAndIncrement());
+            return new Thread(r, "AsyncTask Wait Download #" + mCount.getAndIncrement());
         }
     };
 
@@ -86,7 +86,7 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
             }
     );
 
-    private static final Executor DOWNLOAD_THREAD_POOL_EXECUTOR
+    private static final Executor WAIT_DOWNLOAD_THREAD_POOL_EXECUTOR
             = new ThreadPoolExecutor(4, 4, KEEP_ALIVE,
             TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(15) {
         @Override
@@ -110,6 +110,7 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
                 }
             }
     );
+
 
     /**
      * An {@link Executor} that executes tasks one at a time in serial
@@ -510,9 +511,10 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
         executeOnExecutor(THREAD_POOL_EXECUTOR, params);
     }
 
-    public void executeOnNetwork(Params... params) {
-        executeOnExecutor(DOWNLOAD_THREAD_POOL_EXECUTOR, params);
+    public void executeOnWaitNetwork(Params... params) {
+        executeOnExecutor(WAIT_DOWNLOAD_THREAD_POOL_EXECUTOR, params);
     }
+
 
     /**
      * This method can be invoked from {@link #doInBackground} to

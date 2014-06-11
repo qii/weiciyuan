@@ -240,7 +240,8 @@ public class TimeLineBitmapDownloader {
                 return;
             }
 
-            final ReadWorker newTask = new ReadWorker(view, urlKey, method, isMultiPictures);
+            final LocalOrNetworkChooseWorker newTask = new LocalOrNetworkChooseWorker(view, urlKey,
+                    method, isMultiPictures);
             PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(newTask);
             view.setImageDrawable(downloadedDrawable);
 
@@ -250,7 +251,7 @@ public class TimeLineBitmapDownloader {
                 public void run() {
 
                     if (getBitmapDownloaderTask(view) == newTask) {
-                        newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                        newTask.executeOnNormal();
                     }
                     return;
 
@@ -299,7 +300,8 @@ public class TimeLineBitmapDownloader {
                 return;
             }
 
-            final ReadWorker newTask = new ReadWorker(view, urlKey, method, isMultiPictures);
+            final LocalOrNetworkChooseWorker newTask = new LocalOrNetworkChooseWorker(view, urlKey,
+                    method, isMultiPictures);
             PictureBitmapDrawable downloadedDrawable = new PictureBitmapDrawable(newTask);
             view.setImageDrawable(downloadedDrawable);
 
@@ -309,7 +311,7 @@ public class TimeLineBitmapDownloader {
                 public void run() {
 
                     if (getBitmapDownloaderTask(view.getImageView()) == newTask) {
-                        newTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                        newTask.executeOnNormal();
                     }
                     return;
 
@@ -489,8 +491,13 @@ public class TimeLineBitmapDownloader {
                 boolean downloaded = TaskCache.waitForPictureDownload(
                         url, new FileDownloaderHttpHelper.DownloadListener() {
                     @Override
-                    public void pushProgress(int progress, int max) {
-                        onProgressUpdate(progress, max);
+                    public void pushProgress(final int progress, final int max) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                onProgressUpdate(progress, max);
+                            }
+                        });
                     }
 
                     @Override

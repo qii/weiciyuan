@@ -679,12 +679,14 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                     PictureBitmapDrawable downloadedDrawable
                             = (PictureBitmapDrawable) drawable;
                     IPictureWorker worker = downloadedDrawable.getBitmapDownloaderTask();
-                    ((MyAsyncTask) worker).cancel(true);
+                    if (worker != null) {
+                        ((MyAsyncTask) worker).cancel(true);
+                    }
+                    iv.setImageDrawable(null);
                 }
-                iv.setImageDrawable(null);
             }
-        }
 
+        }
     }
 
     protected void interruptPicDownload(IWeiciyuanDrawable view) {
@@ -693,7 +695,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
             PictureBitmapDrawable downloadedDrawable
                     = (PictureBitmapDrawable) drawable;
             IPictureWorker worker = downloadedDrawable.getBitmapDownloaderTask();
-            ((MyAsyncTask) worker).cancel(true);
+            if (worker != null) {
+                ((MyAsyncTask) worker).cancel(true);
+            }
         }
         view.getImageView().setImageDrawable(null);
     }
