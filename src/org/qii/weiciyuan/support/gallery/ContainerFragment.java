@@ -51,8 +51,10 @@ public class ContainerFragment extends Fragment {
         wait = (TextView) view.findViewById(R.id.wait);
         error = (TextView) view.findViewById(R.id.error);
 
-        String url = getArguments().getString("url");
-        boolean animateIn = getArguments().getBoolean("animationIn");
+        Bundle bundle = getArguments();
+        String url = bundle.getString("url");
+        boolean animateIn = bundle.getBoolean("animationIn");
+        bundle.putBoolean("animationIn", false);
 
         String path = FileManager.getFilePathFromUrl(url, FileLocationMethod.picture_large);
 
@@ -140,6 +142,7 @@ public class ContainerFragment extends Fragment {
                 fragment = GeneralPictureFragment.newInstance(path, rect, animateIn);
             }
             getChildFragmentManager().beginTransaction().replace(R.id.child, fragment).commit();
+
         } else {
             LargePictureFragment fragment = LargePictureFragment.newInstance(path);
             getChildFragmentManager().beginTransaction().replace(R.id.child, fragment).commit();
