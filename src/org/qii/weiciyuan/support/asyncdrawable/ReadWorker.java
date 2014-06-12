@@ -145,7 +145,9 @@ public class ReadWorker extends AbstractWorker<String, Integer, Boolean> {
         } else {
             if (pbWeakReference != null) {
                 ProgressBar pb = pbWeakReference.get();
-                pb.setVisibility(View.INVISIBLE);
+                if (pb != null) {
+                    pb.setVisibility(View.INVISIBLE);
+                }
 
             }
             imageView.setImageDrawable(
