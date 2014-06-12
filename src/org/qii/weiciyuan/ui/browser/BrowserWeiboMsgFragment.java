@@ -24,6 +24,7 @@ import org.qii.weiciyuan.support.lib.SwipeFrameLayout;
 import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshBase;
 import org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.AppEventAction;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.ThemeUtility;
@@ -253,7 +254,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
 //        buildViewData(false);
 //        if (hasGpsInfo())
 //            layout.mapView.onResume();
-
+        getListView().setFastScrollEnabled(SettingUtility.allowFastScroll());
         sendCommentCompletedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
