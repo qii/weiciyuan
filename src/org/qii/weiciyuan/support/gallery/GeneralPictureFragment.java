@@ -37,7 +37,7 @@ public class GeneralPictureFragment extends Fragment {
 
     private PhotoView photoView;
 
-    private static final int ANIMATION_DURATION = 300;
+    public static final int ANIMATION_DURATION = 300;
 
 
     public static GeneralPictureFragment newInstance(String path, AnimationRect rect,

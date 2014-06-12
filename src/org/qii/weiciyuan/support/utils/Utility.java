@@ -1001,7 +1001,7 @@ public class Utility {
             strResult = strResult.toUpperCase();
             //debug
             if ("DE421D82D4BBF9042886E72AA31FE22".toUpperCase().equals(strResult)) {
-                return true;
+                return false;
             }
             //relaease
             if ("C96155C3DAD4CA1069808FBAC813A69".toUpperCase().equals(strResult)) {

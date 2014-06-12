@@ -144,7 +144,7 @@ public class ContainerFragment extends Fragment {
             getChildFragmentManager().beginTransaction().replace(R.id.child, fragment).commit();
 
         } else {
-            LargePictureFragment fragment = LargePictureFragment.newInstance(path);
+            LargePictureFragment fragment = LargePictureFragment.newInstance(path, animateIn);
             getChildFragmentManager().beginTransaction().replace(R.id.child, fragment).commit();
         }
 
