@@ -119,6 +119,7 @@ public class GifPictureFragment extends Fragment {
 
                         if (rect == null) {
                             photoView.getViewTreeObserver().removeOnPreDrawListener(this);
+                            endAction.run();
                             return true;
                         }
 
@@ -128,6 +129,7 @@ public class GifPictureFragment extends Fragment {
 
                         if (finalBounds == null) {
                             photoView.getViewTreeObserver().removeOnPreDrawListener(this);
+                            endAction.run();
                             return true;
                         }
 
