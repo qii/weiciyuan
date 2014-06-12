@@ -93,25 +93,34 @@ public class ContainerFragment extends Fragment {
         }
 
         @Override
-        public void onComplete(String localPath) {
+        public void onComplete(final String localPath) {
             super.onComplete(localPath);
-            progressView.setVisibility(View.INVISIBLE);
-            wait.setVisibility(View.INVISIBLE);
+            CircleProgressView circleProgressView = (CircleProgressView) progressView;
+            circleProgressView.executeRunnableAfterAnimationFinish(new Runnable() {
+                @Override
+                public void run() {
+                    if (getActivity() == null) {
+                        return;
+                    }
+                    progressView.setVisibility(View.INVISIBLE);
+                    wait.setVisibility(View.INVISIBLE);
 
-            if (TextUtils.isEmpty(localPath)) {
-                error.setVisibility(View.VISIBLE);
-                error.setText(
-                        getString(R.string.picture_cant_download_or_sd_cant_read));
-            } else if (!ImageUtility.isThisBitmapCanRead(localPath)) {
-                error.setVisibility(View.VISIBLE);
-                error.setText(
-                        getString(
-                                R.string.download_finished_but_cant_read_picture_file));
-            } else {
-                error.setVisibility(View.INVISIBLE);
-                displayPicture(localPath, false);
-            }
+                    if (TextUtils.isEmpty(localPath)) {
+                        error.setVisibility(View.VISIBLE);
+                        error.setText(
+                                getString(R.string.picture_cant_download_or_sd_cant_read));
+                    } else if (!ImageUtility.isThisBitmapCanRead(localPath)) {
+                        error.setVisibility(View.VISIBLE);
+                        error.setText(
+                                getString(
+                                        R.string.download_finished_but_cant_read_picture_file));
+                    } else {
+                        error.setVisibility(View.INVISIBLE);
+                        displayPicture(localPath, false);
+                    }
 
+                }
+            });
         }
 
 

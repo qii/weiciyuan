@@ -1,5 +1,8 @@
 package org.qii.weiciyuan.support.lib;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -15,11 +18,17 @@ import android.view.View;
 public class CircleProgressView extends View {
 
     private Paint mPaint = new Paint();
+
     private int progress = 0;
+
     private int max = 100;
 
+    private ValueAnimator valueAnimator;
+
+    private boolean isInitValue = true;
+
     public CircleProgressView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public CircleProgressView(Context context, AttributeSet attrs) {
@@ -42,7 +51,8 @@ public class CircleProgressView extends View {
         int height = getMeasuredHeight();
 
         int h = Math.min(width, height);
-        RectF oval2 = new RectF((width - h) / 2, (height - h) / 2, h + (width - h) / 2, h + (height - h) / 2);
+        RectF oval2 = new RectF((width - h) / 2, (height - h) / 2, h + (width - h) / 2,
+                h + (height - h) / 2);
         if (getProgress() < 360) {
             mPaint.setColor(Color.parseColor("#33B5E5"));
             canvas.drawArc(oval2, 180, getProgress(), true, mPaint);
@@ -58,10 +68,61 @@ public class CircleProgressView extends View {
 
     public void setMax(int number) {
         this.max = number;
+        invalidate();
     }
 
+
     public void setProgress(int progress) {
-        this.progress = progress;
-        invalidate();
+        if (progress == 0) {
+            invalidate();
+            return;
+        }
+
+        if (progress <= this.progress) {
+            this.progress = progress;
+            invalidate();
+            return;
+        }
+
+        if (isInitValue) {
+            isInitValue = false;
+            this.progress = progress;
+            invalidate();
+            return;
+        }
+
+        int start = this.progress;
+
+        if (valueAnimator != null && valueAnimator.isRunning()) {
+            start = (Integer) valueAnimator.getAnimatedValue();
+            valueAnimator.cancel();
+        }
+
+        valueAnimator = ValueAnimator.ofInt(start, progress);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (Integer) animation.getAnimatedValue();
+                CircleProgressView.this.progress = value;
+                postInvalidateOnAnimation();
+            }
+        });
+        valueAnimator.start();
+
+    }
+
+
+    public void executeRunnableAfterAnimationFinish(final Runnable runnable) {
+        if (valueAnimator != null && valueAnimator.isRunning()) {
+            valueAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    runnable.run();
+                }
+            });
+        } else {
+            runnable.run();
+        }
     }
 }
