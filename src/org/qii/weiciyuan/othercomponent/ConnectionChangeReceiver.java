@@ -16,17 +16,20 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        judgeNetworkStatus(context);
+        judgeNetworkStatus(context, true);
 
     }
 
-    public static void judgeNetworkStatus(Context context) {
+    public static void judgeNetworkStatus(Context context,
+            boolean forceStartFetchNewUnreadBackgroundService) {
         if (Utility.isConnected(context)) {
 
-            if (SettingUtility.getEnableFetchMSG()) {
-                AppNewMsgAlarm.startAlarm(context, true);
-            } else {
-                AppNewMsgAlarm.stopAlarm(context, false);
+            if (forceStartFetchNewUnreadBackgroundService) {
+                if (SettingUtility.getEnableFetchMSG()) {
+                    AppNewMsgAlarm.startAlarm(context, true);
+                } else {
+                    AppNewMsgAlarm.stopAlarm(context, false);
+                }
             }
 
             decideTimeLineBigPic(context);

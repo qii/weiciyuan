@@ -493,7 +493,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
                 AppEventAction.getSystemMusicBroadcastFilterAction());
         readClipboard();
         //ensure timeline picture type is correct
-        ConnectionChangeReceiver.judgeNetworkStatus(this);
+        ConnectionChangeReceiver.judgeNetworkStatus(this, false);
     }
 
     @Override
