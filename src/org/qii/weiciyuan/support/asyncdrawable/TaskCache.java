@@ -48,7 +48,7 @@ public class TaskCache {
                         Runnable runnable = deque.pollLast();
                         if (runnable instanceof FutureTask) {
                             FutureTask futureTask = (FutureTask) runnable;
-                            futureTask.cancel(false);
+                            futureTask.cancel(true);
                         }
                         e.execute(r);
                     }

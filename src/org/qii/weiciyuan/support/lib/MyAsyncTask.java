@@ -105,7 +105,7 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
 
     private static final Executor WAIT_DOWNLOAD_THREAD_POOL_EXECUTOR
             = new ThreadPoolExecutor(4, 4, KEEP_ALIVE,
-            TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(15) {
+            TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(50) {
         @Override
         public boolean offer(Runnable runnable) {
             return super.offerFirst(runnable);
