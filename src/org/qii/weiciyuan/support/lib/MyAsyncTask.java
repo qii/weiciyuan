@@ -57,6 +57,18 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
     };
 
 
+    private static final Executor CANCEL_OPERATION__THREAD_POOL_EXECUTOR
+            = new ThreadPoolExecutor(4, 4, KEEP_ALIVE,
+            TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(Integer.MAX_VALUE),
+            new ThreadFactory() {
+                private final AtomicInteger mCount = new AtomicInteger(1);
+
+                public Thread newThread(Runnable r) {
+                    return new Thread(r,
+                            "AsyncTask Local Cancel Operation #" + mCount.getAndIncrement());
+                }
+            });
+
     /**
      * An {@link java.util.concurrent.Executor} that can be used to execute tasks in parallel.
      */
@@ -69,8 +81,8 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
             = new ThreadPoolExecutor(8, 10, KEEP_ALIVE,
             TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(128) {
         @Override
-        public void put(Runnable runnable) {
-            super.addFirst(runnable);
+        public boolean offer(Runnable runnable) {
+            return super.offerFirst(runnable);
         }
     }, sThreadFactory,
             new ThreadPoolExecutor.DiscardOldestPolicy() {
@@ -79,6 +91,11 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
                     if (!e.isShutdown()) {
                         LinkedBlockingDeque<Runnable> deque = (LinkedBlockingDeque) e.getQueue();
                         Runnable runnable = deque.pollLast();
+                        if (runnable instanceof FutureTask) {
+                            FutureTask futureTask = (FutureTask) runnable;
+                            futureTask.cancel(true);
+                            CANCEL_OPERATION__THREAD_POOL_EXECUTOR.execute(futureTask);
+                        }
                         e.execute(r);
                     }
                 }
@@ -90,8 +107,8 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
             = new ThreadPoolExecutor(4, 4, KEEP_ALIVE,
             TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(15) {
         @Override
-        public void put(Runnable runnable) {
-            super.addFirst(runnable);
+        public boolean offer(Runnable runnable) {
+            return super.offerFirst(runnable);
         }
 
     }, sDownloadThreadFactory,
@@ -103,7 +120,8 @@ public abstract class MyAsyncTask<Params, Progress, Result> {
                         Runnable runnable = deque.pollLast();
                         if (runnable instanceof FutureTask) {
                             FutureTask futureTask = (FutureTask) runnable;
-                            futureTask.cancel(false);
+                            futureTask.cancel(true);
+                            CANCEL_OPERATION__THREAD_POOL_EXECUTOR.execute(futureTask);
                         }
                         e.execute(r);
                     }

@@ -35,8 +35,8 @@ public class TaskCache {
             = new ThreadPoolExecutor(4, 4, 1,
             TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(15) {
         @Override
-        public void put(Runnable runnable) {
-            super.addFirst(runnable);
+        public boolean offer(Runnable runnable) {
+            return super.offerFirst(runnable);
         }
 
     }, sDownloadThreadFactory,

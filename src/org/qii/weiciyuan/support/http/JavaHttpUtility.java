@@ -394,10 +394,12 @@ public class JavaHttpUtility {
             if (downloadListener != null) {
                 downloadListener.completed();
             }
+            AppLogger.v("download request= " + urlStr + " download finished");
             return true;
 
         } catch (IOException e) {
             e.printStackTrace();
+            AppLogger.v("download request= " + urlStr + " download failed");
         } finally {
             Utility.closeSilently(in);
             Utility.closeSilently(out);

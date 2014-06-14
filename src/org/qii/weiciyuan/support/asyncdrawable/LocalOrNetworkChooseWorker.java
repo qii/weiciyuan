@@ -4,6 +4,7 @@ import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imageutility.ImageUtility;
 
+import android.graphics.drawable.ColorDrawable;
 import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
@@ -57,6 +58,17 @@ public class LocalOrNetworkChooseWorker extends AbstractWorker<String, Integer, 
         return ImageUtility.isThisBitmapCanRead(path) && TaskCache.isThisUrlTaskFinished(data);
     }
 
+    @Override
+    protected void onCancelled(Boolean aBoolean) {
+        super.onCancelled(aBoolean);
+        ImageView imageView = viewWeakReference.get();
+        if (!isMySelf(imageView)) {
+            return;
+        }
+
+        imageView.setImageDrawable(
+                new ColorDrawable(DebugColor.CHOOSE_CANCEL));
+    }
 
     @Override
     protected void onPostExecute(Boolean result) {

@@ -127,6 +127,17 @@ public class LocalWorker extends AbstractWorker<String, Integer, Bitmap> {
         return bitmap;
     }
 
+    @Override
+    protected void onCancelled(Bitmap bitmap) {
+        super.onCancelled(bitmap);
+        ImageView imageView = viewWeakReference.get();
+        if (!isMySelf(imageView)) {
+            return;
+        }
+
+        imageView.setImageDrawable(
+                new ColorDrawable(DebugColor.READ_CANCEL));
+    }
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
@@ -155,7 +166,7 @@ public class LocalWorker extends AbstractWorker<String, Integer, Bitmap> {
             playImageViewAnimation(imageView, bitmap);
             GlobalContext.getInstance().getBitmapCache().put(data, bitmap);
         } else {
-            imageView.setImageDrawable(new ColorDrawable(DebugColor.PICTURE_ERROR));
+            imageView.setImageDrawable(new ColorDrawable(DebugColor.READ_FAILED));
         }
 
 

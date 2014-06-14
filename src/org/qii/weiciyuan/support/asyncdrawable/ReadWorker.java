@@ -118,6 +118,23 @@ public class ReadWorker extends AbstractWorker<String, Integer, Boolean> {
         }
     }
 
+    @Override
+    protected void onCancelled(Boolean aBoolean) {
+        super.onCancelled(aBoolean);
+        ImageView imageView = viewWeakReference.get();
+        if (!isMySelf(imageView)) {
+            return;
+        }
+        if (pbWeakReference != null) {
+            ProgressBar pb = pbWeakReference.get();
+            if (pb != null) {
+                pb.setVisibility(View.INVISIBLE);
+            }
+
+        }
+        imageView.setImageDrawable(
+                new ColorDrawable(DebugColor.DOWNLOAD_CANCEL));
+    }
 
     @Override
     protected void onPostExecute(Boolean result) {
