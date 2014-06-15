@@ -28,23 +28,7 @@ import java.util.List;
  */
 public class FileManager {
 
-    private static final String AVATAR_SMAll = "avatar_small";
-
-    private static final String AVATAR_LARGE = "avatar_large";
-
-    private static final String PICTURE_THUMBNAIL = "picture_thumbnail";
-
-    private static final String PICTURE_BMIDDLE = "picture_bmiddle";
-
-    private static final String PICTURE_LARGE = "picture_large";
-
     private static final String PICTURE_CACHE = "picture_cache";
-
-    private static final String MAP = "map";
-
-    private static final String COVER = "cover";
-
-    private static final String EMOTION = "emotion";
 
     private static final String TXT2PIC = "txt2pic";
 
@@ -177,6 +161,15 @@ public class FileManager {
     }
 
     public static String generateDownloadFileName(String url) {
+
+        if (!isExternalStorageMounted()) {
+            return "";
+        }
+
+        if (TextUtils.isEmpty(url)) {
+            return "";
+        }
+
         String path = String.valueOf(url.hashCode());
         String result = getSdCardPath() + File.separator + PICTURE_CACHE + File.separator + path;
         if (url.endsWith(".jpg")) {
@@ -209,6 +202,10 @@ public class FileManager {
     public static File createNewFileInSDCard(String absolutePath) {
         if (!isExternalStorageMounted()) {
             AppLogger.e("sdcard unavailiable");
+            return null;
+        }
+
+        if (TextUtils.isEmpty(absolutePath)) {
             return null;
         }
 
