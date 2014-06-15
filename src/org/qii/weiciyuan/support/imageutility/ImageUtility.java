@@ -389,6 +389,10 @@ public class ImageUtility {
                 return null;
             }
 
+            if (TextUtils.isEmpty(filePath)) {
+                return null;
+            }
+
             if (!filePath.endsWith(".jpg") && !filePath.endsWith(".gif") && !filePath
                     .endsWith(".png")) {
                 filePath = filePath + ".jpg";

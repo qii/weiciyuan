@@ -9,8 +9,8 @@ import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.AnimationRect;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.WeiboDetailImageView;
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
-import org.qii.weiciyuan.support.utils.Utility;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -85,7 +85,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
             return null;
         }
 
-        if (Utility.isWifi(GlobalContext.getInstance())) {
+        if (SettingUtility.getEnableBigPic()) {
             boolean result = TaskCache
                     .waitForPictureDownload(msg.getOriginal_pic(), downloadListener,
                             FileManager.generateDownloadFileName(msg.getOriginal_pic()),

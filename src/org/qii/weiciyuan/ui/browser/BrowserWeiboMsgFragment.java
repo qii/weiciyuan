@@ -508,9 +508,15 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
                 final IWeiciyuanDrawable pic = (IWeiciyuanDrawable) layout.getChildAt(i);
                 pic.setVisibility(View.VISIBLE);
 
-                TimeLineBitmapDownloader.getInstance()
-                        .displayMultiPicture(pic, msg.getMiddlePicUrls().get(i),
-                                FileLocationMethod.picture_bmiddle);
+                if (SettingUtility.getEnableBigPic()) {
+                    TimeLineBitmapDownloader.getInstance()
+                            .displayMultiPicture(pic, msg.getHighPicUrls().get(i),
+                                    FileLocationMethod.picture_large);
+                } else {
+                    TimeLineBitmapDownloader.getInstance()
+                            .displayMultiPicture(pic, msg.getMiddlePicUrls().get(i),
+                                    FileLocationMethod.picture_bmiddle);
+                }
 
                 final int finalI = i;
                 pic.setOnClickListener(new View.OnClickListener() {

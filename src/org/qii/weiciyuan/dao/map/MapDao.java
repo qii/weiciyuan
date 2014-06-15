@@ -1,7 +1,5 @@
 package org.qii.weiciyuan.dao.map;
 
-import android.graphics.Bitmap;
-import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +11,9 @@ import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.http.HttpMethod;
 import org.qii.weiciyuan.support.http.HttpUtility;
 import org.qii.weiciyuan.support.imageutility.ImageUtility;
+
+import android.graphics.Bitmap;
+import android.text.TextUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +34,6 @@ public class MapDao {
         map.put("zoom", "14");
         map.put("size", "600x380");
 
-
         String jsonData = HttpUtility.getInstance().executeNormalTask(HttpMethod.Get, url, map);
         String mapUrl = "";
         try {
@@ -45,17 +45,22 @@ public class MapDao {
 
         }
 
-        if (TextUtils.isEmpty(mapUrl))
+        if (TextUtils.isEmpty(mapUrl)) {
             return null;
+        }
 
         String filePath = FileManager.getFilePathFromUrl(mapUrl, FileLocationMethod.map);
 
-        boolean downloaded = TaskCache.waitForPictureDownload(mapUrl, null, filePath, FileLocationMethod.map);
+        boolean downloaded = TaskCache
+                .waitForPictureDownload(mapUrl, null, filePath, FileLocationMethod.map);
 
-        if (!downloaded)
+        if (!downloaded) {
             return null;
+        }
 
-        Bitmap bitmap = ImageUtility.readNormalPic(filePath, -1, -1);
+        Bitmap bitmap = ImageUtility
+                .readNormalPic(FileManager.getFilePathFromUrl(mapUrl, FileLocationMethod.map), -1,
+                        -1);
 
         return bitmap;
 
@@ -68,7 +73,9 @@ public class MapDao {
     }
 
     private String access_token;
+
     private double lan;
+
     private double lat;
 
 
