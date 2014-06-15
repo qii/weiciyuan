@@ -128,7 +128,8 @@ public class OtherActivity extends AbstractAppActivity {
                     return;
                 }
 
-                preference.setSummary(s);
+                preference.setSummary(
+                        getString(R.string.pref_max_file_cache_size_is_300mb_current_size_is, s));
             }
 
         }

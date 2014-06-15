@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
     <release version="0.5.0beta6-2014.6"
-             versioncode="39">
-        <change>去除写微博的文字转图片，这功能缺陷太多</change>
+             versioncode="41">
+    <change>去除写微博的文字转图片，这功能缺陷太多</change>
         <change>修复某些应用分享进来没法获取图片的bug</change>
         <change>重写文件缓存，限制最大缓存空间300MB，超过后会清理长期未使用的图片</change>
         <change>改了改图片下载，图片下载不会影响到本地缓存的读取</change>
