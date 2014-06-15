@@ -1,5 +1,6 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
+import org.qii.weiciyuan.support.database.DownloadPicturesDBTask;
 import org.qii.weiciyuan.support.file.FileDownloaderHttpHelper;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
@@ -31,6 +32,10 @@ public class DownloadFutureTask extends FutureTask<Boolean> {
 
     public void addDownloadListener(FileDownloaderHttpHelper.DownloadListener listener) {
         callable.addDownloadListener(listener);
+    }
+
+    public String getUrl() {
+        return callable.url;
     }
 
     private static class JobCallable implements Callable<Boolean> {
@@ -75,7 +80,7 @@ public class DownloadFutureTask extends FutureTask<Boolean> {
                     }
                 }
             }
-            String filePath = FileManager.getFilePathFromUrl(url, method);
+            String filePath = FileManager.generateDownloadFileName(url);
 
             String actualDownloadUrl = url;
 
@@ -105,6 +110,13 @@ public class DownloadFutureTask extends FutureTask<Boolean> {
                             }
                         }
                     });
+
+            if (result) {
+                DownloadPicturesDBTask.add(this.url,
+                        FileManager.generateDownloadFileName(this.url),
+                        this.method);
+            }
+
             TaskCache.removeDownloadTask(url, futureTask);
             return result;
         }

@@ -1,6 +1,7 @@
 package org.qii.weiciyuan.support.file;
 
 import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.database.DownloadPicturesDBTask;
 import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
@@ -37,6 +38,8 @@ public class FileManager {
 
     private static final String PICTURE_LARGE = "picture_large";
 
+    private static final String PICTURE_CACHE = "picture_cache";
+
     private static final String MAP = "map";
 
     private static final String COVER = "cover";
@@ -59,7 +62,7 @@ public class FileManager {
      */
     private static volatile boolean cantReadBecauseOfAndroidBugPermissionProblem = false;
 
-    private static String getSdCardPath() {
+    public static String getSdCardPath() {
         if (isExternalStorageMounted()) {
             File path = GlobalContext.getInstance().getExternalCacheDir();
             if (path != null) {
@@ -170,47 +173,23 @@ public class FileManager {
             return "";
         }
 
-        int index = url.indexOf("//");
+        return DownloadPicturesDBTask.get(url);
+    }
 
-        String s = url.substring(index + 2);
-
-        String oldRelativePath = s.substring(s.indexOf("/"));
-
-        String newRelativePath = "";
-        switch (method) {
-            case avatar_small:
-                newRelativePath = AVATAR_SMAll + oldRelativePath;
-                break;
-            case avatar_large:
-                newRelativePath = AVATAR_LARGE + oldRelativePath;
-                break;
-            case picture_thumbnail:
-                newRelativePath = PICTURE_THUMBNAIL + oldRelativePath;
-                break;
-            case picture_bmiddle:
-                newRelativePath = PICTURE_BMIDDLE + oldRelativePath;
-                break;
-            case picture_large:
-                newRelativePath = PICTURE_LARGE + oldRelativePath;
-                break;
-            case emotion:
-                String name = new File(oldRelativePath).getName();
-                newRelativePath = EMOTION + File.separator + name;
-                break;
-            case cover:
-                newRelativePath = COVER + oldRelativePath;
-                break;
-            case map:
-                newRelativePath = MAP + oldRelativePath;
-                break;
+    public static String generateDownloadFileName(String url) {
+        String path = String.valueOf(url.hashCode());
+        String result = getSdCardPath() + File.separator + PICTURE_CACHE + File.separator + path;
+        if (url.endsWith(".jpg")) {
+            result += ".jpg";
+        } else if (url.endsWith(".gif")) {
+            result += ".gif";
         }
-
-        String result = getSdCardPath() + File.separator + newRelativePath;
         if (!result.endsWith(".jpg") && !result.endsWith(".gif") && !result.endsWith(".png")) {
             result = result + ".jpg";
         }
 
         return result;
+
     }
 
     public static String getTxt2picPath() {
@@ -282,15 +261,10 @@ public class FileManager {
     public static List<String> getCachePath() {
         List<String> path = new ArrayList<String>();
         if (isExternalStorageMounted()) {
-            String thumbnailPath = getSdCardPath() + File.separator + PICTURE_THUMBNAIL;
-            String middlePath = getSdCardPath() + File.separator + PICTURE_BMIDDLE;
-            String oriPath = getSdCardPath() + File.separator + PICTURE_LARGE;
-            String largeAvatarPath = getSdCardPath() + File.separator + AVATAR_LARGE;
+            String thumbnailPath = getSdCardPath() + File.separator + PICTURE_CACHE;
 
             path.add(thumbnailPath);
-            path.add(middlePath);
-            path.add(oriPath);
-            path.add(largeAvatarPath);
+
         }
         return path;
     }
@@ -298,19 +272,10 @@ public class FileManager {
     public static String getPictureCacheSize() {
         long size = 0L;
         if (isExternalStorageMounted()) {
-            String thumbnailPath = getSdCardPath() + File.separator + PICTURE_THUMBNAIL;
-            String middlePath = getSdCardPath() + File.separator + PICTURE_BMIDDLE;
-            String oriPath = getSdCardPath() + File.separator + PICTURE_LARGE;
-            String largeAvatarPath = getSdCardPath() + File.separator + AVATAR_LARGE;
-            String smallAvatarPath = getSdCardPath() + File.separator + AVATAR_SMAll;
-            String coverPath = getSdCardPath() + File.separator + COVER;
+            String thumbnailPath = getSdCardPath() + File.separator + PICTURE_CACHE;
 
             size += new FileSize(new File(thumbnailPath)).getLongSize();
-            size += new FileSize(new File(middlePath)).getLongSize();
-            size += new FileSize(new File(oriPath)).getLongSize();
-            size += new FileSize(new File(largeAvatarPath)).getLongSize();
-            size += new FileSize(new File(smallAvatarPath)).getLongSize();
-            size += new FileSize(new File(coverPath)).getLongSize();
+
 
         }
         return FileSize.convertSizeToString(size);
@@ -322,24 +287,15 @@ public class FileManager {
     }
 
     public static boolean deletePictureCache() {
-        String thumbnailPath = getSdCardPath() + File.separator + PICTURE_THUMBNAIL;
-        String middlePath = getSdCardPath() + File.separator + PICTURE_BMIDDLE;
-        String oriPath = getSdCardPath() + File.separator + PICTURE_LARGE;
-        String largeAvatarPath = getSdCardPath() + File.separator + AVATAR_LARGE;
-        String smallAvatarPath = getSdCardPath() + File.separator + AVATAR_SMAll;
-        String coverPath = getSdCardPath() + File.separator + COVER;
+        String thumbnailPath = getSdCardPath() + File.separator + PICTURE_CACHE;
 
         deleteDirectory(new File(thumbnailPath));
-        deleteDirectory(new File(middlePath));
-        deleteDirectory(new File(oriPath));
-        deleteDirectory(new File(largeAvatarPath));
-        deleteDirectory(new File(smallAvatarPath));
-        deleteDirectory(new File(coverPath));
+        DownloadPicturesDBTask.clearAll();
 
         return true;
     }
 
-    private static boolean deleteDirectory(File path) {
+    public static boolean deleteDirectory(File path) {
         if (path.exists()) {
             File[] files = path.listFiles();
             if (files == null) {

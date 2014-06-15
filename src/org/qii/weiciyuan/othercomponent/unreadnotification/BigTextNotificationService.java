@@ -10,6 +10,7 @@ import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.UserBean;
 import org.qii.weiciyuan.bean.android.UnreadTabIndex;
+import org.qii.weiciyuan.support.asyncdrawable.TaskCache;
 import org.qii.weiciyuan.support.database.NotificationDBTask;
 import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
@@ -305,7 +306,8 @@ public class BigTextNotificationService extends NotificationServiceHelper {
 
         String avatar = ((ItemBean) itemBean).getUser().getAvatar_large();
         String avatarPath = FileManager.getFilePathFromUrl(avatar, FileLocationMethod.avatar_large);
-        if (ImageUtility.isThisBitmapCanRead(avatarPath)) {
+        if (ImageUtility.isThisBitmapCanRead(avatarPath) && TaskCache
+                .isThisUrlTaskFinished(avatar)) {
             Bitmap bitmap = BitmapFactory.decodeFile(avatarPath, new BitmapFactory.Options());
             if (bitmap != null) {
                 builder.setLargeIcon(bitmap);

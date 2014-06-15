@@ -1,11 +1,13 @@
 package org.qii.weiciyuan.support.database;
 
 import org.qii.weiciyuan.support.database.dbUpgrade.Upgrade35to36;
+import org.qii.weiciyuan.support.database.dbUpgrade.Upgrade36to37;
 import org.qii.weiciyuan.support.database.table.AccountTable;
 import org.qii.weiciyuan.support.database.table.AtUsersTable;
 import org.qii.weiciyuan.support.database.table.CommentByMeTable;
 import org.qii.weiciyuan.support.database.table.CommentsTable;
 import org.qii.weiciyuan.support.database.table.DMTable;
+import org.qii.weiciyuan.support.database.table.DownloadPicturesTable;
 import org.qii.weiciyuan.support.database.table.DraftTable;
 import org.qii.weiciyuan.support.database.table.EmotionsTable;
 import org.qii.weiciyuan.support.database.table.FavouriteTable;
@@ -34,7 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "weibo.db";
 
-    private static final int DATABASE_VERSION = 36;
+    private static final int DATABASE_VERSION = 37;
 
     static final String CREATE_ACCOUNT_TABLE_SQL = "create table " + AccountTable.TABLE_NAME
             + "("
@@ -240,6 +242,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + TopicTable.TOPIC_NAME + " text"
             + ");";
 
+    public static final String CREATE_DOWNLOAD_PICTURES_TABLE_SQL = "create table "
+            + DownloadPicturesTable.TABLE_NAME
+            + "("
+            + DownloadPicturesTable.ID + " integer,"
+            + DownloadPicturesTable.URL + " text primary key,"
+            + DownloadPicturesTable.PATH + " text,"
+            + DownloadPicturesTable.SIZE + " integer,"
+            + DownloadPicturesTable.TIME + " integer,"
+            + DownloadPicturesTable.TYPE + " integer"
+            + ");";
+
     private static final String CREATE_HOME_INDEX_SQL = "CREATE INDEX idx_"
             + HomeTable.HomeDataTable.TABLE_NAME
             + " ON "
@@ -330,17 +343,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion <= 36) {
+            Upgrade36to37.upgrade(db);
+        }
 
-        if (oldVersion == 35) {
+        if (oldVersion <= 35) {
             Upgrade35to36.upgrade(db);
-        } else if (oldVersion < 34) {
+        }
+
+        if (oldVersion <= 34) {
+            upgrade34To35(db);
+        }
+
+        if (oldVersion <= 33) {
             deleteAllTable(db);
             onCreate(db);
-        } else if (oldVersion == 34) {
-            upgrade34To35(db);
-        } else {
-            deleteAllTableExceptAccount(db);
-            createOtherTable(db);
         }
 
     }
@@ -387,6 +404,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_DRAFTS_TABLE_SQL);
         db.execSQL(CREATE_ATUSERS_TABLE_SQL);
         db.execSQL(CREATE_TOPICS_TABLE_SQL);
+
+        db.execSQL(CREATE_DOWNLOAD_PICTURES_TABLE_SQL);
 
         db.execSQL(CREATE_HOME_INDEX_SQL);
         db.execSQL(CREATE_HOME_OTHER_GROUP_INDEX_SQL);
@@ -437,6 +456,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + AtUsersTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TopicTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + NotificationTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DownloadPicturesTable.TABLE_NAME);
 
     }
 

@@ -8,7 +8,6 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -18,8 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * User: qii
  * Date: 13-2-9
- * ReadWorker can be interrupted, DownloadWorker can't be interrupted, maybe I can remove
- * CancellationException exception?
  */
 public class TaskCache {
 
@@ -46,9 +43,11 @@ public class TaskCache {
                     if (!e.isShutdown()) {
                         LinkedBlockingDeque<Runnable> deque = (LinkedBlockingDeque) e.getQueue();
                         Runnable runnable = deque.pollLast();
-                        if (runnable instanceof FutureTask) {
-                            FutureTask futureTask = (FutureTask) runnable;
+                        if (runnable instanceof DownloadFutureTask) {
+                            DownloadFutureTask futureTask = (DownloadFutureTask) runnable;
                             futureTask.cancel(true);
+                            String url = futureTask.getUrl();
+                            removeDownloadTask(url, futureTask);
                         }
                         e.execute(r);
                     }
@@ -121,4 +120,6 @@ public class TaskCache {
 
         }
     }
+
+
 }

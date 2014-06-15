@@ -39,10 +39,6 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
 
     private MessageBean msg;
 
-    private String oriPath;
-
-    private String middlePath;
-
     public MsgDetailReadWorker(WeiboDetailImageView view, MessageBean msg) {
         this.view = view;
         this.pb = this.view.getProgressBar();
@@ -50,7 +46,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
         this.retry = view.getRetryButton();
         retry.setVisibility(View.INVISIBLE);
 
-        oriPath = FileManager
+        String oriPath = FileManager
                 .getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large);
 
         if (ImageUtility.isThisBitmapCanRead(oriPath)
@@ -61,7 +57,7 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
             return;
         }
 
-        middlePath = FileManager
+        String middlePath = FileManager
                 .getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle);
 
         if (ImageUtility.isThisBitmapCanRead(middlePath)
@@ -91,14 +87,22 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
 
         if (Utility.isWifi(GlobalContext.getInstance())) {
             boolean result = TaskCache
-                    .waitForPictureDownload(msg.getOriginal_pic(), downloadListener, oriPath,
+                    .waitForPictureDownload(msg.getOriginal_pic(), downloadListener,
+                            FileManager.generateDownloadFileName(msg.getOriginal_pic()),
                             FileLocationMethod.picture_large);
-            return result ? oriPath : null;
+
+            return result ? FileManager
+                    .getFilePathFromUrl(msg.getOriginal_pic(), FileLocationMethod.picture_large)
+                    : null;
         } else {
             boolean result = TaskCache
-                    .waitForPictureDownload(msg.getBmiddle_pic(), downloadListener, middlePath,
+                    .waitForPictureDownload(msg.getBmiddle_pic(), downloadListener,
+                            FileManager.generateDownloadFileName(msg.getBmiddle_pic()),
                             FileLocationMethod.picture_bmiddle);
-            return result ? middlePath : null;
+
+            return result ? FileManager
+                    .getFilePathFromUrl(msg.getBmiddle_pic(), FileLocationMethod.picture_bmiddle)
+                    : null;
         }
 
     }

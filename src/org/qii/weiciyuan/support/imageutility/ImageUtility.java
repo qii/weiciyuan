@@ -495,6 +495,9 @@ public class ImageUtility {
     }
 
     public static boolean isThisBitmapCanRead(String path) {
+        if (TextUtils.isEmpty(path)) {
+            return false;
+        }
         File file = new File(path);
 
         if (!file.exists()) {
@@ -514,6 +517,7 @@ public class ImageUtility {
     }
 
     public static boolean isThisBitmapTooLargeToRead(String path) {
+
         File file = new File(path);
 
         if (!file.exists()) {

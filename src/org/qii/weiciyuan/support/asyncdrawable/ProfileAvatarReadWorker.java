@@ -1,17 +1,18 @@
 package org.qii.weiciyuan.support.asyncdrawable;
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.util.LruCache;
-import android.view.View;
-import android.widget.ImageView;
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
 import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.utils.GlobalContext;
+
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.util.LruCache;
+import android.view.View;
+import android.widget.ImageView;
 
 /**
  * User: qii
@@ -20,8 +21,11 @@ import org.qii.weiciyuan.support.utils.GlobalContext;
 public class ProfileAvatarReadWorker extends MyAsyncTask<String, Integer, Bitmap> {
 
     private LruCache<String, Bitmap> lruCache;
+
     private String data = "";
+
     private ImageView view;
+
     private GlobalContext globalContext;
 
 
@@ -35,15 +39,24 @@ public class ProfileAvatarReadWorker extends MyAsyncTask<String, Integer, Bitmap
 
     @Override
     protected Bitmap doInBackground(String... url) {
-        if (isCancelled())
+        if (isCancelled()) {
             return null;
+        }
 
         String path = FileManager.getFilePathFromUrl(data, FileLocationMethod.avatar_large);
 
-        boolean downloaded = TaskCache.waitForPictureDownload(data, null, path, FileLocationMethod.avatar_large);
+        if (!(ImageUtility.isThisBitmapCanRead(path) && TaskCache.isThisUrlTaskFinished(data))) {
+            boolean downloaded = TaskCache
+                    .waitForPictureDownload(data, null, path, FileLocationMethod.avatar_large);
+            if (downloaded) {
+                path = FileManager.getFilePathFromUrl(data, FileLocationMethod.avatar_large);
+            }
+        }
 
-        int avatarWidth = globalContext.getResources().getDimensionPixelSize(R.dimen.profile_avatar_width);
-        int avatarHeight = globalContext.getResources().getDimensionPixelSize(R.dimen.profile_avatar_height);
+        int avatarWidth = globalContext.getResources()
+                .getDimensionPixelSize(R.dimen.profile_avatar_width);
+        int avatarHeight = globalContext.getResources()
+                .getDimensionPixelSize(R.dimen.profile_avatar_height);
 
         return ImageUtility.getRoundedCornerPic(path, avatarWidth, avatarHeight);
 

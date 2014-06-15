@@ -86,11 +86,12 @@ public class ReadWorker extends AbstractWorker<String, Integer, Boolean> {
             return null;
         }
 
-        String path = FileManager.getFilePathFromUrl(data, method);
+        String path = FileManager.generateDownloadFileName(data);
 
-        return TaskCache.waitForPictureDownload(data,
+        boolean result = TaskCache.waitForPictureDownload(data,
                 (SettingUtility.getEnableBigPic() ? downloadListener : null), path, method);
 
+        return result;
 
     }
 

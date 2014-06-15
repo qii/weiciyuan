@@ -10,7 +10,6 @@ import org.qii.weiciyuan.bean.CommentListBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.bean.UnreadBean;
 import org.qii.weiciyuan.bean.UserBean;
-import org.qii.weiciyuan.othercomponent.ClearCacheTask;
 import org.qii.weiciyuan.othercomponent.ConnectionChangeReceiver;
 import org.qii.weiciyuan.othercomponent.MusicReceiver;
 import org.qii.weiciyuan.support.database.AccountDBTask;
@@ -51,9 +50,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * User: Jiang Qi
@@ -154,8 +150,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity {
         SettingUtility.setDefaultAccountId(accountBean.getUid());
 
         buildInterface(savedInstanceState);
-        Executors.newSingleThreadScheduledExecutor()
-                .schedule(new ClearCacheTask(), 8, TimeUnit.SECONDS);
+
     }
 
 
