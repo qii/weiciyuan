@@ -608,6 +608,11 @@ public class ImageUtility {
             }
 
             String filePath = FileManager.getFilePathFromUrl(url, method);
+
+            if (!ImageUtility.isThisBitmapCanRead(filePath)) {
+                return null;
+            }
+
             if (!filePath.endsWith(".jpg") && !filePath.endsWith(".gif")) {
                 filePath = filePath + ".jpg";
             }

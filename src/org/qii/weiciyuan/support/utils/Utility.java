@@ -10,6 +10,7 @@ import org.qii.weiciyuan.othercomponent.unreadnotification.NotificationServiceHe
 import org.qii.weiciyuan.support.debug.AppLogger;
 import org.qii.weiciyuan.support.file.FileLocationMethod;
 import org.qii.weiciyuan.support.file.FileManager;
+import org.qii.weiciyuan.support.imageutility.ImageUtility;
 import org.qii.weiciyuan.support.lib.AutoScrollListView;
 import org.qii.weiciyuan.support.lib.MyAsyncTask;
 import org.qii.weiciyuan.support.lib.RecordOperationAppBroadcastReceiver;
@@ -507,11 +508,11 @@ public class Utility {
                         FileLocationMethod.picture_bmiddle);
                 String largePath = FileManager.getFilePathFromUrl(msg.getOriginal_pic(),
                         FileLocationMethod.picture_large);
-                if (new File(largePath).exists()) {
+                if (ImageUtility.isThisBitmapCanRead(largePath)) {
                     picUrl = Uri.fromFile(new File(largePath));
-                } else if (new File(middlePath).exists()) {
+                } else if (ImageUtility.isThisBitmapCanRead(middlePath)) {
                     picUrl = Uri.fromFile(new File(middlePath));
-                } else if (new File(smallPath).exists()) {
+                } else if (ImageUtility.isThisBitmapCanRead(smallPath)) {
                     picUrl = Uri.fromFile(new File(smallPath));
                 }
                 if (picUrl != null) {
@@ -1067,13 +1068,14 @@ public class Utility {
     }
 
     //long click link(schedule show dialog event), press home button(onPause onSaveInstance), show dialog,then crash....
+    //executePendingTransactions still occur crash
     public static void forceShowDialog(FragmentActivity activity, DialogFragment dialogFragment) {
-//        try {
-        dialogFragment.show(activity.getSupportFragmentManager(), "");
+        try {
+            dialogFragment.show(activity.getSupportFragmentManager(), "");
         activity.getSupportFragmentManager().executePendingTransactions();
-//        } catch (Exception ignored) {
-//
-//        }
+        } catch (Exception ignored) {
+
+        }
     }
 }
 
