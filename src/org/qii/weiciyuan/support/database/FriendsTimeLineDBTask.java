@@ -170,23 +170,23 @@ public class FriendsTimeLineDBTask {
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
-        if (c.moveToNext()) {
+        if (c.getCount() > 0) {
             try {
                 String[] args = {accountId};
                 ContentValues cv = new ContentValues();
                 cv.put(HomeTable.TIMELINEDATA, gson.toJson(position));
                 getWsd().update(HomeTable.TABLE_NAME, cv, HomeTable.ACCOUNTID + "=?", args);
             } catch (JsonSyntaxException e) {
-
+                e.printStackTrace();
             }
         } else {
-
             ContentValues cv = new ContentValues();
             cv.put(HomeTable.ACCOUNTID, accountId);
             cv.put(HomeTable.TIMELINEDATA, gson.toJson(position));
             getWsd().insert(HomeTable.TABLE_NAME,
                     HomeTable.ID, cv);
         }
+
     }
 
     private static TimeLinePosition getPosition(String accountId) {
@@ -338,11 +338,13 @@ public class FriendsTimeLineDBTask {
             String exceptGroupId) {
         List<MessageTimeLineData> data = new ArrayList<MessageTimeLineData>();
 
-        TimeLinePosition position = getPosition(accountId);
-        MessageListBean msgList = getHomeLineMsgList(accountId,
-                position.position + AppConfig.DB_CACHE_COUNT_OFFSET);
-        MessageTimeLineData home = new MessageTimeLineData("0", msgList, position);
-        data.add(home);
+        if (!"0".equals(exceptGroupId)) {
+            TimeLinePosition position = getPosition(accountId);
+            MessageListBean msgList = getHomeLineMsgList(accountId,
+                    position.position + AppConfig.DB_CACHE_COUNT_OFFSET);
+            MessageTimeLineData home = new MessageTimeLineData("0", msgList, position);
+            data.add(home);
+        }
 
         MessageTimeLineData biGroup = HomeOtherGroupTimeLineDBTask.getTimeLineData(accountId, "1");
         data.add(biGroup);

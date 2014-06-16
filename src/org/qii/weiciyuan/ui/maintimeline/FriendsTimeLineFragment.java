@@ -220,12 +220,10 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
     }
 
+    //must create new position every time onpause,  pulltorefresh wont call onListViewScrollStop
     private void savePositionToDB() {
+        savePositionToPositionsCache();
         TimeLinePosition position = positionCache.get(currentGroupId);
-        if (position == null) {
-            savePositionToPositionsCache();
-            position = positionCache.get(currentGroupId);
-        }
         position.newMsgIds = newMsgTipBar.getValues();
         final String groupId = currentGroupId;
         FriendsTimeLineDBTask
