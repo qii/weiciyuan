@@ -1,19 +1,21 @@
 package org.qii.weiciyuan.support.database;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
 import org.qii.weiciyuan.bean.FavBean;
 import org.qii.weiciyuan.bean.FavListBean;
 import org.qii.weiciyuan.bean.android.FavouriteTimeLineData;
 import org.qii.weiciyuan.bean.android.TimeLinePosition;
 import org.qii.weiciyuan.support.database.table.FavouriteTable;
 import org.qii.weiciyuan.support.debug.AppLogger;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.List;
  * Date: 13-5-30
  */
 public class FavouriteDBTask {
+
     private FavouriteDBTask() {
 
     }
@@ -42,7 +45,8 @@ public class FavouriteDBTask {
         Gson gson = new Gson();
         List<FavBean> msgList = list.getFavorites();
 
-        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), FavouriteTable.FavouriteDataTable.TABLE_NAME);
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(),
+                FavouriteTable.FavouriteDataTable.TABLE_NAME);
         final int mblogidColumn = ih.getColumnIndex(FavouriteTable.FavouriteDataTable.MBLOGID);
         final int accountidColumn = ih.getColumnIndex(FavouriteTable.FavouriteDataTable.ACCOUNTID);
         final int jsondataColumn = ih.getColumnIndex(FavouriteTable.FavouriteDataTable.JSONDATA);
@@ -66,7 +70,8 @@ public class FavouriteDBTask {
             ih.close();
         }
 
-        String sql = "select * from " + FavouriteTable.TABLE_NAME + " where " + FavouriteTable.ACCOUNTID + "  = "
+        String sql = "select * from " + FavouriteTable.TABLE_NAME + " where "
+                + FavouriteTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         if (c.moveToNext()) {
@@ -74,7 +79,8 @@ public class FavouriteDBTask {
                 String[] args = {accountId};
                 ContentValues cv = new ContentValues();
                 cv.put(FavouriteTable.PAGE, page);
-                getWsd().update(FavouriteTable.TABLE_NAME, cv, FavouriteTable.ACCOUNTID + "=?", args);
+                getWsd().update(FavouriteTable.TABLE_NAME, cv, FavouriteTable.ACCOUNTID + "=?",
+                        args);
             } catch (JsonSyntaxException e) {
 
             }
@@ -94,7 +100,8 @@ public class FavouriteDBTask {
         FavListBean result = new FavListBean();
 
         List<FavBean> msgList = new ArrayList<FavBean>();
-        String sql = "select * from " + FavouriteTable.FavouriteDataTable.TABLE_NAME + " where " + FavouriteTable.FavouriteDataTable.ACCOUNTID + "  = "
+        String sql = "select * from " + FavouriteTable.FavouriteDataTable.TABLE_NAME + " where "
+                + FavouriteTable.FavouriteDataTable.ACCOUNTID + "  = "
                 + accountId + " order by " + FavouriteTable.FavouriteDataTable.MBLOGID + " desc";
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
@@ -102,8 +109,9 @@ public class FavouriteDBTask {
             String json = c.getString(c.getColumnIndex(FavouriteTable.FavouriteDataTable.JSONDATA));
             try {
                 FavBean value = gson.fromJson(json, FavBean.class);
-                if (value != null)
+                if (value != null) {
                     value.getStatus().getListViewSpannableString();
+                }
                 msgList.add(value);
             } catch (JsonSyntaxException e) {
                 AppLogger.e(e.getMessage());
@@ -113,7 +121,8 @@ public class FavouriteDBTask {
         result.setFavorites(msgList);
         c.close();
 
-        sql = "select * from " + FavouriteTable.TABLE_NAME + " where " + FavouriteTable.ACCOUNTID + "  = "
+        sql = "select * from " + FavouriteTable.TABLE_NAME + " where " + FavouriteTable.ACCOUNTID
+                + "  = "
                 + accountId;
         c = getRsd().rawQuery(sql, null);
         int page = 0;
@@ -127,17 +136,21 @@ public class FavouriteDBTask {
 
 
     static void deleteAllFavourites(String accountId) {
-        String sql = "delete from " + FavouriteTable.FavouriteDataTable.TABLE_NAME + " where " + FavouriteTable.FavouriteDataTable.ACCOUNTID + " in " + "(" + accountId + ")";
+        String sql = "delete from " + FavouriteTable.FavouriteDataTable.TABLE_NAME + " where "
+                + FavouriteTable.FavouriteDataTable.ACCOUNTID + " in " + "(" + accountId + ")";
 
         getWsd().execSQL(sql);
 
-        sql = "delete from " + FavouriteTable.TABLE_NAME + " where " + FavouriteTable.ACCOUNTID + " in " + "(" + accountId + ")";
+        sql = "delete from " + FavouriteTable.TABLE_NAME + " where " + FavouriteTable.ACCOUNTID
+                + " in " + "(" + accountId + ")";
         getWsd().execSQL(sql);
     }
 
-    public static void asyncUpdatePosition(final TimeLinePosition position, final String accountId) {
-        if (position == null)
+    public static void asyncUpdatePosition(final TimeLinePosition position,
+            final String accountId) {
+        if (position == null) {
             return;
+        }
 
         Runnable runnable = new Runnable() {
             @Override
@@ -151,7 +164,8 @@ public class FavouriteDBTask {
 
 
     private static void updatePosition(TimeLinePosition position, String accountId) {
-        String sql = "select * from " + FavouriteTable.TABLE_NAME + " where " + FavouriteTable.ACCOUNTID + "  = "
+        String sql = "select * from " + FavouriteTable.TABLE_NAME + " where "
+                + FavouriteTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
@@ -160,7 +174,8 @@ public class FavouriteDBTask {
                 String[] args = {accountId};
                 ContentValues cv = new ContentValues();
                 cv.put(FavouriteTable.TIMELINEDATA, gson.toJson(position));
-                getWsd().update(FavouriteTable.TABLE_NAME, cv, FavouriteTable.ACCOUNTID + "=?", args);
+                getWsd().update(FavouriteTable.TABLE_NAME, cv, FavouriteTable.ACCOUNTID + "=?",
+                        args);
             } catch (JsonSyntaxException e) {
 
             }
@@ -175,7 +190,8 @@ public class FavouriteDBTask {
     }
 
     private static TimeLinePosition getPosition(String accountId) {
-        String sql = "select * from " + FavouriteTable.TABLE_NAME + " where " + FavouriteTable.ACCOUNTID + "  = "
+        String sql = "select * from " + FavouriteTable.TABLE_NAME + " where "
+                + FavouriteTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
@@ -184,10 +200,11 @@ public class FavouriteDBTask {
             if (!TextUtils.isEmpty(json)) {
                 try {
                     TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
+                    c.close();
                     return value;
 
                 } catch (JsonSyntaxException e) {
-
+                    e.printStackTrace();
                 }
             }
 
@@ -196,7 +213,8 @@ public class FavouriteDBTask {
         return new TimeLinePosition(0, 0);
     }
 
-    public static void asyncReplace(final FavListBean data, final int page, final String accountId) {
+    public static void asyncReplace(final FavListBean data, final int page,
+            final String accountId) {
         new Thread(new Runnable() {
             @Override
             public void run() {

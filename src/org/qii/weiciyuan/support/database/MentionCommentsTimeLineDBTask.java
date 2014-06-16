@@ -1,20 +1,22 @@
 package org.qii.weiciyuan.support.database;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import org.qii.weiciyuan.bean.CommentBean;
+import org.qii.weiciyuan.bean.CommentListBean;
+import org.qii.weiciyuan.bean.android.CommentTimeLineData;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
+import org.qii.weiciyuan.support.database.table.MentionCommentsTable;
+import org.qii.weiciyuan.support.debug.AppLogger;
+import org.qii.weiciyuan.support.utils.AppConfig;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import org.qii.weiciyuan.bean.CommentBean;
-import org.qii.weiciyuan.bean.CommentListBean;
-import org.qii.weiciyuan.bean.android.CommentTimeLineData;
-import org.qii.weiciyuan.bean.android.TimeLinePosition;
-import org.qii.weiciyuan.support.database.table.MentionCommentsTable;
-import org.qii.weiciyuan.support.utils.AppConfig;
-import org.qii.weiciyuan.support.debug.AppLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -203,10 +205,11 @@ public class MentionCommentsTimeLineDBTask {
             if (!TextUtils.isEmpty(json)) {
                 try {
                     TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
+                    c.close();
                     return value;
 
                 } catch (JsonSyntaxException e) {
-
+                    e.printStackTrace();
                 }
             }
 

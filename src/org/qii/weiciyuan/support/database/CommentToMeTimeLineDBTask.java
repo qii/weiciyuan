@@ -219,10 +219,11 @@ public class CommentToMeTimeLineDBTask {
             if (!TextUtils.isEmpty(json)) {
                 try {
                     TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
+                    c.close();
                     return value;
 
                 } catch (JsonSyntaxException e) {
-
+                    e.printStackTrace();
                 }
             }
 

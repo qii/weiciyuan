@@ -1,13 +1,14 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+import org.qii.weiciyuan.support.utils.TimeLineUtility;
+import org.qii.weiciyuan.support.utils.TimeUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import org.qii.weiciyuan.support.utils.TimeLineUtility;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
-import org.qii.weiciyuan.support.utils.TimeUtility;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,22 +22,36 @@ import java.util.Date;
 public class MessageBean extends ItemBean implements Parcelable {
 
     private String created_at;
+
     private long id;
+
     private String idstr;
+
     private String text;
+
     private String source;
+
     private boolean favorited;
+
     private String truncated;
+
     private String in_reply_to_status_id;
+
     private String in_reply_to_user_id;
+
     private String in_reply_to_screen_name;
+
     private String mid;
+
     private int reposts_count = 0;
+
     private int comments_count = 0;
     //    private Object annotations;
 
     private String thumbnail_pic;
+
     private String bmiddle_pic;
+
     private String original_pic;
 
     private String sourceString;
@@ -44,10 +59,13 @@ public class MessageBean extends ItemBean implements Parcelable {
     private long mills;
 
     private MessageBean retweeted_status;
+
     private UserBean user;
+
     private GeoBean geo;
 
     private ArrayList<PicUrls> pic_urls = new ArrayList<PicUrls>();
+
     private ArrayList<String> pic_ids = new ArrayList<String>();
 
 
@@ -55,6 +73,7 @@ public class MessageBean extends ItemBean implements Parcelable {
 
 
     public static class PicUrls implements Parcelable {
+
         public String thumbnail_pic;
 
         @Override
@@ -135,13 +154,11 @@ public class MessageBean extends ItemBean implements Parcelable {
                     in.readBooleanArray(booleans);
                     messageBean.favorited = booleans[0];
 
-
                     messageBean.truncated = in.readString();
                     messageBean.in_reply_to_status_id = in.readString();
                     messageBean.in_reply_to_user_id = in.readString();
                     messageBean.in_reply_to_screen_name = in.readString();
                     messageBean.mid = in.readString();
-
 
                     messageBean.reposts_count = in.readInt();
                     messageBean.comments_count = in.readInt();
@@ -152,7 +169,8 @@ public class MessageBean extends ItemBean implements Parcelable {
                     messageBean.sourceString = in.readString();
                     messageBean.mills = in.readLong();
 
-                    messageBean.retweeted_status = in.readParcelable(MessageBean.class.getClassLoader());
+                    messageBean.retweeted_status = in
+                            .readParcelable(MessageBean.class.getClassLoader());
                     messageBean.user = in.readParcelable(UserBean.class.getClassLoader());
                     messageBean.geo = in.readParcelable(GeoBean.class.getClassLoader());
 
@@ -328,8 +346,9 @@ public class MessageBean extends ItemBean implements Parcelable {
         if (!TextUtils.isEmpty(sourceString)) {
             return sourceString;
         } else {
-            if (!TextUtils.isEmpty(source))
+            if (!TextUtils.isEmpty(source)) {
                 sourceString = Html.fromHtml(this.source).toString();
+            }
             return sourceString;
         }
     }
@@ -394,63 +413,73 @@ public class MessageBean extends ItemBean implements Parcelable {
     }
 
     private ArrayList<String> thumbnaiUrls = new ArrayList<String>();
+
     private ArrayList<String> middleUrls = new ArrayList<String>();
+
     private ArrayList<String> highUrls = new ArrayList<String>();
 
 
     public ArrayList<String> getThumbnailPicUrls() {
-        if (thumbnaiUrls.size() > 0)
+        if (thumbnaiUrls.size() > 0) {
             return thumbnaiUrls;
-
+        }
+        ArrayList<String> value = new ArrayList<String>();
         for (PicUrls url : pic_urls) {
-            thumbnaiUrls.add(url.thumbnail_pic);
+            value.add(url.thumbnail_pic);
         }
 
-        if (thumbnaiUrls.size() == 0) {
+        if (value.size() == 0) {
             String prefStr = "http://ww4.sinaimg.cn/thumbnail/";
             for (String url : pic_ids) {
-                thumbnaiUrls.add(prefStr + url + ".jpg");
+                value.add(prefStr + url + ".jpg");
             }
         }
-
-        return thumbnaiUrls;
+        this.thumbnaiUrls = value;
+        return value;
     }
 
     public ArrayList<String> getMiddlePicUrls() {
-        if (middleUrls.size() > 0)
+        if (middleUrls.size() > 0) {
             return middleUrls;
-
+        }
+        ArrayList<String> value = new ArrayList<String>();
         for (PicUrls url : pic_urls) {
-            middleUrls.add(url.thumbnail_pic.replace("thumbnail", "bmiddle"));
+            value.add(url.thumbnail_pic.replace("thumbnail", "bmiddle"));
         }
 
-        if (middleUrls.size() == 0) {
+        if (value.size() == 0) {
             String prefStr = "http://ww4.sinaimg.cn/bmiddle/";
             for (String url : pic_ids) {
-                middleUrls.add(prefStr + url + ".jpg");
+                value.add(prefStr + url + ".jpg");
             }
         }
 
-        return middleUrls;
+        this.middleUrls = value;
+        return value;
     }
 
 
     public ArrayList<String> getHighPicUrls() {
-        if (highUrls.size() > 0)
+        if (highUrls.size() > 0) {
             return highUrls;
-
-        for (PicUrls url : pic_urls) {
-            highUrls.add(url.thumbnail_pic.replace("thumbnail", "large"));
         }
 
-        if (highUrls.size() == 0) {
+        ArrayList<String> value = new ArrayList<String>();
+
+        for (PicUrls url : pic_urls) {
+            value.add(url.thumbnail_pic.replace("thumbnail", "large"));
+        }
+
+        if (value.size() == 0) {
             String prefStr = "http://ww4.sinaimg.cn/large/";
             for (String url : pic_ids) {
-                highUrls.add(prefStr + url + ".jpg");
+                value.add(prefStr + url + ".jpg");
             }
         }
 
-        return highUrls;
+        this.highUrls = value;
+
+        return value;
     }
 
     public boolean isMultiPics() {

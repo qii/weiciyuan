@@ -1,18 +1,20 @@
 package org.qii.weiciyuan.support.database;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import org.qii.weiciyuan.bean.MessageBean;
+import org.qii.weiciyuan.bean.MessageListBean;
+import org.qii.weiciyuan.bean.android.MyStatusTimeLineData;
+import org.qii.weiciyuan.bean.android.TimeLinePosition;
+import org.qii.weiciyuan.support.database.table.MyStatusTable;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import org.qii.weiciyuan.bean.MessageBean;
-import org.qii.weiciyuan.bean.MessageListBean;
-import org.qii.weiciyuan.bean.android.MyStatusTimeLineData;
-import org.qii.weiciyuan.bean.android.TimeLinePosition;
-import org.qii.weiciyuan.support.database.table.MyStatusTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +46,10 @@ public class MyStatusDBTask {
             return;
         }
 
-
         Gson gson = new Gson();
         List<MessageBean> msgList = list.getItemList();
-        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(), MyStatusTable.StatusDataTable.TABLE_NAME);
+        DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(),
+                MyStatusTable.StatusDataTable.TABLE_NAME);
         final int mblogidColumn = ih.getColumnIndex(MyStatusTable.StatusDataTable.MBLOGID);
         final int accountidColumn = ih.getColumnIndex(MyStatusTable.StatusDataTable.ACCOUNTID);
         final int jsondataColumn = ih.getColumnIndex(MyStatusTable.StatusDataTable.JSONDATA);
@@ -80,7 +82,8 @@ public class MyStatusDBTask {
 
 
     public static void clear(String accountId) {
-        String sql = "delete from " + MyStatusTable.StatusDataTable.TABLE_NAME + " where " + MyStatusTable.StatusDataTable.ACCOUNTID + " in " + "(" + accountId + ")";
+        String sql = "delete from " + MyStatusTable.StatusDataTable.TABLE_NAME + " where "
+                + MyStatusTable.StatusDataTable.ACCOUNTID + " in " + "(" + accountId + ")";
 
         getWsd().execSQL(sql);
     }
@@ -90,8 +93,10 @@ public class MyStatusDBTask {
         MessageListBean result = new MessageListBean();
 
         List<MessageBean> msgList = new ArrayList<MessageBean>();
-        String sql = "select * from " + MyStatusTable.StatusDataTable.TABLE_NAME + " where " + MyStatusTable.StatusDataTable.ACCOUNTID + "  = "
-                + accountId + " order by " + MyStatusTable.StatusDataTable.MBLOGID + " desc limit 50";
+        String sql = "select * from " + MyStatusTable.StatusDataTable.TABLE_NAME + " where "
+                + MyStatusTable.StatusDataTable.ACCOUNTID + "  = "
+                + accountId + " order by " + MyStatusTable.StatusDataTable.MBLOGID
+                + " desc limit 50";
         Cursor c = getRsd().rawQuery(sql, null);
         while (c.moveToNext()) {
             String json = c.getString(c.getColumnIndex(MyStatusTable.StatusDataTable.JSONDATA));
@@ -112,7 +117,8 @@ public class MyStatusDBTask {
     }
 
     private static void updatePosition(TimeLinePosition position, String accountId) {
-        String sql = "select * from " + MyStatusTable.TABLE_NAME + " where " + MyStatusTable.ACCOUNTID + "  = "
+        String sql = "select * from " + MyStatusTable.TABLE_NAME + " where "
+                + MyStatusTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
@@ -136,7 +142,8 @@ public class MyStatusDBTask {
     }
 
     private static TimeLinePosition getPosition(String accountId) {
-        String sql = "select * from " + MyStatusTable.TABLE_NAME + " where " + MyStatusTable.ACCOUNTID + "  = "
+        String sql = "select * from " + MyStatusTable.TABLE_NAME + " where "
+                + MyStatusTable.ACCOUNTID + "  = "
                 + accountId;
         Cursor c = getRsd().rawQuery(sql, null);
         Gson gson = new Gson();
@@ -145,10 +152,11 @@ public class MyStatusDBTask {
             if (!TextUtils.isEmpty(json)) {
                 try {
                     TimeLinePosition value = gson.fromJson(json, TimeLinePosition.class);
+                    c.close();
                     return value;
 
                 } catch (JsonSyntaxException e) {
-
+                    e.printStackTrace();
                 }
             }
 
@@ -167,9 +175,11 @@ public class MyStatusDBTask {
         }).start();
     }
 
-    public static void asyncUpdatePosition(final TimeLinePosition position, final String accountId) {
-        if (position == null)
+    public static void asyncUpdatePosition(final TimeLinePosition position,
+            final String accountId) {
+        if (position == null) {
             return;
+        }
 
         Runnable runnable = new Runnable() {
             @Override
