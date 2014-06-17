@@ -1,14 +1,16 @@
 package org.qii.weiciyuan.bean;
 
+import org.qii.weiciyuan.support.settinghelper.SettingUtility;
+import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import org.qii.weiciyuan.support.settinghelper.SettingUtility;
-import org.qii.weiciyuan.support.utils.ObjectToStringUtility;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * User: Jiang Qi
@@ -92,6 +94,23 @@ public class CommentListBean extends ListBean<CommentBean, CommentListBean> impl
         }
         this.getItemList().addAll(0, newValue.getItemList());
         this.setTotal_number(newValue.getTotal_number());
+
+        //remove duplicate null flag, [x,y,null,null,z....]
+        List<CommentBean> msgList = getItemList();
+        ListIterator<CommentBean> listIterator = msgList.listIterator();
+
+        boolean isLastItemNull = false;
+        while (listIterator.hasNext()) {
+            CommentBean msg = listIterator.next();
+            if (msg == null) {
+                if (isLastItemNull) {
+                    listIterator.remove();
+                }
+                isLastItemNull = true;
+            } else {
+                isLastItemNull = false;
+            }
+        }
     }
 
     public void addMiddleData(int position, CommentListBean middleValue, boolean towardsBottom) {

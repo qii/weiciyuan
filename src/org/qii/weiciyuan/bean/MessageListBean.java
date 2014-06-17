@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * User: qii
@@ -119,6 +120,23 @@ public class MessageListBean extends ListBean<MessageBean, MessageListBean> impl
         }
         this.getItemList().addAll(0, newValue.getItemList());
         this.setTotal_number(newValue.getTotal_number());
+
+        //remove duplicate null flag, [x,y,null,null,z....]
+        List<MessageBean> msgList = getItemList();
+        ListIterator<MessageBean> listIterator = msgList.listIterator();
+
+        boolean isLastItemNull = false;
+        while (listIterator.hasNext()) {
+            MessageBean msg = listIterator.next();
+            if (msg == null) {
+                if (isLastItemNull) {
+                    listIterator.remove();
+                }
+                isLastItemNull = true;
+            } else {
+                isLastItemNull = false;
+            }
+        }
     }
 
     @Override
