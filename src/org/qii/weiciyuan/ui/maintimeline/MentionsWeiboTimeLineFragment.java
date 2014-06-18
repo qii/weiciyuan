@@ -359,9 +359,14 @@ public class MentionsWeiboTimeLineFragment
     private void setListViewPositionFromPositionsCache() {
         Utility.setListViewSelectionFromTop(getListView(),
                 timeLinePosition != null ? timeLinePosition.position : 0,
-                timeLinePosition != null ? timeLinePosition.top : 0);
+                timeLinePosition != null ? timeLinePosition.top : 0, new Runnable() {
+            @Override
+            public void run() {
+                setListViewUnreadTipBar(timeLinePosition);
 
-        setListViewUnreadTipBar(timeLinePosition);
+            }
+        });
+
 
     }
 

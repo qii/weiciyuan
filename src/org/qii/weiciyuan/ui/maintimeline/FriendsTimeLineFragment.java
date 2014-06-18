@@ -206,13 +206,19 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private void setListViewPositionFromPositionsCache() {
         final TimeLinePosition p = positionCache.get(currentGroupId);
         Utility.setListViewSelectionFromTop(getListView(), p != null ? p.position : 0,
-                p != null ? p.top : 0);
-        setListViewUnreadTipBar(p);
-
+                p != null ? p.top : 0, new Runnable() {
+            @Override
+            public void run() {
+                setListViewUnreadTipBar(p);
+            }
+        });
     }
 
     private void setListViewUnreadTipBar(TimeLinePosition p) {
         if (p != null && p.newMsgIds != null) {
+            if (SettingUtility.getEnableAutoRefresh()) {
+                newMsgTipBar.setType(TopTipBar.Type.ALWAYS);
+            }
             newMsgTipBar.setValue(p.newMsgIds);
         }
     }

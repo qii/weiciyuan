@@ -338,10 +338,15 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
     private void setListViewPositionFromPositionsCache() {
         Utility.setListViewSelectionFromTop(getListView(),
                 timeLinePosition != null ? timeLinePosition.position : 0,
-                timeLinePosition != null ? timeLinePosition.top : 0);
-        setListViewUnreadTipBar(timeLinePosition);
+                timeLinePosition != null ? timeLinePosition.top : 0, new Runnable() {
+            @Override
+            public void run() {
+                setListViewUnreadTipBar(timeLinePosition);
+            }
 
-    }
+            );
+
+        }
 
     private void setListViewUnreadTipBar(TimeLinePosition p) {
         if (p != null && p.newMsgIds != null) {
