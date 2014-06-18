@@ -677,14 +677,23 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         if (getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             int index = getListView().getFirstVisiblePosition();
-            newMsgTipBar.setValue(newValue, false);
-            newMsgTipBar.setType(TopTipBar.Type.ALWAYS);
             View v = getListView().getChildAt(0);
             final int top = (v == null) ? 0 : v.getTop();
-            getAdapter().notifyDataSetChanged();
-            final int positionAfterRefresh = index + size;
-            Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, top);
 
+            if (index != 0 || top != 0) {
+                newMsgTipBar.setValue(newValue, false);
+                newMsgTipBar.setType(TopTipBar.Type.ALWAYS);
+                getAdapter().notifyDataSetChanged();
+
+                final int positionAfterRefresh = index + size;
+                Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, top);
+
+            } else {
+
+                getAdapter().notifyDataSetChanged();
+
+                Utility.setListViewSelectionFromTop(getListView(), 0, 0);
+            }
 
         }
 
