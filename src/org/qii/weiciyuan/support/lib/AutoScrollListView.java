@@ -2,7 +2,6 @@ package org.qii.weiciyuan.support.lib;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ListView;
 
 /**
  * User: qii
@@ -11,7 +10,7 @@ import android.widget.ListView;
  * <p/>
  * ref http://cyrilmottier.com/2013/01/09/back-to-top-android-vs-ios/
  */
-public class AutoScrollListView extends ListView {
+public class AutoScrollListView extends HeaderListView {
 
     /**
      * Position the element at about 1/3 of the list height
@@ -19,6 +18,7 @@ public class AutoScrollListView extends ListView {
     private static final float PREFERRED_SELECTION_OFFSET_FROM_TOP = 0.33f;
 
     private int mRequestedScrollPosition = -1;
+
     private boolean mSmoothScrollRequested;
 
     public AutoScrollListView(Context context) {
@@ -95,7 +95,6 @@ public class AutoScrollListView extends ListView {
                     super.layoutChildren();
                 }
             }
-
 
             smoothScrollToPositionFromTop(position, offset);
         }
