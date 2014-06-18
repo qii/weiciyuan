@@ -203,13 +203,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     }
 
     private void setListViewPositionFromPositionsCache() {
-        TimeLinePosition p = positionCache.get(currentGroupId);
-        if (p != null) {
-            getListView().setSelectionFromTop(p.position + 1, p.top);
-        } else {
-            getListView().setSelectionFromTop(0, 0);
-        }
-
+        final TimeLinePosition p = positionCache.get(currentGroupId);
+        Utility.setListViewSelectionFromTop(getListView(), p != null ? p.position : 0,
+                p != null ? p.top : 0);
         setListViewUnreadTipBar(p);
 
     }
@@ -683,11 +679,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             int index = getListView().getFirstVisiblePosition();
             newMsgTipBar.setValue(newValue, false);
             newMsgTipBar.setType(TopTipBar.Type.ALWAYS);
-            View v = getListView().getChildAt(1);
-            int top = (v == null) ? 0 : v.getTop();
+            View v = getListView().getChildAt(0);
+            final int top = (v == null) ? 0 : v.getTop();
             getAdapter().notifyDataSetChanged();
-            int ss = index + size;
-            getListView().setSelectionFromTop(ss + 1, top);
+            final int positionAfterRefresh = index + size;
+            Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, top);
+
 
         }
 
@@ -703,11 +700,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getList().addNewData(newValue);
             int index = getListView().getFirstVisiblePosition();
 
-            View v = getListView().getChildAt(1);
-            int top = (v == null) ? 0 : v.getTop();
+            View v = getListView().getChildAt(0);
+            final int top = (v == null) ? 0 : v.getTop();
             getAdapter().notifyDataSetChanged();
-            int ss = index + size;
-            getListView().setSelectionFromTop(ss + 1, top);
+            final int positionAfterRefresh = index + size;
+            Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, top);
+
         }
 
 
@@ -729,12 +727,12 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
                 getAdapter().notifyDataSetChanged();
             } else {
 
-                View v = Utility
-                        .getListViewItemViewFromPosition(getListView(), position + 1 + 1);
-                int top = (v == null) ? 0 : v.getTop();
+                int index = getListView().getFirstVisiblePosition();
+                View v = getListView().getChildAt(0);
+                final int top = (v == null) ? 0 : v.getTop();
                 getAdapter().notifyDataSetChanged();
-                int ss = position + 1 + size - 1;
-                getListView().setSelectionFromTop(ss, top);
+                final int positionAfterRefresh = index + size;
+                Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, top);
             }
         }
 

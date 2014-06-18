@@ -333,12 +333,9 @@ public class CommentsToMeTimeLineFragment extends AbstractTimeLineFragment<Comme
     }
 
     private void setListViewPositionFromPositionsCache() {
-        if (timeLinePosition != null) {
-            getListView().setSelectionFromTop(timeLinePosition.position + 1, timeLinePosition.top);
-        } else {
-            getListView().setSelectionFromTop(0, 0);
-        }
-
+        Utility.setListViewSelectionFromTop(getListView(),
+                timeLinePosition != null ? timeLinePosition.position : 0,
+                timeLinePosition != null ? timeLinePosition.top : 0);
         setListViewUnreadTipBar(timeLinePosition);
 
     }

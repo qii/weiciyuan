@@ -805,13 +805,9 @@ public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageLis
 
     private void setListViewPositionFromPositionsCache() {
 
-        TimeLinePosition p = position;
-        if (p != null) {
-            getListView().setSelectionFromTop(p.position + 1, p.top);
-        } else {
-            getListView().setSelectionFromTop(0, 0);
-        }
-
+        Utility.setListViewSelectionFromTop(getListView(),
+                position != null ? position.position : 0,
+                position != null ? position.top : 0);
 
     }
 
