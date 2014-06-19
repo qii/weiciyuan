@@ -679,7 +679,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private void addNewDataAndRememberPositionAutoRefresh(final MessageListBean newValue) {
 
-        int size = newValue.getSize();
+        int initSize = getList().getSize();
 
         if (getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
@@ -699,8 +699,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             final int top = (firstAdapterItemView == null) ? 0 : firstAdapterItemView.getTop();
 
             getAdapter().notifyDataSetChanged();
-
-            final int positionAfterRefresh = index + size;
+            int finalSize = getList().getSize();
+            final int positionAfterRefresh = index + finalSize - initSize;
             Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, top,
                     new Runnable() {
                         @Override
@@ -717,13 +717,15 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
     private void addNewDataAndRememberPosition(final MessageListBean newValue) {
 
-        int size = newValue.getSize();
+        int initSize = getList().getSize();
 
         if (getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
             int index = getListView().getFirstVisiblePosition();
             getAdapter().notifyDataSetChanged();
-            final int positionAfterRefresh = index + size + getListView().getHeaderViewsCount();
+            int finalSize = getList().getSize();
+            final int positionAfterRefresh = index + finalSize - initSize + getListView()
+                    .getHeaderViewsCount();
             //use 1 px to show newMsgTipBar
             Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, 1,
                     new Runnable() {

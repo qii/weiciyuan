@@ -343,10 +343,9 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
             public void run() {
                 setListViewUnreadTipBar(timeLinePosition);
             }
+        });
 
-            );
-
-        }
+    }
 
     private void setListViewUnreadTipBar(TimeLinePosition p) {
         if (p != null && p.newMsgIds != null) {
@@ -390,23 +389,33 @@ public class MentionsCommentTimeLineFragment extends AbstractTimeLineFragment<Co
                 .getMentionsCommentNotificationId(GlobalContext.getInstance().getAccountBean()));
     }
 
-    private void addNewDataAndRememberPosition(CommentListBean newValue) {
+    private void addNewDataAndRememberPosition(final CommentListBean newValue) {
 
-        int size = newValue.getSize();
+        int initSize = getList().getSize();
 
         if (getActivity() != null && newValue.getSize() > 0) {
-            boolean jumpToTop = getList().getSize() == 0;
-            newMsgTipBar.setValue(newValue, jumpToTop);
+            final boolean jumpToTop = getList().getSize() == 0;
 
             getList().addNewData(newValue);
             if (!jumpToTop) {
                 int index = getListView().getFirstVisiblePosition();
-                View v = getListView().getChildAt(1);
-                int top = (v == null) ? 0 : v.getTop();
                 getAdapter().notifyDataSetChanged();
-                int ss = index + size;
-                getListView().setSelectionFromTop(ss + 1, top);
+                int finalSize = getList().getSize();
+                final int positionAfterRefresh = index + finalSize - initSize + getListView()
+                        .getHeaderViewsCount();
+                //use 1 px to show newMsgTipBar
+                Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, 1,
+                        new Runnable() {
+
+                            @Override
+                            public void run() {
+                                newMsgTipBar.setValue(newValue, jumpToTop);
+                            }
+                        });
+
             } else {
+                newMsgTipBar.setValue(newValue, jumpToTop);
+
                 newMsgTipBar.clearAndReset();
                 getAdapter().notifyDataSetChanged();
                 getListView().setSelection(0);
