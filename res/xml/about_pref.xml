@@ -33,6 +33,13 @@
                     android:data="https://github.com/qii/weiciyuan"/>
         </Preference>
 
+        <Preference android:title="@string/pref_google_plus_group_title"
+                    android:summary="@string/pref_google_plus_group_summary">
+            <intent
+                    android:action="android.intent.action.VIEW"
+                    android:data="https://plus.google.com/communities/111020193225004457212"/>
+        </Preference>
+
         <Preference android:title="@string/pref_open_source_license_title">
             <intent
                     android:targetPackage="org.qii.weiciyuan"

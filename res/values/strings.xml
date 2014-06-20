@@ -530,6 +530,8 @@
     <string name="pref_saved_pic_path_title">图片保存路径</string>
     <string name="pref_saved_log_path_title">崩溃日志保存路径</string>
     <string name="pref_open_source_license_title">开源协议</string>
+    <string name="pref_google_plus_group_title">Google+ 社群</string>
+    <string name="pref_google_plus_group_summary">获取最新测试版</string>
     <string name="pref_debug_title">调试</string>
     <string name="pref_debug_mem_title">内存信息</string>
     <string name="print_license">打印协议</string>
