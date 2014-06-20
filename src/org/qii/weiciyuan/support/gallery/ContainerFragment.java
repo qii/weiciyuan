@@ -150,11 +150,13 @@ public class ContainerFragment extends Fragment {
             } else {
                 fragment = GeneralPictureFragment.newInstance(path, rect, animateIn);
             }
-            getChildFragmentManager().beginTransaction().replace(R.id.child, fragment).commit();
+            getChildFragmentManager().beginTransaction().replace(R.id.child, fragment)
+                    .commitAllowingStateLoss();
 
         } else {
             LargePictureFragment fragment = LargePictureFragment.newInstance(path, animateIn);
-            getChildFragmentManager().beginTransaction().replace(R.id.child, fragment).commit();
+            getChildFragmentManager().beginTransaction().replace(R.id.child, fragment)
+                    .commitAllowingStateLoss();
         }
 
     }
