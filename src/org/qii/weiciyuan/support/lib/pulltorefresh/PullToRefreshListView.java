@@ -15,6 +15,12 @@
  *******************************************************************************/
 package org.qii.weiciyuan.support.lib.pulltorefresh;
 
+import org.qii.weiciyuan.R;
+import org.qii.weiciyuan.support.lib.VelocityListView;
+import org.qii.weiciyuan.support.lib.pulltorefresh.internal.EmptyViewMethodAccessor;
+import org.qii.weiciyuan.support.lib.pulltorefresh.internal.LoadingLayout;
+
+import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -28,10 +34,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import org.qii.weiciyuan.R;
-import org.qii.weiciyuan.support.lib.VelocityListView;
-import org.qii.weiciyuan.support.lib.pulltorefresh.internal.EmptyViewMethodAccessor;
-import org.qii.weiciyuan.support.lib.pulltorefresh.internal.LoadingLayout;
 
 public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView> {
 
@@ -259,6 +261,7 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 
         public InternalListViewSDK9(Context context, AttributeSet attrs) {
             super(context, attrs);
+            setLayoutTransition(new LayoutTransition());
         }
 
         @Override

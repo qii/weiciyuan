@@ -6,6 +6,8 @@ import org.qii.weiciyuan.support.utils.Utility;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 
 /**
  * User: Jiang Qi
@@ -13,11 +15,27 @@ import android.content.Intent;
  */
 public class ConnectionChangeReceiver extends BroadcastReceiver {
 
+    private Handler handler = new Handler(Looper.getMainLooper());
+
+    private Runnable task = null;
+
+    //receive multi broadcasts at the same time
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
 
-        judgeNetworkStatus(context, true);
+        if (task != null) {
+            handler.removeCallbacks(task);
+        }
 
+        task = new Runnable() {
+            @Override
+            public void run() {
+                judgeNetworkStatus(context, true);
+                task = null;
+            }
+        };
+
+        handler.postDelayed(task, 2000);
     }
 
     public static void judgeNetworkStatus(Context context,
