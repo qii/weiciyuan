@@ -683,16 +683,40 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         if (getActivity() != null && newValue.getSize() > 0) {
             getList().addNewData(newValue);
+
             HeaderListView headerListView = (HeaderListView) getListView();
             View firstChildView = getListView().getChildAt(0);
             boolean isFirstViewHeader = headerListView.isThisViewHeader(firstChildView);
 
-            if (isFirstViewHeader) {
+            //simply notifyDataSetChanged adapter and scroll to top
+            if (isFirstViewHeader && !headerListView.isInTouchByUser()) {
                 getAdapter().notifyDataSetChanged();
                 Utility.setListViewSelectionFromTop(getListView(), 0, 0);
                 return;
             }
 
+            Runnable endAction = new Runnable() {
+                @Override
+                public void run() {
+                    newMsgTipBar.setValue(newValue, false);
+                    newMsgTipBar.setType(TopTipBar.Type.ALWAYS);
+                }
+            };
+
+            //keep current read position when user touch listview
+            if (isFirstViewHeader && headerListView.isInTouchByUser()) {
+                int index = getListView().getFirstVisiblePosition();
+                getAdapter().notifyDataSetChanged();
+                int finalSize = getList().getSize();
+                final int positionAfterRefresh = index + finalSize - initSize + getListView()
+                        .getHeaderViewsCount();
+                //use 1 px to show newMsgTipBar
+                Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh,
+                        1, endAction);
+                return;
+            }
+
+            //need to calc the first child view's top distance
             int index = getListView().getFirstVisiblePosition();
 
             View firstAdapterItemView = Utility.getListViewFirstAdapterItemView(getListView());
@@ -702,13 +726,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             int finalSize = getList().getSize();
             final int positionAfterRefresh = index + finalSize - initSize;
             Utility.setListViewSelectionFromTop(getListView(), positionAfterRefresh, top,
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            newMsgTipBar.setValue(newValue, false);
-                            newMsgTipBar.setType(TopTipBar.Type.ALWAYS);
-                        }
-                    });
+                    endAction);
 
 
         }

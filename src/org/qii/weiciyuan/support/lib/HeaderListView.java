@@ -1,7 +1,10 @@
 package org.qii.weiciyuan.support.lib;
 
+import org.qii.weiciyuan.support.debug.AppLogger;
+
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
 
@@ -12,6 +15,8 @@ import java.util.ArrayList;
  * Date: 14-6-18
  */
 public class HeaderListView extends ListView {
+
+    private boolean inTouch = false;
 
     private ArrayList<View> headerList = new ArrayList<View>();
 
@@ -27,6 +32,27 @@ public class HeaderListView extends ListView {
         super(context, attrs, defStyle);
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                boolean result = super.dispatchTouchEvent(event);
+                if (result) {
+                    inTouch = true;
+                }
+                return result;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                inTouch = false;
+                break;
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    public boolean isInTouchByUser() {
+        AppLogger.e("" + inTouch);
+        return inTouch;
+    }
 
     @Override
     public void addHeaderView(View v, Object data, boolean isSelectable) {
