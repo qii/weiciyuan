@@ -39,6 +39,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -1118,6 +1119,17 @@ public class Utility {
         } catch (Exception ignored) {
 
         }
+    }
+
+    public static Bitmap getBitmapFromView(View view) {
+
+        Bitmap b = Bitmap.createBitmap(
+                view.getWidth(), view.getHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        c.translate(-view.getScrollX(), -view.getScrollY());
+        view.draw(c);
+        return b;
     }
 }
 

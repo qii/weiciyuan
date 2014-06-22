@@ -35,20 +35,28 @@ import org.qii.weiciyuan.ui.send.WriteWeiboActivity;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroupOverlay;
+import android.view.ViewTreeObserver;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -682,18 +690,164 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         int initSize = getList().getSize();
 
         if (getActivity() != null && newValue.getSize() > 0) {
-            getList().addNewData(newValue);
 
-            HeaderListView headerListView = (HeaderListView) getListView();
+            final HeaderListView headerListView = (HeaderListView) getListView();
             View firstChildView = getListView().getChildAt(0);
             boolean isFirstViewHeader = headerListView.isThisViewHeader(firstChildView);
 
             //simply notifyDataSetChanged adapter and scroll to top
             if (isFirstViewHeader && !headerListView.isInTouchByUser()) {
+//                int finalSize = getList().getSize();
+//
+//                //if add item count above 1, notifyDataSetChanged adapter
+//                if ((finalSize - initSize) > 1) {
+//                    getAdapter().notifyDataSetChanged();
+//                    Utility.setListViewSelectionFromTop(getListView(), 0, 0);
+//                    return;
+//                }
+
+                //animate add item
+
+                final ListView listView = getListView();
+
+                final ArrayList<Pair<Long, Bitmap>> previousViewsBitmap
+                        = new ArrayList<Pair<Long, Bitmap>>();
+                final HashMap<Long, Integer> previousViewsTop = new HashMap<Long, Integer>();
+                final HashMap<Long, View> previousViews = new HashMap<Long, View>();
+
+                int childCount = listView.getChildCount();
+
+                for (int i = 0; i < childCount; i++) {
+                    View childView = listView.getChildAt(i);
+                    if (headerListView.isThisViewHeader(childView)) {
+                        continue;
+                    }
+
+                    int firstAdapterItemPosition = listView.getFirstVisiblePosition();
+                    int currentAdapterItemPosition = firstAdapterItemPosition + i - listView
+                            .getHeaderViewsCount();
+
+                    long currentAdapterItemId = getAdapter().getItemId(currentAdapterItemPosition);
+                    int childViewTop = childView.getTop();
+                    Bitmap bitmap = Utility.getBitmapFromView(childView);
+
+                    Pair<Long, Bitmap> pair = new Pair<Long, Bitmap>(currentAdapterItemId, bitmap);
+                    previousViewsBitmap.add(pair);
+
+                    previousViewsTop.put(currentAdapterItemId, childViewTop);
+                    childView.setHasTransientState(true);
+                    previousViews.put(currentAdapterItemId, childView);
+
+
+                }
+
+                getList().addNewData(newValue);
+
                 getAdapter().notifyDataSetChanged();
-                Utility.setListViewSelectionFromTop(getListView(), 0, 0);
+
+                getListView().getViewTreeObserver()
+                        .addOnPreDrawListener(
+                                new ViewTreeObserver.OnPreDrawListener() {
+                                    @Override
+                                    public boolean onPreDraw() {
+
+                                        listView.getViewTreeObserver()
+                                                .removeOnPreDrawListener(this);
+
+                                        DecelerateInterpolator decelerateInterpolator
+                                                = new DecelerateInterpolator();
+
+                                        final ViewGroupOverlay overlay = listView
+                                                .getOverlay();
+
+                                        Set<Long> previousViewsId = previousViews.keySet();
+
+                                        boolean somePreviousViewsAreStillInScreen = false;
+
+                                        ArrayList<View> newAddedItemViews = new ArrayList<View>();
+
+                                        int deltaY = 0;
+
+                                        int childCount = listView.getChildCount();
+
+                                        for (int i = 0; i < childCount; i++) {
+                                            View childView = listView.getChildAt(i);
+                                            if (headerListView.isThisViewHeader(childView)) {
+                                                continue;
+                                            }
+
+                                            int firstAdapterItemPosition = listView
+                                                    .getFirstVisiblePosition();
+                                            int currentAdapterItemPosition =
+                                                    firstAdapterItemPosition + i - listView
+                                                            .getHeaderViewsCount();
+
+                                            long currentAdapterItemId = getAdapter()
+                                                    .getItemId(currentAdapterItemPosition);
+
+                                            if (previousViewsId.contains(currentAdapterItemId)) {
+                                                somePreviousViewsAreStillInScreen = true;
+                                                deltaY = childView.getTop() - previousViewsTop
+                                                        .get(currentAdapterItemId);
+                                            } else {
+                                                newAddedItemViews.add(childView);
+                                            }
+
+                                        }
+
+                                        if (!somePreviousViewsAreStillInScreen) {
+                                            deltaY = listView.getHeight();
+                                        }
+
+                                        for (View view : newAddedItemViews) {
+                                            view.setTranslationY(-deltaY);
+                                            view.animate().translationY(0)
+                                                    .setInterpolator(decelerateInterpolator);
+                                        }
+
+                                        for (Pair<Long, Bitmap> pair : previousViewsBitmap) {
+                                            long id = pair.first;
+                                            int top = previousViewsTop.get(id);
+                                            final View view = previousViews.get(id);
+                                            final Bitmap bitmap = pair.second;
+                                            final ImageView imageView = new ImageView(
+                                                    getActivity());
+                                            imageView.setImageBitmap(bitmap);
+                                            imageView.measure(View.MeasureSpec.makeMeasureSpec(0,
+                                                    View.MeasureSpec.UNSPECIFIED),
+                                                    View.MeasureSpec.makeMeasureSpec(0,
+                                                            View.MeasureSpec.UNSPECIFIED));
+                                            imageView.layout(0, 0, imageView.getMeasuredWidth(),
+                                                    imageView.getMeasuredHeight());
+                                            overlay.add(imageView);
+                                            imageView.setTranslationY(top);
+                                            view.setAlpha(0);
+                                            imageView.animate()
+                                                    .translationY(top + deltaY)
+                                                    .setInterpolator(decelerateInterpolator)
+                                                    .withEndAction(
+                                                            new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    overlay.remove(
+                                                                            imageView);
+                                                                    bitmap.recycle();
+                                                                    view.setAlpha(
+                                                                            1.0f);
+                                                                    view.setHasTransientState(
+                                                                            false);
+                                                                }
+                                                            });
+                                        }
+
+                                        return true;
+                                    }
+                                });
+
                 return;
             }
+
+            getList().addNewData(newValue);
 
             Runnable endAction = new Runnable() {
                 @Override
