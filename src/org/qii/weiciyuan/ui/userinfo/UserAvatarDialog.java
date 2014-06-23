@@ -77,6 +77,10 @@ public class UserAvatarDialog extends DialogFragment {
 
                         content.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
+                        if (ori == null) {
+                            return;
+                        }
+
                         int[] avatarLocation = new int[2];
                         avatar.getLocationOnScreen(avatarLocation);
 

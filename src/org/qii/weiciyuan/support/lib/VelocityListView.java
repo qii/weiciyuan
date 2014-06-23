@@ -18,7 +18,8 @@ import java.util.List;
  * mLastVisiblePosition += v;
  * so, when notifyDataSetChanged adapter to show new item, the Velocity is also correct.
  * <p/>
- * and modify setOnScrollListener method, so that ListView can own more than just one OnScrollListener
+ * and modify setOnScrollListener method, so that ListView can own more than just one
+ * OnScrollListener
  */
 public class VelocityListView extends AutoScrollListView {
 
@@ -28,10 +29,12 @@ public class VelocityListView extends AutoScrollListView {
      * @author Cyril Mottier
      */
     public interface OnVelocityListViewListener {
+
         void onVelocityChanged(int velocity);
     }
 
     public interface OnVelocityEqualZeroListener {
+
         void onZero();
     }
 
@@ -46,22 +49,29 @@ public class VelocityListView extends AutoScrollListView {
      */
     private static final long MINIMUM_TIME_DELTA = 10L;
 
-    private final ForwardingOnScrollListener mForwardingOnScrollListener = new ForwardingOnScrollListener();
+    private final ForwardingOnScrollListener mForwardingOnScrollListener
+            = new ForwardingOnScrollListener();
 
     private OnVelocityListViewListener mOnVelocityListViewListener;
 
     private OnVelocityEqualZeroListener onVelocityEqualZeroListener;
 
     private long mTime = INVALID_TIME;
+
     private int mVelocity;
 
     private int mFirstVisiblePosition;
+
     private int mFirstVisibleViewTop;
+
     private int mLastVisiblePosition;
+
     private int mLastVisibleViewTop;
+
     private int mLastItemCount;
 
     public static final int TOWARDS_BOTTOM = 0;
+
     public static final int TOWARDS_TOP = 1;
 
     private int towardsOrientation = TOWARDS_BOTTOM;
@@ -141,10 +151,12 @@ public class VelocityListView extends AutoScrollListView {
     private static class ForwardingOnScrollListener implements OnScrollListener {
 
         private OnScrollListener selfListener;
+
         private List<OnScrollListener> clientListener = new ArrayList<OnScrollListener>();
 
         @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                int totalItemCount) {
 
             if (selfListener != null) {
                 selfListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
@@ -182,7 +194,12 @@ public class VelocityListView extends AutoScrollListView {
         }
 
         @Override
-        public void onScroll(AbsListView view, int firstVisiblePosition, int visibleItemCount, int totalItemCount) {
+        public void onScroll(AbsListView view, int firstVisiblePosition, int visibleItemCount,
+                int totalItemCount) {
+
+            if (visibleItemCount == 0) {
+                return;
+            }
 
             final long now = AnimationUtils.currentAnimationTimeMillis();
             final int lastVisiblePosition = firstVisiblePosition + visibleItemCount - 1;
@@ -202,11 +219,13 @@ public class VelocityListView extends AutoScrollListView {
                     //@formatter:off
                     if (mFirstVisiblePosition >= firstVisiblePosition
                             && mFirstVisiblePosition <= lastVisiblePosition) {
-                        distance = getChildAt(mFirstVisiblePosition - firstVisiblePosition).getTop() - mFirstVisibleViewTop;
+                        distance = getChildAt(mFirstVisiblePosition - firstVisiblePosition).getTop()
+                                - mFirstVisibleViewTop;
 
                     } else if (mLastVisiblePosition >= firstVisiblePosition
                             && mLastVisiblePosition <= lastVisiblePosition) {
-                        distance = getChildAt(mLastVisiblePosition - firstVisiblePosition).getTop() - mLastVisibleViewTop;
+                        distance = getChildAt(mLastVisiblePosition - firstVisiblePosition).getTop()
+                                - mLastVisibleViewTop;
                         //@formatter:on
                     } else {
                         // We're in a case were the item we were previously
@@ -217,7 +236,8 @@ public class VelocityListView extends AutoScrollListView {
                             heightSum += getChildAt(i).getHeight();
                         }
 
-                        distance = heightSum / visibleItemCount * (mFirstVisiblePosition - firstVisiblePosition);
+                        distance = heightSum / visibleItemCount * (mFirstVisiblePosition
+                                - firstVisiblePosition);
                     }
 
                     setVelocity((int) (1000d * distance / delta));

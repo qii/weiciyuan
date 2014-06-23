@@ -129,6 +129,7 @@ public class FriendsTimeLineDBTask {
         }
     }
 
+    //todo may occur ConcurrentModificationException
     public static void asyncReplace(final MessageListBean list, final String accountId,
             final String groupId) {
         new Thread(new Runnable() {

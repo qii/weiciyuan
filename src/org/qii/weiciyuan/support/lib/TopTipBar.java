@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -101,9 +102,19 @@ public class TopTipBar extends TextView {
         return copy;
     }
 
+    /**
+     * the json library gson has a bug, may convert database value to Double type,
+     * so I have to force cast to Long type;
+     * todo use other json library
+     */
     public void setValue(Set<Long> values) {
         this.ids.clear();
-        this.ids.addAll(values);
+        Iterator iterator = values.iterator();
+        while (iterator.hasNext()) {
+            Object object = iterator.next();
+            this.ids.add((Long) object);
+        }
+
         this.disappear = false;
         setCount();
     }

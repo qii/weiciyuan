@@ -167,7 +167,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity
                     getSupportFragmentManager().beginTransaction()
                             .replace(android.R.id.content, BrowserWeiboMsgFragment.newInstance(msg),
                                     BrowserWeiboMsgFragment.class.getName())
-                            .commit();
+                            .commitAllowingStateLoss();
                     getSupportFragmentManager().executePendingTransactions();
                     findViewById(android.R.id.content).setBackgroundDrawable(null);
                 }

@@ -41,9 +41,8 @@ public class FavouriteDBTask {
         return databaseHelper.getReadableDatabase();
     }
 
-    public static void add(FavListBean list, int page, String accountId) {
+    private static void add(List<FavBean> msgList, int page, String accountId) {
         Gson gson = new Gson();
-        List<FavBean> msgList = list.getFavorites();
 
         DatabaseUtils.InsertHelper ih = new DatabaseUtils.InsertHelper(getWsd(),
                 FavouriteTable.FavouriteDataTable.TABLE_NAME);
@@ -215,11 +214,15 @@ public class FavouriteDBTask {
 
     public static void asyncReplace(final FavListBean data, final int page,
             final String accountId) {
+
+        final List<FavBean> msgList = new ArrayList<FavBean>();
+        msgList.addAll(data.getFavorites());
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 deleteAllFavourites(accountId);
-                add(data, page, accountId);
+                add(msgList, page, accountId);
             }
         }).start();
     }

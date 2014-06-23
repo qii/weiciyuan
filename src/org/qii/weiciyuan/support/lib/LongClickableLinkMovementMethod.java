@@ -21,10 +21,13 @@ import android.widget.TextView;
 public class LongClickableLinkMovementMethod extends ScrollingMovementMethod {
 
     private static final int CLICK = 1;
+
     private static final int UP = 2;
+
     private static final int DOWN = 3;
 
     private boolean mHasPerformedLongPress;
+
     private CheckForLongPress mPendingCheckForLongPress;
 
     private boolean pressed;
@@ -39,7 +42,7 @@ public class LongClickableLinkMovementMethod extends ScrollingMovementMethod {
 
     @Override
     protected boolean handleMovementKey(TextView widget, Spannable buffer, int keyCode,
-                                        int movementMetaState, KeyEvent event) {
+            int movementMetaState, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_DPAD_CENTER:
             case KeyEvent.KEYCODE_ENTER:
@@ -118,10 +121,12 @@ public class LongClickableLinkMovementMethod extends ScrollingMovementMethod {
             }
         }
 
-        if (selStart > last)
+        if (selStart > last) {
             selStart = selEnd = Integer.MAX_VALUE;
-        if (selEnd < first)
+        }
+        if (selEnd < first) {
             selStart = selEnd = -1;
+        }
 
         switch (what) {
             case CLICK:
@@ -131,8 +136,9 @@ public class LongClickableLinkMovementMethod extends ScrollingMovementMethod {
 
                 MyURLSpan[] link = buffer.getSpans(selStart, selEnd, MyURLSpan.class);
 
-                if (link.length != 1)
+                if (link.length != 1) {
                     return false;
+                }
 
                 link[0].onClick(widget);
                 break;
@@ -191,11 +197,18 @@ public class LongClickableLinkMovementMethod extends ScrollingMovementMethod {
 
     @Override
     public boolean onTouchEvent(TextView widget, Spannable buffer,
-                                MotionEvent event) {
+            MotionEvent event) {
         int action = event.getAction();
 
         if (action == MotionEvent.ACTION_UP ||
                 action == MotionEvent.ACTION_DOWN) {
+
+            Layout layout = widget.getLayout();
+
+            if (layout == null) {
+                return super.onTouchEvent(widget, buffer, event);
+            }
+
             int x = (int) event.getX();
             int y = (int) event.getY();
 
@@ -205,7 +218,6 @@ public class LongClickableLinkMovementMethod extends ScrollingMovementMethod {
             x += widget.getScrollX();
             y += widget.getScrollY();
 
-            Layout layout = widget.getLayout();
             int line = layout.getLineForVertical(y);
             int off = layout.getOffsetForHorizontal(line, x);
 
@@ -263,7 +275,9 @@ public class LongClickableLinkMovementMethod extends ScrollingMovementMethod {
     }
 
     class CheckForLongPress implements Runnable {
+
         MyURLSpan[] spans;
+
         View widget;
 
         public CheckForLongPress(MyURLSpan[] spans, View widget) {
@@ -307,12 +321,14 @@ public class LongClickableLinkMovementMethod extends ScrollingMovementMethod {
     }
 
     public static LongClickableLinkMovementMethod getInstance() {
-        if (sInstance == null)
+        if (sInstance == null) {
             sInstance = new LongClickableLinkMovementMethod();
+        }
 
         return sInstance;
     }
 
     private static LongClickableLinkMovementMethod sInstance;
+
     private static Object FROM_BELOW = new NoCopySpan.Concrete();
 }
