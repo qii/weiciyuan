@@ -37,6 +37,8 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.Loader;
 import android.util.Pair;
 import android.view.Menu;
@@ -96,6 +98,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     private BaseAdapter navAdapter;
 
     private Thread backgroundWifiDownloadPicThread = null;
+
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     public MessageListBean getList() {
@@ -691,20 +695,24 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         if (getActivity() != null && newValue.getSize() > 0) {
 
+            if (hasActionMode()) {
+                AppLogger.v("ListView have ActionMode, skip notifyDataSetChanged");
+                return;
+            }
+
             final HeaderListView headerListView = (HeaderListView) getListView();
             View firstChildView = getListView().getChildAt(0);
             boolean isFirstViewHeader = headerListView.isThisViewHeader(firstChildView);
 
-            //simply notifyDataSetChanged adapter and scroll to top
             if (isFirstViewHeader && !headerListView.isInTouchByUser()) {
-//                int finalSize = getList().getSize();
-//
-//                //if add item count above 1, notifyDataSetChanged adapter
-//                if ((finalSize - initSize) > 1) {
-//                    getAdapter().notifyDataSetChanged();
-//                    Utility.setListViewSelectionFromTop(getListView(), 0, 0);
-//                    return;
-//                }
+
+//                //Overlay shi Android 4.3 method
+                if (!Utility.isJB2()) {
+                    getList().addNewData(newValue);
+                    getAdapter().notifyDataSetChanged();
+                    Utility.setListViewSelectionFromTop(getListView(), 0, 0);
+                    return;
+                }
 
                 //animate add item
 
@@ -1021,31 +1029,45 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         @Override
         public void run() {
-            if (!SettingUtility.getEnableAutoRefresh()) {
-                return;
-            }
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
 
-            if (!Utility.isTaskStopped(dbTask)) {
-                return;
-            }
+                    if (getActivity() == null) {
+                        return;
+                    }
 
-            if (!allowRefresh()) {
-                return;
-            }
+                    if (hasActionMode()) {
+                        return;
+                    }
 
-            if (!Utility.isWifi(getActivity())) {
-                return;
-            }
+                    if (!SettingUtility.getEnableAutoRefresh()) {
+                        return;
+                    }
 
-            if (isListViewFling() || !isVisible() || ((MainTimeLineActivity) getActivity())
-                    .getSlidingMenu().isMenuShowing()) {
-                return;
-            }
+                    if (!Utility.isTaskStopped(dbTask)) {
+                        return;
+                    }
 
-            Bundle bundle = new Bundle();
-            bundle.putBoolean(BundleArgsConstants.SCROLL_TO_TOP, false);
-            bundle.putBoolean(BundleArgsConstants.AUTO_REFRESH, true);
-            getLoaderManager().restartLoader(NEW_MSG_LOADER_ID, bundle, msgAsyncTaskLoaderCallback);
+                    if (!allowRefresh()) {
+                        return;
+                    }
+                    if (!Utility.isWifi(getActivity())) {
+                        return;
+                    }
+                    if (isListViewFling() || !isVisible() || ((MainTimeLineActivity) getActivity())
+                            .getSlidingMenu().isMenuShowing()) {
+                        return;
+                    }
+
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean(BundleArgsConstants.SCROLL_TO_TOP, false);
+                    bundle.putBoolean(BundleArgsConstants.AUTO_REFRESH, true);
+                    getLoaderManager()
+                            .restartLoader(NEW_MSG_LOADER_ID, bundle, msgAsyncTaskLoaderCallback);
+                }
+            });
+
         }
     }
 

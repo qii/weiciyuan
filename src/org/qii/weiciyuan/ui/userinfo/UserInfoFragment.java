@@ -511,6 +511,11 @@ public class UserInfoFragment extends AbstractMessageTimeLineFragment<MessageLis
             = new GlobalContext.MyProfileInfoChangeListener() {
         @Override
         public void onChange(UserBean newUserBean) {
+
+            if (getActivity() == null) {
+                return;
+            }
+
             userBean = newUserBean;
             displayBasicInfo();
             displayCoverPicture();
