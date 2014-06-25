@@ -741,23 +741,6 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                 .downContentPic(view, msg, (AbstractTimeLineFragment) fragment);
     }
 
-    protected void buildRepostContent(final MessageBean repost_msg, ViewHolder holder,
-            int position) {
-        holder.repost_content.setVisibility(View.VISIBLE);
-
-        boolean isSameTag = repost_msg.getId().equals((String) holder.repost_content.getTag());
-
-        if (!isSameTag) {
-            holder.repost_content.setText(repost_msg.getListViewSpannableString());
-            holder.repost_content.setTag(repost_msg.getId());
-        }
-
-        if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {
-            holder.repost_content_pic.setVisibility(View.VISIBLE);
-            buildPic(repost_msg, holder.repost_content_pic, position);
-        }
-    }
-
 
     public static class ViewHolder {
 

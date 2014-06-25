@@ -1,14 +1,5 @@
 package org.qii.weiciyuan.ui.adapter;
 
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import org.qii.weiciyuan.bean.CommentBean;
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.UserBean;
@@ -18,6 +9,16 @@ import org.qii.weiciyuan.support.settinghelper.SettingUtility;
 import org.qii.weiciyuan.support.utils.GlobalContext;
 import org.qii.weiciyuan.support.utils.Utility;
 import org.qii.weiciyuan.ui.send.WriteReplyToCommentActivity;
+
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import java.util.List;
 import java.util.Map;
@@ -38,11 +39,13 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
     private AbsListView.OnScrollListener onScrollListener;
 
-    public CommentListAdapter(Fragment fragment, List<CommentBean> bean, ListView listView, boolean showOriStatus) {
+    public CommentListAdapter(Fragment fragment, List<CommentBean> bean, ListView listView,
+            boolean showOriStatus) {
         this(fragment, bean, listView, showOriStatus, false);
     }
 
-    public CommentListAdapter(Fragment fragment, List<CommentBean> bean, ListView listView, boolean showOriStatus, boolean pref) {
+    public CommentListAdapter(Fragment fragment, List<CommentBean> bean, ListView listView,
+            boolean showOriStatus, boolean pref) {
         super(fragment, bean, listView, showOriStatus, pref);
 
     }
@@ -57,7 +60,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             }
 
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                    int totalItemCount) {
 //                VelocityListView velocityListView = (VelocityListView) view;
 //                if (velocityListView.getVelocity() < 0) {
 //                    topTipBar.hideCount();
@@ -66,7 +70,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 //                        return;
 //                    }
 
-                View childView = Utility.getListViewItemViewFromPosition(listView, firstVisibleItem);
+                View childView = Utility
+                        .getListViewItemViewFromPosition(listView, firstVisibleItem);
 
                 if (childView == null) {
                     return;
@@ -111,8 +116,9 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             bg.put(holder, drawable);
         }
 
-        if (listView.getCheckedItemPosition() == position + 1)
+        if (listView.getCheckedItemPosition() == position + 1) {
             holder.listview_root.setBackgroundColor(checkedBG);
+        }
 
         final CommentBean comment = getList().get(position);
 
@@ -120,7 +126,8 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         if (user != null) {
             holder.username.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(user.getRemark())) {
-                holder.username.setText(new StringBuilder(user.getScreen_name()).append("(").append(user.getRemark()).append(")").toString());
+                holder.username.setText(new StringBuilder(user.getScreen_name()).append("(")
+                        .append(user.getRemark()).append(")").toString());
             } else {
                 holder.username.setText(user.getScreen_name());
             }
@@ -138,18 +145,21 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
         holder.content.setText(comment.getListViewSpannableString());
 
         holder.time.setTime(comment.getMills());
-        if (holder.source != null)
+        if (holder.source != null) {
             holder.source.setText(comment.getSourceString());
+        }
 
         holder.repost_content.setVisibility(View.GONE);
         holder.repost_content_pic.setVisibility(View.GONE);
 
         CommentBean reply = comment.getReply_comment();
-        if (holder.replyIV != null)
+        if (holder.replyIV != null) {
             holder.replyIV.setVisibility(View.GONE);
+        }
         if (reply != null && showOriStatus) {
-            if (holder.repost_layout != null)
+            if (holder.repost_layout != null) {
                 holder.repost_layout.setVisibility(View.VISIBLE);
+            }
             holder.repost_flag.setVisibility(View.VISIBLE);
             holder.repost_content.setVisibility(View.VISIBLE);
             holder.repost_content.setText(reply.getListViewSpannableString());
@@ -159,17 +169,19 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
             MessageBean repost_msg = comment.getStatus();
 
             if (repost_msg != null && showOriStatus) {
-                buildRepostContent(repost_msg, holder, position);
+                buildOriWeiboContent(repost_msg, holder, position);
             } else {
-                if (holder.repost_layout != null)
+                if (holder.repost_layout != null) {
                     holder.repost_layout.setVisibility(View.GONE);
+                }
                 holder.repost_flag.setVisibility(View.GONE);
                 if (holder.replyIV != null) {
                     holder.replyIV.setVisibility(View.VISIBLE);
                     holder.replyIV.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
+                            Intent intent = new Intent(getActivity(),
+                                    WriteReplyToCommentActivity.class);
                             intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
                             intent.putExtra("msg", comment);
                             getActivity().startActivity(intent);
@@ -182,6 +194,35 @@ public class CommentListAdapter extends AbstractAppListAdapter<CommentBean> {
 
 
     }
+
+    protected void buildOriWeiboContent(final MessageBean repost_msg, ViewHolder holder,
+            int position) {
+
+        holder.repost_content.setVisibility(View.VISIBLE);
+
+        boolean isSameTag = repost_msg.getId().equals((String) holder.repost_content.getTag());
+
+        if (!isSameTag) {
+            holder.repost_content.setText(repost_msg.getListViewSpannableString());
+            holder.repost_content.setTag(repost_msg.getId());
+        }
+
+        if (!TextUtils.isEmpty(repost_msg.getBmiddle_pic())) {
+            if (repost_msg.isMultiPics()) {
+                buildMultiPic(repost_msg, holder.repost_content_pic_multi);
+                interruptPicDownload(holder.repost_content_pic);
+            } else {
+                buildPic(repost_msg, holder.repost_content_pic, position);
+                interruptPicDownload(holder.repost_content_pic_multi);
+            }
+
+        } else {
+            interruptPicDownload(holder.repost_content_pic_multi);
+            interruptPicDownload(holder.repost_content_pic);
+        }
+
+    }
+
 
 }
 
